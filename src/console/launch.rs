@@ -4,71 +4,100 @@ use crate::widgets::steps::StepState;
 
 use crate::console::domain::agent::Agent;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum Stage {
-    Identity,
-    Role,
-    Credentials,
-    Construct,
-    AgentBinaries,
-    DerivedImage,
-    Workspace,
-    Network,
-    Sidecar,
-    Capsule,
-    Hardline,
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StageKind {
+    Plain,
+    BuildLog,
+    Credentials { hold_at: u64 },
 }
 
-impl Stage {
-    pub const ALL: [Stage; 11] = [
-        Stage::Identity,
-        Stage::Role,
-        Stage::Credentials,
-        Stage::Construct,
-        Stage::AgentBinaries,
-        Stage::DerivedImage,
-        Stage::Workspace,
-        Stage::Network,
-        Stage::Sidecar,
-        Stage::Capsule,
-        Stage::Hardline,
-    ];
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StageSpec {
+    pub id: String,
+    pub label: String,
+    pub activity: String,
+    pub ticks: u64,
+    pub kind: StageKind,
+    pub skipped: bool,
+    pub container_at: Option<u64>,
+}
 
-    pub fn label(self) -> &'static str {
-        match self {
-            Stage::Identity => "Identity",
-            Stage::Role => "Role",
-            Stage::Credentials => "Credentials",
-            Stage::Construct => "Construct",
-            Stage::AgentBinaries => "Agent Binaries",
-            Stage::DerivedImage => "Derived Image",
-            Stage::Workspace => "Workspace",
-            Stage::Network => "Network",
-            Stage::Sidecar => "Sidecar",
-            Stage::Capsule => "Capsule",
-            Stage::Hardline => "Hardline",
+impl StageSpec {
+    pub fn new(id: &str, label: &str, activity: &str, ticks: u64) -> Self {
+        Self {
+            id: id.to_owned(),
+            label: label.to_owned(),
+            activity: activity.to_owned(),
+            ticks,
+            kind: StageKind::Plain,
+            skipped: false,
+            container_at: None,
         }
     }
 
-    pub fn index(self) -> usize {
-        Stage::ALL.iter().position(|s| *s == self).unwrap_or(0)
+    pub fn kind(mut self, kind: StageKind) -> Self {
+        self.kind = kind;
+        self
     }
 
-    pub fn activity(self, agent: Agent) -> String {
-        match self {
-            Stage::Identity => "Resolving launch identity…".into(),
-            Stage::Role => "Loading role manifest…".into(),
-            Stage::Credentials => "Resolving credentials…".into(),
-            Stage::Construct => "Preparing the Construct image…".into(),
-            Stage::AgentBinaries => format!("Installing {} binaries…", agent.label()),
-            Stage::DerivedImage => "Building derived image…".into(),
-            Stage::Workspace => "Mounting the Workspace…".into(),
-            Stage::Network => "Attaching the network…".into(),
-            Stage::Sidecar => "Starting the sidecar…".into(),
-            Stage::Capsule => "Waiting for the Capsule daemon…".into(),
-            Stage::Hardline => "Opening the hardline…".into(),
-        }
+    pub fn skipped(mut self) -> Self {
+        self.skipped = true;
+        self
     }
+
+    pub fn container_at(mut self, tick: u64) -> Self {
+        self.container_at = Some(tick);
+        self
+    }
+
+    pub fn activity_for(&self, agent: Agent) -> String {
+        self.activity.replace("{agent}", agent.label())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StageList(Vec<StageSpec>);
+
+impl StageList {
+    pub fn new(first: StageSpec, rest: impl IntoIterator<Item = StageSpec>) -> Self {
+        let mut stages = vec![first];
+        stages.extend(rest);
+        Self(stages)
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        false
+    }
+
+    pub fn get(&self, index: usize) -> &StageSpec {
+        &self.0[index.min(self.0.len() - 1)]
+    }
+
+    pub fn iter(&self) -> std::slice::Iter<'_, StageSpec> {
+        self.0.iter()
+    }
+
+    pub fn position(&self, id: &str) -> Option<usize> {
+        self.0.iter().position(|s| s.id == id)
+    }
+
+    pub fn first_of(&self, pick: impl Fn(StageKind) -> bool) -> Option<usize> {
+        self.0.iter().position(|s| pick(s.kind))
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LaunchWords {
+    pub unit: String,
+    pub unit_missing: String,
+    pub log_title: String,
+    pub log_waiting: String,
+    pub build_failed: String,
+    pub ready_activity: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -84,7 +113,7 @@ pub enum LaunchPlan {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LaunchFailure {
-    pub stage: Stage,
+    pub stage: usize,
     pub summary: String,
     pub next_step: String,
     pub detail: Vec<String>,
@@ -92,7 +121,7 @@ pub struct LaunchFailure {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LaunchEvent {
-    StageChanged(Stage, StepState),
+    StageChanged(usize, StepState),
     Activity(String),
     BuildLine(String),
     ContainerReady(String),
@@ -109,14 +138,13 @@ pub struct LaunchRun {
     pub run_id: String,
     pub container: String,
     pub agent: Agent,
-    pub states: [StepState; 11],
-    pub durations: [u64; 11],
+    pub states: Vec<StepState>,
     pub tick: u64,
     pub stage_start: u64,
     pub current: Option<usize>,
     pub done: bool,
     pub failure: Option<LaunchFailure>,
-    pub blocked_at: Option<Stage>,
+    pub blocked_at: Option<usize>,
 
     pub credential_hold: bool,
     pub credential_retried: bool,
@@ -127,6 +155,8 @@ pub struct LaunchRun {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LaunchContent {
+    pub stages: StageList,
+    pub words: LaunchWords,
     pub build_log: Vec<String>,
     pub network_failure: LaunchFailure,
 }
@@ -139,14 +169,13 @@ impl LaunchRun {
         run_id: &str,
         content: Arc<LaunchContent>,
     ) -> Self {
-        let durations = [14, 18, 26, 30, 8, 92, 22, 20, 18, 34, 16];
+        let states = vec![StepState::Queued; content.stages.len()];
         Self {
             plan,
             run_id: run_id.to_owned(),
             container: container.to_owned(),
             agent,
-            states: [StepState::Queued; 11],
-            durations,
+            states,
             tick: 0,
             stage_start: 0,
             current: None,
@@ -191,67 +220,73 @@ impl LaunchRun {
         }
     }
 
+    fn plan_stage(&self) -> Option<usize> {
+        let id = match self.plan {
+            LaunchPlan::FailNetwork => "network",
+            LaunchPlan::BlockedSidecar => "sidecar",
+            LaunchPlan::Clean | LaunchPlan::CredentialsLocked => return None,
+        };
+        self.content.stages.position(id)
+    }
+
     pub fn advance(&mut self) -> Vec<LaunchEvent> {
         let mut ev = vec![];
         if self.is_terminal() || self.credential_hold {
             return ev;
         }
         self.tick += 1;
+        let stages = &self.content.stages;
         let Some(i) = self.current else {
             self.current = Some(0);
             self.stage_start = self.tick;
             self.states[0] = StepState::Running;
-            ev.push(LaunchEvent::StageChanged(
-                Stage::Identity,
-                StepState::Running,
+            ev.push(LaunchEvent::StageChanged(0, StepState::Running));
+            ev.push(LaunchEvent::Activity(
+                stages.get(0).activity_for(self.agent),
             ));
-            ev.push(LaunchEvent::Activity(Stage::Identity.activity(self.agent)));
             return ev;
         };
-        let stage = Stage::ALL[i];
+        let spec = stages.get(i);
         let elapsed = self.tick - self.stage_start;
 
-        match stage {
-            Stage::DerivedImage => {
-                let log = &self.content.build_log;
-                let want =
-                    ((elapsed as usize) * log.len() / self.durations[i] as usize).min(log.len());
-                while self.build_lines_emitted < want {
-                    ev.push(LaunchEvent::BuildLine(
-                        self.content.build_log[self.build_lines_emitted].clone(),
-                    ));
-                    self.build_lines_emitted += 1;
-                }
+        if spec.kind == StageKind::BuildLog {
+            let log = &self.content.build_log;
+            let want = ((elapsed as usize) * log.len() / spec.ticks.max(1) as usize).min(log.len());
+            while self.build_lines_emitted < want {
+                ev.push(LaunchEvent::BuildLine(
+                    self.content.build_log[self.build_lines_emitted].clone(),
+                ));
+                self.build_lines_emitted += 1;
             }
-            Stage::Construct if elapsed == 6 => {
-                ev.push(LaunchEvent::ContainerReady(self.container.clone()));
-            }
-            Stage::Credentials
-                if elapsed == 10
-                    && self.plan == LaunchPlan::CredentialsLocked
-                    && !self.credential_retried =>
-            {
-                self.credential_hold = true;
-                ev.push(LaunchEvent::CredentialError {
-                    message: "1Password locked: unlock the app and retry".into(),
-                });
-                return ev;
-            }
-            _ => {}
         }
-        if elapsed < self.durations[i] {
+        if spec.container_at == Some(elapsed) {
+            ev.push(LaunchEvent::ContainerReady(self.container.clone()));
+        }
+        if let StageKind::Credentials { hold_at } = spec.kind
+            && elapsed == hold_at
+            && self.plan == LaunchPlan::CredentialsLocked
+            && !self.credential_retried
+        {
+            self.credential_hold = true;
+            ev.push(LaunchEvent::CredentialError {
+                message: "1Password locked: unlock the app and retry".into(),
+            });
+            return ev;
+        }
+        if elapsed < spec.ticks {
             return ev;
         }
 
-        let final_state = match (self.plan, stage) {
-            (_, Stage::AgentBinaries) => StepState::Skipped,
-            (LaunchPlan::FailNetwork, Stage::Network) => StepState::Failed,
-            (LaunchPlan::BlockedSidecar, Stage::Sidecar) => StepState::Blocked,
+        let planned = self.plan_stage() == Some(i);
+        let final_state = match (self.plan, planned) {
+            _ if spec.skipped => StepState::Skipped,
+            (LaunchPlan::FailNetwork, true) => StepState::Failed,
+            (LaunchPlan::BlockedSidecar, true) => StepState::Blocked,
             _ => StepState::Done,
         };
         self.states[i] = final_state;
-        ev.push(LaunchEvent::StageChanged(stage, final_state));
-        if stage == Stage::Credentials {
+        ev.push(LaunchEvent::StageChanged(i, final_state));
+        if matches!(spec.kind, StageKind::Credentials { .. }) {
             ev.push(LaunchEvent::CredentialsResolved {
                 origin: String::new(),
                 validation: String::new(),
@@ -265,7 +300,7 @@ impl LaunchRun {
                 return ev;
             }
             StepState::Blocked => {
-                self.blocked_at = Some(stage);
+                self.blocked_at = Some(i);
                 ev.push(LaunchEvent::Activity(
                     "Blocked · this stage cannot continue".into(),
                 ));
@@ -273,13 +308,14 @@ impl LaunchRun {
             }
             _ => {}
         }
-        if i + 1 < Stage::ALL.len() {
-            let next = Stage::ALL[i + 1];
+        if i + 1 < stages.len() {
             self.current = Some(i + 1);
             self.stage_start = self.tick;
             self.states[i + 1] = StepState::Running;
-            ev.push(LaunchEvent::StageChanged(next, StepState::Running));
-            ev.push(LaunchEvent::Activity(next.activity(self.agent)));
+            ev.push(LaunchEvent::StageChanged(i + 1, StepState::Running));
+            ev.push(LaunchEvent::Activity(
+                stages.get(i + 1).activity_for(self.agent),
+            ));
         } else {
             self.done = true;
             ev.push(LaunchEvent::Ready);

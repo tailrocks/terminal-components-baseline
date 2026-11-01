@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use junie_tui::console::launch::{LaunchContent, LaunchFailure, Stage};
+use junie_tui::console::launch::{
+    LaunchContent, LaunchFailure, LaunchWords, StageKind, StageList, StageSpec,
+};
 
 pub const BUILD_LOG: [&str; 44] = [
     "#1 [internal] load build definition from Dockerfile.derived",
@@ -49,11 +51,63 @@ pub const BUILD_LOG: [&str; 44] = [
     "#14 exporting to image",
 ];
 
+fn stages() -> StageList {
+    StageList::new(
+        StageSpec::new("identity", "Identity", "Resolving launch identity…", 14),
+        [
+            StageSpec::new("role", "Role", "Loading role manifest…", 18),
+            StageSpec::new("credentials", "Credentials", "Resolving credentials…", 26)
+                .kind(StageKind::Credentials { hold_at: 10 }),
+            StageSpec::new(
+                "construct",
+                "Construct",
+                "Preparing the Construct image…",
+                30,
+            )
+            .container_at(6),
+            StageSpec::new(
+                "agent-binaries",
+                "Agent Binaries",
+                "Installing {agent} binaries…",
+                8,
+            )
+            .skipped(),
+            StageSpec::new(
+                "derived-image",
+                "Derived Image",
+                "Building derived image…",
+                92,
+            )
+            .kind(StageKind::BuildLog),
+            StageSpec::new("workspace", "Workspace", "Mounting the Workspace…", 22),
+            StageSpec::new("network", "Network", "Attaching the network…", 20),
+            StageSpec::new("sidecar", "Sidecar", "Starting the sidecar…", 18),
+            StageSpec::new("capsule", "Capsule", "Waiting for the Capsule daemon…", 34),
+            StageSpec::new("hardline", "Hardline", "Opening the hardline…", 16),
+        ],
+    )
+}
+
+fn words() -> LaunchWords {
+    LaunchWords {
+        unit: "Container".into(),
+        unit_missing: "not created".into(),
+        log_title: "Docker build".into(),
+        log_waiting: "(waiting for docker build output…)".into(),
+        build_failed: "Docker build failed".into(),
+        ready_activity: "Hardline open · handing off to the Capsule".into(),
+    }
+}
+
 pub fn content() -> Arc<LaunchContent> {
+    let stages = stages();
+    let network = stages.position("network").unwrap_or(0);
     Arc::new(LaunchContent {
+        stages,
+        words: words(),
         build_log: BUILD_LOG.iter().map(|l| (*l).to_owned()).collect(),
         network_failure: LaunchFailure {
-                    stage: Stage::Network,
+                    stage: network,
                     summary: "The Construct network could not be attached".into(),
                     next_step: "Check that Docker's jackin-net bridge exists (docker network ls), then launch again.".into(),
                     detail: vec![
