@@ -113,7 +113,8 @@ components work; they are not where behaviour lives.
   demonstrated in the showcase before apps use them. An app never ships a
   pattern the showcase does not show.
   Exception: jackin's intro, outro and cockpit-to-capsule fade are
-  brand-specific and stay in jackin.
+  brand-specific. They live in the library module `console::rain` and
+  enter the coverage allowlist with a reason.
 - The showcase is a thin consumer too: its pages add wiring, demo data and
   option tables, never drawing, interaction or state logic of their own.
   See the showcase coverage track in
