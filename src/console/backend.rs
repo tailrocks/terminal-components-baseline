@@ -5,11 +5,12 @@ use crate::console::domain::account::{
     Account, AccountIdentity, Confidence, CredentialSource, DetectedKind, IssueCode, Lifecycle,
     RecoverableIssue, ValidationLevel,
 };
-use crate::console::domain::agent::Provider;
+use crate::console::domain::agent::{Agent, Provider};
 use crate::console::domain::instance::InstanceId;
 use crate::console::domain::onepassword::OpReference;
+use crate::console::domain::role::RoleManifestDoc;
 use crate::console::domain::usage::AccountUsage;
-use crate::console::domain::workspace::WorkspaceId;
+use crate::console::domain::workspace::{RoleName, WorkspaceId};
 use crate::console::launch::LaunchContent;
 use crate::console::panes::SessionScript;
 use crate::console::world::{Msg, World};
@@ -287,15 +288,44 @@ impl Clone for Box<dyn OnePassword> {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Effect {
-    SaveWorkspace { id: WorkspaceId },
+    SaveWorkspace {
+        id: WorkspaceId,
+    },
     SaveGlobal,
-    Prewarm { workspace: WorkspaceId },
-    Stop { instance: InstanceId },
-    Purge { instance: InstanceId },
+    Prewarm {
+        workspace: WorkspaceId,
+    },
+    Stop {
+        instance: InstanceId,
+    },
+    Purge {
+        instance: InstanceId,
+    },
     Refresh,
-    RefreshAccount { account: AccountId, stagger_ms: i64 },
-    ValidateAccount { account: AccountId },
-    LoadRole { role: String },
+    RefreshAccount {
+        account: AccountId,
+        stagger_ms: i64,
+    },
+    ValidateAccount {
+        account: AccountId,
+    },
+    LoadRole {
+        role: String,
+    },
+    CheckRole {
+        role: RoleName,
+        doc: RoleManifestDoc,
+    },
+    SaveRole {
+        role: RoleName,
+        doc: RoleManifestDoc,
+    },
+    BindRole {
+        role: RoleName,
+        agent: Agent,
+        account: Option<AccountId>,
+    },
+    RunDoctor,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

@@ -24,7 +24,7 @@ use ratatui::layout::{Position, Rect};
 use crate::console::arbiter::{EntryDecision, ExitDecision};
 use crate::console::domain::instance::InstanceStatus;
 use crate::console::launch::LaunchPlan;
-use crate::console::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_USAGE};
+use crate::console::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_ROLES, TAB_USAGE};
 use crate::console::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
 use crate::console::scenario::{Motion, Scenario};
 use crate::console::screens::capsule::CapsuleScreen;
@@ -32,6 +32,7 @@ use crate::console::screens::cockpit::CockpitScreen;
 use crate::console::screens::editor::EditorScreen;
 use crate::console::screens::modals::{FormAction, FormDialog, HelpOverlay, InfoResult};
 use crate::console::screens::prelude::PreludeScreen;
+use crate::console::screens::role_editor::RoleEditorScreen;
 use crate::console::screens::settings::SettingsScreen;
 use crate::console::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
 use crate::console::world::{Health, Msg, World};
@@ -57,6 +58,9 @@ pub enum Route {
     Settings,
     Accounts,
     Usage,
+    Roles,
+    RoleEditor,
+    Doctor,
     Cockpit,
     Handoff,
     Capsule,
@@ -122,6 +126,9 @@ impl App {
         shell.motion = motion;
 
         shell.clipboard = shell::Clipboard::new().write(false);
+        let router = crate::console::pages::router(&world);
+        let keys = shell_keys(&world);
+        let host_menus = Self::build_host_menu(Route::Manager, &world);
         let mut app = Self {
             theme,
             scenario,
@@ -129,13 +136,13 @@ impl App {
             intro: None,
             outro: None,
             handoff: None,
-            router: crate::console::pages::router(),
+            router,
             layers: ShellLayers::new(),
             shell,
-            keys: shell_keys(),
+            keys,
             quit_guard: LeaveGuard::new(WidgetId::of("quit.guard")),
-            host_menu: Self::host_bar(&Self::build_host_menu(Route::Manager)),
-            host_menus: Self::build_host_menu(Route::Manager),
+            host_menu: Self::host_bar(&host_menus),
+            host_menus,
             host_menu_route: Route::Manager,
             intro_guard: 3,
             clipboard_gen: 0,
@@ -190,17 +197,36 @@ impl App {
 
         match self.scenario {
             Scenario::AccountsMixed => self.go(Go::Accounts { select: None }),
-            Scenario::LaunchRunning | Scenario::LaunchFailure => {
+            Scenario::RoleEditor => self.go(Go::RoleEditor {
+                role: "sentinel".into(),
+            }),
+            Scenario::RoleBinding => self.go(Go::Roles {
+                select: Some("sentinel".into()),
+            }),
+            Scenario::LaunchRunning | Scenario::LaunchFailure | Scenario::LaunchOpenshell => {
                 let plan = if self.scenario == Scenario::LaunchFailure {
                     LaunchPlan::FailNetwork
                 } else {
                     LaunchPlan::Clean
                 };
+                let (role, agent, account) = if self.scenario == Scenario::LaunchOpenshell {
+                    (
+                        "sentinel",
+                        crate::console::domain::agent::Agent::Codex,
+                        "acct-codex-primary",
+                    )
+                } else {
+                    (
+                        "the-architect",
+                        crate::console::domain::agent::Agent::ClaudeCode,
+                        "acct-claude-work",
+                    )
+                };
                 self.go(Go::Launch {
                     workspace: Some(1),
-                    role: "the-architect".into(),
-                    agent: crate::console::domain::agent::Agent::ClaudeCode,
-                    account: Some("acct-claude-work".into()),
+                    role: role.into(),
+                    agent,
+                    account: Some(account.into()),
                     plan,
                 });
                 if frame > 0 {
@@ -379,6 +405,7 @@ impl App {
     }
 
     fn dispatch_msg(&mut self, m: Msg) -> Outcome {
+        self.world.absorb(&m);
         let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));
         let route = self.route();
         let (o, reqs) = self
@@ -395,6 +422,12 @@ impl App {
             }
             if !o.consumed() && route != Route::Accounts {
                 o = self.router.accounts_mut().on_msg(&m, &mut self.world, cx);
+            }
+            if !o.consumed()
+                && route != Route::Roles
+                && let Some(roles) = self.router.roles_mut()
+            {
+                o = roles.on_msg(&m, &mut self.world, cx);
             }
             o
         });
@@ -518,13 +551,23 @@ impl App {
             Route::Manager
                 | Route::Accounts
                 | Route::Usage
+                | Route::Roles
+                | Route::RoleEditor
+                | Route::Doctor
                 | Route::Settings
                 | Route::Editor
                 | Route::Prelude
         )
     }
 
-    fn build_host_menu(route: Route) -> Menus<HostCmd> {
+    fn roots(route: Route) -> bool {
+        matches!(
+            route,
+            Route::Manager | Route::Accounts | Route::Usage | Route::Roles
+        )
+    }
+
+    fn build_host_menu(route: Route, world: &World) -> Menus<HostCmd> {
         use HostCmd::{Press, Quit};
         let k = |c: char| Press(plain(KeyCode::Char(c)));
         let file: Vec<(MenuItem, HostCmd)> = match route {
@@ -577,12 +620,43 @@ impl App {
                 (MenuItem::new("Refresh").shortcut("r"), k('r')),
                 (MenuItem::new("Manage in Accounts").shortcut("m"), k('m')),
             ],
+            Route::Roles => vec![
+                (MenuItem::new("Add role…").shortcut("a"), k('a')),
+                (MenuItem::new("Edit manifest…").shortcut("e"), k('e')),
+                (MenuItem::new("Check").shortcut("v").separator(), k('v')),
+                (
+                    MenuItem::new("Check all").shortcut("F5"),
+                    Press(plain(KeyCode::F(5))),
+                ),
+                (MenuItem::new("Filter…").shortcut("/"), k('/')),
+            ],
+            Route::RoleEditor => vec![
+                (
+                    MenuItem::new("Save…").shortcut("Ctrl+S").separator(),
+                    Press(Key {
+                        code: KeyCode::Char('s'),
+                        mods: KeyModifiers::CONTROL,
+                    }),
+                ),
+                (
+                    MenuItem::new("Check").shortcut("F5"),
+                    Press(plain(KeyCode::F(5))),
+                ),
+                (
+                    MenuItem::new("Cancel").shortcut("Esc"),
+                    Press(plain(KeyCode::Esc)),
+                ),
+            ],
+            Route::Doctor => vec![
+                (MenuItem::new("Run checks").shortcut("r"), k('r')),
+                (MenuItem::new("Copy report").shortcut("y"), k('y')),
+            ],
             _ => vec![(
                 MenuItem::new("Cancel").shortcut("Esc"),
                 Press(plain(KeyCode::Esc)),
             )],
         };
-        let go = vec![
+        let mut go = vec![
             (
                 MenuItem::new("Workspace manager").shortcut("Esc"),
                 HostCmd::Manager,
@@ -597,6 +671,12 @@ impl App {
                 HostCmd::Settings,
             ),
         ];
+        if world.surfaces.roles.is_some() {
+            go.push((MenuItem::new("Roles").shortcut("R"), HostCmd::Roles));
+        }
+        if world.surfaces.doctor.is_some() {
+            go.push((MenuItem::new("Doctor").shortcut("D"), HostCmd::Doctor));
+        }
         let help = vec![
             (MenuItem::new("Key reference").shortcut("?"), HostCmd::Help),
             (MenuItem::new("About jackin-preview"), HostCmd::About),
@@ -613,7 +693,7 @@ impl App {
 
     fn sync_host_menu(&mut self) {
         if self.host_menu_route != self.route() && Self::is_host(self.route()) {
-            self.host_menus = Self::build_host_menu(self.route());
+            self.host_menus = Self::build_host_menu(self.route(), &self.world);
             self.host_menu = Self::host_bar(&self.host_menus);
             self.host_menu_route = self.route();
         }
@@ -633,19 +713,27 @@ impl App {
     fn run_host_cmd(&mut self, cmd: HostCmd) -> Outcome {
         let editing_screen = matches!(
             self.route(),
-            Route::Editor | Route::Settings | Route::Prelude
+            Route::Editor | Route::Settings | Route::Prelude | Route::RoleEditor
         );
         match cmd {
             HostCmd::Manager if editing_screen => {
                 return shell::KeyRouter::replay(self, &plain(KeyCode::Esc));
             }
             HostCmd::Manager => self.go(Go::Manager),
-            HostCmd::Accounts | HostCmd::Usage | HostCmd::Settings if editing_screen => {
+            HostCmd::Accounts
+            | HostCmd::Usage
+            | HostCmd::Settings
+            | HostCmd::Roles
+            | HostCmd::Doctor
+                if editing_screen =>
+            {
                 self.set_status("Save or cancel this screen first", Tone::Secondary);
             }
             HostCmd::Accounts => self.go(Go::Accounts { select: None }),
             HostCmd::Usage => self.go(Go::Usage { select: None }),
             HostCmd::Settings => self.go(Go::Settings),
+            HostCmd::Roles => self.go(Go::Roles { select: None }),
+            HostCmd::Doctor => self.go(Go::Doctor),
             HostCmd::Help => self.open_help(),
             HostCmd::About => self.open_about(),
             HostCmd::Quit => return self.request_quit(),
@@ -883,6 +971,78 @@ impl App {
                     ],
                 ),
             ],
+            Route::Roles => vec![
+                (
+                    "Roles",
+                    vec![
+                        ("↑↓ j k", "move"),
+                        ("Enter", "details"),
+                        ("e", "edit manifest…"),
+                        ("a", "add role…"),
+                        ("d", "remove…"),
+                        ("v", "check"),
+                        ("F5", "check all"),
+                        ("/", "filter"),
+                    ],
+                ),
+                (
+                    "Account bindings",
+                    vec![
+                        ("Enter", "pick an account…"),
+                        ("d", "clear the binding"),
+                        ("u", "undo"),
+                        ("Tab", "actions"),
+                        ("← Esc", "back to the list"),
+                    ],
+                ),
+            ],
+            Route::RoleEditor => vec![
+                (
+                    "Tabs",
+                    vec![
+                        ("←→ 1–3", "switch tab"),
+                        ("[ ]", "switch from anywhere"),
+                        ("Enter ↓", "into the tab body"),
+                        ("Esc", "back to tabs · leave"),
+                    ],
+                ),
+                (
+                    "Manifest · Hooks",
+                    vec![
+                        ("Enter", "edit field"),
+                        ("Choose…", "pick a repository file"),
+                        ("Space", "toggle Docker"),
+                        ("i", "Docker risks"),
+                    ],
+                ),
+                (
+                    "Environment",
+                    vec![
+                        ("a", "add entry…"),
+                        ("e Enter", "edit…"),
+                        ("d", "remove"),
+                        ("u", "undo"),
+                    ],
+                ),
+                (
+                    "Check and save",
+                    vec![
+                        ("F5", "run the role check"),
+                        ("Ctrl+S", "preview then save"),
+                        ("Esc", "back · asks when dirty"),
+                    ],
+                ),
+            ],
+            Route::Doctor => vec![(
+                "Doctor",
+                vec![
+                    ("↑↓ j k", "move"),
+                    ("Enter", "details"),
+                    ("r F5", "run the checks"),
+                    ("y", "copy the report"),
+                    ("Esc", "back"),
+                ],
+            )],
             Route::Editor => vec![
                 (
                     "Tabs",
@@ -1054,6 +1214,8 @@ impl App {
                 JackinCmd::Usage => "Usage",
                 JackinCmd::Accounts => "Accounts",
                 JackinCmd::Settings => "Settings",
+                JackinCmd::Roles => "Roles",
+                JackinCmd::Doctor => "Doctor",
                 JackinCmd::Leave => "Leave this screen",
             })
         }));
@@ -1428,6 +1590,20 @@ impl App {
                 self.show_tab(TAB_USAGE);
                 self.router.usage_mut().select(select);
                 self.enter_route();
+            }
+            Go::Roles { select } => {
+                if let Some(roles) = self.router.roles_mut() {
+                    roles.select(select);
+                    self.show_tab(TAB_ROLES);
+                    self.enter_route();
+                }
+            }
+            Go::RoleEditor { role } => {
+                let page = Page::RoleEditor(Box::new(RoleEditorScreen::new(&self.world, &role)));
+                self.open_page(page);
+            }
+            Go::Doctor => {
+                self.open_page(Page::Doctor(Box::default()));
             }
             Go::Editor { workspace, pending } => {
                 let page = Page::Editor(Box::new(EditorScreen::new(
@@ -1871,13 +2047,24 @@ impl App {
         } else {
             let menu = Self::is_host(self.route())
                 .then(|| HasHints::hints(&self.host_menu, &HintCx::new(focus)));
+            let mut screen = self
+                .router
+                .screen(self.route())
+                .map(|s| s.hints(focus, &self.world));
+            if Self::roots(self.route())
+                && !editing
+                && let Some(h) = screen.as_mut()
+            {
+                if self.world.surfaces.roles.is_some() && self.route() != Route::Roles {
+                    h.push(hint("R", "Roles"));
+                }
+                if self.world.surfaces.doctor.is_some() {
+                    h.push(hint("D", "Doctor"));
+                }
+            }
             shell::Footer::new()
                 .layer(menu)
-                .layer(
-                    self.router
-                        .screen(self.route())
-                        .map(|s| s.hints(focus, &self.world)),
-                )
+                .layer(screen)
                 .fallback(vec![hint("?", "Help"), hint("Esc", "Back")])
         };
         footer.editing(editing).status(status)
@@ -2003,6 +2190,10 @@ enum HostCmd {
 
     Settings,
 
+    Roles,
+
+    Doctor,
+
     Help,
 
     About,
@@ -2027,19 +2218,30 @@ pub enum JackinCmd {
 
     Settings,
 
+    Roles,
+
+    Doctor,
+
     Leave,
 }
 
-pub fn shell_keys() -> shell::ShellKeys<JackinCmd> {
+pub fn shell_keys(world: &World) -> shell::ShellKeys<JackinCmd> {
     use crate::core::keymap::KeyBinding;
     use shell::ShellAction::{self, App as Cmd};
-    shell::ShellKeys::new()
+    let mut keys = shell::ShellKeys::new()
         .quit(crate::ui::leave::QuitKeys::DEFAULT.letter(None))
         .bind(KeyBinding::char('u'), Cmd(JackinCmd::Usage))
         .bind(KeyBinding::char('c'), Cmd(JackinCmd::Accounts))
         .bind(KeyBinding::char('s'), Cmd(JackinCmd::Settings))
         .bind_fallback(KeyBinding::char('q'), Cmd(JackinCmd::Leave))
-        .idle_only(ShellAction::MenuBar)
+        .idle_only(ShellAction::MenuBar);
+    if world.surfaces.roles.is_some() {
+        keys = keys.bind(KeyBinding::char('R'), Cmd(JackinCmd::Roles));
+    }
+    if world.surfaces.doctor.is_some() {
+        keys = keys.bind(KeyBinding::char('D'), Cmd(JackinCmd::Doctor));
+    }
+    keys
 }
 
 impl shell::KeyHost for App {
@@ -2109,6 +2311,14 @@ impl shell::KeyHost for App {
                 if matches!(route, Route::Manager | Route::Accounts | Route::Usage) =>
             {
                 self.go(Go::Settings);
+                Outcome::Changed
+            }
+            ShellAction::App(JackinCmd::Roles) if Self::roots(route) => {
+                self.go(Go::Roles { select: None });
+                Outcome::Changed
+            }
+            ShellAction::App(JackinCmd::Doctor) if Self::roots(route) => {
+                self.go(Go::Doctor);
                 Outcome::Changed
             }
             ShellAction::App(JackinCmd::Leave) => self.leave_key(),

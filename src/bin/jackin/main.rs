@@ -48,7 +48,7 @@ fn cli_after_help() -> String {
         "Scenarios: {scenarios}\n\
          {motion}\n\
          Frame:     with --motion paused, the exact fixture tick to render (intro, cockpit, outro phases)\n\n\
-         Keys: Tab/Shift+Tab focus · ↑↓ move · Enter launch/activate · Esc back · u Accounts & Usage · s Settings · ? help · q quit\n\
+         Keys: Tab/Shift+Tab focus · ↑↓ move · Enter launch/activate · Esc back · u Accounts & Usage · s Settings · R Roles · D Doctor · ? help · q quit\n\
          Everything is simulated in memory; the real Jackin CLI is never touched."
     )
 }

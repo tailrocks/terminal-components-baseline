@@ -25,6 +25,7 @@ pub struct RoleRecord {
     pub manifest: Result<RoleManifestDoc, String>,
     pub check: RoleCheckState,
     pub bindings: BTreeMap<Agent, AccountId>,
+    pub files: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

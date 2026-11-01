@@ -1,5 +1,5 @@
 use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
 use junie_tui::console::backend::{
     Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, ValidationOutcome,
@@ -15,10 +15,14 @@ pub mod launch;
 pub mod onepassword;
 pub mod provider;
 pub mod scripts;
+pub mod surfaces;
 
 #[derive(Debug, Default)]
 pub struct SimBackend {
     save_fails_once: AtomicBool,
+    bind_fails_once: AtomicBool,
+    doctor_runs: AtomicUsize,
+    openshell: bool,
 }
 
 impl SimBackend {
@@ -29,6 +33,21 @@ impl SimBackend {
     pub fn failing_first_save() -> Arc<dyn Backend> {
         Arc::new(SimBackend {
             save_fails_once: AtomicBool::new(true),
+            ..SimBackend::default()
+        })
+    }
+
+    pub fn failing_first_bind() -> Arc<dyn Backend> {
+        Arc::new(SimBackend {
+            bind_fails_once: AtomicBool::new(true),
+            ..SimBackend::default()
+        })
+    }
+
+    pub fn openshell() -> Arc<dyn Backend> {
+        Arc::new(SimBackend {
+            openshell: true,
+            ..SimBackend::default()
         })
     }
 
@@ -103,6 +122,42 @@ impl Backend for SimBackend {
                     account: account.clone(),
                 },
             ),
+            Effect::CheckRole { role, doc } => (
+                600,
+                Msg::RoleChecked {
+                    role: role.clone(),
+                    findings: surfaces::check_role(doc),
+                },
+            ),
+            Effect::SaveRole { role, .. } => (
+                900,
+                Msg::RoleSaved {
+                    role: role.clone(),
+                    ok: true,
+                    error: None,
+                },
+            ),
+            Effect::BindRole { role, agent, .. } => {
+                let ok = !self.bind_fails_once.swap(false, Ordering::SeqCst);
+                (
+                    900,
+                    Msg::RoleBound {
+                        role: role.clone(),
+                        agent: *agent,
+                        ok,
+                        error: (!ok).then(|| {
+                            "could not write config.toml: permission denied (EACCES)".into()
+                        }),
+                    },
+                )
+            }
+            Effect::RunDoctor => {
+                let run = self.doctor_runs.fetch_add(1, Ordering::SeqCst) + 2;
+                (
+                    900,
+                    Msg::DoctorFinished(surfaces::doctor_report(run, world.now_secs() + 1)),
+                )
+            }
             Effect::LoadRole { role } => {
                 let error = world
                     .roles
@@ -133,7 +188,11 @@ impl Backend for SimBackend {
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {
-        launch::content()
+        if self.openshell {
+            launch::openshell_content()
+        } else {
+            launch::content()
+        }
     }
 
     fn session_script(&self) -> Arc<dyn SessionScript> {

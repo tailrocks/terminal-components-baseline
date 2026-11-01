@@ -17,6 +17,7 @@ pub enum DoctorState {
 pub struct DoctorReport {
     pub checks: Vec<DoctorCheck>,
     pub at_secs: i64,
+    pub gateway: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

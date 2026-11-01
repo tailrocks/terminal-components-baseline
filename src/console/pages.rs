@@ -5,11 +5,15 @@ use crate::console::screens::Screen;
 use crate::console::screens::accounts::AccountsScreen;
 use crate::console::screens::capsule::CapsuleScreen;
 use crate::console::screens::cockpit::CockpitScreen;
+use crate::console::screens::doctor::DoctorScreen;
 use crate::console::screens::editor::EditorScreen;
 use crate::console::screens::manager::ManagerScreen;
 use crate::console::screens::prelude::PreludeScreen;
+use crate::console::screens::role_editor::RoleEditorScreen;
+use crate::console::screens::roles::RolesScreen;
 use crate::console::screens::settings::SettingsScreen;
 use crate::console::screens::usage::UsageScreen;
+use crate::console::world::World;
 
 pub const TAB_MANAGER: usize = 0;
 
@@ -17,10 +21,15 @@ pub const TAB_ACCOUNTS: usize = 1;
 
 pub const TAB_USAGE: usize = 2;
 
+pub const TAB_ROLES: usize = 3;
+
 pub enum Page {
     Manager(Box<ManagerScreen>),
     Accounts(Box<AccountsScreen>),
     Usage(Box<UsageScreen>),
+    Roles(Box<RolesScreen>),
+    RoleEditor(Box<RoleEditorScreen>),
+    Doctor(Box<DoctorScreen>),
     Settings(Box<SettingsScreen>),
     Editor(Box<EditorScreen>),
     Prelude(Box<PreludeScreen>),
@@ -40,6 +49,9 @@ impl Page {
             Page::Manager(_) => Route::Manager,
             Page::Accounts(_) => Route::Accounts,
             Page::Usage(_) => Route::Usage,
+            Page::Roles(_) => Route::Roles,
+            Page::RoleEditor(_) => Route::RoleEditor,
+            Page::Doctor(_) => Route::Doctor,
             Page::Settings(_) => Route::Settings,
             Page::Editor(_) => Route::Editor,
             Page::Prelude(_) => Route::Prelude,
@@ -53,6 +65,9 @@ impl Page {
             Page::Manager(s) => s.as_ref(),
             Page::Accounts(s) => s.as_ref(),
             Page::Usage(s) => s.as_ref(),
+            Page::Roles(s) => s.as_ref(),
+            Page::RoleEditor(s) => s.as_ref(),
+            Page::Doctor(s) => s.as_ref(),
             Page::Settings(s) => s.as_ref(),
             Page::Editor(s) => s.as_ref(),
             Page::Prelude(s) => s.as_ref(),
@@ -66,6 +81,9 @@ impl Page {
             Page::Manager(s) => s.as_mut(),
             Page::Accounts(s) => s.as_mut(),
             Page::Usage(s) => s.as_mut(),
+            Page::Roles(s) => s.as_mut(),
+            Page::RoleEditor(s) => s.as_mut(),
+            Page::Doctor(s) => s.as_mut(),
             Page::Settings(s) => s.as_mut(),
             Page::Editor(s) => s.as_mut(),
             Page::Prelude(s) => s.as_mut(),
@@ -75,12 +93,16 @@ impl Page {
     }
 }
 
-pub fn router() -> Router<Page> {
-    Router::with_tabs(vec![
+pub fn router(w: &World) -> Router<Page> {
+    let mut tabs = vec![
         Page::Manager(Box::default()),
         Page::Accounts(Box::default()),
         Page::Usage(Box::default()),
-    ])
+    ];
+    if w.surfaces.roles.is_some() {
+        tabs.push(Page::Roles(Box::default()));
+    }
+    Router::with_tabs(tabs)
 }
 
 pub trait Pages {
@@ -95,6 +117,8 @@ pub trait Pages {
     fn accounts_mut(&mut self) -> &mut AccountsScreen;
 
     fn usage_mut(&mut self) -> &mut UsageScreen;
+
+    fn roles_mut(&mut self) -> Option<&mut RolesScreen>;
 
     fn cockpit_mut(&mut self) -> Option<&mut CockpitScreen>;
 
@@ -142,6 +166,10 @@ impl Pages for Router<Page> {
 
     fn usage_mut(&mut self) -> &mut UsageScreen {
         find!(self.pages_mut(), Usage).expect("usage is the root of its tab")
+    }
+
+    fn roles_mut(&mut self) -> Option<&mut RolesScreen> {
+        find!(self.pages_mut(), Roles)
     }
 
     fn cockpit_mut(&mut self) -> Option<&mut CockpitScreen> {

@@ -125,3 +125,73 @@ pub fn content() -> Arc<LaunchContent> {
                 },
     })
 }
+
+pub const OPENSHELL_BUILD_LOG: [&str; 12] = [
+    "#1 [internal] load build definition from Dockerfile",
+    "#1 DONE 0.0s",
+    "#2 [internal] load metadata for registry.jackin.local/construct:0.7.0",
+    "#2 DONE 0.3s",
+    "#3 [1/4] FROM registry.jackin.local/construct:0.7.0",
+    "#3 CACHED",
+    "#4 [2/4] COPY role/ /jackin/role/",
+    "#4 DONE 0.1s",
+    "#5 [3/4] RUN /jackin/bin/role-install --manifest /jackin/role/jackin.role.toml",
+    "#5 4.210 install: codex 0.46.0",
+    "#5 DONE 5.2s",
+    "#6 exporting to image",
+];
+
+fn openshell_stages() -> StageList {
+    StageList::new(
+        StageSpec::new("image", "Image build", "Building the role image…", 30)
+            .kind(StageKind::BuildLog),
+        [
+            StageSpec::new(
+                "provider",
+                "OpenShell provider",
+                "Preparing the OpenShell provider…",
+                10,
+            ),
+            StageSpec::new("sandbox", "Sandbox", "Creating the sandbox…", 22).container_at(6),
+            StageSpec::new("credentials", "Credentials", "Resolving credentials…", 14)
+                .kind(StageKind::Credentials { hold_at: 10 }),
+            StageSpec::new("upload", "Upload", "Uploading the project…", 30),
+            StageSpec::new(
+                "hooks",
+                "Hooks",
+                "Running the setup and preflight hooks…",
+                18,
+            ),
+            StageSpec::new("codex", "Codex", "Starting {agent}…", 16),
+        ],
+    )
+}
+
+pub fn openshell_content() -> Arc<LaunchContent> {
+    let stages = openshell_stages();
+    let sandbox = stages.position("sandbox").unwrap_or(0);
+    Arc::new(LaunchContent {
+        stages,
+        words: LaunchWords {
+            unit: "Sandbox".into(),
+            unit_missing: "not created".into(),
+            log_title: "Image build".into(),
+            log_waiting: "(waiting for build output…)".into(),
+            build_failed: "Image build failed".into(),
+            ready_activity: "Codex is running · opening the session".into(),
+        },
+        build_log: OPENSHELL_BUILD_LOG
+            .iter()
+            .map(|l| (*l).to_owned())
+            .collect(),
+        network_failure: LaunchFailure {
+            stage: sandbox,
+            summary: "The sandbox could not be created".into(),
+            next_step: "Run jackin doctor, fix the failing check, then launch again.".into(),
+            detail: vec![
+                "gateway: jackin-local".into(),
+                "sandbox: create failed".into(),
+            ],
+        },
+    })
+}

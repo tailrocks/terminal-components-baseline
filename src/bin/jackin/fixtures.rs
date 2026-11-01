@@ -1429,12 +1429,30 @@ pub fn world_for(scenario: Scenario) -> World {
             crate::surfaces::docker(&mut w, scenario == Scenario::DockerNoEngine);
             w
         }
+        Scenario::RoleEditor => {
+            let mut w = populated(scenario, false);
+            crate::surfaces::roles(&mut w, vec![Agent::Codex]);
+            crate::surfaces::docker(&mut w, false);
+            w
+        }
+        Scenario::RoleBinding => {
+            let mut w = populated(scenario, false);
+            crate::surfaces::roles(&mut w, vec![Agent::Codex, Agent::ClaudeCode]);
+            w.backend = SimBackend::failing_first_bind();
+            w
+        }
+        Scenario::Doctor => {
+            let mut w = populated(scenario, false);
+            crate::surfaces::doctor(&mut w);
+            w
+        }
+        Scenario::LaunchOpenshell => {
+            let mut w = populated(scenario, false);
+            w.backend = SimBackend::openshell();
+            w
+        }
         Scenario::Returning
         | Scenario::AccountsMixed
-        | Scenario::RoleEditor
-        | Scenario::RoleBinding
-        | Scenario::Doctor
-        | Scenario::LaunchOpenshell
         | Scenario::LaunchRunning
         | Scenario::LaunchFailure
         | Scenario::CapsuleMulti => populated(scenario, false),

@@ -424,9 +424,11 @@ fn scenario(name: &str, scenario: &str, cols: u16, rows: u16) -> App {
 fn tab_to(app: &App, label: &str) {
     for _ in 0..16 {
         let screen = app.settle();
-        let focused = find_all(&screen, label)
-            .into_iter()
-            .any(|p| row_text(&screen, u32::from(p.y)).contains('▎'));
+        let focused = find_all(&screen, label).into_iter().any(|p| {
+            [p.y, p.y + 1]
+                .into_iter()
+                .any(|y| row_text(&screen, u32::from(y)).contains('▎'))
+        });
         if focused {
             return;
         }
@@ -506,5 +508,295 @@ fn jackin_docker_setting_no_engine() {
     assert!(text(&on).contains("jackin gateway add"));
     assert!(text(&on).contains("4 risks"));
     app.visual("functional/jackin_docker_no_engine");
+    app.key("escape");
+    app.key("escape");
+    app.wait_text("Unsaved changes");
+    app.key("right");
+    app.key("enter");
+    app.wait_text("Current directory");
+    app.finish();
+}
+
+const DOCTOR_CHECKS: [&str; 7] = [
+    "OpenShell binary",
+    "SSH binary",
+    "Git binary",
+    "Gateway registered",
+    "Gateway health",
+    "Pinned version",
+    "Engine socket",
+];
+
+fn list_row(screen: &tui_test::TerminalSnapshot, label: &str) -> String {
+    let rows: Vec<String> = find_all(screen, label)
+        .into_iter()
+        .map(|p| row_text(screen, u32::from(p.y)))
+        .filter(|row| row.contains('│'))
+        .collect();
+    assert_eq!(rows.len(), 1, "one list row {label:?}:\n{}", text(screen));
+    rows[0].clone()
+}
+
+#[test]
+fn jackin_doctor_failure_and_rerun() {
+    let app = scenario("jackin-doctor", "doctor", 120, 40);
+    let manager = app.wait_text("Current directory");
+    assert!(text(&manager).contains("gateway failing"));
+    app.type_text("D");
+    let doctor = app.wait_text("Engine socket");
+    for label in DOCTOR_CHECKS {
+        assert!(text(&doctor).contains(label), "check {label:?}");
+    }
+    assert!(text(&doctor).contains("1 failing"));
+    assert!(text(&doctor).contains("1 warning"));
+    assert!(list_row(&doctor, "Engine socket").contains("fail"));
+
+    for _ in 0..6 {
+        app.key("down");
+    }
+    let engine = app.wait_text("Start Docker or OrbStack");
+    assert!(text(&engine).contains("Doctor › ") || text(&engine).contains("Doctor"));
+
+    app.key("r");
+    app.wait_text("Running checks…");
+    app.advance_clock(900);
+    let passing = app.wait_text("all checks pass");
+    assert!(!text(&passing).contains("Start Docker or OrbStack"));
+    app.key("escape");
+    let healthy = app.wait_screen("manager after the passing run", |s| {
+        let t = text(s);
+        t.contains("Current directory") && !t.contains("gateway failing")
+    });
+    assert!(text(&healthy).contains("gateway"));
+    app.type_text("D");
+    app.wait_text("all checks pass");
+
+    app.key("r");
+    app.wait_text("Running checks…");
+    app.advance_clock(900);
+    let failed = app.wait_text("connection refused");
+    assert!(list_row(&failed, "Gateway health").contains("fail"));
+    assert!(list_row(&failed, "Engine socket").contains("ok"));
+    assert!(list_row(&failed, "Git binary").contains("ok"));
+    app.visual("functional/jackin_doctor");
+
+    app.key("escape");
+    let manager = app.wait_text("Current directory");
+    assert!(text(&manager).contains("gateway failing"));
+
+    app.resize(80, 24);
+    app.type_text("D");
+    app.wait_text("Engine socket");
+    app.key("enter");
+    let detail = app.wait_text("Expected");
+    assert!(text(&detail).contains("Gateway"));
+    app.finish();
+}
+
+fn binding_row(screen: &tui_test::TerminalSnapshot, agent: &str) -> String {
+    let rows: Vec<String> = text(screen)
+        .lines()
+        .filter_map(|line| line.rsplit('│').next())
+        .map(|cell| cell.replace('▎', "").trim().to_owned())
+        .filter(|cell| cell.starts_with(agent) && !cell.starts_with("Codex model"))
+        .collect();
+    assert_eq!(
+        rows.len(),
+        1,
+        "one binding row {agent:?}:\n{}",
+        text(screen)
+    );
+    rows[0].clone()
+}
+
+#[test]
+fn jackin_role_binding_pick_and_clear() {
+    let app = scenario("jackin-role-binding", "role-binding", 120, 40);
+    app.wait_text("Account bindings");
+    let roles = app.settle();
+    for role in [
+        "sentinel",
+        "the-architect",
+        "reviewer",
+        "data-eng",
+        "writer",
+    ] {
+        assert!(text(&roles).contains(role), "role {role:?}");
+    }
+    assert!(text(&roles).contains("5 roles"));
+    assert!(text(&roles).contains("A launch uses --account"));
+    let binding = binding_row(&roles, "Codex");
+    assert!(binding.contains("Codex · Primary"), "{binding}");
+    assert!(binding.contains("role binding"), "{binding}");
+
+    app.key("tab");
+    app.key("enter");
+    let picker = app.wait_text("Bind account · sentinel · Codex");
+    assert!(text(&picker).contains("Primary"));
+    assert!(text(&picker).contains("Experiments"));
+    app.key("escape");
+    app.wait_absent("Bind account · sentinel · Codex");
+    assert!(binding_row(&app.settle(), "Codex").contains("Codex · Primary"));
+
+    app.key("enter");
+    app.wait_text("Bind account · sentinel · Codex");
+    app.key("down");
+    app.key("enter");
+    app.wait_text("Binding sentinel…");
+    app.advance_clock(900);
+    let failed = app.wait_text("Could not save the binding");
+    assert!(text(&failed).contains("Nothing changed"));
+    let unchanged = app.settle();
+    let row = binding_row(&unchanged, "Codex");
+    assert!(
+        row.contains("Codex · Primary") && !row.contains("Experiments"),
+        "the failed write must not change the row: {row}"
+    );
+
+    app.key("enter");
+    app.wait_text("Bind account · sentinel · Codex");
+    app.key("down");
+    app.key("enter");
+    app.advance_clock(900);
+    app.wait_text("Bound Codex · Experiments to sentinel");
+    let bound = app.settle();
+    assert!(binding_row(&bound, "Codex").contains("Codex · Experiments"));
+
+    app.key("d");
+    app.advance_clock(900);
+    let cleared = app.wait_text("u undoes");
+    assert!(text(&cleared).contains("Cleared the Codex binding of sentinel"));
+    assert!(text(&cleared).contains("none · uses Codex · Primary ★"));
+    app.key("u");
+    app.advance_clock(900);
+    app.wait_text("Restored the Codex binding of sentinel");
+    assert!(binding_row(&app.settle(), "Codex").contains("Codex · Experiments"));
+    app.key("d");
+    app.advance_clock(900);
+    app.wait_text("none · uses Codex · Primary ★");
+    app.visual("functional/jackin_role_binding");
+
+    app.resize(80, 24);
+    app.key("escape");
+    app.wait_absent("Account bindings");
+    app.key("enter");
+    app.wait_text("Account bindings");
+    app.finish();
+}
+
+#[test]
+fn jackin_launch_openshell_stages() {
+    let mut args = vec!["--scenario", "launch-openshell", "--motion", "paused"];
+    args.extend_from_slice(&["--frame", "90"]);
+    let app = App::new(
+        "jackin-launch-openshell",
+        JACKIN,
+        &args,
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("stage 5 of 7 · Upload");
+    let screen = app.settle();
+    for label in [
+        "Image build",
+        "OpenShell provider",
+        "Sandbox",
+        "Credentials",
+        "Upload",
+        "Hooks",
+        "Codex",
+    ] {
+        assert!(text(&screen).contains(label), "stage {label:?}");
+    }
+    assert!(text(&screen).contains("4/7 stages"));
+    assert!(text(&screen).contains("jackin-"));
+    let body: String = text(&screen).lines().skip(1).collect::<Vec<_>>().join("\n");
+    for word in ["Docker", "Capsule", "Construct", "Derived Image"] {
+        assert!(!body.contains(word), "demo word {word:?} leaked:\n{body}");
+    }
+    app.key("b");
+    let log = app.wait_text("12 lines · following");
+    assert!(!text(&log).contains("Docker build"));
+    app.key("escape");
+    app.visual("functional/jackin_launch_openshell");
+    app.key("ctrl+c");
+    app.wait_text("Current directory");
+    app.finish();
+}
+
+#[test]
+fn jackin_role_editor_check_and_save() {
+    let app = scenario("jackin-role-editor", "role-editor", 120, 40);
+    app.wait_text("Roles › sentinel › edit");
+    let editor = app.settle();
+    for needle in [
+        "sentinel",
+        "policy.yaml",
+        "Check passed",
+        "Manifest",
+        "Hooks",
+        "Environment 2",
+    ] {
+        assert!(
+            text(&editor).contains(needle),
+            "{needle:?}:\n{}",
+            text(&editor)
+        );
+    }
+
+    app.key("enter");
+    tab_to(&app, "Codex model");
+    app.type_text("codex-fixture");
+    app.key("tab");
+    app.key("space");
+    let confirm = app.wait_text("Turn on Docker for role sentinel?");
+    for risk in DOCKER_RISKS {
+        assert!(text(&confirm).contains(risk), "risk text {risk:?}");
+    }
+    app.key("right");
+    app.key("enter");
+    app.wait_absent("Turn on Docker for role sentinel?");
+    let dirty = app.wait_text("2 changes");
+    assert!(text(&dirty).contains("Manifest •"), "{}", text(&dirty));
+
+    app.key("ctrl+s");
+    let preview = app.wait_text("Save role");
+    assert!(text(&preview).contains("none → codex-fixture"));
+    assert!(text(&preview).contains("off → on"));
+    app.key("escape");
+    app.wait_absent("Save role");
+    let kept = app.settle();
+    assert!(!text(&kept).contains("Role sentinel saved"));
+    assert!(text(&kept).contains("2 changes"));
+
+    tab_to(&app, "Dockerfile");
+    for _ in 0..10 {
+        app.key("backspace");
+    }
+    app.type_text("Dockerfile.old");
+    app.key("enter");
+    app.key("f5");
+    app.advance_clock(600);
+    let failed = app.wait_text("final stage must start FROM construct");
+    assert!(text(&failed).contains("Dockerfile.old"));
+    assert!(text(&failed).contains("Manifest !") || text(&failed).contains("Manifest •!"));
+
+    app.key("ctrl+s");
+    let blocked = app.wait_text("Check failed · sentinel");
+    assert!(text(&blocked).contains("nothing was written"));
+    app.key("escape");
+    app.wait_absent("Check failed · sentinel");
+    app.visual("functional/jackin_role_editor");
+
+    app.resize(80, 24);
+    let narrow = app.wait_text("1 error");
+    assert!(text(&narrow).contains("Dockerfile"));
+    app.key("escape");
+    app.key("escape");
+    app.wait_text("Unsaved changes");
+    app.key("right");
+    app.key("enter");
+    app.wait_text("Discarded 3 changes");
     app.finish();
 }

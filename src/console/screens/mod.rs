@@ -2,11 +2,15 @@ pub mod accounts;
 pub mod capsule;
 pub mod cockpit;
 pub mod config;
+pub mod doctor;
 pub mod editor;
 pub mod inspect;
+pub mod listdetail;
 pub mod manager;
 pub mod modals;
 pub mod prelude;
+pub mod role_editor;
+pub mod roles;
 pub mod rowmenu;
 pub mod settings;
 pub mod usage;
@@ -19,7 +23,7 @@ use crate::console::domain::account::AccountId;
 use crate::console::domain::agent::Agent;
 use crate::console::domain::instance::InstanceId;
 use crate::console::domain::onepassword::OpReference;
-use crate::console::domain::workspace::{Workspace, WorkspaceId};
+use crate::console::domain::workspace::{RoleName, Workspace, WorkspaceId};
 use crate::console::launch::LaunchPlan;
 use crate::console::world::{Msg, World};
 use crate::ui::layer::Layer;
@@ -92,6 +96,13 @@ pub enum Go {
     Usage {
         select: Option<AccountId>,
     },
+    Roles {
+        select: Option<RoleName>,
+    },
+    RoleEditor {
+        role: RoleName,
+    },
+    Doctor,
 
     Editor {
         workspace: Option<WorkspaceId>,
