@@ -17,7 +17,7 @@ use ratatui::style::Color;
 
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
-use crate::core::event::{Input, InputConfig, Key, Mouse, MouseKind, Outcome};
+use crate::core::event::{External, Input, InputConfig, Key, Mouse, MouseKind, Outcome};
 use crate::core::keyboard::{self, KeyboardProtocol};
 
 pub trait Application {
@@ -46,6 +46,49 @@ pub trait Application {
     fn take_output(&mut self) -> Vec<String> {
         Vec::new()
     }
+
+    fn external(&self) -> Option<&ExternalReceiver> {
+        None
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ExternalSender(std::sync::mpsc::Sender<External>);
+
+impl ExternalSender {
+    pub fn send<T: std::any::Any + Send + Sync>(&self, message: T) -> bool {
+        self.0.send(External::new(message)).is_ok()
+    }
+}
+
+#[derive(Debug)]
+pub struct ExternalReceiver {
+    queue: std::sync::mpsc::Receiver<External>,
+    latency: Duration,
+}
+
+impl ExternalReceiver {
+    pub const DEFAULT_LATENCY: Duration = Duration::from_millis(10);
+
+    pub fn latency(mut self, latency: Duration) -> Self {
+        self.latency = latency;
+        self
+    }
+
+    pub fn drain(&self) -> Vec<External> {
+        self.queue.try_iter().collect()
+    }
+}
+
+pub fn external_channel() -> (ExternalSender, ExternalReceiver) {
+    let (tx, rx) = std::sync::mpsc::channel();
+    (
+        ExternalSender(tx),
+        ExternalReceiver {
+            queue: rx,
+            latency: ExternalReceiver::DEFAULT_LATENCY,
+        },
+    )
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -466,6 +509,9 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
         if let Some((_, due)) = hover_due {
             wait = wait.min(due.saturating_duration_since(now));
         }
+        if let Some(external) = app.external() {
+            wait = wait.min(external.latency);
+        }
 
         if pump.has_pending() || poll_uninterrupted(wait)? {
             pump.set_policy(app.coalesce());
@@ -489,6 +535,16 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
         }
         if hover_due.is_some_and(|(_, due)| due <= now + wait) {
             dirty = true;
+        }
+
+        let external = app.external().map(ExternalReceiver::drain);
+        for message in external.into_iter().flatten() {
+            if app.handle(Input::External(message)) == Outcome::Changed {
+                dirty = true;
+            }
+        }
+        if app.should_quit() {
+            return Ok(());
         }
 
         if let Some(size) = terminal_size(terminal)

@@ -139,7 +139,7 @@ impl<P> StatusLine<P> {
                 m.kind,
                 MouseKind::Down | MouseKind::Secondary | MouseKind::Middle
             ),
-            Input::Tick | Input::Resize(..) => false,
+            Input::Tick | Input::Resize(..) | Input::External(_) => false,
         };
         if acts && self.is_error() {
             self.message = None;

@@ -117,6 +117,7 @@ impl Inspector {
             }
             Input::Resize(w, h) => format!("Resize {w}×{h}"),
             Input::Paste(text) => format!("Paste {} chars", text.chars().count()),
+            Input::External(_) => "External message".to_owned(),
         };
         self.inputs += 1;
         self.log.push_front((what, format!("{out:?}")));

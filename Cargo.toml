@@ -11,6 +11,11 @@ default-run = "showcase"
 [workspace]
 members = ["."]
 
+[features]
+default = ["cli"]
+cli = ["dep:clap"]
+terminal = ["dep:vt100"]
+
 [lib]
 name = "junie_tui"
 path = "src/lib.rs"
@@ -20,25 +25,30 @@ doctest = false
 [[bin]]
 name = "showcase"
 path = "src/bin/showcase/main.rs"
+required-features = ["cli"]
 
 [[bin]]
 name = "tablepro"
 path = "src/bin/tablepro/main.rs"
+required-features = ["cli"]
 
 [[bin]]
 name = "jackin"
 path = "src/bin/jackin/main.rs"
+required-features = ["cli"]
 
 [[bin]]
 name = "holla"
 path = "src/bin/holla/main.rs"
+required-features = ["cli"]
 
 [[test]]
 name = "functional"
 path = "tests/functional/main.rs"
 
 [dependencies]
-clap = { version = "4.6", features = ["derive"] }
+clap = { version = "4.6", features = ["derive"], optional = true }
+vt100 = { version = "0.18.1", optional = true }
 ratatui = { version = "0.30", features = ["crossterm_0_29"] }
 unicode-width = "0.2"
 unicode-segmentation = "1"
