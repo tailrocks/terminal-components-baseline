@@ -42,7 +42,21 @@ fn jackin(name: &str, motion: &str) -> App {
 
 #[test]
 fn jackin_launch_detach_reconnect_preserves_capsule() {
-    let app = jackin("jackin-launch", "paused");
+    let app = App::new(
+        "jackin-launch",
+        JACKIN,
+        &[
+            "--scenario",
+            "returning",
+            "--motion",
+            "paused",
+            "--frame",
+            "40",
+        ],
+        120,
+        40,
+        "truecolor",
+    );
     let manager = app.wait_text("Current directory");
     assert!(text(&manager).contains("2 running"));
     app.key("enter");
@@ -52,6 +66,7 @@ fn jackin_launch_detach_reconnect_preserves_capsule() {
     app.visual("functional/jackin_launch_reconnect");
     app.key("enter");
     app.wait_text("Loading the-architect into workspace payments-platform");
+    app.visual("functional/jackin_launch_cockpit");
     app.advance_clock(30_000);
     let capsule = app.wait_screen("launch hands off to capsule", |s| {
         let t = text(s);
@@ -61,18 +76,22 @@ fn jackin_launch_detach_reconnect_preserves_capsule() {
     });
     assert!(!text(&capsule).contains("junie-tui:advance-clock:"));
     assert!(!text(&capsule).contains("Launch failed"));
+    app.visual("functional/jackin_launch_capsule");
 
     app.key("ctrl+b");
     app.wait_text("prefix…");
     app.key("d");
     let detached = app.wait_text("Detached · payments-platform keeps running");
     assert!(text(&detached).contains("3 running"));
+    app.visual("functional/jackin_launch_detached");
 
     app.key("enter");
-    app.wait_screen("reconnect restores live capsule", |s| {
+    let restored = app.wait_screen("reconnect restores live capsule", |s| {
         let t = text(s);
         t.contains("Claude Code v2.1.14") && t.contains("Ctrl+B Pane commands")
     });
+    assert!(text(&restored).contains("Allow edit to src/settlement/config.rs? (y/n)"));
+    app.visual("functional/jackin_launch_reconnected");
     app.key("ctrl+b");
     app.wait_text("prefix…");
     app.key("d");
@@ -347,28 +366,70 @@ fn jackin_first_use_empty_manager_and_intro() {
     app.finish();
 }
 
+fn stop_action(app: &App, label: &str) -> Point {
+    let screen = app.screen();
+    let hits: Vec<_> = find_all(&screen, label)
+        .into_iter()
+        .filter(|point| {
+            let row = row_text(&screen, u32::from(point.y));
+            row.contains("Keep running") && row.contains('│')
+        })
+        .collect();
+    assert_eq!(
+        hits.len(),
+        1,
+        "one stop-dialog action {label:?}:\n{}",
+        text(&screen)
+    );
+    Point {
+        x: hits[0].x + 2,
+        y: hits[0].y,
+    }
+}
+
 #[test]
 fn jackin_manager_stop_cancel_then_confirm() {
-    let app = jackin("jackin-manager-stop", "paused");
-    app.wait_text("Current directory");
-
+    let app = App::new(
+        "jackin-manager-stop",
+        JACKIN,
+        &[
+            "--scenario",
+            "returning",
+            "--motion",
+            "paused",
+            "--frame",
+            "40",
+        ],
+        120,
+        40,
+        "truecolor",
+    );
+    let manager = app.wait_text("2 running");
+    assert!(text(&manager).contains("Current directory"));
     app.key("down");
+    app.wait_text("payments-platform");
+    app.key("right");
+    app.key("down");
+    app.wait_text("7f3a");
     app.key("t");
-    let gate = app.wait_screen("stop gate may open", |s| {
-        let t = text(s);
-        t.contains("Stop instance") || t.contains("Current directory")
+    let dialog = app.wait_text("Stop instance 7f3a?");
+    assert!(text(&dialog).contains("Keep running"));
+    assert!(text(&dialog).contains("preserved with uncommitted work"));
+    app.visual("functional/jackin_stop_instance_dialog");
+    app.click(stop_action(&app, "Keep running"));
+    let kept = app.wait_screen("cancel leaves the instance running", |s| {
+        !text(s).contains("Stop instance 7f3a?") && text(s).contains("2 running")
     });
-    if text(&gate).contains("Stop instance") {
-        app.visual("functional/jackin_manager_stop_dialog");
-        app.key("escape");
-        app.wait_absent("Stop instance");
-        app.key("t");
-        app.wait_text("Stop instance");
-        app.click(button(&app, "Stop"));
-        app.wait_screen("instance stopped", |s| !text(s).contains("Stop instance"));
-    } else {
-        app.visual("functional/jackin_manager_stop_dialog");
-    }
+    assert!(text(&kept).contains("7f3a"));
+    assert!(text(&kept).contains("running"));
+    app.key("t");
+    app.wait_text("Stop instance 7f3a?");
+    app.click(stop_action(&app, "Stop"));
+    app.advance_clock(2_000);
+    let stopped = app.wait_text("Instance 7f3a stopped");
+    assert!(text(&stopped).contains("1 running"));
+    assert!(!text(&stopped).contains("2 running"));
+    assert!(text(&stopped).contains("preserved"));
     app.finish();
 }
 
@@ -390,27 +451,108 @@ fn jackin_cockpit_launch_failure_acknowledges() {
         "truecolor",
     );
     app.wait_text("Loading the-architect into workspace");
-    app.settle();
-    app.visual("functional/jackin_launch_failure");
-
-    app.key("ctrl+c");
+    app.advance_clock(24_000);
+    let failed = app.wait_text("Launch failed");
+    assert!(text(&failed).contains("The Construct network could not be attached"));
+    assert!(text(&failed).contains("Network"));
+    assert!(text(&failed).contains("network jackin-net not found"));
+    app.visual("functional/jackin_launch_failed");
+    app.key("escape");
     app.wait_text("Current directory");
     app.finish();
 }
 
 #[test]
+fn jackin_cockpit_ctrl_c_returns_to_manager() {
+    let app = App::new(
+        "jackin-launch-abort",
+        JACKIN,
+        &[
+            "--scenario",
+            "launch-failure",
+            "--motion",
+            "paused",
+            "--frame",
+            "40",
+        ],
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("Loading the-architect into workspace");
+    app.key("ctrl+c");
+    let manager = app.wait_text("Current directory");
+    assert!(text(&manager).contains("Launch failed ·"));
+    assert!(text(&manager).contains("still running in the Construct"));
+    assert!(!text(&manager).contains("Loading the-architect"));
+    app.finish();
+}
+
+#[test]
 fn jackin_settings_unsaved_leave_cancel_then_discard() {
-    let app = jackin("jackin-settings-leave", "paused");
+    let app = App::new(
+        "jackin-settings-leave",
+        JACKIN,
+        &[
+            "--scenario",
+            "returning",
+            "--motion",
+            "paused",
+            "--frame",
+            "40",
+        ],
+        120,
+        40,
+        "truecolor",
+    );
     app.wait_text("Current directory");
     app.key("s");
-    let settings = app.wait_screen("settings may open", |s| {
-        let t = text(s).to_lowercase();
-        t.contains("settings") || t.contains("current directory")
+    let settings = app.wait_text("Add Co-authored-by trailer");
+    assert!(
+        row_text(
+            &settings,
+            u32::from(find(&settings, "Add Co-authored-by trailer").y)
+        )
+        .contains("[✓]")
+    );
+    app.key("enter");
+    app.key(" ");
+    let dirty = app.wait_text("• 1 change");
+    assert!(
+        row_text(
+            &dirty,
+            u32::from(find(&dirty, "Add Co-authored-by trailer").y)
+        )
+        .contains("[ ]")
+    );
+    app.key("escape");
+    app.key("escape");
+    let leave = app.wait_text("Unsaved changes");
+    assert!(text(&leave).contains("Save changes before leaving?"));
+    assert!(text(&leave).contains("1 change would be"));
+    assert!(text(&leave).contains("lost."));
+    assert!(text(&leave).contains("Discard"));
+    app.visual("functional/jackin_settings_dirty_leave");
+    app.key("enter");
+    let kept = app.wait_screen("cancel stays on the dirty settings", |s| {
+        !text(s).contains("Unsaved changes") && text(s).contains("• 1 change")
     });
-    app.settle();
-    if text(&settings).to_lowercase().contains("settings") {
-        app.key("escape");
-    }
-    app.visual("functional/jackin_settings_leave");
+    assert!(text(&kept).contains("Add Co-authored-by trailer"));
+    app.key("escape");
+    app.wait_text("Unsaved changes");
+    app.key("right");
+    app.key("enter");
+    let discarded = app.wait_text("Discarded 1 change");
+    assert!(text(&discarded).contains("Current directory"));
+    app.key("s");
+    let reopened = app.wait_text("Add Co-authored-by trailer");
+    assert!(!text(&reopened).contains("• 1 change"));
+    assert!(
+        row_text(
+            &reopened,
+            u32::from(find(&reopened, "Add Co-authored-by trailer").y)
+        )
+        .contains("[✓]")
+    );
     app.finish();
 }

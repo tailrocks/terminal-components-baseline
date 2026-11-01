@@ -25,5 +25,50 @@
     "status": "suspect",
     "reason": "Measured 160 by 50. The narrow help checkpoint in the test is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
     "replacement_id": null
+  },
+  {
+    "id": "functional/showcase_keyboard_activation",
+    "path": "tests/functional/baselines/functional/showcase_keyboard_activation.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "superseded",
+    "reason": "The capture followed a Preview click and accepted either Run task or Preview. functional/showcase_keyboard_run_task is the focused Run task activation.",
+    "replacement_id": "functional/showcase_keyboard_run_task"
+  },
+  {
+    "id": "functional/tablepro_query_error_recovery",
+    "path": "tests/functional/baselines/functional/tablepro_query_error_recovery.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "superseded",
+    "reason": "The file is the unrecovered syntax error. functional/tablepro_query_recovered is the screen after the corrected orders query.",
+    "replacement_id": "functional/tablepro_query_recovered"
+  },
+  {
+    "id": "functional/jackin_manager_stop_dialog",
+    "path": "tests/functional/baselines/functional/jackin_manager_stop_dialog.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "superseded",
+    "reason": "The file is the manager without the stop dialog. functional/jackin_stop_instance_dialog shows Stop instance 7f3a.",
+    "replacement_id": "functional/jackin_stop_instance_dialog"
+  },
+  {
+    "id": "functional/jackin_settings_leave",
+    "path": "tests/functional/baselines/functional/jackin_settings_leave.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "superseded",
+    "reason": "The file is the manager. functional/jackin_settings_dirty_leave shows the unsaved-changes leave choice.",
+    "replacement_id": "functional/jackin_settings_dirty_leave"
+  },
+  {
+    "id": "functional/jackin_launch_failure",
+    "path": "tests/functional/baselines/functional/jackin_launch_failure.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "superseded",
+    "reason": "The file is the loading cockpit. functional/jackin_launch_failed is the failed network stage.",
+    "replacement_id": "functional/jackin_launch_failed"
   }
 ]
