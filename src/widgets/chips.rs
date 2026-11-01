@@ -1,0 +1,674 @@
+use ratatui::buffer::Buffer;
+use ratatui::crossterm::event::KeyCode;
+use ratatui::layout::Rect;
+use ratatui::style::Color;
+
+use crate::core::event::{Key, Outcome};
+use crate::core::hit::Axis;
+use crate::core::id::{ItemKey, Part, PartRef, WidgetId};
+use crate::core::keymap::unassigned_chord;
+use crate::core::keymap::{Actions, KeyBinding, KeyMap, NavKeys, lookup};
+use crate::core::list::{Cursor, Navigable, RowSource};
+use crate::theme::{ButtonKind, Kind};
+use crate::ui::context::ContextConfig;
+use crate::ui::ctx::{RenderCtx, fill};
+use crate::ui::text::{truncate, width};
+use crate::ui::tooltip::Tip;
+use crate::widgets::icon_button::IconButton;
+use crate::widgets::menu::{ContextMenu, MenuAction, MenuItem};
+
+pub fn overflow_run(widths: &[u16], avail: u16, gap: u16) -> (usize, Option<String>) {
+    let total: u32 = widths.iter().map(|&w| w as u32).sum::<u32>()
+        + gap as u32 * widths.len().saturating_sub(1) as u32;
+    if total <= avail as u32 {
+        return (widths.len(), None);
+    }
+    let n = widths.len();
+    for k in (0..n).rev() {
+        let marker = format!("+{}", n - k);
+        let used: u32 = widths[..k]
+            .iter()
+            .map(|&w| w as u32 + gap as u32)
+            .sum::<u32>()
+            + width(&marker) as u32;
+        if used <= avail as u32 {
+            return (k, Some(marker));
+        }
+    }
+    (0, None)
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Chip {
+    pub label: String,
+    pub enabled: bool,
+    pub removable: bool,
+    pub error: bool,
+}
+
+impl Chip {
+    pub fn new(label: &str) -> Self {
+        Self {
+            label: label.to_owned(),
+            enabled: true,
+            removable: true,
+            error: false,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ChipBar {
+    pub id: WidgetId,
+    pub chips: Vec<Chip>,
+    pub cursor: usize,
+    pub add_label: Option<String>,
+
+    pub lead: Option<String>,
+    pub area: Rect,
+
+    pub overflow_marker: bool,
+
+    pub nav: NavKeys,
+
+    pub keymap: KeyMap<ChipCmd>,
+
+    pub close_button: IconButton,
+
+    pub overflow_menu: bool,
+
+    pub more_button: IconButton,
+
+    pub digit_toggles: bool,
+
+    pub context_menu: bool,
+
+    pub context: ContextConfig,
+
+    menu: Option<(ContextMenu, BarMenu)>,
+
+    shown: usize,
+
+    more_area: Rect,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ChipCmd {
+    Remove,
+
+    Add,
+
+    ClearAll,
+
+    ShowHidden,
+
+    Lead,
+}
+
+impl Actions for ChipCmd {
+    fn label(self) -> &'static str {
+        match self {
+            ChipCmd::Remove => "Remove",
+            ChipCmd::Add => "Add",
+            ChipCmd::ClearAll => "Clear all",
+            ChipCmd::ShowHidden => "Show hidden",
+            ChipCmd::Lead => "Switch the match mode",
+        }
+    }
+
+    fn default_keymap() -> KeyMap<Self> {
+        vec![
+            (KeyBinding::key(KeyCode::Delete), ChipCmd::Remove),
+            (KeyBinding::key(KeyCode::Backspace), ChipCmd::Remove),
+            (KeyBinding::char('x'), ChipCmd::Remove),
+            (KeyBinding::char('+'), ChipCmd::Add),
+            (KeyBinding::char('X'), ChipCmd::ClearAll),
+            (KeyBinding::key(KeyCode::Down), ChipCmd::ShowHidden),
+            (KeyBinding::char('m'), ChipCmd::Lead),
+        ]
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ChipAction {
+    Activate(usize),
+    Toggle(usize),
+    Remove(usize),
+    Add,
+    Lead,
+    ClearAll,
+}
+
+impl ChipBar {
+    pub fn new(id: WidgetId) -> Self {
+        Self {
+            id,
+            chips: vec![],
+            cursor: 0,
+            add_label: Some("+ Add filter".into()),
+            lead: None,
+            area: Rect::ZERO,
+            overflow_marker: true,
+            nav: NavKeys::default(),
+            keymap: ChipCmd::default_keymap(),
+            close_button: IconButton::close(WidgetId::of("chips.remove")),
+            overflow_menu: true,
+            more_button: IconButton::new(WidgetId::of("chips.more"), "+"),
+            digit_toggles: false,
+            context_menu: true,
+            context: ContextConfig::DEFAULT,
+            menu: None,
+            shown: 0,
+            more_area: Rect::ZERO,
+        }
+    }
+
+    pub fn close_target_w(mut self, cells: u16) -> Self {
+        self.close_button = self.close_button.plate(cells);
+        self
+    }
+
+    pub fn close_button(mut self, button: IconButton) -> Self {
+        self.close_button = button;
+        self
+    }
+
+    pub fn more_button(mut self, button: IconButton) -> Self {
+        self.more_button = button;
+        self
+    }
+
+    pub fn overflow_menu(mut self, on: bool) -> Self {
+        self.overflow_menu = on;
+        self
+    }
+
+    pub fn more_id(&self) -> WidgetId {
+        self.id.part(PartRef::of(Part::OVERFLOW))
+    }
+
+    pub fn menu_id(&self) -> WidgetId {
+        self.id.sub("more-menu")
+    }
+
+    pub fn menu_open(&self) -> bool {
+        self.menu.is_some()
+    }
+
+    fn open_menu(&mut self) {
+        let hidden: Vec<usize> = (self.shown.min(self.chips.len())..self.chips.len()).collect();
+        if hidden.is_empty() {
+            return;
+        }
+        let items = hidden
+            .iter()
+            .map(|&i| MenuItem::new(self.chips[i].label.clone()))
+            .collect();
+        let menu =
+            ContextMenu::new(self.menu_id(), items).anchor_control(self.more_id(), self.more_area);
+        self.menu = Some((menu, BarMenu::Hidden(hidden)));
+    }
+
+    pub fn context_items(&self, i: usize) -> Vec<(ChipAction, MenuItem)> {
+        use crate::ui::context::{ContextCmd, command_items};
+        let Some(chip) = self.chips.get(i) else {
+            return Vec::new();
+        };
+        let toggle = MenuItem::new(if chip.enabled { "Turn off" } else { "Turn on" })
+            .shortcut("Space")
+            .separator();
+        let cmds = [
+            ContextCmd::new(ChipCmd::Remove)
+                .unless((!chip.removable).then_some("This filter stays")),
+            ContextCmd::new(ChipCmd::ClearAll).danger(),
+        ];
+        let mut items = vec![(ChipAction::Toggle(i), toggle)];
+        items.extend(
+            command_items(&self.keymap, &cmds)
+                .into_iter()
+                .map(|(c, it)| {
+                    let a = match c {
+                        ChipCmd::Remove => ChipAction::Remove(i),
+                        _ => ChipAction::ClearAll,
+                    };
+                    (a, it)
+                }),
+        );
+        items
+    }
+
+    fn open_chip_menu(&mut self, i: usize, anchor: crate::ui::context::ContextAnchor) {
+        let (actions, items): (Vec<_>, Vec<_>) = self.context_items(i).into_iter().unzip();
+        if items.is_empty() {
+            return;
+        }
+        let menu = anchor.apply(ContextMenu::new(self.menu_id(), items));
+        self.menu = Some((menu, BarMenu::Chip(actions)));
+    }
+
+    fn menu_event(&mut self, ev: Option<MenuAction>) -> Option<ChipAction> {
+        match ev? {
+            MenuAction::Chosen(k) => match self.menu.take()?.1 {
+                BarMenu::Hidden(hidden) => {
+                    let i = *hidden.get(k)?;
+                    self.cursor = i;
+                    Some(ChipAction::Activate(i))
+                }
+                BarMenu::Chip(actions) => actions.get(k).copied(),
+            },
+            MenuAction::Dismissed => {
+                self.menu = None;
+                None
+            }
+        }
+    }
+
+    pub fn digit_toggles(mut self, on: bool) -> Self {
+        self.digit_toggles = on;
+        self
+    }
+
+    pub fn nav(mut self, nav: NavKeys) -> Self {
+        self.nav = nav;
+        self
+    }
+
+    pub fn keymap(mut self, keymap: KeyMap<ChipCmd>) -> Self {
+        self.keymap = keymap;
+        self
+    }
+
+    pub fn overflow_marker(mut self, on: bool) -> Self {
+        self.overflow_marker = on;
+        self
+    }
+
+    pub fn chip_id(&self, i: usize) -> WidgetId {
+        self.id.part(PartRef::item(Part::ROW, ItemKey::index(i)))
+    }
+    pub fn close_id(&self, i: usize) -> WidgetId {
+        self.id.part(PartRef::item(Part::CLOSE, ItemKey::index(i)))
+    }
+    pub fn add_id(&self) -> WidgetId {
+        self.id.part(PartRef::of(Part::NEW))
+    }
+
+    pub fn lead_id(&self) -> WidgetId {
+        self.id.part(PartRef::of(Part::TITLE))
+    }
+
+    fn stops(&self) -> usize {
+        self.chips.len() + usize::from(self.add_label.is_some())
+    }
+
+    pub fn on_key(&mut self, key: &Key) -> (Outcome, Option<ChipAction>) {
+        if let Some((menu, _)) = self.menu.as_mut() {
+            let (o, ev) = menu.on_key(key);
+            return (o, self.menu_event(ev));
+        }
+        let n = self.stops();
+        if n == 0 {
+            return (Outcome::Ignored, None);
+        }
+        self.cursor = self.cursor.min(n - 1);
+        if self.digit_toggles
+            && key.plain()
+            && let KeyCode::Char(c @ '1'..='9') = key.code
+        {
+            let i = c as usize - '1' as usize;
+            if i < self.chips.len() {
+                self.cursor = i;
+                return (Outcome::Changed, Some(ChipAction::Toggle(i)));
+            }
+        }
+        if self.context_menu && self.cursor < self.chips.len() && self.context.keys.matches(key) {
+            let anchor = crate::ui::context::ContextAnchor::Control {
+                id: self.chip_id(self.cursor),
+                fallback: self.area,
+            };
+            self.open_chip_menu(self.cursor, anchor);
+            return (Outcome::Changed, None);
+        }
+        let action = lookup(&self.keymap, key);
+        if unassigned_chord(key, &self.keymap) {
+            return (Outcome::Ignored, None);
+        }
+        match action {
+            Some(ChipCmd::Remove)
+                if self.cursor < self.chips.len() && self.chips[self.cursor].removable =>
+            {
+                return (Outcome::Changed, Some(ChipAction::Remove(self.cursor)));
+            }
+            Some(ChipCmd::Add) => return (Outcome::Changed, Some(ChipAction::Add)),
+            Some(ChipCmd::ClearAll) => return (Outcome::Changed, Some(ChipAction::ClearAll)),
+            Some(ChipCmd::ShowHidden)
+                if self.overflow_menu && self.overflow_marker && self.shown < self.chips.len() =>
+            {
+                self.open_menu();
+                return (Outcome::Changed, None);
+            }
+            Some(ChipCmd::Lead) if self.lead.is_some() => {
+                return (Outcome::Changed, Some(ChipAction::Lead));
+            }
+            _ => {}
+        }
+        let to = match self.nav.action(key).filter(|_| key.plain()) {
+            Some(nav) => self.cursor().apply(nav, self, 1).index(),
+            None => None,
+        };
+        if let Some(to) = to {
+            self.cursor = to;
+            return (Outcome::Changed, None);
+        }
+        match key.code {
+            KeyCode::Enter => {
+                if self.cursor < self.chips.len() {
+                    (Outcome::Changed, Some(ChipAction::Activate(self.cursor)))
+                } else {
+                    (Outcome::Changed, Some(ChipAction::Add))
+                }
+            }
+            KeyCode::Char(' ') if self.cursor < self.chips.len() => {
+                (Outcome::Changed, Some(ChipAction::Toggle(self.cursor)))
+            }
+            _ => (Outcome::Ignored, None),
+        }
+    }
+
+    pub fn on_click(&mut self, id: WidgetId) -> (Outcome, Option<ChipAction>) {
+        if let Some((menu, _)) = self.menu.as_mut()
+            && menu.contains_id(id)
+        {
+            let ev = menu.on_click(id);
+            return (Outcome::Changed, self.menu_event(ev));
+        }
+        if id == self.more_id() {
+            if self.menu.take().is_none() {
+                self.open_menu();
+            }
+            return (Outcome::Changed, None);
+        }
+
+        self.menu = None;
+        if id == self.add_id() {
+            self.cursor = self.chips.len();
+            return (Outcome::Changed, Some(ChipAction::Add));
+        }
+        if id == self.lead_id() {
+            return (Outcome::Changed, Some(ChipAction::Lead));
+        }
+        for i in 0..self.chips.len() {
+            if self.close_id(i) == id {
+                return (Outcome::Changed, Some(ChipAction::Remove(i)));
+            }
+            if self.chip_id(i) == id {
+                self.cursor = i;
+                return (Outcome::Changed, Some(ChipAction::Activate(i)));
+            }
+        }
+        (Outcome::Ignored, None)
+    }
+
+    pub fn render(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, bg: Color) {
+        let area = area.intersection(*buf.area());
+        if area.is_empty() {
+            return;
+        }
+        self.area = area;
+        let t = ctx.theme;
+        let focused = ctx.interaction.focused_under(self.id, self.menu.is_some());
+        let plane = t.plane_of(bg);
+        let mut x = area.x;
+        let y = area.y;
+        if let Some(lead) = &self.lead {
+            let lid = self.lead_id();
+            let mut s = ctx.state(lid);
+            s.focused = false;
+            let st = t.interactive(Kind::Title, s, plane).style;
+            let text = format!(" {lead} ");
+            buf.set_string(x, y, &text, st);
+            ctx.register_part(
+                self.id,
+                PartRef::of(Part::TITLE),
+                Rect::new(x, y, width(&text) as u16, 1),
+            );
+            x += width(&text) as u16 + 1;
+        }
+        let chip_w =
+            |c: &Chip| 1 + width(&c.label) as u16 + 1 + if c.removable { 2 } else { 0 } + 1;
+        let widths: Vec<u16> = self.chips.iter().map(chip_w).collect();
+        let (shown, marker) = overflow_run(&widths, area.right().saturating_sub(x), 1);
+        self.shown = shown;
+        let mut more_area = Rect::ZERO;
+        for (i, chip) in self.chips.iter().enumerate() {
+            if i >= shown {
+                if let Some(m) = marker.as_ref().filter(|_| self.overflow_marker) {
+                    if self.overflow_menu {
+                        let left = x.saturating_sub(1).max(area.x);
+                        let r = Rect::new(left, y, x + width(m) as u16 + 1 - left, 1)
+                            .intersection(area);
+                        more_area = self
+                            .more_button
+                            .with_glyph(m)
+                            .part_of(self.id, PartRef::of(Part::OVERFLOW))
+                            .render_in(
+                                r,
+                                x,
+                                buf,
+                                ctx,
+                                ratatui::style::Style::new().bg(bg),
+                                Some(
+                                    match crate::core::keymap::label_for(
+                                        &self.keymap,
+                                        ChipCmd::ShowHidden,
+                                    ) {
+                                        Some(k) => Tip::new(t.strings.tip_overflow).shortcut(&k),
+                                        None => Tip::new(t.strings.tip_overflow),
+                                    },
+                                ),
+                            );
+                    } else {
+                        buf.set_string(x, y, m, t.muted().bg(bg));
+                    }
+                    x += width(m) as u16 + 1;
+                }
+                break;
+            }
+            let cid = self.chip_id(i);
+
+            let mut s = ctx.child_state(self.id, cid, i == self.cursor);
+            s.focused = focused && i == self.cursor;
+            s.selected = chip.enabled;
+            let it = t.interactive(Kind::Chip, s, plane);
+            let mut st = it.style;
+            if chip.error {
+                st = st.fg(t.legible(t.error, st.bg.unwrap_or(bg)));
+            }
+            let label_w = width(&chip.label) as u16;
+            let w = widths[i];
+            let r = Rect::new(x, y, w, 1);
+            fill(buf, r, st);
+            buf.set_string(x, y, it.gutter, it.gutter_style);
+            buf.set_string(x + 1, y, truncate(&chip.label, label_w as usize), st);
+            if chip.removable {
+                ctx.register_part(self.id, PartRef::item(Part::ROW, ItemKey::index(i)), r);
+
+                let gx = x + 2 + label_w;
+                let cw = self.close_button.width(t).max(1).min(w);
+                let left = gx
+                    .saturating_sub(self.close_button.pad)
+                    .max(x)
+                    .min(x + w - cw);
+                let tip = Tip::new(t.strings.tip_remove);
+                let tip = match crate::core::keymap::label_for(&self.keymap, ChipCmd::Remove) {
+                    Some(k) => tip.shortcut(&k),
+                    None => tip,
+                };
+                self.close_button
+                    .part_of(self.id, PartRef::item(Part::CLOSE, ItemKey::index(i)))
+                    .render_in(Rect::new(left, y, cw, 1), gx, buf, ctx, st, Some(tip));
+            } else {
+                ctx.register_part(self.id, PartRef::item(Part::ROW, ItemKey::index(i)), r);
+            }
+            x += w + 1;
+        }
+        if let Some(add) = &self.add_label {
+            let aid = self.add_id();
+            let mut s = ctx.child_state(self.id, aid, self.cursor == self.chips.len());
+            s.focused = focused && self.cursor == self.chips.len();
+            let it = t.interactive(Kind::Button(ButtonKind::Subtle), s, plane);
+            let st = it.style;
+            let w = width(add) as u16 + 2;
+            if x + w <= area.right() {
+                let r = Rect::new(x, y, w, 1);
+                fill(buf, r, st);
+                buf.set_string(x, y, it.gutter, it.gutter_style);
+                buf.set_string(x + 1, y, add, st);
+                ctx.register_part(self.id, PartRef::of(Part::NEW), r);
+            }
+        }
+        if !ctx.inert {
+            ctx.ring.register(self.id);
+        }
+        self.more_area = more_area;
+        if more_area.is_empty() && matches!(self.menu, Some((_, BarMenu::Hidden(_)))) {
+            self.menu = None;
+        }
+        if let Some((menu, _)) = self.menu.as_mut() {
+            menu.render(*buf.area(), buf, ctx);
+        }
+    }
+}
+
+impl crate::ui::measure::Measure for ChipBar {
+    fn measure(&self, _avail: ratatui::layout::Size, _ctx: &RenderCtx) -> ratatui::layout::Size {
+        let lead = self.lead.as_ref().map_or(0, |l| width(l) as u16 + 3);
+        let chips: u16 = self
+            .chips
+            .iter()
+            .map(|c| 1 + width(&c.label) as u16 + 1 + if c.removable { 2 } else { 0 } + 1 + 1)
+            .sum();
+        let add = self.add_label.as_ref().map_or(0, |a| width(a) as u16 + 2);
+
+        let w = lead
+            + if add > 0 {
+                chips + add
+            } else {
+                chips.saturating_sub(1)
+            };
+        ratatui::layout::Size::new(w, 1)
+    }
+}
+
+impl RowSource for ChipBar {
+    fn len(&self) -> usize {
+        self.stops()
+    }
+    fn label(&self, i: usize) -> &str {
+        self.chips.get(i).map_or("", |c| c.label.as_str())
+    }
+}
+
+impl Navigable for ChipBar {
+    fn cursor(&self) -> Cursor {
+        Cursor::new(self.cursor).axis(Axis::Horizontal)
+    }
+}
+
+impl crate::ui::specimen::Specimen for ChipBar {
+    fn specimen_id(&self) -> WidgetId {
+        self.id
+    }
+
+    fn supports(&self, state: crate::ui::specimen::SpecimenState) -> bool {
+        use crate::ui::specimen::SpecimenState::*;
+        matches!(
+            state,
+            Rest | Hover | Focused | FocusedHover | Error | Overflow | Narrow
+        )
+    }
+
+    fn specimen(
+        &self,
+        state: crate::ui::specimen::SpecimenState,
+        area: Rect,
+        buf: &mut Buffer,
+        ctx: &mut RenderCtx,
+        bg: Color,
+    ) {
+        use crate::ui::specimen::SpecimenState;
+        let mut b = self.clone();
+        b.menu = None;
+        let v = state.visual();
+        if v.hovered && !b.chips.is_empty() {
+            ctx.interaction.hover = Some(b.chip_id(0));
+        }
+        match state {
+            SpecimenState::Error => {
+                if let Some(c) = b.chips.first_mut() {
+                    c.error = true;
+                }
+            }
+            SpecimenState::Overflow => {
+                for l in ["region = 'eu'", "plan = 'pro'", "seats > 5"] {
+                    b.chips.push(Chip::new(l));
+                }
+            }
+            _ => {}
+        }
+        b.render(area, buf, ctx, bg);
+    }
+}
+
+impl crate::core::pointer::MouseTarget for ChipBar {
+    type Action = ChipAction;
+
+    fn mouse_id(&self) -> WidgetId {
+        self.id
+    }
+
+    fn route(
+        &mut self,
+        ev: &crate::core::pointer::PointerEvent,
+    ) -> Option<crate::core::response::Response<ChipAction>> {
+        let menu = self.menu.as_ref().map(|(m, _)| m.id);
+        (ev.on(self.id) || menu.is_some_and(|m| ev.on(m))).then(|| self.pointer(ev))
+    }
+
+    fn pointer(
+        &mut self,
+        ev: &crate::core::pointer::PointerEvent,
+    ) -> crate::core::response::Response<ChipAction> {
+        use crate::core::intent::Phase;
+
+        if let Some((axis, delta)) = ev.wheel()
+            && let Some((menu, _)) = self.menu.as_mut()
+        {
+            return crate::core::scroll::Scrollable::wheel(&mut menu.list, axis, delta).lift();
+        }
+        match ev.phase() {
+            Some(Phase::Click) => self.on_click(ev.id).into(),
+
+            Some(Phase::Secondary) if self.context_menu => {
+                let Some(i) = (0..self.chips.len())
+                    .find(|&i| ev.id == self.chip_id(i) || ev.id == self.close_id(i))
+                else {
+                    return crate::core::response::Response::ignored();
+                };
+                if self.context.moves_cursor {
+                    self.cursor = i;
+                }
+                self.open_chip_menu(i, crate::ui::context::ContextAnchor::Pointer(ev.pos()));
+                crate::core::response::Response::changed()
+            }
+            _ => crate::core::response::Response::ignored(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+enum BarMenu {
+    Hidden(Vec<usize>),
+
+    Chip(Vec<ChipAction>),
+}

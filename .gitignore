@@ -1,0 +1,17 @@
+/target
+/.venv
+.DS_Store
+__pycache__/
+# per-session capture arguments in shots/ (written by the retired capture.sh)
+/shots/.args.*
+docs/refactoring-plan/evidence/*.tar.gz
+
+# Visual baseline (tuiscotti): approved frames at snapshots/ are the tracked
+# baseline (the committed artifact set is `COMMITTED` in
+# tests/visual_baseline/support.rs); actuals, expected/diff review images and
+# frame JSON are regenerable scratch under target/tuiscotti/ (gitignored
+# above). The two entries below are leftovers of the retired tuisnap CLI.
+/snapshots.actual
+/snapshots.diff
+
+.claude/

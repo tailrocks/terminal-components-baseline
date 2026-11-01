@@ -1,0 +1,62 @@
+[package]
+name = "junie-tui"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+description = "Junie-inspired Ratatui design-system laboratory"
+license = "MIT"
+
+default-run = "showcase"
+
+[workspace]
+members = ["."]
+
+[lib]
+name = "junie_tui"
+path = "src/lib.rs"
+
+doctest = false
+
+[[bin]]
+name = "showcase"
+path = "src/bin/showcase/main.rs"
+
+[[bin]]
+name = "tablepro"
+path = "src/bin/tablepro/main.rs"
+
+[[bin]]
+name = "jackin"
+path = "src/bin/jackin/main.rs"
+
+[[bin]]
+name = "holla"
+path = "src/bin/holla/main.rs"
+
+[[test]]
+name = "functional"
+path = "tests/functional/main.rs"
+
+[dependencies]
+clap = { version = "4.6", features = ["derive"] }
+ratatui = { version = "0.30", features = ["crossterm_0_29"] }
+unicode-width = "0.2"
+unicode-segmentation = "1"
+
+[target.'cfg(unix)'.dependencies]
+
+libc = "0.2"
+
+[dev-dependencies]
+
+tui-test = { package = "tuiscotti-tui-test", version = "=0.2.1" }
+
+tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/tuiscotti", rev = "d8d54155947f6303a41dfd6079b53c0abc16f29a" }
+serde_json = "1"
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
