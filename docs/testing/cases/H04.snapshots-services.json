@@ -1,0 +1,80 @@
+{
+  "task_id": "H04.snapshots-services",
+  "cases": [
+    {
+      "case_id": "H04.snapshots-services.route",
+      "owner_task": "H04.snapshots-services",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H04.snapshots-services",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H04.snapshots-services.services",
+      "owner_task": "H04.snapshots-services",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-platforms",
+        "parity-platforms-linux"
+      ],
+      "action_sequence": "Open pg, pg-blocking, mise, mise-outdated, service, and brew-services.",
+      "expected_results": "Each body names its family.",
+      "forbidden_effects": "A service row appears in the mise snapshot.",
+      "checkpoint_ids": [
+        "H04.snapshots-services.services.120x40",
+        "H04.snapshots-services.services.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H04.snapshots-services.scenario.parity-platforms",
+      "owner_task": "H04.snapshots-services",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-platforms",
+      "action_sequence": "Launch the application with scenario parity-platforms and exercise the surface owned by H04.snapshots-services.",
+      "expected_results": "The visible fixture data belongs to parity-platforms.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H04.snapshots-services.scenario.parity-platforms-linux",
+      "owner_task": "H04.snapshots-services",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-platforms-linux",
+      "action_sequence": "Launch the application with scenario parity-platforms-linux and exercise the surface owned by H04.snapshots-services.",
+      "expected_results": "The visible fixture data belongs to parity-platforms-linux.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

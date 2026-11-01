@@ -1,0 +1,45 @@
+{
+  "task_id": "T04.history",
+  "cases": [
+    {
+      "case_id": "T04.history.route",
+      "owner_task": "T04.history",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T04.history",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T04.history.rerun",
+      "owner_task": "T04.history",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Search, switch connection scope and all-scope, enable failed-only, open details, copy, and rerun the selected entry. Also search a missing phrase.",
+      "expected_results": "The rerun result is that entry's statement. Empty search shows no rows.",
+      "forbidden_effects": "Rerun executes the previously active editor text instead of the selected entry.",
+      "checkpoint_ids": [
+        "T04.history.rerun.120x40",
+        "T04.history.rerun.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

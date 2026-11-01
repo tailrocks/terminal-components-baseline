@@ -1,0 +1,37 @@
+{
+  "task_id": "X02.startup",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x02_startup.rs",
+    "docs/testing/cases/X02.startup.json",
+    "tests/functional/baselines/pre_refactor/X02.startup/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/runtime.rs",
+    "src/shell/app.rs"
+  ],
+  "coverage_rows": [
+    "X02.startup.route",
+    "X02.startup.start"
+  ],
+  "checkpoints": [
+    "X02.startup.start.120x40"
+  ],
+  "acceptance": "The first input after startup and a bounded burst leave the process alive with the expected final screen.",
+  "status": "queued",
+  "architecture_refactor": false
+}

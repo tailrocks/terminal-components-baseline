@@ -1,0 +1,37 @@
+{
+  "task_id": "J05.handoff",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j05_handoff.rs",
+    "docs/testing/cases/J05.handoff.json",
+    "tests/functional/baselines/pre_refactor/J05.handoff/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/app.rs",
+    "src/bin/jackin/rain.rs"
+  ],
+  "coverage_rows": [
+    "J05.handoff.route",
+    "J05.handoff.handoff"
+  ],
+  "checkpoints": [
+    "J05.handoff.handoff.120x40"
+  ],
+  "acceptance": "Handoff and its skip reach the capsule without a second instance.",
+  "status": "queued",
+  "architecture_refactor": false
+}

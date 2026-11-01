@@ -1,0 +1,45 @@
+{
+  "task_id": "T05.help",
+  "cases": [
+    {
+      "case_id": "T05.help.route",
+      "owner_task": "T05.help",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T05.help",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T05.help.help",
+      "owner_task": "T05.help",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open Help, scroll it, press a page key, and close it.",
+      "expected_results": "The Help title is visible while it is open. Focus returns to the opener.",
+      "forbidden_effects": "A page key activates the workbench while Help is open.",
+      "checkpoint_ids": [
+        "T05.help.help.120x40",
+        "T05.help.help.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "task_id": "T03.confirm",
+  "cases": [
+    {
+      "case_id": "T03.confirm.route",
+      "owner_task": "T03.confirm",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.confirm",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T03.confirm.gates",
+      "owner_task": "T03.confirm",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Cancel an ordinary confirmation and a typed confirmation. Enter a wrong, partial, and exact phrase.",
+      "expected_results": "Wrong and partial text do not execute. Exact text executes once.",
+      "forbidden_effects": "Cancel leaves a new History entry.",
+      "checkpoint_ids": [
+        "T03.confirm.gates.120x40",
+        "T03.confirm.gates.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

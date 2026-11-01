@@ -1,0 +1,45 @@
+{
+  "task_id": "T01.test",
+  "cases": [
+    {
+      "case_id": "T01.test.route",
+      "owner_task": "T01.test",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T01.test",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T01.test.actions",
+      "owner_task": "T01.test",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Run Test, Save, Save & connect, and Cancel on distinct edits.",
+      "expected_results": "Test does not save. Save reopens with the edit. Save & connect opens the workbench. Cancel keeps the previous record.",
+      "forbidden_effects": "Cancel writes the edit.",
+      "checkpoint_ids": [
+        "T01.test.actions.120x40",
+        "T01.test.actions.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

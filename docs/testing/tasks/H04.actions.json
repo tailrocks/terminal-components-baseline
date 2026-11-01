@@ -1,0 +1,44 @@
+{
+  "task_id": "H04.actions",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h04_actions.rs",
+    "docs/testing/cases/H04.actions.json",
+    "tests/functional/baselines/pre_refactor/H04.actions/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/domain/catalog.rs",
+    "src/bin/holla/domain/outcomes.rs",
+    "src/bin/holla/sim/world.rs"
+  ],
+  "coverage_rows": [
+    "H04.actions.route",
+    "H04.actions.families",
+    "H04.actions.scenario.parity-git-current",
+    "H04.actions.scenario.parity-git-batch",
+    "H04.actions.scenario.parity-cargo",
+    "H04.actions.scenario.parity-docker",
+    "H04.actions.scenario.parity-brew-services",
+    "H04.actions.scenario.parity-upgrade-managers"
+  ],
+  "checkpoints": [
+    "H04.actions.families.120x40"
+  ],
+  "acceptance": "Each action family shows its command, directory, host, and confirmation, and the follow-up screen shows the simulated effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

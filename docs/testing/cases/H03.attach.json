@@ -1,0 +1,45 @@
+{
+  "task_id": "H03.attach",
+  "cases": [
+    {
+      "case_id": "H03.attach.route",
+      "owner_task": "H03.attach",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H03.attach",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H03.attach.attach",
+      "owner_task": "H03.attach",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Detach, observe the monitor, attach, request stop, and escalate a resistant process.",
+      "expected_results": "The task is still running after detach. Stop changes that task only.",
+      "forbidden_effects": "Detach stops the task.",
+      "checkpoint_ids": [
+        "H03.attach.attach.120x40",
+        "H03.attach.attach.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

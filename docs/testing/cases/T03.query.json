@@ -1,0 +1,45 @@
+{
+  "task_id": "T03.query",
+  "cases": [
+    {
+      "case_id": "T03.query.route",
+      "owner_task": "T03.query",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.query",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T03.query.classify",
+      "owner_task": "T03.query",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Run SELECT, a scoped write, an unscoped write, a destructive statement, a mixed batch, EXPLAIN, and EXPLAIN ANALYZE under each implemented safe mode. Include comments, a quoted semicolon, empty SQL, and a syntax error.",
+      "expected_results": "The safety decision is the highest applicable decision. Denied execution adds no result and no History entry.",
+      "forbidden_effects": "A denied statement produces a result grid.",
+      "checkpoint_ids": [
+        "T03.query.classify.120x40",
+        "T03.query.classify.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

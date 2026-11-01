@@ -1,0 +1,81 @@
+{
+  "task_id": "J05.launch",
+  "cases": [
+    {
+      "case_id": "J05.launch.route",
+      "owner_task": "J05.launch",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.launch",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J05.launch.stages",
+      "owner_task": "J05.launch",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "launch-running",
+        "launch-failure",
+        "hard-cases"
+      ],
+      "action_sequence": "Run each launch plan to its meaningful stage boundary with the controls the binary already supports.",
+      "expected_results": "The visible stage name is that plan's stage. A failed launch does not attach a capsule and leaves one instance record.",
+      "forbidden_effects": "The failure checkpoint is still resolving credentials.",
+      "checkpoint_ids": [
+        "J05.launch.stages.120x40",
+        "J05.launch.stages.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "J05.launch.scenario.launch-running",
+      "owner_task": "J05.launch",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "launch-running",
+      "action_sequence": "Launch the application with scenario launch-running and exercise the surface owned by J05.launch.",
+      "expected_results": "The visible fixture data belongs to launch-running.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "J05.launch.scenario.launch-failure",
+      "owner_task": "J05.launch",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "launch-failure",
+      "action_sequence": "Launch the application with scenario launch-failure and exercise the surface owned by J05.launch.",
+      "expected_results": "The visible fixture data belongs to launch-failure.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

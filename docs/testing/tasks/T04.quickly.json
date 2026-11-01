@@ -1,0 +1,36 @@
+{
+  "task_id": "T04.quickly",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t04_quickly.rs",
+    "docs/testing/cases/T04.quickly.json",
+    "tests/functional/baselines/pre_refactor/T04.quickly/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/app.rs"
+  ],
+  "coverage_rows": [
+    "T04.quickly.route",
+    "T04.quickly.switcher"
+  ],
+  "checkpoints": [
+    "T04.quickly.switcher.120x40"
+  ],
+  "acceptance": "Open Quickly reaches tables, History, and query tabs, and cancel or no-match changes nothing.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,63 @@
+{
+  "task_id": "J02.general",
+  "cases": [
+    {
+      "case_id": "J02.general.route",
+      "owner_task": "J02.general",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J02.general",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J02.general.general",
+      "owner_task": "J02.general",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "returning"
+      ],
+      "action_sequence": "Change the name, working directory, and one policy. Reopen after save.",
+      "expected_results": "The reopened values are the saved values.",
+      "forbidden_effects": "A cancelled edit is saved.",
+      "checkpoint_ids": [
+        "J02.general.general.120x40",
+        "J02.general.general.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "J02.general.scenario.returning",
+      "owner_task": "J02.general",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "returning",
+      "action_sequence": "Launch the application with scenario returning and exercise the surface owned by J02.general.",
+      "expected_results": "The visible fixture data belongs to returning.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

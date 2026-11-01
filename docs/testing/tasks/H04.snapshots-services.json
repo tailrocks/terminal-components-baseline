@@ -1,0 +1,38 @@
+{
+  "task_id": "H04.snapshots-services",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h04_snapshots-services.rs",
+    "docs/testing/cases/H04.snapshots-services.json",
+    "tests/functional/baselines/pre_refactor/H04.snapshots-services/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/snapshot.rs"
+  ],
+  "coverage_rows": [
+    "H04.snapshots-services.route",
+    "H04.snapshots-services.services",
+    "H04.snapshots-services.scenario.parity-platforms",
+    "H04.snapshots-services.scenario.parity-platforms-linux"
+  ],
+  "checkpoints": [
+    "H04.snapshots-services.services.120x40"
+  ],
+  "acceptance": "Service snapshot families show their own rows.",
+  "status": "queued",
+  "architecture_refactor": false
+}

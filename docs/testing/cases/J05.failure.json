@@ -1,0 +1,45 @@
+{
+  "task_id": "J05.failure",
+  "cases": [
+    {
+      "case_id": "J05.failure.route",
+      "owner_task": "J05.failure",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.failure",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J05.failure.failure",
+      "owner_task": "J05.failure",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Reach the failed stage, acknowledge it, and use locked-credential retry and the supported one-launch fallback.",
+      "expected_results": "The failure text is the failed stage. No capsule is attached.",
+      "forbidden_effects": "Acknowledgement is available before the failure is visible.",
+      "checkpoint_ids": [
+        "J05.failure.failure.120x40",
+        "J05.failure.failure.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

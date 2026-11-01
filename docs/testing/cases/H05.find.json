@@ -1,0 +1,45 @@
+{
+  "task_id": "H05.find",
+  "cases": [
+    {
+      "case_id": "H05.find.route",
+      "owner_task": "H05.find",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H05.find",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H05.find.find",
+      "owner_task": "H05.find",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Search, clear to empty results, select a hit, and open it.",
+      "expected_results": "The opened directory is the selected hit.",
+      "forbidden_effects": "Empty results open the previous path.",
+      "checkpoint_ids": [
+        "H05.find.find.120x40",
+        "H05.find.find.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

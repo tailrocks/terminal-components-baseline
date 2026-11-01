@@ -1,0 +1,63 @@
+{
+  "task_id": "H03.input",
+  "cases": [
+    {
+      "case_id": "H03.input.route",
+      "owner_task": "H03.input",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H03.input",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H03.input.prompts",
+      "owner_task": "H03.input",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-task-input"
+      ],
+      "action_sequence": "Answer a public prompt and a secret prompt. Try input when it is refused. Press Ctrl+C and then Escape.",
+      "expected_results": "The secret is masked. Escape returns keys to the shell. Refused input does not appear as a delivered line.",
+      "forbidden_effects": "The secret is echoed.",
+      "checkpoint_ids": [
+        "H03.input.prompts.120x40",
+        "H03.input.prompts.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H03.input.scenario.parity-task-input",
+      "owner_task": "H03.input",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-task-input",
+      "action_sequence": "Launch the application with scenario parity-task-input and exercise the surface owned by H03.input.",
+      "expected_results": "The visible fixture data belongs to parity-task-input.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

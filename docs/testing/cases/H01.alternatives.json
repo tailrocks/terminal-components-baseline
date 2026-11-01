@@ -1,0 +1,45 @@
+{
+  "task_id": "H01.alternatives",
+  "cases": [
+    {
+      "case_id": "H01.alternatives.route",
+      "owner_task": "H01.alternatives",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H01.alternatives",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H01.alternatives.alternatives",
+      "owner_task": "H01.alternatives",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open Alternatives for the selected row.",
+      "expected_results": "Every alternative names that row's action.",
+      "forbidden_effects": "Alternatives shows another row's action.",
+      "checkpoint_ids": [
+        "H01.alternatives.alternatives.120x40",
+        "H01.alternatives.alternatives.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

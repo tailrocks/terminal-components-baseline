@@ -1,0 +1,43 @@
+{
+  "task_id": "X02.resize",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "T05.quit",
+    "H03.guards",
+    "J06.exit"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x02_resize.rs",
+    "docs/testing/cases/X02.resize.json",
+    "tests/functional/baselines/pre_refactor/X02.resize/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/core/shape.rs",
+    "src/shell/app.rs",
+    "src/bin/tablepro/app.rs",
+    "src/bin/holla/app.rs",
+    "src/bin/jackin/app.rs"
+  ],
+  "coverage_rows": [
+    "X02.resize.route",
+    "X02.resize.resize"
+  ],
+  "checkpoints": [
+    "X02.resize.resize.120x40"
+  ],
+  "acceptance": "Narrow and too-small states are captured before the terminal grows. Open layers survive.",
+  "status": "queued",
+  "architecture_refactor": false
+}

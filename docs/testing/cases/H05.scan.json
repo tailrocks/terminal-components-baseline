@@ -1,0 +1,80 @@
+{
+  "task_id": "H05.scan",
+  "cases": [
+    {
+      "case_id": "H05.scan.route",
+      "owner_task": "H05.scan",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H05.scan",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H05.scan.scan",
+      "owner_task": "H05.scan",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-disk-scan",
+        "disk-cleanup"
+      ],
+      "action_sequence": "Start a scan, observe progress and partial data, cancel one scan, and complete another. Change the scan root.",
+      "expected_results": "Cancellation does not show a completed total. A stale result is labelled when the root changes.",
+      "forbidden_effects": "A cancelled scan shows the completed byte total as final.",
+      "checkpoint_ids": [
+        "H05.scan.scan.120x40",
+        "H05.scan.scan.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H05.scan.scenario.parity-disk-scan",
+      "owner_task": "H05.scan",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-disk-scan",
+      "action_sequence": "Launch the application with scenario parity-disk-scan and exercise the surface owned by H05.scan.",
+      "expected_results": "The visible fixture data belongs to parity-disk-scan.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H05.scan.scenario.disk-cleanup",
+      "owner_task": "H05.scan",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "disk-cleanup",
+      "action_sequence": "Launch the application with scenario disk-cleanup and exercise the surface owned by H05.scan.",
+      "expected_results": "The visible fixture data belongs to disk-cleanup.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

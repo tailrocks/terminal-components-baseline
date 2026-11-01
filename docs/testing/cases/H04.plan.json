@@ -1,0 +1,63 @@
+{
+  "task_id": "H04.plan",
+  "cases": [
+    {
+      "case_id": "H04.plan.route",
+      "owner_task": "H04.plan",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H04.plan",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H04.plan.plan",
+      "owner_task": "H04.plan",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "upgrade-plan"
+      ],
+      "action_sequence": "Remove an optional step, undo, restore, and reach no runnable steps. Cancel both confirmation stages. Enter the exact phrase and start. Show drift and re-review. Run success and failure. Cancel remaining work.",
+      "expected_results": "The started plan is the reviewed plan. A cancelled confirmation does not start it. Completed steps do not run twice.",
+      "forbidden_effects": "A wrong phrase starts the plan.",
+      "checkpoint_ids": [
+        "H04.plan.plan.120x40",
+        "H04.plan.plan.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H04.plan.scenario.upgrade-plan",
+      "owner_task": "H04.plan",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "upgrade-plan",
+      "action_sequence": "Launch the application with scenario upgrade-plan and exercise the surface owned by H04.plan.",
+      "expected_results": "The visible fixture data belongs to upgrade-plan.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "task_id": "J04.chooser",
+  "cases": [
+    {
+      "case_id": "J04.chooser.route",
+      "owner_task": "J04.chooser",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J04.chooser",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J04.chooser.chooser",
+      "owner_task": "J04.chooser",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open the chooser, go Back and Cancel, show an inaccessible vault and an unsupported field, and retry a locked session.",
+      "expected_results": "The returned reference is the chosen field. Cancel returns no new reference.",
+      "forbidden_effects": "An inaccessible vault returns a field.",
+      "checkpoint_ids": [
+        "J04.chooser.chooser.120x40",
+        "J04.chooser.chooser.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

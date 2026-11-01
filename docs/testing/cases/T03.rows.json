@@ -1,0 +1,45 @@
+{
+  "task_id": "T03.rows",
+  "cases": [
+    {
+      "case_id": "T03.rows.route",
+      "owner_task": "T03.rows",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.rows",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T03.rows.rows",
+      "owner_task": "T03.rows",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Run a query with no rows, a query with known rows, and a large result. Try to edit the result. Select, sort, copy, pin, switch, and close it.",
+      "expected_results": "The grid values are the fixture values. Sort changes row order. Editing is refused.",
+      "forbidden_effects": "Sort changes the status text without the row order.",
+      "checkpoint_ids": [
+        "T03.rows.rows.120x40",
+        "T03.rows.rows.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

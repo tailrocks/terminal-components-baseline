@@ -1,0 +1,63 @@
+{
+  "task_id": "J05.outro",
+  "cases": [
+    {
+      "case_id": "J05.outro.route",
+      "owner_task": "J05.outro",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.outro",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J05.outro.outro",
+      "owner_task": "J05.outro",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "outro-last"
+      ],
+      "action_sequence": "Exit the last instance and exit when another instance remains.",
+      "expected_results": "Outro appears only for the last instance. The terminal is restored.",
+      "forbidden_effects": "A non-last exit shows Outro.",
+      "checkpoint_ids": [
+        "J05.outro.outro.120x40",
+        "J05.outro.outro.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "J05.outro.scenario.outro-last",
+      "owner_task": "J05.outro",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "outro-last",
+      "action_sequence": "Launch the application with scenario outro-last and exercise the surface owned by J05.outro.",
+      "expected_results": "The visible fixture data belongs to outro-last.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

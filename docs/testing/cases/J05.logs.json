@@ -1,0 +1,45 @@
+{
+  "task_id": "J05.logs",
+  "cases": [
+    {
+      "case_id": "J05.logs.route",
+      "owner_task": "J05.logs",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.logs",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J05.logs.logs",
+      "owner_task": "J05.logs",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open logs before output and after output. Select text and press Ctrl+C, then press Ctrl+C with no selection.",
+      "expected_results": "The selection copies. The unselected Ctrl+C aborts. Ctrl+Q Cancel stays, and Confirm aborts.",
+      "forbidden_effects": "Ctrl+C aborts while a selection exists.",
+      "checkpoint_ids": [
+        "J05.logs.logs.120x40",
+        "J05.logs.logs.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

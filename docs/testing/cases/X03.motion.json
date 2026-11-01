@@ -1,0 +1,45 @@
+{
+  "task_id": "X03.motion",
+  "cases": [
+    {
+      "case_id": "X03.motion.route",
+      "owner_task": "X03.motion",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X03.motion",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X03.motion.motion",
+      "owner_task": "X03.motion",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Capture paused and reduced frames with the existing frame controls. Capture a Jackin phase with the clock hook. Do not add a Showcase clock hook.",
+      "expected_results": "Paused frames are stable. A Showcase transient that cannot be frozen is BLOCKED, not accepted as a changing baseline.",
+      "forbidden_effects": "A changing frame is stored as the expected image.",
+      "checkpoint_ids": [
+        "X03.motion.motion.120x40",
+        "X03.motion.motion.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

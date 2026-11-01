@@ -1,0 +1,45 @@
+{
+  "task_id": "T03.error",
+  "cases": [
+    {
+      "case_id": "T03.error.route",
+      "owner_task": "T03.error",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.error",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T03.error.recover",
+      "owner_task": "T03.error",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Run a statement that fails, then correct it and run it again.",
+      "expected_results": "The error text is the failure. The recovered result is the corrected statement's result, and the old error is gone.",
+      "forbidden_effects": "Recovery still shows the old error.",
+      "checkpoint_ids": [
+        "T03.error.recover.120x40",
+        "T03.error.recover.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

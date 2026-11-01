@@ -1,0 +1,45 @@
+{
+  "task_id": "X02.exit",
+  "cases": [
+    {
+      "case_id": "X02.exit.route",
+      "owner_task": "X02.exit",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X02.exit",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X02.exit.exit",
+      "owner_task": "X02.exit",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Exit each applicable application through its clean path and through one guarded path.",
+      "expected_results": "The code is 0 and the signal is empty after the user confirms. Alternate screen, paste, and mouse modes are restored.",
+      "forbidden_effects": "Drop's cleanup kill counts as success.",
+      "checkpoint_ids": [
+        "X02.exit.exit.120x40",
+        "X02.exit.exit.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

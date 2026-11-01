@@ -1,0 +1,45 @@
+{
+  "task_id": "T05.disconnect",
+  "cases": [
+    {
+      "case_id": "T05.disconnect.route",
+      "owner_task": "T05.disconnect",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T05.disconnect",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T05.disconnect.disconnect",
+      "owner_task": "T05.disconnect",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Disconnect with a clean session, then with dirty SQL or pending table edits. Cancel, then confirm on a later attempt.",
+      "expected_results": "Cancel keeps the connection, the SQL, and the pending values.",
+      "forbidden_effects": "Cancel returns to the connection list.",
+      "checkpoint_ids": [
+        "T05.disconnect.disconnect.120x40",
+        "T05.disconnect.disconnect.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "task_id": "J04.accounts",
+  "cases": [
+    {
+      "case_id": "J04.accounts.route",
+      "owner_task": "J04.accounts",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J04.accounts",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J04.accounts.accounts",
+      "owner_task": "J04.accounts",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "first-use",
+        "accounts-mixed",
+        "returning",
+        "hard-cases"
+      ],
+      "action_sequence": "Exercise 1Password, local-folder, and API-key sources and the fixture's missing, locked, denied, revoked, invalid, and wrong-provider material. Enable, disable, choose default, and remove.",
+      "expected_results": "Removal updates workspace-binding fallback. Captures show only mask, reference, fingerprint, or tail.",
+      "forbidden_effects": "A raw secret is visible.",
+      "checkpoint_ids": [
+        "J04.accounts.accounts.120x40",
+        "J04.accounts.accounts.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "J04.accounts.scenario.accounts-mixed",
+      "owner_task": "J04.accounts",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "accounts-mixed",
+      "action_sequence": "Launch the application with scenario accounts-mixed and exercise the surface owned by J04.accounts.",
+      "expected_results": "The visible fixture data belongs to accounts-mixed.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

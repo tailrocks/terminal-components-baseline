@@ -1,0 +1,80 @@
+{
+  "task_id": "H01.scope",
+  "cases": [
+    {
+      "case_id": "H01.scope.route",
+      "owner_task": "H01.scope",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H01.scope",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H01.scope.scope",
+      "owner_task": "H01.scope",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "monorepo-child",
+        "remote-host"
+      ],
+      "action_sequence": "Switch Here, project, and host. Pin, hide, restore, and reset ranking.",
+      "expected_results": "The action row's command, directory, and host match the selected item after reranking.",
+      "forbidden_effects": "Hide removes a different item.",
+      "checkpoint_ids": [
+        "H01.scope.scope.120x40",
+        "H01.scope.scope.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H01.scope.scenario.monorepo-child",
+      "owner_task": "H01.scope",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "monorepo-child",
+      "action_sequence": "Launch the application with scenario monorepo-child and exercise the surface owned by H01.scope.",
+      "expected_results": "The visible fixture data belongs to monorepo-child.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H01.scope.scenario.remote-host",
+      "owner_task": "H01.scope",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "remote-host",
+      "action_sequence": "Launch the application with scenario remote-host and exercise the surface owned by H01.scope.",
+      "expected_results": "The visible fixture data belongs to remote-host.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

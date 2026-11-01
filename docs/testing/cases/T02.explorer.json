@@ -1,0 +1,45 @@
+{
+  "task_id": "T02.explorer",
+  "cases": [
+    {
+      "case_id": "T02.explorer.route",
+      "owner_task": "T02.explorer",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T02.explorer",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T02.explorer.tree",
+      "owner_task": "T02.explorer",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Expand a schema and open a table preview, then pin it.",
+      "expected_results": "The preview title is the chosen object. Pinning does not replace another pinned tab.",
+      "forbidden_effects": "A filter result opens a different object than the selected row.",
+      "checkpoint_ids": [
+        "T02.explorer.tree.120x40",
+        "T02.explorer.tree.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

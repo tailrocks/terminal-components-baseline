@@ -1,0 +1,47 @@
+{
+  "task_id": "J03.general",
+  "cases": [
+    {
+      "case_id": "J03.general.route",
+      "owner_task": "J03.general",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J03.general",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J03.general.edit",
+      "owner_task": "J03.general",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "returning"
+      ],
+      "action_sequence": "Change one General value.",
+      "expected_results": "The dirty marker and the count include that change.",
+      "forbidden_effects": "The settings screen is still the unchanged manager.",
+      "checkpoint_ids": [
+        "J03.general.edit.120x40",
+        "J03.general.edit.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

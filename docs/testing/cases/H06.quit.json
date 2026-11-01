@@ -1,0 +1,48 @@
+{
+  "task_id": "H06.quit",
+  "cases": [
+    {
+      "case_id": "H06.quit.route",
+      "owner_task": "H06.quit",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H06.quit",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H06.quit.quit",
+      "owner_task": "H06.quit",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-platforms",
+        "parity-platforms-linux"
+      ],
+      "action_sequence": "Quit while cleanup runs, including when another activity is running.",
+      "expected_results": "The exit path shows the guard. Confirmed exit waits for the report contract.",
+      "forbidden_effects": "Quit drops the report and returns success immediately.",
+      "checkpoint_ids": [
+        "H06.quit.quit.120x40",
+        "H06.quit.quit.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

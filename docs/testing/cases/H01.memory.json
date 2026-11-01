@@ -1,0 +1,63 @@
+{
+  "task_id": "H01.memory",
+  "cases": [
+    {
+      "case_id": "H01.memory.route",
+      "owner_task": "H01.memory",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H01.memory",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H01.memory.memory",
+      "owner_task": "H01.memory",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-history"
+      ],
+      "action_sequence": "Run a search with history enabled and disabled. Load malformed memory and a save failure when the fixture provides them.",
+      "expected_results": "Save failure keeps the current search text.",
+      "forbidden_effects": "A memory failure clears the query.",
+      "checkpoint_ids": [
+        "H01.memory.memory.120x40",
+        "H01.memory.memory.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H01.memory.scenario.parity-history",
+      "owner_task": "H01.memory",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-history",
+      "action_sequence": "Launch the application with scenario parity-history and exercise the surface owned by H01.memory.",
+      "expected_results": "The visible fixture data belongs to parity-history.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

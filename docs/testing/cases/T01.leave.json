@@ -1,0 +1,45 @@
+{
+  "task_id": "T01.leave",
+  "cases": [
+    {
+      "case_id": "T01.leave.route",
+      "owner_task": "T01.leave",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T01.leave",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T01.leave.guards",
+      "owner_task": "T01.leave",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "From a dirty form, try close, New, Edit another, and Quit. Choose Stay, Discard, and Save. Also attempt invalid Save from the dialog.",
+      "expected_results": "Stay and a failed validation keep the draft and the original record. Discard restores the original. Save stores the draft.",
+      "forbidden_effects": "A leave path drops the draft without a choice.",
+      "checkpoint_ids": [
+        "T01.leave.guards.120x40",
+        "T01.leave.guards.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": "H03.attach",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h03_attach.rs",
+    "docs/testing/cases/H03.attach.json",
+    "tests/functional/baselines/pre_refactor/H03.attach/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/activity.rs",
+    "src/bin/holla/domain/activity.rs"
+  ],
+  "coverage_rows": [
+    "H03.attach.route",
+    "H03.attach.attach"
+  ],
+  "checkpoints": [
+    "H03.attach.attach.120x40"
+  ],
+  "acceptance": "Detach and attach do not stop the task. Stop and escalation affect only that task.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,45 @@
+{
+  "task_id": "T02.viewers",
+  "cases": [
+    {
+      "case_id": "T02.viewers.route",
+      "owner_task": "T02.viewers",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T02.viewers",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T02.viewers.viewer",
+      "owner_task": "T02.viewers",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open a cell viewer, select and copy its text, follow a foreign key, refresh, and fetch more rows.",
+      "expected_results": "The viewer text is the cell text. Follow opens the referenced row.",
+      "forbidden_effects": "Copy captures a different cell.",
+      "checkpoint_ids": [
+        "T02.viewers.viewer.120x40",
+        "T02.viewers.viewer.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

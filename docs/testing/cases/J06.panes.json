@@ -1,0 +1,63 @@
+{
+  "task_id": "J06.panes",
+  "cases": [
+    {
+      "case_id": "J06.panes.route",
+      "owner_task": "J06.panes",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J06.panes",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J06.panes.input",
+      "owner_task": "J06.panes",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "capsule-multi"
+      ],
+      "action_sequence": "Type and paste into each supported pane kind and answer a simulated prompt.",
+      "expected_results": "The other panes' text is unchanged.",
+      "forbidden_effects": "Input appears in an unfocused pane.",
+      "checkpoint_ids": [
+        "J06.panes.input.120x40",
+        "J06.panes.input.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "J06.panes.scenario.capsule-multi",
+      "owner_task": "J06.panes",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "capsule-multi",
+      "action_sequence": "Launch the application with scenario capsule-multi and exercise the surface owned by J06.panes.",
+      "expected_results": "The visible fixture data belongs to capsule-multi.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

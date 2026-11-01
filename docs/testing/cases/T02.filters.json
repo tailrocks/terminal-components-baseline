@@ -1,0 +1,45 @@
+{
+  "task_id": "T02.filters",
+  "cases": [
+    {
+      "case_id": "T02.filters.route",
+      "owner_task": "T02.filters",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T02.filters",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T02.filters.filters",
+      "owner_task": "T02.filters",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Add, edit, remove, and reset chips. Exercise match-all, match-any, no rows, and filter-on-cell.",
+      "expected_results": "The visible row identities match the filter. Reset restores the unfiltered identities. Selection stays on the same identity when it remains.",
+      "forbidden_effects": "No-rows shows the previous rows.",
+      "checkpoint_ids": [
+        "T02.filters.filters.120x40",
+        "T02.filters.filters.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "task_id": "J05.intro",
+  "cases": [
+    {
+      "case_id": "J05.intro.route",
+      "owner_task": "J05.intro",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.intro",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J05.intro.intro",
+      "owner_task": "J05.intro",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "first-use",
+        "returning"
+      ],
+      "action_sequence": "Enter through each implemented intro path and exercise skip, guard, and abort.",
+      "expected_results": "Abort does not open the cockpit as a successful join. Skip reaches the documented next route.",
+      "forbidden_effects": "Skip bypasses a guard the source still enforces.",
+      "checkpoint_ids": [
+        "J05.intro.intro.120x40",
+        "J05.intro.intro.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "J05.intro.scenario.first-use",
+      "owner_task": "J05.intro",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "first-use",
+      "action_sequence": "Launch the application with scenario first-use and exercise the surface owned by J05.intro.",
+      "expected_results": "The visible fixture data belongs to first-use.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

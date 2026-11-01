@@ -1,0 +1,36 @@
+{
+  "task_id": "T05.disconnect",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t05_disconnect.rs",
+    "docs/testing/cases/T05.disconnect.json",
+    "tests/functional/baselines/pre_refactor/T05.disconnect/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/app.rs"
+  ],
+  "coverage_rows": [
+    "T05.disconnect.route",
+    "T05.disconnect.disconnect"
+  ],
+  "checkpoints": [
+    "T05.disconnect.disconnect.120x40"
+  ],
+  "acceptance": "Clean disconnect works. Dirty disconnect can be cancelled and keeps drafts.",
+  "status": "queued",
+  "architecture_refactor": false
+}

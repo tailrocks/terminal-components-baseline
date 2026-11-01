@@ -1,0 +1,72 @@
+{
+  "task_id": "S03.basictable",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s03_basictable.rs",
+    "docs/testing/cases/S03.basictable.json",
+    "tests/functional/baselines/pre_refactor/S03.basictable/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/tables.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.basictable.route",
+    "sc.basictable.playground",
+    "sc.basictable.playground.120x40",
+    "sc.basictable.playground.80x24",
+    "sc.basictable.options",
+    "sc.basictable.options.120x40",
+    "sc.basictable.options.80x24",
+    "sc.basictable.states",
+    "sc.basictable.states.120x40",
+    "sc.basictable.states.80x24",
+    "sc.basictable.specimen.rest",
+    "sc.basictable.specimen.hover",
+    "sc.basictable.specimen.pressed",
+    "sc.basictable.specimen.focused",
+    "sc.basictable.specimen.focused_hover",
+    "sc.basictable.specimen.selected",
+    "sc.basictable.specimen.disabled",
+    "sc.basictable.specimen.busy",
+    "sc.basictable.specimen.error",
+    "sc.basictable.specimen.editing",
+    "sc.basictable.specimen.empty",
+    "sc.basictable.specimen.loading",
+    "sc.basictable.specimen.overflow",
+    "sc.basictable.specimen.narrow",
+    "sc.basictable.compare-levels",
+    "opt.basictable.selection",
+    "sc.basictable.sort"
+  ],
+  "checkpoints": [
+    "sc.basictable.playground.120x40",
+    "sc.basictable.playground.80x24",
+    "sc.basictable.options.120x40",
+    "sc.basictable.options.80x24",
+    "sc.basictable.states.120x40",
+    "sc.basictable.states.80x24",
+    "sc.basictable.compare-levels",
+    "sc.basictable.sort"
+  ],
+  "acceptance": "Open Basic table by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,74 @@
+{
+  "task_id": "S08.diff",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s08_diff.rs",
+    "docs/testing/cases/S08.diff.json",
+    "tests/functional/baselines/pre_refactor/S08.diff/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/diff.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.diff.route",
+    "sc.diff.playground",
+    "sc.diff.playground.120x40",
+    "sc.diff.playground.80x24",
+    "sc.diff.options",
+    "sc.diff.options.120x40",
+    "sc.diff.options.80x24",
+    "sc.diff.states",
+    "sc.diff.states.120x40",
+    "sc.diff.states.80x24",
+    "sc.diff.specimen.rest",
+    "sc.diff.specimen.hover",
+    "sc.diff.specimen.pressed",
+    "sc.diff.specimen.focused",
+    "sc.diff.specimen.focused_hover",
+    "sc.diff.specimen.selected",
+    "sc.diff.specimen.disabled",
+    "sc.diff.specimen.busy",
+    "sc.diff.specimen.error",
+    "sc.diff.specimen.editing",
+    "sc.diff.specimen.empty",
+    "sc.diff.specimen.loading",
+    "sc.diff.specimen.overflow",
+    "sc.diff.specimen.narrow",
+    "sc.diff.compare-levels",
+    "opt.diff.mode",
+    "opt.diff.file",
+    "opt.diff.width",
+    "sc.diff.diff"
+  ],
+  "checkpoints": [
+    "sc.diff.playground.120x40",
+    "sc.diff.playground.80x24",
+    "sc.diff.options.120x40",
+    "sc.diff.options.80x24",
+    "sc.diff.states.120x40",
+    "sc.diff.states.80x24",
+    "sc.diff.compare-levels",
+    "sc.diff.diff"
+  ],
+  "acceptance": "Open Diff by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

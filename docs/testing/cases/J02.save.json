@@ -1,0 +1,63 @@
+{
+  "task_id": "J02.save",
+  "cases": [
+    {
+      "case_id": "J02.save.route",
+      "owner_task": "J02.save",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J02.save",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J02.save.save",
+      "owner_task": "J02.save",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "hard-cases"
+      ],
+      "action_sequence": "Cancel a preview, Stay, Discard, fail one save, retry, and reopen.",
+      "expected_results": "Failure keeps the pending edit and the previous saved values. Retry then reopen shows the new values.",
+      "forbidden_effects": "Failure reports the edit as saved.",
+      "checkpoint_ids": [
+        "J02.save.save.120x40",
+        "J02.save.save.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "J02.save.scenario.hard-cases",
+      "owner_task": "J02.save",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "hard-cases",
+      "action_sequence": "Launch the application with scenario hard-cases and exercise the surface owned by J02.save.",
+      "expected_results": "The visible fixture data belongs to hard-cases.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

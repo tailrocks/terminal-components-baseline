@@ -1,0 +1,45 @@
+{
+  "task_id": "X03.color",
+  "cases": [
+    {
+      "case_id": "X03.color.route",
+      "owner_task": "X03.color",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X03.color",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X03.color.matrix",
+      "owner_task": "X03.color",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Capture one shared control treatment in all five colour configurations for each application shell.",
+      "expected_results": "Rest, hover, pressed, disabled, and selected are distinguishable at every level, including NO_COLOR modifiers.",
+      "forbidden_effects": "A colour change that keeps the text is accepted as equal.",
+      "checkpoint_ids": [
+        "X03.color.matrix.120x40",
+        "X03.color.matrix.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

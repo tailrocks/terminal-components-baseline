@@ -1,0 +1,45 @@
+{
+  "task_id": "T04.tabs",
+  "cases": [
+    {
+      "case_id": "T04.tabs.route",
+      "owner_task": "T04.tabs",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T04.tabs",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T04.tabs.close",
+      "owner_task": "T04.tabs",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Close tabs by pointer, keyboard, and middle-click where supported.",
+      "expected_results": "The remaining tab titles and SQL values are the ones that were not closed. Active fallback is the documented neighbour.",
+      "forbidden_effects": "A reused index shows a different tab's SQL.",
+      "checkpoint_ids": [
+        "T04.tabs.close.120x40",
+        "T04.tabs.close.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "task_id": "J06.prefix",
+  "cases": [
+    {
+      "case_id": "J06.prefix.route",
+      "owner_task": "J06.prefix",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J06.prefix",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J06.prefix.prefix",
+      "owner_task": "J06.prefix",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Enter the prefix, let it time out, repeat it, and cancel it. Also use the palette and a menu while a pane owns input.",
+      "expected_results": "The command runs only after a completed prefix. Cancellation types nothing into the pane.",
+      "forbidden_effects": "A timed-out prefix still runs the command.",
+      "checkpoint_ids": [
+        "J06.prefix.prefix.120x40",
+        "J06.prefix.prefix.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

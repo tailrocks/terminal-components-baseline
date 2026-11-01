@@ -1,0 +1,45 @@
+{
+  "task_id": "X02.resize",
+  "cases": [
+    {
+      "case_id": "X02.resize.route",
+      "owner_task": "X02.resize",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X02.resize",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X02.resize.resize",
+      "owner_task": "X02.resize",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Shrink to 71x20, 72x19, and 72x20 and to each source breakpoint below, at, and above. Do this with a form, a picker, a destructive gate, and running output open. Then grow.",
+      "expected_results": "The narrow checkpoint is the narrow size. After growth the same draft, selection, and focus remain.",
+      "forbidden_effects": "The narrow baseline is captured after the terminal returns to 120x40.",
+      "checkpoint_ids": [
+        "X02.resize.resize.120x40",
+        "X02.resize.resize.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

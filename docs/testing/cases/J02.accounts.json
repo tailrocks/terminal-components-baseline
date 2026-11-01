@@ -1,0 +1,45 @@
+{
+  "task_id": "J02.accounts",
+  "cases": [
+    {
+      "case_id": "J02.accounts.route",
+      "owner_task": "J02.accounts",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J02.accounts",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J02.accounts.bindings",
+      "owner_task": "J02.accounts",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Change a binding and the default override, save, and reopen.",
+      "expected_results": "The reopened binding is the saved binding.",
+      "forbidden_effects": "Fallback shows a different account.",
+      "checkpoint_ids": [
+        "J02.accounts.bindings.120x40",
+        "J02.accounts.bindings.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

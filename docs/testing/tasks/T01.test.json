@@ -1,0 +1,37 @@
+{
+  "task_id": "T01.test",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t01_test.rs",
+    "docs/testing/cases/T01.test.json",
+    "tests/functional/baselines/pre_refactor/T01.test/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/connections.rs",
+    "src/bin/tablepro/db.rs"
+  ],
+  "coverage_rows": [
+    "T01.test.route",
+    "T01.test.actions"
+  ],
+  "checkpoints": [
+    "T01.test.actions.120x40"
+  ],
+  "acceptance": "Test, Save, Save & connect, and Cancel are separate results.",
+  "status": "queued",
+  "architecture_refactor": false
+}

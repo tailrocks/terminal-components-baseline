@@ -1,0 +1,63 @@
+{
+  "task_id": "H06.cleanup",
+  "cases": [
+    {
+      "case_id": "H06.cleanup.route",
+      "owner_task": "H06.cleanup",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H06.cleanup",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H06.cleanup.select",
+      "owner_task": "H06.cleanup",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-delete-safety"
+      ],
+      "action_sequence": "Detect categories, try disabled and protected items, and select eligible items in each mode.",
+      "expected_results": "Protected items stay. The mode label matches the selected mode.",
+      "forbidden_effects": "A protected descendant is included.",
+      "checkpoint_ids": [
+        "H06.cleanup.select.120x40",
+        "H06.cleanup.select.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H06.cleanup.scenario.parity-delete-safety",
+      "owner_task": "H06.cleanup",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-delete-safety",
+      "action_sequence": "Launch the application with scenario parity-delete-safety and exercise the surface owned by H06.cleanup.",
+      "expected_results": "The visible fixture data belongs to parity-delete-safety.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

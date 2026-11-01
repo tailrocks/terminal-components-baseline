@@ -1,0 +1,45 @@
+{
+  "task_id": "H03.picker",
+  "cases": [
+    {
+      "case_id": "H03.picker.route",
+      "owner_task": "H03.picker",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H03.picker",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H03.picker.picker",
+      "owner_task": "H03.picker",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open the picker and choose one activity.",
+      "expected_results": "The opened output is that activity's output.",
+      "forbidden_effects": "The picker opens the first activity regardless of the highlight.",
+      "checkpoint_ids": [
+        "H03.picker.picker.120x40",
+        "H03.picker.picker.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

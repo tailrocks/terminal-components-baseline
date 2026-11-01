@@ -1,0 +1,81 @@
+{
+  "task_id": "S08.textutilities",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s08_textutilities.rs",
+    "docs/testing/cases/S08.textutilities.json",
+    "tests/functional/baselines/pre_refactor/S08.textutilities/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/text_utilities.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.textutilities.route",
+    "sc.textutilities.playground",
+    "sc.textutilities.playground.120x40",
+    "sc.textutilities.playground.80x24",
+    "sc.textutilities.options",
+    "sc.textutilities.options.120x40",
+    "sc.textutilities.options.80x24",
+    "sc.textutilities.states",
+    "sc.textutilities.states.120x40",
+    "sc.textutilities.states.80x24",
+    "sc.textutilities.specimen.rest",
+    "sc.textutilities.specimen.hover",
+    "sc.textutilities.specimen.pressed",
+    "sc.textutilities.specimen.focused",
+    "sc.textutilities.specimen.focused_hover",
+    "sc.textutilities.specimen.selected",
+    "sc.textutilities.specimen.disabled",
+    "sc.textutilities.specimen.busy",
+    "sc.textutilities.specimen.error",
+    "sc.textutilities.specimen.editing",
+    "sc.textutilities.specimen.empty",
+    "sc.textutilities.specimen.loading",
+    "sc.textutilities.specimen.overflow",
+    "sc.textutilities.specimen.narrow",
+    "sc.textutilities.compare-levels",
+    "opt.textutilities.width",
+    "opt.textutilities.sheet",
+    "opt.textutilities.wrap",
+    "opt.textutilities.duration",
+    "opt.textutilities.case",
+    "opt.textutilities.nav",
+    "opt.textutilities.copy_key",
+    "opt.textutilities.track_click",
+    "opt.textutilities.scrollbar_gap",
+    "opt.textutilities.reveal",
+    "sc.textutilities.text"
+  ],
+  "checkpoints": [
+    "sc.textutilities.playground.120x40",
+    "sc.textutilities.playground.80x24",
+    "sc.textutilities.options.120x40",
+    "sc.textutilities.options.80x24",
+    "sc.textutilities.states.120x40",
+    "sc.textutilities.states.80x24",
+    "sc.textutilities.compare-levels",
+    "sc.textutilities.text"
+  ],
+  "acceptance": "Open Text utilities by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

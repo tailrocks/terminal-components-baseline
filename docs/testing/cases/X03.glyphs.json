@@ -1,0 +1,45 @@
+{
+  "task_id": "X03.glyphs",
+  "cases": [
+    {
+      "case_id": "X03.glyphs.route",
+      "owner_task": "X03.glyphs",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X03.glyphs",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X03.glyphs.glyphs",
+      "owner_task": "X03.glyphs",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open one glyph-dependent family in Unicode and ASCII, including combining text, wide text, and emoji where the fixture has them.",
+      "expected_results": "ASCII mode does not draw the Unicode gutter or seam.",
+      "forbidden_effects": "ASCII mode still draws \u2503.",
+      "checkpoint_ids": [
+        "X03.glyphs.glyphs.120x40",
+        "X03.glyphs.glyphs.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

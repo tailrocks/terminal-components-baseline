@@ -1,0 +1,45 @@
+{
+  "task_id": "J02.roles",
+  "cases": [
+    {
+      "case_id": "J02.roles.route",
+      "owner_task": "J02.roles",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J02.roles",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J02.roles.roles",
+      "owner_task": "J02.roles",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Load roles, trust one, show the failure fixture, and retry.",
+      "expected_results": "Retry replaces the failure with the loaded roles. The workspace id is unchanged.",
+      "forbidden_effects": "Failure clears saved roles.",
+      "checkpoint_ids": [
+        "J02.roles.roles.120x40",
+        "J02.roles.roles.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

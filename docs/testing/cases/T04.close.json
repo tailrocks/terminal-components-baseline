@@ -1,0 +1,45 @@
+{
+  "task_id": "T04.close",
+  "cases": [
+    {
+      "case_id": "T04.close.route",
+      "owner_task": "T04.close",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T04.close",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T04.close.dirty",
+      "owner_task": "T04.close",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Close a dirty tab and choose Cancel, then Discard, then Save on separate tabs. While confirmation is open, try to close the neighbour.",
+      "expected_results": "Cancel keeps the SQL. The modal refuses the neighbour close.",
+      "forbidden_effects": "Cancel closes the tab.",
+      "checkpoint_ids": [
+        "T04.close.dirty.120x40",
+        "T04.close.dirty.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

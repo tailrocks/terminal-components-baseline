@@ -1,0 +1,36 @@
+{
+  "task_id": "T05.viewers",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t05_viewers.rs",
+    "docs/testing/cases/T05.viewers.json",
+    "tests/functional/baselines/pre_refactor/T05.viewers/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/workbench.rs"
+  ],
+  "coverage_rows": [
+    "T05.viewers.route",
+    "T05.viewers.viewer"
+  ],
+  "checkpoints": [
+    "T05.viewers.viewer.120x40"
+  ],
+  "acceptance": "A viewer owns selection, copy, and close.",
+  "status": "queued",
+  "architecture_refactor": false
+}

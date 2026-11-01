@@ -1,0 +1,80 @@
+{
+  "task_id": "H06.gate",
+  "cases": [
+    {
+      "case_id": "H06.gate.route",
+      "owner_task": "H06.gate",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H06.gate",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H06.gate.confirm",
+      "owner_task": "H06.gate",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-gradle",
+        "parity-idea"
+      ],
+      "action_sequence": "Cancel each stage. Enter partial, wrong, and exact text. Change the plan and try the old confirmation. Refuse a second cleanup and a failed Gradle stop.",
+      "expected_results": "Exact text on the current plan is the only path that deletes. A failed prerequisite deletes nothing.",
+      "forbidden_effects": "The old phrase deletes after the plan changes.",
+      "checkpoint_ids": [
+        "H06.gate.confirm.120x40",
+        "H06.gate.confirm.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H06.gate.scenario.parity-gradle",
+      "owner_task": "H06.gate",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-gradle",
+      "action_sequence": "Launch the application with scenario parity-gradle and exercise the surface owned by H06.gate.",
+      "expected_results": "The visible fixture data belongs to parity-gradle.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H06.gate.scenario.parity-idea",
+      "owner_task": "H06.gate",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-idea",
+      "action_sequence": "Launch the application with scenario parity-idea and exercise the surface owned by H06.gate.",
+      "expected_results": "The visible fixture data belongs to parity-idea.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

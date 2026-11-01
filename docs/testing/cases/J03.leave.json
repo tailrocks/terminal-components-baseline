@@ -1,0 +1,47 @@
+{
+  "task_id": "J03.leave",
+  "cases": [
+    {
+      "case_id": "J03.leave.route",
+      "owner_task": "J03.leave",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J03.leave",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J03.leave.leave",
+      "owner_task": "J03.leave",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "hard-cases"
+      ],
+      "action_sequence": "Leave clean. Then dirty the form and choose Stay, Discard, preview cancel, Save, a failing save, and retry.",
+      "expected_results": "Each result matches its name. Focus returns to the opener. Reopen shows the saved or restored values.",
+      "forbidden_effects": "The leave baseline is the manager without an edit.",
+      "checkpoint_ids": [
+        "J03.leave.leave.120x40",
+        "J03.leave.leave.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

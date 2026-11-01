@@ -1,0 +1,45 @@
+{
+  "task_id": "J02.mounts",
+  "cases": [
+    {
+      "case_id": "J02.mounts.route",
+      "owner_task": "J02.mounts",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J02.mounts",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J02.mounts.mounts",
+      "owner_task": "J02.mounts",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Add, edit, and remove a mount. Enter a destination conflict and an invalid path.",
+      "expected_results": "The invalid form does not partially apply. The saved mount matches the form.",
+      "forbidden_effects": "A conflict is stored.",
+      "checkpoint_ids": [
+        "J02.mounts.mounts.120x40",
+        "J02.mounts.mounts.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "task_id": "T02.structure",
+  "cases": [
+    {
+      "case_id": "T02.structure.route",
+      "owner_task": "T02.structure",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T02.structure",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T02.structure.tabs",
+      "owner_task": "T02.structure",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open Columns, Indexes, Foreign keys, Constraints, Triggers, and DDL.",
+      "expected_results": "Each tab's heading and cell values belong to the opened object.",
+      "forbidden_effects": "An empty tab shows another tab's rows.",
+      "checkpoint_ids": [
+        "T02.structure.tabs.120x40",
+        "T02.structure.tabs.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

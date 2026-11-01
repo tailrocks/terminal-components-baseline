@@ -1,0 +1,49 @@
+{
+  "task_id": "J01.status",
+  "cases": [
+    {
+      "case_id": "J01.status.route",
+      "owner_task": "J01.status",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J01.status",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J01.status.status",
+      "owner_task": "J01.status",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "first-use",
+        "returning",
+        "launch-running"
+      ],
+      "action_sequence": "Show each implemented instance status and select that instance.",
+      "expected_results": "The selected row's status text is that instance's status.",
+      "forbidden_effects": "Selection shows another instance's status.",
+      "checkpoint_ids": [
+        "J01.status.status.120x40",
+        "J01.status.status.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "task_id": "T05.maximize",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t05_maximize.rs",
+    "docs/testing/cases/T05.maximize.json",
+    "tests/functional/baselines/pre_refactor/T05.maximize/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/workbench.rs"
+  ],
+  "coverage_rows": [
+    "T05.maximize.route",
+    "T05.maximize.layout"
+  ],
+  "checkpoints": [
+    "T05.maximize.layout.120x40"
+  ],
+  "acceptance": "Hiding the explorer and maximizing a pane restore the same layout.",
+  "status": "queued",
+  "architecture_refactor": false
+}

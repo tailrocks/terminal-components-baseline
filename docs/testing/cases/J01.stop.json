@@ -1,0 +1,45 @@
+{
+  "task_id": "J01.stop",
+  "cases": [
+    {
+      "case_id": "J01.stop.route",
+      "owner_task": "J01.stop",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J01.stop",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J01.stop.stop",
+      "owner_task": "J01.stop",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Select a running instance, open Stop, cancel, then confirm on the same instance.",
+      "expected_results": "Cancel keeps it running. Confirm stops that instance and the running count drops by one.",
+      "forbidden_effects": "The stop dialog is absent from the stop checkpoint.",
+      "checkpoint_ids": [
+        "J01.stop.stop.120x40",
+        "J01.stop.stop.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

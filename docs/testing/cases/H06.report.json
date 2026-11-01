@@ -1,0 +1,63 @@
+{
+  "task_id": "H06.report",
+  "cases": [
+    {
+      "case_id": "H06.report.route",
+      "owner_task": "H06.report",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H06.report",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H06.report.results",
+      "owner_task": "H06.report",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-cleanup-results"
+      ],
+      "action_sequence": "Complete a cleanup with mixed item outcomes and open the running and final reports.",
+      "expected_results": "The total and each item status match the simulation.",
+      "forbidden_effects": "A failed item is counted as freed.",
+      "checkpoint_ids": [
+        "H06.report.results.120x40",
+        "H06.report.results.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H06.report.scenario.parity-cleanup-results",
+      "owner_task": "H06.report",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-cleanup-results",
+      "action_sequence": "Launch the application with scenario parity-cleanup-results and exercise the surface owned by H06.report.",
+      "expected_results": "The visible fixture data belongs to parity-cleanup-results.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "task_id": "X03.focus",
+  "cases": [
+    {
+      "case_id": "X03.focus.route",
+      "owner_task": "X03.focus",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X03.focus",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X03.focus.focus",
+      "owner_task": "X03.focus",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Focus a control, open an overlay over a selected list, and show an owner-controlled cursor.",
+      "expected_results": "One gutter is visible in the top layer. The covered selection is neutral. The owner cursor is a fill without a second gutter.",
+      "forbidden_effects": "The page under the overlay keeps its gutter.",
+      "checkpoint_ids": [
+        "X03.focus.focus.120x40",
+        "X03.focus.focus.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

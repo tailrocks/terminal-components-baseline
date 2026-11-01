@@ -1,0 +1,37 @@
+{
+  "task_id": "J02.mounts",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j02_mounts.rs",
+    "docs/testing/cases/J02.mounts.json",
+    "tests/functional/baselines/pre_refactor/J02.mounts/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/editor.rs",
+    "src/bin/jackin/screens/config.rs"
+  ],
+  "coverage_rows": [
+    "J02.mounts.route",
+    "J02.mounts.mounts"
+  ],
+  "checkpoints": [
+    "J02.mounts.mounts.120x40"
+  ],
+  "acceptance": "Mount create, edit, and remove validate destination conflicts before any pending row changes.",
+  "status": "queued",
+  "architecture_refactor": false
+}

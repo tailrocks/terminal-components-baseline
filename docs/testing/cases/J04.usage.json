@@ -1,0 +1,45 @@
+{
+  "task_id": "J04.usage",
+  "cases": [
+    {
+      "case_id": "J04.usage.route",
+      "owner_task": "J04.usage",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J04.usage",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J04.usage.usage",
+      "owner_task": "J04.usage",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open each usage view. Show quota, missing data, mixed health, freshness, and stale values. Start refresh, refuse a duplicate, succeed, and fail.",
+      "expected_results": "Failure keeps the last good numbers. Return opens the same account.",
+      "forbidden_effects": "Failed refresh replaces the numbers with another account's quota.",
+      "checkpoint_ids": [
+        "J04.usage.usage.120x40",
+        "J04.usage.usage.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "task_id": "H05.previews",
+  "cases": [
+    {
+      "case_id": "H05.previews.route",
+      "owner_task": "H05.previews",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H05.previews",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H05.previews.preview",
+      "owner_task": "H05.previews",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Show text, binary, missing, unreadable, and symlink previews when the fixture has them. Toggle hidden files. Find, select, and copy inside a large preview.",
+      "expected_results": "Hidden-file toggle keeps a valid selection. Preview scrolling leaves the file list in place.",
+      "forbidden_effects": "Copy returns a different file's text.",
+      "checkpoint_ids": [
+        "H05.previews.preview.120x40",
+        "H05.previews.preview.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

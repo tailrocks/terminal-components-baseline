@@ -1,0 +1,45 @@
+{
+  "task_id": "J06.export",
+  "cases": [
+    {
+      "case_id": "J06.export.route",
+      "owner_task": "J06.export",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J06.export",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J06.export.export",
+      "owner_task": "J06.export",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Enter an invalid path, cancel a valid path, and confirm a valid path.",
+      "expected_results": "Invalid is rejected. Cancel writes no success report. Confirm reports that path.",
+      "forbidden_effects": "The test claims a host file was written.",
+      "checkpoint_ids": [
+        "J06.export.export.120x40",
+        "J06.export.export.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

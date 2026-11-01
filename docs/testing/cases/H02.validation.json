@@ -1,0 +1,45 @@
+{
+  "task_id": "H02.validation",
+  "cases": [
+    {
+      "case_id": "H02.validation.route",
+      "owner_task": "H02.validation",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H02.validation",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H02.validation.literal",
+      "owner_task": "H02.validation",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Enter literal shell metacharacters where the argument field allows them, then return after an error.",
+      "expected_results": "The field shows the literal text. The owning action is unchanged.",
+      "forbidden_effects": "The metacharacters are executed as a different command.",
+      "checkpoint_ids": [
+        "H02.validation.literal.120x40",
+        "H02.validation.literal.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

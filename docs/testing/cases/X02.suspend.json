@@ -1,0 +1,45 @@
+{
+  "task_id": "X02.suspend",
+  "cases": [
+    {
+      "case_id": "X02.suspend.route",
+      "owner_task": "X02.suspend",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X02.suspend",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X02.suspend.suspend",
+      "owner_task": "X02.suspend",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Suspend and resume on this host when the harness can deliver the signal.",
+      "expected_results": "The screen and modes return. If the API cannot suspend, the row stays BLOCKED with the API evidence.",
+      "forbidden_effects": "A killed process is reported as resume.",
+      "checkpoint_ids": [
+        "X02.suspend.suspend.120x40",
+        "X02.suspend.suspend.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

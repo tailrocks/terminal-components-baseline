@@ -1,0 +1,45 @@
+{
+  "task_id": "X01.clipboard",
+  "cases": [
+    {
+      "case_id": "X01.clipboard.route",
+      "owner_task": "X01.clipboard",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X01.clipboard",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X01.clipboard.copy",
+      "owner_task": "X01.clipboard",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Select text and press the copy chord, then press the quit chord with a selection and without one.",
+      "expected_results": "A selection copies. Quit runs only when the app does not consume the key as copy.",
+      "forbidden_effects": "An unsupported clipboard path is reported as a copied payload.",
+      "checkpoint_ids": [
+        "X01.clipboard.copy.120x40",
+        "X01.clipboard.copy.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

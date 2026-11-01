@@ -1,0 +1,45 @@
+{
+  "task_id": "T05.menus",
+  "cases": [
+    {
+      "case_id": "T05.menus.route",
+      "owner_task": "T05.menus",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T05.menus",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T05.menus.menus",
+      "owner_task": "T05.menus",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open every implemented shell menu and invoke an enabled command. Invoke a disabled command.",
+      "expected_results": "The enabled command's result is visible. The disabled command does not change state.",
+      "forbidden_effects": "The disabled command runs.",
+      "checkpoint_ids": [
+        "T05.menus.menus.120x40",
+        "T05.menus.menus.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

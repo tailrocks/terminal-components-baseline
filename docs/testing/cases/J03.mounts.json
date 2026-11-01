@@ -1,0 +1,45 @@
+{
+  "task_id": "J03.mounts",
+  "cases": [
+    {
+      "case_id": "J03.mounts.route",
+      "owner_task": "J03.mounts",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J03.mounts",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J03.mounts.mounts",
+      "owner_task": "J03.mounts",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Add a global mount and compare its scope with a workspace mount.",
+      "expected_results": "The saved scope is global.",
+      "forbidden_effects": "The workspace mount list gains the global mount.",
+      "checkpoint_ids": [
+        "J03.mounts.mounts.120x40",
+        "J03.mounts.mounts.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

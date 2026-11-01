@@ -1,0 +1,45 @@
+{
+  "task_id": "T02.commit",
+  "cases": [
+    {
+      "case_id": "T02.commit.route",
+      "owner_task": "T02.commit",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T02.commit",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T02.commit.commit",
+      "owner_task": "T02.commit",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open the SQL preview, cancel commit, then confirm commit.",
+      "expected_results": "Cancel leaves the pending counts. Confirm clears them and History contains the previewed statement.",
+      "forbidden_effects": "Confirm commits a different statement than the preview.",
+      "checkpoint_ids": [
+        "T02.commit.commit.120x40",
+        "T02.commit.commit.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

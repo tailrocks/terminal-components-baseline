@@ -1,0 +1,45 @@
+{
+  "task_id": "T03.affected",
+  "cases": [
+    {
+      "case_id": "T03.affected.route",
+      "owner_task": "T03.affected",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.affected",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T03.affected.affected",
+      "owner_task": "T03.affected",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Confirm one scoped write.",
+      "expected_results": "The affected body shows the simulated count and History records that statement.",
+      "forbidden_effects": "The body shows rows from the previous SELECT.",
+      "checkpoint_ids": [
+        "T03.affected.affected.120x40",
+        "T03.affected.affected.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

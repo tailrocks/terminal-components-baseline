@@ -1,0 +1,45 @@
+{
+  "task_id": "X01.cli",
+  "cases": [
+    {
+      "case_id": "X01.cli.route",
+      "owner_task": "X01.cli",
+      "application": "cross",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X01.cli",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "X01.cli.cli",
+      "owner_task": "X01.cli",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Run --help and an unknown page, scenario, connection, option key, and option value for each binary. Repeat --opt and observe precedence.",
+      "expected_results": "The exit status and the error name the bad argument. A valid option is accepted.",
+      "forbidden_effects": "An invalid option starts the full-screen UI and is treated as success.",
+      "checkpoint_ids": [
+        "X01.cli.cli.120x40",
+        "X01.cli.cli.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

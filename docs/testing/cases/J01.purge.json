@@ -1,0 +1,45 @@
+{
+  "task_id": "J01.purge",
+  "cases": [
+    {
+      "case_id": "J01.purge.route",
+      "owner_task": "J01.purge",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J01.purge",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J01.purge.purge",
+      "owner_task": "J01.purge",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Enter a wrong token and then the exact token.",
+      "expected_results": "The wrong token does not purge. The exact token purges that instance only.",
+      "forbidden_effects": "A partial token purges.",
+      "checkpoint_ids": [
+        "J01.purge.purge.120x40",
+        "J01.purge.purge.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

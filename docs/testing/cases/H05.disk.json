@@ -1,0 +1,80 @@
+{
+  "task_id": "H05.disk",
+  "cases": [
+    {
+      "case_id": "H05.disk.route",
+      "owner_task": "H05.disk",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H05.disk",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H05.disk.tree",
+      "owner_task": "H05.disk",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-disk-navigation",
+        "parity-insights"
+      ],
+      "action_sequence": "Expand, sort, multi-select, and read the selected-byte total. Open Overview and TopFiles and return.",
+      "expected_results": "The returned node is the node that was open. The neighbour pane is unchanged.",
+      "forbidden_effects": "Sort changes the total without changing the selected set.",
+      "checkpoint_ids": [
+        "H05.disk.tree.120x40",
+        "H05.disk.tree.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H05.disk.scenario.parity-disk-navigation",
+      "owner_task": "H05.disk",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-disk-navigation",
+      "action_sequence": "Launch the application with scenario parity-disk-navigation and exercise the surface owned by H05.disk.",
+      "expected_results": "The visible fixture data belongs to parity-disk-navigation.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H05.disk.scenario.parity-insights",
+      "owner_task": "H05.disk",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-insights",
+      "action_sequence": "Launch the application with scenario parity-insights and exercise the surface owned by H05.disk.",
+      "expected_results": "The visible fixture data belongs to parity-insights.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

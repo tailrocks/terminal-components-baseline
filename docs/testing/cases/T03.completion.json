@@ -1,0 +1,45 @@
+{
+  "task_id": "T03.completion",
+  "cases": [
+    {
+      "case_id": "T03.completion.route",
+      "owner_task": "T03.completion",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.completion",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T03.completion.complete",
+      "owner_task": "T03.completion",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open completion, move the selection, accept one item, then dismiss another.",
+      "expected_results": "Accepted text is the selected item. Dismiss leaves the SQL unchanged.",
+      "forbidden_effects": "Dismiss inserts the highlighted item.",
+      "checkpoint_ids": [
+        "T03.completion.complete.120x40",
+        "T03.completion.complete.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

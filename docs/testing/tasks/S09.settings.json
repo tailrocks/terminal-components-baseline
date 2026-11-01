@@ -1,0 +1,77 @@
+{
+  "task_id": "S09.settings",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s09_settings.rs",
+    "docs/testing/cases/S09.settings.json",
+    "tests/functional/baselines/pre_refactor/S09.settings/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/settings.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.settings.route",
+    "sc.settings.playground",
+    "sc.settings.playground.120x40",
+    "sc.settings.playground.80x24",
+    "sc.settings.options",
+    "sc.settings.options.120x40",
+    "sc.settings.options.80x24",
+    "sc.settings.states",
+    "sc.settings.states.120x40",
+    "sc.settings.states.80x24",
+    "sc.settings.specimen.rest",
+    "sc.settings.specimen.hover",
+    "sc.settings.specimen.pressed",
+    "sc.settings.specimen.focused",
+    "sc.settings.specimen.focused_hover",
+    "sc.settings.specimen.selected",
+    "sc.settings.specimen.disabled",
+    "sc.settings.specimen.busy",
+    "sc.settings.specimen.error",
+    "sc.settings.specimen.editing",
+    "sc.settings.specimen.empty",
+    "sc.settings.specimen.loading",
+    "sc.settings.specimen.overflow",
+    "sc.settings.specimen.narrow",
+    "sc.settings.compare-levels",
+    "opt.settings.tab",
+    "opt.settings.cell_nav",
+    "opt.settings.env_select",
+    "opt.settings.desc_rows",
+    "opt.settings.tab_dirty",
+    "opt.settings.save_confirm",
+    "sc.settings.settings"
+  ],
+  "checkpoints": [
+    "sc.settings.playground.120x40",
+    "sc.settings.playground.80x24",
+    "sc.settings.options.120x40",
+    "sc.settings.options.80x24",
+    "sc.settings.states.120x40",
+    "sc.settings.states.80x24",
+    "sc.settings.compare-levels",
+    "sc.settings.settings"
+  ],
+  "acceptance": "Open Settings by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,752 @@
+{
+  "task_id": "S01.shell",
+  "cases": [
+    {
+      "case_id": "opt.shell.color",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "truecolor",
+        "256",
+        "16",
+        "mono"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.overrides",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "none",
+        "ascii-mono"
+      ],
+      "effect": "frame",
+      "needs": [
+        [
+          "shell.color",
+          "mono"
+        ]
+      ],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.glyphs",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "unicode",
+        "ascii"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.strings",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "default",
+        "ascii"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.motion",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "full",
+        "reduced",
+        "paused"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.focus_on",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "press",
+        "release"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.double_click_ms",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "250",
+        "500",
+        "800"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.double_click_slop",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "0",
+        "1",
+        "2"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.wheel_lines",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "1",
+        "3",
+        "5"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.hover_refresh_after_scroll",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.flash_ms",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "70",
+        "140",
+        "280"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.secondary_outside",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "reopen",
+        "close",
+        "ignore"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.end_edit_on_dead_space",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.autoscroll",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.autoscroll_ms",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "25",
+        "50",
+        "100"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.track_repeat",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.track_repeat_ms",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "150/25",
+        "300/50",
+        "500/100"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.track_click",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "page",
+        "jump"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.pointer_shapes",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.caret_shape",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "bar",
+        "block",
+        "underline",
+        "terminal"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.click_skips_animation",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.tooltips",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.reveal",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.platform",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "auto",
+        "macos",
+        "other"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.field_keys",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "auto",
+        "emacs",
+        "desktop"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.edit_entry",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "immediate",
+        "type-to-edit",
+        "explicit"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.focus_fallback",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "first",
+        "nearest"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.shift_wheel_horizontal",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.legacy_ctrl_punctuation",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.keyboard_protocol",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "auto",
+        "on",
+        "off"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.alt_keys",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "auto",
+        "delivered",
+        "refused",
+        "until-seen",
+        "with-protocol"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.card_heading",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "plain",
+        "rule",
+        "band",
+        "emphasis"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "opt.shell.inactive_selection",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "shell",
+      "option_values": [
+        "accent",
+        "neutral",
+        "none"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute a second option only when needs names it."
+    },
+    {
+      "case_id": "sc.shell.inspector",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "action_sequence": "Open the Inspector, move through its sections, change an option, and close it.",
+      "expected_results": "The Inspector shows the current page and the option change is visible on that page.",
+      "forbidden_effects": "Closing the Inspector changes the page selection.",
+      "checkpoint_ids": [
+        "sc.shell.inspector.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.shell.sidebar-policy",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "action_sequence": "Switch Current, Accordion, and All expansion.",
+      "expected_results": "The visible groups match the selected policy.",
+      "forbidden_effects": "All leaves a collapsed group expanded.",
+      "checkpoint_ids": [
+        "sc.shell.sidebar-policy.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.shell.shell-override",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "action_sequence": "Change a shell option that the page says affects a control, from the default to one other value.",
+      "expected_results": "The control's visible behaviour matches that value.",
+      "forbidden_effects": "The page option changes when only the shell option was edited.",
+      "checkpoint_ids": [
+        "sc.shell.shell-override.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    }
+  ]
+}

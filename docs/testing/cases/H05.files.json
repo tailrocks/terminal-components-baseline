@@ -1,0 +1,80 @@
+{
+  "task_id": "H05.files",
+  "cases": [
+    {
+      "case_id": "H05.files.route",
+      "owner_task": "H05.files",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H05.files",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H05.files.nav",
+      "owner_task": "H05.files",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-files",
+        "parity-browser"
+      ],
+      "action_sequence": "Enter a directory and return to the parent and the root boundary.",
+      "expected_results": "The visible path is that directory and then its parent.",
+      "forbidden_effects": "Parent jumps to an unrelated directory.",
+      "checkpoint_ids": [
+        "H05.files.nav.120x40",
+        "H05.files.nav.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H05.files.scenario.parity-files",
+      "owner_task": "H05.files",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-files",
+      "action_sequence": "Launch the application with scenario parity-files and exercise the surface owned by H05.files.",
+      "expected_results": "The visible fixture data belongs to parity-files.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H05.files.scenario.parity-browser",
+      "owner_task": "H05.files",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-browser",
+      "action_sequence": "Launch the application with scenario parity-browser and exercise the surface owned by H05.files.",
+      "expected_results": "The visible fixture data belongs to parity-browser.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

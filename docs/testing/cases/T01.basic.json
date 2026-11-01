@@ -1,0 +1,70 @@
+{
+  "task_id": "T01.basic",
+  "cases": [
+    {
+      "case_id": "T01.basic.route",
+      "owner_task": "T01.basic",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T01.basic",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T01.basic.fields",
+      "owner_task": "T01.basic",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Create a connection. Enter a blank name, a whitespace name, an invalid port, and the implemented valid boundaries. Save.",
+      "expected_results": "The saved record shows the exact valid name, host, port, engine, environment, group, and safe mode.",
+      "forbidden_effects": "An invalid Save replaces the original connection.",
+      "checkpoint_ids": [
+        "T01.basic.fields.120x40",
+        "T01.basic.fields.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "T01.basic.reopen",
+      "owner_task": "T01.basic",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Reopen the saved connection.",
+      "expected_results": "Every basic field matches the saved value.",
+      "forbidden_effects": "Reopen shows a default that was not saved.",
+      "checkpoint_ids": [
+        "T01.basic.reopen.120x40",
+        "T01.basic.reopen.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

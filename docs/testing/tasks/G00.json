@@ -1,0 +1,45 @@
+{
+  "task_id": "G00",
+  "wave": "A",
+  "kind": "prerequisite",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [],
+  "owned_files": [
+    "docs/testing/tasks/G00.json",
+    "docs/testing/reference-manifest.json"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    "AGENTS.md",
+    "docs/GOAL.md",
+    "docs/functional-testing.md",
+    "tests/functional/support.rs",
+    "src/catalog.rs"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "Record REFERENCE_SHA, tool digests, the missing visual-baseline tag, the Nextest list, and the existing gate results. Do not edit production or test behaviour.",
+  "status": "passed",
+  "architecture_refactor": false,
+  "evidence": {
+    "worktree": "clean except untracked terminal-components-baseline-goal.txt",
+    "nextest_list_count": 93,
+    "visual_baseline_tag": null,
+    "binaries_sha256": {
+      "showcase": "59646b3de51a53b516276b869826be2d16d81bb35a3c08d9df012acc7854826f",
+      "tablepro": "aeb2ca26942ba5fb74f817f3a7b5ab3f34b3c4e90e86f0afd8c31d13ea2e0343",
+      "holla": "d0e1196de5b1fc1417904c4da43f75960028b0d29e87209e9b69ef1e91cddf8f",
+      "jackin": "8f06be062879e897e5b3a49ea965e015e3f937452925d0baa41e992bd1b63839"
+    }
+  },
+  "gates": {
+    "functional_partitions": "93 passed, 0 failed. Union of test(/holla_/) and not test(/holla_/).",
+    "all_targets_list": "93 tests, identical to --test functional",
+    "clippy": "cargo clippy --locked --all-targets -- -D warnings PASS",
+    "fmt": "cargo fmt --check PASS",
+    "all_targets": "cargo nextest run --locked --all-targets --no-tests fail: 93 passed, 0 skipped, 61.805s"
+  }
+}

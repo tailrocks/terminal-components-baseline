@@ -1,0 +1,82 @@
+{
+  "task_id": "S02.inputs",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s02_inputs.rs",
+    "docs/testing/cases/S02.inputs.json",
+    "tests/functional/baselines/pre_refactor/S02.inputs/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/inputs.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.inputs.route",
+    "sc.inputs.playground",
+    "sc.inputs.playground.120x40",
+    "sc.inputs.playground.80x24",
+    "sc.inputs.options",
+    "sc.inputs.options.120x40",
+    "sc.inputs.options.80x24",
+    "sc.inputs.states",
+    "sc.inputs.states.120x40",
+    "sc.inputs.states.80x24",
+    "sc.inputs.specimen.rest",
+    "sc.inputs.specimen.hover",
+    "sc.inputs.specimen.pressed",
+    "sc.inputs.specimen.focused",
+    "sc.inputs.specimen.focused_hover",
+    "sc.inputs.specimen.selected",
+    "sc.inputs.specimen.disabled",
+    "sc.inputs.specimen.busy",
+    "sc.inputs.specimen.error",
+    "sc.inputs.specimen.editing",
+    "sc.inputs.specimen.empty",
+    "sc.inputs.specimen.loading",
+    "sc.inputs.specimen.overflow",
+    "sc.inputs.specimen.narrow",
+    "sc.inputs.compare-levels",
+    "opt.inputs.edit_entry",
+    "opt.inputs.focus_select",
+    "opt.inputs.field_keys",
+    "opt.inputs.text_keymap",
+    "opt.inputs.blur_action",
+    "opt.inputs.pointer_select",
+    "opt.inputs.label_hit",
+    "opt.inputs.wrap_label",
+    "opt.inputs.plain_label",
+    "opt.inputs.readout",
+    "opt.inputs.required_message",
+    "sc.inputs.edit"
+  ],
+  "checkpoints": [
+    "sc.inputs.playground.120x40",
+    "sc.inputs.playground.80x24",
+    "sc.inputs.options.120x40",
+    "sc.inputs.options.80x24",
+    "sc.inputs.states.120x40",
+    "sc.inputs.states.80x24",
+    "sc.inputs.compare-levels",
+    "sc.inputs.edit"
+  ],
+  "acceptance": "Open Inputs by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

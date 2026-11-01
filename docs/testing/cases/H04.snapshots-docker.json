@@ -1,0 +1,63 @@
+{
+  "task_id": "H04.snapshots-docker",
+  "cases": [
+    {
+      "case_id": "H04.snapshots-docker.route",
+      "owner_task": "H04.snapshots-docker",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H04.snapshots-docker",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H04.snapshots-docker.docker",
+      "owner_task": "H04.snapshots-docker",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "docker-cleanup"
+      ],
+      "action_sequence": "Open docker-ps, docker-df, compose-ps, and docker-unavailable.",
+      "expected_results": "Unavailable does not list containers as running.",
+      "forbidden_effects": "Unavailable offers a follow-up that claims a container started.",
+      "checkpoint_ids": [
+        "H04.snapshots-docker.docker.120x40",
+        "H04.snapshots-docker.docker.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H04.snapshots-docker.scenario.docker-cleanup",
+      "owner_task": "H04.snapshots-docker",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "docker-cleanup",
+      "action_sequence": "Launch the application with scenario docker-cleanup and exercise the surface owned by H04.snapshots-docker.",
+      "expected_results": "The visible fixture data belongs to docker-cleanup.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

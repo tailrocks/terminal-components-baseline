@@ -1,0 +1,45 @@
+{
+  "task_id": "J03.environments",
+  "cases": [
+    {
+      "case_id": "J03.environments.route",
+      "owner_task": "J03.environments",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J03.environments",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J03.environments.env",
+      "owner_task": "J03.environments",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Add a global environment value and a secret reference.",
+      "expected_results": "Reopen shows the global key and a masked reference.",
+      "forbidden_effects": "The value appears in a workspace environment.",
+      "checkpoint_ids": [
+        "J03.environments.env.120x40",
+        "J03.environments.env.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

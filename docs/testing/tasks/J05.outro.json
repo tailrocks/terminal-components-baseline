@@ -1,0 +1,38 @@
+{
+  "task_id": "J05.outro",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j05_outro.rs",
+    "docs/testing/cases/J05.outro.json",
+    "tests/functional/baselines/pre_refactor/J05.outro/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/app.rs",
+    "src/bin/jackin/rain.rs"
+  ],
+  "coverage_rows": [
+    "J05.outro.route",
+    "J05.outro.outro",
+    "J05.outro.scenario.outro-last"
+  ],
+  "checkpoints": [
+    "J05.outro.outro.120x40"
+  ],
+  "acceptance": "The last instance shows Outro. A non-last exit does not.",
+  "status": "queued",
+  "architecture_refactor": false
+}

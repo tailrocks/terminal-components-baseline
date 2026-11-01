@@ -1,0 +1,70 @@
+{
+  "task_id": "T01.connections",
+  "cases": [
+    {
+      "case_id": "T01.connections.route",
+      "owner_task": "T01.connections",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T01.connections",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T01.connections.select",
+      "owner_task": "T01.connections",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Select each fixture connection and filter until one and then zero remain.",
+      "expected_results": "Details show the selected name and host. Empty search shows the empty state.",
+      "forbidden_effects": "Details keep the previous connection after the selection moves.",
+      "checkpoint_ids": [
+        "T01.connections.select.120x40",
+        "T01.connections.select.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "T01.connections.status",
+      "owner_task": "T01.connections",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open idle, connecting, authentication-failure, and unreachable-host fixtures, then recover with another connection.",
+      "expected_results": "Each status text is the fixture's status. Recovery opens the other connection's workbench.",
+      "forbidden_effects": "Recovery shows the failed connection as connected.",
+      "checkpoint_ids": [
+        "T01.connections.status.120x40",
+        "T01.connections.status.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

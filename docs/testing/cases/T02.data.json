@@ -1,0 +1,45 @@
+{
+  "task_id": "T02.data",
+  "cases": [
+    {
+      "case_id": "T02.data.route",
+      "owner_task": "T02.data",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T02.data",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "T02.data.kinds",
+      "owner_task": "T02.data",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Open an editable table, a read-only view, and a table without a primary key.",
+      "expected_results": "The read-only view rejects mutation with the current reason. The editable table accepts a valid edit.",
+      "forbidden_effects": "The view stores an edit.",
+      "checkpoint_ids": [
+        "T02.data.kinds.120x40",
+        "T02.data.kinds.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

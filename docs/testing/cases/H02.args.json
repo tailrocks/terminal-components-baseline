@@ -1,0 +1,63 @@
+{
+  "task_id": "H02.args",
+  "cases": [
+    {
+      "case_id": "H02.args.route",
+      "owner_task": "H02.args",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H02.args",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H02.args.args",
+      "owner_task": "H02.args",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-task-sources"
+      ],
+      "action_sequence": "Fill each implemented argument type, enter invalid input, correct it, and cancel after an edit.",
+      "expected_results": "The displayed command and directory match the form. The secret is masked.",
+      "forbidden_effects": "Cancel starts the activity.",
+      "checkpoint_ids": [
+        "H02.args.args.120x40",
+        "H02.args.args.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H02.args.scenario.parity-task-sources",
+      "owner_task": "H02.args",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-task-sources",
+      "action_sequence": "Launch the application with scenario parity-task-sources and exercise the surface owned by H02.args.",
+      "expected_results": "The visible fixture data belongs to parity-task-sources.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

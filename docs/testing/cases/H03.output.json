@@ -1,0 +1,97 @@
+{
+  "task_id": "H03.output",
+  "cases": [
+    {
+      "case_id": "H03.output.route",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H03.output",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "H03.output.states",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "activities-multi",
+        "launch-failure",
+        "parity-executor"
+      ],
+      "action_sequence": "Reach each implemented activity state, including spawn failure, nonzero exit, and restart. Filter, find, select, copy, and follow output.",
+      "expected_results": "The visible status and exit status belong to that activity. Another activity's output does not change.",
+      "forbidden_effects": "Restart rewrites the failed run's identity.",
+      "checkpoint_ids": [
+        "H03.output.states.120x40",
+        "H03.output.states.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H03.output.scenario.activities-multi",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "activities-multi",
+      "action_sequence": "Launch the application with scenario activities-multi and exercise the surface owned by H03.output.",
+      "expected_results": "The visible fixture data belongs to activities-multi.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H03.output.scenario.launch-failure",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "launch-failure",
+      "action_sequence": "Launch the application with scenario launch-failure and exercise the surface owned by H03.output.",
+      "expected_results": "The visible fixture data belongs to launch-failure.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H03.output.scenario.parity-executor",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-executor",
+      "action_sequence": "Launch the application with scenario parity-executor and exercise the surface owned by H03.output.",
+      "expected_results": "The visible fixture data belongs to parity-executor.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

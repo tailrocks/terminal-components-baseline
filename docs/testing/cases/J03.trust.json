@@ -1,0 +1,45 @@
+{
+  "task_id": "J03.trust",
+  "cases": [
+    {
+      "case_id": "J03.trust.route",
+      "owner_task": "J03.trust",
+      "application": "jackin",
+      "kind": "route",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J03.trust",
+      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
+      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+    },
+    {
+      "case_id": "J03.trust.trust",
+      "owner_task": "J03.trust",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Change a trust value, Discard on one attempt, and Save on another.",
+      "expected_results": "Discard restores the old value. Save reopens with the new value.",
+      "forbidden_effects": "Discard saves the change.",
+      "checkpoint_ids": [
+        "J03.trust.trust.120x40",
+        "J03.trust.trust.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}
