@@ -6,7 +6,7 @@
     "rows": 40,
     "status": "suspect",
     "reason": "Measured 120 by 40. The live name says narrow and the narrow checkpoint is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
-    "replacement_id": null
+    "replacement_id": "functional/holla_browser_80x24"
   },
   {
     "id": "functional/tablepro_resize_60x20",
@@ -15,7 +15,7 @@
     "rows": 40,
     "status": "suspect",
     "reason": "Measured 120 by 40. The name says 60 by 20. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
-    "replacement_id": null
+    "replacement_id": "functional/tablepro_workbench_60x20"
   },
   {
     "id": "functional/showcase_help_resize",
@@ -24,7 +24,7 @@
     "rows": 50,
     "status": "suspect",
     "reason": "Measured 160 by 50. The narrow help checkpoint in the test is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
-    "replacement_id": null
+    "replacement_id": "functional/showcase_help_80x24"
   },
   {
     "id": "functional/showcase_keyboard_activation",
@@ -70,5 +70,109 @@
     "status": "superseded",
     "reason": "The file is the loading cockpit. functional/jackin_launch_failed is the failed network stage.",
     "replacement_id": "functional/jackin_launch_failed"
+  },
+  {
+    "id": "functional/holla_browser_80x24",
+    "path": "tests/functional/baselines/functional/holla_browser_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002. This is the 80 by 24 file list captured before the terminal returns to 120 by 40. Receipt docs/testing/acceptance-receipts/functional_holla_browser_80x24.json.",
+    "replaces": "functional/holla_resize_narrow"
+  },
+  {
+    "id": "functional/tablepro_workbench_60x20",
+    "path": "tests/functional/baselines/functional/tablepro_workbench_60x20.tui.json",
+    "cols": 60,
+    "rows": 20,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002. This is the 60 by 20 workbench captured before the terminal returns to 120 by 40. Receipt docs/testing/acceptance-receipts/functional_tablepro_workbench_60x20.json.",
+    "replaces": "functional/tablepro_resize_60x20"
+  },
+  {
+    "id": "functional/showcase_help_80x24",
+    "path": "tests/functional/baselines/functional/showcase_help_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002. This is Keyboard & mouse at 80 by 24, captured before the terminal returns to 160 by 50. Receipt docs/testing/acceptance-receipts/functional_showcase_help_80x24.json.",
+    "replaces": "functional/showcase_help_resize"
+  },
+  {
+    "id": "functional/showcase_keyboard_run_task",
+    "path": "tests/functional/baselines/functional/showcase_keyboard_run_task.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 after keyboard activation of Run task. Receipt docs/testing/acceptance-receipts/functional_showcase_keyboard_run_task.json.",
+    "replaces": "functional/showcase_keyboard_activation"
+  },
+  {
+    "id": "functional/tablepro_query_recovered",
+    "path": "tests/functional/baselines/functional/tablepro_query_recovered.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 after the corrected orders query. Receipt docs/testing/acceptance-receipts/functional_tablepro_query_recovered.json.",
+    "replaces": "functional/tablepro_query_error_recovery"
+  },
+  {
+    "id": "functional/jackin_stop_instance_dialog",
+    "path": "tests/functional/baselines/functional/jackin_stop_instance_dialog.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 while Stop instance 7f3a is open. Receipt docs/testing/acceptance-receipts/functional_jackin_stop_instance_dialog.json.",
+    "replaces": "functional/jackin_manager_stop_dialog"
+  },
+  {
+    "id": "functional/jackin_settings_dirty_leave",
+    "path": "tests/functional/baselines/functional/jackin_settings_dirty_leave.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 on the unsaved-changes leave choice. Receipt docs/testing/acceptance-receipts/functional_jackin_settings_dirty_leave.json.",
+    "replaces": "functional/jackin_settings_leave"
+  },
+  {
+    "id": "functional/jackin_launch_failed",
+    "path": "tests/functional/baselines/functional/jackin_launch_failed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 on the failed network stage. Receipt docs/testing/acceptance-receipts/functional_jackin_launch_failed.json.",
+    "replaces": "functional/jackin_launch_failure"
+  },
+  {
+    "id": "functional/jackin_launch_cockpit",
+    "path": "tests/functional/baselines/functional/jackin_launch_cockpit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 at the cockpit launch stage. Receipt docs/testing/acceptance-receipts/functional_jackin_launch_cockpit.json."
+  },
+  {
+    "id": "functional/jackin_launch_capsule",
+    "path": "tests/functional/baselines/functional/jackin_launch_capsule.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 at the capsule launch stage. Receipt docs/testing/acceptance-receipts/functional_jackin_launch_capsule.json."
+  },
+  {
+    "id": "functional/jackin_launch_detached",
+    "path": "tests/functional/baselines/functional/jackin_launch_detached.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 after detach. Receipt docs/testing/acceptance-receipts/functional_jackin_launch_detached.json."
+  },
+  {
+    "id": "functional/jackin_launch_reconnected",
+    "path": "tests/functional/baselines/functional/jackin_launch_reconnected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 after reconnect. Receipt docs/testing/acceptance-receipts/functional_jackin_launch_reconnected.json."
   }
 ]

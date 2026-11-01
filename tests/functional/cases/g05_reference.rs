@@ -120,11 +120,32 @@ fn assert_suspect_dispositions() {
         serde_json::from_slice(&std::fs::read(&path).expect("dispositions")).expect("dispositions");
     let rows = value.as_array().expect("dispositions array");
     let expected = [
-        ("functional/holla_resize_narrow", 120_u64, 40_u64),
-        ("functional/tablepro_resize_60x20", 120_u64, 40_u64),
-        ("functional/showcase_help_resize", 160_u64, 50_u64),
+        (
+            "functional/holla_resize_narrow",
+            120_u64,
+            40_u64,
+            "functional/holla_browser_80x24",
+            80_u64,
+            24_u64,
+        ),
+        (
+            "functional/tablepro_resize_60x20",
+            120_u64,
+            40_u64,
+            "functional/tablepro_workbench_60x20",
+            60_u64,
+            20_u64,
+        ),
+        (
+            "functional/showcase_help_resize",
+            160_u64,
+            50_u64,
+            "functional/showcase_help_80x24",
+            80_u64,
+            24_u64,
+        ),
     ];
-    for (id, cols, rows_n) in expected {
+    for (id, cols, rows_n, replacement, replacement_cols, replacement_rows) in expected {
         let row = rows
             .iter()
             .find(|row| row["id"] == id)
@@ -132,7 +153,7 @@ fn assert_suspect_dispositions() {
         assert_eq!(row["status"].as_str(), Some("suspect"), "{id}");
         assert_eq!(row["cols"].as_u64(), Some(cols), "{id}");
         assert_eq!(row["rows"].as_u64(), Some(rows_n), "{id}");
-        assert!(row["replacement_id"].is_null(), "{id}");
+        assert_eq!(row["replacement_id"].as_str(), Some(replacement), "{id}");
         assert!(row.get("retired_id").is_none(), "{id}");
         assert!(row.get("commit").is_none(), "{id}");
         let reason = row["reason"].as_str().expect("reason");
@@ -149,6 +170,146 @@ fn assert_suspect_dispositions() {
         assert_eq!(file["test_id"].as_str(), Some(id));
         assert_eq!(file["snapshot"]["cols"].as_u64(), Some(cols));
         assert_eq!(file["snapshot"]["rows"].as_u64(), Some(rows_n));
+        let replacement_row = rows
+            .iter()
+            .find(|row| row["id"] == replacement)
+            .unwrap_or_else(|| panic!("missing replacement disposition {replacement}"));
+        assert_eq!(
+            replacement_row["status"].as_str(),
+            Some("accepted"),
+            "{replacement}"
+        );
+        let replacement_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join(replacement_row["path"].as_str().expect("path"));
+        let replacement_file: Value =
+            serde_json::from_slice(&std::fs::read(&replacement_path).expect("replacement"))
+                .expect("replacement json");
+        assert_eq!(
+            replacement_file["test_id"].as_str(),
+            Some(replacement),
+            "{replacement}"
+        );
+        assert_eq!(
+            replacement_file["snapshot"]["cols"].as_u64(),
+            Some(replacement_cols),
+            "{replacement}"
+        );
+        assert_eq!(
+            replacement_file["snapshot"]["rows"].as_u64(),
+            Some(replacement_rows),
+            "{replacement}"
+        );
+    }
+}
+
+fn assert_acceptance_receipts() {
+    let manifest = manifest();
+    let lockfile = manifest["lockfile_sha256"].as_str().expect("lockfile");
+    let cases = [
+        (
+            "functional_holla_browser_80x24",
+            "holla",
+            "functional/holla_browser_80x24",
+        ),
+        (
+            "functional_tablepro_workbench_60x20",
+            "tablepro",
+            "functional/tablepro_workbench_60x20",
+        ),
+        (
+            "functional_showcase_help_80x24",
+            "showcase",
+            "functional/showcase_help_80x24",
+        ),
+        (
+            "functional_showcase_keyboard_run_task",
+            "showcase",
+            "functional/showcase_keyboard_run_task",
+        ),
+        (
+            "functional_tablepro_query_recovered",
+            "tablepro",
+            "functional/tablepro_query_recovered",
+        ),
+        (
+            "functional_jackin_stop_instance_dialog",
+            "jackin",
+            "functional/jackin_stop_instance_dialog",
+        ),
+        (
+            "functional_jackin_settings_dirty_leave",
+            "jackin",
+            "functional/jackin_settings_dirty_leave",
+        ),
+        (
+            "functional_jackin_launch_failed",
+            "jackin",
+            "functional/jackin_launch_failed",
+        ),
+        (
+            "functional_jackin_launch_cockpit",
+            "jackin",
+            "functional/jackin_launch_cockpit",
+        ),
+        (
+            "functional_jackin_launch_capsule",
+            "jackin",
+            "functional/jackin_launch_capsule",
+        ),
+        (
+            "functional_jackin_launch_detached",
+            "jackin",
+            "functional/jackin_launch_detached",
+        ),
+        (
+            "functional_jackin_launch_reconnected",
+            "jackin",
+            "functional/jackin_launch_reconnected",
+        ),
+    ];
+    for (file, binary, baseline_id) in cases {
+        let receipt_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("docs/testing/acceptance-receipts")
+            .join(format!("{file}.json"));
+        let receipt: Value =
+            serde_json::from_slice(&std::fs::read(&receipt_path).expect("receipt"))
+                .expect("receipt json");
+        assert_eq!(
+            receipt["source_sha"].as_str(),
+            Some(REFERENCE_SHA),
+            "{file}"
+        );
+        assert_eq!(
+            receipt["lockfile_sha256"].as_str(),
+            Some(lockfile),
+            "{file}"
+        );
+        assert_eq!(
+            receipt["comparator_rev"].as_str(),
+            Some(COMPARATOR_REV),
+            "{file}"
+        );
+        assert_eq!(
+            receipt["expect_baseline"].as_str(),
+            Some("missing"),
+            "{file}"
+        );
+        let precondition = receipt["precondition"].as_str().unwrap_or("");
+        assert!(!precondition.is_empty(), "{file}");
+        let expected_sha = manifest["binaries"][binary]["sha256"]
+            .as_str()
+            .unwrap_or_else(|| panic!("missing binary {binary}"));
+        assert_eq!(
+            receipt["binary_sha256"].as_str(),
+            Some(expected_sha),
+            "{file}"
+        );
+        let baseline = baseline_root().join(format!("{baseline_id}.tui.json"));
+        assert_eq!(
+            receipt["candidate_sha256"].as_str(),
+            Some(file_sha256(&baseline).as_str()),
+            "{file}"
+        );
     }
 }
 
@@ -292,6 +453,11 @@ fn g05_reference_session_receipt_records_identity() {
     assert_eq!(session["comparator_name"], manifest["comparator"]["name"]);
     assert_eq!(session["comparator_rev"].as_str(), Some(COMPARATOR_REV));
     app.finish();
+}
+
+#[test]
+fn g05_acceptance_receipts_match_reference_baselines() {
+    assert_acceptance_receipts();
 }
 
 #[test]
