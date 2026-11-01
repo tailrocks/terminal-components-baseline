@@ -18,7 +18,7 @@ use ratatui::layout::Rect;
 use super::modals::{BrowserResult, ChoiceDialog};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::console::domain::workspace::{Mount, Workspace};
-use crate::console::sim::world::World;
+use crate::console::world::World;
 
 const BROWSER: WidgetId = WidgetId::of("prelude.browser");
 const DEST: WidgetId = WidgetId::of("prelude.dest");

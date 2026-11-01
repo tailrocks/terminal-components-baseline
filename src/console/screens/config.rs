@@ -37,7 +37,7 @@ use crate::console::domain::workspace::{
     EnvValue, EnvVar, Isolation, Mount, MountKind, MountScope, MountSource, RoleName, Workspace,
     env_key_error, mask,
 };
-use crate::console::sim::world::{GlobalConfig, World};
+use crate::console::world::{GlobalConfig, World};
 use crate::ui::context::ContextAnchor;
 use crate::widgets::menu::MenuItem;
 use ratatui::crossterm::event::KeyModifiers;
@@ -1437,7 +1437,7 @@ impl ConfigTabs {
                     role: r.clone(),
                     original: Some(k.clone()),
                 });
-                let flow = OpFlow::new(self.ids.form.sub("op"), &w.op, w.now_ms());
+                let flow = OpFlow::new(self.ids.form.sub("op"), w.op.as_ref(), w.now_ms());
                 cx.open(flow, LayerTag::new("cfg.env.op"));
             }
             (RowKey::Env(r, k), KeyCode::Char('s')) => {
@@ -2249,7 +2249,7 @@ impl ConfigTabs {
             ("cfg.mount", ModalResult::Form(Some(values))) => self.save_mount(values, w, cx),
             ("cfg.env", ModalResult::FormAction(name, _)) => {
                 if name == "choose:op" {
-                    let flow = OpFlow::new(self.ids.form.sub("op"), &w.op, w.now_ms());
+                    let flow = OpFlow::new(self.ids.form.sub("op"), w.op.as_ref(), w.now_ms());
                     cx.open(flow, LayerTag::new("cfg.env.opform"));
                 }
                 Outcome::Changed
@@ -2401,7 +2401,7 @@ impl ConfigTabs {
                 });
                 return Outcome::Changed;
             }
-            MountSource::Host(crate::console::sim::world::expand(&w.home, &host))
+            MountSource::Host(crate::console::world::expand(&w.home, &host))
         };
         let original = match &self.editing {
             Some(Editing::Mount { original }) => original.clone(),

@@ -35,11 +35,12 @@ use ratatui::style::{Modifier, Style};
 use super::modals::{InfoDialog, InfoResult};
 use super::rowmenu::RowMenu;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
+use crate::console::backend::Effect;
 use crate::console::domain::agent::Agent;
 use crate::console::domain::instance::{DaemonSnapshot, InstanceStatus};
 use crate::console::domain::workspace::WorkspaceId;
-use crate::console::sim::launch::LaunchPlan;
-use crate::console::sim::world::{DaemonHealth, Msg, World, job};
+use crate::console::launch::LaunchPlan;
+use crate::console::world::{DaemonHealth, Msg, World, job};
 use crate::ui::context::ContextAnchor;
 use crate::ui::text::plural;
 use crate::widgets::menu::MenuItem;
@@ -492,10 +493,10 @@ impl ManagerScreen {
                     inst.last_seen_secs = now_secs;
                 }
                 let now = w.now_ms();
-                let mut d = crate::console::sim::pty::Daemon::new(&wsname);
+                let mut d = crate::console::panes::Daemon::new(&wsname, w.backend.session_script());
                 d.new_tab(Some(agent), None, now, false);
                 w.daemons.insert(id.to_owned(), d);
-                crate::console::sim::world::refresh_snapshots(w);
+                crate::console::world::refresh_snapshots(w);
                 w.sync_arbiter();
                 cx.status(format!(
                     "Restored {} · container restarted",
@@ -703,7 +704,7 @@ impl ManagerScreen {
             return;
         }
         self.busy_rows.push((RowKey::Workspace(ws), "prewarming…"));
-        w.schedule(2_400, Msg::Prewarmed { workspace: ws });
+        w.perform(Effect::Prewarm { workspace: ws });
         cx.progress(job::PREWARM, "Prewarming the derived image…");
     }
 
@@ -1871,9 +1872,9 @@ impl Page<Jackin> for ManagerScreen {
             if w.refresh_fails && !self.last_refresh_error {
                 self.last_refresh_error = true;
                 w.daemon_health = DaemonHealth::Stale;
-                w.schedule(0, Msg::Refreshed { ok: false });
+                w.perform(Effect::Refresh);
             } else {
-                crate::console::sim::world::refresh_snapshots(w);
+                crate::console::world::refresh_snapshots(w);
                 for i in w.instances.iter_mut() {
                     if i.status.is_live() {
                         i.last_seen_secs = w.clock.now_secs();
@@ -1911,7 +1912,7 @@ impl Page<Jackin> for ManagerScreen {
                     i.last_seen_secs = now_secs;
                 }
                 w.daemons.remove(instance);
-                crate::console::sim::world::refresh_snapshots(w);
+                crate::console::world::refresh_snapshots(w);
                 w.sync_arbiter();
                 cx.status(format!(
                     "Instance {} stopped",
@@ -2335,7 +2336,7 @@ impl Page<Jackin> for ManagerScreen {
                 let plan = match w.scenario {
                     crate::console::scenario::Scenario::LaunchFailure => LaunchPlan::FailNetwork,
                     crate::console::scenario::Scenario::HardCases => {
-                        if w.op.session == crate::console::sim::onepassword::OpSession::Locked
+                        if w.op.session() == crate::console::backend::OpSession::Locked
                             && account.as_deref().is_some_and(|a| {
                                 a.contains("work")
                                     || a.contains("grok")
@@ -2384,7 +2385,7 @@ impl Page<Jackin> for ManagerScreen {
                 let id = tag.key.clone();
                 self.busy_rows
                     .push((RowKey::Instance(id.clone()), "stopping…"));
-                w.schedule(1_800, Msg::Stopped { instance: id });
+                w.perform(Effect::Stop { instance: id });
                 cx.progress(job::STOP, "Stopping…");
                 Outcome::Changed
             }
@@ -2397,7 +2398,7 @@ impl Page<Jackin> for ManagerScreen {
                 let id = tag.key.clone();
                 self.busy_rows
                     .push((RowKey::Instance(id.clone()), "purging…"));
-                w.schedule(2_200, Msg::Purged { instance: id });
+                w.perform(Effect::Purge { instance: id });
                 cx.progress(job::PURGE, "Purging…");
                 Outcome::Changed
             }

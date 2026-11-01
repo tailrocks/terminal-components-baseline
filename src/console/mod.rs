@@ -1,8 +1,11 @@
 pub mod app;
 pub mod arbiter;
+pub mod backend;
 pub mod domain;
+pub mod launch;
 pub mod pages;
+pub mod panes;
 pub mod rain;
 pub mod scenario;
 pub mod screens;
-pub mod sim;
+pub mod world;

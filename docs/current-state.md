@@ -20,9 +20,18 @@ does not exist in this tree yet.
 | `src/bin/showcase/` | Showcase: the executable component catalog (54 pages). Thin consumer: pages add wiring, demo data and option tables only. |
 | `src/bin/tablepro/` | TablePro: simulated database workbench (connections, explorer, query tabs, results, history). |
 | `src/bin/holla/` | Holla: simulated launcher/finder, files, disk cleanup, services. Backends are simulated; tests assert the next in-app consequence. |
-| `src/bin/jackin/` | Jackin: simulated workspace manager/cockpit/capsule. Binary name is `jackin` (`cargo run --bin jackin`). |
+| `src/console/` | The jackin-preview screens as library blocks: manager, editor, accounts, usage, settings, cockpit, capsule, prelude, inspect and the modals, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
+| `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TerminalView`, `encode_key`. It renders a vt100 session from a byte stream and does no I/O. |
+| `src/bin/jackin/` | Jackin-preview: the command line, the fixture data and the simulated `Backend`. Binary name is `jackin` (`cargo run --bin jackin`). |
 | `tests/functional/` | The only test estate: live PTY functional/integration tests plus the frozen visual gate. See [functional testing](functional-testing.md). |
 | `.velnor/config.toml` | Source of truth for generated CI (`.github/` is generated, never hand-edited). See [CI](ci.md). |
+
+## Cargo features
+
+| Feature | Default | Adds |
+| --- | --- | --- |
+| `cli` | yes | `clap`, the `cli` module and `Motion` as a `clap::ValueEnum`. The four binaries require it. |
+| `terminal` | no | `vt100` and the `terminal` module. |
 
 ## Rules that hold today
 

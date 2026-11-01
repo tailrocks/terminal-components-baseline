@@ -23,6 +23,7 @@ use ratatui::layout::{Position, Rect};
 
 use crate::console::arbiter::{EntryDecision, ExitDecision};
 use crate::console::domain::instance::InstanceStatus;
+use crate::console::launch::LaunchPlan;
 use crate::console::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_USAGE};
 use crate::console::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
 use crate::console::scenario::{Motion, Scenario};
@@ -33,8 +34,7 @@ use crate::console::screens::modals::{FormAction, FormDialog, HelpOverlay, InfoR
 use crate::console::screens::prelude::PreludeScreen;
 use crate::console::screens::settings::SettingsScreen;
 use crate::console::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
-use crate::console::sim::launch::LaunchPlan;
-use crate::console::sim::world::{Msg, World};
+use crate::console::world::{Msg, World};
 use crate::shell::Page as _;
 use crate::ui::leave::{LeaveGuard, Stakes};
 use crate::widgets::brand::Lockup;
@@ -708,7 +708,7 @@ impl App {
             ),
             Err(e) => right.push(Segment::new(format!("! {}", e.label()), Tone::Error).priority(8)),
         }
-        if self.world.daemon_health == crate::console::sim::world::DaemonHealth::Stale {
+        if self.world.daemon_health == crate::console::world::DaemonHealth::Stale {
             right.push(Segment::new("▲ daemon stale", Tone::Warning).priority(8));
         }
         if !self.world.jobs.is_empty() {
@@ -1500,7 +1500,7 @@ impl App {
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
                     d.new_tab(agent, account.clone(), now, false);
                 }
-                crate::console::sim::world::refresh_snapshots(&mut self.world);
+                crate::console::world::refresh_snapshots(&mut self.world);
                 self.go(Go::Attach {
                     instance,
                     pane: None,
@@ -1553,7 +1553,7 @@ impl App {
                     i.last_seen_secs = now_secs;
                 }
                 self.world.daemons.remove(&instance);
-                crate::console::sim::world::refresh_snapshots(&mut self.world);
+                crate::console::world::refresh_snapshots(&mut self.world);
                 self.world.sync_arbiter();
 
                 self.show_tab(TAB_MANAGER);
@@ -1765,7 +1765,7 @@ impl App {
             ),
             Err(e) => left.push(Segment::new(format!("! {}", e.label()), Tone::Error).priority(8)),
         }
-        if self.world.daemon_health == crate::console::sim::world::DaemonHealth::Stale {
+        if self.world.daemon_health == crate::console::world::DaemonHealth::Stale {
             left.push(Segment::new("▲ daemon stale", Tone::Warning).priority(8))
         }
         if let Some(s) = self.router.screen(route) {

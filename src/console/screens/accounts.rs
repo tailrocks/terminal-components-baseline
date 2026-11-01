@@ -35,6 +35,7 @@ use ratatui::style::{Modifier, Style};
 use super::modals::{BrowserResult, FormDialog, FormField, FormValues, OpFlow};
 use super::rowmenu::RowMenu;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
+use crate::console::backend::{CheckRow, Effect, FolderProbe, ValidationOutcome, apply_validation};
 use crate::console::domain::account::{
     Account, AccountId, AccountOrigin, CredentialSource, DetectedKind, DuplicateProbe, IssueCode,
     Lifecycle, ValidationState, fingerprint, masked, tail_of,
@@ -44,8 +45,7 @@ use crate::console::domain::onepassword::OpReference;
 use crate::console::domain::usage::{
     Freshness, OverallSummary, QuotaStatus, QuotaWindow, WindowUnit,
 };
-use crate::console::sim::provider::{self, CheckRow, ValidationOutcome};
-use crate::console::sim::world::{Msg, World, job};
+use crate::console::world::{Msg, World, job};
 use crate::ui::context::ContextAnchor;
 use crate::ui::text::plural;
 use crate::ui::text::thousands;
@@ -396,13 +396,10 @@ impl AccountsScreen {
                 continue;
             }
             a.usage.freshness.phase = Freshness::Refreshing;
-            let dur = provider::refresh_duration_ms(a) + i as i64 * 160;
-            w.schedule(
-                dur,
-                Msg::AccountRefreshed {
-                    account: id.clone(),
-                },
-            );
+            w.perform(Effect::RefreshAccount {
+                account: id.clone(),
+                stagger_ms: i as i64 * 160,
+            });
             started += 1;
         }
         if started == 0 {
@@ -422,7 +419,7 @@ impl AccountsScreen {
 
     fn apply_refresh(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
         let now = w.now_secs();
-        let locked = w.op.session != crate::console::sim::onepassword::OpSession::SignedIn;
+        let locked = w.op.session() != crate::console::backend::OpSession::SignedIn;
         let broker_down = w.refresh_fails;
         let Some(a) = w.accounts.get_mut(id) else {
             return;
@@ -710,11 +707,11 @@ impl AccountsScreen {
                     .op_ref
                     .clone()
                     .ok_or("Choose a 1Password item and field first")?;
-                Ok(provider::validate(
+                Ok(w.backend.validate(
                     provider,
                     &CredentialSource::OnePassword(r),
                     None,
-                    &w.op,
+                    w.op.as_ref(),
                     now,
                 ))
             }
@@ -723,14 +720,14 @@ impl AccountsScreen {
                 if path.trim().is_empty() {
                     return Err("Enter or browse to the local agent folder".into());
                 }
-                Ok(provider::validate(
+                Ok(w.backend.validate(
                     provider,
                     &CredentialSource::LocalFolder {
                         path: path.trim().to_owned(),
                         detected: DetectedKind::Unknown,
                     },
                     None,
-                    &w.op,
+                    w.op.as_ref(),
                     now,
                 ))
             }
@@ -739,14 +736,14 @@ impl AccountsScreen {
                 if key.trim().is_empty() {
                     return Err("API key required: the field is empty".into());
                 }
-                Ok(provider::validate(
+                Ok(w.backend.validate(
                     provider,
                     &CredentialSource::PlainApiKey {
                         fingerprint: fingerprint(&key),
                         tail: tail_of(&key),
                     },
                     Some(&key),
-                    &w.op,
+                    w.op.as_ref(),
                     now,
                 ))
             }
@@ -829,8 +826,8 @@ impl AccountsScreen {
             0 => CredentialSource::OnePassword(ctx.op_ref.clone().unwrap()),
             1 => {
                 let path = get("folder").trim().to_owned();
-                let detected = match provider::probe_folder(&path) {
-                    provider::FolderProbe::Found(k) => k,
+                let detected = match w.backend.probe_folder(&path) {
+                    FolderProbe::Found(k) => k,
                     _ => DetectedKind::Unknown,
                 };
                 CredentialSource::LocalFolder { path, detected }
@@ -957,7 +954,7 @@ impl AccountsScreen {
         if account.endpoint.is_some() && !provider.supports_endpoint() {
             account.endpoint = None;
         }
-        provider::apply_validation(&mut account, &outcome, now);
+        apply_validation(&mut account, &outcome, now);
         if first_for_provider && editing.is_none() {
             account.default_for_provider = true;
         }
@@ -1060,12 +1057,9 @@ impl AccountsScreen {
             started_tick: w.clock.now_ms as u64,
         };
         let title = a.title();
-        w.schedule(
-            900,
-            Msg::AccountValidated {
-                account: id.to_owned(),
-            },
-        );
+        w.perform(Effect::ValidateAccount {
+            account: id.to_owned(),
+        });
         cx.progress(job::ACCOUNT_VALIDATE, format!("Validating {title}…"));
     }
 
@@ -1094,12 +1088,14 @@ impl AccountsScreen {
             ));
             return;
         }
-        let outcome = provider::validate(a.provider, &a.source, None, &w.op, now);
+        let outcome = w
+            .backend
+            .validate(a.provider, &a.source, None, w.op.as_ref(), now);
         let Some(slot) = w.accounts.get_mut(id) else {
             return;
         };
         let keep_windows = slot.usage.windows.clone();
-        provider::apply_validation(slot, &outcome, now);
+        apply_validation(slot, &outcome, now);
         if slot.usage.windows.is_empty() {
             slot.usage.windows = keep_windows;
         }
@@ -1443,9 +1439,9 @@ impl AccountsScreen {
                     format!(
                         "{registered} registered · {} discovered · 1Password {}",
                         w.accounts.accounts.len() - registered,
-                        match w.op.session {
-                            crate::console::sim::onepassword::OpSession::SignedIn => "available",
-                            crate::console::sim::onepassword::OpSession::Locked => "locked",
+                        match w.op.session() {
+                            crate::console::backend::OpSession::SignedIn => "available",
+                            crate::console::backend::OpSession::Locked => "locked",
                         }
                     ),
                     Tone::Normal,
@@ -2458,7 +2454,8 @@ impl Page<Jackin> for AccountsScreen {
             ("form", ModalResult::FormAction(name, values)) => {
                 match name.as_str() {
                     "choose:op" => {
-                        let flow = OpFlow::new(WidgetId::of("accounts.op"), &w.op, w.now_ms());
+                        let flow =
+                            OpFlow::new(WidgetId::of("accounts.op"), w.op.as_ref(), w.now_ms());
                         cx.open(flow, LayerTag::new("op"));
                     }
                     "choose:browse" => {

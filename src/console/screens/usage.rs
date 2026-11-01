@@ -24,11 +24,11 @@ use ratatui::layout::{Position, Rect};
 use ratatui::style::{Modifier, Style};
 
 use super::{Cx, Go, Screen};
+use crate::console::backend::Effect;
 use crate::console::domain::account::{Account, AccountId, IssueCode, Lifecycle};
 use crate::console::domain::agent::UsageSurface;
 use crate::console::domain::usage::{Freshness, OverallSummary, QuotaStatus};
-use crate::console::sim::provider;
-use crate::console::sim::world::{Msg, World};
+use crate::console::world::{Msg, World};
 use crate::ui::text::plural;
 
 enum OvLine {
@@ -216,13 +216,10 @@ impl UsageScreen {
                 && a.usage.freshness.phase != Freshness::Refreshing
             {
                 a.usage.freshness.phase = Freshness::Refreshing;
-                let d = provider::refresh_duration_ms(a) + i as i64 * 120;
-                w.schedule(
-                    d,
-                    Msg::AccountRefreshed {
-                        account: id.clone(),
-                    },
-                );
+                w.perform(Effect::RefreshAccount {
+                    account: id.clone(),
+                    stagger_ms: i as i64 * 120,
+                });
                 n += 1;
             }
         }

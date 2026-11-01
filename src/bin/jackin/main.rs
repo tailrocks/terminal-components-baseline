@@ -1,4 +1,5 @@
 mod fixtures;
+mod sim;
 
 use clap::Parser;
 use junie_tui::cli::CommonArgs;

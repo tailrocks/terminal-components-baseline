@@ -1,16 +1,17 @@
 use std::collections::BTreeMap;
+use std::sync::Arc;
 
 use crate::clock::SimClock;
 use crate::console::arbiter::Arbiter;
+use crate::console::backend::{Backend, Effect, OnePassword};
 use crate::console::domain::account::{AccountId, AccountRegistry};
 use crate::console::domain::agent::{Agent, AuthMode, Provider};
 use crate::console::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus};
 use crate::console::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
 };
+use crate::console::panes::Daemon;
 use crate::console::scenario::Scenario;
-use crate::console::sim::onepassword::SimOnePassword;
-use crate::console::sim::pty::Daemon;
 use crate::shell::JobKey;
 
 pub mod job {
@@ -175,7 +176,8 @@ pub struct World {
     pub daemons: BTreeMap<InstanceId, Daemon>,
     pub global: GlobalConfig,
     pub accounts: AccountRegistry,
-    pub op: SimOnePassword,
+    pub op: Box<dyn OnePassword>,
+    pub backend: Arc<dyn Backend>,
     pub fs: Vec<FsEntry>,
     pub github: Vec<GithubRepo>,
     pub clipboard: Option<String>,
@@ -184,8 +186,6 @@ pub struct World {
     pub last_refresh_secs: i64,
 
     pub refresh_fails: bool,
-
-    pub save_fails_once: bool,
 
     pub takeover_at_ms: Option<i64>,
 
@@ -201,6 +201,13 @@ impl World {
 
     pub fn now_ms(&self) -> i64 {
         self.clock.now_ms
+    }
+
+    pub fn perform(&mut self, effect: Effect) {
+        let backend = self.backend.clone();
+        if let Some(done) = backend.perform(&effect, self) {
+            self.schedule(done.after_ms, done.msg);
+        }
     }
 
     pub fn schedule(&mut self, delay_ms: i64, msg: Msg) {

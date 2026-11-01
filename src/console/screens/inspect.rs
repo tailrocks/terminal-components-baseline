@@ -21,8 +21,8 @@ use ratatui::style::{Modifier, Style};
 
 use super::ModalResult;
 use super::modals::modal_frame;
-use crate::console::sim::changes::{ChangeSet, ChangedFile, DiffStatus};
-use crate::console::sim::world::World;
+use crate::console::backend::{ChangeSet, ChangedFile, DiffStatus};
+use crate::console::world::World;
 use crate::core::scroll::Scrollable;
 use crate::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
 use crate::ui::popup::Dismiss;

@@ -42,10 +42,10 @@ use crate::console::domain::account::AccountId;
 use crate::console::domain::agent::Agent;
 use crate::console::domain::instance::AgentState;
 use crate::console::domain::usage::Freshness;
-use crate::console::sim::pty::{
+use crate::console::panes::{
     Daemon, Direction, MAX_LABEL, MIN_PANE_COLS, MIN_PANE_ROWS, PaneId, PaneNode, Seam, nearest,
 };
-use crate::console::sim::world::{Msg, World};
+use crate::console::world::{Msg, World};
 use crate::core::scroll::Scrollable;
 use crate::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
 use crate::ui::text::plural;
@@ -199,7 +199,7 @@ impl CapsuleScreen {
         self.daemon(w).and_then(|d| d.focused_pane())
     }
 
-    fn account_suffix(w: &World, p: &crate::console::sim::pty::Pane) -> Option<String> {
+    fn account_suffix(w: &World, p: &crate::console::panes::Pane) -> Option<String> {
         let id = p.proc.account.as_ref()?;
         let a = w.accounts.get(id)?;
         if w.accounts.by_provider(a.provider).count() >= 2 {
@@ -530,7 +530,7 @@ impl CapsuleScreen {
             .map(|d| d.touched_files())
             .unwrap_or_default();
         let inst = w.instance(&self.instance);
-        let changes = crate::console::sim::changes::changes_for(
+        let changes = w.backend.changes(
             &self.instance,
             &touched,
             inst.map(|i| i.uncommitted).unwrap_or(0),
@@ -766,7 +766,7 @@ impl CapsuleScreen {
             Some(acc) => cx.status(format!("Started {label} · account {acc}")),
             None => cx.status(format!("Started {label}")),
         }
-        crate::console::sim::world::refresh_snapshots(w);
+        crate::console::world::refresh_snapshots(w);
         let now_secs = w.clock.now_secs();
         if let Some(i) = w.instance_mut(&self.instance)
             && let Ok(s) = i.sessions.as_mut()
@@ -2085,7 +2085,7 @@ impl Page<Jackin> for CapsuleScreen {
                 {
                     let tab_closed = d.close_pane(p);
                     let empty = d.tabs.is_empty();
-                    crate::console::sim::world::refresh_snapshots(w);
+                    crate::console::world::refresh_snapshots(w);
                     if empty {
                         cx.status("Last session ended · the Capsule shuts down");
                         self.end_instance(false, cx);
@@ -2108,7 +2108,7 @@ impl Page<Jackin> for CapsuleScreen {
                     let i = d.active;
                     d.close_tab(i);
                     let empty = d.tabs.is_empty();
-                    crate::console::sim::world::refresh_snapshots(w);
+                    crate::console::world::refresh_snapshots(w);
                     if empty {
                         cx.status("Last session ended · the Capsule shuts down");
                         self.end_instance(false, cx);

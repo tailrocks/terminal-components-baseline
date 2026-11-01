@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::widgets::steps::StepState;
 
 use crate::console::domain::agent::Agent;
@@ -120,57 +122,23 @@ pub struct LaunchRun {
     pub credential_retried: bool,
     pub build_lines_emitted: usize,
     pub cancelled: bool,
+    pub content: Arc<LaunchContent>,
 }
 
-pub const BUILD_LOG: [&str; 44] = [
-    "#1 [internal] load build definition from Dockerfile.derived",
-    "#1 transferring dockerfile: 2.31kB done",
-    "#1 DONE 0.0s",
-    "#2 [internal] load metadata for ghcr.io/jackin/construct:0.6.4",
-    "#2 DONE 0.4s",
-    "#3 [internal] load .dockerignore",
-    "#3 transferring context: 2B done",
-    "#3 DONE 0.0s",
-    "#4 [ 1/9] FROM ghcr.io/jackin/construct:0.6.4@sha256:9c41e2f0a7b3c5d6e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1",
-    "#4 resolve ghcr.io/jackin/construct:0.6.4 0.1s done",
-    "#4 CACHED",
-    "#5 [internal] load build context",
-    "#5 transferring context: 41.02kB 0.0s done",
-    "#5 DONE 0.0s",
-    "#6 [ 2/9] RUN --mount=type=cache,target=/var/cache/apt apt-get update && apt-get install -y --no-install-recommends git-lfs ripgrep fd-find jq",
-    "#6 0.812 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]",
-    "#6 1.204 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]",
-    "#6 2.331 Reading package lists...",
-    "#6 3.118 Building dependency tree...",
-    "#6 3.902 The following NEW packages will be installed: fd-find git-lfs jq ripgrep",
-    "#6 5.410 Setting up ripgrep (13.0.0-4+b2) ...",
-    "#6 5.612 Setting up git-lfs (3.3.0-1+b5) ...",
-    "#6 DONE 6.1s",
-    "#7 [ 3/9] RUN corepack enable && corepack prepare pnpm@9.12.0 --activate",
-    "#7 1.930 Preparing pnpm@9.12.0 for immediate activation...",
-    "#7 DONE 2.4s",
-    "#8 [ 4/9] COPY roles/the-architect/manifest.toml /jackin/role/manifest.toml",
-    "#8 DONE 0.0s",
-    "#9 [ 5/9] RUN /jackin/bin/role-install --manifest /jackin/role/manifest.toml",
-    "#9 0.211 role: the-architect@1.4.2 (github.com/chainargos/roles)",
-    "#9 0.480 install: cargo-nextest 0.9.72",
-    "#9 4.115 install: sqlfluff 3.1.0",
-    "#9 7.309 warning: hook post-install.sh exited 0 with output on stderr",
-    "#9 DONE 7.6s",
-    "#10 [ 6/9] RUN useradd --uid 501 --create-home operator && chown -R operator /workspace",
-    "#10 DONE 0.5s",
-    "#11 [ 7/9] COPY --chown=operator agent-home/ /home/operator/.claude/",
-    "#11 DONE 0.1s",
-    "#12 [ 8/9] RUN /jackin/bin/agent-install claude@2.1.14",
-    "#12 0.104 claude 2.1.14 already present in layer cache",
-    "#12 DONE 0.2s",
-    "#13 [ 9/9] LABEL org.jackin.run=9c41e2f0 org.jackin.workspace=payments-platform",
-    "#13 DONE 0.0s",
-    "#14 exporting to image",
-];
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LaunchContent {
+    pub build_log: Vec<String>,
+    pub network_failure: LaunchFailure,
+}
 
 impl LaunchRun {
-    pub fn new(plan: LaunchPlan, agent: Agent, container: &str, run_id: &str) -> Self {
+    pub fn new(
+        plan: LaunchPlan,
+        agent: Agent,
+        container: &str,
+        run_id: &str,
+        content: Arc<LaunchContent>,
+    ) -> Self {
         let durations = [14, 18, 26, 30, 8, 92, 22, 20, 18, 34, 16];
         Self {
             plan,
@@ -189,6 +157,7 @@ impl LaunchRun {
             credential_retried: false,
             build_lines_emitted: 0,
             cancelled: false,
+            content,
         }
     }
 
@@ -244,11 +213,12 @@ impl LaunchRun {
 
         match stage {
             Stage::DerivedImage => {
-                let want = ((elapsed as usize) * BUILD_LOG.len() / self.durations[i] as usize)
-                    .min(BUILD_LOG.len());
+                let log = &self.content.build_log;
+                let want =
+                    ((elapsed as usize) * log.len() / self.durations[i] as usize).min(log.len());
                 while self.build_lines_emitted < want {
                     ev.push(LaunchEvent::BuildLine(
-                        BUILD_LOG[self.build_lines_emitted].to_owned(),
+                        self.content.build_log[self.build_lines_emitted].clone(),
                     ));
                     self.build_lines_emitted += 1;
                 }
@@ -289,23 +259,7 @@ impl LaunchRun {
         }
         match final_state {
             StepState::Failed => {
-                let f = LaunchFailure {
-                    stage,
-                    summary: "The Construct network could not be attached".into(),
-                    next_step: "Check that Docker's jackin-net bridge exists (docker network ls), then launch again.".into(),
-                    detail: vec![
-                        "network: attach jackin-net to jackin-payments-platform-7f3a".into(),
-                        "docker: Error response from daemon: network jackin-net not found".into(),
-                        "retry 1/3 after 400 ms: network jackin-net not found".into(),
-                        "retry 2/3 after 800 ms: network jackin-net not found".into(),
-                        "retry 3/3 after 1600 ms: network jackin-net not found".into(),
-                        "sidecar: not started (network stage failed)".into(),
-                        "capsule: not started".into(),
-                        "cleanup: container jackin-payments-platform-7f3a kept for inspection".into(),
-                        "credentials: material was resolved in memory and discarded".into(),
-                        "run: 9c41e2f0 · backend docker 27.1 · host darwin 25.5".into(),
-                    ],
-                };
+                let f = self.content.network_failure.clone();
                 self.failure = Some(f.clone());
                 ev.push(LaunchEvent::Failed(f));
                 return ev;

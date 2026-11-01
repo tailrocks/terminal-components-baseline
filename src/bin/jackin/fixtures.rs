@@ -1,6 +1,10 @@
 use std::collections::BTreeMap;
 
+use crate::sim::SimBackend;
+use crate::sim::onepassword::SimOnePassword;
+use crate::sim::scripts::SimScripts;
 use junie_tui::console::arbiter::{Arbiter, DiscoveryError};
+use junie_tui::console::backend::OpSession;
 use junie_tui::console::domain::account::{
     Account, AccountId, AccountIdentity, AccountRegistry, Confidence, CredentialSource,
     DetectedKind, IdentitySubject, IssueCode, Lifecycle, Recoverability, RecoverableIssue,
@@ -18,10 +22,9 @@ use junie_tui::console::domain::workspace::{
     AllowedRoles, EnvVar, Isolation, Mount, MountScope, RoleEntry, RolePolicy, RoleSource,
     Workspace,
 };
+use junie_tui::console::panes::Daemon;
 use junie_tui::console::scenario::Scenario;
-use junie_tui::console::sim::onepassword::{OpSession, SimOnePassword};
-use junie_tui::console::sim::pty::Daemon;
-use junie_tui::console::sim::world::{
+use junie_tui::console::world::{
     DaemonHealth, FsEntry, GithubRepo, GlobalConfig, TrustRow, World, refresh_snapshots,
 };
 use junie_tui::ui::layout::SplitDir;
@@ -1090,7 +1093,8 @@ fn base_world(scenario: Scenario) -> World {
         daemons: BTreeMap::new(),
         global: global(false),
         accounts: AccountRegistry::default(),
-        op: SimOnePassword::fixture(now),
+        op: Box::new(SimOnePassword::fixture(now)),
+        backend: SimBackend::shared(),
         fs: fs(),
         github: github(),
         clipboard: None,
@@ -1098,7 +1102,6 @@ fn base_world(scenario: Scenario) -> World {
         daemon_health: DaemonHealth::Healthy,
         last_refresh_secs: now - 3,
         refresh_fails: false,
-        save_fails_once: false,
         takeover_at_ms: None,
         session_accounts: BTreeMap::new(),
         discovery_pending: false,
@@ -1301,7 +1304,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
     }
 
     let now_ms = w.now_ms();
-    let mut d1 = Daemon::new("payments-platform");
+    let mut d1 = Daemon::new("payments-platform", SimScripts::shared());
     d1.new_tab(
         Some(Agent::ClaudeCode),
         Some("acct-claude-work".into()),
@@ -1365,7 +1368,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         p.term.set_lines(history);
     }
     w.daemons.insert("jk-7f3a".into(), d1);
-    let mut d3 = Daemon::new("infra-control-plane");
+    let mut d3 = Daemon::new("infra-control-plane", SimScripts::shared());
     d3.new_tab(
         Some(Agent::Codex),
         Some("acct-codex-experiments".into()),
@@ -1374,7 +1377,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
     );
     w.daemons.insert("jk-9b02".into(), d3);
     if rich {
-        let d10 = Daemon::new("data-pipeline");
+        let d10 = Daemon::new("data-pipeline", SimScripts::shared());
         w.daemons.insert("jk-e0e0".into(), d10);
 
         if let Some(i) = w.instance_mut("jk-e0e0") {
@@ -1440,10 +1443,10 @@ pub fn world_for(scenario: Scenario) -> World {
         }
         Scenario::HardCases => {
             let mut w = populated(scenario, true);
-            w.op.session = OpSession::Locked;
+            w.op.set_session(OpSession::Locked);
             w.daemon_health = DaemonHealth::Stale;
             w.refresh_fails = true;
-            w.save_fails_once = true;
+            w.backend = SimBackend::failing_first_save();
 
             if let Some(r) = w.roles.iter_mut().find(|r| r.name == "writer") {
                 r.fetch_error = Some(

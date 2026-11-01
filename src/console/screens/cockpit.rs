@@ -27,9 +27,9 @@ use crate::console::domain::agent::Agent;
 use crate::console::domain::instance::{Instance, InstanceStatus};
 use crate::console::domain::precedence::PrecedenceLevel;
 use crate::console::domain::workspace::WorkspaceId;
+use crate::console::launch::{LaunchEvent, LaunchPlan, LaunchRun, Stage};
 use crate::console::scenario::Motion;
-use crate::console::sim::launch::{LaunchEvent, LaunchPlan, LaunchRun, Stage};
-use crate::console::sim::world::World;
+use crate::console::world::World;
 
 pub const RAIL: WidgetId = WidgetId::of("cockpit.rail");
 pub const LOG: WidgetId = WidgetId::of("cockpit.log");
@@ -92,7 +92,7 @@ impl CockpitScreen {
                 12,
             )
         );
-        let run = LaunchRun::new(plan, agent, &container, &run_id);
+        let run = LaunchRun::new(plan, agent, &container, &run_id, w.backend.launch_content());
         let steps = Stage::ALL.iter().map(|s| Step::new(s.label())).collect();
         let mut log = TextViewport::new(LOG).wrap(true).max_lines(5_000);
         log.follow = true;
@@ -308,10 +308,11 @@ impl CockpitScreen {
                         .and_then(|i| w.workspace(i))
                         .map(|x| x.name.clone())
                         .unwrap_or(wsname);
-                    let mut d = crate::console::sim::pty::Daemon::new(&wsname);
+                    let mut d =
+                        crate::console::panes::Daemon::new(&wsname, w.backend.session_script());
                     d.new_tab(Some(self.agent), self.account.clone(), now, false);
                     w.daemons.insert(id.clone(), d);
-                    crate::console::sim::world::refresh_snapshots(w);
+                    crate::console::world::refresh_snapshots(w);
                     w.sync_arbiter();
                     self.handoff_requested = true;
                     cx.go(Go::Attach {
@@ -742,7 +743,7 @@ impl Page<Jackin> for CockpitScreen {
             }
             ("cred", ModalResult::Dialog { action, .. }) => match action {
                 Some(0) => {
-                    w.op.session = crate::console::sim::onepassword::OpSession::SignedIn;
+                    w.op.set_session(crate::console::backend::OpSession::SignedIn);
                     self.credential_hold = false;
                     self.run.retry_credentials();
                     if let Some((_, v, tone)) = self.credentials.as_mut() {

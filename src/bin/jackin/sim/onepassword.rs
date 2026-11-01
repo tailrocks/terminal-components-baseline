@@ -1,5 +1,9 @@
-use crate::console::domain::agent::Provider;
-use crate::console::domain::onepassword::OpReference;
+use junie_tui::console::backend::{
+    FieldDescriptor, FieldKind, KeyOutcome, OnePassword, OpAccount, OpAccountState, OpError,
+    OpField, OpItem, OpSession, OpVault, SecretClass, VaultAccess,
+};
+use junie_tui::console::domain::agent::Provider;
+use junie_tui::console::domain::onepassword::OpReference;
 
 pub struct Secret {
     bytes: Vec<u8>,
@@ -41,150 +45,10 @@ impl Drop for Secret {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum KeyOutcome {
-    Valid,
-    Rejected,
-    RateLimited,
-    Unavailable,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SecretClass {
-    Empty,
-    Unrecognised,
-    Key {
-        provider: Provider,
-        outcome: KeyOutcome,
-    },
-}
-
 pub trait SecretFree {}
 impl SecretFree for SecretClass {}
 impl SecretFree for () {}
 impl SecretFree for bool {}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum OpSession {
-    SignedIn,
-    Locked,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum OpAccountState {
-    Available,
-    Locked,
-    AuthorizationRequired,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum VaultAccess {
-    ReadWrite,
-    ReadOnly,
-    Denied,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum FieldKind {
-    Concealed,
-    Text,
-    Url,
-}
-
-impl FieldKind {
-    pub fn label(self) -> &'static str {
-        match self {
-            FieldKind::Concealed => "concealed",
-            FieldKind::Text => "text",
-            FieldKind::Url => "url",
-        }
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct OpField {
-    pub id: String,
-    pub label: String,
-    pub kind: FieldKind,
-
-    material: Option<String>,
-
-    pub tail: String,
-}
-
-#[derive(Debug, Clone)]
-pub struct OpItem {
-    pub id: String,
-    pub title: String,
-    pub category: &'static str,
-    pub fields: Vec<OpField>,
-}
-
-#[derive(Debug, Clone)]
-pub struct OpVault {
-    pub id: String,
-    pub name: String,
-    pub access: VaultAccess,
-    pub items: Vec<OpItem>,
-}
-
-#[derive(Debug, Clone)]
-pub struct OpAccount {
-    pub id: String,
-    pub email: String,
-    pub state: OpAccountState,
-    pub vaults: Vec<OpVault>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum OpError {
-    Locked,
-    AuthorizationRequired { account: String },
-    PermissionDenied { vault: String },
-    MissingAccount { account: String },
-    MissingVault { vault: String },
-    MissingItem { item: String, vault: String },
-    MissingField { field: String, item: String },
-    EmptyMaterial { field: String },
-    WrongFieldShape { field: String },
-}
-
-impl OpError {
-    pub fn message(&self) -> String {
-        match self {
-            OpError::Locked => "1Password locked: unlock the app and retry".into(),
-            OpError::AuthorizationRequired { account } => {
-                format!("1Password authorization required: sign in to {account}")
-            }
-            OpError::PermissionDenied { vault } => {
-                format!("1Password access denied: no permission for vault {vault}")
-            }
-            OpError::MissingAccount { account } => {
-                format!("1Password account not found: {account}")
-            }
-            OpError::MissingVault { vault } => format!("1Password vault not found: {vault}"),
-            OpError::MissingItem { item, vault } => {
-                format!("1Password item not found: {item} in {vault}")
-            }
-            OpError::MissingField { field, item } => {
-                format!("1Password field not found: {field} in {item}")
-            }
-            OpError::EmptyMaterial { field } => format!("API key required: field {field} is empty"),
-            OpError::WrongFieldShape { field } => {
-                format!("Field {field} is not a credential: choose a concealed field")
-            }
-        }
-    }
-
-    pub fn retryable(&self) -> bool {
-        matches!(self, OpError::Locked)
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct FieldDescriptor {
-    pub masked: String,
-}
 
 #[derive(Debug, Clone)]
 pub struct SimOnePassword {
@@ -545,7 +409,7 @@ impl SimOnePassword {
             });
         }
         Ok(FieldDescriptor {
-            masked: crate::console::domain::account::masked(&f.tail),
+            masked: junie_tui::console::domain::account::masked(&f.tail),
         })
     }
 
@@ -605,5 +469,70 @@ pub fn classify_plain(provider: Provider, value: &str) -> SecretClass {
     SecretClass::Key {
         provider: detected,
         outcome,
+    }
+}
+
+impl OnePassword for SimOnePassword {
+    fn session(&self) -> OpSession {
+        self.session
+    }
+
+    fn set_session(&mut self, session: OpSession) {
+        self.session = session;
+    }
+
+    fn accounts(&self) -> &[OpAccount] {
+        &self.accounts
+    }
+
+    fn latency_ms(&self) -> i64 {
+        self.latency_ms
+    }
+
+    fn list_accounts(&self) -> Result<Vec<&OpAccount>, OpError> {
+        SimOnePassword::list_accounts(self)
+    }
+
+    fn list_vaults(&self, account: &str) -> Result<Vec<&OpVault>, OpError> {
+        SimOnePassword::list_vaults(self, account)
+    }
+
+    fn list_items(&self, account: &str, vault: &str) -> Result<Vec<&OpItem>, OpError> {
+        SimOnePassword::list_items(self, account, vault)
+    }
+
+    fn list_fields(
+        &self,
+        account: &str,
+        vault: &str,
+        item: &str,
+    ) -> Result<Vec<&OpField>, OpError> {
+        SimOnePassword::list_fields(self, account, vault, item)
+    }
+
+    fn reference(
+        &self,
+        account: &str,
+        vault: &str,
+        item: &str,
+        field: &str,
+    ) -> Result<OpReference, OpError> {
+        SimOnePassword::reference(self, account, vault, item, field)
+    }
+
+    fn describe(&self, reference: &OpReference) -> Result<FieldDescriptor, OpError> {
+        SimOnePassword::describe(self, reference)
+    }
+
+    fn endpoint_of(&self, reference: &OpReference) -> Option<String> {
+        SimOnePassword::endpoint_of(self, reference)
+    }
+
+    fn classify(&self, reference: &OpReference) -> Result<SecretClass, OpError> {
+        self.resolve_into(reference, |secret| secret.classify())
+    }
+
+    fn box_clone(&self) -> Box<dyn OnePassword> {
+        Box::new(self.clone())
     }
 }

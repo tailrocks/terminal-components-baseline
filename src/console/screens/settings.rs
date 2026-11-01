@@ -25,9 +25,10 @@ use ratatui::style::Modifier;
 use super::config::{ConfigTabs, Doc, Scope, Tab as CfgTab, mode_label};
 use super::modals::InfoDialog;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
+use crate::console::backend::Effect;
 use crate::console::domain::agent::{Agent, AuthMode};
 use crate::console::domain::workspace::RoleName;
-use crate::console::sim::world::{GlobalConfig, Msg, World, job};
+use crate::console::world::{GlobalConfig, Msg, World, job};
 use crate::ui::text::plural;
 
 pub const TABS: WidgetId = WidgetId::of("settings.tabs");
@@ -322,9 +323,7 @@ impl SettingsScreen {
         self.sync_pending();
         self.saving = true;
         self.save.busy = true;
-        let ok = !w.save_fails_once;
-        w.save_fails_once = false;
-        w.schedule(900, Msg::GlobalSaved { ok });
+        w.perform(Effect::SaveGlobal);
         cx.progress(job::SETTINGS_SAVE, "Saving settings…");
         cx.focus.focus(SAVE);
     }

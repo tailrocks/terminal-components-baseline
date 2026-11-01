@@ -13,9 +13,9 @@ use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
+use crate::console::backend::{FieldKind, OnePassword, OpError};
 use crate::console::domain::onepassword::OpReference;
-use crate::console::sim::onepassword::{FieldKind, OpError, SimOnePassword};
-use crate::console::sim::world::World;
+use crate::console::world::World;
 
 use super::ModalResult;
 use crate::core::scroll::Scrollable;
@@ -128,7 +128,7 @@ pub struct OpFlow {
 }
 
 impl OpFlow {
-    pub fn new(id: WidgetId, op: &SimOnePassword, now_ms: i64) -> Self {
+    pub fn new(id: WidgetId, op: &dyn OnePassword, now_ms: i64) -> Self {
         let mut f = Self {
             dismiss: crate::ui::popup::Dismiss::LIGHT,
             step: OpStep::Account,
@@ -144,13 +144,13 @@ impl OpFlow {
         };
         f.picker.list.width = (64, 64);
 
-        let avail: Vec<&crate::console::sim::onepassword::OpAccount> = op
-            .accounts
+        let avail: Vec<&crate::console::backend::OpAccount> = op
+            .accounts()
             .iter()
-            .filter(|a| a.state == crate::console::sim::onepassword::OpAccountState::Available)
+            .filter(|a| a.state == crate::console::backend::OpAccountState::Available)
             .collect();
-        if op.accounts.len() == 1 || (avail.len() == 1 && op.accounts.len() == 1) {
-            f.account = Some(op.accounts[0].id.clone());
+        if op.accounts().len() == 1 || (avail.len() == 1 && op.accounts().len() == 1) {
+            f.account = Some(op.accounts()[0].id.clone());
             f.step = OpStep::Vault;
         }
         f.begin_load(now_ms, op);
@@ -171,7 +171,7 @@ impl OpFlow {
         parts.join(" › ")
     }
 
-    fn begin_load(&mut self, now_ms: i64, op: &SimOnePassword) {
+    fn begin_load(&mut self, now_ms: i64, op: &dyn OnePassword) {
         self.picker.set_query("");
         self.picker.title = match self.step {
             OpStep::Account => "Choose 1Password account".into(),
@@ -200,10 +200,10 @@ impl OpFlow {
             ),
         });
         self.picker.set_items(vec![]);
-        self.loading_until = Some(now_ms + op.latency_ms);
+        self.loading_until = Some(now_ms + op.latency_ms());
     }
 
-    pub fn tick(&mut self, now_ms: i64, op: &SimOnePassword) -> Outcome {
+    pub fn tick(&mut self, now_ms: i64, op: &dyn OnePassword) -> Outcome {
         if let Some(t) = self.loading_until
             && now_ms >= t
         {
@@ -239,7 +239,7 @@ impl OpFlow {
         self.last_error = Some(e);
     }
 
-    pub fn refresh(&mut self, op: &SimOnePassword) {
+    pub fn refresh(&mut self, op: &dyn OnePassword) {
         self.picker.status = PickerStatus::Ready;
         self.last_error = None;
         let q = self.picker.query().to_lowercase();
@@ -254,9 +254,9 @@ impl OpFlow {
                             .detail(a.email.clone())
                             .glyph("▪")
                             .tag(match a.state {
-                                crate::console::sim::onepassword::OpAccountState::Available => "signed in",
-                                crate::console::sim::onepassword::OpAccountState::Locked => "locked",
-                                crate::console::sim::onepassword::OpAccountState::AuthorizationRequired => {
+                                crate::console::backend::OpAccountState::Available => "signed in",
+                                crate::console::backend::OpAccountState::Locked => "locked",
+                                crate::console::backend::OpAccountState::AuthorizationRequired => {
                                     "authorize"
                                 }
                             })
@@ -276,9 +276,9 @@ impl OpFlow {
                             .detail(format!("{} items", v.items.len()))
                             .glyph("▪")
                             .tag(match v.access {
-                                crate::console::sim::onepassword::VaultAccess::ReadWrite => "",
-                                crate::console::sim::onepassword::VaultAccess::ReadOnly => "read-only",
-                                crate::console::sim::onepassword::VaultAccess::Denied => "no access",
+                                crate::console::backend::VaultAccess::ReadWrite => "",
+                                crate::console::backend::VaultAccess::ReadOnly => "read-only",
+                                crate::console::backend::VaultAccess::Denied => "no access",
                             })
                     })
                     .collect(),
@@ -336,13 +336,13 @@ impl OpFlow {
         self.picker.set_items(items);
     }
 
-    fn back(&mut self, now_ms: i64, op: &SimOnePassword) -> Outcome {
+    fn back(&mut self, now_ms: i64, op: &dyn OnePassword) -> Outcome {
         match self.step {
             OpStep::Account => {
                 self.result = Some(None);
             }
             OpStep::Vault => {
-                if op.accounts.len() > 1 {
+                if op.accounts().len() > 1 {
                     self.step = OpStep::Account;
                     self.account = None;
                     self.begin_load(now_ms, op);
@@ -364,7 +364,7 @@ impl OpFlow {
         Outcome::Changed
     }
 
-    fn choose(&mut self, i: usize, now_ms: i64, op: &SimOnePassword) -> Outcome {
+    fn choose(&mut self, i: usize, now_ms: i64, op: &dyn OnePassword) -> Outcome {
         let Some(row) = self.picker.items.get(i).cloned() else {
             return Outcome::Consumed;
         };
@@ -422,7 +422,7 @@ impl OpFlow {
         Outcome::Changed
     }
 
-    pub fn on_key(&mut self, key: &Key, now_ms: i64, op: &SimOnePassword) -> Outcome {
+    pub fn on_key(&mut self, key: &Key, now_ms: i64, op: &dyn OnePassword) -> Outcome {
         if key.is_char('r')
             && self.picker.status != PickerStatus::Ready
             && self.picker.query().is_empty()
@@ -452,7 +452,7 @@ impl OpFlow {
         }
     }
 
-    pub fn pointer(&mut self, ev: &PointerEvent, now_ms: i64, op: &SimOnePassword) -> Outcome {
+    pub fn pointer(&mut self, ev: &PointerEvent, now_ms: i64, op: &dyn OnePassword) -> Outcome {
         let Some(r) = self.picker.route(ev) else {
             return match ev.wheel() {
                 Some((Axis::Vertical, delta)) => {
@@ -513,13 +513,13 @@ impl Layer<ModalResult, World> for OpFlow {
         OpFlow::render(self, screen, buf, ctx);
     }
     fn on_key(&mut self, key: &Key, cx: &mut LayerCx<'_, World>) -> Outcome {
-        OpFlow::on_key(self, key, cx.app.now_ms(), &cx.app.op).or(Outcome::Consumed)
+        OpFlow::on_key(self, key, cx.app.now_ms(), cx.app.op.as_ref()).or(Outcome::Consumed)
     }
     fn pointer(&mut self, ev: &PointerEvent, cx: &mut LayerCx<'_, World>) -> Outcome {
-        OpFlow::pointer(self, ev, cx.app.now_ms(), &cx.app.op)
+        OpFlow::pointer(self, ev, cx.app.now_ms(), cx.app.op.as_ref())
     }
     fn on_tick(&mut self, w: &World) -> Outcome {
-        self.tick(w.now_ms(), &w.op)
+        self.tick(w.now_ms(), w.op.as_ref())
     }
     fn hints(&self, _: Option<WidgetId>) -> Vec<Hint> {
         OpFlow::hints(self)

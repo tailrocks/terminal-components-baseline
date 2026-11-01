@@ -1,33 +1,4 @@
-pub use crate::widgets::diff::{DiffFile as ChangedFile, DiffHunk as Hunk, DiffLine, DiffStatus};
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ChangeSet {
-    pub files: Vec<ChangedFile>,
-
-    pub unpushed: usize,
-}
-
-impl ChangeSet {
-    pub fn additions(&self) -> usize {
-        self.files.iter().map(|f| f.additions()).sum()
-    }
-    pub fn deletions(&self) -> usize {
-        self.files.iter().map(|f| f.deletions()).sum()
-    }
-    pub fn is_empty(&self) -> bool {
-        self.files.is_empty() && self.unpushed == 0
-    }
-
-    pub fn summary(&self) -> String {
-        let n = self.files.len();
-        format!(
-            "{n} file{} · +{} −{}",
-            if n == 1 { "" } else { "s" },
-            self.additions(),
-            self.deletions()
-        )
-    }
-}
+use junie_tui::console::backend::{ChangeSet, ChangedFile, DiffLine, DiffStatus, Hunk};
 
 fn seed(instance_id: &str) -> u64 {
     instance_id.bytes().fold(0xcbf2_9ce4_8422_2325u64, |h, b| {

@@ -31,13 +31,14 @@ use ratatui::style::Modifier;
 use super::config::{ConfigTabs, Doc, Scope, Tab as CfgTab};
 use super::modals::InfoDialog;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
+use crate::console::backend::Effect;
 use crate::console::domain::account::AccountId;
 use crate::console::domain::agent::Provider;
 use crate::console::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, Effective, RoleEntry, RoleName, RoleSource, Workspace,
     WorkspaceId,
 };
-use crate::console::sim::world::{Msg, World, job};
+use crate::console::world::{Msg, World, job};
 use crate::ui::text::plural;
 
 pub const TABS: WidgetId = WidgetId::of("editor.tabs");
@@ -449,10 +450,8 @@ impl EditorScreen {
         self.sync_pending();
         self.saving = true;
         self.save.busy = true;
-        let ok = !w.save_fails_once;
-        w.save_fails_once = false;
         let id = self.workspace.unwrap_or(w.next_workspace_id);
-        w.schedule(900, Msg::WorkspaceSaved { id, ok });
+        w.perform(Effect::SaveWorkspace { id });
         cx.progress(
             job::WORKSPACE_SAVE,
             format!("Saving {}…", self.pending.name),
@@ -1407,20 +1406,9 @@ impl EditorScreen {
 
     fn start_role_load(&mut self, name: &str, w: &mut World, cx: &mut Cx) {
         self.pending_load = Some(name.to_owned());
-
-        let error = w
-            .roles
-            .iter()
-            .find(|r| r.name == name)
-            .and_then(|r| r.fetch_error.clone());
-        w.schedule(
-            1100,
-            Msg::RoleLoaded {
-                role: name.to_owned(),
-                ok: error.is_none(),
-                error,
-            },
-        );
+        w.perform(Effect::LoadRole {
+            role: name.to_owned(),
+        });
         cx.progress(job::ROLE_LOAD, format!("Loading role {name}…"));
     }
 
@@ -1494,7 +1482,7 @@ impl EditorScreen {
             });
             targets.push(m.destination.clone());
             if let crate::console::domain::workspace::MountSource::Host(src) = &m.source {
-                let src = crate::console::sim::world::expand(&w.home, src);
+                let src = crate::console::world::expand(&w.home, src);
                 for f in w.fs.iter().filter(|f| {
                     f.dir
                         && f.path.starts_with(&format!("{src}/"))
