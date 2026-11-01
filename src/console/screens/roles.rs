@@ -214,11 +214,9 @@ impl RolesScreen {
                     };
                     let summary = self.binding_summary(rec, w);
                     let detail = match check_mark(rec) {
-                        StatusKind::Fail if rec.manifest.is_err() => {
-                            format!("{} · broken", chip(rec))
-                        }
-                        StatusKind::Fail => format!("{} · failed", chip(rec)),
-                        StatusKind::Running => format!("{} · checking", chip(rec)),
+                        StatusKind::Fail if rec.manifest.is_err() => "broken".to_owned(),
+                        StatusKind::Fail => "failed".to_owned(),
+                        StatusKind::Running => "checking".to_owned(),
                         _ => chip(rec).to_owned(),
                     };
                     let row = ListRow::new(&rec.name).mark(check_mark(rec)).detail(detail);

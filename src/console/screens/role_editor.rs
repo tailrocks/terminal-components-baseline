@@ -1096,6 +1096,9 @@ impl RoleEditorScreen {
         if self.checking() {
             return vec![];
         }
+        if self.fatal.is_some() {
+            return vec![Notice::info("No check · the manifest does not parse")];
+        }
         let findings = self.findings();
         if findings.is_empty() {
             return vec![Notice::success("Check passed")];
@@ -1570,7 +1573,7 @@ impl Page<Jackin> for RoleEditorScreen {
                     Tab::Environment => self.env_dirty(),
                 };
                 it.error = self.tab_error(*tab);
-                if *tab == Tab::Environment {
+                if *tab == Tab::Environment && self.fatal.is_none() {
                     it.suffix = Some(self.pending.env.len().to_string());
                 }
                 it

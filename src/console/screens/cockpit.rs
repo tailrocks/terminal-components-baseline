@@ -453,23 +453,26 @@ impl CockpitScreen {
                 Prop::new(&self.run.content.words.unit, c.clone()).copyable(),
             );
         }
-        if self.docker
-            && let Some(d) = w.surfaces.docker.as_ref()
-        {
-            props.extend(
-                d.risks
-                    .iter()
-                    .map(|r| Prop::new(&r.label, r.text.clone()).wrap()),
-            );
-        }
         if self.debug {
             props.push(Prop::new(
                 "Telemetry",
                 format!("run {} -> otlp://collector.internal:4317", self.run.run_id),
             ));
         }
-        let d =
+        let mut d =
             InfoDialog::new(WidgetId::of("cockpit.info"), "Debug info", props).meta("read-only");
+        if self.docker
+            && let Some(risks) = w.surfaces.docker.as_ref().map(|d| &d.risks)
+        {
+            d = d
+                .detail(
+                    risks
+                        .iter()
+                        .map(|r| format!("{} · {}", r.label, r.text))
+                        .collect(),
+                )
+                .width(80);
+        }
         cx.open(d, LayerTag::new("info"));
     }
 
