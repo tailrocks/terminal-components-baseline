@@ -6,7 +6,10 @@ use crate::console::arbiter::Arbiter;
 use crate::console::backend::{Backend, Effect, OnePassword};
 use crate::console::domain::account::{AccountId, AccountRegistry};
 use crate::console::domain::agent::{Agent, AuthMode, Provider};
+use crate::console::domain::doctor::{DoctorReport, DoctorState};
 use crate::console::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus};
+use crate::console::domain::role::{AccountOrder, RoleFinding};
+use crate::console::domain::surfaces::Surfaces;
 use crate::console::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
 };
@@ -23,6 +26,10 @@ pub mod job {
     pub const STOP: JobKey = JobKey::new("instance.stop");
     pub const PURGE: JobKey = JobKey::new("instance.purge");
     pub const ACCOUNT_VALIDATE: JobKey = JobKey::new("account.validate");
+    pub const ROLE_CHECK: JobKey = JobKey::new("role.check");
+    pub const ROLE_SAVE: JobKey = JobKey::new("role.save");
+    pub const ROLE_BIND: JobKey = JobKey::new("role.bind");
+    pub const DOCTOR: JobKey = JobKey::new("doctor");
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -134,6 +141,22 @@ pub enum Msg {
         instance: InstanceId,
         by: String,
     },
+    RoleChecked {
+        role: RoleName,
+        findings: Vec<RoleFinding>,
+    },
+    RoleSaved {
+        role: RoleName,
+        ok: bool,
+        error: Option<String>,
+    },
+    RoleBound {
+        role: RoleName,
+        agent: Agent,
+        ok: bool,
+        error: Option<String>,
+    },
+    DoctorFinished(DoctorReport),
 }
 
 impl Msg {
@@ -146,6 +169,10 @@ impl Msg {
             Msg::Stopped { .. } => Some(job::STOP),
             Msg::Purged { .. } => Some(job::PURGE),
             Msg::AccountValidated { .. } => Some(job::ACCOUNT_VALIDATE),
+            Msg::RoleChecked { .. } => Some(job::ROLE_CHECK),
+            Msg::RoleSaved { .. } => Some(job::ROLE_SAVE),
+            Msg::RoleBound { .. } => Some(job::ROLE_BIND),
+            Msg::DoctorFinished(_) => Some(job::DOCTOR),
             Msg::Refreshed { .. } | Msg::AccountRefreshed { .. } | Msg::Takeover { .. } => None,
         }
     }
@@ -161,6 +188,20 @@ pub struct Job {
 pub enum DaemonHealth {
     Healthy,
     Stale,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Health {
+    Healthy,
+    Stale,
+    Failing,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HealthView {
+    pub noun: String,
+    pub health: Health,
+    pub at_secs: i64,
 }
 
 pub struct World {
@@ -192,6 +233,8 @@ pub struct World {
     pub session_accounts: BTreeMap<(InstanceId, u64), AccountId>,
 
     pub discovery_pending: bool,
+
+    pub surfaces: Surfaces,
 }
 
 impl World {
@@ -214,6 +257,54 @@ impl World {
         let due = self.clock.now_ms + delay_ms;
         self.jobs.push(Job { due_ms: due, msg });
         self.jobs.sort_by_key(|j| j.due_ms);
+    }
+
+    pub fn health_view(&self) -> HealthView {
+        match self
+            .surfaces
+            .doctor
+            .as_ref()
+            .and_then(|d| d.report().map(|r| (d, r)))
+        {
+            Some((doctor, report)) => HealthView {
+                noun: doctor.noun.clone(),
+                health: if report.failing() > 0 {
+                    Health::Failing
+                } else if report.stale(self.now_secs()) {
+                    Health::Stale
+                } else {
+                    Health::Healthy
+                },
+                at_secs: report.at_secs,
+            },
+            None => HealthView {
+                noun: self
+                    .surfaces
+                    .doctor
+                    .as_ref()
+                    .map_or_else(|| "daemon".into(), |d| d.noun.clone()),
+                health: match self.daemon_health {
+                    DaemonHealth::Healthy => Health::Healthy,
+                    DaemonHealth::Stale => Health::Stale,
+                },
+                at_secs: self.last_refresh_secs,
+            },
+        }
+    }
+
+    pub fn docker_on(&self, ws: Option<WorkspaceId>, role: &str) -> bool {
+        self.surfaces.docker.as_ref().is_some_and(|d| {
+            d.role_enabled.contains(role)
+                || ws
+                    .and_then(|id| self.workspace(id))
+                    .is_some_and(|w| w.docker)
+        })
+    }
+
+    pub fn absorb(&mut self, msg: &Msg) {
+        if let (Msg::DoctorFinished(report), Some(d)) = (msg, self.surfaces.doctor.as_mut()) {
+            d.state = DoctorState::Done(report.clone());
+        }
     }
 
     pub fn tick(&mut self, interval_ms: i64) -> Vec<Msg> {
@@ -334,12 +425,21 @@ impl World {
         role: Option<&str>,
         session: Option<&AccountId>,
     ) -> crate::console::domain::precedence::ResolvedAccount {
+        let (order, binding) = match &self.surfaces.roles {
+            Some(admin) => (
+                admin.order,
+                role.and_then(|r| admin.binding_for_provider(r, provider)),
+            ),
+            None => (AccountOrder::Demo, None),
+        };
         crate::console::domain::precedence::resolve_account(
             provider,
             ws,
             role,
             session,
             &self.accounts,
+            order,
+            binding,
         )
     }
 

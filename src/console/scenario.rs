@@ -17,10 +17,22 @@ pub enum Scenario {
     OutroLast,
 
     HardCases,
+
+    RoleEditor,
+
+    RoleBinding,
+
+    DockerSetting,
+
+    DockerNoEngine,
+
+    Doctor,
+
+    LaunchOpenshell,
 }
 
 impl Scenario {
-    pub const ALL: [Scenario; 8] = [
+    pub const ALL: [Scenario; 14] = [
         Scenario::FirstUse,
         Scenario::Returning,
         Scenario::AccountsMixed,
@@ -29,6 +41,12 @@ impl Scenario {
         Scenario::CapsuleMulti,
         Scenario::OutroLast,
         Scenario::HardCases,
+        Scenario::RoleEditor,
+        Scenario::RoleBinding,
+        Scenario::DockerSetting,
+        Scenario::DockerNoEngine,
+        Scenario::Doctor,
+        Scenario::LaunchOpenshell,
     ];
 
     pub fn name(self) -> &'static str {
@@ -41,6 +59,12 @@ impl Scenario {
             Scenario::CapsuleMulti => "capsule-multi",
             Scenario::OutroLast => "outro-last",
             Scenario::HardCases => "hard-cases",
+            Scenario::RoleEditor => "role-editor",
+            Scenario::RoleBinding => "role-binding",
+            Scenario::DockerSetting => "docker-setting",
+            Scenario::DockerNoEngine => "docker-no-engine",
+            Scenario::Doctor => "doctor",
+            Scenario::LaunchOpenshell => "launch-openshell",
         }
     }
 

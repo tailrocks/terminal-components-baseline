@@ -34,7 +34,7 @@ use crate::console::screens::modals::{FormAction, FormDialog, HelpOverlay, InfoR
 use crate::console::screens::prelude::PreludeScreen;
 use crate::console::screens::settings::SettingsScreen;
 use crate::console::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
-use crate::console::world::{Msg, World};
+use crate::console::world::{Health, Msg, World};
 use crate::shell::Page as _;
 use crate::ui::leave::{LeaveGuard, Stakes};
 use crate::widgets::brand::Lockup;
@@ -708,8 +708,8 @@ impl App {
             ),
             Err(e) => right.push(Segment::new(format!("! {}", e.label()), Tone::Error).priority(8)),
         }
-        if self.world.daemon_health == crate::console::world::DaemonHealth::Stale {
-            right.push(Segment::new("▲ daemon stale", Tone::Warning).priority(8));
+        if let Some(s) = self.health_segment() {
+            right.push(s);
         }
         if !self.world.jobs.is_empty() {
             right.push(
@@ -724,6 +724,16 @@ impl App {
             );
         }
         segments::render(rest, buf, ctx, &[], &right, t.canvas);
+    }
+
+    fn health_segment(&self) -> Option<Segment> {
+        let hv = self.world.health_view();
+        let (word, tone) = match hv.health {
+            Health::Healthy => return None,
+            Health::Stale => ("stale", Tone::Warning),
+            Health::Failing => ("failing", Tone::Error),
+        };
+        Some(Segment::new(format!("▲ {} {word}", hv.noun), tone).priority(8))
     }
 
     fn open_help(&mut self) {
@@ -1765,8 +1775,8 @@ impl App {
             ),
             Err(e) => left.push(Segment::new(format!("! {}", e.label()), Tone::Error).priority(8)),
         }
-        if self.world.daemon_health == crate::console::world::DaemonHealth::Stale {
-            left.push(Segment::new("▲ daemon stale", Tone::Warning).priority(8))
+        if let Some(s) = self.health_segment() {
+            left.push(s);
         }
         if let Some(s) = self.router.screen(route) {
             left.push(Segment::new(s.crumb(&self.world), Tone::Secondary).priority(7));

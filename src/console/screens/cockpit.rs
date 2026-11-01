@@ -6,10 +6,11 @@ use crate::core::pointer::{MouseTarget, PointerEvent, scroll_input};
 use crate::shell::Page;
 use crate::theme::{Theme, Tone};
 use crate::ui::ctx::{RenderCtx, fill};
-use crate::ui::text::width;
+use crate::ui::text::{plural, width};
 use crate::widgets::button::Button;
 use crate::widgets::dialog::Dialog;
 use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::notice::Notice;
 use crate::widgets::progress::spinner_frame;
 use crate::widgets::props::Prop;
 use crate::widgets::segments::Segment;
@@ -63,6 +64,7 @@ pub struct CockpitScreen {
     pub debug: bool,
     pub credential_hold: bool,
     pub target_label: String,
+    docker: bool,
 }
 
 impl CockpitScreen {
@@ -120,6 +122,7 @@ impl CockpitScreen {
         {
             accounts.insert(0, a.clone());
         }
+        let docker = w.docker_on(workspace, &role);
         Self {
             run,
             workspace,
@@ -143,6 +146,7 @@ impl CockpitScreen {
             debug: false,
             credential_hold: false,
             target_label,
+            docker,
         }
     }
 
@@ -447,6 +451,15 @@ impl CockpitScreen {
             props.insert(
                 0,
                 Prop::new(&self.run.content.words.unit, c.clone()).copyable(),
+            );
+        }
+        if self.docker
+            && let Some(d) = w.surfaces.docker.as_ref()
+        {
+            props.extend(
+                d.risks
+                    .iter()
+                    .map(|r| Prop::new(&r.label, r.text.clone()).wrap()),
             );
         }
         if self.debug {
@@ -952,6 +965,25 @@ impl Page<Jackin> for CockpitScreen {
                 Style::new().fg(t.tone(*tone)),
             );
             y += 3;
+        }
+        if self.docker
+            && let Some(d) = w.surfaces.docker.as_ref()
+        {
+            let ny = rail.bottom() + 4;
+            if ny + 1 < area.bottom().saturating_sub(3) {
+                let x = rail.x.saturating_sub(4);
+                let notice = Notice::warning(format!(
+                    "Docker is on · the agent can read the engine key · i shows all {}",
+                    plural(d.risks.len(), "risk", "risks")
+                ));
+                fill(buf, Rect::new(area.x, ny, area.width, 1), t.base());
+                notice.render(
+                    Rect::new(x, ny, area.right().saturating_sub(x + 2), 1),
+                    buf,
+                    ctx,
+                    t.canvas,
+                );
+            }
         }
         let _ = y;
 

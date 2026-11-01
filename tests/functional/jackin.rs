@@ -414,3 +414,97 @@ fn jackin_settings_unsaved_leave_cancel_then_discard() {
     app.visual("functional/jackin_settings_leave");
     app.finish();
 }
+
+fn scenario(name: &str, scenario: &str, cols: u16, rows: u16) -> App {
+    let mut args = vec!["--scenario", scenario];
+    args.extend_from_slice(PAUSED);
+    App::new(name, JACKIN, &args, cols, rows, "truecolor")
+}
+
+fn tab_to(app: &App, label: &str) {
+    for _ in 0..16 {
+        let screen = app.settle();
+        let focused = find_all(&screen, label)
+            .into_iter()
+            .any(|p| row_text(&screen, u32::from(p.y)).contains('▎'));
+        if focused {
+            return;
+        }
+        app.key("tab");
+    }
+    panic!("{label:?} never took focus:\n{}", text(&app.screen()));
+}
+
+const DOCKER_RISKS: [&str; 4] = [
+    "The agent can read the engine client key.",
+    "Containers bypass the sandbox network policy.",
+    "A bind mount names a path on the engine host, not in the sandbox.",
+    "The engine outlives the sandbox.",
+];
+
+fn turn_docker_on(app: &App) {
+    app.key("down");
+    app.key("e");
+    let editor = app.wait_text("payments-platform › edit");
+    assert!(text(&editor).contains("Docker for the agent"));
+    assert!(text(&editor).contains("Off by default"));
+    tab_to(app, "Docker for the agent");
+    app.key("space");
+    let confirm = app.wait_text("Turn on Docker for payments-platform?");
+    for risk in DOCKER_RISKS {
+        assert!(text(&confirm).contains(risk), "risk text {risk:?}");
+    }
+    app.key("escape");
+    app.wait_absent("Turn on Docker for payments-platform?");
+    let cancelled = app.settle();
+    assert!(text(&cancelled).contains("Off by default"));
+    assert!(!text(&cancelled).contains("• 1 change"));
+    app.key("space");
+    app.wait_text("Turn on Docker for payments-platform?");
+    app.key("right");
+    app.key("enter");
+    app.wait_absent("Turn on Docker for payments-platform?");
+}
+
+#[test]
+fn jackin_docker_setting_confirm_and_save() {
+    let app = scenario("jackin-docker-setting", "docker-setting", 120, 40);
+    app.wait_text("Current directory");
+    turn_docker_on(&app);
+    let on = app.wait_text("4 risks");
+    assert!(text(&on).contains("On · jackin-local · host.openshell.internal:18476"));
+    assert!(text(&on).contains("• 1 change"));
+
+    app.key("ctrl+s");
+    let preview = app.wait_text("Save workspace");
+    assert!(text(&preview).contains("Docker"));
+    assert!(text(&preview).contains("off → on"));
+    app.key("right");
+    app.key("enter");
+    app.wait_text("Saving payments-platform");
+    app.advance_clock(1000);
+    app.wait_text("Workspace payments-platform saved");
+    let manager = app.wait_text("docker on");
+    assert!(text(&manager).contains("dirty exit"));
+
+    app.key("e");
+    app.wait_text("payments-platform › edit");
+    tab_to(&app, "Docker for the agent");
+    let reopened = app.settle();
+    assert!(text(&reopened).contains("On · jackin-local"));
+    assert!(!text(&reopened).contains("• 1 change"));
+    app.visual("functional/jackin_docker_setting");
+    app.finish();
+}
+
+#[test]
+fn jackin_docker_setting_no_engine() {
+    let app = scenario("jackin-docker-no-engine", "docker-no-engine", 120, 40);
+    app.wait_text("Current directory");
+    turn_docker_on(&app);
+    let on = app.wait_text("has no Docker engine");
+    assert!(text(&on).contains("jackin gateway add"));
+    assert!(text(&on).contains("4 risks"));
+    app.visual("functional/jackin_docker_no_engine");
+    app.finish();
+}

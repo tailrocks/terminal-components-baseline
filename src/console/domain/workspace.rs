@@ -19,6 +19,7 @@ pub struct Workspace {
     pub role_env: BTreeMap<RoleName, Vec<EnvVar>>,
     pub keep_awake: bool,
     pub git_pull: bool,
+    pub docker: bool,
 
     pub accounts: AccountPolicy,
     pub dirty_policy: DirtyExitPolicy,
@@ -127,6 +128,7 @@ impl Workspace {
             role_env: BTreeMap::new(),
             keep_awake: false,
             git_pull: true,
+            docker: false,
             accounts: AccountPolicy::default(),
             dirty_policy: DirtyExitPolicy::Ask,
         }
@@ -212,6 +214,7 @@ impl Workspace {
         n += usize::from(self.workdir != other.workdir);
         n += usize::from(self.keep_awake != other.keep_awake);
         n += usize::from(self.git_pull != other.git_pull);
+        n += usize::from(self.docker != other.docker);
         n += usize::from(self.roles != other.roles);
         n += usize::from(self.dirty_policy != other.dirty_policy);
         n += keyed(&self.mounts, &other.mounts, |m| m.destination.clone());

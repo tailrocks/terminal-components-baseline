@@ -1,7 +1,11 @@
 pub mod account;
 pub mod agent;
+pub mod docker;
+pub mod doctor;
 pub mod instance;
 pub mod onepassword;
 pub mod precedence;
+pub mod role;
+pub mod surfaces;
 pub mod usage;
 pub mod workspace;

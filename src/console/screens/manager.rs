@@ -40,7 +40,7 @@ use crate::console::domain::agent::Agent;
 use crate::console::domain::instance::{DaemonSnapshot, InstanceStatus};
 use crate::console::domain::workspace::WorkspaceId;
 use crate::console::launch::LaunchPlan;
-use crate::console::world::{DaemonHealth, Msg, World, job};
+use crate::console::world::{DaemonHealth, Health, Msg, World, job};
 use crate::ui::context::ContextAnchor;
 use crate::ui::text::plural;
 use crate::widgets::menu::MenuItem;
@@ -417,10 +417,13 @@ impl ManagerScreen {
         let mut p = Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent");
         p.set_searchable(false);
         p.list.width = (84, 84);
-        let scope = match ws.and_then(|id| w.workspace(id)) {
+        let mut scope = match ws.and_then(|id| w.workspace(id)) {
             Some(x) => format!("{} › {role}", x.name),
             None => format!("{} › {role}", w.tilde(&w.cwd)),
         };
+        if w.docker_on(ws, &role) {
+            scope.push_str(" · Docker is on for this launch");
+        }
         p.scope = Some(scope);
         let (items, targets) = agent_rows(w, ws, Some(&role));
         p.set_items(items);
@@ -1328,10 +1331,15 @@ impl ManagerScreen {
                         facts.push(Prop::new(
                             "Policies",
                             format!(
-                                "git pull {} · keep awake {} · dirty exit {}",
+                                "git pull {} · keep awake {} · dirty exit {}{}",
                                 if ws.git_pull { "enabled" } else { "disabled" },
                                 if ws.keep_awake { "on" } else { "off" },
-                                ws.dirty_policy.label()
+                                ws.dirty_policy.label(),
+                                if ws.docker && w.surfaces.docker.is_some() {
+                                    " · docker on"
+                                } else {
+                                    ""
+                                }
                             ),
                         ));
                         let used = props::render(
@@ -1350,13 +1358,12 @@ impl ManagerScreen {
                                 "Instances",
                                 t.secondary().add_modifier(Modifier::BOLD),
                             );
-                            let meta = match w.daemon_health {
-                                DaemonHealth::Healthy => {
-                                    format!("daemon · {}", w.clock.ago(w.last_refresh_secs))
-                                }
-                                DaemonHealth::Stale => {
-                                    format!("▲ daemon stale · {}", w.clock.ago(w.last_refresh_secs))
-                                }
+                            let hv = w.health_view();
+                            let ago = w.clock.ago(hv.at_secs);
+                            let meta = match hv.health {
+                                Health::Healthy => format!("{} · {ago}", hv.noun),
+                                Health::Stale => format!("▲ {} stale · {ago}", hv.noun),
+                                Health::Failing => format!("▲ {} failing · {ago}", hv.noun),
                             };
                             let mw = width(&meta) as u16;
                             if y < inner.bottom() && inner.width > mw + 12 {
@@ -1750,21 +1757,18 @@ impl ManagerScreen {
         }
         if y + 3 < inner.bottom() {
             y += 1;
+            let hv = w.health_view();
             buf.set_string(
                 inner.x,
                 y,
-                "Daemon",
+                crate::ui::text::capitalize(&hv.noun),
                 t.secondary().bg(bg).add_modifier(Modifier::BOLD),
             );
-            let (h, tone) = match w.daemon_health {
-                DaemonHealth::Healthy => (
-                    format!("healthy · {}", w.clock.ago(w.last_refresh_secs)),
-                    Tone::Secondary,
-                ),
-                DaemonHealth::Stale => (
-                    format!("▲ stale · {}", w.clock.ago(w.last_refresh_secs)),
-                    Tone::Warning,
-                ),
+            let ago = w.clock.ago(hv.at_secs);
+            let (h, tone) = match hv.health {
+                Health::Healthy => (format!("healthy · {ago}"), Tone::Secondary),
+                Health::Stale => (format!("▲ stale · {ago}"), Tone::Warning),
+                Health::Failing => (format!("▲ failing · {ago}"), Tone::Error),
             };
             buf.set_string(
                 inner.right() - width(&h) as u16,

@@ -15,6 +15,7 @@ use junie_tui::console::domain::instance::{
     DaemonSnapshot, Instance, InstanceStatus, ManifestError, SessionRecord, SessionStatus,
 };
 use junie_tui::console::domain::onepassword::OpReference;
+use junie_tui::console::domain::surfaces::Surfaces;
 use junie_tui::console::domain::usage::{
     AccountUsage, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
 };
@@ -1105,6 +1106,7 @@ fn base_world(scenario: Scenario) -> World {
         takeover_at_ms: None,
         session_accounts: BTreeMap::new(),
         discovery_pending: false,
+        surfaces: Surfaces::default(),
     };
     w.sync_arbiter();
     w
@@ -1422,8 +1424,17 @@ pub fn world_for(scenario: Scenario) -> World {
             w.discovery_pending = true;
             w
         }
+        Scenario::DockerSetting | Scenario::DockerNoEngine => {
+            let mut w = populated(scenario, false);
+            crate::surfaces::docker(&mut w, scenario == Scenario::DockerNoEngine);
+            w
+        }
         Scenario::Returning
         | Scenario::AccountsMixed
+        | Scenario::RoleEditor
+        | Scenario::RoleBinding
+        | Scenario::Doctor
+        | Scenario::LaunchOpenshell
         | Scenario::LaunchRunning
         | Scenario::LaunchFailure
         | Scenario::CapsuleMulti => populated(scenario, false),

@@ -18,7 +18,13 @@ use crate::console::domain::onepassword::OpReference;
 use crate::console::world::World;
 
 use super::ModalResult;
+use crate::console::domain::docker::DockerRiskText;
 use crate::core::scroll::Scrollable;
+use crate::theme::StatusKind;
+use crate::ui::text::plural;
+use crate::widgets::button::Button;
+use crate::widgets::dialog::Dialog;
+use crate::widgets::props::Prop;
 
 #[allow(clippy::too_many_arguments)]
 pub fn modal_frame(
@@ -38,6 +44,65 @@ pub fn modal_frame(
         .placement(crate::ui::popup::Placement::Center)
         .dismiss(dismiss)
         .render(screen, buf, ctx)
+}
+
+pub fn unsaved_dialog(id: WidgetId, changes: usize) -> Dialog {
+    Dialog::confirm(
+        id,
+        "Unsaved changes",
+        &format!(
+            "Save changes before leaving? {} would be lost.",
+            plural(changes.max(1), "change", "changes")
+        ),
+        "Save",
+    )
+    .actions(
+        vec![
+            Button::subtle(id.sub("exit_cancel"), "Cancel"),
+            Button::danger(id.sub("exit_discard"), "Discard"),
+            Button::primary(id.sub("exit_save"), "Save"),
+        ],
+        Some(0),
+    )
+}
+
+pub fn docker_risk_dialog(
+    id: WidgetId,
+    subject: &str,
+    risks: &[DockerRiskText],
+    confirm: bool,
+) -> Dialog {
+    let facts: Vec<Prop> = risks
+        .iter()
+        .map(|r| Prop::new(&r.label, r.text.clone()).wrap())
+        .collect();
+    if confirm {
+        return Dialog::facts(
+            id,
+            &format!("Turn on Docker for {subject}?"),
+            facts,
+            vec![],
+            None,
+            Button::primary(id.sub("turn_on"), "Turn on"),
+        )
+        .title_status(StatusKind::Warn)
+        .width(92);
+    }
+    let close = Button::primary(id.sub("close"), "Close");
+    let focus = close.id;
+    let mut d = Dialog::facts(
+        id,
+        &format!("Docker risks · {subject}"),
+        facts,
+        vec![],
+        None,
+        close.clone(),
+    )
+    .title_status(StatusKind::Warn)
+    .width(92)
+    .actions(vec![close], Some(0));
+    d.initial_focus = focus;
+    d
 }
 
 use crate::widgets::file_browser::{Choose, FileCmd, FileEntry, MemorySource, UrlEntry};

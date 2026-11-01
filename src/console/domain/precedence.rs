@@ -1,5 +1,6 @@
 use crate::console::domain::account::*;
 use crate::console::domain::agent::Provider;
+use crate::console::domain::role::AccountOrder;
 use crate::console::domain::workspace::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -9,6 +10,7 @@ pub enum PrecedenceLevel {
     Workspace,
     ProviderDefault,
     Discovered,
+    OnlyAccount,
     None,
 }
 
@@ -20,6 +22,7 @@ impl PrecedenceLevel {
             PrecedenceLevel::Workspace => "Workspace choice",
             PrecedenceLevel::ProviderDefault => "provider default",
             PrecedenceLevel::Discovered => "discovered on host",
+            PrecedenceLevel::OnlyAccount => "only account",
             PrecedenceLevel::None => "no account",
         }
     }
@@ -52,6 +55,8 @@ pub fn resolve_account(
     role: Option<&str>,
     session: Option<&AccountId>,
     registry: &AccountRegistry,
+    order: AccountOrder,
+    binding: Option<&AccountId>,
 ) -> ResolvedAccount {
     let effective = ws.map(|w| w.effective_accounts(registry));
     let in_set = |id: &AccountId| -> bool {
@@ -69,24 +74,42 @@ pub fn resolve_account(
             "Session choice · picked for this session in Capsule".into(),
         ));
     }
-    if let (Some(w), Some(r)) = (ws, role)
-        && let Some(id) = w.role_preference(r, provider, registry)
-    {
-        candidates.push((
-            PrecedenceLevel::Role,
-            id,
-            format!("Role preference · set on Role {r} in {}", w.name),
-        ));
-    }
-    if let Some(w) = ws
-        && let Some(id) = w.accounts.preferred.get(&provider)
-        && in_set(id)
-    {
-        candidates.push((
-            PrecedenceLevel::Workspace,
-            id.clone(),
-            format!("Workspace preference · set in {} › Accounts", w.name),
-        ));
+    let workspace_choice = || {
+        ws.and_then(|w| w.accounts.preferred.get(&provider).map(|id| (w, id)))
+            .filter(|(_, id)| in_set(id))
+            .map(|(w, id)| {
+                (
+                    PrecedenceLevel::Workspace,
+                    id.clone(),
+                    format!("Workspace preference · set in {} › Accounts", w.name),
+                )
+            })
+    };
+    match order {
+        AccountOrder::Demo => {
+            if let (Some(w), Some(r)) = (ws, role)
+                && let Some(id) = w.role_preference(r, provider, registry)
+            {
+                candidates.push((
+                    PrecedenceLevel::Role,
+                    id,
+                    format!("Role preference · set on Role {r} in {}", w.name),
+                ));
+            }
+            candidates.extend(workspace_choice());
+        }
+        AccountOrder::Jackin => {
+            candidates.extend(workspace_choice());
+            if let (Some(id), Some(r)) = (binding, role)
+                && in_set(id)
+            {
+                candidates.push((
+                    PrecedenceLevel::Role,
+                    id.clone(),
+                    format!("Role binding · set on Role {r}"),
+                ));
+            }
+        }
     }
     if let Some(a) = registry.default_for(provider)
         && in_set(&a.id)
@@ -108,6 +131,21 @@ pub fn resolve_account(
                 provider.short()
             ),
         ));
+    }
+    if order == AccountOrder::Jackin {
+        let mut of_provider = registry
+            .accounts
+            .iter()
+            .filter(|a| a.provider == provider && a.enabled);
+        if let (Some(only), None) = (of_provider.next(), of_provider.next())
+            && in_set(&only.id)
+        {
+            candidates.push((
+                PrecedenceLevel::OnlyAccount,
+                only.id.clone(),
+                format!("Only account · the one {} account", provider.short()),
+            ));
+        }
     }
     if let (Some(w), Some(set)) = (ws, effective.as_ref()) {
         let extra: Vec<AccountId> = set

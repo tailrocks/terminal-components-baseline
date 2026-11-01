@@ -370,23 +370,8 @@ impl SettingsScreen {
     fn leave(&mut self, cx: &mut Cx) {
         self.sync_pending();
         if self.change_count() > 0 {
-            let d = Dialog::confirm(
-                WidgetId::of("settings.exit"),
-                "Unsaved changes",
-                &format!(
-                    "Save changes before leaving? {} would be lost.",
-                    plural(self.change_count(), "change", "changes")
-                ),
-                "Save",
-            )
-            .actions(
-                vec![
-                    Button::subtle(WidgetId::of("settings.exit.cancel"), "Cancel"),
-                    Button::danger(WidgetId::of("settings.exit.discard"), "Discard"),
-                    Button::primary(WidgetId::of("settings.exit.save"), "Save"),
-                ],
-                Some(0),
-            );
+            let d =
+                super::modals::unsaved_dialog(WidgetId::of("settings.exit"), self.change_count());
             cx.open(d, LayerTag::new("exit"));
         } else {
             cx.go(Go::Manager);

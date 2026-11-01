@@ -15,6 +15,7 @@ use crate::widgets::choice::Checkbox;
 use crate::widgets::dialog::Dialog;
 use crate::widgets::input::{InputAction, TextInput};
 use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::notice::Notice;
 use crate::widgets::option_list::Item;
 use crate::widgets::picker::Picker;
 use crate::widgets::progress::spinner_frame;
@@ -34,12 +35,17 @@ use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::console::backend::Effect;
 use crate::console::domain::account::AccountId;
 use crate::console::domain::agent::Provider;
+use crate::console::domain::docker::{DockerSetting, EngineState};
 use crate::console::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, Effective, RoleEntry, RoleName, RoleSource, Workspace,
     WorkspaceId,
 };
 use crate::console::world::{Msg, World, job};
 use crate::ui::text::plural;
+
+fn on_off(v: bool) -> &'static str {
+    if v { "on" } else { "off" }
+}
 
 pub const TABS: WidgetId = WidgetId::of("editor.tabs");
 pub const NAME: WidgetId = WidgetId::of("editor.name");
@@ -48,6 +54,7 @@ pub const WORKDIR: WidgetId = WidgetId::of("editor.workdir");
 const GENERAL: WidgetId = WidgetId::of("editor.general");
 pub const KEEP_AWAKE: WidgetId = WidgetId::of("editor.keep_awake");
 pub const GIT_PULL: WidgetId = WidgetId::of("editor.git_pull");
+pub const DOCKER: WidgetId = WidgetId::of("editor.docker");
 pub const DIRTY_POLICY: WidgetId = WidgetId::of("editor.dirty_policy");
 pub const ROLES: WidgetId = WidgetId::of("editor.roles");
 pub const ACCOUNTS: WidgetId = WidgetId::of("editor.accounts");
@@ -115,6 +122,7 @@ pub struct EditorScreen {
     workdir_button: Button,
     keep_awake: Checkbox,
     git_pull: Checkbox,
+    docker: Checkbox,
     dirty_policy: Select,
     role_rows: Vec<RoleRow>,
     role_cursor: usize,
@@ -182,6 +190,7 @@ impl EditorScreen {
             workdir_button: Button::secondary(WORKDIR, "Choose…"),
             keep_awake: Checkbox::new(KEEP_AWAKE, "Keep awake", pending.keep_awake),
             git_pull: Checkbox::new(GIT_PULL, "Git pull before launch", pending.git_pull),
+            docker: Checkbox::new(DOCKER, "Docker for the agent", pending.docker),
             dirty_policy: Select::new(
                 DIRTY_POLICY,
                 "On dirty exit",
@@ -225,6 +234,7 @@ impl EditorScreen {
         self.pending.name = self.name.text().trim().to_owned();
         self.pending.keep_awake = self.keep_awake.checked;
         self.pending.git_pull = self.git_pull.checked;
+        self.pending.docker = self.docker.checked;
         self.pending.dirty_policy = match self.dirty_policy.selected {
             1 => DirtyExitPolicy::Keep,
             2 => DirtyExitPolicy::Discard,
@@ -242,6 +252,7 @@ impl EditorScreen {
             || self.pending.workdir != self.original.workdir
             || self.pending.keep_awake != self.original.keep_awake
             || self.pending.git_pull != self.original.git_pull
+            || self.pending.docker != self.original.docker
             || self.pending.dirty_policy != self.original.dirty_policy
     }
 
@@ -375,6 +386,19 @@ impl EditorScreen {
                 format!("{} → {}", self.original.workdir, self.pending.workdir),
             ));
         }
+        if self.pending.docker != self.original.docker {
+            facts.push(
+                Prop::new(
+                    "Docker",
+                    format!(
+                        "{} → {}",
+                        on_off(self.original.docker),
+                        on_off(self.pending.docker)
+                    ),
+                )
+                .tone(Tone::Warning),
+            );
+        }
         facts.extend(self.cfg.summary_facts());
         if self.pending.roles != self.original.roles {
             facts.push(Prop::new(
@@ -409,6 +433,12 @@ impl EditorScreen {
             code.push(format!(
                 "~ git_pull {} → {}",
                 self.original.git_pull, self.pending.git_pull
+            ));
+        }
+        if self.pending.docker != self.original.docker {
+            code.push(format!(
+                "~ docker {} → {}",
+                self.original.docker, self.pending.docker
             ));
         }
         if self.pending.dirty_policy != self.original.dirty_policy {
@@ -505,23 +535,7 @@ impl EditorScreen {
     fn leave(&mut self, cx: &mut Cx) {
         self.sync_pending();
         if self.change_count() > 0 || self.is_create() {
-            let d = Dialog::confirm(
-                WidgetId::of("editor.exit"),
-                "Unsaved changes",
-                &format!(
-                    "Save changes before leaving? {} would be lost.",
-                    plural(self.change_count().max(1), "change", "changes")
-                ),
-                "Save",
-            )
-            .actions(
-                vec![
-                    Button::subtle(WidgetId::of("editor.exit.cancel"), "Cancel"),
-                    Button::danger(WidgetId::of("editor.exit.discard"), "Discard"),
-                    Button::primary(WidgetId::of("editor.exit.save"), "Save"),
-                ],
-                Some(0),
-            );
+            let d = super::modals::unsaved_dialog(WidgetId::of("editor.exit"), self.change_count());
             cx.open(d, LayerTag::new("exit"));
         } else {
             cx.go(Go::Manager);
@@ -533,29 +547,42 @@ impl EditorScreen {
         let bg = t.canvas;
         let fw = area.width.saturating_sub(4).min(72);
 
-        let kids = [
+        let docker = w.surfaces.docker.as_ref();
+        let docker_notices = self.docker_notices(w, fw.saturating_sub(4));
+        let docker_h = 1 + docker_notices
+            .iter()
+            .map(|n| n.height(fw.saturating_sub(4)))
+            .sum::<u16>();
+        let mut kids = vec![
             StackChild::fixed(3),
             StackChild::fixed(1),
             StackChild::fixed(3),
             StackChild::fixed(1),
             StackChild::fixed(1),
             StackChild::fixed(1),
-            StackChild::fixed(1),
-            StackChild::fixed(3),
         ];
+        let mut ids: Vec<Vec<WidgetId>> = vec![
+            vec![NAME],
+            vec![],
+            vec![WORKDIR, self.workdir_button.id],
+            vec![],
+            vec![self.keep_awake.id],
+            vec![self.git_pull.id],
+        ];
+        let docker_slot = docker.map(|_| {
+            kids.push(StackChild::fixed(docker_h));
+            ids.push(vec![DOCKER]);
+            kids.len() - 1
+        });
+        kids.push(StackChild::fixed(1));
+        ids.push(vec![]);
+        let dirty_slot = kids.len();
+        kids.push(StackChild::fixed(3));
+        ids.push(vec![self.dirty_policy.id]);
         let focus = ctx.interaction.focus;
-        let at = [
-            &[NAME][..],
-            &[],
-            &[WORKDIR, self.workdir_button.id],
-            &[],
-            &[self.keep_awake.id],
-            &[self.git_pull.id],
-            &[],
-            &[self.dirty_policy.id],
-        ]
-        .iter()
-        .position(|ids| focus.is_some_and(|f| ids.contains(&f)));
+        let at = ids
+            .iter()
+            .position(|ids| focus.is_some_and(|f| ids.contains(&f)));
         let l = Stack::default().layout(area, &kids, &mut self.general_stack, at);
         Stack::chrome(&l, area, buf, ctx, GENERAL, &self.general_stack);
         let col = |r: Rect| Rect::new(r.x + 2, r.y, fw.min(r.width.saturating_sub(2)), r.height);
@@ -624,7 +651,38 @@ impl EditorScreen {
             }
             None => ctx.focus_stop(self.git_pull.id),
         }
-        match l.slot(7) {
+        if let (Some(i), Some(d)) = (docker_slot, docker) {
+            match l.slot(i) {
+                Some(r) => {
+                    let r = col(r);
+                    self.docker.render(Rect::new(r.x, r.y, 30, 1), buf, ctx, bg);
+                    let hint = self.docker_hint(d);
+                    let hx = r.x + 30;
+                    buf.set_string(
+                        hx,
+                        r.y,
+                        crate::ui::reveal::cut(
+                            Rect::new(hx, r.y, area.right().saturating_sub(hx), 1),
+                            &hint,
+                        ),
+                        t.faint().bg(bg),
+                    );
+                    let mut y = r.y + 1;
+                    for n in &docker_notices {
+                        let nw = r.width.saturating_sub(4);
+                        let used = n.render(
+                            Rect::new(r.x + 4, y, nw, r.bottom().saturating_sub(y)),
+                            buf,
+                            ctx,
+                            bg,
+                        );
+                        y += used;
+                    }
+                }
+                None => ctx.focus_stop(DOCKER),
+            }
+        }
+        match l.slot(dirty_slot) {
             Some(r) => {
                 let r = col(r);
                 self.dirty_policy
@@ -632,7 +690,74 @@ impl EditorScreen {
             }
             None => ctx.focus_stop(self.dirty_policy.id),
         }
-        let _ = w;
+    }
+
+    fn docker_hint(&self, d: &DockerSetting) -> String {
+        if self.docker.checked {
+            return match &d.engine {
+                EngineState::Configured { endpoint } => {
+                    format!("On · {} · {endpoint}", d.gateway)
+                }
+                EngineState::Missing => format!("On · {} · no engine", d.gateway),
+            };
+        }
+        match self.always_on_role(d) {
+            Some(role) => format!("Always on for role {role}"),
+            None => "Off by default".into(),
+        }
+    }
+
+    fn always_on_role<'a>(&'a self, d: &'a DockerSetting) -> Option<&'a str> {
+        match &self.pending.roles.allowed {
+            AllowedRoles::Custom(list) if !list.is_empty() => list
+                .iter()
+                .all(|r| d.role_enabled.contains(r))
+                .then(|| list[0].as_str()),
+            _ => None,
+        }
+    }
+
+    fn docker_notices(&self, w: &World, _width: u16) -> Vec<Notice> {
+        let Some(d) = w.surfaces.docker.as_ref().filter(|_| self.docker.checked) else {
+            return vec![];
+        };
+        let mut v = vec![Notice::warning(format!(
+            "{} · press i to read them",
+            plural(d.risks.len(), "risk", "risks")
+        ))];
+        if d.engine == EngineState::Missing {
+            v.push(Notice::warning(format!(
+                "Gateway {} has no Docker engine. Launches fail until you add one with jackin gateway add.",
+                d.gateway
+            )));
+        }
+        v
+    }
+
+    fn open_docker_risks(&self, w: &World, cx: &mut Cx, confirm: bool) {
+        let Some(d) = w.surfaces.docker.as_ref() else {
+            return;
+        };
+        let dialog = super::modals::docker_risk_dialog(
+            WidgetId::of("editor.docker.risks"),
+            &self.pending.name,
+            &d.risks,
+            confirm,
+        );
+        cx.open(
+            dialog,
+            LayerTag::new(if confirm { "docker.on" } else { "docker.info" }),
+        );
+    }
+
+    fn toggle_docker(&mut self, w: &World, cx: &mut Cx) -> Outcome {
+        if self.docker.checked || w.surfaces.docker.is_none() {
+            let o = self.docker.on_click();
+            self.sync_pending();
+            return o;
+        }
+        self.open_docker_risks(w, cx, true);
+        Outcome::Changed
     }
 
     fn render_roles(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, w: &World) {
@@ -1565,6 +1690,13 @@ impl EditorScreen {
                 return o;
             }
         }
+        if focus == Some(DOCKER) && (key.is_char(' ') || key.is(KeyCode::Enter)) {
+            return self.toggle_docker(w, cx);
+        }
+        if w.surfaces.docker.is_some() && !self.name.editing && key.is_char('i') && key.plain() {
+            self.open_docker_risks(w, cx, false);
+            return Outcome::Changed;
+        }
         if focus == Some(DIRTY_POLICY) {
             let (o, _) = self.dirty_policy.on_key(key);
             if o.consumed() {
@@ -1744,6 +1876,7 @@ impl Page<Jackin> for EditorScreen {
                         | Some(WORKDIR)
                         | Some(KEEP_AWAKE)
                         | Some(GIT_PULL)
+                        | Some(DOCKER)
                         | Some(DIRTY_POLICY)
                 ) =>
             {
@@ -2025,6 +2158,21 @@ impl Page<Jackin> for EditorScreen {
                 cx.status("Not trusted · role not loaded");
                 Outcome::Changed
             }
+            (
+                "docker.on",
+                ModalResult::Dialog {
+                    action: Some(1), ..
+                },
+            ) => {
+                self.docker.checked = true;
+                self.sync_pending();
+                cx.focus.focus(DOCKER);
+                Outcome::Changed
+            }
+            ("docker.on" | "docker.info", _) => {
+                cx.focus.focus(DOCKER);
+                Outcome::Changed
+            }
             ("roleerr", _) => Outcome::Changed,
             _ => Outcome::Changed,
         }
@@ -2289,6 +2437,10 @@ impl EditorScreen {
                     let o = self.git_pull.on_click();
                     self.sync_pending();
                     return o;
+                }
+                if id == DOCKER {
+                    cx.focus.focus(DOCKER);
+                    return self.toggle_docker(w, cx);
                 }
                 Outcome::Ignored
             }
