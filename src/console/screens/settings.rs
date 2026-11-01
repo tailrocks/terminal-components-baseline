@@ -1,22 +1,22 @@
-use crate::screens::Jackin;
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::{MouseTarget, PointerEvent};
-use junie_tui::shell::Page;
-use junie_tui::theme::Tone;
-use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
-use junie_tui::ui::scroll_view::{Axes, ScrollView};
-use junie_tui::ui::text::{fit, truncate, width, wrap};
-use junie_tui::widgets::button::{Button, row_layout_right};
-use junie_tui::widgets::choice::Checkbox;
-use junie_tui::widgets::dialog::Dialog;
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::option_list::Item;
-use junie_tui::widgets::progress::spinner_frame;
-use junie_tui::widgets::props::Prop;
-use junie_tui::widgets::segments::Segment;
-use junie_tui::widgets::tabs::{TabAction, TabItem, Tabs};
+use crate::console::screens::Jackin;
+use crate::core::event::{Key, Outcome};
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::{MouseTarget, PointerEvent};
+use crate::shell::Page;
+use crate::theme::Tone;
+use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
+use crate::ui::scroll_view::{Axes, ScrollView};
+use crate::ui::text::{fit, truncate, width, wrap};
+use crate::widgets::button::{Button, row_layout_right};
+use crate::widgets::choice::Checkbox;
+use crate::widgets::dialog::Dialog;
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::option_list::Item;
+use crate::widgets::progress::spinner_frame;
+use crate::widgets::props::Prop;
+use crate::widgets::segments::Segment;
+use crate::widgets::tabs::{TabAction, TabItem, Tabs};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
@@ -25,10 +25,10 @@ use ratatui::style::Modifier;
 use super::config::{ConfigTabs, Doc, Scope, Tab as CfgTab, mode_label};
 use super::modals::InfoDialog;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::domain::agent::{Agent, AuthMode};
-use crate::domain::workspace::RoleName;
-use crate::sim::world::{GlobalConfig, Msg, World, job};
-use junie_tui::ui::text::plural;
+use crate::console::domain::agent::{Agent, AuthMode};
+use crate::console::domain::workspace::RoleName;
+use crate::console::sim::world::{GlobalConfig, Msg, World, job};
+use crate::ui::text::plural;
 
 pub const TABS: WidgetId = WidgetId::of("settings.tabs");
 pub const COAUTHOR: WidgetId = WidgetId::of("settings.coauthor");
@@ -440,7 +440,7 @@ impl SettingsScreen {
             t.secondary().bg(bg).add_modifier(Modifier::BOLD),
         );
         y += 1;
-        buf.set_string(x, y, junie_tui::ui::reveal::cut(Rect::new(x, y, area.width.saturating_sub(4), 1), "Co-authored-by: <agent> <noreply@…>   ·   Signed-off-by: Alexey Zhokhov <alexey@chainargos.com>"), t.muted().bg(bg));
+        buf.set_string(x, y, crate::ui::reveal::cut(Rect::new(x, y, area.width.saturating_sub(4), 1), "Co-authored-by: <agent> <noreply@…>   ·   Signed-off-by: Alexey Zhokhov <alexey@chainargos.com>"), t.muted().bg(bg));
     }
 
     fn render_trust(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
@@ -553,7 +553,7 @@ impl SettingsScreen {
             buf.set_string(
                 area.x + 2,
                 ny,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(area.x + 2, ny, area.width.saturating_sub(4), 1),
                     "An untrusted source blocks + Load role until it is trusted here or",
                 ),
@@ -562,7 +562,7 @@ impl SettingsScreen {
             buf.set_string(
                 area.x + 2,
                 ny + 1,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(area.x + 2, ny + 1, area.width.saturating_sub(4), 1),
                     "in the trust dialog that the load opens.",
                 ),
@@ -693,7 +693,7 @@ impl SettingsScreen {
             buf.set_string(
                 dx,
                 y,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(dx, y, rect.right().saturating_sub(dx + 1), 1),
                     &detail,
                 ),
@@ -1142,7 +1142,7 @@ impl Page<Jackin> for SettingsScreen {
             "Save…".into()
         };
         let widths = [self.cancel.width(), self.save.width()];
-        let lines = junie_tui::widgets::button::row_lines(area.width.saturating_sub(4), &widths, 3);
+        let lines = crate::widgets::button::row_lines(area.width.saturating_sub(4), &widths, 3);
         let rects = row_layout_right(
             Rect::new(
                 area.x,
@@ -1204,13 +1204,13 @@ impl Page<Jackin> for SettingsScreen {
         format!("Settings › global › {}", TAB_NAMES[self.tabs.active.min(4)])
     }
 
-    fn stakes(&mut self, _w: &World) -> junie_tui::ui::leave::Stakes {
+    fn stakes(&mut self, _w: &World) -> crate::ui::leave::Stakes {
         self.sync_pending();
         let n = self.change_count();
         if n > 0 {
-            junie_tui::ui::leave::Stakes::Unsaved { changes: n }
+            crate::ui::leave::Stakes::Unsaved { changes: n }
         } else {
-            junie_tui::ui::leave::Stakes::Clean
+            crate::ui::leave::Stakes::Clean
         }
     }
 

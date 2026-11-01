@@ -1,20 +1,20 @@
-use crate::screens::Jackin;
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::{MouseTarget, PointerEvent, scroll_input};
-use junie_tui::shell::Page;
-use junie_tui::theme::{Theme, Tone};
-use junie_tui::ui::ctx::{RenderCtx, fill};
-use junie_tui::ui::text::width;
-use junie_tui::widgets::button::Button;
-use junie_tui::widgets::dialog::Dialog;
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::progress::spinner_frame;
-use junie_tui::widgets::props::Prop;
-use junie_tui::widgets::segments::Segment;
-use junie_tui::widgets::steps::{Step, StepRail, StepState};
-use junie_tui::widgets::viewport::{Span, TextViewport};
+use crate::console::screens::Jackin;
+use crate::core::event::{Key, Outcome};
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::{MouseTarget, PointerEvent, scroll_input};
+use crate::shell::Page;
+use crate::theme::{Theme, Tone};
+use crate::ui::ctx::{RenderCtx, fill};
+use crate::ui::text::width;
+use crate::widgets::button::Button;
+use crate::widgets::dialog::Dialog;
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::progress::spinner_frame;
+use crate::widgets::props::Prop;
+use crate::widgets::segments::Segment;
+use crate::widgets::steps::{Step, StepRail, StepState};
+use crate::widgets::viewport::{Span, TextViewport};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
@@ -22,14 +22,14 @@ use ratatui::style::{Modifier, Style};
 
 use super::modals::{InfoDialog, InfoResult};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::domain::account::AccountId;
-use crate::domain::agent::Agent;
-use crate::domain::fixtures::PrecedenceLevel;
-use crate::domain::instance::{Instance, InstanceStatus};
-use crate::domain::workspace::WorkspaceId;
-use crate::scenario::Motion;
-use crate::sim::launch::{LaunchEvent, LaunchPlan, LaunchRun, Stage};
-use crate::sim::world::World;
+use crate::console::domain::account::AccountId;
+use crate::console::domain::agent::Agent;
+use crate::console::domain::instance::{Instance, InstanceStatus};
+use crate::console::domain::precedence::PrecedenceLevel;
+use crate::console::domain::workspace::WorkspaceId;
+use crate::console::scenario::Motion;
+use crate::console::sim::launch::{LaunchEvent, LaunchPlan, LaunchRun, Stage};
+use crate::console::sim::world::World;
 
 pub const RAIL: WidgetId = WidgetId::of("cockpit.rail");
 pub const LOG: WidgetId = WidgetId::of("cockpit.log");
@@ -84,8 +84,8 @@ impl CockpitScreen {
         let container = format!("jackin-{wsname}-{suffix}");
         let run_id = format!(
             "run-{}-{suffix}",
-            junie_tui::ui::text::clip(
-                &crate::scenario::CLOCK
+            crate::ui::text::clip(
+                &crate::console::scenario::CLOCK
                     .stamp(w.now_secs())
                     .replace([' ', ':'], "-")
                     .replace('-', ""),
@@ -168,7 +168,7 @@ impl CockpitScreen {
             (
                 format!(
                     "{} · {primary} · {}",
-                    junie_tui::ui::text::plural(self.accounts.len().max(1), "account", "accounts"),
+                    crate::ui::text::plural(self.accounts.len().max(1), "account", "accounts"),
                     others.join(" · ")
                 ),
                 val,
@@ -177,7 +177,11 @@ impl CockpitScreen {
         }
     }
 
-    fn why_label(&self, account: &crate::domain::account::Account, w: &World) -> &'static str {
+    fn why_label(
+        &self,
+        account: &crate::console::domain::account::Account,
+        w: &World,
+    ) -> &'static str {
         let r = w.account_for(
             account.provider,
             self.workspace.and_then(|id| w.workspace(id)),
@@ -304,10 +308,10 @@ impl CockpitScreen {
                         .and_then(|i| w.workspace(i))
                         .map(|x| x.name.clone())
                         .unwrap_or(wsname);
-                    let mut d = crate::sim::pty::Daemon::new(&wsname);
+                    let mut d = crate::console::sim::pty::Daemon::new(&wsname);
                     d.new_tab(Some(self.agent), self.account.clone(), now, false);
                     w.daemons.insert(id.clone(), d);
-                    crate::domain::fixtures::refresh_snapshots(w);
+                    crate::console::sim::world::refresh_snapshots(w);
                     w.sync_arbiter();
                     self.handoff_requested = true;
                     cx.go(Go::Attach {
@@ -340,7 +344,7 @@ impl CockpitScreen {
             last_seen_secs: now,
             run_id: self.run.run_id.clone(),
             sessions: Ok(vec![]),
-            daemon: crate::domain::instance::DaemonSnapshot::Unavailable,
+            daemon: crate::console::domain::instance::DaemonSnapshot::Unavailable,
             branch: None,
             pr: None,
             accounts: self.accounts.clone(),
@@ -483,11 +487,11 @@ impl CockpitScreen {
         let w = screen.width.saturating_sub(6).min(110);
         let h = screen.height.saturating_sub(4);
 
-        let (_, inner) = junie_tui::ui::modal::Frame::new(w, h)
+        let (_, inner) = crate::ui::modal::Frame::new(w, h)
             .title(title)
             .meta(Some(&meta))
-            .placement(junie_tui::ui::popup::Placement::Center)
-            .dismiss(junie_tui::ui::popup::Dismiss::LIGHT)
+            .placement(crate::ui::popup::Placement::Center)
+            .dismiss(crate::ui::popup::Dismiss::LIGHT)
             .render(screen, buf, ctx);
         let t = ctx.theme;
         let bg = t.surface_elevated;
@@ -512,15 +516,12 @@ impl CockpitScreen {
         buf.set_string(
             inner.x,
             inner.bottom() - 1,
-            junie_tui::ui::reveal::cut(
-                Rect::new(inner.x, inner.bottom() - 1, inner.width, 1),
-                hint,
-            ),
+            crate::ui::reveal::cut(Rect::new(inner.x, inner.bottom() - 1, inner.width, 1), hint),
             t.faint().bg(bg),
         );
         ctx.hits.register(LOG, body);
         ctx.hits.register(
-            junie_tui::widgets::scrollbar::id_for(LOG),
+            crate::widgets::scrollbar::id_for(LOG),
             Rect::new(body.right() - 1, body.y, 1, body.height),
         );
     }
@@ -613,7 +614,7 @@ impl Page<Jackin> for CockpitScreen {
                 }
                 _ => {
                     let (o, ev) = self.log.on_key(key);
-                    if let Some(junie_tui::widgets::viewport::ViewportAction::Copy(text)) = ev {
+                    if let Some(crate::widgets::viewport::ViewportAction::Copy(text)) = ev {
                         cx.copy(text);
                     }
                     return o.or(Outcome::Consumed);
@@ -662,7 +663,7 @@ impl Page<Jackin> for CockpitScreen {
             if let Some(r) = self.log.route(ev) {
                 return r.outcome();
             }
-            if ev.id == junie_tui::ui::modal::SURFACE
+            if ev.id == crate::ui::modal::SURFACE
                 && let Some(r) = scroll_input(&mut self.log, ev)
             {
                 return r.outcome();
@@ -672,7 +673,7 @@ impl Page<Jackin> for CockpitScreen {
             return Outcome::Ignored;
         }
         let id = ev.id;
-        if self.log_open && id == junie_tui::ui::modal::CLOSE {
+        if self.log_open && id == crate::ui::modal::CLOSE {
             self.log_open = false;
             cx.focus.focus(RAIL);
             return Outcome::Changed;
@@ -741,7 +742,7 @@ impl Page<Jackin> for CockpitScreen {
             }
             ("cred", ModalResult::Dialog { action, .. }) => match action {
                 Some(0) => {
-                    w.op.session = crate::sim::onepassword::OpSession::SignedIn;
+                    w.op.session = crate::console::sim::onepassword::OpSession::SignedIn;
                     self.credential_hold = false;
                     self.run.retry_credentials();
                     if let Some((_, v, tone)) = self.credentials.as_mut() {
@@ -758,7 +759,7 @@ impl Page<Jackin> for CockpitScreen {
                     if let Some((o, v, tone)) = self.credentials.as_mut() {
                         *o = format!(
                             "plain text · masked API key · {}",
-                            crate::domain::account::masked("Q1zx")
+                            crate::console::domain::account::masked("Q1zx")
                         );
                         *v = "typed once for this launch · never stored".into();
                         *tone = Tone::Secondary;
@@ -800,7 +801,7 @@ impl Page<Jackin> for CockpitScreen {
             Motion::Reduced => 60,
             _ => self.frozen_at.unwrap_or(self.tick),
         };
-        crate::rain::paint_atmosphere(
+        crate::console::rain::paint_atmosphere(
             buf,
             area,
             &exclude,
@@ -822,7 +823,7 @@ impl Page<Jackin> for CockpitScreen {
             buf.set_string(
                 x,
                 y,
-                junie_tui::ui::reveal::cut(Rect::new(x, y, area.width, 1), text),
+                crate::ui::reveal::cut(Rect::new(x, y, area.width, 1), text),
                 style,
             );
         };
@@ -902,13 +903,13 @@ impl Page<Jackin> for CockpitScreen {
             buf.set_string(
                 x,
                 y,
-                junie_tui::ui::reveal::cut(Rect::new(x, y, (wdt) as u16, 1), &line),
+                crate::ui::reveal::cut(Rect::new(x, y, (wdt) as u16, 1), &line),
                 t.muted(),
             );
             buf.set_string(
                 x + 13,
                 y + 1,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(x + 13, y + 1, (wdt.saturating_sub(13)) as u16, 1),
                     val,
                 ),
@@ -945,7 +946,7 @@ impl Page<Jackin> for CockpitScreen {
         buf.set_string(
             ax,
             ay,
-            junie_tui::ui::reveal::cut(
+            crate::ui::reveal::cut(
                 Rect::new(ax, ay, area.width.saturating_sub(2), 1),
                 &activity,
             ),
@@ -956,7 +957,7 @@ impl Page<Jackin> for CockpitScreen {
             buf.set_string(
                 ax,
                 ay + 1,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(ax, ay + 1, area.width.saturating_sub(2), 1),
                     &lines,
                 ),

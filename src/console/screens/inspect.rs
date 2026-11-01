@@ -1,19 +1,19 @@
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::focus::Focus;
-use junie_tui::core::hit::Axis;
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::{MouseTarget, PointerEvent};
-use junie_tui::core::scroll::ScrollState;
-use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
-use junie_tui::ui::layout::{Split, SplitDir};
-use junie_tui::ui::text::{fit, truncate_middle, width};
+use crate::core::event::{Key, Outcome};
+use crate::core::focus::Focus;
+use crate::core::hit::Axis;
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::{MouseTarget, PointerEvent};
+use crate::core::scroll::ScrollState;
+use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
+use crate::ui::layout::{Split, SplitDir};
+use crate::ui::text::{fit, truncate_middle, width};
 
-use junie_tui::widgets::diff::DiffView;
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::scrollbar;
-use junie_tui::widgets::splitter::Splitter;
-use junie_tui::widgets::tree::{TreeAction, TreeNode, TreeView};
+use crate::widgets::diff::DiffView;
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::scrollbar;
+use crate::widgets::splitter::Splitter;
+use crate::widgets::tree::{TreeAction, TreeNode, TreeView};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
@@ -21,11 +21,11 @@ use ratatui::style::{Modifier, Style};
 
 use super::ModalResult;
 use super::modals::modal_frame;
-use crate::sim::changes::{ChangeSet, ChangedFile, DiffStatus};
-use crate::sim::world::World;
-use junie_tui::core::scroll::Scrollable;
-use junie_tui::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
-use junie_tui::ui::popup::Dismiss;
+use crate::console::sim::changes::{ChangeSet, ChangedFile, DiffStatus};
+use crate::console::sim::world::World;
+use crate::core::scroll::Scrollable;
+use crate::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
+use crate::ui::popup::Dismiss;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum InspectMode {
@@ -336,7 +336,7 @@ impl InspectChanges {
             buf.set_string(
                 inner.x,
                 inner.y,
-                junie_tui::ui::reveal::cut(Rect::new(inner.x, inner.y, inner.width, 1), &head),
+                crate::ui::reveal::cut(Rect::new(inner.x, inner.y, inner.width, 1), &head),
                 t.secondary().bg(bg),
             );
             let mode = format!("{} · d switches", self.diff.mode.label());
@@ -587,10 +587,10 @@ fn build_tree(files: &[ChangedFile]) -> (Vec<TreeNode>, Vec<(Vec<usize>, usize)>
     (nodes, leaves)
 }
 
-fn view_hint(mode: junie_tui::widgets::diff::DiffMode) -> Hint {
-    junie_tui::widgets::keyhint::toggle_hint(
+fn view_hint(mode: crate::widgets::diff::DiffMode) -> Hint {
+    crate::widgets::keyhint::toggle_hint(
         "v",
-        mode == junie_tui::widgets::diff::DiffMode::Review,
+        mode == crate::widgets::diff::DiffMode::Review,
         "Show unified",
         "Show side by side",
     )

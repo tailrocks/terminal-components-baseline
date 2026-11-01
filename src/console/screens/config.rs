@@ -1,26 +1,26 @@
 use std::collections::{BTreeMap, HashSet};
 
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::hit::Axis;
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
-use junie_tui::theme::Tone;
-use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
-use junie_tui::ui::master_detail::{MasterDetail, Mode};
-use junie_tui::ui::text::{fit, width};
-use junie_tui::widgets::choice::{Checkbox, RadioGroup};
-use junie_tui::widgets::dialog::Dialog;
-use junie_tui::widgets::input::TextInput;
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::notice::Notice;
-use junie_tui::widgets::option_list::Item;
-use junie_tui::widgets::panel::{Panel, PanelFocus};
-use junie_tui::widgets::picker::Picker;
-use junie_tui::widgets::props::Prop;
-use junie_tui::widgets::scrollbar;
-use junie_tui::widgets::select::Select;
+use crate::core::event::{Key, Outcome};
+use crate::core::hit::Axis;
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::PointerEvent;
+use crate::core::scroll::ScrollState;
+use crate::theme::Tone;
+use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
+use crate::ui::master_detail::{MasterDetail, Mode};
+use crate::ui::text::{fit, width};
+use crate::widgets::choice::{Checkbox, RadioGroup};
+use crate::widgets::dialog::Dialog;
+use crate::widgets::input::TextInput;
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::notice::Notice;
+use crate::widgets::option_list::Item;
+use crate::widgets::panel::{Panel, PanelFocus};
+use crate::widgets::picker::Picker;
+use crate::widgets::props::Prop;
+use crate::widgets::scrollbar;
+use crate::widgets::select::Select;
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
@@ -31,15 +31,15 @@ use super::modals::{
 };
 use super::rowmenu::RowMenu;
 use super::{Cx, LayerTag, ModalResult};
-use crate::domain::agent::AuthMode;
-use crate::domain::onepassword::OpReference;
-use crate::domain::workspace::{
+use crate::console::domain::agent::AuthMode;
+use crate::console::domain::onepassword::OpReference;
+use crate::console::domain::workspace::{
     EnvValue, EnvVar, Isolation, Mount, MountKind, MountScope, MountSource, RoleName, Workspace,
     env_key_error, mask,
 };
-use crate::sim::world::{GlobalConfig, World};
-use junie_tui::ui::context::ContextAnchor;
-use junie_tui::widgets::menu::MenuItem;
+use crate::console::sim::world::{GlobalConfig, World};
+use crate::ui::context::ContextAnchor;
+use crate::widgets::menu::MenuItem;
 use ratatui::crossterm::event::KeyModifiers;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -605,7 +605,7 @@ impl ConfigTabs {
                     .replace("global", "Global"),
                 Some(r) => format!("Role: {r}"),
             };
-            let mut meta = junie_tui::ui::text::plural(vars.len(), "var", "vars");
+            let mut meta = crate::ui::text::plural(vars.len(), "var", "vars");
             if !in_registry {
                 meta = format!("not in registry · {meta}");
             }
@@ -814,7 +814,7 @@ impl ConfigTabs {
                 buf.set_string(
                     x,
                     y,
-                    junie_tui::ui::reveal::cut(Rect::new(x, y, widths[i], 1), h),
+                    crate::ui::reveal::cut(Rect::new(x, y, widths[i], 1), h),
                     t.muted().bg(bg),
                 );
                 x += widths[i] + 2;
@@ -971,7 +971,7 @@ impl ConfigTabs {
                     }
 
                     let cell = Rect::new(x, y, cw, 1);
-                    let shown = junie_tui::ui::reveal::fit(ctx, cell, text, s.focused);
+                    let shown = crate::ui::reveal::fit(ctx, cell, text, s.focused);
                     buf.set_string(x, y, fit(&shown, cw as usize), cs);
                     x += cw + 2;
                 }
@@ -1149,13 +1149,13 @@ impl ConfigTabs {
             buf.set_string(
                 inner.x,
                 y,
-                junie_tui::ui::reveal::cut(Rect::new(inner.x, y, lw, 1), &k),
+                crate::ui::reveal::cut(Rect::new(inner.x, y, lw, 1), &k),
                 t.muted().bg(bg),
             );
             buf.set_string(
                 inner.x + lw,
                 y,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(inner.x + lw, y, inner.width.saturating_sub(lw), 1),
                     &v,
                 ),
@@ -1189,7 +1189,7 @@ impl ConfigTabs {
             }
             (Tab::Mounts, _) => v.push(hint("Enter", "Add mount…")),
             (Tab::Environments, Some(RowKey::Env(..))) => {
-                v.push(junie_tui::widgets::widget_hints::EDIT);
+                v.push(crate::widgets::widget_hints::EDIT);
                 v.push(hint("m", "Show"));
                 v.push(hint("p", "1Password…"));
                 v.push(hint("s", "Scope…"));
@@ -1930,7 +1930,7 @@ impl ConfigTabs {
                     .detail(if n > 0 {
                         format!(
                             "{} · Enter adds another",
-                            junie_tui::ui::text::plural(n, "override", "overrides")
+                            crate::ui::text::plural(n, "override", "overrides")
                         )
                     } else {
                         "no overrides yet".into()
@@ -2401,7 +2401,7 @@ impl ConfigTabs {
                 });
                 return Outcome::Changed;
             }
-            MountSource::Host(crate::sim::world::expand(&w.home, &host))
+            MountSource::Host(crate::console::sim::world::expand(&w.home, &host))
         };
         let original = match &self.editing {
             Some(Editing::Mount { original }) => original.clone(),

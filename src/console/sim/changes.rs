@@ -1,6 +1,4 @@
-pub use junie_tui::widgets::diff::{
-    DiffFile as ChangedFile, DiffHunk as Hunk, DiffLine, DiffStatus,
-};
+pub use crate::widgets::diff::{DiffFile as ChangedFile, DiffHunk as Hunk, DiffLine, DiffStatus};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ChangeSet {

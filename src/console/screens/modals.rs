@@ -1,24 +1,24 @@
-use junie_tui::core::event::{Key, Outcome};
+use crate::core::event::{Key, Outcome};
 
-use junie_tui::core::hit::Axis;
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::{MouseTarget, PointerEvent};
-use junie_tui::ui::ctx::RenderCtx;
-use junie_tui::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::option_list::Item;
-use junie_tui::widgets::picker::{Picker, PickerAction, PickerStatus};
+use crate::core::hit::Axis;
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::{MouseTarget, PointerEvent};
+use crate::ui::ctx::RenderCtx;
+use crate::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::option_list::Item;
+use crate::widgets::picker::{Picker, PickerAction, PickerStatus};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
-use crate::domain::onepassword::OpReference;
-use crate::sim::onepassword::{FieldKind, OpError, SimOnePassword};
-use crate::sim::world::World;
+use crate::console::domain::onepassword::OpReference;
+use crate::console::sim::onepassword::{FieldKind, OpError, SimOnePassword};
+use crate::console::sim::world::World;
 
 use super::ModalResult;
-use junie_tui::core::scroll::Scrollable;
+use crate::core::scroll::Scrollable;
 
 #[allow(clippy::too_many_arguments)]
 pub fn modal_frame(
@@ -30,18 +30,18 @@ pub fn modal_frame(
     title: &str,
     meta: Option<&str>,
 
-    dismiss: junie_tui::ui::popup::Dismiss,
+    dismiss: crate::ui::popup::Dismiss,
 ) -> (Rect, Rect) {
-    junie_tui::ui::modal::Frame::new(width_, height)
+    crate::ui::modal::Frame::new(width_, height)
         .title(title)
         .meta(meta)
-        .placement(junie_tui::ui::popup::Placement::Center)
+        .placement(crate::ui::popup::Placement::Center)
         .dismiss(dismiss)
         .render(screen, buf, ctx)
 }
 
-use junie_tui::widgets::file_browser::{Choose, FileCmd, FileEntry, MemorySource, UrlEntry};
-pub use junie_tui::widgets::file_browser::{FileBrowser, FileBrowserResult as BrowserResult};
+use crate::widgets::file_browser::{Choose, FileCmd, FileEntry, MemorySource, UrlEntry};
+pub use crate::widgets::file_browser::{FileBrowser, FileBrowserResult as BrowserResult};
 
 pub fn file_browser(
     id: WidgetId,
@@ -97,11 +97,11 @@ pub fn file_browser(
     }
 }
 
-pub use junie_tui::widgets::choice_dialog::ChoiceDialog;
-pub use junie_tui::widgets::form_dialog::{
+pub use crate::widgets::choice_dialog::ChoiceDialog;
+pub use crate::widgets::form_dialog::{
     FieldValue, FormAction, FormDialog, FormField, FormFieldKind as FieldKindW, FormValues,
 };
-pub use junie_tui::widgets::info_dialog::{InfoDialog, InfoResult};
+pub use crate::widgets::info_dialog::{InfoDialog, InfoResult};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OpStep {
@@ -112,7 +112,7 @@ pub enum OpStep {
 }
 
 pub struct OpFlow {
-    pub dismiss: junie_tui::ui::popup::Dismiss,
+    pub dismiss: crate::ui::popup::Dismiss,
     pub step: OpStep,
     pub account: Option<String>,
     pub vault: Option<(String, String)>,
@@ -130,7 +130,7 @@ pub struct OpFlow {
 impl OpFlow {
     pub fn new(id: WidgetId, op: &SimOnePassword, now_ms: i64) -> Self {
         let mut f = Self {
-            dismiss: junie_tui::ui::popup::Dismiss::LIGHT,
+            dismiss: crate::ui::popup::Dismiss::LIGHT,
             step: OpStep::Account,
             account: None,
             vault: None,
@@ -144,10 +144,10 @@ impl OpFlow {
         };
         f.picker.list.width = (64, 64);
 
-        let avail: Vec<&crate::sim::onepassword::OpAccount> = op
+        let avail: Vec<&crate::console::sim::onepassword::OpAccount> = op
             .accounts
             .iter()
-            .filter(|a| a.state == crate::sim::onepassword::OpAccountState::Available)
+            .filter(|a| a.state == crate::console::sim::onepassword::OpAccountState::Available)
             .collect();
         if op.accounts.len() == 1 || (avail.len() == 1 && op.accounts.len() == 1) {
             f.account = Some(op.accounts[0].id.clone());
@@ -254,9 +254,9 @@ impl OpFlow {
                             .detail(a.email.clone())
                             .glyph("▪")
                             .tag(match a.state {
-                                crate::sim::onepassword::OpAccountState::Available => "signed in",
-                                crate::sim::onepassword::OpAccountState::Locked => "locked",
-                                crate::sim::onepassword::OpAccountState::AuthorizationRequired => {
+                                crate::console::sim::onepassword::OpAccountState::Available => "signed in",
+                                crate::console::sim::onepassword::OpAccountState::Locked => "locked",
+                                crate::console::sim::onepassword::OpAccountState::AuthorizationRequired => {
                                     "authorize"
                                 }
                             })
@@ -276,9 +276,9 @@ impl OpFlow {
                             .detail(format!("{} items", v.items.len()))
                             .glyph("▪")
                             .tag(match v.access {
-                                crate::sim::onepassword::VaultAccess::ReadWrite => "",
-                                crate::sim::onepassword::VaultAccess::ReadOnly => "read-only",
-                                crate::sim::onepassword::VaultAccess::Denied => "no access",
+                                crate::console::sim::onepassword::VaultAccess::ReadWrite => "",
+                                crate::console::sim::onepassword::VaultAccess::ReadOnly => "read-only",
+                                crate::console::sim::onepassword::VaultAccess::Denied => "no access",
                             })
                     })
                     .collect(),
@@ -537,4 +537,4 @@ impl Layer<ModalResult, World> for OpFlow {
     }
 }
 
-pub use junie_tui::widgets::help::HelpOverlay;
+pub use crate::widgets::help::HelpOverlay;

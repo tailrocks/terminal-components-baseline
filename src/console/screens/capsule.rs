@@ -1,38 +1,36 @@
-use crate::screens::Jackin;
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::hit::{Axis, Bar};
-use junie_tui::core::id::{Part, WidgetId};
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::{MouseTarget, PointerEvent};
-use junie_tui::core::response::Response;
-use junie_tui::core::selection::ClickPolicy;
-use junie_tui::shell::Page;
-use junie_tui::theme::{Theme, Tone};
-use junie_tui::ui::context::ContextConfig;
-use junie_tui::ui::ctx::{RenderCtx, fill};
-use junie_tui::ui::layer;
-use junie_tui::ui::layout::SplitDir;
-use junie_tui::ui::text::{clip, truncate, truncate_middle, width};
-use junie_tui::widgets::brand::Lockup;
-use junie_tui::widgets::button::Button;
-use junie_tui::widgets::dialog::Dialog;
-use junie_tui::widgets::empty::{self, EmptyState};
-use junie_tui::widgets::input::TextInput;
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::menu::{
-    ContextMenu, MenuAction, MenuBar, MenuBarAction, MenuItem, Placement,
-};
-use junie_tui::widgets::meter_list::{MeterList, MeterRow};
-use junie_tui::widgets::option_list::Item;
-use junie_tui::widgets::picker::Picker;
-use junie_tui::widgets::progress::{Meter, MeterVisual, spinner_frame};
-use junie_tui::widgets::props::{self, Prop};
-use junie_tui::widgets::scrollbar;
-use junie_tui::widgets::segments::{self, Segment};
-use junie_tui::widgets::splitter::Splitter;
-use junie_tui::widgets::statusbar::{StatusBar, StatusItem};
-use junie_tui::widgets::tabs::{TabAction, TabItem, Tabs};
-use junie_tui::widgets::viewport::TextViewport;
+use crate::console::screens::Jackin;
+use crate::core::event::{Key, Outcome};
+use crate::core::hit::{Axis, Bar};
+use crate::core::id::{Part, WidgetId};
+use crate::core::intent::Phase;
+use crate::core::pointer::{MouseTarget, PointerEvent};
+use crate::core::response::Response;
+use crate::core::selection::ClickPolicy;
+use crate::shell::Page;
+use crate::theme::{Theme, Tone};
+use crate::ui::context::ContextConfig;
+use crate::ui::ctx::{RenderCtx, fill};
+use crate::ui::layer;
+use crate::ui::layout::SplitDir;
+use crate::ui::text::{clip, truncate, truncate_middle, width};
+use crate::widgets::brand::Lockup;
+use crate::widgets::button::Button;
+use crate::widgets::dialog::Dialog;
+use crate::widgets::empty::{self, EmptyState};
+use crate::widgets::input::TextInput;
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::menu::{ContextMenu, MenuAction, MenuBar, MenuBarAction, MenuItem, Placement};
+use crate::widgets::meter_list::{MeterList, MeterRow};
+use crate::widgets::option_list::Item;
+use crate::widgets::picker::Picker;
+use crate::widgets::progress::{Meter, MeterVisual, spinner_frame};
+use crate::widgets::props::{self, Prop};
+use crate::widgets::scrollbar;
+use crate::widgets::segments::{self, Segment};
+use crate::widgets::splitter::Splitter;
+use crate::widgets::statusbar::{StatusBar, StatusItem};
+use crate::widgets::tabs::{TabAction, TabItem, Tabs};
+use crate::widgets::viewport::TextViewport;
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
@@ -40,17 +38,17 @@ use ratatui::style::Style;
 
 use super::modals::{ChoiceDialog, InfoDialog, InfoResult, modal_frame};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::domain::account::AccountId;
-use crate::domain::agent::Agent;
-use crate::domain::instance::AgentState;
-use crate::domain::usage::Freshness;
-use crate::sim::pty::{
+use crate::console::domain::account::AccountId;
+use crate::console::domain::agent::Agent;
+use crate::console::domain::instance::AgentState;
+use crate::console::domain::usage::Freshness;
+use crate::console::sim::pty::{
     Daemon, Direction, MAX_LABEL, MIN_PANE_COLS, MIN_PANE_ROWS, PaneId, PaneNode, Seam, nearest,
 };
-use crate::sim::world::{Msg, World};
-use junie_tui::core::scroll::Scrollable;
-use junie_tui::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
-use junie_tui::ui::text::plural;
+use crate::console::sim::world::{Msg, World};
+use crate::core::scroll::Scrollable;
+use crate::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
+use crate::ui::text::plural;
 
 pub const STRIP: WidgetId = WidgetId::of("capsule.strip");
 pub const MENUBAR: WidgetId = WidgetId::of("capsule.menubar");
@@ -201,7 +199,7 @@ impl CapsuleScreen {
         self.daemon(w).and_then(|d| d.focused_pane())
     }
 
-    fn account_suffix(w: &World, p: &crate::sim::pty::Pane) -> Option<String> {
+    fn account_suffix(w: &World, p: &crate::console::sim::pty::Pane) -> Option<String> {
         let id = p.proc.account.as_ref()?;
         let a = w.accounts.get(id)?;
         if w.accounts.by_provider(a.provider).count() >= 2 {
@@ -300,7 +298,7 @@ impl CapsuleScreen {
                 ],
             ),
         ];
-        MenuBar::new(MENUBAR, entries).brand(Lockup::new(crate::app::BRAND_MARK))
+        MenuBar::new(MENUBAR, entries).brand(Lockup::new(crate::console::app::BRAND_MARK))
     }
 
     fn open_brand_menu(&mut self) {
@@ -532,7 +530,7 @@ impl CapsuleScreen {
             .map(|d| d.touched_files())
             .unwrap_or_default();
         let inst = w.instance(&self.instance);
-        let changes = crate::sim::changes::changes_for(
+        let changes = crate::console::sim::changes::changes_for(
             &self.instance,
             &touched,
             inst.map(|i| i.uncommitted).unwrap_or(0),
@@ -768,17 +766,17 @@ impl CapsuleScreen {
             Some(acc) => cx.status(format!("Started {label} · account {acc}")),
             None => cx.status(format!("Started {label}")),
         }
-        crate::domain::fixtures::refresh_snapshots(w);
+        crate::console::sim::world::refresh_snapshots(w);
         let now_secs = w.clock.now_secs();
         if let Some(i) = w.instance_mut(&self.instance)
             && let Ok(s) = i.sessions.as_mut()
         {
             let id = format!("s-{:02}", s.len() + 6);
-            s.push(crate::domain::instance::SessionRecord {
+            s.push(crate::console::domain::instance::SessionRecord {
                 id,
                 agent,
                 label: label.to_lowercase(),
-                status: crate::domain::instance::SessionStatus::Active,
+                status: crate::console::domain::instance::SessionStatus::Active,
                 started_secs: now_secs,
             });
         }
@@ -1557,7 +1555,7 @@ impl CapsuleScreen {
                     buf.set_string(
                         r.x + 2,
                         r.y,
-                        junie_tui::ui::reveal::cut(
+                        crate::ui::reveal::cut(
                             Rect::new(r.x + 2, r.y, r.width.saturating_sub(6), 1),
                             &title,
                         ),
@@ -1577,9 +1575,9 @@ impl CapsuleScreen {
                     let range = pane.term.scroll.visible_range();
                     meta = format!(
                         "{}–{} of {}",
-                        junie_tui::ui::text::thousands(range.start + 1),
-                        junie_tui::ui::text::thousands(range.end),
-                        junie_tui::ui::text::thousands(pane.term.scroll.content_len)
+                        crate::ui::text::thousands(range.start + 1),
+                        crate::ui::text::thousands(range.end),
+                        crate::ui::text::thousands(pane.term.scroll.content_len)
                     );
                 }
                 if tab.zoomed.is_some() {
@@ -2087,7 +2085,7 @@ impl Page<Jackin> for CapsuleScreen {
                 {
                     let tab_closed = d.close_pane(p);
                     let empty = d.tabs.is_empty();
-                    crate::domain::fixtures::refresh_snapshots(w);
+                    crate::console::sim::world::refresh_snapshots(w);
                     if empty {
                         cx.status("Last session ended · the Capsule shuts down");
                         self.end_instance(false, cx);
@@ -2110,7 +2108,7 @@ impl Page<Jackin> for CapsuleScreen {
                     let i = d.active;
                     d.close_tab(i);
                     let empty = d.tabs.is_empty();
-                    crate::domain::fixtures::refresh_snapshots(w);
+                    crate::console::sim::world::refresh_snapshots(w);
                     if empty {
                         cx.status("Last session ended · the Capsule shuts down");
                         self.end_instance(false, cx);
@@ -2279,7 +2277,7 @@ impl Page<Jackin> for CapsuleScreen {
                 let widths = [reconnect.width(), leave.width()];
                 let total = widths[0] + gap + widths[1];
                 let x = area.x + area.width.saturating_sub(total) / 2;
-                let rects = junie_tui::widgets::button::row_layout(
+                let rects = crate::widgets::button::row_layout(
                     Rect::new(x, y, total.min(area.width), 1),
                     &widths,
                     gap,
@@ -2420,7 +2418,7 @@ pub struct UsageDialog {
     pub accounts: Vec<AccountId>,
     pub tab: usize,
     pub tabbar_focus: bool,
-    pub scroll: junie_tui::core::scroll::ScrollState,
+    pub scroll: crate::core::scroll::ScrollState,
     pub refreshing_until: Option<i64>,
     pub result: Option<ModalResult>,
     pub area: Rect,
@@ -2433,7 +2431,7 @@ impl UsageDialog {
             accounts,
             tab: 0,
             tabbar_focus: true,
-            scroll: junie_tui::core::scroll::ScrollState::default(),
+            scroll: crate::core::scroll::ScrollState::default(),
             refreshing_until: None,
             result: None,
             area: Rect::ZERO,
@@ -2447,7 +2445,7 @@ impl Layer<ModalResult, World> for UsageDialog {
         true
     }
     fn spec(&self) -> LayerSpec {
-        LayerSpec::modal(junie_tui::ui::popup::Dismiss::LIGHT)
+        LayerSpec::modal(crate::ui::popup::Dismiss::LIGHT)
             .initial_focus(WidgetId::of("capsule.usage"))
     }
 
@@ -2747,7 +2745,7 @@ impl Layer<ModalResult, World> for UsageDialog {
                 Line::Text(s, tone) => buf.set_string(
                     body.x,
                     yy,
-                    junie_tui::ui::reveal::cut(Rect::new(body.x, yy, body.width, 1), s),
+                    crate::ui::reveal::cut(Rect::new(body.x, yy, body.width, 1), s),
                     Style::new().fg(t.tone(*tone)).bg(bg),
                 ),
                 Line::Meter(label, pct, value, tone) => {
@@ -2788,7 +2786,7 @@ impl Layer<ModalResult, World> for UsageDialog {
         buf.set_string(
             inner.x,
             inner.bottom().saturating_sub(1),
-            junie_tui::ui::reveal::cut(
+            crate::ui::reveal::cut(
                 Rect::new(inner.x, inner.bottom().saturating_sub(1), inner.width, 1),
                 hint,
             ),

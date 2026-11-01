@@ -1,32 +1,32 @@
-use crate::screens::Jackin;
-use junie_tui::shell::Page;
+use crate::console::screens::Jackin;
+use crate::shell::Page;
 use std::collections::HashSet;
 
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::hit::Axis;
-use junie_tui::core::id::{ItemKey, Part, PartRef, WidgetId};
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
-use junie_tui::core::selection::ClickPolicy;
-use junie_tui::theme::{ButtonKind, Tone};
-use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
-use junie_tui::ui::layout::{Split, SplitDir};
-use junie_tui::ui::master_detail::{MasterDetail, Mode};
-use junie_tui::ui::text::{fit, truncate_middle, width};
-use junie_tui::widgets::button::{Button, row_layout, row_lines};
-use junie_tui::widgets::dialog::Dialog;
-use junie_tui::widgets::empty::{self, EmptyState};
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::option_list::Item;
-use junie_tui::widgets::panel::{Panel, PanelFocus};
-use junie_tui::widgets::picker::Picker;
-use junie_tui::widgets::progress::spinner_frame;
-use junie_tui::widgets::props::{self, Prop};
-use junie_tui::widgets::scrollbar;
-use junie_tui::widgets::segments::Segment;
-use junie_tui::widgets::splitter::Splitter;
-use junie_tui::widgets::viewport::Span;
+use crate::core::event::{Key, Outcome};
+use crate::core::hit::Axis;
+use crate::core::id::{ItemKey, Part, PartRef, WidgetId};
+use crate::core::intent::Phase;
+use crate::core::pointer::PointerEvent;
+use crate::core::scroll::ScrollState;
+use crate::core::selection::ClickPolicy;
+use crate::theme::{ButtonKind, Tone};
+use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
+use crate::ui::layout::{Split, SplitDir};
+use crate::ui::master_detail::{MasterDetail, Mode};
+use crate::ui::text::{fit, truncate_middle, width};
+use crate::widgets::button::{Button, row_layout, row_lines};
+use crate::widgets::dialog::Dialog;
+use crate::widgets::empty::{self, EmptyState};
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::option_list::Item;
+use crate::widgets::panel::{Panel, PanelFocus};
+use crate::widgets::picker::Picker;
+use crate::widgets::progress::spinner_frame;
+use crate::widgets::props::{self, Prop};
+use crate::widgets::scrollbar;
+use crate::widgets::segments::Segment;
+use crate::widgets::splitter::Splitter;
+use crate::widgets::viewport::Span;
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
@@ -35,14 +35,14 @@ use ratatui::style::{Modifier, Style};
 use super::modals::{InfoDialog, InfoResult};
 use super::rowmenu::RowMenu;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::domain::agent::Agent;
-use crate::domain::instance::{DaemonSnapshot, InstanceStatus};
-use crate::domain::workspace::WorkspaceId;
-use crate::sim::launch::LaunchPlan;
-use crate::sim::world::{DaemonHealth, Msg, World, job};
-use junie_tui::ui::context::ContextAnchor;
-use junie_tui::ui::text::plural;
-use junie_tui::widgets::menu::MenuItem;
+use crate::console::domain::agent::Agent;
+use crate::console::domain::instance::{DaemonSnapshot, InstanceStatus};
+use crate::console::domain::workspace::WorkspaceId;
+use crate::console::sim::launch::LaunchPlan;
+use crate::console::sim::world::{DaemonHealth, Msg, World, job};
+use crate::ui::context::ContextAnchor;
+use crate::ui::text::plural;
+use crate::widgets::menu::MenuItem;
 
 pub const TREE: WidgetId = WidgetId::of("manager.tree");
 pub const DETAIL: WidgetId = WidgetId::of("manager.detail");
@@ -74,7 +74,7 @@ fn status_word_tone(s: InstanceStatus, otherwise: Tone) -> Tone {
     if s.is_live() { Tone::Active } else { otherwise }
 }
 
-fn instance_line(i: &crate::domain::instance::Instance, tone: Tone) -> Vec<Span> {
+fn instance_line(i: &crate::console::domain::instance::Instance, tone: Tone) -> Vec<Span> {
     let (g, gt) = instance_mark(i.status);
     vec![
         Span::new(format!("{g} "), gt),
@@ -264,11 +264,11 @@ impl ManagerScreen {
                             InstanceStatus::Running => (
                                 format!(
                                     "running {}",
-                                    junie_tui::ui::text::duration(
+                                    crate::ui::text::duration(
                                         std::time::Duration::from_secs(
                                             (w.now_secs() - i.created_secs).max(0) as u64
                                         ),
-                                        junie_tui::ui::text::DurationStyle::Spoken
+                                        crate::ui::text::DurationStyle::Spoken
                                     )
                                 ),
                                 Tone::Active,
@@ -360,7 +360,10 @@ impl ManagerScreen {
         self.detail_scroll.jump_start();
     }
 
-    fn selected_instance<'a>(&self, w: &'a World) -> Option<&'a crate::domain::instance::Instance> {
+    fn selected_instance<'a>(
+        &self,
+        w: &'a World,
+    ) -> Option<&'a crate::console::domain::instance::Instance> {
         match &self.selected {
             RowKey::Instance(id) => w.instance(id),
             _ => None,
@@ -370,7 +373,7 @@ impl ManagerScreen {
     fn selected_workspace<'a>(
         &self,
         w: &'a World,
-    ) -> Option<&'a crate::domain::workspace::Workspace> {
+    ) -> Option<&'a crate::console::domain::workspace::Workspace> {
         match &self.selected {
             RowKey::Workspace(id) => w.workspace(*id),
             RowKey::CurrentDir => w.cwd_workspace(),
@@ -489,10 +492,10 @@ impl ManagerScreen {
                     inst.last_seen_secs = now_secs;
                 }
                 let now = w.now_ms();
-                let mut d = crate::sim::pty::Daemon::new(&wsname);
+                let mut d = crate::console::sim::pty::Daemon::new(&wsname);
                 d.new_tab(Some(agent), None, now, false);
                 w.daemons.insert(id.to_owned(), d);
-                crate::domain::fixtures::refresh_snapshots(w);
+                crate::console::sim::world::refresh_snapshots(w);
                 w.sync_arbiter();
                 cx.status(format!(
                     "Restored {} · container restarted",
@@ -537,7 +540,7 @@ impl ManagerScreen {
                 format!(
                     "jackin/derived:{}-{}",
                     i.workdir.trim_start_matches("/workspace/"),
-                    junie_tui::ui::text::clip(i.run_id.trim_start_matches("run-"), 4)
+                    crate::ui::text::clip(i.run_id.trim_start_matches("run-"), 4)
                 ),
             ),
             Prop::new(
@@ -1233,7 +1236,7 @@ impl ManagerScreen {
                 buf.set_string(
                     inner.x,
                     y,
-                    junie_tui::ui::reveal::cut(Rect::new(inner.x, y, inner.width, 1), text),
+                    crate::ui::reveal::cut(Rect::new(inner.x, y, inner.width, 1), text),
                     style.bg(bg),
                 );
             }
@@ -1275,9 +1278,9 @@ impl ManagerScreen {
                                         .map(|d| format!("{d} ★ · "))
                                         .unwrap_or_default(),
                                     match &ws.roles.allowed {
-                                        crate::domain::workspace::AllowedRoles::All =>
+                                        crate::console::domain::workspace::AllowedRoles::All =>
                                             format!("allowed all ({} in registry)", w.roles.len()),
-                                        crate::domain::workspace::AllowedRoles::Custom(l) =>
+                                        crate::console::domain::workspace::AllowedRoles::Custom(l) =>
                                             format!("allowed {} of {}", l.len(), w.roles.len()),
                                     }
                                 ),
@@ -1292,7 +1295,7 @@ impl ManagerScreen {
                                         .chain(ws.role_env.values().flatten())
                                         .filter(|e| matches!(
                                             e.value,
-                                            crate::domain::workspace::EnvValue::OnePassword(_)
+                                            crate::console::domain::workspace::EnvValue::OnePassword(_)
                                         ))
                                         .count()
                                 ),
@@ -1366,10 +1369,10 @@ impl ManagerScreen {
                                     Tone::Secondary
                                 };
                                 let line = instance_line(i, tone);
-                                let text = junie_tui::widgets::viewport::line_text(&line);
+                                let text = crate::widgets::viewport::line_text(&line);
                                 put(buf, y, &text, t.secondary());
                                 if y < inner.bottom() {
-                                    junie_tui::widgets::viewport::render_spans(
+                                    crate::widgets::viewport::render_spans(
                                         buf,
                                         inner.x,
                                         y,
@@ -1534,7 +1537,7 @@ impl ManagerScreen {
                             buf.set_string(
                                 r.x + 2,
                                 yy,
-                                junie_tui::ui::reveal::cut(
+                                crate::ui::reveal::cut(
                                     Rect::new(r.x + 2, yy, r.width.saturating_sub(3), 1),
                                     text,
                                 ),
@@ -1637,7 +1640,7 @@ impl ManagerScreen {
             buf.set_string(
                 inner.x,
                 y,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(inner.x, y, inner.width, 1),
                     &format!(
                         "◉ {}  {ws} · {} · {}",
@@ -1651,29 +1654,29 @@ impl ManagerScreen {
             let live = match &i.daemon {
                 DaemonSnapshot::Tabs(tabs) => format!(
                     "running {} · {} · {}",
-                    junie_tui::ui::text::duration(
+                    crate::ui::text::duration(
                         std::time::Duration::from_secs(
                             (w.now_secs() - i.created_secs).max(0) as u64
                         ),
-                        junie_tui::ui::text::DurationStyle::Spoken
+                        crate::ui::text::DurationStyle::Spoken
                     ),
                     plural(tabs.len(), "tab", "tabs"),
                     plural(tabs.iter().map(|t| t.panes.len()).sum(), "pane", "panes")
                 ),
                 _ => format!(
                     "running {} · daemon unavailable",
-                    junie_tui::ui::text::duration(
+                    crate::ui::text::duration(
                         std::time::Duration::from_secs(
                             (w.now_secs() - i.created_secs).max(0) as u64
                         ),
-                        junie_tui::ui::text::DurationStyle::Spoken
+                        crate::ui::text::DurationStyle::Spoken
                     )
                 ),
             };
             buf.set_string(
                 inner.x + 3,
                 y + 1,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(inner.x + 3, y + 1, inner.width.saturating_sub(3), 1),
                     &live,
                 ),
@@ -1692,7 +1695,7 @@ impl ManagerScreen {
             buf.set_string(
                 inner.x + 3,
                 y + 2,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(inner.x + 3, y + 2, inner.width.saturating_sub(3), 1),
                     &format!("account {}", acc.label(&w.accounts)),
                 ),
@@ -1730,7 +1733,7 @@ impl ManagerScreen {
                 buf.set_string(
                     inner.x,
                     y,
-                    junie_tui::ui::reveal::cut(
+                    crate::ui::reveal::cut(
                         Rect::new(inner.x, y, inner.width, 1),
                         &format!(
                             "◌ {}  {ws} · {} · {}",
@@ -1776,11 +1779,12 @@ impl ManagerScreen {
                 t.muted().bg(bg),
             );
             y += 1;
-            let summary = crate::domain::usage::OverallSummary::compute(&w.accounts.accounts);
+            let summary =
+                crate::console::domain::usage::OverallSummary::compute(&w.accounts.accounts);
             buf.set_string(
                 inner.x,
                 y,
-                junie_tui::ui::reveal::cut(
+                crate::ui::reveal::cut(
                     Rect::new(inner.x, y, inner.width, 1),
                     &format!(
                         "Usage        {} · {}",
@@ -1869,7 +1873,7 @@ impl Page<Jackin> for ManagerScreen {
                 w.daemon_health = DaemonHealth::Stale;
                 w.schedule(0, Msg::Refreshed { ok: false });
             } else {
-                crate::domain::fixtures::refresh_snapshots(w);
+                crate::console::sim::world::refresh_snapshots(w);
                 for i in w.instances.iter_mut() {
                     if i.status.is_live() {
                         i.last_seen_secs = w.clock.now_secs();
@@ -1907,7 +1911,7 @@ impl Page<Jackin> for ManagerScreen {
                     i.last_seen_secs = now_secs;
                 }
                 w.daemons.remove(instance);
-                crate::domain::fixtures::refresh_snapshots(w);
+                crate::console::sim::world::refresh_snapshots(w);
                 w.sync_arbiter();
                 cx.status(format!(
                     "Instance {} stopped",
@@ -2329,9 +2333,9 @@ impl Page<Jackin> for ManagerScreen {
                     return Outcome::Changed;
                 };
                 let plan = match w.scenario {
-                    crate::scenario::Scenario::LaunchFailure => LaunchPlan::FailNetwork,
-                    crate::scenario::Scenario::HardCases => {
-                        if w.op.session == crate::sim::onepassword::OpSession::Locked
+                    crate::console::scenario::Scenario::LaunchFailure => LaunchPlan::FailNetwork,
+                    crate::console::scenario::Scenario::HardCases => {
+                        if w.op.session == crate::console::sim::onepassword::OpSession::Locked
                             && account.as_deref().is_some_and(|a| {
                                 a.contains("work")
                                     || a.contains("grok")
@@ -2626,8 +2630,9 @@ impl ManagerScreen {
                                 .map(|d| format!("{d} ★"))
                                 .unwrap_or("none".into()),
                             match &ws.roles.allowed {
-                                crate::domain::workspace::AllowedRoles::All => " · all".to_owned(),
-                                crate::domain::workspace::AllowedRoles::Custom(l) =>
+                                crate::console::domain::workspace::AllowedRoles::All =>
+                                    " · all".to_owned(),
+                                crate::console::domain::workspace::AllowedRoles::Custom(l) =>
                                     format!(" · {} allowed", l.len()),
                             },
                             w.account_for(Agent::ClaudeCode.provider(), Some(ws), None, None)
@@ -2689,7 +2694,7 @@ impl ManagerScreen {
             if inner.y + i as u16 >= inner.bottom() {
                 break;
             }
-            junie_tui::widgets::viewport::render_spans(
+            crate::widgets::viewport::render_spans(
                 buf,
                 inner.x,
                 inner.y + i as u16,

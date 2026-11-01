@@ -1,35 +1,35 @@
-use crate::screens::Jackin;
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::hit::Axis;
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
-use junie_tui::shell::Page;
-use junie_tui::theme::{StatusKind, Tone};
-use junie_tui::ui::columns::{self, Col};
-use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
-use junie_tui::ui::text::{fit, truncate, width};
-use junie_tui::widgets::empty::{self, EmptyState};
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::panel::Panel;
-use junie_tui::widgets::progress::{Meter, MeterVisual, spinner_frame};
+use crate::console::screens::Jackin;
+use crate::core::event::{Key, Outcome};
+use crate::core::hit::Axis;
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::PointerEvent;
+use crate::core::scroll::ScrollState;
+use crate::shell::Page;
+use crate::theme::{StatusKind, Tone};
+use crate::ui::columns::{self, Col};
+use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
+use crate::ui::text::{fit, truncate, width};
+use crate::widgets::empty::{self, EmptyState};
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::panel::Panel;
+use crate::widgets::progress::{Meter, MeterVisual, spinner_frame};
 
 use super::accounts::QuotaTone;
-use junie_tui::widgets::scrollbar;
-use junie_tui::widgets::viewport::{Span, render_spans};
+use crate::widgets::scrollbar;
+use crate::widgets::viewport::{Span, render_spans};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
 use ratatui::style::{Modifier, Style};
 
 use super::{Cx, Go, Screen};
-use crate::domain::account::{Account, AccountId, IssueCode, Lifecycle};
-use crate::domain::agent::UsageSurface;
-use crate::domain::usage::{Freshness, OverallSummary, QuotaStatus};
-use crate::sim::provider;
-use crate::sim::world::{Msg, World};
-use junie_tui::ui::text::plural;
+use crate::console::domain::account::{Account, AccountId, IssueCode, Lifecycle};
+use crate::console::domain::agent::UsageSurface;
+use crate::console::domain::usage::{Freshness, OverallSummary, QuotaStatus};
+use crate::console::sim::provider;
+use crate::console::sim::world::{Msg, World};
+use crate::ui::text::plural;
 
 enum OvLine {
     Text(Vec<Span>),
@@ -699,7 +699,7 @@ impl UsageScreen {
                 buf.set_string(
                     area.x,
                     title_row,
-                    junie_tui::ui::reveal::cut(
+                    crate::ui::reveal::cut(
                         Rect::new(area.x, title_row, area.width.saturating_sub(20), 1),
                         &title,
                     ),
@@ -755,10 +755,7 @@ impl UsageScreen {
                             buf.set_string(
                                 body.x,
                                 y,
-                                junie_tui::ui::reveal::cut(
-                                    Rect::new(body.x, y, body.width, 1),
-                                    text,
-                                ),
+                                crate::ui::reveal::cut(Rect::new(body.x, y, body.width, 1), text),
                                 style.bg(bg),
                             );
                         }
@@ -885,12 +882,12 @@ impl Page<Jackin> for UsageScreen {
                     Some(IssueCode::RateLimited)
                     | Some(IssueCode::ProviderUnavailable)
                     | Some(IssueCode::CredentialFileMissing) => {
-                        crate::domain::usage::FreshnessInfo::failed(
+                        crate::console::domain::usage::FreshnessInfo::failed(
                             a.usage.freshness.last_good_secs,
                             a.usage.freshness.retry_secs,
                         )
                     }
-                    _ => crate::domain::usage::FreshnessInfo::current(now),
+                    _ => crate::console::domain::usage::FreshnessInfo::current(now),
                 };
                 a.last_refresh_secs = Some(now);
             }

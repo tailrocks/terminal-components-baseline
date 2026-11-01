@@ -1,5 +1,5 @@
-use crate::domain::agent::Provider;
-use crate::domain::onepassword::OpReference;
+use crate::console::domain::agent::Provider;
+use crate::console::domain::onepassword::OpReference;
 
 pub struct Secret {
     bytes: Vec<u8>,
@@ -545,7 +545,7 @@ impl SimOnePassword {
             });
         }
         Ok(FieldDescriptor {
-            masked: crate::domain::account::masked(&f.tail),
+            masked: crate::console::domain::account::masked(&f.tail),
         })
     }
 

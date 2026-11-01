@@ -1,32 +1,32 @@
-use crate::screens::Jackin;
-use junie_tui::shell::Page;
+use crate::console::screens::Jackin;
+use crate::shell::Page;
 use std::collections::HashSet;
 
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::hit::Axis;
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
-use junie_tui::theme::{ButtonKind, StatusKind, Tone};
-use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
-use junie_tui::ui::layout::{Split, SplitDir};
-use junie_tui::ui::master_detail::{MasterDetail, Mode};
-use junie_tui::ui::text::{fit, truncate, width};
-use junie_tui::widgets::button::{Button, ButtonRow, RowOverflow};
-use junie_tui::widgets::choice::RadioGroup;
-use junie_tui::widgets::dialog::Dialog;
-use junie_tui::widgets::empty::{self, EmptyState};
-use junie_tui::widgets::input::TextInput;
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::meter_list::{MeterList, MeterRow};
-use junie_tui::widgets::panel::{Panel, PanelFocus};
-use junie_tui::widgets::progress::{Meter, MeterLevel, MeterTone, MeterVisual, spinner_frame};
-use junie_tui::widgets::scrollbar;
-use junie_tui::widgets::segments::Segment;
-use junie_tui::widgets::select::Select;
-use junie_tui::widgets::splitter::Splitter;
-use junie_tui::widgets::viewport::{Span, render_spans, wrap_spans};
+use crate::core::event::{Key, Outcome};
+use crate::core::hit::Axis;
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::PointerEvent;
+use crate::core::scroll::ScrollState;
+use crate::theme::{ButtonKind, StatusKind, Tone};
+use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
+use crate::ui::layout::{Split, SplitDir};
+use crate::ui::master_detail::{MasterDetail, Mode};
+use crate::ui::text::{fit, truncate, width};
+use crate::widgets::button::{Button, ButtonRow, RowOverflow};
+use crate::widgets::choice::RadioGroup;
+use crate::widgets::dialog::Dialog;
+use crate::widgets::empty::{self, EmptyState};
+use crate::widgets::input::TextInput;
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::meter_list::{MeterList, MeterRow};
+use crate::widgets::panel::{Panel, PanelFocus};
+use crate::widgets::progress::{Meter, MeterLevel, MeterTone, MeterVisual, spinner_frame};
+use crate::widgets::scrollbar;
+use crate::widgets::segments::Segment;
+use crate::widgets::select::Select;
+use crate::widgets::splitter::Splitter;
+use crate::widgets::viewport::{Span, render_spans, wrap_spans};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
@@ -35,19 +35,21 @@ use ratatui::style::{Modifier, Style};
 use super::modals::{BrowserResult, FormDialog, FormField, FormValues, OpFlow};
 use super::rowmenu::RowMenu;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::domain::account::{
+use crate::console::domain::account::{
     Account, AccountId, AccountOrigin, CredentialSource, DetectedKind, DuplicateProbe, IssueCode,
     Lifecycle, ValidationState, fingerprint, masked, tail_of,
 };
-use crate::domain::agent::{Provider, UsageSurface};
-use crate::domain::onepassword::OpReference;
-use crate::domain::usage::{Freshness, OverallSummary, QuotaStatus, QuotaWindow, WindowUnit};
-use crate::sim::provider::{self, CheckRow, ValidationOutcome};
-use crate::sim::world::{Msg, World, job};
-use junie_tui::ui::context::ContextAnchor;
-use junie_tui::ui::text::plural;
-use junie_tui::ui::text::thousands;
-use junie_tui::widgets::menu::MenuItem;
+use crate::console::domain::agent::{Provider, UsageSurface};
+use crate::console::domain::onepassword::OpReference;
+use crate::console::domain::usage::{
+    Freshness, OverallSummary, QuotaStatus, QuotaWindow, WindowUnit,
+};
+use crate::console::sim::provider::{self, CheckRow, ValidationOutcome};
+use crate::console::sim::world::{Msg, World, job};
+use crate::ui::context::ContextAnchor;
+use crate::ui::text::plural;
+use crate::ui::text::thousands;
+use crate::widgets::menu::MenuItem;
 
 pub const TREE: WidgetId = WidgetId::of("accounts.tree");
 pub const INSPECTOR: WidgetId = WidgetId::of("accounts.inspector");
@@ -420,7 +422,7 @@ impl AccountsScreen {
 
     fn apply_refresh(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
         let now = w.now_secs();
-        let locked = w.op.session != crate::sim::onepassword::OpSession::SignedIn;
+        let locked = w.op.session != crate::console::sim::onepassword::OpSession::SignedIn;
         let broker_down = w.refresh_fails;
         let Some(a) = w.accounts.get_mut(id) else {
             return;
@@ -435,26 +437,26 @@ impl AccountsScreen {
                 } else {
                     Freshness::Failed
                 };
-                a.issue = Some(crate::domain::account::RecoverableIssue::new(
+                a.issue = Some(crate::console::domain::account::RecoverableIssue::new(
                     IssueCode::ProviderUnavailable,
                     "Usage broker unreachable: last good values kept",
-                    crate::domain::account::Recoverability::Retryable,
+                    crate::console::domain::account::Recoverability::Retryable,
                 ));
                 outcome = "broker unreachable · last good kept";
             }
             (CredentialSource::OnePassword(_), _) if locked => {
                 a.usage.freshness.phase = Freshness::Failed;
-                a.issue = Some(crate::domain::account::RecoverableIssue::new(
+                a.issue = Some(crate::console::domain::account::RecoverableIssue::new(
                     IssueCode::OpLocked,
                     "1Password locked: unlock the app and retry",
-                    crate::domain::account::Recoverability::Retryable,
+                    crate::console::domain::account::Recoverability::Retryable,
                 ));
                 outcome = "failed · 1Password locked";
             }
             (_, Some(IssueCode::RateLimited)) => {
                 let retry = a.issue.as_ref().and_then(|i| i.retry_secs).unwrap_or(now);
                 if now >= retry {
-                    a.usage.freshness = crate::domain::usage::FreshnessInfo::current(now);
+                    a.usage.freshness = crate::console::domain::usage::FreshnessInfo::current(now);
                     a.issue = None;
                     outcome = "current";
                 } else {
@@ -473,7 +475,7 @@ impl AccountsScreen {
                 outcome = "needs attention";
             }
             _ => {
-                a.usage.freshness = crate::domain::usage::FreshnessInfo::current(now);
+                a.usage.freshness = crate::console::domain::usage::FreshnessInfo::current(now);
                 if let Some(i) = &a.issue
                     && i.code == IssueCode::Stale
                 {
@@ -948,7 +950,7 @@ impl AccountsScreen {
         } else {
             Some(purpose)
         };
-        account.endpoint = endpoint.map(|host| crate::domain::account::Endpoint {
+        account.endpoint = endpoint.map(|host| crate::console::domain::account::Endpoint {
             label: "Grok Build".into(),
             host,
         });
@@ -1074,11 +1076,11 @@ impl AccountsScreen {
         };
         if let CredentialSource::PlainApiKey { fingerprint, .. } = &a.source {
             let level = if a.usage.windows.iter().any(|w| w.has_meter()) {
-                crate::domain::account::ValidationLevel::QuotaReadable
+                crate::console::domain::account::ValidationLevel::QuotaReadable
             } else if a.identity.subject.is_some() {
-                crate::domain::account::ValidationLevel::IdentityAuthenticated
+                crate::console::domain::account::ValidationLevel::IdentityAuthenticated
             } else {
-                crate::domain::account::ValidationLevel::MaterialDiscovered
+                crate::console::domain::account::ValidationLevel::MaterialDiscovered
             };
             let short = fingerprint.chars().take(8).collect::<String>();
             if let Some(slot) = w.accounts.get_mut(id) {
@@ -1442,8 +1444,8 @@ impl AccountsScreen {
                         "{registered} registered · {} discovered · 1Password {}",
                         w.accounts.accounts.len() - registered,
                         match w.op.session {
-                            crate::sim::onepassword::OpSession::SignedIn => "available",
-                            crate::sim::onepassword::OpSession::Locked => "locked",
+                            crate::console::sim::onepassword::OpSession::SignedIn => "available",
+                            crate::console::sim::onepassword::OpSession::Locked => "locked",
                         }
                     ),
                     Tone::Normal,
@@ -1456,7 +1458,7 @@ impl AccountsScreen {
                 for c in &s.comparable {
                     let mut text = format!("{} · {}   {} · {}–{}% remaining", c.surface.label(), c.label, plural(c.accounts, "account", "accounts"), c.min_remaining_pct, c.max_remaining_pct);
                     if let Some((u, l)) = c.summed {
-                        text.push_str(&format!(" · {} / {} {}", junie_tui::ui::text::thousands(u as usize), junie_tui::ui::text::thousands(l as usize), c.unit.label()));
+                        text.push_str(&format!(" · {} / {} {}", crate::ui::text::thousands(u as usize), crate::ui::text::thousands(l as usize), c.unit.label()));
                     }
                     if c.last_good_count > 0 {
                         text.push_str(&format!(" ({} last good)", c.last_good_count));
@@ -1467,7 +1469,7 @@ impl AccountsScreen {
                     lines.push(Line::Blank);
                     lines.push(Line::Heading("Not comparable".into(), String::new()));
                     let names: Vec<String> = s.not_comparable.iter().map(|n| format!("{} ({})", n.surface.label(), n.reason)).collect();
-                    for l in junie_tui::ui::text::wrap(&names.join(" · "), width_ as usize) {
+                    for l in crate::ui::text::wrap(&names.join(" · "), width_ as usize) {
                         lines.push(Line::Text(l, Tone::Muted));
                     }
                 }
@@ -1721,7 +1723,7 @@ impl AccountsScreen {
                 match l {
                     Line::Prop(k, v, tone) => {
                         let vw = body.width.saturating_sub(label_w) as usize;
-                        let parts = junie_tui::ui::text::wrap(&v, vw.max(8));
+                        let parts = crate::ui::text::wrap(&v, vw.max(8));
                         for (i, p) in parts.into_iter().enumerate() {
                             rendered.push(Line::Prop(
                                 if i == 0 { k.clone() } else { String::new() },
@@ -1731,7 +1733,7 @@ impl AccountsScreen {
                         }
                     }
                     Line::Text(v, tone) => {
-                        for p in junie_tui::ui::text::wrap(&v, body.width as usize) {
+                        for p in crate::ui::text::wrap(&v, body.width as usize) {
                             rendered.push(Line::Text(p, tone));
                         }
                     }
@@ -1776,7 +1778,7 @@ impl AccountsScreen {
                     buf.set_string(
                         body.x + label_w,
                         y,
-                        junie_tui::ui::reveal::cut(
+                        crate::ui::reveal::cut(
                             Rect::new(body.x + label_w, y, body.width.saturating_sub(label_w), 1),
                             value,
                         ),
@@ -1787,7 +1789,7 @@ impl AccountsScreen {
                     buf.set_string(
                         body.x,
                         y,
-                        junie_tui::ui::reveal::cut(Rect::new(body.x, y, body.width, 1), text),
+                        crate::ui::reveal::cut(Rect::new(body.x, y, body.width, 1), text),
                         Style::new().fg(t.tone(*tone)).bg(bg),
                     );
                 }
@@ -1865,7 +1867,7 @@ impl AccountsScreen {
                     buf.set_string(
                         inner.x,
                         y,
-                        junie_tui::ui::reveal::cut(
+                        crate::ui::reveal::cut(
                             Rect::new(inner.x, y, inner.width, 1),
                             &format!("{k}  {v}"),
                         ),
@@ -1884,7 +1886,7 @@ impl AccountsScreen {
                     buf.set_string(
                         inner.x,
                         y,
-                        junie_tui::ui::reveal::cut(Rect::new(inner.x, y, inner.width, 1), v),
+                        crate::ui::reveal::cut(Rect::new(inner.x, y, inner.width, 1), v),
                         Style::new().fg(t.tone(*tone)).bg(bg),
                     );
                     y += 1;
@@ -1894,7 +1896,7 @@ impl AccountsScreen {
                     buf.set_string(
                         inner.x,
                         y,
-                        junie_tui::ui::reveal::cut(Rect::new(inner.x, y, inner.width, 1), &lead),
+                        crate::ui::reveal::cut(Rect::new(inner.x, y, inner.width, 1), &lead),
                         t.primary().bg(bg),
                     );
                     let lw = width(&lead) as u16;
@@ -1942,7 +1944,7 @@ fn draw_status_line(
     x: u16,
     y: u16,
     w: u16,
-    t: &junie_tui::theme::Theme,
+    t: &crate::theme::Theme,
     kind: StatusKind,
     spans: &[Span],
     bg: ratatui::style::Color,
@@ -2023,7 +2025,7 @@ pub(super) fn meter_tone(win: &QuotaWindow, a: &Account) -> QuotaTone {
 }
 
 fn validation_marks(a: &Account) -> (&'static str, &'static str, &'static str) {
-    use crate::domain::account::ValidationLevel as L;
+    use crate::console::domain::account::ValidationLevel as L;
     match &a.validation {
         ValidationState::Valid(L::QuotaReadable) => ("✓", "✓", "✓"),
         ValidationState::Valid(L::IdentityAuthenticated) => (
@@ -2678,7 +2680,7 @@ impl Page<Jackin> for AccountsScreen {
                 if reg {
                     v.push(hint("e", "Edit…"));
                     v.push(hint("Space", "Default"));
-                    v.push(junie_tui::widgets::keyhint::toggle_hint(
+                    v.push(crate::widgets::keyhint::toggle_hint(
                         "t", enabled, "Disable", "Enable",
                     ));
                     v.push(hint("v", "Validate"));

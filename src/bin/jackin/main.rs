@@ -1,18 +1,10 @@
-mod app;
-
-mod arbiter;
-mod domain;
-mod pages;
-mod rain;
-mod scenario;
-mod screens;
-mod sim;
+mod fixtures;
 
 use clap::Parser;
 use junie_tui::cli::CommonArgs;
 
-use crate::app::App;
-use crate::scenario::Scenario;
+use junie_tui::console::app::App;
+use junie_tui::console::scenario::Scenario;
 
 const NO_MOTION_ENV: &str = "JACKIN_NO_MOTION";
 
@@ -62,6 +54,13 @@ fn cli_after_help() -> String {
 fn main() -> std::io::Result<()> {
     let cli: Cli = junie_tui::cli::parse(cli_after_help());
     let motion = cli.common.motion(NO_MOTION_ENV);
-    let mut app = App::for_scenario(cli.scenario, motion, cli.common.frame, cli.common.theme());
+    let world = fixtures::world_for(cli.scenario);
+    let mut app = App::for_scenario(
+        cli.scenario,
+        world,
+        motion,
+        cli.common.frame,
+        cli.common.theme(),
+    );
     junie_tui::shell::run(&mut app)
 }

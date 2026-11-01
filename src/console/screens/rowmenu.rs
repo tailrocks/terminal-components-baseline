@@ -1,9 +1,9 @@
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::id::WidgetId;
-use junie_tui::ui::context::{ContextAnchor, ContextConfig};
-use junie_tui::ui::ctx::RenderCtx;
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::menu::{ContextMenu, MenuAction, MenuItem};
+use crate::core::event::{Key, Outcome};
+use crate::core::id::WidgetId;
+use crate::ui::context::{ContextAnchor, ContextConfig};
+use crate::ui::ctx::RenderCtx;
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::menu::{ContextMenu, MenuAction, MenuItem};
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 

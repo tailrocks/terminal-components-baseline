@@ -1,20 +1,20 @@
 use std::collections::BTreeMap;
 
-use crate::arbiter::Arbiter;
-use crate::domain::account::{AccountId, AccountRegistry};
-use crate::domain::agent::{Agent, AuthMode, Provider};
-use crate::domain::instance::{Instance, InstanceId, InstanceStatus};
-use crate::domain::workspace::{
+use crate::clock::SimClock;
+use crate::console::arbiter::Arbiter;
+use crate::console::domain::account::{AccountId, AccountRegistry};
+use crate::console::domain::agent::{Agent, AuthMode, Provider};
+use crate::console::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus};
+use crate::console::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
 };
-use crate::scenario::Scenario;
-use crate::sim::onepassword::SimOnePassword;
-use crate::sim::pty::Daemon;
-use junie_tui::clock::SimClock;
-use junie_tui::shell::JobKey;
+use crate::console::scenario::Scenario;
+use crate::console::sim::onepassword::SimOnePassword;
+use crate::console::sim::pty::Daemon;
+use crate::shell::JobKey;
 
 pub mod job {
-    use junie_tui::shell::JobKey;
+    use crate::shell::JobKey;
     pub const WORKSPACE_SAVE: JobKey = JobKey::new("workspace.save");
     pub const SETTINGS_SAVE: JobKey = JobKey::new("settings.save");
     pub const ROLE_LOAD: JobKey = JobKey::new("role.load");
@@ -326,8 +326,14 @@ impl World {
         ws: Option<&Workspace>,
         role: Option<&str>,
         session: Option<&AccountId>,
-    ) -> crate::domain::fixtures::ResolvedAccount {
-        crate::domain::fixtures::resolve_account(provider, ws, role, session, &self.accounts)
+    ) -> crate::console::domain::precedence::ResolvedAccount {
+        crate::console::domain::precedence::resolve_account(
+            provider,
+            ws,
+            role,
+            session,
+            &self.accounts,
+        )
     }
 
     pub fn agent_mode(&self, agent: Agent) -> AuthMode {
@@ -371,7 +377,7 @@ impl World {
             }
             None => {
                 if let Some(a) = self.accounts.default_for(provider) {
-                    match crate::domain::workspace::usability_of(a) {
+                    match crate::console::domain::workspace::usability_of(a) {
                         Usability::Ready => ready.push(a.id.clone()),
                         u => blocked.push((a.id.clone(), u.label())),
                     }
@@ -469,5 +475,23 @@ pub fn mask_path(home: &str, path: &str) -> String {
         format!("…/{last}")
     } else {
         path.to_owned()
+    }
+}
+
+pub fn refresh_snapshots(w: &mut World) {
+    let snaps: Vec<(String, DaemonSnapshot)> = w
+        .daemons
+        .iter()
+        .map(|(id, d)| (id.clone(), d.snapshot()))
+        .collect();
+    for (id, s) in snaps {
+        if let Some(i) = w.instance_mut(&id) {
+            i.daemon = s;
+        }
+    }
+    for i in w.instances.iter_mut() {
+        if i.status != InstanceStatus::Running {
+            i.daemon = DaemonSnapshot::Unavailable;
+        }
     }
 }

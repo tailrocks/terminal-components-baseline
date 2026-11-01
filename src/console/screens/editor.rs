@@ -1,28 +1,28 @@
-use crate::screens::Jackin;
-use junie_tui::core::event::{Key, Outcome};
-use junie_tui::core::hit::Axis;
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::{MouseTarget, PointerEvent};
-use junie_tui::core::scroll::ScrollState;
-use junie_tui::shell::Page;
-use junie_tui::theme::Tone;
-use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
-use junie_tui::ui::layout::{Stack, StackChild, StackScroll};
-use junie_tui::ui::text::{fit, truncate, width};
-use junie_tui::widgets::button::{Button, row_layout_right};
-use junie_tui::widgets::choice::Checkbox;
-use junie_tui::widgets::dialog::Dialog;
-use junie_tui::widgets::input::{InputAction, TextInput};
-use junie_tui::widgets::keyhint::{Hint, hint};
-use junie_tui::widgets::option_list::Item;
-use junie_tui::widgets::picker::Picker;
-use junie_tui::widgets::progress::spinner_frame;
-use junie_tui::widgets::props::Prop;
-use junie_tui::widgets::scrollbar;
-use junie_tui::widgets::segments::Segment;
-use junie_tui::widgets::select::Select;
-use junie_tui::widgets::tabs::{TabAction, TabItem, Tabs};
+use crate::console::screens::Jackin;
+use crate::core::event::{Key, Outcome};
+use crate::core::hit::Axis;
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::{MouseTarget, PointerEvent};
+use crate::core::scroll::ScrollState;
+use crate::shell::Page;
+use crate::theme::Tone;
+use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
+use crate::ui::layout::{Stack, StackChild, StackScroll};
+use crate::ui::text::{fit, truncate, width};
+use crate::widgets::button::{Button, row_layout_right};
+use crate::widgets::choice::Checkbox;
+use crate::widgets::dialog::Dialog;
+use crate::widgets::input::{InputAction, TextInput};
+use crate::widgets::keyhint::{Hint, hint};
+use crate::widgets::option_list::Item;
+use crate::widgets::picker::Picker;
+use crate::widgets::progress::spinner_frame;
+use crate::widgets::props::Prop;
+use crate::widgets::scrollbar;
+use crate::widgets::segments::Segment;
+use crate::widgets::select::Select;
+use crate::widgets::tabs::{TabAction, TabItem, Tabs};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
@@ -31,14 +31,14 @@ use ratatui::style::Modifier;
 use super::config::{ConfigTabs, Doc, Scope, Tab as CfgTab};
 use super::modals::InfoDialog;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::domain::account::AccountId;
-use crate::domain::agent::Provider;
-use crate::domain::workspace::{
+use crate::console::domain::account::AccountId;
+use crate::console::domain::agent::Provider;
+use crate::console::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, Effective, RoleEntry, RoleName, RoleSource, Workspace,
     WorkspaceId,
 };
-use crate::sim::world::{Msg, World, job};
-use junie_tui::ui::text::plural;
+use crate::console::sim::world::{Msg, World, job};
+use crate::ui::text::plural;
 
 pub const TABS: WidgetId = WidgetId::of("editor.tabs");
 pub const NAME: WidgetId = WidgetId::of("editor.name");
@@ -602,7 +602,7 @@ impl EditorScreen {
                 buf.set_string(
                     x,
                     y + 2,
-                    junie_tui::ui::reveal::cut(Rect::new(x, y + 2, fw, 1), &hint),
+                    crate::ui::reveal::cut(Rect::new(x, y + 2, fw, 1), &hint),
                     t.faint().bg(bg),
                 );
             }
@@ -814,7 +814,7 @@ impl EditorScreen {
                     buf.set_string(
                         mx,
                         y,
-                        junie_tui::ui::reveal::cut(
+                        crate::ui::reveal::cut(
                             Rect::new(mx, y, rect.right().saturating_sub(mx + 1), 1),
                             &meta,
                         ),
@@ -926,7 +926,7 @@ impl EditorScreen {
         buf.set_string(
             area.x + 2,
             area.y,
-            junie_tui::ui::reveal::cut(
+            crate::ui::reveal::cut(
                 Rect::new(area.x + 2, area.y, area.width.saturating_sub(4), 1),
                 &head,
             ),
@@ -1053,7 +1053,8 @@ impl EditorScreen {
                         st
                     };
 
-                    let label = if a.origin == crate::domain::account::AccountOrigin::Discovered
+                    let label = if a.origin
+                        == crate::console::domain::account::AccountOrigin::Discovered
                         && a.display_name == "discovered"
                     {
                         "host login".to_owned()
@@ -1079,12 +1080,14 @@ impl EditorScreen {
                     let origin = match eff.map(|e| e.origin) {
                         Some(o) => o.label().to_owned(),
                         None if a.default_for_provider => "disabled here".to_owned(),
-                        None if a.origin == crate::domain::account::AccountOrigin::Discovered => {
+                        None if a.origin
+                            == crate::console::domain::account::AccountOrigin::Discovered =>
+                        {
                             "discovered on host".to_owned()
                         }
                         None => "available".to_owned(),
                     };
-                    let status = crate::domain::workspace::usability_of(a).label();
+                    let status = crate::console::domain::workspace::usability_of(a).label();
                     let status_tone = if a.enabled && status == "ready" {
                         t.text_muted
                     } else {
@@ -1097,7 +1100,7 @@ impl EditorScreen {
                         buf.set_string(
                             stx,
                             y,
-                            junie_tui::ui::reveal::cut(
+                            crate::ui::reveal::cut(
                                 Rect::new(stx, y, rect.right().saturating_sub(stx + 1), 1),
                                 &status,
                             ),
@@ -1490,8 +1493,8 @@ impl EditorScreen {
                     .group("mounts")
             });
             targets.push(m.destination.clone());
-            if let crate::domain::workspace::MountSource::Host(src) = &m.source {
-                let src = crate::sim::world::expand(&w.home, src);
+            if let crate::console::domain::workspace::MountSource::Host(src) = &m.source {
+                let src = crate::console::sim::world::expand(&w.home, src);
                 for f in w.fs.iter().filter(|f| {
                     f.dir
                         && f.path.starts_with(&format!("{src}/"))
@@ -1857,7 +1860,7 @@ impl Page<Jackin> for EditorScreen {
 
     fn on_blur(
         &mut self,
-        ch: junie_tui::core::focus::FocusChange,
+        ch: crate::core::focus::FocusChange,
         _w: &mut World,
         cx: &mut Cx,
     ) -> Outcome {
@@ -2095,7 +2098,7 @@ impl Page<Jackin> for EditorScreen {
             "Save…".into()
         };
         let widths = [self.cancel.width(), self.save.width()];
-        let lines = junie_tui::widgets::button::row_lines(area.width.saturating_sub(4), &widths, 3);
+        let lines = crate::widgets::button::row_lines(area.width.saturating_sub(4), &widths, 3);
         let rects = row_layout_right(
             Rect::new(
                 area.x,
@@ -2136,7 +2139,7 @@ impl Page<Jackin> for EditorScreen {
                         v.push(if self.name.editing {
                             hint("Enter", "Apply")
                         } else {
-                            junie_tui::widgets::widget_hints::EDIT
+                            crate::widgets::widget_hints::EDIT
                         });
                     } else if focus == Some(WORKDIR) {
                         v.push(hint("Enter", "Choose…"));
@@ -2183,13 +2186,13 @@ impl Page<Jackin> for EditorScreen {
         }
     }
 
-    fn stakes(&mut self, _w: &World) -> junie_tui::ui::leave::Stakes {
+    fn stakes(&mut self, _w: &World) -> crate::ui::leave::Stakes {
         self.sync_pending();
         let n = self.change_count();
         if n > 0 || self.is_create() {
-            junie_tui::ui::leave::Stakes::Unsaved { changes: n }
+            crate::ui::leave::Stakes::Unsaved { changes: n }
         } else {
-            junie_tui::ui::leave::Stakes::Clean
+            crate::ui::leave::Stakes::Clean
         }
     }
 

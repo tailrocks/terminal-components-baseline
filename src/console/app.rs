@@ -1,47 +1,45 @@
-use junie_tui::clock::Clock;
-use junie_tui::core::event::{Input, Key, Outcome};
-use junie_tui::core::focus::FocusChange;
-use junie_tui::core::id::WidgetId;
-use junie_tui::core::intent::Phase;
-use junie_tui::core::pointer::{
-    MouseTarget, PointerEvent, PointerHost, PointerParts, PointerRouter,
-};
-use junie_tui::core::response::Response;
-use junie_tui::shell::{self, Chrome, Menus, PageKey, Router, Shell};
-use junie_tui::theme::{Theme, Tone};
-use junie_tui::ui::ctx::{RenderCtx, fill};
-use junie_tui::ui::layer::{
+use crate::clock::Clock;
+use crate::core::event::{Input, Key, Outcome};
+use crate::core::focus::FocusChange;
+use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::{MouseTarget, PointerEvent, PointerHost, PointerParts, PointerRouter};
+use crate::core::response::Response;
+use crate::shell::{self, Chrome, Menus, PageKey, Router, Shell};
+use crate::theme::{Theme, Tone};
+use crate::ui::ctx::{RenderCtx, fill};
+use crate::ui::layer::{
     DismissReason, Dismissed, LayerCx, LayerEntry, LayerPointer, ShellLayers, Taken,
 };
-use junie_tui::widgets::dialog::Dialog;
-use junie_tui::widgets::hintbar::HintBar;
-use junie_tui::widgets::keyhint::hint;
-use junie_tui::widgets::picker::{Picker, PickerAction};
-use junie_tui::widgets::segments::{self, Segment};
-use junie_tui::widgets::too_small::TooSmall;
+use crate::widgets::dialog::Dialog;
+use crate::widgets::hintbar::HintBar;
+use crate::widgets::keyhint::hint;
+use crate::widgets::picker::{Picker, PickerAction};
+use crate::widgets::segments::{self, Segment};
+use crate::widgets::too_small::TooSmall;
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::{Position, Rect};
 
-use crate::arbiter::{EntryDecision, ExitDecision};
-use crate::domain::instance::InstanceStatus;
-use crate::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_USAGE};
-use crate::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
-use crate::scenario::{Motion, Scenario};
-use crate::screens::capsule::CapsuleScreen;
-use crate::screens::cockpit::CockpitScreen;
-use crate::screens::editor::EditorScreen;
-use crate::screens::modals::{FormAction, FormDialog, HelpOverlay, InfoResult};
-use crate::screens::prelude::PreludeScreen;
-use crate::screens::settings::SettingsScreen;
-use crate::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
-use crate::sim::launch::LaunchPlan;
-use crate::sim::world::{Msg, World};
-use junie_tui::shell::Page as _;
-use junie_tui::ui::leave::{LeaveGuard, Stakes};
-use junie_tui::widgets::brand::Lockup;
-use junie_tui::widgets::dialog::DialogResult;
-use junie_tui::widgets::menu::{MenuBar, MenuBarAction, MenuItem};
+use crate::console::arbiter::{EntryDecision, ExitDecision};
+use crate::console::domain::instance::InstanceStatus;
+use crate::console::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_USAGE};
+use crate::console::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
+use crate::console::scenario::{Motion, Scenario};
+use crate::console::screens::capsule::CapsuleScreen;
+use crate::console::screens::cockpit::CockpitScreen;
+use crate::console::screens::editor::EditorScreen;
+use crate::console::screens::modals::{FormAction, FormDialog, HelpOverlay, InfoResult};
+use crate::console::screens::prelude::PreludeScreen;
+use crate::console::screens::settings::SettingsScreen;
+use crate::console::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
+use crate::console::sim::launch::LaunchPlan;
+use crate::console::sim::world::{Msg, World};
+use crate::shell::Page as _;
+use crate::ui::leave::{LeaveGuard, Stakes};
+use crate::widgets::brand::Lockup;
+use crate::widgets::dialog::DialogResult;
+use crate::widgets::menu::{MenuBar, MenuBarAction, MenuItem};
 
 pub const BRAND_MARK: &str = "jackin❯";
 const STRIP_HELP: WidgetId = WidgetId::of("strip.help");
@@ -112,8 +110,13 @@ pub struct App {
 }
 
 impl App {
-    pub fn for_scenario(scenario: Scenario, motion: Motion, frame: u64, theme: Theme) -> Self {
-        let mut world = crate::domain::fixtures::world_for(scenario);
+    pub fn for_scenario(
+        scenario: Scenario,
+        mut world: World,
+        motion: Motion,
+        frame: u64,
+        theme: Theme,
+    ) -> Self {
         world.clock.running = motion != Motion::Paused;
         let mut shell = Shell::new();
         shell.motion = motion;
@@ -126,7 +129,7 @@ impl App {
             intro: None,
             outro: None,
             handoff: None,
-            router: crate::pages::router(),
+            router: crate::console::pages::router(),
             layers: ShellLayers::new(),
             shell,
             keys: shell_keys(),
@@ -196,7 +199,7 @@ impl App {
                 self.go(Go::Launch {
                     workspace: Some(1),
                     role: "the-architect".into(),
-                    agent: crate::domain::agent::Agent::ClaudeCode,
+                    agent: crate::console::domain::agent::Agent::ClaudeCode,
                     account: Some("acct-claude-work".into()),
                     plan,
                 });
@@ -653,22 +656,26 @@ impl App {
 
     fn open_about(&mut self) {
         let props = vec![
-            junie_tui::widgets::props::Prop::new(
+            crate::widgets::props::Prop::new(
                 "Product",
                 "jackin-preview · deterministic redesign preview",
             ),
-            junie_tui::widgets::props::Prop::new("Scenario", self.world.scenario.name()),
-            junie_tui::widgets::props::Prop::new(
+            crate::widgets::props::Prop::new("Scenario", self.world.scenario.name()),
+            crate::widgets::props::Prop::new(
                 "Construct",
                 "simulated · nothing here touches a real container",
             ),
-            junie_tui::widgets::props::Prop::new(
+            crate::widgets::props::Prop::new(
                 "Design system",
                 "Junie-inspired Ratatui components (junie_tui)",
             ),
         ];
-        let d = crate::screens::modals::InfoDialog::new(WidgetId::of("host.about"), "About", props)
-            .width(64);
+        let d = crate::console::screens::modals::InfoDialog::new(
+            WidgetId::of("host.about"),
+            "About",
+            props,
+        )
+        .width(64);
         self.open_layer(Box::new(d), LayerTag::new("about"), self.route());
     }
 
@@ -701,7 +708,7 @@ impl App {
             ),
             Err(e) => right.push(Segment::new(format!("! {}", e.label()), Tone::Error).priority(8)),
         }
-        if self.world.daemon_health == crate::sim::world::DaemonHealth::Stale {
+        if self.world.daemon_health == crate::console::sim::world::DaemonHealth::Stale {
             right.push(Segment::new("▲ daemon stale", Tone::Warning).priority(8));
         }
         if !self.world.jobs.is_empty() {
@@ -709,7 +716,7 @@ impl App {
                 Segment::new(
                     format!(
                         "{} working",
-                        junie_tui::widgets::progress::spinner_frame(ctx.interaction.tick)
+                        crate::widgets::progress::spinner_frame(ctx.interaction.tick)
                     ),
                     Tone::Secondary,
                 )
@@ -1023,11 +1030,11 @@ impl App {
             ],
         };
 
-        let mut sections: Vec<junie_tui::widgets::help::HelpSection> = sections
+        let mut sections: Vec<crate::widgets::help::HelpSection> = sections
             .into_iter()
             .map(|(title, rows)| {
                 rows.into_iter().fold(
-                    junie_tui::widgets::help::HelpSection::new(title),
+                    crate::widgets::help::HelpSection::new(title),
                     |s, (k, v)| s.row(k, v),
                 )
             })
@@ -1137,7 +1144,7 @@ impl App {
         .or(Outcome::Changed)
     }
 
-    fn top_form_values(&self) -> crate::screens::modals::FormValues {
+    fn top_form_values(&self) -> crate::console::screens::modals::FormValues {
         self.layers
             .top_as::<FormDialog>()
             .map(FormDialog::values)
@@ -1223,11 +1230,7 @@ impl App {
                     .unwrap_or_default();
                 let now = self.now_ms();
                 if reason == DismissReason::OutsideClick
-                    && junie_tui::ui::modal::refuse_outside_click(
-                        &mut self.shell.pointer,
-                        dismiss,
-                        now,
-                    )
+                    && crate::ui::modal::refuse_outside_click(&mut self.shell.pointer, dismiss, now)
                 {
                     Outcome::Changed
                 } else {
@@ -1293,7 +1296,7 @@ impl App {
     }
 
     fn layer_pointer(&mut self, ev: &PointerEvent) -> Outcome {
-        if ev.is(Phase::Click) && ev.id == junie_tui::ui::modal::CLOSE {
+        if ev.is(Phase::Click) && ev.id == crate::ui::modal::CLOSE {
             return self.dismiss_layer(DismissReason::CloseButton);
         }
         match self
@@ -1497,7 +1500,7 @@ impl App {
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
                     d.new_tab(agent, account.clone(), now, false);
                 }
-                crate::domain::fixtures::refresh_snapshots(&mut self.world);
+                crate::console::sim::world::refresh_snapshots(&mut self.world);
                 self.go(Go::Attach {
                     instance,
                     pane: None,
@@ -1531,7 +1534,7 @@ impl App {
                 self.set_status(
                     &format!(
                         "Detached · {name} keeps running · {} in the Construct",
-                        junie_tui::ui::text::plural(n, "instance", "instances")
+                        crate::ui::text::plural(n, "instance", "instances")
                     ),
                     Tone::Secondary,
                 );
@@ -1550,7 +1553,7 @@ impl App {
                     i.last_seen_secs = now_secs;
                 }
                 self.world.daemons.remove(&instance);
-                crate::domain::fixtures::refresh_snapshots(&mut self.world);
+                crate::console::sim::world::refresh_snapshots(&mut self.world);
                 self.world.sync_arbiter();
 
                 self.show_tab(TAB_MANAGER);
@@ -1566,7 +1569,7 @@ impl App {
                     self.set_status(
                         &format!(
                             "Launch failed · {} still running in the Construct",
-                            junie_tui::ui::text::plural(
+                            crate::ui::text::plural(
                                 self.world.running_count(),
                                 "instance",
                                 "instances"
@@ -1616,7 +1619,7 @@ impl App {
                     .collect();
                 let text = format!(
                     "Still inside the Construct · {}",
-                    junie_tui::ui::text::plural(remaining, "instance remains", "instances remain")
+                    crate::ui::text::plural(remaining, "instance remains", "instances remain")
                 );
                 self.router.manager_mut().still_inside =
                     Some((text.clone(), rows, self.world.now_ms() + 6_000));
@@ -1744,7 +1747,7 @@ impl App {
     fn draw_strip(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, route: Route) {
         let t = self.theme;
         let (state, tone) = self.construct_state(route);
-        let lockup = junie_tui::widgets::brand::Lockup::new(BRAND_MARK);
+        let lockup = crate::widgets::brand::Lockup::new(BRAND_MARK);
         let pill_w = lockup.render(area.x + 1, area.y, buf, &t);
         let area = Rect::new(
             area.x + 1 + pill_w,
@@ -1762,7 +1765,7 @@ impl App {
             ),
             Err(e) => left.push(Segment::new(format!("! {}", e.label()), Tone::Error).priority(8)),
         }
-        if self.world.daemon_health == crate::sim::world::DaemonHealth::Stale {
+        if self.world.daemon_health == crate::console::sim::world::DaemonHealth::Stale {
             left.push(Segment::new("▲ daemon stale", Tone::Warning).priority(8))
         }
         if let Some(s) = self.router.screen(route) {
@@ -1777,7 +1780,7 @@ impl App {
                 Segment::new(
                     format!(
                         "{} working",
-                        junie_tui::widgets::progress::spinner_frame(ctx.interaction.tick)
+                        crate::widgets::progress::spinner_frame(ctx.interaction.tick)
                     ),
                     Tone::Secondary,
                 )
@@ -1836,7 +1839,7 @@ impl App {
     }
 
     fn footer(&self, modal: bool) -> shell::Footer {
-        use junie_tui::core::hints::{HasHints, HintCx};
+        use crate::core::hints::{HasHints, HintCx};
         let focus = self.shell.focus.current();
         let editing = self
             .router
@@ -1904,7 +1907,7 @@ impl shell::App for App {
     }
 
     fn advance_clock(&mut self, ms: u64) -> Option<Outcome> {
-        Some(junie_tui::clock::run_step(
+        Some(crate::clock::run_step(
             self,
             |a| &mut a.world.clock,
             ms,
@@ -2018,10 +2021,10 @@ pub enum JackinCmd {
 }
 
 pub fn shell_keys() -> shell::ShellKeys<JackinCmd> {
-    use junie_tui::core::keymap::KeyBinding;
+    use crate::core::keymap::KeyBinding;
     use shell::ShellAction::{self, App as Cmd};
     shell::ShellKeys::new()
-        .quit(junie_tui::ui::leave::QuitKeys::DEFAULT.letter(None))
+        .quit(crate::ui::leave::QuitKeys::DEFAULT.letter(None))
         .bind(KeyBinding::char('u'), Cmd(JackinCmd::Usage))
         .bind(KeyBinding::char('c'), Cmd(JackinCmd::Accounts))
         .bind(KeyBinding::char('s'), Cmd(JackinCmd::Settings))

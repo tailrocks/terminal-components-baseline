@@ -1,15 +1,15 @@
-use junie_tui::shell::Router;
+use crate::shell::Router;
 
-use crate::app::Route;
-use crate::screens::Screen;
-use crate::screens::accounts::AccountsScreen;
-use crate::screens::capsule::CapsuleScreen;
-use crate::screens::cockpit::CockpitScreen;
-use crate::screens::editor::EditorScreen;
-use crate::screens::manager::ManagerScreen;
-use crate::screens::prelude::PreludeScreen;
-use crate::screens::settings::SettingsScreen;
-use crate::screens::usage::UsageScreen;
+use crate::console::app::Route;
+use crate::console::screens::Screen;
+use crate::console::screens::accounts::AccountsScreen;
+use crate::console::screens::capsule::CapsuleScreen;
+use crate::console::screens::cockpit::CockpitScreen;
+use crate::console::screens::editor::EditorScreen;
+use crate::console::screens::manager::ManagerScreen;
+use crate::console::screens::prelude::PreludeScreen;
+use crate::console::screens::settings::SettingsScreen;
+use crate::console::screens::usage::UsageScreen;
 
 pub const TAB_MANAGER: usize = 0;
 

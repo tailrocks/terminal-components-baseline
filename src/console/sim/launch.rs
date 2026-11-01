@@ -1,6 +1,6 @@
-use junie_tui::widgets::steps::StepState;
+use crate::widgets::steps::StepState;
 
-use crate::domain::agent::Agent;
+use crate::console::domain::agent::Agent;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Stage {

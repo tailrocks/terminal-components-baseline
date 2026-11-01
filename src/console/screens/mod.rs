@@ -11,22 +11,22 @@ pub mod rowmenu;
 pub mod settings;
 pub mod usage;
 
-use junie_tui::core::event::Outcome;
-use junie_tui::widgets::option_list::Item;
-use junie_tui::widgets::segments::Segment;
+use crate::core::event::Outcome;
+use crate::widgets::option_list::Item;
+use crate::widgets::segments::Segment;
 
-use crate::domain::account::AccountId;
-use crate::domain::agent::Agent;
-use crate::domain::instance::InstanceId;
-use crate::domain::onepassword::OpReference;
-use crate::domain::workspace::{Workspace, WorkspaceId};
-use crate::sim::launch::LaunchPlan;
-use crate::sim::world::{Msg, World};
-use junie_tui::ui::layer::Layer;
-pub use junie_tui::ui::layer::LayerTag;
-use junie_tui::ui::layers::LayerResult;
-use junie_tui::widgets::menu::MenuAction;
-use junie_tui::widgets::picker::PickerAction;
+use crate::console::domain::account::AccountId;
+use crate::console::domain::agent::Agent;
+use crate::console::domain::instance::InstanceId;
+use crate::console::domain::onepassword::OpReference;
+use crate::console::domain::workspace::{Workspace, WorkspaceId};
+use crate::console::sim::launch::LaunchPlan;
+use crate::console::sim::world::{Msg, World};
+use crate::ui::layer::Layer;
+pub use crate::ui::layer::LayerTag;
+use crate::ui::layers::LayerResult;
+use crate::widgets::menu::MenuAction;
+use crate::widgets::picker::PickerAction;
 use modals::{BrowserResult, FormAction, FormDialog, FormValues, InfoResult};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -128,13 +128,13 @@ pub enum Go {
     Quit,
 }
 
-pub type Request = junie_tui::shell::Request<ModalResult, World, Go>;
+pub type Request = crate::shell::Request<ModalResult, World, Go>;
 
-pub type Cx<'a> = junie_tui::shell::Cx<'a, ModalResult, World, Go>;
+pub type Cx<'a> = crate::shell::Cx<'a, ModalResult, World, Go>;
 
 pub struct Jackin;
 
-impl junie_tui::shell::PageTypes for Jackin {
+impl crate::shell::PageTypes for Jackin {
     type State = World;
     type Msg = Msg;
     type Result = ModalResult;
@@ -142,7 +142,7 @@ impl junie_tui::shell::PageTypes for Jackin {
     type Go = Go;
 }
 
-pub trait Screen: junie_tui::shell::Page<Jackin> {
+pub trait Screen: crate::shell::Page<Jackin> {
     fn picker_items(&mut self, _tag: &LayerTag, _query: &str, _w: &World) -> Option<Vec<Item>> {
         None
     }
@@ -164,11 +164,11 @@ pub trait Screen: junie_tui::shell::Page<Jackin> {
 }
 
 pub fn health_spans(
-    s: &crate::domain::usage::OverallSummary,
-) -> Vec<junie_tui::widgets::viewport::Span> {
-    use crate::domain::usage::HealthWord;
-    use junie_tui::theme::Tone;
-    use junie_tui::widgets::viewport::Span;
+    s: &crate::console::domain::usage::OverallSummary,
+) -> Vec<crate::widgets::viewport::Span> {
+    use crate::console::domain::usage::HealthWord;
+    use crate::theme::Tone;
+    use crate::widgets::viewport::Span;
     let word = Span::new(
         s.health.label(),
         match s.health {

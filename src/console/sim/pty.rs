@@ -1,22 +1,22 @@
 use std::collections::VecDeque;
 
-use junie_tui::core::id::WidgetId;
-use junie_tui::theme::Tone;
-use junie_tui::ui::layout::SplitDir;
-use junie_tui::widgets::viewport::{Line, Span, TextViewport};
+use crate::core::id::WidgetId;
+use crate::theme::Tone;
+use crate::ui::layout::SplitDir;
+use crate::widgets::viewport::{Line, Span, TextViewport};
 
-use crate::domain::account::AccountId;
-use crate::domain::agent::Agent;
-use crate::domain::instance::AgentState;
+use crate::console::domain::account::AccountId;
+use crate::console::domain::agent::Agent;
+use crate::console::domain::instance::AgentState;
 
-pub use junie_tui::ui::pane_tree::PaneId;
+pub use crate::ui::pane_tree::PaneId;
 
 pub const SCROLLBACK: usize = 2_000;
 pub const MIN_PANE_COLS: u16 = 20;
 pub const MIN_PANE_ROWS: u16 = 4;
 pub const MAX_LABEL: usize = 16;
 
-pub use junie_tui::ui::pane_tree::{Direction, PaneNode, Seam, nearest};
+pub use crate::ui::pane_tree::{Direction, PaneNode, Seam, nearest};
 
 #[derive(Debug, Clone)]
 pub struct Tab {
@@ -1108,9 +1108,9 @@ impl Pane {
                 self.term.push(pl);
             }
             let n = self.term.len().saturating_sub(1);
-            let col = junie_tui::ui::text::width(&self.proc.prompt)
-                + junie_tui::ui::text::width(&self.input);
-            self.term.caret = Some(junie_tui::widgets::viewport::CellPos { line: n, col });
+            let col =
+                crate::ui::text::width(&self.proc.prompt) + crate::ui::text::width(&self.input);
+            self.term.caret = Some(crate::widgets::viewport::CellPos { line: n, col });
         } else {
             self.term.caret = None;
         }
@@ -1410,8 +1410,8 @@ impl Daemon {
         v
     }
 
-    pub fn snapshot(&self) -> crate::domain::instance::DaemonSnapshot {
-        use crate::domain::instance::{DaemonSnapshot, PaneSnapshot, TabSnapshot};
+    pub fn snapshot(&self) -> crate::console::domain::instance::DaemonSnapshot {
+        use crate::console::domain::instance::{DaemonSnapshot, PaneSnapshot, TabSnapshot};
         if self.tabs.is_empty() {
             return DaemonSnapshot::NoTabs;
         }

@@ -1,12 +1,14 @@
-use crate::domain::account::{
+use crate::console::domain::account::{
     Account, AccountIdentity, Confidence, CredentialSource, DetectedKind, IdentitySubject,
     IssueCode, Lifecycle, Recoverability, RecoverableIssue, ValidationLevel,
 };
-use crate::domain::agent::Provider;
-use crate::domain::usage::{
+use crate::console::domain::agent::Provider;
+use crate::console::domain::usage::{
     AccountUsage, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
 };
-use crate::sim::onepassword::{KeyOutcome, OpError, SecretClass, SimOnePassword, classify_plain};
+use crate::console::sim::onepassword::{
+    KeyOutcome, OpError, SecretClass, SimOnePassword, classify_plain,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ValidationOutcome {
@@ -491,16 +493,16 @@ fn validate_folder(provider: Provider, path: &str, now: i64) -> ValidationOutcom
 
 pub fn apply_validation(a: &mut Account, v: &ValidationOutcome, now: i64) {
     a.validation = match (&v.level, &v.issue) {
-        (Some(l), None) => crate::domain::account::ValidationState::Valid(*l),
+        (Some(l), None) => crate::console::domain::account::ValidationState::Valid(*l),
         (Some(l), Some(i))
             if i.is_informational()
                 || i.code == IssueCode::QuotaUnsupported
                 || i.code == IssueCode::RateLimited =>
         {
-            crate::domain::account::ValidationState::Valid(*l)
+            crate::console::domain::account::ValidationState::Valid(*l)
         }
-        (_, Some(i)) => crate::domain::account::ValidationState::Invalid(i.clone()),
-        (None, None) => crate::domain::account::ValidationState::NeverValidated,
+        (_, Some(i)) => crate::console::domain::account::ValidationState::Invalid(i.clone()),
+        (None, None) => crate::console::domain::account::ValidationState::NeverValidated,
     };
     a.identity = v.identity.clone();
     a.confidence = v.confidence;
