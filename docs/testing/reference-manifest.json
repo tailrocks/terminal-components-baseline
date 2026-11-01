@@ -106,5 +106,11 @@
     "fmt": "PASS",
     "all_targets_list_equals_functional": true,
     "all_targets": "PASS 93/93 in 61.805s"
+  },
+  "acceptance": {
+    "script": "scripts/accept-baseline.py",
+    "candidate_gate_env": "FUNCTIONAL_CANDIDATE_GATE",
+    "session_file": "session.json",
+    "dispositions": "docs/testing/baseline-dispositions.json"
   }
 }

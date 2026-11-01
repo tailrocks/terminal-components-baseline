@@ -1,0 +1,29 @@
+[
+  {
+    "id": "functional/holla_resize_narrow",
+    "path": "tests/functional/baselines/functional/holla_resize_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "suspect",
+    "reason": "Measured 120 by 40. The live name says narrow and the narrow checkpoint is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
+    "replacement_id": null
+  },
+  {
+    "id": "functional/tablepro_resize_60x20",
+    "path": "tests/functional/baselines/functional/tablepro_resize_60x20.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "suspect",
+    "reason": "Measured 120 by 40. The name says 60 by 20. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
+    "replacement_id": null
+  },
+  {
+    "id": "functional/showcase_help_resize",
+    "path": "tests/functional/baselines/functional/showcase_help_resize.tui.json",
+    "cols": 160,
+    "rows": 50,
+    "status": "suspect",
+    "reason": "Measured 160 by 50. The narrow help checkpoint in the test is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
+    "replacement_id": null
+  }
+]

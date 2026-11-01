@@ -22,12 +22,36 @@ pub struct Point {
     pub y: u16,
 }
 
+/// Which binary identity a launch is allowed to execute.
+///
+/// `Candidate` is the ordinary nextest path. It refuses a file whose sha256
+/// is one of the recorded reference binaries, so a candidate run cannot be
+/// swapped onto the frozen reference build. `Reference` is the capture path:
+/// the file name must be `showcase`, `tablepro`, `holla`, or `jackin`, and
+/// the sha256 must equal that manifest entry.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SessionMode {
+    Candidate,
+    Reference,
+}
+
+impl SessionMode {
+    const fn as_str(self) -> &'static str {
+        match self {
+            Self::Candidate => "candidate",
+            Self::Reference => "reference",
+        }
+    }
+}
+
 /// Launch description for a functional session.
 ///
 /// `color`: `None` passes no `--color` and sets no `NO_COLOR`. `Some("nocolor")`
 /// sets `NO_COLOR=1`. Any other value is passed as `--color`.
 /// `history`: `false` sets `HOLLA_NO_HISTORY=1`. `true` omits that variable.
 /// `motion`: when set, `--motion` is appended. `clock` enables the test clock.
+/// `mode`: `Candidate` from [`Launch::new`] and [`App::new`]. `Reference` is
+/// opt-in for captures against the manifest binaries.
 #[derive(Clone, Debug)]
 pub struct Launch {
     pub name: String,
@@ -42,6 +66,7 @@ pub struct Launch {
     pub clock: bool,
     pub env: Vec<(String, String)>,
     pub term: String,
+    pub mode: SessionMode,
 }
 
 impl Launch {
@@ -59,6 +84,7 @@ impl Launch {
             clock: false,
             env: Vec::new(),
             term: "xterm-256color".to_string(),
+            mode: SessionMode::Candidate,
         }
     }
 }
@@ -175,7 +201,7 @@ impl App {
 
     pub fn visual(&self, test_id: &str) {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
-        let outcome = self.check_visual(&root, test_id);
+        let outcome = self.check_visual_with_precondition(&root, test_id, "");
         assert!(
             outcome.is_pass(),
             "visual mismatch for {test_id}: {outcome:?}"
@@ -187,6 +213,21 @@ impl App {
         &self,
         baseline_root: &Path,
         test_id: &str,
+    ) -> tuiscotti_latest::check::CheckOutcome {
+        self.check_visual_with_precondition(baseline_root, test_id, "")
+    }
+
+    /// Compare the live screen with a frozen baseline.
+    ///
+    /// `precondition` is recorded as `precondition <text>` before the
+    /// comparison. [`App::visual`] and [`App::check_visual`] pass an empty
+    /// text. This reads the baseline root and writes only under the evidence
+    /// directory.
+    pub fn check_visual_with_precondition(
+        &self,
+        baseline_root: &Path,
+        test_id: &str,
+        precondition: &str,
     ) -> tuiscotti_latest::check::CheckOutcome {
         let _ = self.settle();
         let screen = self.stable_screen();
@@ -200,6 +241,7 @@ impl App {
         let artifacts = self.directory.join("check-artifacts");
         let store = tuiscotti_latest::check::FrozenStore::new(baseline_root, &artifacts)
             .expect("open Tuiscotti frozen store");
+        self.log(format!("precondition {precondition}"));
         let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
         let sha = match &outcome {
             tuiscotti_latest::check::CheckOutcome::Pass(success) => {
@@ -504,6 +546,16 @@ pub fn try_launch(launch: Launch) -> Result<App, LaunchError> {
     let directory = evidence_directory(&launch.name);
     let home = directory.join("home");
     std::fs::create_dir_all(&home).expect("create isolated application home");
+    let resolved = resolve_bin(&launch.bin);
+    let manifest = read_manifest();
+    let sha = if resolved.is_file() {
+        Some(file_sha256(&resolved))
+    } else {
+        None
+    };
+    if let Some(message) = identity_refusal(&launch, &resolved, sha.as_deref(), &manifest) {
+        return refuse_launch(directory, message);
+    }
     let args = child_args(&launch);
     let session = Session::new(&launch.name);
     let defaults = OpenOptions::default();
@@ -527,7 +579,9 @@ pub fn try_launch(launch: Launch) -> Result<App, LaunchError> {
     );
     match spawn {
         Ok(_opened) => {
-            write_binary_record(&directory, &launch.bin);
+            let sha = sha.expect("launched binary has a digest");
+            write_binary_record(&directory, &resolved, &sha);
+            write_session(&directory, &launch, &resolved, &sha, &manifest);
             let app = App {
                 session,
                 directory,
@@ -733,7 +787,71 @@ fn prepared_launch(launch: &Launch, home: &Path) -> LaunchOptions {
     options
 }
 
-fn write_binary_record(directory: &Path, bin: &Path) {
+fn write_binary_record(directory: &Path, path: &Path, sha256: &str) {
+    let record = serde_json::json!({
+        "path": path,
+        "sha256": sha256,
+    });
+    std::fs::write(
+        directory.join("binary.json"),
+        serde_json::to_vec_pretty(&record).expect("binary record"),
+    )
+    .expect("write binary.json");
+}
+
+struct Manifest {
+    reference_sha: String,
+    lockfile_sha256: String,
+    comparator_name: String,
+    comparator_rev: String,
+    session_file: String,
+    binaries: Vec<(String, String)>,
+}
+
+fn manifest_path() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("docs/testing/reference-manifest.json")
+}
+
+fn required_str(value: &serde_json::Value, key: &str) -> String {
+    value
+        .get(key)
+        .and_then(serde_json::Value::as_str)
+        .unwrap_or_else(|| panic!("reference manifest field {key}"))
+        .to_string()
+}
+
+fn read_manifest() -> Manifest {
+    let path = manifest_path();
+    let text = std::fs::read_to_string(&path)
+        .unwrap_or_else(|error| panic!("read reference manifest {}: {error}", path.display()));
+    let value: serde_json::Value = serde_json::from_str(&text)
+        .unwrap_or_else(|error| panic!("parse reference manifest {}: {error}", path.display()));
+    let session_file = required_str(&value["acceptance"], "session_file");
+    assert_eq!(
+        session_file, "session.json",
+        "reference manifest session file"
+    );
+    let binaries_value = value["binaries"]
+        .as_object()
+        .expect("reference manifest binaries");
+    let mut binaries = Vec::with_capacity(binaries_value.len());
+    for (name, entry) in binaries_value {
+        let sha = entry["sha256"]
+            .as_str()
+            .unwrap_or_else(|| panic!("reference manifest sha256 for {name}"));
+        binaries.push((name.clone(), sha.to_string()));
+    }
+    Manifest {
+        reference_sha: required_str(&value, "reference_sha"),
+        lockfile_sha256: required_str(&value, "lockfile_sha256"),
+        comparator_name: required_str(&value["comparator"], "name"),
+        comparator_rev: required_str(&value["comparator"], "rev"),
+        session_file,
+        binaries,
+    }
+}
+
+fn resolve_bin(bin: &Path) -> PathBuf {
     let path = if bin.is_absolute() {
         bin.to_path_buf()
     } else {
@@ -741,14 +859,86 @@ fn write_binary_record(directory: &Path, bin: &Path) {
             .expect("current directory")
             .join(bin)
     };
-    let path = path.canonicalize().unwrap_or(path);
+    path.canonicalize().unwrap_or(path)
+}
+
+fn identity_refusal(
+    launch: &Launch,
+    binary: &Path,
+    sha256: Option<&str>,
+    manifest: &Manifest,
+) -> Option<String> {
+    match launch.mode {
+        SessionMode::Candidate => {
+            let sha256 = sha256?;
+            let matched = manifest.binaries.iter().any(|(_, digest)| digest == sha256);
+            if matched {
+                Some(format!(
+                    "reference binary refused in candidate mode: {} sha256 {sha256}",
+                    binary.display()
+                ))
+            } else {
+                None
+            }
+        }
+        SessionMode::Reference => {
+            let name = binary
+                .file_name()
+                .and_then(|file| file.to_str())
+                .unwrap_or("");
+            let expected = manifest
+                .binaries
+                .iter()
+                .find(|(entry, _)| entry == name)
+                .map(|(_, digest)| digest.as_str());
+            if sha256.is_some_and(|actual| expected == Some(actual)) {
+                None
+            } else {
+                Some(format!(
+                    "reference identity mismatch for {name}: {}",
+                    binary.display()
+                ))
+            }
+        }
+    }
+}
+
+fn refuse_launch(directory: PathBuf, message: String) -> Result<App, LaunchError> {
+    std::fs::write(directory.join("spawn-error.txt"), &message).expect("write spawn-error.txt");
+    Err(LaunchError {
+        evidence: directory,
+        message,
+    })
+}
+
+fn write_session(
+    directory: &Path,
+    launch: &Launch,
+    binary: &Path,
+    sha256: &str,
+    manifest: &Manifest,
+) {
     let record = serde_json::json!({
-        "path": path,
-        "sha256": file_sha256(&path),
+        "mode": launch.mode.as_str(),
+        "reference_sha": manifest.reference_sha,
+        "lockfile_sha256": manifest.lockfile_sha256,
+        "binary_path": binary,
+        "binary_sha256": sha256,
+        "args": launch.args,
+        "cols": launch.cols,
+        "rows": launch.rows,
+        "color": launch.color,
+        "platform": launch.platform,
+        "history": launch.history,
+        "motion": launch.motion,
+        "clock": launch.clock,
+        "TERM": launch.term,
+        "comparator_name": manifest.comparator_name,
+        "comparator_rev": manifest.comparator_rev,
     });
-    std::fs::write(
-        directory.join("binary.json"),
-        serde_json::to_vec_pretty(&record).expect("binary record"),
-    )
-    .expect("write binary.json");
+    let mut bytes = serde_json::to_vec_pretty(&record).expect("session record");
+    bytes.push(b'\n');
+    let path = directory.join(&manifest.session_file);
+    std::fs::write(&path, bytes)
+        .unwrap_or_else(|error| panic!("write {}: {error}", path.display()));
 }
