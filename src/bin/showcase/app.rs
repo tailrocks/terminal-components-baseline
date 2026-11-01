@@ -93,6 +93,7 @@ pub enum PageId {
     Progress,
     Scrolling,
     Terminal,
+    TerminalPane,
     Editor,
     Diff,
     Grid,
@@ -153,6 +154,16 @@ pub const NAV_GROUPS: &[&str] = &[
     "Text & code",
     "Screens",
 ];
+
+pub const HIDDEN_ENTRIES: &[NavEntry] = &[NavEntry {
+    id: PageId::TerminalPane,
+    label: "Terminal pane",
+    group: "Text & code",
+}];
+
+pub fn entries() -> impl Iterator<Item = &'static NavEntry> {
+    NAV_ENTRIES.iter().chain(HIDDEN_ENTRIES)
+}
 
 pub const NAV_ENTRIES: &[NavEntry] = &[
     NavEntry {
@@ -466,12 +477,24 @@ pub enum NavExpand {
 
 impl PageId {
     pub fn index(self) -> usize {
-        NAV_ENTRIES.iter().position(|e| e.id == self).unwrap_or(0)
+        entries().position(|e| e.id == self).unwrap_or(0)
+    }
+
+    pub fn entry(self) -> &'static NavEntry {
+        entries().nth(self.index()).unwrap_or(&NAV_ENTRIES[0])
     }
 
     pub fn nav_path(self) -> Vec<usize> {
-        let e = &NAV_ENTRIES[self.index()];
+        let e = self.entry();
         let roots = nav_roots();
+        if HIDDEN_ENTRIES.iter().any(|h| h.id == self) {
+            return vec![
+                roots
+                    .iter()
+                    .position(|r| *r == NavRoot::Group(e.group))
+                    .unwrap_or(0),
+            ];
+        }
         if e.group.is_empty() {
             return vec![
                 roots
@@ -513,8 +536,7 @@ impl PageId {
                 .collect()
         };
         let n = norm(name);
-        NAV_ENTRIES
-            .iter()
+        entries()
             .find(|e| norm(e.label) == n)
             .map(|e| e.id)
             .or_else(|| {
@@ -673,8 +695,7 @@ impl App {
 
     pub fn with_motion(theme: Theme, motion: Motion, frame: u64) -> Self {
         use crate::pages::*;
-        let pages: Vec<Box<dyn Page>> = NAV_ENTRIES
-            .iter()
+        let pages: Vec<Box<dyn Page>> = entries()
             .map(|e| -> Box<dyn Page> {
                 match e.id {
                     PageId::Overview => Box::new(overview::OverviewPage::new()),
@@ -692,6 +713,7 @@ impl App {
                     PageId::Progress => Box::new(progress::ProgressPage::new()),
                     PageId::Scrolling => Box::new(scrolling::ScrollingPage::new()),
                     PageId::Terminal => Box::new(terminal::TerminalPage::new()),
+                    PageId::TerminalPane => Box::new(terminal_pane::TerminalPanePage::new()),
                     PageId::Editor => Box::new(editor::EditorPage::new()),
                     PageId::Diff => Box::new(diff::DiffPage::new()),
                     PageId::Grid => Box::new(grid::GridPage::new()),
@@ -1813,11 +1835,11 @@ impl App {
 
     fn header_crumb(&self) -> Breadcrumb {
         if self.router.depth() > 1 {
-            return self.router.breadcrumb(HEADER_CRUMB, |s| {
-                NAV_ENTRIES[s.page.index()].label.to_owned()
-            });
+            return self
+                .router
+                .breadcrumb(HEADER_CRUMB, |s| s.page.entry().label.to_owned());
         }
-        let entry = &NAV_ENTRIES[self.page().index()];
+        let entry = self.page().entry();
         let segments = [entry.group, entry.label]
             .iter()
             .filter(|s| !s.is_empty())

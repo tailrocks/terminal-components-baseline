@@ -1,3 +1,4 @@
+use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, TerminalSnapshot};
 
 use super::support::{App, Point, SHOWCASE, cell_bg, crop, find, find_all, row_text, text};
@@ -853,6 +854,7 @@ page_test!(showcase_page_panetree, "panetree", "Pane tree");
 page_test!(showcase_page_codeeditor, "codeeditor", "Code editor");
 page_test!(showcase_page_diff, "diff", "Diff");
 page_test!(showcase_page_terminal, "terminal", "Terminal");
+page_test!(showcase_page_terminalpane, "terminalpane", "Terminal pane");
 page_test!(
     showcase_page_textutilities,
     "textutilities",
@@ -885,3 +887,158 @@ page_test!(
     "readonlyreport",
     "Read-only report"
 );
+
+fn terminal_pane(name: &str, opts: &[&str]) -> App {
+    let mut args = vec!["--page", "terminalpane", "--motion", "paused"];
+    for opt in opts {
+        args.extend(["--opt", opt]);
+    }
+    let app = App::new(name, SHOWCASE, &args, 120, 40, "truecolor");
+    app.wait_text("Terminal pane");
+    app.settle();
+    app
+}
+
+fn pane_row(screen: &TerminalSnapshot, title: &str, row: u16) -> (Point, String) {
+    let top = find(screen, title);
+    let y = top.y + 1 + row;
+    (Point { x: 0, y }, row_text(screen, u32::from(y)))
+}
+
+fn cell_at(
+    screen: &TerminalSnapshot,
+    row: (Point, String),
+    needle: &str,
+) -> tui_test::SnapshotCell {
+    let at = row
+        .1
+        .find(needle)
+        .unwrap_or_else(|| panic!("{needle:?} in {:?}", row.1));
+    let col = row.1[..at].chars().count();
+    screen
+        .cell_at(col as u32, u32::from(row.0.y))
+        .expect("pane cell")
+        .clone()
+}
+
+fn replay_row(replay: &str) -> (TerminalSnapshot, (Point, String)) {
+    let app = terminal_pane(
+        "showcase-terminal-replay-start",
+        &[
+            "terminalpane.fixture=midstream",
+            &format!("terminalpane.replay={replay}"),
+        ],
+    );
+    app.click_text("Replay");
+    let screen = app.wait_screen("replayed starting chunk", |s| {
+        text(s).contains("2 of 4 chunks")
+            || text(s).contains("3 of 4 chunks")
+            || text(s).contains("1 of 4 chunks")
+    });
+    let row = pane_row(&screen, "midstream", 0);
+    app.finish();
+    (screen, row)
+}
+
+#[test]
+fn showcase_terminal_replay_mid_sequence() {
+    let app = terminal_pane("showcase-terminal-pane", &[]);
+    let screen = app.settle();
+    assert!(text(&screen).contains("dev@jackin"));
+    for mode in ["app cursor", "bracketed paste", "alt screen", "hide cursor"] {
+        assert!(
+            row_text(&screen, u32::from(find(&screen, mode).y)).contains("off"),
+            "{mode} reads off"
+        );
+    }
+    let coloured = cell_at(&screen, pane_row(&screen, "session", 2), "rgb-green");
+    let bold = cell_at(&screen, pane_row(&screen, "session", 3), "bold");
+    assert!(bold.has(Attrs::BOLD));
+    app.finish();
+
+    let plain = terminal_pane("showcase-terminal-pane-plain", &["terminalpane.colour=off"]);
+    let screen = plain.settle();
+    let uncoloured = cell_at(&screen, pane_row(&screen, "session", 2), "rgb-green");
+    assert_ne!(
+        format!("{:?}", uncoloured.fg()),
+        format!("{:?}", coloured.fg()),
+        "colour off drops the foreground colour"
+    );
+    assert!(
+        cell_at(&screen, pane_row(&screen, "session", 3), "bold").has(Attrs::BOLD),
+        "bold survives without colour"
+    );
+    plain.finish();
+
+    let full = terminal_pane(
+        "showcase-terminal-fullscreen",
+        &["terminalpane.fixture=fullscreen"],
+    );
+    full.click_text("Play all");
+    let screen = full.settle();
+    for mode in ["app cursor", "bracketed paste", "alt screen", "hide cursor"] {
+        assert!(
+            row_text(&screen, u32::from(find(&screen, mode).y)).contains("on"),
+            "{mode} reads on"
+        );
+    }
+    let pane = find(&screen, "fullscreen");
+    full.click(Point {
+        x: pane.x + 4,
+        y: pane.y + 4,
+    });
+    full.key("enter");
+    full.wait_text("Ctrl+G Release");
+    full.key("up");
+    full.wait_text("ESC O A");
+    full.key("ctrl+g");
+    full.wait_absent("Ctrl+G Release");
+    full.click_text("Reset");
+    full.wait_text("0 of 3 chunks");
+    let pane = find(&full.settle(), "fullscreen");
+    full.click(Point {
+        x: pane.x + 4,
+        y: pane.y + 4,
+    });
+    full.key("enter");
+    full.key("up");
+    full.wait_text("ESC [ A");
+    full.key("ctrl+g");
+    full.finish();
+
+    for (replay, shown) in [
+        ("inside a CSI sequence", ";224;84mtail"),
+        ("inside an OSC sequence", "0;titleafter"),
+        ("inside a UTF-8 character", "x"),
+    ] {
+        let (_, row) = replay_row(replay);
+        assert!(row.1.contains(shown), "{replay}: {:?}", row.1);
+    }
+    let (screen, row) = replay_row("stream start");
+    let tail = cell_at(&screen, row, "tail");
+    assert!(format!("{:?}", tail.fg()).contains("72"), "{:?}", tail.fg());
+
+    let mid = terminal_pane(
+        "showcase-terminal-midstream",
+        &[
+            "terminalpane.fixture=midstream",
+            "terminalpane.replay=inside a CSI sequence",
+        ],
+    );
+    mid.click_text("Replay");
+    let literal = mid.wait_text(";224;84mtail");
+    let row = pane_row(&literal, "midstream", 0);
+    let cell = cell_at(&literal, row, ";224;84mtail");
+    assert_ne!(format!("{:?}", cell.fg()), format!("{:?}", tail.fg()));
+    for _ in 0..3 {
+        mid.click_text("Step");
+        mid.settle();
+    }
+    let ready = mid.wait_text("ready $");
+    assert!(!text(&ready).contains(";224;84mtail"));
+    mid.click_text("Replay");
+    mid.wait_text(";224;84mtail");
+    mid.settle();
+    mid.visual("functional/showcase_terminal_replay");
+    mid.finish();
+}

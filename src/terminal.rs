@@ -71,9 +71,21 @@ impl TerminalState {
         }
     }
 
+    pub fn scrollback_len(&self) -> usize {
+        self.parser.screen().scrollback_len()
+    }
+
+    pub fn scrollback(&self) -> usize {
+        self.parser.screen().scrollback()
+    }
+
+    pub fn set_scrollback(&mut self, rows: usize) {
+        self.parser.screen_mut().set_scrollback(rows);
+    }
+
     pub fn cursor(&self, area: Rect) -> Option<Position> {
         let screen = self.parser.screen();
-        if screen.hide_cursor() {
+        if screen.hide_cursor() || screen.scrollback() > 0 {
             return None;
         }
         let (row, col) = screen.cursor_position();

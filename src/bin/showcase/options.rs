@@ -278,6 +278,7 @@ pub fn page_options(page: PageId) -> &'static [Opt] {
         PageId::Scrolling => SCROLLING,
         PageId::Diff => DIFF,
         PageId::Terminal => TERMINAL,
+        PageId::TerminalPane => TERMINAL_PANE,
         PageId::QueryWorkbench => QUERY_WORKBENCH,
         PageId::Connections => CONNECTIONS,
         PageId::Finder => FINDER,
@@ -1726,12 +1727,31 @@ pub static TERMINAL: &[Opt] = &[
     ),
 ];
 
+pub static TERMINAL_PANE: &[Opt] = &[
+    Opt::new(
+        "terminalpane.fixture",
+        "Fixture",
+        &["session", "fullscreen", "split", "midstream"],
+    ),
+    Opt::new("terminalpane.size", "Size", &["80x24", "40x12", "20x6"]).default(1),
+    Opt::new("terminalpane.colour", "Colour", OFF_ON).default(1),
+    Opt::new("terminalpane.focused", "Focused", OFF_ON).default(1),
+    Opt::new(
+        "terminalpane.replay",
+        "Replay start",
+        &[
+            "stream start",
+            "inside a CSI sequence",
+            "inside an OSC sequence",
+            "inside a UTF-8 character",
+        ],
+    ),
+];
+
 pub fn all() -> impl Iterator<Item = &'static Opt> {
-    SHELL.iter().chain(
-        crate::app::NAV_ENTRIES
-            .iter()
-            .flat_map(|e| page_options(e.id).iter()),
-    )
+    SHELL
+        .iter()
+        .chain(crate::app::entries().flat_map(|e| page_options(e.id).iter()))
 }
 
 pub fn find(key: &str) -> Option<&'static Opt> {

@@ -64,6 +64,7 @@ pub mod tabs;
 pub mod taskrunner;
 pub mod template;
 pub mod terminal;
+pub mod terminal_pane;
 pub mod text_utilities;
 pub mod textareas;
 pub mod toolbars;

@@ -12,7 +12,7 @@ default-run = "showcase"
 members = ["."]
 
 [features]
-default = ["cli"]
+default = ["cli", "terminal"]
 cli = ["dep:clap"]
 terminal = ["dep:vt100"]
 
@@ -25,7 +25,7 @@ doctest = false
 [[bin]]
 name = "showcase"
 path = "src/bin/showcase/main.rs"
-required-features = ["cli"]
+required-features = ["cli", "terminal"]
 
 [[bin]]
 name = "tablepro"
