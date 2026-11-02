@@ -13701,5 +13701,293 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.activity.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/opt_diskcleanup_check_click",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/opt_diskcleanup_check_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/opt_diskcleanup_collapse_below",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/opt_diskcleanup_collapse_below.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/opt_diskcleanup_meter_visual",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/opt_diskcleanup_meter_visual.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/opt_diskcleanup_mode",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/opt_diskcleanup_mode.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/opt_diskcleanup_scan",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/opt_diskcleanup_scan.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/opt_diskcleanup_sizes",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/opt_diskcleanup_sizes.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/opt_diskcleanup_typed",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/opt_diskcleanup_typed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_after",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_confirmed",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_confirmed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_dry",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_dry.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_empty",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_gate2",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_gate2.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_rescan",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_cleanup_rescan.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_options",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_playground",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_route",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_busy",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_busy.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_states",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_diskcleanup/sc_diskcleanup_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_diskcleanup/sc_diskcleanup_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
+    "replacement_id": null
   }
 ]
