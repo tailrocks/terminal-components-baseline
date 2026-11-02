@@ -8112,5 +8112,446 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_escape.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_escape.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_focus_out.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_focus_out.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_backdrop.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_backdrop.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_chrome.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_chrome.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_close.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_close.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_close_button.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_close_button.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_dim.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_dim.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_dismiss.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_fit.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_fit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_margin.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_margin.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_min.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_min.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_placement.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_placement.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_margin.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_margin.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_outside_click.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_outside_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_pass_through.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_pass_through.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_placement.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_placement.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_refuse_feedback.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_refuse_feedback.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_delay.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_delay.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_key.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_key.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_mode.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_mode.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_passes.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_passes.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_rows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_scroll.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_scroll.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_wheel.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_wheel.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_text_inset.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_text_inset.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_tip_delay.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tip_delay.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_tip_width.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tip_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_tooltips.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tooltips.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_v_align.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_v_align.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/opt_popupstooltips_vertical_margin.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_vertical_margin.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_overlays_after.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_overlays_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_overlays_before.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_overlays_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_pressed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_popupstooltips/sc_popupstooltips_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
+    "replacement_id": null
   }
 ]
