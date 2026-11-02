@@ -6,27 +6,30 @@
       "owner_task": "T03.cancelled",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing lists Filter connections and Development and does not show Query 1. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with status ✓ Connected to Development and the empty editor placeholder Type SQL. The status is not Loading schema, and Cancelled is absent. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "6c1f75f815dc2a67ddd6abdb70710a7e785b6275",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T03.cancelled",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "the workbench is already Query 1; Ctrl+Q exits"
     },
     {
       "case_id": "T03.cancelled.boundary",
       "owner_task": "T03.cancelled",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "On Development, Query 1 receives two statements: SELECT sku FROM products WHERE sku = 't03_cancelled_first'; and SELECT name FROM products WHERE name = 't03_cancelled_second'. Development Safe Mode stays Silent, so Alt+R Run All does not open an Execute confirm. The running line contains running and ends in Esc cancels, and Cancelled is absent. Esc during that line, before a result body, leaves one result tab Cancelled, the result line Cancelled · nothing was recorded, the empty state titled Cancelled with hint The statement was stopped before it finished; nothing was recorded, and status Query cancelled. The screen does not show 1 row, No rows, Statement executed, or SELECT products. Both markers stay in the editor. The 120×40 frame is that cancelled body. The 80×24 frame, captured before the terminal returns to 120×40, still shows the title, the hint, the result line, and both statements. After both frames the cancelled title and hint remain, and 1 row is absent. Ctrl+Y opens Query history and does not list t03_cancelled_first or t03_cancelled_second. Ctrl+W closes history and returns to Query 1 with the cancelled body still shown. Ctrl+Q opens Quit TablePro? for the unsaved query; confirming Quit exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "6c1f75f815dc2a67ddd6abdb70710a7e785b6275",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Cancel before completion and, where the UI allows it, between statements.",
       "expected_results": "The cancelled body remains the result. A later statement does not overwrite it.",
@@ -39,7 +42,79 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a0579ec213158e5cf78b661c7dbfd4fcd3885e967bca856ea9b57a78aaf30369",
+        "expect_baseline": "missing",
+        "precondition": "T03.cancelled.boundary.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6a45b1d48a5bcdfaf54f65491fe60b8f86943204bdbc35f94cdb3489df4e3b05",
+        "expect_baseline": "missing",
+        "precondition": "T03.cancelled.boundary.narrow"
+      }
     }
   ]
 }
