@@ -15168,5 +15168,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T02.editors.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t02_filters/t02_filters_filters_120x40",
+    "path": "tests/functional/baselines/pre_refactor/t02_filters/t02_filters_filters_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T02.filters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t02_filters/t02_filters_filters_narrow",
+    "path": "tests/functional/baselines/pre_refactor/t02_filters/t02_filters_filters_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T02.filters.",
+    "replacement_id": null
   }
 ]
