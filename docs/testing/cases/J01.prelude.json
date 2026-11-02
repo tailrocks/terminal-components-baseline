@@ -6,27 +6,30 @@
       "owner_task": "J01.prelude",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40 opens the manager. ManagerScreen::new in src/bin/jackin/screens/manager.rs selects Current directory. Key n calls Go::Prelude when the selection is not an instance. PreludeScreen::open in src/bin/jackin/screens/prelude.rs paints New workspace · step 1 of 5 · Source. Esc is rewind, which sets status Cancelled · nothing created and returns through Go::Manager. world_for in src/bin/jackin/domain/fixtures.rs still lists payments-platform, infra-control-plane, release-automation, and customer-portal, and no new name appears. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J01.prelude",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; n on Current directory",
+      "return_path": "Esc from Source paints Cancelled · nothing created and returns to the manager; Ctrl+Q exits 0"
     },
     {
       "case_id": "J01.prelude.steps",
       "owner_task": "J01.prelude",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The host start chooses the parent row. choose_cursor in src/widgets/file_browser.rs treats list cursor 0 as the cwd, and fixtures.rs sets HOME to /Users/alexey and cwd to /Users/alexey/src/payments-platform. Step 2 paints Same path and that path. Esc returns to step 1, and Esc again is rewind in src/bin/jackin/screens/prelude.rs, status Cancelled · nothing created, with no new workspace. The git start uses vim_keymap FileCmd::Url. The label is Git URL. A URL that contains no github() full_name paints Could not resolve from file_browser in src/bin/jackin/screens/modals.rs. https://github.com/chainargos/payments-platform resolves. ChoiceDialog::width(58) in prelude.rs cuts the source line before · git. The painted line keeps the URL prefix, and Default shows /work/payments-platform. The radio starts on Back's neighbor, not on the Back button. Down selects Edit destination… and Enter opens New workspace · step 3 of 5 · Edit destination. Esc returns to Destination, Enter opens Edit again, and Enter with the absolute path opens Working dir. edit_used makes Workdir Esc return to Edit. Name Esc returns to Workdir. The name field begins as the destination basename and is already editing. Enter submits payments-platform. validate_name paints A workspace named payments-platform already exists and stays on step 5. That open error is the checkpoint, shot at 120×40 and then at 80×24 before the terminal returns to 120×40. A name containing / paints Name cannot contain / and stays on step 5. payments-lab activates Create, dialog action index 1. create sets Workspace payments-lab · review and save in the editor and does not write the file. Ctrl+S calls open_preview in src/bin/jackin/screens/editor.rs. is_create is true, so the title is Create workspace. blockers in src/bin/jackin/screens/config.rs is empty, so the confirm label is Save, and Dialog::facts focuses Cancel. The saved status is absent on that preview. start_save schedules 900 ms. The wall clock reaches Workspace payments-lab saved. The manager lists payments-lab plus the original four names. Reopen focuses the tab strip. ] shows the Mounts row. column_widths leaves the Source cell short of the full URL, and the painted prefix is https://github.com/chainargos/payments-platfo.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j01_prelude/j01_prelude_steps_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j01_prelude/j01_prelude_steps_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Start from a host directory and from Git. Visit Source, Destination, Edit, Workdir, and Name. Go Back and Cancel at each boundary. Enter an invalid and a duplicate name. Finish one valid prelude.",
       "expected_results": "Cancel adds no workspace. The Editor shows the pending values. Save then reopen shows those values.",
@@ -39,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "22df054b59534e859d2d70d4b39a8ea75e303aeabbc346255f1b5dd5ee3676c2",
+        "expect_baseline": "missing",
+        "precondition": "J01.prelude.steps.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3ebfa91d8c384875a37dbbbae6887e6f97478d8a719f8d0d819d90b60a71862e",
+        "expect_baseline": "missing",
+        "precondition": "J01.prelude.steps.narrow"
+      }
     }
   ]
 }
