@@ -64,6 +64,15 @@ fn row_after(screen: &TerminalSnapshot, needle: &str) -> String {
     row_text(screen, index + 1)
 }
 
+fn password_masked(screen: &TerminalSnapshot) -> bool {
+    let Some(index) = (0..screen.rows()).find(|row| row_text(screen, *row).contains("Password"))
+    else {
+        return false;
+    };
+    let next = index + 1;
+    next < screen.rows() && row_text(screen, next).contains(MASK) && !text(screen).contains(SECRET)
+}
+
 fn click_above_footer(app: &App, label: &str) {
     let screen = app.wait_text(label);
     let limit = u16::try_from(screen.rows()).expect("rows") - 1;
@@ -271,6 +280,33 @@ fn secrets_mask_password_and_round_trip_ssh_host() {
     );
     shot(&app, "T01.advanced.secrets.120x40");
     no_secret(&app.screen());
+
+    app.resize(80, 24);
+    app.wait_screen("narrow size", |screen| {
+        screen.cols() == 80 && screen.rows() == 24
+    });
+    // The Basic column keeps its wide scroll offset, so the focused password
+    // sits below the 24-row viewport until focus leaves and returns.
+    app.key("tab");
+    app.key("shift+tab");
+    let narrow = app.wait_screen("narrow masked password", |screen| {
+        screen.cols() == 80 && screen.rows() == 24 && password_masked(screen)
+    });
+    assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
+    assert!(
+        row_after(&narrow, "Password").contains(MASK),
+        "mask left the password row\n{}",
+        text(&narrow)
+    );
+    no_secret(&narrow);
+    shot(&app, "T01.advanced.secrets.narrow");
+    no_secret(&app.screen());
+
+    app.resize(120, 40);
+    let wide = app.wait_screen("wide restored", |screen| {
+        screen.cols() == 120 && screen.rows() == 40
+    });
+    no_secret(&wide);
 
     app.key("ctrl+s");
     let saved = app.wait_text(SAVED);
