@@ -7482,5 +7482,275 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_button_wrap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_button_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_buttons.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_buttons.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_stepper.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_stepper.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_tones.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_tones.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_close_button.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_close_button.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_form_meta.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_form_meta.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_info_error.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_info_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_info_keymap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_info_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_keep_open.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_keep_open.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/opt_dialogkinds_width.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_kinds_after.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_kinds_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_kinds_before.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_kinds_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_focused.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_selected.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogkinds/sc_dialogkinds_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
+    "replacement_id": null
   }
 ]
