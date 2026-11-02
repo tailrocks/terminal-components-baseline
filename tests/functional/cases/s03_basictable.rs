@@ -389,7 +389,15 @@ fn sections_narrow_then_wide() {
     );
 
     app.resize(120, 40);
-    let wide_states = app.wait_text(CAP_STATES);
+    // The first frame after a resize can carry the wide caption before the
+    // lower specimen rows are drawn. Wait until those rows are on screen.
+    let wide_states = app.wait_screen("states redraw at 120 by 40", |screen| {
+        screen.cols() == 120
+            && screen.rows() == 40
+            && text(screen).contains(CAP_STATES)
+            && text(screen).contains("selected")
+            && text(screen).contains("disabled")
+    });
     see(
         &wide_states,
         &[
