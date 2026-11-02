@@ -11478,5 +11478,293 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_horizontal",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_horizontal.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_mark",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_mark.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_max_lines",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_max_lines.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_nav",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_numbered",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_numbered.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_rail_nav",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_rail_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_scrollbar_gap",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_scrollbar_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_selectable",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_selectable.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_track_click",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/opt_terminal_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_options",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_playground",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_route",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_run_after",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_run_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_run_before",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_run_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_seam_held",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_seam_held.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_states",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_terminal/sc_terminal_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
+    "replacement_id": null
   }
 ]
