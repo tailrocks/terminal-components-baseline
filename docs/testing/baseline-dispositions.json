@@ -10029,5 +10029,257 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_dir",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_dir.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_double_click",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_double_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_gap",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_hit_pad",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_hit_pad.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_maximized",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_maximized.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_min",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_min.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_min_child_rows",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_min_child_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_percent",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_percent.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_scrollbar_gap",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_scrollbar_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/opt_splitsstacks_track_click",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_options",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_playground",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_route",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_splits_after",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_splits_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_splits_before",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_splits_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_states",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_splitsstacks/sc_splitsstacks_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
+    "replacement_id": null
   }
 ]
