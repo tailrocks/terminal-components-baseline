@@ -3288,5 +3288,455 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_arrows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_arrows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_bar_width.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_bar_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_chip_keymap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_chip_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_chip_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_chip_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_close_button.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_button.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_close_on_blur.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_on_blur.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_close_target.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_target.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_cursor_style.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_cursor_style.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_digit_toggles.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_digit_toggles.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_dismiss.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_hover_moves_cursor.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_hover_moves_cursor.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_label_hit.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_label_hit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_max_rows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_max_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_mixed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_mixed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_more_button.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_more_button.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_overflow_marker.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_overflow_marker.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_overflow_menu.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_overflow_menu.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_placement.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_placement.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_popup_fit.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_popup_fit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_popup_width.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_popup_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_press_drag.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_press_drag.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_select_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_select_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_tab_in_open.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_tab_in_open.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_track_click.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_type_ahead.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_wheel.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_wheel.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/opt_chipsselects_wrap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_chips_after.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_chips_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_chips_before.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_chips_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_selects_after.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_selects_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_selects_before.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_selects_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_empty.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_error.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_focused.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_focused_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_narrow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_pressed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_chipsselects/sc_chipsselects_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
+    "replacement_id": null
   }
 ]
