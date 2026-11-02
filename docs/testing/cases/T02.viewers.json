@@ -6,27 +6,30 @@
       "owner_task": "T02.viewers",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120x40 with reduced motion. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 with status Connected to Development. Ctrl+O opens public.orders. The grid offers Enter Edit and does not open a cell viewer. Ctrl+W closes that clean tab and returns to Query 1. The header still names Development, and the status line remains Opened public.orders. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5b5b870e1858fcf36013adb7d273b79d96c79edd",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T02.viewers",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect; Ctrl+O orders",
+      "return_path": "Ctrl+W closes the orders tab and returns to Query 1; Ctrl+Q exits"
     },
     {
       "case_id": "T02.viewers.viewer",
       "owner_task": "T02.viewers",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "On Development, Enter on orders.shipping_address row 1 opens a viewer titled shipping_address. The body is the pretty-printed cell {\"line1\":\"104 Calle Mayor\",\"city\":\"Stockholm\",\"postal_code\":\"19431\",\"country\":\"US\"}, not the neighbor Milan address. The 120x40 and 80x24 frames are captured while that viewer is open. The 80x24 frame still draws the title, Close, and all four pretty lines. Esc returns to that cell. y reports Copied 90 characters · {\"line1\": \"104 Calle Mayor\", \"city\": \"S…. Shift+F10 shows Copy cell and shipping_address · row 1; Esc leaves the same cell. customers.organization_id row 1 is af3e2db9-3aa5-4f25-91ed-6db9875cdecc. Ctrl+] opens public.organizations filtered by id = that uuid. That id is not one of the 1,240 generated organization ids, so the visible id is the filter chip and the body says Loading rows…, not a data row. The source cell is not edited. Ctrl+W returns to that customer cell. r on the clean grid says Refreshed and the cell value is unchanged. Ctrl+End moves the cursor onto the more row, which draws fetching…. Enter sets Showing the first 500 rows · add a LIMIT or filter to narrow and leaves the cursor on that more row. Ctrl+Home returns to the organization cell, which is still loaded. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5b5b870e1858fcf36013adb7d273b79d96c79edd",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_viewers/t02_viewers_viewer_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t02_viewers/t02_viewers_viewer_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Open a cell viewer, select and copy its text, follow a foreign key, refresh, and fetch more rows.",
       "expected_results": "The viewer text is the cell text. Follow opens the referenced row.",
@@ -39,7 +42,79 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a8544faf39b5cb31d5642f5e1d1935af3de0d293489017fcf5b1a751d2e9987a",
+        "expect_baseline": "missing",
+        "precondition": "T02.viewers.viewer.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "78ce3ddd16f7b160e5bcab4118952b10de7913e866f2437d22eee88d6c07c7eb",
+        "expect_baseline": "missing",
+        "precondition": "T02.viewers.viewer.narrow"
+      }
     }
   ]
 }
