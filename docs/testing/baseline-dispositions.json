@@ -16608,5 +16608,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.handoff.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j05_outro/j05_outro_outro_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j05_outro/j05_outro_outro_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.outro.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j05_outro/j05_outro_outro_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j05_outro/j05_outro_outro_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.outro.",
+    "replacement_id": null
   }
 ]
