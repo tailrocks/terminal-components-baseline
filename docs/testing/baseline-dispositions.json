@@ -2856,5 +2856,194 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_blur_action",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_blur_action.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_edit_entry",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_edit_entry.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_esc_reverts",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_esc_reverts.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_field_keys",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_field_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_focus_select",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_focus_select.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_horizontal",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_horizontal.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_label_hit",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_label_hit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_nav",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_pointer_select",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_pointer_select.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/opt_textareas_text_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_text_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_multiline_after",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_multiline_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_multiline_before",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_multiline_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_route",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_textareas/sc_textareas_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
+    "replacement_id": null
   }
 ]
