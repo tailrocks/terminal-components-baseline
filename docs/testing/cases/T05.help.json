@@ -6,27 +6,30 @@
       "owner_task": "T05.help",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing lists Filter connections and Development. Query 1 and Keyboard shortcuts are absent. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with status Connected to Development and the empty editor placeholder Type SQL. Loading schema is absent. F1 opens Help. The frame title is Keyboard shortcuts, the status strip reads TablePro, the sections are Shell and workbench and Grid and editor, and Done is present. Esc closes Help and returns to Query 1 with Type SQL and Connected to Development. Keyboard shortcuts, both section headings, and Query 2 are absent. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "763b5fc85576217eead601c1b7e17820eea2b20f",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T05.help",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect; press F1",
+      "return_path": "Esc closes Help and returns to Query 1; Ctrl+Q exits"
     },
     {
       "case_id": "T05.help.help",
       "owner_task": "T05.help",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Query 1, connected to Development, receives SELECT sku FROM products WHERE sku = 't05_help_opener';. Ctrl+T opens Query 2 on the Type SQL placeholder. Ctrl+PageUp returns to Query 1: its tab rule is ━, Query 2's rule is ─, and the same SQL is still in the editor. F1 opens Help while the editor is capturing. The frame title is Keyboard shortcuts, the status strip reads TablePro, both sections Shell and workbench and Grid and editor are visible, and Done is present. Ctrl+PageDown is the workbench Next page chord. Help's layer consumes it, so Help stays open, the list scrolls, and Query 1 stays the active tab. PageUp brings both section headings back. Plain PageDown scrolls again: a row that was visible leaves, Keyboard shortcuts and TablePro stay, and Query 1 stays active. That scrolled Help is the checkpoint, before Esc. At 120×40 the position is 5–33 of 33 in two columns. The first visible row is Ctrl+R Run the statement at the cursor. The second column starts at p Preview the SQL of pending changes. Both section headings are off-screen. Query 1's underline is ━ and Query 2's is ─. The strip shows TablePro and ? help. The footer is ↑↓ Scroll, Esc Close, and Connected to Development. The 80×24 frame is captured after resize(80, 24) and before resize(120, 40). Its position is 5–20 of 40 in one column, from Ctrl+R through z Maximize the pane, with Done visible. The dialog covers the tab strip. The strip still starts with TablePro and the footer still shows Connected to Development. After the terminal returns to 120×40, Esc closes Help onto Query 1 with the same SQL. Query 2 stays idle. The Type SQL placeholder, Keyboard shortcuts, and Grid and editor are absent. Ctrl+Q opens Quit TablePro? for the unsaved query; confirming Quit exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "763b5fc85576217eead601c1b7e17820eea2b20f",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t05_help/t05_help_help_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t05_help/t05_help_help_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Open Help, scroll it, press a page key, and close it.",
       "expected_results": "The Help title is visible while it is open. Focus returns to the opener.",
@@ -39,7 +42,79 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "548416eee53f0a352051ac55333b9f92d6eb4798a0912aba455789696a483b6b",
+        "expect_baseline": "missing",
+        "precondition": "T05.help.help.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "86322d3a2062b98692f05ee727152deb4e72f660a116ea51ea1cc18716ab0028",
+        "expect_baseline": "missing",
+        "precondition": "T05.help.help.narrow"
+      }
     }
   ]
 }
