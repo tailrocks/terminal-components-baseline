@@ -10794,5 +10794,221 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/opt_panetree_frames",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/opt_panetree_frames.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/opt_panetree_hit_pad",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/opt_panetree_hit_pad.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/opt_panetree_keys",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/opt_panetree_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/opt_panetree_layout",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/opt_panetree_layout.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/opt_panetree_min",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/opt_panetree_min.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/opt_panetree_step",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/opt_panetree_step.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_options",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_panes_after",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_panes_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_panes_before",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_panes_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_playground",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_route",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_states",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panetree/sc_panetree_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_panetree/sc_panetree_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panetree.",
+    "replacement_id": null
   }
 ]
