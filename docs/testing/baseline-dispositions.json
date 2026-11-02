@@ -16446,5 +16446,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.leave.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j05_intro/j05_intro_intro_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j05_intro/j05_intro_intro_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.intro.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j05_intro/j05_intro_intro_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j05_intro/j05_intro_intro_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.intro.",
+    "replacement_id": null
   }
 ]
