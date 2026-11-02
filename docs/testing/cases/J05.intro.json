@@ -6,34 +6,37 @@
       "owner_task": "J05.intro",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario first-use --color truecolor --motion reduced at 120×40. world_for(FirstUse) in src/bin/jackin/domain/fixtures.rs builds base_world, whose Arbiter::new(0) is an empty discovery, and sets discovery_pending. request_entry in src/bin/jackin/arbiter.rs returns PlayIntro for Ok(0) when foreign_claim is false. start in src/bin/jackin/app.rs stores IntroState. render_intro for Motion::Reduced in src/bin/jackin/rain.rs draws CAPTION Knock, knock, operator. and the hint Enter Continue. intro_guard starts at 3. After it reaches 0, Enter calls IntroState::skip, reduced skip sets tick to REDUCED_HOLD, and finish_intro calls complete_entry and enter_manager. The manager shows Current directory, not saved, no instances, and Create a workspace from this directory. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J05.intro",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "jackin --scenario first-use --color truecolor --motion reduced at 120x40",
+      "return_path": "Enter after the intro guard skips into the manager; Ctrl+Q exits 0"
     },
     {
       "case_id": "J05.intro.intro",
       "owner_task": "J05.intro",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "intro_guard starts at 3 in src/bin/jackin/app.rs and decrements on ticks. While intro_guard > 0 and motion is not Paused, sequence_key consumes Enter and Esc. Enter queued for that first poll, while intro_guard is still 3, leaves Knock, knock, operator. on screen. After the guard, Enter calls IntroState::skip. For Motion::Reduced, skip in src/bin/jackin/rain.rs sets tick to REDUCED_HOLD (45), the phase becomes Done, and finish_intro enters the manager. The manager is Current directory with not saved and no instances, and it appears inside the reduced hold rather than after it. The checkpoints are that phrase, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40) and before Enter. render_intro draws CAPTION, the pill, and hint Enter Continue. Ctrl+C after the guard calls release_entry and sets quit. The process exits 0, and Current directory, Resolving launch identity, and the-architect stay absent. --scenario returning uses populated in src/bin/jackin/domain/fixtures.rs, so request_entry returns JoinActive and start enters the manager. That screen shows the-architect and 2 running, and Knock, knock, operator. is absent. skip_animation in src/bin/jackin/app.rs replays Enter only when click_skips_animation is set. This leaf does not click.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j05_intro/j05_intro_intro_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j05_intro/j05_intro_intro_narrow.tui.json"
+      ],
       "scenario": [
         "first-use",
         "returning"
       ],
-      "action_sequence": "Enter through each implemented intro path and exercise skip, guard, and abort.",
-      "expected_results": "Abort does not open the cockpit as a successful join. Skip reaches the documented next route.",
-      "forbidden_effects": "Skip bypasses a guard the source still enforces.",
+      "action_sequence": "Press Enter while the intro guard still consumes it. Shoot the phrase at 120×40, resize to 80×24, shoot it, resize back, then Enter into the manager. Ctrl+C after the guard aborts. Launch --scenario returning.",
+      "expected_results": "The phrase stays through the guard and through both checkpoints. Enter after the guard reaches the empty manager. Ctrl+C exits 0 without the manager or the cockpit. Returning joins the manager and does not show the first-use phrase.",
+      "forbidden_effects": "Enter during the guard skips the intro. Ctrl+C opens the manager or the cockpit. Returning presents the empty-discovery intro.",
       "checkpoint_ids": [
         "J05.intro.intro.120x40",
         "J05.intro.intro.narrow"
@@ -42,21 +45,97 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "first-use",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "111725b237debc4d762a9b7f932597f47fff09becfd6ed31e0d3c1bff93e6625",
+        "expect_baseline": "missing",
+        "precondition": "J05.intro.intro.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "first-use",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "34106fc9b615058247e8b81a2df98615c0f08142709f83e668a36314de5a956a",
+        "expect_baseline": "missing",
+        "precondition": "J05.intro.intro.narrow"
+      }
     },
     {
       "case_id": "J05.intro.scenario.first-use",
       "owner_task": "J05.intro",
       "application": "jackin",
       "kind": "scenario",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The first-use journey launches jackin --scenario first-use --color truecolor --motion reduced. world_for(FirstUse) in src/bin/jackin/domain/fixtures.rs is the empty discovery path from base_world, so the intro shows Knock, knock, operator. and does not show returning identities from populated: the-architect, 7f3a, infra-control-plane, or 2 running. After the guard, Enter skips through IntroState::skip and finish_intro in src/bin/jackin/app.rs into the empty manager: not saved, no instances, and Create a workspace from this directory. Those returning identities stay absent. The test does not assert them as present.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [],
       "scenario": "first-use",
-      "action_sequence": "Launch the application with scenario first-use and exercise the surface owned by J05.intro.",
+      "action_sequence": "Launch the application with scenario first-use and exercise the intro owned by J05.intro.",
       "expected_results": "The visible fixture data belongs to first-use.",
       "forbidden_effects": "The journey asserts a different scenario's identities."
     }
