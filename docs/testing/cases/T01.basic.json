@@ -6,65 +6,177 @@
       "owner_task": "T01.basic",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro opens on Connections with no --page flag. A click on Production in the tree, then e, opens a card titled Edit connection with Basic selected. The drawn fields include Name, Host, Port, Database, and Username. Cancel drops the form. The detail still shows Production and prod-db-1.acme.io:5432. The footer still shows Fix the highlighted fields from the rejected submit.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "89263a012c376b8d5edc17a46678762e1a381977",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_basic/t01_basic_fields_120x40.tui.json"
+      ],
       "route": "T01.basic",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch tablepro with no --page; click Production in the tree; press e",
+      "return_path": "click Cancel; the detail shows Production and prod-db-1.acme.io:5432",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "340c99bb0ecc0e2de53f12f4acf84ee9bff3de142fd568b9bf3a388c97bf63f7",
+        "expect_baseline": "missing",
+        "precondition": "T01.basic.fields.120x40"
+      }
     },
     {
       "case_id": "T01.basic.fields",
       "owner_task": "T01.basic",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "On Production, a blank name and a one-space name both draw Required under Name and leave port 5432. The space keeps the caret column of the one-character name. Ports 65536, abc, and 0 draw Port must… (U+2026). The validator in connections.rs returns Port must be 1–65535; reveal::fit clips that string in the port column at 120×40. Submit sets the status Fix the highlighted fields, leaves Edit connection open, and leaves Production in the tree. Connection saved is absent. The 120×40 checkpoint is that frame with a blank name, port 0, both drawn errors, host prod-db-1.acme.io, database acme_prod, and username acme_ops.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "89263a012c376b8d5edc17a46678762e1a381977",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_basic/t01_basic_fields_120x40.tui.json"
+      ],
       "scenario": null,
-      "action_sequence": "Create a connection. Enter a blank name, a whitespace name, an invalid port, and the implemented valid boundaries. Save.",
-      "expected_results": "The saved record shows the exact valid name, host, port, engine, environment, group, and safe mode.",
-      "forbidden_effects": "An invalid Save replaces the original connection.",
+      "action_sequence": "Open Edit on Production. Submit a blank name, a one-space name, and ports 65536, abc, and 0. Submit again with a blank name and port 0. Capture that frame before leaving the form.",
+      "expected_results": "The blank and whitespace names draw Required. The invalid ports draw Port must… and the status Fix the highlighted fields. The form stays open and the tree still shows Production.",
+      "forbidden_effects": "Connection saved appears, or the tree replaces Production with the rejected name.",
       "checkpoint_ids": [
-        "T01.basic.fields.120x40",
-        "T01.basic.fields.narrow"
+        "T01.basic.fields.120x40"
       ],
       "terminal_columns": 120,
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "340c99bb0ecc0e2de53f12f4acf84ee9bff3de142fd568b9bf3a388c97bf63f7",
+        "expect_baseline": "missing",
+        "precondition": "T01.basic.fields.120x40"
+      }
     },
     {
       "case_id": "T01.basic.reopen",
       "owner_task": "T01.basic",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Cancel closes the form. Pressing e opens Edit connection on Production again. Name is Production, host is prod-db-1.acme.io, and port is 5432. Database is acme_prod and username is acme_ops. The blank name and port 0 are gone. Connection saved is absent. The footer still shows Fix the highlighted fields.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "89263a012c376b8d5edc17a46678762e1a381977",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_basic/t01_basic_reopen_120x40.tui.json"
+      ],
       "scenario": null,
-      "action_sequence": "Reopen the saved connection.",
-      "expected_results": "Every basic field matches the saved value.",
-      "forbidden_effects": "Reopen shows a default that was not saved.",
+      "action_sequence": "Cancel the rejected edit, then press e on the same connection.",
+      "expected_results": "Name, Host, and Port show Production, prod-db-1.acme.io, and 5432.",
+      "forbidden_effects": "Connection saved appears, or the reopened form shows the rejected name or port.",
       "checkpoint_ids": [
-        "T01.basic.reopen.120x40",
-        "T01.basic.reopen.narrow"
+        "T01.basic.reopen.120x40"
       ],
       "terminal_columns": 120,
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7b143db45a459f43625142f383a70295238bbd96da6b1f897fe8f802026a9924",
+        "expect_baseline": "missing",
+        "precondition": "T01.basic.reopen.120x40"
+      }
     }
   ]
 }
