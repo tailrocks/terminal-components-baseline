@@ -1704,5 +1704,347 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.helpkeys.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/opt_quitleave_ctrl_c",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_ctrl_c.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/opt_quitleave_ctrl_q",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_ctrl_q.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/opt_quitleave_esc_quits",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_esc_quits.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/opt_quitleave_letter",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_letter.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/opt_quitleave_save",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_save.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/opt_quitleave_stakes",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_stakes.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_leave_after",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_leave_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_leave_before",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_leave_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_options",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_playground",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_route",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_specimen_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_states",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_quitleave/sc_quitleave_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.quitleave.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/opt_focusnavigation_nav",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/opt_focusnavigation_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/opt_focusnavigation_tab_in_field",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/opt_focusnavigation_tab_in_field.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_ring_after",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_ring_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_ring_before",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_ring_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_route",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.focusnavigation.",
+    "replacement_id": null
   }
 ]
