@@ -13224,5 +13224,257 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.queryworkbench.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/opt_connections_form_width",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_form_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/opt_connections_group_by",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_group_by.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/opt_connections_list",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_list.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/opt_connections_list_width",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_list_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/opt_connections_meta",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_meta.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/opt_connections_state",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_state.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_connections_after",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_connections_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_connections_before",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_connections_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_options",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_playground",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_route",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_specimen_busy",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_busy.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_specimen_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_states",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_connections/sc_connections_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.connections.",
+    "replacement_id": null
   }
 ]
