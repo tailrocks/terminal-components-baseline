@@ -16,12 +16,12 @@ use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
-use super::listdetail::{Action, Event, Frame, Line, ListDetail, ListRow};
 use super::{Cx, Go, Screen};
 use crate::console::backend::Effect;
 use crate::console::domain::doctor::{DoctorCheck, DoctorReport, DoctorState};
 use crate::console::world::{Msg, World, job};
 use crate::ui::text::plural;
+use crate::widgets::list_detail::{Action, Event, Frame, Line, ListDetail, ListRow};
 
 pub const LIST: WidgetId = WidgetId::of("doctor.list");
 pub const DETAIL: WidgetId = WidgetId::of("doctor.detail");

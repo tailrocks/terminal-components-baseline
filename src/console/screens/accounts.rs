@@ -33,7 +33,6 @@ use ratatui::layout::{Position, Rect};
 use ratatui::style::{Modifier, Style};
 
 use super::modals::{BrowserResult, FormDialog, FormField, FormValues, OpFlow};
-use super::rowmenu::RowMenu;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::console::backend::{CheckRow, Effect, FolderProbe, ValidationOutcome, apply_validation};
 use crate::console::domain::account::{
@@ -50,6 +49,7 @@ use crate::ui::context::ContextAnchor;
 use crate::ui::text::plural;
 use crate::ui::text::thousands;
 use crate::widgets::menu::MenuItem;
+use crate::widgets::row_menu::RowMenu;
 
 pub const TREE: WidgetId = WidgetId::of("accounts.tree");
 pub const INSPECTOR: WidgetId = WidgetId::of("accounts.inspector");
@@ -2654,7 +2654,7 @@ impl Page<Jackin> for AccountsScreen {
 
     fn hints(&self, focus: Option<WidgetId>, w: &World) -> Vec<Hint> {
         if self.menu.is_open() {
-            return super::rowmenu::hints();
+            return crate::widgets::row_menu::hints();
         }
         if focus == Some(INSPECTOR) {
             return vec![

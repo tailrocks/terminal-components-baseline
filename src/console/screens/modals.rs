@@ -26,26 +26,6 @@ use crate::widgets::button::Button;
 use crate::widgets::dialog::Dialog;
 use crate::widgets::props::Prop;
 
-#[allow(clippy::too_many_arguments)]
-pub fn modal_frame(
-    screen: Rect,
-    buf: &mut Buffer,
-    ctx: &mut RenderCtx,
-    width_: u16,
-    height: u16,
-    title: &str,
-    meta: Option<&str>,
-
-    dismiss: crate::ui::popup::Dismiss,
-) -> (Rect, Rect) {
-    crate::ui::modal::Frame::new(width_, height)
-        .title(title)
-        .meta(meta)
-        .placement(crate::ui::popup::Placement::Center)
-        .dismiss(dismiss)
-        .render(screen, buf, ctx)
-}
-
 pub fn unsaved_dialog(id: WidgetId, changes: usize) -> Dialog {
     Dialog::confirm(
         id,

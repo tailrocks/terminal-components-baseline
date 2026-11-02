@@ -29,7 +29,6 @@ use ratatui::style::{Modifier, Style};
 use super::modals::{
     BrowserResult, ChoiceDialog, FieldKindW, FieldValue, FormDialog, FormField, FormValues, OpFlow,
 };
-use super::rowmenu::RowMenu;
 use super::{Cx, LayerTag, ModalResult};
 use crate::console::domain::agent::AuthMode;
 use crate::console::domain::onepassword::OpReference;
@@ -40,6 +39,7 @@ use crate::console::domain::workspace::{
 use crate::console::world::{GlobalConfig, World};
 use crate::ui::context::ContextAnchor;
 use crate::widgets::menu::MenuItem;
+use crate::widgets::row_menu::RowMenu;
 use ratatui::crossterm::event::KeyModifiers;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

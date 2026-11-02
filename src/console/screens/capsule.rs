@@ -36,7 +36,7 @@ use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
 use ratatui::style::Style;
 
-use super::modals::{ChoiceDialog, InfoDialog, InfoResult, modal_frame};
+use super::modals::{ChoiceDialog, InfoDialog, InfoResult};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::console::domain::account::AccountId;
 use crate::console::domain::agent::Agent;
@@ -48,6 +48,7 @@ use crate::console::panes::{
 use crate::console::world::{Msg, World};
 use crate::core::scroll::Scrollable;
 use crate::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
+use crate::ui::modal::modal_frame;
 use crate::ui::text::plural;
 
 pub const STRIP: WidgetId = WidgetId::of("capsule.strip");
@@ -544,11 +545,11 @@ impl CapsuleScreen {
             .daemon(w)
             .map(|d| d.workspace.clone())
             .unwrap_or_default();
-        let d = super::inspect::InspectChanges::new(
+        let d = crate::widgets::inspect_changes::InspectChanges::new(
             WidgetId::of("capsule.inspect"),
             &format!("Inspect changes · {ws}"),
             changes,
-            super::inspect::InspectMode::Compact,
+            crate::widgets::inspect_changes::InspectMode::Compact,
         )
         .returns_to_exit(from_exit);
         cx.open(d, LayerTag::new("inspect"));

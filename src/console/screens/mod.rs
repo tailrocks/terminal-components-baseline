@@ -4,14 +4,11 @@ pub mod cockpit;
 pub mod config;
 pub mod doctor;
 pub mod editor;
-pub mod inspect;
-pub mod listdetail;
 pub mod manager;
 pub mod modals;
 pub mod prelude;
 pub mod role_editor;
 pub mod roles;
-pub mod rowmenu;
 pub mod settings;
 pub mod usage;
 
@@ -81,6 +78,19 @@ impl From<LayerResult> for ModalResult {
             LayerResult::Help => ModalResult::Help,
             LayerResult::File(r) => ModalResult::Browser(r),
         }
+    }
+}
+
+impl From<crate::widgets::inspect_changes::InspectOutcome> for ModalResult {
+    fn from(o: crate::widgets::inspect_changes::InspectOutcome) -> Self {
+        use crate::widgets::inspect_changes::InspectOutcome;
+        ModalResult::Custom(
+            match o {
+                InspectOutcome::Back => "back",
+                InspectOutcome::Close => "close",
+            }
+            .into(),
+        )
     }
 }
 

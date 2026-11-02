@@ -16,35 +16,7 @@ use crate::console::panes::SessionScript;
 use crate::console::world::{Msg, World};
 
 pub use crate::widgets::diff::{DiffFile as ChangedFile, DiffHunk as Hunk, DiffLine, DiffStatus};
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ChangeSet {
-    pub files: Vec<ChangedFile>,
-
-    pub unpushed: usize,
-}
-
-impl ChangeSet {
-    pub fn additions(&self) -> usize {
-        self.files.iter().map(|f| f.additions()).sum()
-    }
-    pub fn deletions(&self) -> usize {
-        self.files.iter().map(|f| f.deletions()).sum()
-    }
-    pub fn is_empty(&self) -> bool {
-        self.files.is_empty() && self.unpushed == 0
-    }
-
-    pub fn summary(&self) -> String {
-        let n = self.files.len();
-        format!(
-            "{n} file{} · +{} −{}",
-            if n == 1 { "" } else { "s" },
-            self.additions(),
-            self.deletions()
-        )
-    }
-}
+pub use crate::widgets::inspect_changes::ChangeSet;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ValidationOutcome {

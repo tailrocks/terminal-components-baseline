@@ -391,3 +391,23 @@ impl<'a> Frame<'a> {
         (area, area.inner(self.margin))
     }
 }
+
+#[allow(clippy::too_many_arguments)]
+pub fn modal_frame(
+    screen: Rect,
+    buf: &mut Buffer,
+    ctx: &mut RenderCtx,
+    width_: u16,
+    height: u16,
+    title: &str,
+    meta: Option<&str>,
+
+    dismiss: Dismiss,
+) -> (Rect, Rect) {
+    Frame::new(width_, height)
+        .title(title)
+        .meta(meta)
+        .placement(Placement::Center)
+        .dismiss(dismiss)
+        .render(screen, buf, ctx)
+}

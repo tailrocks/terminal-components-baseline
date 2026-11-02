@@ -33,7 +33,6 @@ use ratatui::layout::{Position, Rect};
 use ratatui::style::{Modifier, Style};
 
 use super::modals::{InfoDialog, InfoResult};
-use super::rowmenu::RowMenu;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::console::backend::Effect;
 use crate::console::domain::agent::Agent;
@@ -44,6 +43,7 @@ use crate::console::world::{DaemonHealth, Health, Msg, World, job};
 use crate::ui::context::ContextAnchor;
 use crate::ui::text::plural;
 use crate::widgets::menu::MenuItem;
+use crate::widgets::row_menu::RowMenu;
 
 pub const TREE: WidgetId = WidgetId::of("manager.tree");
 pub const DETAIL: WidgetId = WidgetId::of("manager.detail");
@@ -2482,7 +2482,7 @@ impl Page<Jackin> for ManagerScreen {
 
     fn hints(&self, focus: Option<WidgetId>, w: &World) -> Vec<Hint> {
         if self.menu.is_open() {
-            return super::rowmenu::hints();
+            return crate::widgets::row_menu::hints();
         }
         let mut v = vec![];
         if focus == Some(DETAIL) {

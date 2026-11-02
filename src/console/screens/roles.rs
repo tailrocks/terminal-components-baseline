@@ -24,7 +24,6 @@ use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
-use super::listdetail::{Action, Event, Frame, Line, ListDetail, ListRow};
 use super::modals::FormDialog;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::console::backend::Effect;
@@ -35,6 +34,7 @@ use crate::console::domain::role::{RoleCheckState, RoleRecord};
 use crate::console::domain::workspace::{RoleName, RoleSource, usability_of};
 use crate::console::world::{Msg, World, job};
 use crate::ui::text::plural;
+use crate::widgets::list_detail::{Action, Event, Frame, Line, ListDetail, ListRow};
 
 pub const LIST: WidgetId = WidgetId::of("roles.list");
 pub const DETAIL: WidgetId = WidgetId::of("roles.detail");

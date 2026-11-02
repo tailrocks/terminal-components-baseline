@@ -2255,7 +2255,7 @@ impl Page<Jackin> for EditorScreen {
             return vec![hint("", "Saving…")];
         }
         if self.cfg.menu_open() {
-            return super::rowmenu::hints();
+            return crate::widgets::row_menu::hints();
         }
         let mut v = vec![];
         if focus == Some(TABS) {

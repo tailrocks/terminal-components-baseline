@@ -19,13 +19,46 @@ use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
 use ratatui::style::{Modifier, Style};
 
-use super::ModalResult;
-use super::modals::modal_frame;
-use crate::console::backend::{ChangeSet, ChangedFile, DiffStatus};
-use crate::console::world::World;
 use crate::core::scroll::Scrollable;
 use crate::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
+use crate::ui::modal::modal_frame;
 use crate::ui::popup::Dismiss;
+use crate::widgets::diff::{DiffFile as ChangedFile, DiffStatus};
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ChangeSet {
+    pub files: Vec<ChangedFile>,
+
+    pub unpushed: usize,
+}
+
+impl ChangeSet {
+    pub fn additions(&self) -> usize {
+        self.files.iter().map(|f| f.additions()).sum()
+    }
+    pub fn deletions(&self) -> usize {
+        self.files.iter().map(|f| f.deletions()).sum()
+    }
+    pub fn is_empty(&self) -> bool {
+        self.files.is_empty() && self.unpushed == 0
+    }
+
+    pub fn summary(&self) -> String {
+        let n = self.files.len();
+        format!(
+            "{n} file{} · +{} −{}",
+            if n == 1 { "" } else { "s" },
+            self.additions(),
+            self.deletions()
+        )
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InspectOutcome {
+    Close,
+    Back,
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum InspectMode {
@@ -79,7 +112,7 @@ pub struct InspectChanges {
     stacked: bool,
 
     returns_to_exit: bool,
-    result: Option<ModalResult>,
+    result: Option<InspectOutcome>,
     pub area: Rect,
 }
 
@@ -167,14 +200,11 @@ impl InspectChanges {
     }
 
     fn leave(&mut self) -> Outcome {
-        self.result = Some(ModalResult::Custom(
-            if self.returns_to_exit {
-                "back"
-            } else {
-                "close"
-            }
-            .into(),
-        ));
+        self.result = Some(if self.returns_to_exit {
+            InspectOutcome::Back
+        } else {
+            InspectOutcome::Close
+        });
         Outcome::Changed
     }
 
@@ -605,7 +635,7 @@ impl InspectChanges {
     }
 }
 
-impl Layer<ModalResult, World> for InspectChanges {
+impl<R: From<InspectOutcome> + 'static, W: 'static> Layer<R, W> for InspectChanges {
     fn animating(&self) -> bool {
         true
     }
@@ -614,10 +644,10 @@ impl Layer<ModalResult, World> for InspectChanges {
     }
 
     fn on_dismiss(&mut self, _: DismissReason) {
-        self.result = Some(ModalResult::Custom("close".into()));
+        self.result = Some(InspectOutcome::Close);
     }
 
-    fn on_key(&mut self, key: &Key, cx: &mut LayerCx<'_, World>) -> Outcome {
+    fn on_key(&mut self, key: &Key, cx: &mut LayerCx<'_, W>) -> Outcome {
         let focus = &mut *cx.focus;
         match key.code {
             KeyCode::Char('v') if key.plain() => {
@@ -636,7 +666,7 @@ impl Layer<ModalResult, World> for InspectChanges {
         }
     }
 
-    fn pointer(&mut self, ev: &PointerEvent, cx: &mut LayerCx<'_, World>) -> Outcome {
+    fn pointer(&mut self, ev: &PointerEvent, cx: &mut LayerCx<'_, W>) -> Outcome {
         let focus = &mut *cx.focus;
         let (id, pos) = (ev.id, ev.pos());
         if let Some((axis, delta)) = ev.wheel() {
@@ -702,7 +732,7 @@ impl Layer<ModalResult, World> for InspectChanges {
         Outcome::Consumed
     }
 
-    fn render(&mut self, screen: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, _w: &World) {
+    fn render(&mut self, screen: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, _w: &W) {
         let w = (screen.width * 9 / 10).max(MIN_W.min(screen.width.saturating_sub(2)));
         let h = (screen.height * 9 / 10).max(MIN_H.min(screen.height.saturating_sub(2)));
         let meta = match self.mode {
@@ -710,7 +740,7 @@ impl Layer<ModalResult, World> for InspectChanges {
             InspectMode::Compact => "m advanced view".to_owned(),
             InspectMode::Advanced => "Tab tree / diff".to_owned(),
         };
-        let dismiss = Layer::spec(self).dismiss;
+        let dismiss = Layer::<R, W>::spec(self).dismiss;
         let (area, inner) = modal_frame(screen, buf, ctx, w, h, &self.title, Some(&meta), dismiss);
         self.area = area;
         let bg = ctx.theme.surface_elevated;
@@ -720,8 +750,8 @@ impl Layer<ModalResult, World> for InspectChanges {
         }
     }
 
-    fn take_result(&mut self) -> Option<LayerOut<ModalResult>> {
-        self.result.take().map(LayerOut::Close)
+    fn take_result(&mut self) -> Option<LayerOut<R>> {
+        self.result.take().map(|o| LayerOut::Close(R::from(o)))
     }
 
     fn hints(&self, _: Option<WidgetId>) -> Vec<Hint> {
