@@ -118,7 +118,13 @@ fn connect_development(app: &App) {
     app.click(list_row(app, "Development"));
     app.wait_text("dev-db.internal.acme.io");
     click_connect(app);
-    app.wait_text(QUERY);
+    // Query 1 is drawn during "Loading schema…", before the connected status.
+    app.wait_screen("development connected", |screen| {
+        let visible = text(screen);
+        visible.contains(QUERY)
+            && visible.contains("Connected to Development")
+            && !visible.contains("Loading schema")
+    });
 }
 
 fn open_organizations(app: &App) {
