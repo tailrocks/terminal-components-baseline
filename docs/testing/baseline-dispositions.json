@@ -6204,5 +6204,284 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/opt_sidebars_badges",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_badges.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/opt_sidebars_collapsed",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/opt_sidebars_collapsed_rail",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed_rail.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/opt_sidebars_collapsed_width",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/opt_sidebars_hidden",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_hidden.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/opt_sidebars_keys",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/opt_sidebars_rail_label",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_rail_label.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/opt_sidebars_width",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_options",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_playground",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_route",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_sidebar_after",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_sidebar_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_sidebar_before",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_sidebar_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_focused_hover",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_states",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_sidebars/sc_sidebars_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
+    "replacement_id": null
   }
 ]
