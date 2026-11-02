@@ -6,29 +6,32 @@
       "owner_task": "J01.purge",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40 opens the manager. Down, Right, Down focuses jk-7f3a after payments-platform is expanded. Infra is expanded so 9b02 is listed, then focus returns to 7f3a. p opens the dialog from manager.rs purge. The title is Purge instance 7f3a? and the ack token is the short id. dialog.rs armed stays false for 9b02, the field paints Does not match, and the instance is not purged. Esc cancels. The status is Cancelled · nothing changed. 7f3a and 9b02 stay listed and the panel still says 2 running. finish() sends Ctrl+Q and exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "29d2e084cb7c7a294e9b8f72503e8aee4af2856c",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J01.purge",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch jackin --scenario returning --color truecolor --motion reduced at 120x40; Down, Right, Down to 7f3a; p",
+      "return_path": "Esc cancels the purge dialog back to the manager; Ctrl+Q exits 0"
     },
     {
       "case_id": "J01.purge.purge",
       "owner_task": "J01.purge",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The same path opens manager.rs purge for jk-7f3a. A partial token 7f3 is not dialog.rs armed, paints Does not match, and does not purge. A wrong token 9b02 does the same. The checkpoints are that open dialog, at 120×40 and then at 80×24, before the exact token is submitted. The exact token 7f3a arms the dialog. Confirm schedules Msg::Purged. The status is Purged 7f3a · container, sidecar, volume and recovery state removed. hidden() drops that row. 9b02 stays and the panel says 1 running. No other instance is removed.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "29d2e084cb7c7a294e9b8f72503e8aee4af2856c",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.json"
+      ],
       "scenario": null,
-      "action_sequence": "Enter a wrong token and then the exact token.",
+      "action_sequence": "Enter a partial token, then a wrong token, then the exact token.",
       "expected_results": "The wrong token does not purge. The exact token purges that instance only.",
       "forbidden_effects": "A partial token purges.",
       "checkpoint_ids": [
@@ -39,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1e50f2e215819b6801ab47578f0a5e372214c50929cbfd1d95e097dc7699d2ff",
+        "expect_baseline": "missing",
+        "precondition": "J01.purge.purge.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "dd589b6f188d4e8af4daa4973741229736babdae8484a6db83f2f9d1360a40e2",
+        "expect_baseline": "missing",
+        "precondition": "J01.purge.purge.narrow"
+      }
     }
   ]
 }
