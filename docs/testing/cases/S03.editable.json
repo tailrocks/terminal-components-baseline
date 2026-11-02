@@ -2136,7 +2136,7 @@
         "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_cells.tui.json"
       ],
       "route": "editable",
-      "action_sequence": "Focus the first task cell, press Enter, type Q, and capture the screen before commit or cancel.",
+      "action_sequence": "Focus the first task cell, press Enter, type Q, redraw after the click flash, and capture the open edit before commit or cancel.",
       "expected_results": "The task cell shows the typed Q, the footer says Enter Apply and Esc Cancel, and the edit count stays 0.",
       "forbidden_effects": "The status says Cell saved or Edit cancelled, or the meta shows 1 edits.",
       "checkpoint_ids": [
@@ -2178,7 +2178,7 @@
           "HOLLA_NO_HISTORY": "1"
         },
         "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
-        "candidate_sha256": "2a1ad01a484a84296f54395ab52f677620bf3d1406b2afc065e9704a61b68d6d",
+        "candidate_sha256": "714f27671a3d6c3978cac46bca421d39c4f5565fb5905c9144f4cff4715bc43f",
         "expect_baseline": "missing",
         "precondition": "the task cell shows the typed Q while the edit is still open"
       }
