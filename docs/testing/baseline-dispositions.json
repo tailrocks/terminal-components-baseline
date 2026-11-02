@@ -15600,5 +15600,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged holla reference executable at fffe002 for H01.finder.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h01_scope/h01_scope_scope_120x40",
+    "path": "tests/functional/baselines/pre_refactor/h01_scope/h01_scope_scope_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H01.scope.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h01_scope/h01_scope_scope_narrow",
+    "path": "tests/functional/baselines/pre_refactor/h01_scope/h01_scope_scope_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H01.scope.",
+    "replacement_id": null
   }
 ]
