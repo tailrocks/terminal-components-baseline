@@ -6,27 +6,30 @@
       "owner_task": "H06.quit",
       "application": "holla",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-platforms --color truecolor --motion reduced at 120×40 with HOLLA_NO_HISTORY=1 and JUNIE_TUI_CLIENT_PLATFORM=macos opens the finder. The shell paints ~/work/mac and mbp. Quit holla❯?, postgresql@17, and ~/work/box stay absent. Paste Homebrew services and Enter. The page paints redis started and does not paint postgresql@17. Paste Open btm and Enter. The monitor paints q quits the monitor. Ctrl+Q opens the quit guard. src/bin/holla/app.rs open_quit_confirm uses the local title Quit holla❯? when world.host.remote is false, and the body says still running. Quitting stops what holla started. The confirm button is Stop and quit and the focused cancel is ▎Stay. Leave when it settles is absent. Enter on Stay returns to the monitor and the process is still running. s paints terminated (SIGTERM) and the process is still running. finish() sends Ctrl+Q and exits 0. src/bin/holla/domain/parity.rs platforms_mac paints ~/work/mac and a started redis service.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "7571cc1692bf9a98fe80577d79ccd9e1834040ca",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "H06.quit",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch holla --scenario parity-platforms --color truecolor --motion reduced at 120x40; paste Open btm; Enter; Ctrl+Q",
+      "return_path": "Enter on Stay returns to the monitor; s stops it; Ctrl+Q exits 0"
     },
     {
       "case_id": "H06.quit.quit",
       "owner_task": "H06.quit",
       "application": "holla",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "parity-platforms starts a cleanup with no live activity. Ctrl+Q while that job is running paints the local title Quit holla❯? and the cleanup sentence from src/bin/holla/app.rs open_quit_confirm, using the {k} of {t} the screen paints. The confirm button is Leave when it settles and the focused cancel is ▎Stay. Stop and quit, postgresql@17, and redis stay absent. Confirming Leave paints leaving when the cleanup settles · its report and log land first from on_layer_result while the process is still running, and the dialog is gone. A second Ctrl+Q paints Already stopping · the shell leaves when every process is gone from request_quit while the process is still running, then the shell exits 0. A separate launch opens Open btm and Ctrl+Q. The body contains still running. Quitting stops what holla started and the button is Stop and quit. Confirming paints stopping and quitting when every process is gone while the process is still running, then the shell exits 0. A third launch leaves btm running, starts a cleanup, and Ctrl+Q paints still running and a cleanup is at {k} of {t} items with Stop and quit. Esc returns to the page and the process stays running. alt+1 and s stop btm, alt+0 reaches Cleanup report, and finish() exits 0. The 120×40 shot and the 80×24 shot are the open cleanup dialog, before Stay, after the report page has painted 1 of 4 items and Ctrl+Q has frozen the body at A cleanup is running (1 of 4 items). The dialog shows ▎Stay and Leave when it settles over Cleanup report and ~/work/mac. The narrow shot is taken before the terminal returns to 120×40. parity-platforms-linux paints ~/work/box and devbox. src/bin/holla/domain/parity.rs platforms_linux sets host.remote to false after linux(), so the title stays Quit holla❯? and does not paint Quit holla❯ on. Homebrew services paints postgresql@17 stopped and does not paint redis. Open btm and Ctrl+Q paint Stop and quit and the activity body, with redis, ~/work/mac, and Leave when it settles absent. Esc returns to the monitor and the process stays running. s paints terminated (SIGTERM). finish() exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "7571cc1692bf9a98fe80577d79ccd9e1834040ca",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h06_quit/h06_quit_quit_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h06_quit/h06_quit_quit_narrow.tui.json"
+      ],
       "scenario": [
         "parity-platforms",
         "parity-platforms-linux"
@@ -42,7 +45,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-platforms",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a8558037069657c5efca13b044350bf76a49512e582b9ebfbba386639c3604f6",
+        "expect_baseline": "missing",
+        "precondition": "H06.quit.quit.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-platforms",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "71a24d2f3e90df3b216ef4c4aa8d667dd8d918b39a825ccf7630dba01d47e4c8",
+        "expect_baseline": "missing",
+        "precondition": "H06.quit.quit.narrow"
+      }
     }
   ]
 }
