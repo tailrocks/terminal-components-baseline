@@ -6,27 +6,30 @@
       "owner_task": "H06.log",
       "application": "holla",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-idea --color truecolor --motion reduced at 120×40 with HOLLA_NO_HISTORY=1 opens the finder. The shell paints ~/work/ide and mbp. Paste Clean IntelliJ metadata under ~/work/ide, the label of catalog id idea.clean, which launches Launch::Cleanup { category: Some(\"idea.clean\") }. Enter opens Cleanup · IntelliJ metadata. d opens gate 1 of 2 with focus on Cancel and Continue…. Right and Enter open the dialog whose title ends with gate 2 of 2. The painted phrase is TRASH 4 UNDER /Users/alex/work/ide ON mbp. TRASH 0 and Enter paints Does not match. ctrl+u clears the field, the phrase and Enter leave a status that contains cleanup started, and the run then reaches log write failures. Esc returns to the finder. Esc clears the query to Search actions. Paste Show cleanup history and Enter opens Cleanup history, the disk-history snapshot. Esc returns to the finder, which shows Show cleanup history and ~/work/ide. Cleanup history, Log failure, and Quit holla are gone. finish() sends Ctrl+Q and exits 0. ~/Projects/safe, sparse.img, build.gradle.kts, and 842 of 926 stay absent.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "e6b4297e90332a7dbdff1bf12b6a0d301030f158",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "H06.log",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch holla --scenario parity-idea --color truecolor --motion reduced at 120x40; paste Clean IntelliJ metadata under ~/work/ide; Enter; pass both gates; Esc; Esc; paste Show cleanup history; Enter",
+      "return_path": "Esc returns to the finder; Ctrl+Q exits 0"
     },
     {
       "case_id": "H06.log.log",
       "owner_task": "H06.log",
       "application": "holla",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "parity-idea sets ops_log.write_failure to EROFS, and OpsLog::append stores no line. After one report exists, Show cleanup history opens Cleanup history. The fact labeled Log failure paints EROFS · deletions still ran · nothing rolled back. The entries fact is 0 · 0 operation log records. The operation log · newest last section is absent. The page has no dated history row and no JSON outcome field. Report 1 · 4 trashed · 4 log write failures is the report follow-up, and the history table has no trashed or removed row. ~/work/ide is the status-bar path. The 120×40 shot is that page with the log failure visible. The 80×24 shot is the same page before the terminal returns to 120×40. Esc leaves the page. Opening Show cleanup history again still shows the log failure, 0 · 0 operation log records, and no stored row. ~/Projects/safe, sparse.img, build.gradle.kts, and 842 of 926 stay absent.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "e6b4297e90332a7dbdff1bf12b6a0d301030f158",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h06_log/h06_log_log_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h06_log/h06_log_log_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Produce an operation log and the fixture's log failure.",
       "expected_results": "The failure text is the log failure. Recovery does not invent entries.",
@@ -39,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-idea",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f5d7d3b5bd65932e89f65ce2c6cae4497b0b748eb8ce96231d1e6aa737328660",
+        "expect_baseline": "missing",
+        "precondition": "H06.log.log.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-idea",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "67cffe0f00d71a4b3f1c59718e9ca8ab47cab952794e2aa5443c5e3c657ae3c6",
+        "expect_baseline": "missing",
+        "precondition": "H06.log.log.narrow"
+      }
     }
   ]
 }
