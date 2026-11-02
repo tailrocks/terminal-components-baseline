@@ -18,11 +18,17 @@ const PORT: &str = "5432";
 const REQUIRED: &str = "Required";
 /// Drawn form of the port validator. The source string is
 /// "Port must be 1–65535"; at 120×40 `reveal::fit` clips the port column to
-/// this prefix plus U+2026.
+/// this prefix plus U+2026. At 80×24 the same clip is `Port mus…`.
 const PORT_ERROR: &str = "Port must…";
+const NARROW_PORT_ERROR: &str = "Port mus…";
 const STATUS: &str = "Fix the highlighted fields";
 const SAVED: &str = "Connection saved";
 const TITLE: &str = "Edit connection";
+const BOUND_PORT: &str = "65535";
+const BOUND_HOST: &str = "prod-db-1.acme.io:65535";
+const ENGINE: &str = "PostgreSQL";
+const ENV_LABEL: &str = "production";
+const SAFE_DESC: &str = "deliberate acknowledgement";
 
 fn visual_id(checkpoint: &str) -> String {
     format!(
@@ -217,6 +223,22 @@ fn submit(app: &App) -> TerminalSnapshot {
     app.settle()
 }
 
+fn wait_size(app: &App, cols: u16, rows: u16) -> TerminalSnapshot {
+    app.resize(cols, rows);
+    app.wait_screen(&format!("size {cols}x{rows}"), |screen| {
+        let visible = text(screen);
+        screen.cols() == u32::from(cols)
+            && screen.rows() == u32::from(rows)
+            && (visible.contains("TablePro")
+                || visible.contains(TITLE)
+                || visible.contains("Filter connections"))
+    })
+}
+
+fn has_token(screen: &TerminalSnapshot, token: &str) -> bool {
+    text(screen).split_whitespace().any(|word| word == token)
+}
+
 fn open_edit(app: &App) {
     app.click(list_row(app, NAME));
     flash_settle(app);
@@ -392,6 +414,30 @@ fn basic_fields_reject_blank_names_and_invalid_ports() {
     assert_eq!((failed.cols(), failed.rows()), (120, 40));
     app.visual(&visual_id("T01.basic.fields.120x40"));
 
+    let fields_narrow = wait_size(&app, 80, 24);
+    assert_eq!((fields_narrow.cols(), fields_narrow.rows()), (80, 24));
+    assert_required(&fields_narrow);
+    assert_eq!(
+        name_value(&fields_narrow),
+        "",
+        "narrow blank name\n{}",
+        text(&fields_narrow)
+    );
+    assert_eq!(
+        port_value(&fields_narrow),
+        "0",
+        "narrow port\n{}",
+        text(&fields_narrow)
+    );
+    see(
+        &fields_narrow,
+        &[TITLE, STATUS, NARROW_PORT_ERROR, HOST],
+        &[SAVED, "65536", "abc"],
+    );
+    app.visual(&visual_id("T01.basic.fields.narrow"));
+    let fields_back = wait_size(&app, 120, 40);
+    assert_eq!((fields_back.cols(), fields_back.rows()), (120, 40));
+
     click_cancel(&app);
     let closed = app.wait_absent(TITLE);
     assert_original_detail(&closed);
@@ -407,8 +453,80 @@ fn basic_fields_reject_blank_names_and_invalid_ports() {
     assert_eq!((reopened.cols(), reopened.rows()), (120, 40));
     app.visual(&visual_id("T01.basic.reopen.120x40"));
 
+    let reopen_narrow = wait_size(&app, 80, 24);
+    assert_eq!((reopen_narrow.cols(), reopen_narrow.rows()), (80, 24));
+    see(&reopen_narrow, &[TITLE, NAME, HOST, PORT], &[SAVED]);
+    assert_eq!(
+        name_value(&reopen_narrow),
+        NAME,
+        "narrow name\n{}",
+        text(&reopen_narrow)
+    );
+    assert_eq!(
+        port_value(&reopen_narrow),
+        PORT,
+        "narrow port\n{}",
+        text(&reopen_narrow)
+    );
+    app.visual(&visual_id("T01.basic.reopen.narrow"));
+    let reopen_back = wait_size(&app, 120, 40);
+    assert_eq!((reopen_back.cols(), reopen_back.rows()), (120, 40));
+
+    app.click(form_hit(&app, PORT));
+    flash_settle(&app);
+    set_port(&app, BOUND_PORT);
+    let saved = submit(&app);
+    see(
+        &saved,
+        &[
+            SAVED,
+            NAME,
+            BOUND_HOST,
+            ENGINE,
+            ENV_LABEL,
+            "Safe Mode",
+            SAFE_DESC,
+            DATABASE,
+            USER,
+        ],
+        &[TITLE, "65536"],
+    );
+    assert!(
+        (0..saved.rows()).any(|row| {
+            let line = row_text(&saved, row);
+            line.contains("Environment") && line.contains(ENV_LABEL)
+        }),
+        "environment label\n{}",
+        text(&saved)
+    );
+    assert!(
+        (0..saved.rows()).any(|row| {
+            let line = row_text(&saved, row);
+            line.contains("Engine") && line.contains(ENGINE)
+        }),
+        "engine label\n{}",
+        text(&saved)
+    );
+    assert!(
+        !text(&saved).contains("abc"),
+        "rejected port abc\n{}",
+        text(&saved)
+    );
+    assert!(!has_token(&saved, "0"), "rejected port 0\n{}", text(&saved));
+    assert!(!has_token(&saved, "65536"));
+    assert!(!has_token(&saved, "abc"));
+
+    app.key("e");
+    let again = app.wait_text(TITLE);
+    assert_eq!(name_value(&again), NAME, "saved name\n{}", text(&again));
+    assert_eq!(
+        port_value(&again),
+        BOUND_PORT,
+        "saved port\n{}",
+        text(&again)
+    );
     click_cancel(&app);
     let back = app.wait_absent(TITLE);
-    assert_original_detail(&back);
+    see(&back, &[NAME, BOUND_HOST, ENGINE], &[TITLE, "65536"]);
     app.finish();
 }
