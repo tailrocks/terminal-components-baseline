@@ -3045,5 +3045,248 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.textareas.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/opt_toolbars_gap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/opt_toolbars_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/opt_toolbars_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/opt_toolbars_skip_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_skip_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/opt_toolbars_wrap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_actions.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_actions.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_focused.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_focused_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_narrow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_pressed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_specimen_selected.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_toolbars/sc_toolbars_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.toolbars.",
+    "replacement_id": null
   }
 ]
