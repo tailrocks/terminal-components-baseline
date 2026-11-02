@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. Space dismisses Stand up, operator only when that line is showing. From the manager, s calls Go::Settings in src/bin/jackin/app.rs. SettingsScreen::enter in src/bin/jackin/screens/settings.rs focuses the tab strip, and the crumb is Settings › global › General. ] once calls set_tab, and TAB_NAMES puts Mounts next, so the crumb is Settings › global › Mounts. global() in src/bin/jackin/domain/fixtures.rs stores host ~/.gitconfig at /home/agent/.gitconfig read-only scope global, host ~/.cache/cargo-registry at /home/agent/.cargo/registry scope global, and read-only host ~/roles/sre-kube at /home/agent/.kube with MountScope::Role(\"sre\"). MountScope::label in src/bin/jackin/domain/workspace.rs paints global or role sre, and mount_rows in src/bin/jackin/screens/config.rs inserts that scope cell when Scope::Global. Esc calls leave in settings.rs. change_count is 0, so Unsaved changes stays closed. No mount form opens, so FormDialog::take_result in src/ui/layers.rs does not run. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "d563dc124db36ca35b20ea9245c0a413242937c9",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J03.mounts",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "The checkpoint is the open New mount form from open_mount_form in src/bin/jackin/screens/config.rs, after Browse chooses ~/src/payments-platform/docs from fixtures.rs and Destination is /home/agent/field-notes, before Save. On the 120×40 form the Scope select shows global, because open_mount_form adds that field when ConfigTabs scope is Global. scope_options index 0 is global, and the test leaves that control alone, so save_mount stores MountScope::Global. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. FormDialog::take_result in src/ui/layers.rs closes on FormAction::Save before save_mount can paint a validation error. The chosen host and destination /home/agent/field-notes still store the row and paint Mount /home/agent/field-notes added · save to apply, and the scope cell is global. Ctrl+S calls open_preview in src/bin/jackin/screens/settings.rs. The dialog title is Save settings. The focused line contains Cancel. Clean up & save… is absent. Confirm Save calls start_save, which schedules GlobalSaved at 900 ms, and the wall clock reaches Settings saved. Reopening Mounts shows /home/agent/field-notes with scope global, plus the original three destinations. Esc returns to the manager. Key e on payments-platform calls Go::Editor in src/bin/jackin/screens/manager.rs. ] opens the workspace Mounts tab from TAB_NAMES in src/bin/jackin/screens/editor.rs. That list still has /workspace/payments-platform and /workspace/libs from fixtures.rs and does not contain /home/agent/field-notes. The crumb stays Workspaces › payments-platform › edit.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "d563dc124db36ca35b20ea9245c0a413242937c9",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j03_mounts/j03_mounts_mounts_120x40.tui.json",
