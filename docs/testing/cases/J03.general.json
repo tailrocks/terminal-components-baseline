@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. From the manager, shell key s is JackinCmd::Settings in src/bin/jackin/app.rs. SettingsScreen::enter in src/bin/jackin/screens/settings.rs focuses the tab strip, and crumb() paints Settings › global › General. global(rich) in src/bin/jackin/domain/fixtures.rs sets coauthor_trailer and dco_signoff, so the checkboxes Add Co-authored-by trailer and Sign off commits (DCO) start checked. change_count is 0, so strip_right does not paint • 1 change. Esc from the tab strip calls leave, which returns to the manager without Dialog::confirm. The manager shows Current directory. Unsaved changes is absent. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8756cf3355906410ccad80d9ae75411077d16aaa",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J03.general",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "Enter from the tab strip focuses the co-author checkbox through body_focus in src/bin/jackin/screens/settings.rs. Space toggles it once. general_dirty and GlobalConfig::change_count in src/bin/jackin/sim/world.rs count that one flag. strip_right paints • 1 change, and render_general paints a warning • beside the changed checkbox. Sign off commits (DCO) stays checked. The checkpoint is that dirty General page, before Esc and before Save. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Neither capture contains Settings saved. Esc from the tab strip calls leave. Dialog::confirm title is Unsaved changes and the body contains 1 change would be lost. Cancel is the focused action. Discard is the danger button. Activating Discard sets the status Discarded 1 change in on_layer_result and returns to the manager. Save is not pressed. Reopening settings shows both commit checkboxes checked and • 1 change absent, so nothing was written.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8756cf3355906410ccad80d9ae75411077d16aaa",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j03_general/j03_general_edit_120x40.tui.json",
