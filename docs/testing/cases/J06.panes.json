@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario capsule-multi --color truecolor --motion reduced at 120×40. start in src/bin/jackin/app.rs matches Scenario::CapsuleMulti and calls Go::Attach for jk-7f3a. populated in src/bin/jackin/domain/fixtures.rs builds the payments-platform daemon: new_tab Claude (pane 1), split Horizontal Codex with new_first false (pane 2, second / right), split Vertical shell with new_first false (pane 3, second / below pane 2), then sets that tab's focused pane back to 1. split_leaf in src/ui/pane_tree.rs keeps the old leaf first when new_first is false. The first tab is Claude on the left and Codex above a shell on the right. boot_all in src/bin/jackin/sim/pty.rs stops each script at Await, so Claude shows Allow edit to src/settlement/config.rs? (y/n) and Claude Code v2.1.14. The Codex script header in that file is OpenAI Codex v0.48. follow in src/widgets/viewport.rs jumps to the tail, so the visible Codex text is the title Codex (Primary) and 12.4k tokens. The shell prompt is payments-platform ❯ with boot text git status -sb and feature/settlement-backoff. Ctrl+B enters prefix mode in CapsuleScreen::on_key in src/bin/jackin/screens/capsule.rs. d calls handle_prefix_cmd, which calls detach. Go::Detach in src/bin/jackin/app.rs returns to the workspace manager and sets Detached · payments-platform keeps running. The permission question is gone. The test does not quit through the outro. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "ff8bc499f898b1ff709f2c2f906722a77ea1e389",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J06.panes",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "The same capsule-multi attach leaves focus on pane 1. Plain characters go through CapsuleScreen::forward_key in src/bin/jackin/screens/capsule.rs to Pane::type_char in src/bin/jackin/sim/pty.rs, and harness paste goes through CapsuleScreen::on_paste, which types those characters into the focused pane and drops CR/LF. Markers are owned by the column of the vertical seam from the Horizontal split, not by a flat substring. The checkpoints are the frame where both Claude markers sit on the Claude prompt, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40), before backspace, and before Enter. The Codex tail still shows 12.4k tokens from the script in src/bin/jackin/sim/pty.rs, because follow in src/widgets/viewport.rs keeps OpenAI Codex v0.48 above the viewport. The shell still shows its boot prompt. Edit src/settlement/config.rs is not visible yet. Backspace clears the Claude buffer, then y and Enter hit AgentProcess::on_input in src/bin/jackin/sim/pty.rs. A trim of y queues Edit src/settlement/config.rs at now+400 ms, the policy line at +900 ms, and Done · 3 files changed at +1500 ms. Reduced motion leaves clock.running true in src/bin/jackin/app.rs, so the real frame loop delivers those lines. Ctrl+B then a direction calls handle_prefix_cmd and move_focus. Codex receives its own type and paste, and Enter echoes Thinking… in that pane. The shell markers are backspaced and pwd returns /workspace/payments-platform in the shell pane only. Skipped. stays absent. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "ff8bc499f898b1ff709f2c2f906722a77ea1e389",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j06_panes/j06_panes_input_120x40.tui.json",
@@ -44,7 +44,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "capsule-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "33aa336b664ce950507d8e197b313554dd36d22558c61a48cd3715de8d87b4bf",
+        "expect_baseline": "missing",
+        "precondition": "J06.panes.input.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "capsule-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c9b287cde84935c44f53ab72aec77b56a3d85963d17a1fe0d13f4f1f3fc83a7e",
+        "expect_baseline": "missing",
+        "precondition": "J06.panes.input.narrow"
+      }
     },
     {
       "case_id": "J06.panes.scenario.capsule-multi",
@@ -54,7 +130,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario capsule-multi --color truecolor --motion reduced shows the populated fixture. world_for in src/bin/jackin/domain/fixtures.rs uses populated for Scenario::CapsuleMulti, and the daemon workspace is payments-platform. The shell boot in src/bin/jackin/sim/pty.rs includes feature/settlement-backoff. Claude Code v2.1.14 is the Claude script header in that file. The Codex script header there is OpenAI Codex v0.48, and follow in src/widgets/viewport.rs leaves the title Codex (Primary) and 12.4k tokens on screen. The test asserts those visible identities and does not assert Launch failed from src/bin/jackin/screens/cockpit.rs, network jackin-net not found from src/bin/jackin/sim/launch.rs, or You were in the Construct from src/bin/jackin/rain.rs.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "ff8bc499f898b1ff709f2c2f906722a77ea1e389",
       "evidence_paths": [],
       "baseline_paths": [],
       "scenario": "capsule-multi",
