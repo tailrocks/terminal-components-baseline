@@ -167,6 +167,33 @@ fn assert_cancel_focused(screen: &TerminalSnapshot) {
     assert!(cancel_focused(screen), "Cancel is not focused\n{visible}");
 }
 
+/// The 140ms press flash stays painted while motion is reduced. A same-size
+/// resize does not force a new frame, so the shot nudges the width and comes
+/// back. Below about 100 columns the header omits the size chip. The nudge
+/// also leaves the hidden terminal cursor on the redraw, instead of on
+/// whichever footer cell the previous diff wrote last.
+fn flash_settle(app: &App) {
+    std::thread::sleep(Duration::from_millis(200));
+    let screen = app.screen();
+    let cols = u16::try_from(screen.cols()).expect("cols");
+    let rows = u16::try_from(screen.rows()).expect("rows");
+    let nudged = cols + 1;
+    app.resize(nudged, rows);
+    if cols >= 100 {
+        app.wait_text(&format!("{nudged}×{rows}"));
+        app.resize(cols, rows);
+        app.wait_text(&format!("{cols}×{rows}"));
+    } else {
+        app.wait_screen("narrow nudge", |screen| {
+            screen.cols() == u32::from(nudged) && screen.rows() == u32::from(rows)
+        });
+        app.resize(cols, rows);
+        app.wait_screen("narrow restored", |screen| {
+            screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows)
+        });
+    }
+}
+
 /// The shot compares the settled frame. It does not resize.
 fn shot(app: &App, checkpoint: &str, cols: u32, rows: u32) {
     let before = app.screen();
@@ -276,6 +303,7 @@ fn tablepro_quit_dirty_cancel_keeps_sql_then_confirms() {
     assert_eq!((opened.cols(), opened.rows()), (120, 40));
     assert_cancel_focused(&opened);
 
+    flash_settle(&app);
     shot(&app, WIDE, 120, 40);
     app.resize(80, 24);
     let narrow = app.wait_screen("quit dialog at 80x24", |screen| {
@@ -283,6 +311,7 @@ fn tablepro_quit_dirty_cancel_keeps_sql_then_confirms() {
     });
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     assert_cancel_focused(&narrow);
+    flash_settle(&app);
     shot(&app, NARROW, 80, 24);
     app.resize(120, 40);
 
