@@ -15492,5 +15492,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T05.viewers.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t05_menus/t05_menus_menus_120x40",
+    "path": "tests/functional/baselines/pre_refactor/t05_menus/t05_menus_menus_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T05.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t05_menus/t05_menus_menus_narrow",
+    "path": "tests/functional/baselines/pre_refactor/t05_menus/t05_menus_menus_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T05.menus.",
+    "replacement_id": null
   }
 ]
