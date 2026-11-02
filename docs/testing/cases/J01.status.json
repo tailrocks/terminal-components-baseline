@@ -6,27 +6,30 @@
       "owner_task": "J01.status",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40 opens the manager. app.rs plays the intro unless frame >= rain::INTRO_END && motion != Reduced, so Space dismisses Stand up when that line is showing and is skipped when Current directory is already up. The tree starts on Current directory with expanded empty. Down, Right expands payments-platform and stays on the workspace, Down selects jk-7f3a, and Down selects jk-c41e. The detail title is c41e · payments-platform. Lifecycle is painted by draw_detail_card in src/bin/jackin/screens/manager.rs as label · description from src/bin/jackin/domain/instance.rs: preserved · dirty · Stopped with uncommitted changes in the Workspace; kept until you decide. The wide tree omits row meta because show_meta requires a row at least 44 columns wide. Left returns to the payments-platform workspace: the Lifecycle heading and the c41e · payments-platform title are gone. instances_of in src/bin/jackin/sim/world.rs keeps rows where !status.hidden(), and hidden() in src/bin/jackin/domain/instance.rs is Superseded and Purged, so jk-77aa and jk-88bb stay out of the list. CleanExited is outside these scenarios: populated(false) in src/bin/jackin/domain/fixtures.rs does not create it, and Returning uses that world. finish() sends Ctrl+Q from the manager and exits 0 through app.rs request_quit.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "b0809b8fded94ce44659c269d6269335352bacf0",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J01.status",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; Space dismisses the intro when Stand up is showing; Down, Right, Down, Down selects c41e",
+      "return_path": "Left returns to the payments-platform workspace; Ctrl+Q exits 0"
     },
     {
       "case_id": "J01.status.status",
       "owner_task": "J01.status",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Scenarios are first-use, returning, and launch-running. first-use is world_for FirstUse in src/bin/jackin/domain/fixtures.rs: after the intro, the manager paints no instances and Current directory, and it does not paint 7f3a. returning uses populated(false). Visible rows, each on its own selection: jk-7f3a Running (payments-platform, the-architect) title 7f3a · payments-platform and Lifecycle running · Container and Capsule daemon are live.; jk-c41e PreservedDirty title c41e · payments-platform and Lifecycle preserved · dirty · Stopped with uncommitted changes in the Workspace; kept until you decide.; jk-9b02 Running title 9b02 · infra-control-plane with the same live sentence, distinguished by the short id; jk-04d7 PreservedUnpushed title 04d7 · infra-control-plane and commits that were never (the line wraps before pushed); jk-a1c0 RestoreAvailable title a1c0 · release-automation and Stopped cleanly; jk-5e5e FailedSetup title 5e5e · release-automation and Launch failed before the Capsule was ready; jk-12ee Crashed title 12ee · customer-portal and stopped unexpectedly. After each move the previous title and the previous unique lifecycle fragment are gone. At 120 columns show_meta in src/bin/jackin/screens/manager.rs is false, so the tree row does not paint the status and the detail Lifecycle line does. At 80 columns MasterDetail collapses, the Lifecycle heading is absent, and the focused row paints the meta, including crashed · exit 137 on 12ee and preserved · dirty on c41e. The quiet checkpoint is c41e selected, before the selection moves: 120×40, then 80×24, then back to 120×40. launch-running does not open on the manager. src/bin/jackin/app.rs sends Go::Launch for workspace Some(1), role the-architect, agent ClaudeCode, plan Clean. Ctrl+C in src/bin/jackin/screens/cockpit.rs on_key pushes instance_record with InstanceStatus::FailedSetup and Go::LaunchFailedAck. src/bin/jackin/sim/world.rs new_instance_id paints jk-b5df. The selected title is b5df · payments-platform and Lifecycle is failed setup · Launch failed before the Capsule was ready; nothing to attach to. The status line is Launch failed with 2 instances still running. Up to c41e restores preserved · dirty and drops that failed-setup description. Up to 7f3a restores the live sentence. instances_of filters !status.hidden(), and hidden() in src/bin/jackin/domain/instance.rs is Superseded and Purged, so jk-77aa and jk-88bb stay absent. CleanExited is outside these scenarios because populated(false) in src/bin/jackin/domain/fixtures.rs does not create it. Labels are instance.rs label(). The c41e session line s-03 can paint the word exited; that is a session status, not an instance status.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "b0809b8fded94ce44659c269d6269335352bacf0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j01_status/j01_status_status_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j01_status/j01_status_status_narrow.tui.json"
+      ],
       "scenario": [
         "first-use",
         "returning",
@@ -43,7 +46,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "324803b5a5ddfdbdfe45b39a0e44559cf01882d00885500bd6cc3a60718e4535",
+        "expect_baseline": "missing",
+        "precondition": "J01.status.status.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f5dae35ebe064643b662dc45dedb20149e422ac6b3c8d7286c45139236e1ea67",
+        "expect_baseline": "missing",
+        "precondition": "J01.status.status.narrow"
+      }
     }
   ]
 }
