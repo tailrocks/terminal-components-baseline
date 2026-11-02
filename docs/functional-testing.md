@@ -435,9 +435,14 @@ repository uses it.
 ## Suite composition
 
 Tests live one module per application — `showcase.rs`, `tablepro.rs`,
-`holla.rs`, `jackin.rs` — plus cross-cutting `lifecycle.rs` (resize and
+`holla.rs` in `tests/functional`, and `jackin.rs` in
+`apps/jackin/tests/functional` (the `jackin-console` crate, because the test
+needs `CARGO_BIN_EXE_jackin`) — plus cross-cutting `lifecycle.rs` (resize and
 overlay ownership) and `visual.rs` (strict frozen check), all on the
-single shared harness in `support.rs`.
+single shared harness in `tests/functional/support.rs`. The jackin test
+crate includes that file with `#[path]`; each crate keeps its approved
+baselines under its own `tests/functional/baselines`, and evidence goes to
+the workspace `target/functional` for both.
 
 `visual.rs` uses latest Tuiscotti main `d8d5415` (0.4.0, renamed dev-dependency
 `tuiscotti-latest`): a live `tui_test` snapshot is checked with

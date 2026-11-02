@@ -1,4 +1,5 @@
-use super::support::{App, SHOWCASE, find, text};
+use super::bins::SHOWCASE;
+use super::support::{App, find, text};
 
 #[test]
 fn showcase_held_button_matches_frozen_tuiscotti_baseline() {

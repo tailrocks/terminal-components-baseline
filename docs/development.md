@@ -12,6 +12,10 @@ pins in `mise.toml`), then work from the workspace root.
 | Lint | `cargo clippy --locked --all-targets -- -D warnings` |
 | Format check | `cargo fmt --check` |
 
+The workspace default members are `junie-tui` and `jackin-console`
+(`apps/jackin`), so these commands cover both crates and `--test functional`
+runs the root journeys and the jackin journeys.
+
 All test commands use `cargo nextest`, never `cargo test`. Run the
 functional suite, clippy and fmt before reporting work as done; see
 [functional testing](functional-testing.md) for the test system and

@@ -1,7 +1,8 @@
 use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, TerminalSnapshot};
 
-use super::support::{App, Point, SHOWCASE, cell_bg, crop, find, find_all, row_text, text};
+use super::bins::SHOWCASE;
+use super::support::{App, Point, cell_bg, crop, find, find_all, row_text, text};
 
 fn inside(point: Point) -> Point {
     Point {

@@ -3659,58 +3659,16 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::builder("terminal::TerminalView::focused"),
     Capability::builder("terminal::TerminalView::color"),
     Capability::function("terminal::encode_key"),
-    Capability::ty("console::world::World"),
-    Capability::ty("console::backend::Backend"),
-    Capability::ty("console::backend::OnePassword"),
-    Capability::ty("console::backend::Effect"),
-    Capability::ty("console::backend::Completion"),
-    Capability::ty("console::panes::SessionScript"),
-    Capability::ty("console::launch::LaunchContent"),
-    Capability::ty("console::app::App"),
     Capability::function("terminal::TerminalState::scrollback_len"),
     Capability::function("terminal::TerminalState::scrollback"),
     Capability::function("terminal::TerminalState::set_scrollback"),
     Capability::function("ui::text::capitalize"),
-    Capability::ty("console::domain::surfaces::Surfaces"),
-    Capability::ty("console::domain::docker::DockerSetting"),
-    Capability::ty("console::domain::docker::EngineState"),
-    Capability::ty("console::domain::docker::DockerRiskText"),
-    Capability::ty("console::domain::doctor::DoctorSurface"),
-    Capability::ty("console::domain::doctor::DoctorState"),
-    Capability::ty("console::domain::doctor::DoctorReport"),
-    Capability::ty("console::domain::doctor::DoctorCheck"),
-    Capability::ty("console::domain::role::AccountOrder"),
-    Capability::ty("console::domain::role::RoleAdmin"),
-    Capability::ty("console::domain::role::RoleRecord"),
-    Capability::ty("console::domain::role::RoleCheckState"),
-    Capability::ty("console::domain::role::FindingArea"),
-    Capability::ty("console::domain::role::RoleFinding"),
-    Capability::ty("console::domain::role::RoleManifestDoc"),
-    Capability::ty("console::domain::role::RoleEnvEntry"),
-    Capability::ty("console::launch::StageList"),
-    Capability::ty("console::launch::StageSpec"),
-    Capability::ty("console::launch::StageKind"),
-    Capability::ty("console::launch::LaunchWords"),
-    Capability::ty("console::world::Health"),
-    Capability::ty("console::world::HealthView"),
     Capability::ty("widgets::list_detail::ListDetail"),
     Capability::ty("widgets::list_detail::ListRow"),
     Capability::ty("widgets::list_detail::Line"),
     Capability::ty("widgets::list_detail::Action"),
     Capability::ty("widgets::list_detail::Frame"),
     Capability::ty("widgets::list_detail::Event"),
-    Capability::ty("console::screens::doctor::DoctorScreen"),
-    Capability::ty("console::screens::roles::RolesScreen"),
-    Capability::ty("console::screens::role_editor::RoleEditorScreen"),
-    Capability::function("console::screens::modals::unsaved_dialog"),
-    Capability::function("console::screens::modals::docker_risk_dialog"),
-    Capability::function("console::rain::render_intro"),
-    Capability::function("console::rain::render_outro"),
-    Capability::function("console::rain::dim_buffer"),
-    Capability::function("console::rain::handoff_stage"),
-    Capability::function("console::rain::paint_atmosphere"),
-    Capability::ty("console::rain::IntroState"),
-    Capability::ty("console::rain::OutroState"),
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -3719,130 +3677,10 @@ pub struct Allowed {
     pub reason: &'static str,
 }
 
-const PREVIEW: &str = "demonstrated by jackin-preview and its approved functional baselines";
-const BRAND: &str = "brand-specific intro, outro and fade of jackin; demonstrated by jackin-preview and its approved functional baselines";
+const PREVIEW: &str =
+    "demonstrated by the jackin demo app (apps/jackin) and its approved functional baselines";
 
 pub static ALLOWLIST: &[Allowed] = &[
-    Allowed {
-        id: "console::world::World",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::backend::Backend",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::backend::OnePassword",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::backend::Effect",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::backend::Completion",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::panes::SessionScript",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::launch::LaunchContent",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::app::App",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::surfaces::Surfaces",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::docker::DockerSetting",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::docker::EngineState",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::docker::DockerRiskText",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::doctor::DoctorSurface",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::doctor::DoctorState",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::doctor::DoctorReport",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::doctor::DoctorCheck",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::role::AccountOrder",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::role::RoleAdmin",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::role::RoleRecord",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::role::RoleCheckState",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::role::FindingArea",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::role::RoleFinding",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::role::RoleManifestDoc",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::domain::role::RoleEnvEntry",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::launch::StageList",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::launch::StageSpec",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::launch::StageKind",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::launch::LaunchWords",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::world::Health",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::world::HealthView",
-        reason: PREVIEW,
-    },
     Allowed {
         id: "widgets::list_detail::ListDetail",
         reason: PREVIEW,
@@ -3866,53 +3704,5 @@ pub static ALLOWLIST: &[Allowed] = &[
     Allowed {
         id: "widgets::list_detail::Event",
         reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::screens::doctor::DoctorScreen",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::screens::roles::RolesScreen",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::screens::role_editor::RoleEditorScreen",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::screens::modals::unsaved_dialog",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::screens::modals::docker_risk_dialog",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "console::rain::render_intro",
-        reason: BRAND,
-    },
-    Allowed {
-        id: "console::rain::render_outro",
-        reason: BRAND,
-    },
-    Allowed {
-        id: "console::rain::dim_buffer",
-        reason: BRAND,
-    },
-    Allowed {
-        id: "console::rain::handoff_stage",
-        reason: BRAND,
-    },
-    Allowed {
-        id: "console::rain::paint_atmosphere",
-        reason: BRAND,
-    },
-    Allowed {
-        id: "console::rain::IntroState",
-        reason: BRAND,
-    },
-    Allowed {
-        id: "console::rain::OutroState",
-        reason: BRAND,
     },
 ];

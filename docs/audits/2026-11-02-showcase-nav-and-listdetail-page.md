@@ -19,9 +19,9 @@ sidebar in the same change.
 
 ## ListDetail has no showcase page
 
-`ListDetail` is a generic list and detail block (Doctor and Roles use it).
-Its catalog lines sit in the `ALLOWLIST` of `src/catalog.rs` with the reason
-`PREVIEW`. The reason text says "approved baselines", which becomes true
+`ListDetail` is a generic list and detail block (`widgets::list_detail`;
+the jackin Doctor and Roles screens use it). Its catalog lines sit in the
+`ALLOWLIST` of `src/catalog.rs` with the reason `PREVIEW`. The reason text says "approved baselines", which becomes true
 only when the eight P9.2 baselines are accepted.
 
 Next step: add a showcase page `listdetail` (group `Screens`) with demo
@@ -29,9 +29,11 @@ rows that cover a long binding summary, a failing row, a faint row, a
 narrow width (drawer mode) and the empty state, then delete the
 `ListDetail`, `ListRow`, `Line`, `Action`, `Frame` and `Event` allowlist
 lines. The page also shows the column rule: the chip column is reserved
-and the right column truncates first. `unsaved_dialog` is the second
-non-app-specific allowlist entry and moves to the page that shows the
-unsaved-changes dialog.
+and the right column truncates first. The library already has
+`ui::leave::unsaved_dialog`; the jackin crate keeps its own
+`screens::modals::unsaved_dialog` because the approved baselines show its
+text. Unifying the two is a deliberate visual change that needs a
+re-approval.
 
 ## Recorded, not changed
 
