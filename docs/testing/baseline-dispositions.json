@@ -2550,5 +2550,176 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/opt_forms_blur",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_blur.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/opt_forms_desc_rows",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_desc_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/opt_forms_help",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_help.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/opt_forms_managed",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_managed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/opt_forms_placeholders",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_placeholders.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/opt_forms_required",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_required.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/opt_forms_validate_when",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_validate_when.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_route",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_submit_after",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_submit_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_forms/sc_forms_submit_before",
+    "path": "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_submit_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
+    "replacement_id": null
   }
 ]
