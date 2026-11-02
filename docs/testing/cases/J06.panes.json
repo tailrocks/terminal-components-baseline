@@ -6,27 +6,30 @@
       "owner_task": "J06.panes",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario capsule-multi --color truecolor --motion reduced at 120×40. start in src/bin/jackin/app.rs matches Scenario::CapsuleMulti and calls Go::Attach for jk-7f3a. populated in src/bin/jackin/domain/fixtures.rs builds the payments-platform daemon: new_tab Claude (pane 1), split Horizontal Codex with new_first false (pane 2, second / right), split Vertical shell with new_first false (pane 3, second / below pane 2), then sets that tab's focused pane back to 1. split_leaf in src/ui/pane_tree.rs keeps the old leaf first when new_first is false. The first tab is Claude on the left and Codex above a shell on the right. boot_all in src/bin/jackin/sim/pty.rs stops each script at Await, so Claude shows Allow edit to src/settlement/config.rs? (y/n) and Claude Code v2.1.14. The Codex script header in that file is OpenAI Codex v0.48. follow in src/widgets/viewport.rs jumps to the tail, so the visible Codex text is the title Codex (Primary) and 12.4k tokens. The shell prompt is payments-platform ❯ with boot text git status -sb and feature/settlement-backoff. Ctrl+B enters prefix mode in CapsuleScreen::on_key in src/bin/jackin/screens/capsule.rs. d calls handle_prefix_cmd, which calls detach. Go::Detach in src/bin/jackin/app.rs returns to the workspace manager and sets Detached · payments-platform keeps running. The permission question is gone. The test does not quit through the outro. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J06.panes",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "jackin --scenario capsule-multi --color truecolor --motion reduced at 120x40",
+      "return_path": "Ctrl+B then d detaches to the workspace manager; the process stays there and does not play the outro"
     },
     {
       "case_id": "J06.panes.input",
       "owner_task": "J06.panes",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The same capsule-multi attach leaves focus on pane 1. Plain characters go through CapsuleScreen::forward_key in src/bin/jackin/screens/capsule.rs to Pane::type_char in src/bin/jackin/sim/pty.rs, and harness paste goes through CapsuleScreen::on_paste, which types those characters into the focused pane and drops CR/LF. Markers are owned by the column of the vertical seam from the Horizontal split, not by a flat substring. The checkpoints are the frame where both Claude markers sit on the Claude prompt, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40), before backspace, and before Enter. The Codex tail still shows 12.4k tokens from the script in src/bin/jackin/sim/pty.rs, because follow in src/widgets/viewport.rs keeps OpenAI Codex v0.48 above the viewport. The shell still shows its boot prompt. Edit src/settlement/config.rs is not visible yet. Backspace clears the Claude buffer, then y and Enter hit AgentProcess::on_input in src/bin/jackin/sim/pty.rs. A trim of y queues Edit src/settlement/config.rs at now+400 ms, the policy line at +900 ms, and Done · 3 files changed at +1500 ms. Reduced motion leaves clock.running true in src/bin/jackin/app.rs, so the real frame loop delivers those lines. Ctrl+B then a direction calls handle_prefix_cmd and move_focus. Codex receives its own type and paste, and Enter echoes Thinking… in that pane. The shell markers are backspaced and pwd returns /workspace/payments-platform in the shell pane only. Skipped. stays absent. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j06_panes/j06_panes_input_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j06_panes/j06_panes_input_narrow.tui.json"
+      ],
       "scenario": [
         "capsule-multi"
       ],
@@ -48,8 +51,8 @@
       "owner_task": "J06.panes",
       "application": "jackin",
       "kind": "scenario",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario capsule-multi --color truecolor --motion reduced shows the populated fixture. world_for in src/bin/jackin/domain/fixtures.rs uses populated for Scenario::CapsuleMulti, and the daemon workspace is payments-platform. The shell boot in src/bin/jackin/sim/pty.rs includes feature/settlement-backoff. Claude Code v2.1.14 is the Claude script header in that file. The Codex script header there is OpenAI Codex v0.48, and follow in src/widgets/viewport.rs leaves the title Codex (Primary) and 12.4k tokens on screen. The test asserts those visible identities and does not assert Launch failed from src/bin/jackin/screens/cockpit.rs, network jackin-net not found from src/bin/jackin/sim/launch.rs, or You were in the Construct from src/bin/jackin/rain.rs.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
