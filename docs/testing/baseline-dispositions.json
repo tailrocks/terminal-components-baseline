@@ -4350,5 +4350,302 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_affordance.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_affordance.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_blur.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_blur.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_cursor_style.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_cursor_style.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_dismiss.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_flag_out_of_set.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_flag_out_of_set.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_max_rows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_max_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_placement.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_placement.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_popup_width.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_popup_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_tag_separator.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_tag_separator.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/opt_celleditors_type_ahead.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_editors_after.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_editors_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_editors_before.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_editors_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_editing.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_editing.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_empty.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_error.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_focused.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_narrow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_celleditors/sc_celleditors_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
+    "replacement_id": null
   }
 ]
