@@ -6,42 +6,124 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Launch cockpit opens with --page launchcockpit, with ] after Accounts & usage, and with a click on Screens then Launch cockpit. [ returns to Accounts & usage.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_route.tui.json"
+      ],
       "route": "launchcockpit",
       "label": "Launch cockpit",
       "entry_path": "--page launchcockpit",
-      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route"
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "17ac10818f75bef7b3fbd46ef7c85f99063c40022d518f2dc5899700a4c5fce5",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_route 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.playground",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The playground at 120 by 40 shows the idle launch: payments-platform, the ready log, and Launch.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground.tui.json"
+      ],
       "route": "launchcockpit",
-      "section_or_overlay": "playground"
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1532f0848db3bab77826f48a743ef58805cb48ab7d9da9e3217c91def80796e0",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_playground 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.playground.120x40",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The Launch cockpit playground is the visible section at 120 by 40, with the ready log and Launch.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_120x40.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -55,19 +137,59 @@
       "client_platform": "macos",
       "expected_results": "The Launch cockpit playground section is the visible section at 120 by 40.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 120x40 and activate the playground tab."
+      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "48f6ce20ad1cc5137f15090edf92fd1494164bd809868c0d3860f7c3233f1826",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_playground_120x40 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.playground.80x24",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The playground at 80 by 24 shows the idle launch head. The size chip and the launch buttons sit below the fold.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_80x24.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -81,33 +203,113 @@
       "client_platform": "macos",
       "expected_results": "The Launch cockpit playground section is the visible section at 80 by 24.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 80x24 and activate the playground tab."
+      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bc91da4456a4805467f34b8a967d963b01c4481c3ca13de9b09992642b055a4f",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_playground_80x24 80x24"
+      }
     },
     {
       "case_id": "sc.launchcockpit.options",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The options section lists Launch outcome, Numbered stages, Stages take focus, and Wrap the log.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options.tui.json"
+      ],
       "route": "launchcockpit",
-      "section_or_overlay": "options"
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7cbb53589c92e8c87b57febb75388a5e273abca7cf2c5b0d8751b3874e30bdaf",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_options 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.options.120x40",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The options section is the visible section at 120 by 40 and lists every Launch cockpit control.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options_120x40.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -121,19 +323,59 @@
       "client_platform": "macos",
       "expected_results": "The Launch cockpit options section is the visible section at 120 by 40.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 120x40 and activate the options tab."
+      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d301eae3273869d29d12083e77ca777edaad42308e0f580dd29b57942962628d",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_options_120x40 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.options.80x24",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The options section is the visible section at 80 by 24 and lists the Launch cockpit controls.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options_80x24.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -147,33 +389,113 @@
       "client_platform": "macos",
       "expected_results": "The Launch cockpit options section is the visible section at 80 by 24.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 80x24 and activate the options tab."
+      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7251dcb9c3141ce8c2ff1045621b1658c916d9f34fcb5b700ef3b22a7bfdce9e",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_options_80x24 80x24"
+      }
     },
     {
       "case_id": "sc.launchcockpit.states",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The states grid draws rest, focused, empty, overflow, and narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states.tui.json"
+      ],
       "route": "launchcockpit",
-      "section_or_overlay": "states"
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "edca2359ac77fed65e2e305bfe9159c168239e20e25773571e9aee0337408b06",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_states 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.states.120x40",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The states section is the visible section at 120 by 40 and draws rest, focused, empty, overflow, and narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states_120x40.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -187,19 +509,59 @@
       "client_platform": "macos",
       "expected_results": "The Launch cockpit states section is the visible section at 120 by 40.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 120x40 and activate the states tab."
+      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "719ba8fc03594358ac2b5a23761d5a0f2bfd86e4707fee3e6f40796c4dfc49b6",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_states_120x40 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.states.80x24",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The states section is the visible section at 80 by 24 and draws the rest row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states_80x24.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -213,31 +575,109 @@
       "client_platform": "macos",
       "expected_results": "The Launch cockpit states section is the visible section at 80 by 24.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 80x24 and activate the states tab."
+      "action_sequence": "Launch showcase --page launchcockpit --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2018a816739ea1709737d38198ad9f148659c4850e5df915a49119635557952f",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_states_80x24 80x24"
+      }
     },
     {
       "case_id": "sc.launchcockpit.specimen.rest",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The states grid draws the rest row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_rest.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f26377cc32d921c975a9d659022a9e2c606bd83c80ae8b31cc36dee6bb81dd15",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_specimen_rest 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.specimen.hover",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::Hover, so this page does not draw that row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -252,8 +692,8 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::Pressed, so this page does not draw that row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -268,24 +708,64 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The states grid draws the focused row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_focused.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a62e2a523bb2de54e1961a9959ec91d9b7e8dba422214eb122a92d3a37727aff",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_specimen_focused 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.specimen.focused_hover",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::FocusedHover, so this page does not draw that row. The drawn label on other pages is \"focus + hover\".",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -300,8 +780,8 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::Selected, so this page does not draw that row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -316,8 +796,8 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::Disabled, so this page does not draw that row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -332,8 +812,8 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::Busy, so this page does not draw that row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -348,8 +828,8 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::Error, so this page does not draw that row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -364,8 +844,8 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::Editing, so this page does not draw that row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -380,24 +860,64 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The states grid draws the empty row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_empty.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "95a9622061d133cc9567c7bf68da90eca1ba62b08afe0687c287d338b9de1b4f",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_specimen_empty 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.specimen.loading",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/launch_cockpit.rs states_grid lines 480-483. The .rows list is Rest, Focused, Empty, Overflow, Narrow. It omits SpecimenState::Loading, so this page does not draw that row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -412,44 +932,127 @@
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The states grid draws the overflow row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_overflow.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "dfd4573fe7f5a4537981f8f122a8075e3dcc36ad8f5ed92b3e915c370bd1214f",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_specimen_overflow 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.specimen.narrow",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The states grid draws the narrow row.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_narrow.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "cc01c5527dfe4da8b8fb39b5d0f74cf2de263f554da6b150f43e1f09a98c87f0",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_specimen_narrow 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.compare-levels",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Compare levels reaches the no color band at 120 by 40 and keeps it after the terminal settles at 80 by 24. Turning it off restores the states grid and leaves the option values unchanged.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_80x24.tui.json"
+      ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
       "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
@@ -458,19 +1061,97 @@
       "checkpoint_ids": [
         "sc.launchcockpit.compare-levels.120x40",
         "sc.launchcockpit.compare-levels.80x24"
-      ]
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9f95cd265a8d433aab27961db171dd345f4771ba2e45178388897baeda2451ba",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_compare-levels_120x40 120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "211c21094d18c2144722251f4f40a1c53f9e9f80068e4d12b4b4ab9dc4f0fb92",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_compare-levels_80x24 80x24"
+      }
     },
     {
       "case_id": "opt.launchcockpit.outcome",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Launch outcome is behaviour. The control shows credentials, and letting the launch run opens Credential source unavailable. Dismissing it leaves that failure in the log.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_outcome.tui.json"
+      ],
       "route": "launchcockpit",
       "option_values": [
         "success",
@@ -482,19 +1163,61 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set launchcockpit.outcome from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Launch outcome effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--opt",
+          "launchcockpit.outcome=credentials",
+          "--color",
+          "truecolor",
+          "--motion",
+          "full"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "37e1945e5737ea9ad711ed548ebe91c6c11a12a0bb873eefba77043038a3abe8",
+        "expect_baseline": "missing",
+        "precondition": "opt_launchcockpit_outcome 120x40"
+      }
     },
     {
       "case_id": "opt.launchcockpit.numbered",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Numbered stages on draws 01 Identity through 11 Hardline. The default playground leaves the stages unnumbered.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_numbered.tui.json"
+      ],
       "route": "launchcockpit",
       "option_values": [
         "off",
@@ -505,19 +1228,61 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set launchcockpit.numbered from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Numbered stages effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--opt",
+          "launchcockpit.numbered=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9e8450caa4a46d6f3457b483a9ccd379a32bb1d47b5420d636cf83f6ba3651fe",
+        "expect_baseline": "missing",
+        "precondition": "opt_launchcockpit_numbered 120x40"
+      }
     },
     {
       "case_id": "opt.launchcockpit.selectable",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Stages take focus on paints the focus gutter on the clicked stage and shows Move. Off leaves that gutter unpainted.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_selectable.tui.json"
+      ],
       "route": "launchcockpit",
       "option_values": [
         "off",
@@ -528,19 +1293,61 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set launchcockpit.selectable from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Stages take focus effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--opt",
+          "launchcockpit.selectable=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2b51ace15cd4b1de15a8e5de85a560e670c51a1eac74853ed0014bb2d676d972",
+        "expect_baseline": "missing",
+        "precondition": "opt_launchcockpit_selectable 120x40"
+      }
     },
     {
       "case_id": "opt.launchcockpit.wrap",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Wrap off keeps the same first ready row and hides the wrapped remainder. The Options control shows off.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_wrap.tui.json"
+      ],
       "route": "launchcockpit",
       "option_values": [
         "off",
@@ -551,29 +1358,364 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set launchcockpit.wrap from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Wrap the log effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--opt",
+          "launchcockpit.wrap=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a5479a44036140062e178dc12ae8880c9f61c7821532563c3db1a32a0299e9e7",
+        "expect_baseline": "missing",
+        "precondition": "opt_launchcockpit_wrap 120x40"
+      }
     },
     {
       "case_id": "sc.launchcockpit.launch",
       "owner_task": "S10.launchcockpit",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The paused first running frame shows jackin launch backend. Cancel launch opens Cancel launch? and that dialog is captured before it closes. Keep launching stays on the running frame. Confirming writes Launch cancelled at Identity. The credentials dialog and the Docker build failed dialog are captured before dismiss. The success frame, Hardline open and Launched, is a separate shot.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_before.tui.json",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancel.tui.json",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancelled.tui.json",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_credentials.tui.json",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_build.tui.json",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_after.tui.json"
+      ],
       "route": "launchcockpit",
       "action_sequence": "Run the stages to success. Show credential failure, retry, build failure, and cancellation.",
       "expected_results": "The visible stage is the stage that failed or succeeded. Cancellation does not attach a success result.",
       "forbidden_effects": "Retry skips the failed stage and shows success.",
       "checkpoint_ids": [
         "sc.launchcockpit.launch.before",
+        "sc.launchcockpit.launch.cancel",
+        "sc.launchcockpit.launch.cancelled",
+        "sc.launchcockpit.launch.credentials",
+        "sc.launchcockpit.launch.build",
         "sc.launchcockpit.launch.after"
       ],
       "terminal_columns": 120,
-      "terminal_rows": 40
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "launchcockpit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9d22815498c68dc7a4e05ac6b78b609f01f4ea9b44f46d7ca552ac2afbde7dcb",
+        "expect_baseline": "missing",
+        "precondition": "sc_launchcockpit_launch_before 120x40",
+        "checkpoints": [
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "launchcockpit",
+              "--color",
+              "truecolor",
+              "--motion",
+              "paused"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "9d22815498c68dc7a4e05ac6b78b609f01f4ea9b44f46d7ca552ac2afbde7dcb",
+            "expect_baseline": "missing",
+            "precondition": "sc_launchcockpit_launch_before 120x40",
+            "case_id": "sc.launchcockpit.launch.before",
+            "checkpoint_id": "sc.launchcockpit.launch.before"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "launchcockpit",
+              "--color",
+              "truecolor",
+              "--motion",
+              "paused"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "2886e28143043dce273e95b7c6abd75e9a57192c54afa72b3e439ad40a3f4443",
+            "expect_baseline": "missing",
+            "precondition": "sc_launchcockpit_launch_cancel 120x40",
+            "case_id": "sc.launchcockpit.launch.cancel",
+            "checkpoint_id": "sc.launchcockpit.launch.cancel"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "launchcockpit",
+              "--color",
+              "truecolor",
+              "--motion",
+              "paused"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "807b306ebf87e96d40e9ce6db60367a29f9b70306926fa30194d50f7c96d5fb8",
+            "expect_baseline": "missing",
+            "precondition": "sc_launchcockpit_launch_cancelled 120x40",
+            "case_id": "sc.launchcockpit.launch.cancelled",
+            "checkpoint_id": "sc.launchcockpit.launch.cancelled"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "launchcockpit",
+              "--opt",
+              "launchcockpit.outcome=credentials",
+              "--color",
+              "truecolor",
+              "--motion",
+              "full"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "d30c09a30c0907d7cc5c494056251ec4c72dc193a8cae1fddf8c67b6d8067942",
+            "expect_baseline": "missing",
+            "precondition": "sc_launchcockpit_launch_credentials 120x40",
+            "case_id": "sc.launchcockpit.launch.credentials",
+            "checkpoint_id": "sc.launchcockpit.launch.credentials"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "launchcockpit",
+              "--opt",
+              "launchcockpit.outcome=build-failure",
+              "--color",
+              "truecolor",
+              "--motion",
+              "full"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "1ce94e6a456e31b11bbd45f90e03418855c047ebba7eddefb7dbab5ac94a8db8",
+            "expect_baseline": "missing",
+            "precondition": "sc_launchcockpit_launch_build 120x40",
+            "case_id": "sc.launchcockpit.launch.build",
+            "checkpoint_id": "sc.launchcockpit.launch.build"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "launchcockpit",
+              "--color",
+              "truecolor",
+              "--motion",
+              "full"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "75c11a3ec69a6ba89d9925a8189ce2fe61f32c16713c1b0b64b6e094fe77a3c0",
+            "expect_baseline": "missing",
+            "precondition": "sc_launchcockpit_launch_after 120x40",
+            "case_id": "sc.launchcockpit.launch.after",
+            "checkpoint_id": "sc.launchcockpit.launch.after"
+          }
+        ]
+      }
     }
   ]
 }
