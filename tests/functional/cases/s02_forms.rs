@@ -508,6 +508,12 @@ fn sections_narrow_then_wide() {
             "New task",
         ],
     );
+    see(
+        &app,
+        "sc.forms.specimen.narrow",
+        "states grid paged to the narrow row at 120 by 40",
+        &args,
+    );
 
     click_tab(&app, "Options");
     let wide_opt = app.wait_text(CAP_OPT);
