@@ -6,28 +6,31 @@
       "owner_task": "H04.snapshots-host",
       "application": "holla",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Holla first-use at 120×40 in truecolor with reduced motion and HOLLA_NO_HISTORY=1 pastes Show system resources. Enter opens the system snapshot. Esc is shell Back and returns to the finder with that row selected (Type Search, Results · 1). first-use has no live activities, so Ctrl+Q leaves on clean stakes and the process exits 0. If a quit dialog is drawn, the test reads whether Stay or the confirm button has the focus gutter before Enter, and it does not call finish while the dialog is open.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "c0270f75c2fa8864293431fc24e746c0cce28598",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "H04.snapshots-host",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch holla --scenario first-use --color truecolor --motion reduced at 120x40; paste Show system resources; Enter",
+      "return_path": "Esc returns to the finder on Show system resources; Ctrl+Q exits 0"
     },
     {
       "case_id": "H04.snapshots-host.host",
       "owner_task": "H04.snapshots-host",
       "application": "holla",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Scenario first-use (fixtures.rs first_use at 1744) sets system_pressure (154), whose node (vite) listens on port 5173 (197), and disk_full (343), whose history (621) is ~/work/legacy/node_modules trashed at 3.9 GB. base assigns ssh_personal (205) at 1319, alias devbox. catalog.rs lists disk.history when history, the ops log, or reports are non-empty (2896) and launches snapshot disk-history (2904). system.port requires ArgSpec port, default 5173 (2236-2259). app.rs rewrites a port snapshot to port:{port} (2367-2375). Connect is Launch::Handoff (3280), not the snapshot. Alt+Enter offers Show the resolved configuration as ssh.{alias}.resolve (3283-3286), and run_derived pushes snapshot ssh:{alias} (2542-2548). snapshot.rs titles are System resources or Process tree (257-262), Port {port} with $ lsof -nP -iTCP:{port} -sTCP:LISTEN (358-363), Cleanup history (709-710), and ssh {alias} · resolved with the ssh -G detail and $ ssh -G {alias} (109, 922-964). The open system page is the checkpoint at 120×40 and, after resize, at 80×24, before Esc. Open btm is not activated. Each family asserts its title, one line only that family draws, and the absence of another family's line.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "c0270f75c2fa8864293431fc24e746c0cce28598",
       "evidence_paths": [],
-      "baseline_paths": [],
-      "scenario": null,
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow.tui.json"
+      ],
+      "scenario": "first-use",
       "action_sequence": "Open system, processes, port, disk-history, and ssh.",
       "expected_results": "The title kind matches the opened snapshot.",
       "forbidden_effects": "One family shows another family's rows.",
@@ -39,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "first-use",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "18e4374e7f70bc7e5c2b370d4f2115b339894eb7fa09a511541c99ea3e2cac9c",
+        "expect_baseline": "missing",
+        "precondition": "H04.snapshots-host.host.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "first-use",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1c37fb54f85bef75fe6574ceaaba95cc13c24d466db26a5d8b2566ed48526cae",
+        "expect_baseline": "missing",
+        "precondition": "H04.snapshots-host.host.narrow"
+      }
     }
   ]
 }
