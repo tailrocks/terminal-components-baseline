@@ -6,42 +6,128 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "--page meters opens the playground with the sidebar on Meters",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_route.tui.json"
+      ],
       "route": "meters",
       "label": "Meters",
       "entry_path": "--page meters",
-      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route"
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a3deeb95fcf7ef119d3eedd6dc89bba77e32bb1cbb91c99c4a6724f12921b571",
+        "expect_baseline": "missing",
+        "precondition": "--page meters opens the playground with the sidebar on Meters"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.playground",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground is the visible Meters section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground.tui.json"
+      ],
       "route": "meters",
-      "section_or_overlay": "playground"
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "def45cde105713f980aa07bd9351bb9916f6bead7efa4a39de563d84ce8a41a2",
+        "expect_baseline": "missing",
+        "precondition": "playground is the visible Meters section"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.playground.120x40",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground tab at 120 by 40 after the narrow capture",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground_120x40.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -55,19 +141,59 @@
       "client_platform": "macos",
       "expected_results": "The Meters playground section is the visible section at 120 by 40.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page meters --motion paused at 120x40 and activate the playground tab."
+      "action_sequence": "Launch showcase --page meters --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5244ec3aeb27ae5bfe5625ecbb49f02d1a1843f2617f895ebfab2485d2065759",
+        "expect_baseline": "missing",
+        "precondition": "playground tab at 120 by 40 after the narrow capture"
+      }
     },
     {
       "case_id": "sc.meters.playground.80x24",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground at 80 by 24 before the terminal grows",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground_80x24.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -81,33 +207,115 @@
       "client_platform": "macos",
       "expected_results": "The Meters playground section is the visible section at 80 by 24.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page meters --motion paused at 80x24 and activate the playground tab."
+      "action_sequence": "Launch showcase --page meters --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "85eca4f088ee8426fd74efedf75628868c0400da1fb345a7ef2a496d42ecf6d8",
+        "expect_baseline": "missing",
+        "precondition": "playground at 80 by 24 before the terminal grows"
+      }
     },
     {
       "case_id": "sc.meters.options",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options is the visible Meters section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options.tui.json"
+      ],
       "route": "meters",
-      "section_or_overlay": "options"
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2731d3421c63e99e4e63ae53a0cb275adf58a7d5762e2c7dc8ca353875d144a1",
+        "expect_baseline": "missing",
+        "precondition": "options is the visible Meters section"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.options.120x40",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options tab at 120 by 40 after the narrow capture",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options_120x40.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -121,19 +329,59 @@
       "client_platform": "macos",
       "expected_results": "The Meters options section is the visible section at 120 by 40.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page meters --motion paused at 120x40 and activate the options tab."
+      "action_sequence": "Launch showcase --page meters --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f1b3039088f038a20d9abf81764bbc64edb5bf6a3af2519b9612c080f6c4fbaf",
+        "expect_baseline": "missing",
+        "precondition": "options tab at 120 by 40 after the narrow capture"
+      }
     },
     {
       "case_id": "sc.meters.options.80x24",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options at 80 by 24 before the terminal grows",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options_80x24.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -147,33 +395,115 @@
       "client_platform": "macos",
       "expected_results": "The Meters options section is the visible section at 80 by 24.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page meters --motion paused at 80x24 and activate the options tab."
+      "action_sequence": "Launch showcase --page meters --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "cdb2919006aa72722f06c54c745bedb80b586636ad987836af680c177cf7ec60",
+        "expect_baseline": "missing",
+        "precondition": "options at 80 by 24 before the terminal grows"
+      }
     },
     {
       "case_id": "sc.meters.states",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states is the visible Meters section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states.tui.json"
+      ],
       "route": "meters",
-      "section_or_overlay": "states"
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2bccee52c26e3980aecbd45bb7f2cd5daa0dcf8c0fc2e0c3c0db96697a9ce706",
+        "expect_baseline": "missing",
+        "precondition": "states is the visible Meters section"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.states.120x40",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states tab at 120 by 40 after the narrow capture",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states_120x40.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -187,19 +517,59 @@
       "client_platform": "macos",
       "expected_results": "The Meters states section is the visible section at 120 by 40.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page meters --motion paused at 120x40 and activate the states tab."
+      "action_sequence": "Launch showcase --page meters --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e0930f396cc9cc49814916ac05839c62c92e347a2b307ab3120ebf34dc51f741",
+        "expect_baseline": "missing",
+        "precondition": "states tab at 120 by 40 after the narrow capture"
+      }
     },
     {
       "case_id": "sc.meters.states.80x24",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states at 80 by 24 before the terminal grows",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states_80x24.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -213,31 +583,111 @@
       "client_platform": "macos",
       "expected_results": "The Meters states section is the visible section at 80 by 24.",
       "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page meters --motion paused at 80x24 and activate the states tab."
+      "action_sequence": "Launch showcase --page meters --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ed98fcd8fa93c6dd6e0e4ef58e72c2d87a3007444d10df84d89903f65adb7b90",
+        "expect_baseline": "missing",
+        "precondition": "states at 80 by 24 before the terminal grows"
+      }
     },
     {
       "case_id": "sc.meters.specimen.rest",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "rest row is on the states grid",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_rest.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6026657610400d7420c59f8724865056279a59de7c60272caf0bb2c14b0cfbb7",
+        "expect_baseline": "missing",
+        "precondition": "rest row is on the states grid"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.specimen.hover",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::Hover.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -252,8 +702,8 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::Pressed.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -268,8 +718,8 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::Focused.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -284,8 +734,8 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::FocusedHover.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -300,8 +750,8 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::Selected.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -316,8 +766,8 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::Disabled.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -332,8 +782,8 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::Busy.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -348,24 +798,66 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "error row is on the states grid",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_error.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "efea4deea54cd12694077e0b0ddeddce775d376563565a2cf8d07c3575ca407e",
+        "expect_baseline": "missing",
+        "precondition": "error row is on the states grid"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.specimen.editing",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::Editing.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -380,8 +872,8 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/meters.rs states_grid lines 326-377. Line 332 is .rows(&[Rest, Loading, Error, Overflow, Narrow]). The list omits SpecimenState::Empty.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -396,60 +888,189 @@
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "loading row is on the states grid",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_loading.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9aaf360bd285da0b355ad1877c1cddeb778f2bd8efd85a6f42bb9a2b6a8bdef0",
+        "expect_baseline": "missing",
+        "precondition": "loading row is on the states grid"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.specimen.overflow",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "overflow row is on the states grid",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_overflow.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0c2ded5d9d92e3b60baa64283824d52180462d64d568d9cc215034bd4a85ce93",
+        "expect_baseline": "missing",
+        "precondition": "overflow row is on the states grid"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.specimen.narrow",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "narrow row is on the states grid",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_narrow.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "733414f41cdbca4cc38131f59fda56bc11fc6c1b87b20189ae8ab32200180e7b",
+        "expect_baseline": "missing",
+        "precondition": "narrow row is on the states grid"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.compare-levels",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "compare levels scrolled to no color at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_compare-levels_80x24.tui.json"
+      ],
       "route": "meters",
       "section_or_overlay": "states",
       "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
@@ -458,19 +1079,97 @@
       "checkpoint_ids": [
         "sc.meters.compare-levels.120x40",
         "sc.meters.compare-levels.80x24"
-      ]
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f653b1c08bb38fb3d9631a2d3ccea218b89c86a115551a1f9f9f875e26ea1362",
+        "expect_baseline": "missing",
+        "precondition": "compare levels scrolled to no color at 120 by 40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4dce359afa884cb0863eec1df4f6e07a7ddf9c968a8ed5b068599b474481249f",
+        "expect_baseline": "missing",
+        "precondition": "compare levels still on at 80 by 24 before restoring 120 by 40"
+      }
     },
     {
       "case_id": "opt.meters.label_width",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "meters.label_width=8 is the visible playground",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_label_width.tui.json"
+      ],
       "route": "meters",
       "option_values": [
         "measured",
@@ -482,19 +1181,63 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set meters.label_width from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Label column effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--opt",
+          "meters.label_width=8",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b9ee41d97a6a6824aafe20c306bbcff2ef0432ec4d0200379ffbeb87552eb873",
+        "expect_baseline": "missing",
+        "precondition": "meters.label_width=8 is the visible playground"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "opt.meters.label_gap",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "meters.label_gap=3 is the visible playground",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_label_gap.tui.json"
+      ],
       "route": "meters",
       "option_values": [
         "1",
@@ -505,19 +1248,63 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set meters.label_gap from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Label gap effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--opt",
+          "meters.label_gap=3",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "265a573a7f2a773e610403e61bfcffac81204532fbf6ba0df19b959514e6021c",
+        "expect_baseline": "missing",
+        "precondition": "meters.label_gap=3 is the visible playground"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "opt.meters.meter_width",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "meters.meter_width=14 is the visible playground",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_meter_width.tui.json"
+      ],
       "route": "meters",
       "option_values": [
         "24",
@@ -529,19 +1316,63 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set meters.meter_width from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Meter width effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--opt",
+          "meters.meter_width=14",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "704a90533aa9579da36fb60f1cb9ec0c89528183c3bdfe131bdd0e0e2a62375b",
+        "expect_baseline": "missing",
+        "precondition": "meters.meter_width=14 is the visible playground"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "opt.meters.detail",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "meters.detail=off is the visible playground",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_detail.tui.json"
+      ],
       "route": "meters",
       "option_values": [
         "off",
@@ -552,19 +1383,63 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set meters.detail from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Details effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--opt",
+          "meters.detail=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "627a1cd50ca1887e9f87fea9df82cf5de5d4c5949393bf3cfa308c5e48dcd098",
+        "expect_baseline": "missing",
+        "precondition": "meters.detail=off is the visible playground"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "opt.meters.detail_tone",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "meters.detail_tone=secondary is the visible playground",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_detail_tone.tui.json"
+      ],
       "route": "meters",
       "option_values": [
         "muted",
@@ -575,19 +1450,63 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set meters.detail_tone from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Detail tone effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--opt",
+          "meters.detail_tone=secondary",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7ea449a00367adcf6a9540299c4bc99137668c27f27d2f39ab1a527e3d705411",
+        "expect_baseline": "missing",
+        "precondition": "meters.detail_tone=secondary is the visible playground"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "opt.meters.visual",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "meters.visual=line is the visible playground",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_visual.tui.json"
+      ],
       "route": "meters",
       "option_values": [
         "block",
@@ -598,19 +1517,63 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set meters.visual from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Quota meter visual effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--opt",
+          "meters.visual=line",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "003c1be96b00ad2e00db94cfff0a7790e8e4994a3ba9e7b2aff4ae31aca7ca94",
+        "expect_baseline": "missing",
+        "precondition": "meters.visual=line is the visible playground"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "opt.meters.offline",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "meters.offline=on is the visible playground",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_offline.tui.json"
+      ],
       "route": "meters",
       "option_values": [
         "off",
@@ -621,19 +1584,63 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set meters.offline from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Offline (last-good) effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--opt",
+          "meters.offline=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d3fc3bc5f6796eec5a2313ece6c8a3bca8e3fcc1d247c79a968e2826117a0c61",
+        "expect_baseline": "missing",
+        "precondition": "meters.offline=on is the visible playground"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "opt.meters.stale_style",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "faint stale style is visible only while offline, so meters.offline=on",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_stale_style.tui.json"
+      ],
       "route": "meters",
       "option_values": [
         "dashed",
@@ -644,19 +1651,66 @@
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
       "action_sequence": "Set meters.stale_style from its default to another listed value through --opt or the Options control.",
       "expected_results": "The visible Stale style effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--opt",
+          "meters.stale_style=faint",
+          "--opt",
+          "meters.offline=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "47b3b398d3730dbec1bd151cf19cf390c35d09c9fb0ef0b1a91ba20cdbad9d76",
+        "expect_baseline": "missing",
+        "precondition": "faint stale style is visible only while offline, so meters.offline=on"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
     },
     {
       "case_id": "sc.meters.meters",
       "owner_task": "S06.meters",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "live meters before refresh",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_meters_before.tui.json",
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_meters_after.tui.json"
+      ],
       "route": "meters",
       "action_sequence": "Start a refresh, observe the busy state and the final values, then refuse refresh while offline. Show warning, stale, and detail tones.",
       "expected_results": "Final numbers replace the busy state. Offline does not start a refresh.",
@@ -666,7 +1720,84 @@
         "sc.meters.meters.after"
       ],
       "terminal_columns": 120,
-      "terminal_rows": 40
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3e155c2835a64a5819b59556b9734d20ae7d8535a08f37780430f697d4bc82a7",
+        "expect_baseline": "missing",
+        "precondition": "live meters before refresh"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "meters",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8de9d3092957d8308e7ead561a8582fbb1407f6779a45ab91331fef3239b0ab3",
+        "expect_baseline": "missing",
+        "precondition": "offline refresh leaves the refreshed numbers in place"
+      },
+      "motion_mode": "reduced"
     }
   ]
 }
