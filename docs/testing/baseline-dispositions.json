@@ -633,5 +633,446 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_bar",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_bar.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_brand",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_brand.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_dismiss",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_hide_owner_focus",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_hide_owner_focus.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_hover_switch",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_hover_switch.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_nav",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_open_on",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_open_on.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_press_drag",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_press_drag.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_type_ahead",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/opt_chrome_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_menu-switch_after",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menu-switch_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_menu-switch_before",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menu-switch_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_menus_after",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menus_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_menus_before",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menus_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_route",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_chrome/sc_chrome_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.chrome.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_align",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_align.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_badge",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_badge.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_brand",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_brand.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_compact",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_compact.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_hidden",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_hidden.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_layer",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_layer.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_priority",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_priority.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_quit_hint",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_quit_hint.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_share",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_share.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_status",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_status.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_too_small_min",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_too_small_min.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/opt_statushints_width",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_hints_after",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_hints_before",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_route",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_status_after",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_statushints/sc_statushints_status_before",
+    "path": "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
+    "replacement_id": null
   }
 ]
