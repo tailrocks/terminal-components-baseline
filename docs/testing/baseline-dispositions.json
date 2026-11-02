@@ -10281,5 +10281,239 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.splitsstacks.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/opt_masterdetail_collapse",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_collapse.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/opt_masterdetail_esc_returns",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_esc_returns.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/opt_masterdetail_gap",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/opt_masterdetail_keys",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/opt_masterdetail_size",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_size.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/opt_masterdetail_step",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_step.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/opt_masterdetail_summary",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_summary.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/opt_masterdetail_width",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_detail_after",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_detail_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_detail_before",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_detail_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_options",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_playground",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_route",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_states",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_masterdetail/sc_masterdetail_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
+    "replacement_id": null
   }
 ]
