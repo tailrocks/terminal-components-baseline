@@ -16356,5 +16356,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.mounts.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j02_environments/j02_environments_env_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j02_environments/j02_environments_env_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J02.environments.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j02_environments/j02_environments_env_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j02_environments/j02_environments_env_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J02.environments.",
+    "replacement_id": null
   }
 ]
