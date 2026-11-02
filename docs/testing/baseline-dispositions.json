@@ -3738,5 +3738,230 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.chipsselects.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/opt_basictable_selection.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/opt_basictable_selection.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_sort_after.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_sort_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_sort_before.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_sort_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_empty.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_focused.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_focused_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_narrow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_pressed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_specimen_selected.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_basictable/sc_basictable_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
+    "replacement_id": null
   }
 ]
