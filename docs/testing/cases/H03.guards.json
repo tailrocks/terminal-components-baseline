@@ -6,27 +6,30 @@
       "owner_task": "H03.guards",
       "application": "holla",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Holla activities-multi at 120×40 in truecolor with reduced motion and HOLLA_NO_HISTORY=1 opens the finder. Ctrl+W on Here sets Here cannot be closed · Ctrl+Q quits and does not open Quit holla. q is finder query text and the process stays running. Backspace restores Search actions. Ctrl+G, Enter opens frontend dev. Ctrl+W opens Stop frontend dev? with Keep running focused and Stop and close as the danger button. Enter keeps the tab, the header still shows http://localhost:5173/, and the status is not Stopping · the tab closes once the process is gone. Ctrl+Q opens Quit holla❯?. Right, Enter activates Stop and quit. A following Ctrl+Q exits 0 and restores the terminal.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "eaabc07efebf8a323321223b09d1f78dd5cd8204",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "H03.guards",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch holla --scenario activities-multi --color truecolor --motion reduced at 120x40; Ctrl+W on Here; q in the finder; Ctrl+G, Enter on frontend dev; Ctrl+W, Enter on Keep running",
+      "return_path": "Right, Enter on Stop and quit; Ctrl+Q exits 0"
     },
     {
       "case_id": "H03.guards.quit",
       "owner_task": "H03.guards",
       "application": "holla",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Paused activities-multi leaves api tests running, so the completed close is parity-task-input: Quick no-op runs true, reaches succeeded and exit 0, and Ctrl+W closes that tab with no Stop dialog and without starting Deploy the release. On activities-multi with paused motion, Ctrl+G, Enter opens frontend dev and Ctrl+Q opens Quit holla❯? with Stay, Stop and quit, and the body that activities are still running and detached monitors keep going. That dialog is captured at 120×40, then at 80×24, and the narrow shot is taken before the terminal returns to 120×40. Enter activates Stay. frontend dev stays open, http://localhost:5173/ remains, and the status is not Stopping · the tab closes once the process is gone. Esc returns to Here, q is query text, and no quit dialog opens. Ctrl+Q again and Right, Enter choose Stop and quit. fixtures::base leaves clock.running false when motion is paused, and World::tick returns before self.tick advances, so a cancelling activity never reaches TERM_EXIT_TICKS on that launch. The same Stop and quit on activities-multi with reduced motion exits 0 and restores the terminal.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "eaabc07efebf8a323321223b09d1f78dd5cd8204",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h03_guards/h03_guards_quit_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h03_guards/h03_guards_quit_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Close a completed tab. Close a running tab and choose Stay, then Stop and quit. Type q in the Finder query.",
       "expected_results": "Stay leaves the task running. q is query text. The confirmed exit is code 0.",
@@ -38,8 +41,84 @@
       "terminal_columns": 120,
       "terminal_rows": 40,
       "color_mode": "truecolor",
-      "motion_mode": "reduced",
-      "client_platform": "macos"
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "activities-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4f4757b75fb97870efa617937c09cd00d0750af88e61235fa1f4398812f27f0d",
+        "expect_baseline": "missing",
+        "precondition": "H03.guards.quit.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "activities-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ef0c8a02f2cd6ef509ec69c81fae222bc7321fd886f3f9fdf8133525c8478595",
+        "expect_baseline": "missing",
+        "precondition": "H03.guards.quit.narrow"
+      }
     }
   ]
 }
