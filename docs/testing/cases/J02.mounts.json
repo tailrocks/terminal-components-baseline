@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. workspaces in src/bin/jackin/domain/fixtures.rs gives payments-platform two mounts: host ~/src/payments-platform at /workspace/payments-platform, and read-only host ~/src/shared-libs at /workspace/libs. One Down from Current directory focuses payments-platform. Key e on that workspace calls Go::Editor in src/bin/jackin/screens/manager.rs. ] in src/bin/jackin/screens/editor.rs moves General to Mounts, and the tab paints both destinations from the pending list in src/bin/jackin/screens/config.rs. Esc calls leave in editor.rs. change_count is 0, so Unsaved changes stays closed. No mount form opens, so FormDialog::take_result in src/ui/layers.rs does not run. Ctrl+Q exits 0. No new destination is stored.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "050ad823771814162761aff7c793d584f2e3f8c1",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J02.mounts",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "The checkpoint is the open New mount form from open_mount_form in src/bin/jackin/screens/config.rs, after Browse chooses ~/src/payments-platform/docs from fixtures.rs and Destination is /workspace/payments-platform, before Save. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. FormDialog::take_result in src/ui/layers.rs closes on FormAction::Save, and the layer is popped before the owner runs. save_mount in config.rs returns before pending.mounts.push when the host is still not chosen, when the destination is already a mount, and when the destination does not start with /. Those returns call with_top after the pop, so Choose the host directory first, the already-a-mount sentence, and Destination must be an absolute path inside the Construct are not painted, and no row is stored. A chosen host with destination /workspace/field-notes paints Mount /workspace/field-notes added · save to apply, and the original two destinations remain. Editing that row to /workspace/libs closes the same way: the row stays /workspace/field-notes and updated is absent. Editing it to /workspace/notes-renamed paints Mount /workspace/notes-renamed updated · save to apply. d paints Removed /workspace/notes-renamed · u restores until save, and u is not pressed. Adding /workspace/field-notes again and Ctrl+S calls open_preview in src/bin/jackin/screens/editor.rs. The focused line contains Cancel. Clean up & save… is absent. Confirm Save calls start_save, which schedules WorkspaceSaved at 900 ms, and the wall clock reaches Workspace payments-platform saved. Reopening Mounts shows /workspace/field-notes from ~/src/payments-platform/docs, plus the original two destinations. /workspace/notes and /workspace/notes-renamed are absent.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "050ad823771814162761aff7c793d584f2e3f8c1",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j02_mounts/j02_mounts_mounts_120x40.tui.json",
