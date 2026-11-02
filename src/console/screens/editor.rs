@@ -2250,7 +2250,7 @@ impl Page<Jackin> for EditorScreen {
         self.cfg.render_menu(area, buf, ctx);
     }
 
-    fn hints(&self, focus: Option<WidgetId>, _w: &World) -> Vec<Hint> {
+    fn hints(&self, focus: Option<WidgetId>, w: &World) -> Vec<Hint> {
         if self.saving {
             return vec![hint("", "Saving…")];
         }
@@ -2279,6 +2279,8 @@ impl Page<Jackin> for EditorScreen {
                         });
                     } else if focus == Some(WORKDIR) {
                         v.push(hint("Enter", "Choose…"));
+                    } else if focus == Some(DOCKER) && w.surfaces.docker.is_some() {
+                        v.extend(super::modals::docker_row_hints());
                     } else {
                         v.push(hint("Space", "Toggle"));
                     }

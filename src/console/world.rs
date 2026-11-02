@@ -8,7 +8,7 @@ use crate::console::domain::account::{AccountId, AccountRegistry};
 use crate::console::domain::agent::{Agent, AuthMode, Provider};
 use crate::console::domain::doctor::{DoctorReport, DoctorState};
 use crate::console::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus};
-use crate::console::domain::role::{AccountOrder, RoleFinding};
+use crate::console::domain::role::{AccountOrder, RoleFinding, RoleRecord};
 use crate::console::domain::surfaces::Surfaces;
 use crate::console::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
@@ -29,6 +29,7 @@ pub mod job {
     pub const ROLE_CHECK: JobKey = JobKey::new("role.check");
     pub const ROLE_SAVE: JobKey = JobKey::new("role.save");
     pub const ROLE_BIND: JobKey = JobKey::new("role.bind");
+    pub const ROLE_ADD: JobKey = JobKey::new("role.add");
     pub const DOCTOR: JobKey = JobKey::new("doctor");
 }
 
@@ -156,6 +157,10 @@ pub enum Msg {
         ok: bool,
         error: Option<String>,
     },
+    RoleAdded {
+        location: String,
+        result: Result<Box<RoleRecord>, String>,
+    },
     DoctorFinished(DoctorReport),
 }
 
@@ -172,6 +177,7 @@ impl Msg {
             Msg::RoleChecked { .. } => Some(job::ROLE_CHECK),
             Msg::RoleSaved { .. } => Some(job::ROLE_SAVE),
             Msg::RoleBound { .. } => Some(job::ROLE_BIND),
+            Msg::RoleAdded { .. } => Some(job::ROLE_ADD),
             Msg::DoctorFinished(_) => Some(job::DOCTOR),
             Msg::Refreshed { .. } | Msg::AccountRefreshed { .. } | Msg::Takeover { .. } => None,
         }

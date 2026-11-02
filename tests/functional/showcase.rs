@@ -994,7 +994,7 @@ fn showcase_terminal_replay_mid_sequence() {
     full.key("ctrl+g");
     full.wait_absent("Ctrl+G Release");
     full.click_text("Reset");
-    full.wait_text("0 of 3 chunks");
+    full.wait_text("0 of 4 chunks");
     let pane = find(&full.settle(), "fullscreen");
     full.click(Point {
         x: pane.x + 4,
@@ -1041,4 +1041,54 @@ fn showcase_terminal_replay_mid_sequence() {
     mid.settle();
     mid.visual("functional/showcase_terminal_replay");
     mid.finish();
+}
+
+fn mode_reads(screen: &TerminalSnapshot, mode: &str, value: &str) -> bool {
+    row_text(screen, u32::from(find(screen, mode).y)).contains(value)
+}
+
+#[test]
+fn showcase_terminal_play_all_counts_the_leave_chunk() {
+    let app = terminal_pane(
+        "showcase-terminal-leave-chunk",
+        &["terminalpane.fixture=fullscreen"],
+    );
+    app.click_text("Play all");
+    let played = app.wait_text("3 of 4 chunks");
+    assert!(mode_reads(&played, "alt screen", "on"));
+    app.click_text("Step");
+    let left = app.wait_text("4 of 4 chunks");
+    assert!(mode_reads(&left, "alt screen", "off"));
+    app.click_text("Step");
+    app.settle();
+    app.wait_text("4 of 4 chunks");
+    app.finish();
+}
+
+fn small_terminal_keeps_controls(cols: u16, rows: u16) {
+    let app = App::new(
+        &format!("showcase-terminal-pane-{cols}x{rows}"),
+        SHOWCASE,
+        &["--page", "terminalpane", "--motion", "paused"],
+        cols,
+        rows,
+        "truecolor",
+    );
+    let screen = app.wait_text("Replay");
+    assert!(
+        text(&screen).contains("Step") && text(&screen).contains("Play all"),
+        "the controls stay on screen at {cols}x{rows}:\n{}",
+        text(&screen)
+    );
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_pane_fits_80x24() {
+    small_terminal_keeps_controls(80, 24);
+}
+
+#[test]
+fn showcase_terminal_pane_fits_120x20() {
+    small_terminal_keeps_controls(120, 20);
 }

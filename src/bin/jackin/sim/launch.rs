@@ -96,6 +96,7 @@ fn words() -> LaunchWords {
         log_waiting: "(waiting for docker build output…)".into(),
         build_failed: "Docker build failed".into(),
         ready_activity: "Hardline open · handing off to the Capsule".into(),
+        credentials_resolved: "resolved in memory · discarded after injection".into(),
     }
 }
 
@@ -106,6 +107,8 @@ pub fn content() -> Arc<LaunchContent> {
         stages,
         words: words(),
         build_log: BUILD_LOG.iter().map(|l| (*l).to_owned()).collect(),
+        agent_provider_only: false,
+        name_slug: None,
         network_failure: LaunchFailure {
                     stage: network,
                     summary: "The Construct network could not be attached".into(),
@@ -179,11 +182,14 @@ pub fn openshell_content() -> Arc<LaunchContent> {
             log_waiting: "(waiting for build output…)".into(),
             build_failed: "Image build failed".into(),
             ready_activity: "Codex is running · opening the session".into(),
+            credentials_resolved: "resolved in memory · discarded".into(),
         },
         build_log: OPENSHELL_BUILD_LOG
             .iter()
             .map(|l| (*l).to_owned())
             .collect(),
+        agent_provider_only: true,
+        name_slug: Some(7),
         network_failure: LaunchFailure {
             stage: sandbox,
             summary: "The sandbox could not be created".into(),

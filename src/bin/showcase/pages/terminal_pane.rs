@@ -22,6 +22,7 @@ use junie_tui::widgets::props::{self, Prop};
 
 const ID: WidgetId = WidgetId::of("terminalpane");
 const PANE: WidgetId = WidgetId::of("terminalpane.pane");
+const CONTROLS_MIN_AREA: u16 = 6;
 
 struct Fixture {
     name: &'static str,
@@ -341,17 +342,27 @@ impl TerminalPanePage {
     fn render_playground(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
         let t = ctx.theme;
         let (rows, cols) = self.state.size();
-        let title = self.fixture().name;
-        let progress = format!("{} of {} chunks", self.next, self.fixture().chunks.len());
+        let fixture = self.fixture();
+        let title = fixture.name;
+        let progress = format!(
+            "{} of {} chunks",
+            self.next + usize::from(self.leave_fed),
+            fixture.chunks.len() + usize::from(fixture.leave.is_some()),
+        );
         let panel = Panel::framed(Some(title))
             .meta(&progress)
             .focused(ctx.interaction.focused(PANE));
         let outer = panel.outer(Size::new(cols, rows));
+        let controls_h = if area.height > CONTROLS_MIN_AREA {
+            2
+        } else {
+            0
+        };
         let frame = Rect::new(
             area.x,
             area.y,
             outer.width.min(area.width),
-            outer.height.min(area.height),
+            outer.height.min(area.height - controls_h),
         );
         let bg = panel.bg(t);
         let inner = panel.render(frame, buf, t);
@@ -372,17 +383,19 @@ impl TerminalPanePage {
         }
 
         let controls_y = frame.bottom() + 1;
-        let widths = [
-            self.step.width(),
-            self.play.width(),
-            self.replay.width(),
-            self.reset.width(),
-        ];
-        let rects = row_layout(Rect::new(area.x, controls_y, area.width, 1), &widths, 2);
-        self.step.render(rects[0], buf, ctx, t.canvas);
-        self.play.render(rects[1], buf, ctx, t.canvas);
-        self.replay.render(rects[2], buf, ctx, t.canvas);
-        self.reset.render(rects[3], buf, ctx, t.canvas);
+        if controls_y < area.bottom() {
+            let widths = [
+                self.step.width(),
+                self.play.width(),
+                self.replay.width(),
+                self.reset.width(),
+            ];
+            let rects = row_layout(Rect::new(area.x, controls_y, area.width, 1), &widths, 2);
+            self.step.render(rects[0], buf, ctx, t.canvas);
+            self.play.render(rects[1], buf, ctx, t.canvas);
+            self.replay.render(rects[2], buf, ctx, t.canvas);
+            self.reset.render(rects[3], buf, ctx, t.canvas);
+        }
 
         let echo_y = controls_y + 2;
         let (label, tone) = match (&self.echo, self.capturing) {
@@ -396,21 +409,25 @@ impl TerminalPanePage {
                 Tone::Muted,
             ),
         };
-        buf.set_string(
-            area.x,
-            echo_y,
-            junie_tui::ui::text::truncate(&label, area.width as usize),
-            ratatui::style::Style::new().fg(t.tone(tone)).bg(t.canvas),
-        );
-        buf.set_string(
-            area.x,
-            echo_y + 1,
-            junie_tui::ui::text::truncate(
-                "A stream that starts inside a sequence prints its tail as text until the next full redraw.",
-                area.width as usize,
-            ),
-            t.faint().bg(bg),
-        );
+        if echo_y < area.bottom() {
+            buf.set_string(
+                area.x,
+                echo_y,
+                junie_tui::ui::text::truncate(&label, area.width as usize),
+                ratatui::style::Style::new().fg(t.tone(tone)).bg(t.canvas),
+            );
+        }
+        if echo_y + 1 < area.bottom() {
+            buf.set_string(
+                area.x,
+                echo_y + 1,
+                junie_tui::ui::text::truncate(
+                    "A stream that starts inside a sequence prints its tail as text until the next full redraw.",
+                    area.width as usize,
+                ),
+                t.faint().bg(bg),
+            );
+        }
         let _ = bg;
     }
 

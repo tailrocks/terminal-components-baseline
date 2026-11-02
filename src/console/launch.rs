@@ -98,6 +98,7 @@ pub struct LaunchWords {
     pub log_waiting: String,
     pub build_failed: String,
     pub ready_activity: String,
+    pub credentials_resolved: String,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -159,6 +160,8 @@ pub struct LaunchContent {
     pub words: LaunchWords,
     pub build_log: Vec<String>,
     pub network_failure: LaunchFailure,
+    pub agent_provider_only: bool,
+    pub name_slug: Option<usize>,
 }
 
 impl LaunchRun {

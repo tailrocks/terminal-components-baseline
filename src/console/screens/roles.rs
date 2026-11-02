@@ -11,6 +11,7 @@ use crate::ui::ctx::RenderCtx;
 use crate::ui::layout::Split;
 use crate::widgets::dialog::Dialog;
 use crate::widgets::empty::{self, EmptyAction, EmptyState};
+use crate::widgets::form_dialog::{FieldValue, FormField};
 use crate::widgets::info_dialog::InfoDialog;
 use crate::widgets::input::TextInput;
 use crate::widgets::keyhint::{Hint, hint};
@@ -24,6 +25,7 @@ use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
 use super::listdetail::{Action, Event, Frame, Line, ListDetail, ListRow};
+use super::modals::FormDialog;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::console::backend::Effect;
 use crate::console::domain::account::AccountId;
@@ -65,6 +67,7 @@ pub struct RolesScreen {
     pick: Option<(RoleName, Agent, Vec<AccountId>)>,
     removing: Option<RoleName>,
     checking: BTreeSet<RoleName>,
+    adding: Option<String>,
 }
 
 impl Default for RolesScreen {
@@ -97,22 +100,22 @@ fn check_mark(rec: &RoleRecord) -> StatusKind {
     }
 }
 
+fn location_error(v: &str) -> Option<String> {
+    let v = v.trim();
+    let ok = !v.chars().any(char::is_whitespace)
+        && ["/", "~/", "./", "https://", "ssh://", "git@"]
+            .iter()
+            .any(|p| v.starts_with(p));
+    (!ok).then(|| {
+        "Use a directory such as ~/roles/sentinel or a git URL such as https://github.com/owner/role.git."
+            .to_owned()
+    })
+}
+
 fn chip(rec: &RoleRecord) -> &'static str {
     match rec.source {
         RoleSource::Git { .. } => "git",
         RoleSource::Local { .. } => "path",
-    }
-}
-
-fn level_phrase(level: PrecedenceLevel) -> &'static str {
-    match level {
-        PrecedenceLevel::Role => "the role binding",
-        PrecedenceLevel::ProviderDefault => "the provider default",
-        PrecedenceLevel::OnlyAccount => "the only account",
-        PrecedenceLevel::Workspace => "the workspace binding",
-        PrecedenceLevel::Session => "the session choice",
-        PrecedenceLevel::Discovered => "the account found on the host",
-        PrecedenceLevel::None => "no account",
     }
 }
 
@@ -135,6 +138,7 @@ impl RolesScreen {
             pick: None,
             removing: None,
             checking: BTreeSet::new(),
+            adding: None,
         }
     }
 
@@ -213,13 +217,9 @@ impl RolesScreen {
                         return ListRow::new(name);
                     };
                     let summary = self.binding_summary(rec, w);
-                    let detail = match check_mark(rec) {
-                        StatusKind::Fail if rec.manifest.is_err() => "broken".to_owned(),
-                        StatusKind::Fail => "failed".to_owned(),
-                        StatusKind::Running => "checking".to_owned(),
-                        _ => chip(rec).to_owned(),
-                    };
-                    let row = ListRow::new(&rec.name).mark(check_mark(rec)).detail(detail);
+                    let row = ListRow::new(&rec.name)
+                        .mark(check_mark(rec))
+                        .detail(chip(rec));
                     if summary.is_empty() {
                         row.meta("no binding", Tone::Faint)
                     } else {
@@ -577,13 +577,7 @@ impl RolesScreen {
                 cx.status(format!("Bound {title} to {role} for {agent}"));
             }
             (None, false) => {
-                let level = w
-                    .account_for(bind.agent.provider(), None, Some(role), None)
-                    .level;
-                cx.status(format!(
-                    "Cleared the {agent} binding of {role} · launches use {} · u undoes",
-                    level_phrase(level)
-                ));
+                cx.status(format!("Cleared the {agent} binding of {role} · u undoes"));
             }
         }
     }
@@ -691,7 +685,73 @@ impl RolesScreen {
     }
 
     fn add(&mut self, cx: &mut Cx) {
-        cx.status("Not in this preview · register a role with jackin role add");
+        self.open_add_form("", cx);
+    }
+
+    fn open_add_form(&mut self, location: &str, cx: &mut Cx) {
+        let f = WidgetId::of("roles.add");
+        let fields = vec![FormField::input(
+            "location",
+            TextInput::new(f.sub("location"), "Location")
+                .required(true)
+                .placeholder("~/roles/sentinel or https://github.com/owner/role.git")
+                .validator(location_error)
+                .value(location),
+        )];
+        let form = FormDialog::new(f, "Add role", fields)
+            .width(76)
+            .meta("register a role");
+        cx.open(form, LayerTag::new("add"));
+    }
+
+    fn start_add(&mut self, values: Vec<(String, FieldValue)>, w: &mut World, cx: &mut Cx) {
+        let location = values
+            .iter()
+            .find_map(|(n, v)| match v {
+                FieldValue::Text(s) if n == "location" => Some(s.trim().to_owned()),
+                _ => None,
+            })
+            .unwrap_or_default();
+        self.adding = Some(location.clone());
+        w.perform(Effect::AddRole { location });
+        cx.progress(job::ROLE_ADD, "Adding role…");
+    }
+
+    fn finish_add(
+        &mut self,
+        location: &str,
+        result: &Result<Box<RoleRecord>, String>,
+        w: &mut World,
+        cx: &mut Cx,
+    ) {
+        self.adding = None;
+        match result {
+            Ok(rec) => {
+                let name = rec.name.clone();
+                if let Some(admin) = w.surfaces.roles.as_mut() {
+                    admin.roles.push((**rec).clone());
+                }
+                self.want = Some(name.clone());
+                self.filter = None;
+                self.build_rows(w);
+                cx.status(format!("Role {name} added"));
+            }
+            Err(reason) => {
+                let d = InfoDialog::new(
+                    WidgetId::of("roles.addfail"),
+                    "Could not add role",
+                    vec![
+                        Prop::new("Location", location.to_owned()).wrap(),
+                        Prop::new("Error", reason.clone()).tone(Tone::Error).wrap(),
+                        Prop::new("State", "no role was registered"),
+                        Prop::new("Next", "check the location, then add the role again"),
+                    ],
+                )
+                .error()
+                .width(76);
+                cx.open(d, LayerTag::new("addfail").key(location));
+            }
+        }
     }
 
     fn fire(&mut self, name: &str, w: &mut World, cx: &mut Cx) {
@@ -725,6 +785,7 @@ impl Page<Jackin> for RolesScreen {
 
     fn animating(&self, w: &World) -> bool {
         self.pending.is_some()
+            || self.adding.is_some()
             || w.surfaces.roles.as_ref().is_some_and(|a| {
                 a.roles
                     .iter()
@@ -753,6 +814,10 @@ impl Page<Jackin> for RolesScreen {
                 .is_some_and(|p| &p.role == role && p.agent == *agent) =>
             {
                 self.finish_bind(*ok, error.clone(), w, cx);
+                Outcome::Changed
+            }
+            Msg::RoleAdded { location, result } if self.adding.as_deref() == Some(location) => {
+                self.finish_add(location, result, w, cx);
                 Outcome::Changed
             }
             Msg::RoleChecked { role, findings } if self.checking.remove(role) => {
@@ -921,6 +986,8 @@ impl Page<Jackin> for RolesScreen {
                 }
             }
             ("remove", _) => self.removing = None,
+            ("add", ModalResult::Form(Some(values))) => self.start_add(values, w, cx),
+            ("addfail", _) => self.open_add_form(&tag.key, cx),
             (
                 "filter",
                 ModalResult::Dialog {

@@ -20,6 +20,30 @@ use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
 use ratatui::style::{Modifier, Style};
 
+const COLUMN_GAP: u16 = 2;
+
+fn columns(rest: u16, detail: u16, meta: u16) -> (u16, u16) {
+    let both = detail > 0 && meta > 0;
+    let gap = if both { COLUMN_GAP } else { 0 };
+    let (mut d, mut m) = if detail + gap + meta <= rest {
+        (detail, meta)
+    } else if detail <= meta {
+        let d = detail.min(rest);
+        (d, rest.saturating_sub(d + gap))
+    } else {
+        let m = meta.min(rest);
+        (rest.saturating_sub(m + gap), m)
+    };
+    if m < meta.min(4) {
+        m = 0;
+        d = detail.min(rest);
+    }
+    if d < detail.min(4) {
+        d = 0;
+    }
+    (d, m)
+}
+
 #[derive(Debug, Clone)]
 pub struct ListRow {
     pub mark: Option<StatusKind>,
@@ -484,6 +508,9 @@ impl ListDetail {
             .max()
             .unwrap_or(8)
             .clamp(8, 22);
+        let (detail_w, meta_w) = frame.rows.iter().fold((0, 0), |(d, m), r| {
+            (d.max(width(&r.detail) as u16), m.max(width(&r.meta) as u16))
+        });
         for (k, i) in self.scroll.visible_range().enumerate() {
             let y = inner.y + k as u16;
             let row = &frame.rows[i];
@@ -506,15 +533,8 @@ impl ListDetail {
                 buf.set_string(x, y, glyph, gs.bg(st.bg.unwrap_or(bg)));
             }
             x += 2;
-            let meta_w = width(&row.meta) as u16;
             let right = rect.right().saturating_sub(1);
-            let avail = right.saturating_sub(x);
-            let meta_room = if meta_w > 0 && avail > meta_w + 14 {
-                meta_w + 2
-            } else {
-                0
-            };
-            let lw = (label_w as u16).min(avail.saturating_sub(meta_room));
+            let lw = (label_w as u16).min(right.saturating_sub(x));
             let label_style = if row.faint {
                 st.fg(t.text_muted)
             } else if s.selected {
@@ -528,21 +548,22 @@ impl ListDetail {
                 fit(&truncate(&row.label, lw as usize), lw as usize),
                 label_style,
             );
-            let dx = x + lw + 2;
-            let droom = right.saturating_sub(dx + meta_room) as usize;
-            if !row.detail.is_empty() && droom >= 4 {
+            let dx = x + lw + COLUMN_GAP;
+            let (detail_col, meta_col) = columns(right.saturating_sub(dx), detail_w, meta_w);
+            if !row.detail.is_empty() && detail_col > 0 {
                 buf.set_string(
                     dx,
                     y,
-                    truncate(&row.detail, droom),
+                    truncate(&row.detail, detail_col as usize),
                     st.fg(t.text_muted).remove_modifier(Modifier::BOLD),
                 );
             }
-            if meta_room > 0 {
+            if !row.meta.is_empty() && meta_col > 0 {
+                let meta = truncate(&row.meta, meta_col as usize);
                 buf.set_string(
-                    right - meta_w,
+                    right - width(&meta) as u16,
                     y,
-                    &row.meta,
+                    &meta,
                     st.fg(t.tone(row.meta_tone)).remove_modifier(Modifier::BOLD),
                 );
             }

@@ -66,6 +66,10 @@ pub fn unsaved_dialog(id: WidgetId, changes: usize) -> Dialog {
     )
 }
 
+pub fn docker_row_hints() -> [Hint; 2] {
+    [hint("Space", "Toggle"), hint("i", "Risks")]
+}
+
 pub fn docker_risk_dialog(
     id: WidgetId,
     subject: &str,

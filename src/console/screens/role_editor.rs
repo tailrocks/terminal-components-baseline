@@ -156,6 +156,8 @@ pub struct RoleEditorScreen {
     save: Button,
     saving: bool,
     check: RoleCheckState,
+    checked: Option<RoleManifestDoc>,
+    save_after_check: bool,
     pick: Option<Pick>,
     pick_targets: Vec<String>,
 }
@@ -243,6 +245,10 @@ impl RoleEditorScreen {
             save: Button::primary(SAVE, "Save…"),
             saving: false,
             check: rec.map_or(RoleCheckState::Unchecked, |r| r.check.clone()),
+            checked: rec
+                .filter(|r| matches!(r.check, RoleCheckState::Done(_)))
+                .map(|_| doc.clone()),
+            save_after_check: false,
             pick: None,
             pick_targets: vec![],
         };
@@ -406,12 +412,30 @@ impl RoleEditorScreen {
             cx.error("Fix the entries marked ! before the check");
             return;
         }
+        self.save_after_check = false;
+        self.start_check(w, cx);
+    }
+
+    fn start_check(&mut self, w: &mut World, cx: &mut Cx) {
         self.check = RoleCheckState::Running;
+        self.checked = Some(self.pending.clone());
         w.perform(Effect::CheckRole {
             role: self.role.clone(),
             doc: self.pending.clone(),
         });
         cx.progress(job::ROLE_CHECK, format!("Checking {}…", self.role));
+    }
+
+    fn is_stale(&self) -> bool {
+        self.checked.as_ref() != Some(&self.pending)
+    }
+
+    fn stale_text(&self) -> &'static str {
+        if self.checked.is_none() {
+            "Not checked yet · F5"
+        } else {
+            "Not checked since your last edit · F5"
+        }
     }
 
     fn validate_fields(&mut self) -> bool {
@@ -455,7 +479,7 @@ impl RoleEditorScreen {
         Outcome::Changed
     }
 
-    fn open_preview(&mut self, cx: &mut Cx) {
+    fn request_save(&mut self, w: &mut World, cx: &mut Cx) {
         self.sync();
         if self.locked() {
             cx.status("This role is read-only");
@@ -466,15 +490,20 @@ impl RoleEditorScreen {
             cx.error("Fix the entries marked ! before saving");
             return;
         }
-        if !self.findings().is_empty() || self.is_busy() {
+        if self.is_busy() {
             self.open_check_failed(cx);
             return;
         }
-        let n = self.change_count();
-        if n == 0 {
+        if self.change_count() == 0 {
             cx.status("Nothing to save");
             return;
         }
+        self.save_after_check = true;
+        self.start_check(w, cx);
+    }
+
+    fn open_preview(&mut self, cx: &mut Cx) {
+        let n = self.change_count();
         let scope = match &self.source {
             RoleSource::Local { path } => format!("role manifest · {path}/jackin.role.toml"),
             RoleSource::Git { url, .. } => format!("role manifest · {url}"),
@@ -741,7 +770,7 @@ impl RoleEditorScreen {
                 "name",
                 TextInput::new(f.sub("name"), "Name")
                     .required(true)
-                    .placeholder("SENTINEL_NOTE")
+                    .placeholder("EXAMPLE_NAME")
                     .validator(entry_name_error)
                     .value(e.as_ref().map_or("", |e| e.name.as_str())),
             ),
@@ -1101,7 +1130,11 @@ impl RoleEditorScreen {
         }
         let findings = self.findings();
         if findings.is_empty() {
-            return vec![Notice::success("Check passed")];
+            return vec![if self.is_stale() {
+                Notice::info(self.stale_text())
+            } else {
+                Notice::success("Check passed")
+            }];
         }
         findings
             .iter()
@@ -1118,6 +1151,8 @@ impl RoleEditorScreen {
             let findings = self.findings().len();
             let (text, tone) = if running {
                 ("Checking…".to_owned(), Tone::Active)
+            } else if findings == 0 && self.is_stale() {
+                (self.stale_text().to_owned(), Tone::Secondary)
             } else if findings == 0 {
                 ("Check passed".to_owned(), Tone::Success)
             } else {
@@ -1218,6 +1253,13 @@ impl Page<Jackin> for RoleEditorScreen {
                 } else {
                     plural(findings.len(), "error", "errors")
                 });
+                if std::mem::take(&mut self.save_after_check) {
+                    if findings.is_empty() {
+                        self.open_preview(cx);
+                    } else {
+                        self.open_check_failed(cx);
+                    }
+                }
                 Outcome::Changed
             }
             _ => Outcome::Ignored,
@@ -1231,7 +1273,7 @@ impl Page<Jackin> for RoleEditorScreen {
         let focus = cx.focus.current();
         let editing = self.editing_any();
         if key.ctrl() && key.code == KeyCode::Char('s') {
-            self.open_preview(cx);
+            self.request_save(w, cx);
             return Outcome::Changed;
         }
         if key.is(KeyCode::F(5)) {
@@ -1300,7 +1342,7 @@ impl Page<Jackin> for RoleEditorScreen {
         if focus == Some(SAVE) {
             let (o, fired) = self.save.on_key(key);
             if fired {
-                self.open_preview(cx);
+                self.request_save(w, cx);
                 return Outcome::Changed;
             }
             if o.consumed() {
@@ -1417,7 +1459,7 @@ impl Page<Jackin> for RoleEditorScreen {
         if id == SAVE {
             cx.focus.focus(SAVE);
             if self.save.on_click() {
-                self.open_preview(cx);
+                self.request_save(w, cx);
             }
             return Outcome::Changed;
         }
@@ -1512,7 +1554,7 @@ impl Page<Jackin> for RoleEditorScreen {
                 ModalResult::Dialog {
                     action: Some(2), ..
                 },
-            ) => self.open_preview(cx),
+            ) => self.request_save(w, cx),
             (
                 "exit",
                 ModalResult::Dialog {
@@ -1651,7 +1693,7 @@ impl Page<Jackin> for RoleEditorScreen {
         self.save.render(rects[1], buf, ctx, bg);
     }
 
-    fn hints(&self, focus: Option<WidgetId>, _w: &World) -> Vec<Hint> {
+    fn hints(&self, focus: Option<WidgetId>, w: &World) -> Vec<Hint> {
         if self.saving {
             return vec![hint("", "Saving…")];
         }
@@ -1665,9 +1707,10 @@ impl Page<Jackin> for RoleEditorScreen {
             v.push(hint("e", "Edit"));
             v.push(hint("d", "Remove"));
             v.push(hint("u", "Undo"));
+        } else if focus == Some(DOCKER) && w.surfaces.docker.is_some() {
+            v.extend(super::modals::docker_row_hints());
         } else if focus == Some(DOCKER) {
             v.push(hint("Space", "Toggle"));
-            v.push(hint("i", "Risks"));
         } else {
             v.push(hint("Tab", "Next"));
         }

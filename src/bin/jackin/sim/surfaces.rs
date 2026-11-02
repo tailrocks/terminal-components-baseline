@@ -1,5 +1,8 @@
 use junie_tui::console::domain::doctor::{DoctorCheck, DoctorReport};
-use junie_tui::console::domain::role::{FindingArea, RoleFinding, RoleManifestDoc};
+use junie_tui::console::domain::role::{
+    FindingArea, RoleCheckState, RoleFinding, RoleManifestDoc, RoleRecord,
+};
+use junie_tui::console::domain::workspace::RoleSource;
 use junie_tui::theme::StatusKind;
 
 const FILES: [&str; 5] = [
@@ -17,6 +20,51 @@ fn missing(area: FindingArea, key: &str, path: &str) -> RoleFinding {
         message: format!("{path}: file not found in the role repository"),
         fix: "Create the file or choose an existing one with Choose….".into(),
     }
+}
+
+pub fn add_role(location: &str, taken: impl Fn(&str) -> bool) -> Result<RoleRecord, String> {
+    let location = location.trim();
+    let last = location.trim_end_matches('/').rsplit(['/', ':']).next();
+    let name = last
+        .map(|l| l.strip_suffix(".git").unwrap_or(l))
+        .filter(|n| !n.is_empty() && *n != "~")
+        .ok_or_else(|| format!("{location}: not a role location"))?;
+    if name == "missing" {
+        return Err(format!("{location}: no jackin.role.toml found"));
+    }
+    if taken(name) {
+        return Err(format!("A role named {name} is already registered."));
+    }
+    let doc = RoleManifestDoc {
+        name: name.into(),
+        dockerfile: "Dockerfile".into(),
+        policy: "policy.yaml".into(),
+        codex_model: None,
+        docker: false,
+        hook_setup: None,
+        hook_preflight: None,
+        env: vec![],
+    };
+    let git = ["https://", "ssh://", "git@"]
+        .iter()
+        .any(|p| location.starts_with(p));
+    Ok(RoleRecord {
+        name: name.into(),
+        source: if git {
+            RoleSource::Git {
+                url: location.into(),
+                branch: "main".into(),
+            }
+        } else {
+            RoleSource::Local {
+                path: location.into(),
+            }
+        },
+        check: RoleCheckState::Done(check_role(&doc)),
+        manifest: Ok(doc),
+        bindings: Default::default(),
+        files: FILES.iter().map(|f| (*f).to_owned()).collect(),
+    })
 }
 
 pub fn check_role(doc: &RoleManifestDoc) -> Vec<RoleFinding> {

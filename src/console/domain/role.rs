@@ -18,7 +18,7 @@ pub struct RoleAdmin {
     pub order: AccountOrder,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RoleRecord {
     pub name: RoleName,
     pub source: RoleSource,

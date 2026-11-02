@@ -83,7 +83,14 @@ impl CockpitScreen {
             .unwrap_or_else(|| w.cwd.rsplit('/').next().unwrap_or("directory").to_owned());
         let instance_id = w.new_instance_id();
         let suffix = instance_id.trim_start_matches("jk-").to_owned();
-        let container = format!("jackin-{wsname}-{suffix}");
+        let content = w.backend.launch_content();
+        let container = match content.name_slug {
+            Some(n) => {
+                let slug = crate::ui::text::clip(&wsname, n);
+                format!("jackin-{}-{suffix}", slug.trim_end_matches('-'))
+            }
+            None => format!("jackin-{wsname}-{suffix}"),
+        };
         let run_id = format!(
             "run-{}-{suffix}",
             crate::ui::text::clip(
@@ -94,7 +101,7 @@ impl CockpitScreen {
                 12,
             )
         );
-        let run = LaunchRun::new(plan, agent, &container, &run_id, w.backend.launch_content());
+        let run = LaunchRun::new(plan, agent, &container, &run_id, content.clone());
         let steps = run
             .content
             .stages
@@ -121,6 +128,13 @@ impl CockpitScreen {
             && !accounts.contains(a)
         {
             accounts.insert(0, a.clone());
+        }
+        if content.agent_provider_only {
+            accounts.retain(|id| {
+                w.accounts
+                    .get(id)
+                    .is_some_and(|a| a.provider == agent.provider())
+            });
         }
         let docker = w.docker_on(workspace, &role);
         Self {
@@ -179,15 +193,20 @@ impl CockpitScreen {
             .filter_map(|id| w.accounts.get(id))
             .map(|a| a.title())
             .collect();
+        let primary = self
+            .account
+            .as_ref()
+            .and_then(|id| w.accounts.get(id))
+            .map(|a| format!("{} ({})", a.title(), a.source.origin_label()))
+            .unwrap_or_else(|| origin.clone());
         if others.is_empty() {
-            (origin, val, tone)
+            let shown = if self.run.content.agent_provider_only {
+                primary
+            } else {
+                origin
+            };
+            (shown, val, tone)
         } else {
-            let primary = self
-                .account
-                .as_ref()
-                .and_then(|id| w.accounts.get(id))
-                .map(|a| format!("{} ({})", a.title(), a.source.origin_label()))
-                .unwrap_or(origin);
             (
                 format!(
                     "{} · {primary} · {}",
@@ -277,7 +296,7 @@ impl CockpitScreen {
                 LaunchEvent::ContainerReady(c) => self.container = Some(c),
                 LaunchEvent::CredentialsResolved { .. } => {
                     if let Some((_, v, tone)) = self.credentials.as_mut() {
-                        *v = format!("resolved in memory · discarded after injection · {v}");
+                        *v = format!("{} · {v}", self.run.content.words.credentials_resolved);
                         *tone = Tone::Secondary;
                     }
                 }
@@ -973,19 +992,16 @@ impl Page<Jackin> for CockpitScreen {
             && let Some(d) = w.surfaces.docker.as_ref()
         {
             let ny = rail.bottom() + 4;
-            if ny + 1 < area.bottom().saturating_sub(3) {
-                let x = rail.x.saturating_sub(4);
-                let notice = Notice::warning(format!(
-                    "Docker is on · the agent can read the engine key · i shows all {}",
-                    plural(d.risks.len(), "risk", "risks")
-                ));
-                fill(buf, Rect::new(area.x, ny, area.width, 1), t.base());
-                notice.render(
-                    Rect::new(x, ny, area.right().saturating_sub(x + 2), 1),
-                    buf,
-                    ctx,
-                    t.canvas,
-                );
+            let x = rail.x.saturating_sub(4);
+            let width = area.right().saturating_sub(x + 2);
+            let notice = Notice::warning(format!(
+                "Docker is on · the agent can read the engine key and containers bypass the sandbox network policy · i shows all {}",
+                plural(d.risks.len(), "risk", "risks")
+            ));
+            let h = notice.height(width);
+            if ny + h < area.bottom().saturating_sub(3) {
+                fill(buf, Rect::new(area.x, ny, area.width, h), t.base());
+                notice.render(Rect::new(x, ny, width, h), buf, ctx, t.canvas);
             }
         }
         let _ = y;

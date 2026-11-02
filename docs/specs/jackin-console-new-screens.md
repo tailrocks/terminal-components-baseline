@@ -60,6 +60,7 @@ All asynchronous work uses the existing pattern: the screen calls `World::perfor
 | `CheckRole { role, doc: RoleManifestDoc }` | `RoleChecked { role, findings }` | `ROLE_CHECK` |
 | `SaveRole { role, doc }` | `RoleSaved { role, ok, error: Option<String> }` | `ROLE_SAVE` |
 | `BindRole { role, agent, account: Option<AccountId> }` | `RoleBound { role, agent, ok, error }` | `ROLE_BIND` |
+| `AddRole { location }` | `RoleAdded { location, result: Result<Box<RoleRecord>, String> }` | `ROLE_ADD` |
 | `RunDoctor` | `DoctorFinished(DoctorReport)` | `DOCTOR` |
 
 Docker needs no effect: it is the `docker` field of `Workspace`, saved by the existing `Effect::SaveWorkspace`. `Msg` keeps `Clone + PartialEq + Eq`, so every payload does too.
@@ -226,7 +227,7 @@ Route: `Route::Roles` (root tab 3), deep link `--scenario role-binding`.
 
 `MasterDetail` (`ui/master_detail.rs`), the pattern of Manager and Accounts, so the split, drawer and summary modes and the narrow behaviour come from the component.
 
-- Master: `Panel` titled `Roles`, meta `5 roles · 1 !`. Rows: `StatusKind` mark of the check, role name, source chip (`path` or `git`), binding summary (`Codex · Primary` or faint `no binding`). Last row `+ Add role…`. Filter with `/` as Accounts.
+- Master: `Panel` titled `Roles`, meta `5 roles · 1 !`. Rows: `StatusKind` mark of the check, role name, source chip (`path` or `git`), binding summary (`Codex · Primary` or faint `no binding`). Last row `+ Add role…`, which opens a `FormDialog` titled `Add role` with one required field `Location` (a directory such as `~/roles/sentinel` or a git URL) and sends `Effect::AddRole`. A refusal opens `InfoDialog` `Could not add role` (`State: no role was registered`), and the form reopens with the typed location. Filter with `/` as Accounts. Row layout (shared `ListDetail`): the source chip column is reserved for every row, and the binding summary is truncated first (`Codex · Experimen…`). The check state shows through the mark only.
 - Detail: header `Role · sentinel` with meta `local · check passed`. A `props` sheet (`Prop`): `Source`, `Dockerfile`, `Policy`, `Codex model`, `Docker` (`on` in warning tone when the manifest enables it), `Hooks`, `Environment` (`2 entries`), `Check`. Then the section `Account bindings` with one row per `RoleAdmin.agents` entry:
 
 ```
@@ -258,7 +259,7 @@ Account bindings                                    default account of this role
 | Long content | Names and account titles clip (`fit`/`truncate`); the detail scrolls | `Tab` into the detail, `PageDown` |
 | Narrow | `MasterDetail` drawer: `Enter` opens the detail, `Esc` closes it | As Manager |
 
-Clearing is not confirmed because it is reversible: the status reads `Cleared the Codex binding of sentinel · launches use the provider default · u undoes` and `u` restores the previous value once, while the screen is open. Removing a role is confirmed (`Dialog::destructive`, body `jackin forgets the role. The files in ~/roles/sentinel stay.`); a role that a workspace names as default is refused with `InfoDialog`: `Role sentinel is the default role of payments-platform. Choose another default role, then remove it.` (`RoleInUse`).
+Clearing is not confirmed because it is reversible: the status reads `Cleared the Codex binding of sentinel · u undoes` (the row already says what the launch uses, and a longer status pushes the key hints out of the footer) and `u` restores the previous value once, while the screen is open. Removing a role is confirmed (`Dialog::destructive`, body `jackin forgets the role. The files in ~/roles/sentinel stay.`); a role that a workspace names as default is refused with `InfoDialog`: `Role sentinel is the default role of payments-platform. Choose another default role, then remove it.` (`RoleInUse`).
 
 ### 3.4 Key map
 
@@ -475,7 +476,7 @@ pub struct DoctorCheck {
 
 ### 6.1 Page
 
-New page `terminalpane` (label `Terminal pane`, group `Text & code`, after `Terminal`; the existing page `terminal` is the task-output demo and stays). Files: `src/bin/showcase/pages/terminal_pane.rs`, `PageId::TerminalPane`, a `NAV_ENTRIES` row, alias `terminalpane`, options in `options.rs`, and `page_test!(showcase_page_terminalpane, "terminalpane", "Terminal pane")`.
+New page `terminalpane` (label `Terminal pane`, group `Text & code`, after `Terminal`; the existing page `terminal` is the task-output demo and stays). Files: `src/bin/showcase/pages/terminal_pane.rs`, `PageId::TerminalPane`, a `NAV_ENTRIES` row (deviation, accepted by the review: the page sits in `HIDDEN_ENTRIES` and is reachable only with `--page terminalpane`, because a sidebar row changes `Components 54` and the sidebar of every showcase baseline; the row moves to `NAV_ENTRIES` at the next intended showcase re-baseline, see `docs/audits/2026-11-02-showcase-nav-and-listdetail-page.md`), alias `terminalpane`, options in `options.rs`, and `page_test!(showcase_page_terminalpane, "terminalpane", "Terminal pane")`.
 
 The page is wiring and demo data only (AGENTS.md showcase rule): it feeds bytes with `TerminalState::feed`, draws `TerminalView`, and prints `Modes` and `encode_key` results. It implements no emulation, no key encoding, no state logic.
 
@@ -502,7 +503,7 @@ The page owns a `TerminalState` and a cursor into `chunks`; that is all of its s
 | `split` | one SGR split across chunks (`ESC` / `[38;2;7` / `2;224;84mgreen`), a UTF-8 box character split between bytes (`E2 94` / `82`), an OSC title split before its `BEL` | `feed` is stateful across calls |
 | `midstream` | four chunks. c1 `ESC[38;2;72;224;84mtail ESC[0m CRLF`. c2 `ESC]0;title BEL after CRLF`. c3 `E2 94 82 x CRLF` (the box character `│` and `x`). c4, the redraw: `ESC[2J ESC[H ready $ ` | replay from the inside of a sequence |
 
-`Replay` resets the state, then feeds the rest of one starting chunk from a byte offset. `Replay start` picks the chunk and the offset: `stream start` is (c1, 0); `inside a CSI sequence` is (c1, 9), after `ESC[38;2;72`; `inside an OSC sequence` is (c2, 2), after `ESC]`; `inside a UTF-8 character` is (c3, 2), on the continuation byte `82`. `Step` feeds the next chunk (the redraw chunk is last); `Play all` feeds the rest; `Reset` calls `TerminalState::reset`. Size changes call `TerminalState::resize`.
+`Replay` resets the state, then feeds the rest of one starting chunk from a byte offset. `Replay start` picks the chunk and the offset: `stream start` is (c1, 0); `inside a CSI sequence` is (c1, 9), after `ESC[38;2;72`; `inside an OSC sequence` is (c2, 2), after `ESC]`; `inside a UTF-8 character` is (c3, 2), on the continuation byte `82`. `Step` feeds the next chunk (the redraw chunk is last); `Play all` feeds the rest of the chunks and stops before a fixture's leave chunk (`ESC[?1049l`), so the modes still read `on`; one more `Step` feeds the leave chunk. The counter in the panel meta counts the leave chunk (`fullscreen`: `3 of 4 chunks` after `Play all`, `4 of 4` after the `Step`); `Reset` calls `TerminalState::reset`. Size changes call `TerminalState::resize`.
 
 Expected results, verified against `vt100 0.18.1` in a scratch program on 2 Nov 2026 (a fresh 5x30 parser, the remainder of the starting chunk fed in one `feed` call):
 
@@ -621,7 +622,7 @@ The seven rows are the brief's six stages plus `Credentials`, which the demo flo
 
 ### 7.3 Test `jackin_launch_openshell_stages`
 
-Scenario `launch-openshell --motion paused --frame 90` (cumulative stage ticks 30, 40, 62, 76, 106, so frame 90 is inside `Upload`). Assert the seven labels, `stage 5 of 7 · Upload`, the strip `4/7 stages`, the chip `jackin-…` under the `Sandbox` word, and none of `Docker`, `Capsule`, `Construct`, `Derived Image`. Press `b`; assert the log title `Image build`. `visual("functional/jackin_launch_openshell")`.
+Scenario `launch-openshell --motion paused --frame 90` (cumulative stage ticks 30, 40, 62, 76, 106, so frame 90 is inside `Upload`). Assert the seven labels, `stage 5 of 7 · Upload`, the strip `4/7 stages`, the chip `jackin-payment-b5df` (D07: `jackin-<slug7>-<suffix4>`, at most 19 characters) under the `Sandbox` word, a credentials block that lists the Codex account only and is not clipped, and none of `Docker`, `Capsule`, `Construct`, `Derived Image` below line 0. The shell draws the first screen line (the chrome strip, `inside the Construct` or `entering the Construct`, `app.rs:1919`). `Construct` is the base image name and the baseline's brand wording, not a Docker or Capsule word, so the test skips line 0 and forbids `Construct` on every other line. Press `b`; assert the log title `Image build`. `visual("functional/jackin_launch_openshell")`.
 
 Regression proof (not a new test): `jackin_launch_reconnect`, `jackin_launch_failure` and `showcase_page_launchcockpit` pass unchanged, which shows the demo labels are byte-identical.
 

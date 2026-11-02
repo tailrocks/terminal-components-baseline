@@ -325,6 +325,9 @@ pub enum Effect {
         agent: Agent,
         account: Option<AccountId>,
     },
+    AddRole {
+        location: String,
+    },
     RunDoctor,
 }
 

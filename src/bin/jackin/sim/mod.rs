@@ -151,6 +151,20 @@ impl Backend for SimBackend {
                     },
                 )
             }
+            Effect::AddRole { location } => (
+                700,
+                Msg::RoleAdded {
+                    location: location.clone(),
+                    result: surfaces::add_role(location, |name| {
+                        world
+                            .surfaces
+                            .roles
+                            .as_ref()
+                            .is_some_and(|a| a.role(name).is_some())
+                    })
+                    .map(Box::new),
+                },
+            ),
             Effect::RunDoctor => {
                 let run = self.doctor_runs.fetch_add(1, Ordering::SeqCst) + 2;
                 (

@@ -494,8 +494,35 @@ fn jackin_docker_setting_confirm_and_save() {
     tab_to(&app, "Docker for the agent");
     let reopened = app.settle();
     assert!(text(&reopened).contains("On · jackin-local"));
+    assert!(text(&reopened).contains("Space Toggle  i Risks"));
     assert!(!text(&reopened).contains("• 1 change"));
     app.visual("functional/jackin_docker_setting");
+    app.finish();
+}
+
+#[test]
+fn jackin_cockpit_docker_names_key_and_egress_bypass() {
+    let app = scenario("jackin-cockpit-docker", "docker-setting", 120, 40);
+    app.wait_text("Current directory");
+    turn_docker_on(&app);
+    app.key("ctrl+s");
+    app.wait_text("Save workspace");
+    app.key("right");
+    app.key("enter");
+    app.wait_text("Saving payments-platform");
+    app.advance_clock(1000);
+    app.wait_text("Workspace payments-platform saved");
+    app.key("escape");
+    app.wait_text("Current directory");
+    app.key("enter");
+    app.wait_text("Launch · choose Agent");
+    app.key("enter");
+    let cockpit = app.wait_text("Loading the-architect");
+    let screen = text(&cockpit);
+    assert!(screen.contains("the agent can read the engine key"));
+    assert!(screen.contains("containers bypass the sandbox"));
+    assert!(screen.contains("network policy · i shows all 4 risks"));
+    app.key("ctrl+c");
     app.finish();
 }
 
@@ -507,6 +534,7 @@ fn jackin_docker_setting_no_engine() {
     let on = app.wait_text("has no Docker engine");
     assert!(text(&on).contains("jackin gateway add"));
     assert!(text(&on).contains("4 risks"));
+    assert!(text(&on).contains("Space Toggle  i Risks"));
     app.visual("functional/jackin_docker_no_engine");
     app.key("escape");
     app.key("escape");
@@ -578,6 +606,18 @@ fn jackin_doctor_failure_and_rerun() {
     assert!(list_row(&failed, "Gateway health").contains("fail"));
     assert!(list_row(&failed, "Engine socket").contains("ok"));
     assert!(list_row(&failed, "Git binary").contains("ok"));
+    app.key("g");
+    for _ in 0..4 {
+        app.key("down");
+    }
+    let detail = app.wait_text("Expected");
+    for needle in ["Gateway health", "Status", "Found", "Expected"] {
+        assert!(
+            text(&detail).contains(needle),
+            "{needle:?}:\n{}",
+            text(&detail)
+        );
+    }
     app.visual("functional/jackin_doctor");
 
     app.key("escape");
@@ -625,6 +665,17 @@ fn jackin_role_binding_pick_and_clear() {
     }
     assert!(text(&roles).contains("5 roles"));
     assert!(text(&roles).contains("A launch uses --account"));
+    for (role, chip) in [
+        ("reviewer", "git"),
+        ("data-eng", "path"),
+        ("writer", "path"),
+    ] {
+        let row = list_row(&roles, role);
+        assert!(
+            row.contains(chip),
+            "the {role} row keeps its source chip: {row}"
+        );
+    }
     let binding = binding_row(&roles, "Codex");
     assert!(binding.contains("Codex · Primary"), "{binding}");
     assert!(binding.contains("role binding"), "{binding}");
@@ -666,6 +717,11 @@ fn jackin_role_binding_pick_and_clear() {
     app.advance_clock(900);
     let cleared = app.wait_text("u undoes");
     assert!(text(&cleared).contains("Cleared the Codex binding of sentinel"));
+    assert!(
+        text(&cleared).contains("Enter Pick  d Clear  u Undo"),
+        "the status text leaves the key hints whole:\n{}",
+        text(&cleared)
+    );
     assert!(text(&cleared).contains("none · uses Codex · Primary ★"));
     app.key("u");
     app.advance_clock(900);
@@ -710,7 +766,27 @@ fn jackin_launch_openshell_stages() {
         assert!(text(&screen).contains(label), "stage {label:?}");
     }
     assert!(text(&screen).contains("4/7 stages"));
-    assert!(text(&screen).contains("jackin-"));
+    let sandbox = text(&screen)
+        .split_whitespace()
+        .find(|word| word.starts_with("jackin-"))
+        .map(str::to_owned)
+        .expect("a sandbox chip");
+    assert_eq!(
+        sandbox, "jackin-payment-b5df",
+        "D07: jackin-<slug7>-<suffix4>"
+    );
+    assert!(sandbox.len() <= 19);
+    let screen_text = text(&screen);
+    let credentials = screen_text
+        .lines()
+        .skip_while(|l| !l.contains("credentials "))
+        .take(2)
+        .map(str::trim)
+        .collect::<Vec<_>>()
+        .join("\n");
+    assert!(credentials.contains("Codex"), "{credentials}");
+    assert!(!credentials.contains("Claude"), "{credentials}");
+    assert!(!credentials.contains('…'), "clipped: {credentials}");
     let body: String = text(&screen).lines().skip(1).collect::<Vec<_>>().join("\n");
     for word in ["Docker", "Capsule", "Construct", "Derived Image"] {
         assert!(!body.contains(word), "demo word {word:?} leaked:\n{body}");
@@ -760,7 +836,14 @@ fn jackin_role_editor_check_and_save() {
     let dirty = app.wait_text("2 changes");
     assert!(text(&dirty).contains("Manifest •"), "{}", text(&dirty));
 
+    assert!(
+        text(&dirty).contains("Not checked since your last edit"),
+        "an edit makes the check stale:\n{}",
+        text(&dirty)
+    );
+    assert!(!text(&dirty).contains("Check passed"));
     app.key("ctrl+s");
+    app.advance_clock(600);
     let preview = app.wait_text("Save role");
     assert!(text(&preview).contains("none → codex-fixture"));
     assert!(text(&preview).contains("off → on"));
@@ -776,6 +859,14 @@ fn jackin_role_editor_check_and_save() {
     }
     app.type_text("Dockerfile.old");
     app.key("enter");
+    app.key("ctrl+s");
+    app.advance_clock(600);
+    let unchecked = app.wait_text("Check failed · sentinel");
+    assert!(text(&unchecked).contains("Dockerfile.old:12"));
+    assert!(text(&unchecked).contains("nothing was written"));
+    assert!(!text(&unchecked).contains("Save role"));
+    app.key("escape");
+    app.wait_absent("Check failed · sentinel");
     app.key("f5");
     app.advance_clock(600);
     let failed = app.wait_text("final stage must start FROM construct");
@@ -783,6 +874,7 @@ fn jackin_role_editor_check_and_save() {
     assert!(text(&failed).contains("Manifest !") || text(&failed).contains("Manifest •!"));
 
     app.key("ctrl+s");
+    app.advance_clock(600);
     let blocked = app.wait_text("Check failed · sentinel");
     assert!(text(&blocked).contains("nothing was written"));
     app.key("escape");
@@ -798,5 +890,64 @@ fn jackin_role_editor_check_and_save() {
     app.key("right");
     app.key("enter");
     app.wait_text("Discarded 3 changes");
+    app.finish();
+}
+
+fn submit_location(app: &App, location: &str) {
+    app.type_text(location);
+    app.key("enter");
+    app.key("tab");
+    app.key("tab");
+    app.key("enter");
+}
+
+#[test]
+fn jackin_roles_add_role() {
+    let app = scenario("jackin-role-add", "role-binding", 120, 40);
+    app.wait_text("Account bindings");
+    assert!(!text(&app.settle()).contains("new-role"));
+    app.key("a");
+    app.wait_text("register a role");
+
+    submit_location(&app, "roles/new-role");
+    let invalid = app.settle();
+    assert!(
+        text(&invalid).contains("Use a directory such as"),
+        "{}",
+        text(&invalid)
+    );
+    assert!(
+        text(&invalid).contains("register a role"),
+        "the form stays open"
+    );
+    app.key("escape");
+    app.wait_absent("register a role");
+
+    app.key("a");
+    app.wait_text("register a role");
+    submit_location(&app, "~/roles/sentinel");
+    app.wait_text("Adding role…");
+    app.advance_clock(700);
+    let taken = app.wait_text("Could not add role");
+    assert!(text(&taken).contains("A role named sentinel is already registered."));
+    assert!(text(&taken).contains("no role was registered"));
+    app.key("escape");
+    let again = app.wait_text("register a role");
+    assert!(
+        text(&again).contains("~/roles/sentinel"),
+        "the typed location stays"
+    );
+    app.key("escape");
+    app.wait_absent("register a role");
+
+    app.key("a");
+    app.wait_text("register a role");
+    submit_location(&app, "~/roles/new-role");
+    app.wait_text("Adding role…");
+    app.advance_clock(700);
+    let added = app.wait_text("Role new-role added");
+    assert!(text(&added).contains("Roles › new-role") || text(&added).contains("Role · new-role"));
+    assert!(text(&added).contains("6 roles"));
+    assert!(!text(&added).contains("Not in this preview"));
     app.finish();
 }
