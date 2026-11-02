@@ -16158,5 +16158,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J01.delete.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j01_purge/j01_purge_purge_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J01.purge.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j01_purge/j01_purge_purge_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J01.purge.",
+    "replacement_id": null
   }
 ]
