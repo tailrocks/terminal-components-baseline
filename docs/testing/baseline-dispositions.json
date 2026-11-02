@@ -16302,5 +16302,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J02.roles.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j03_general/j03_general_edit_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j03_general/j03_general_edit_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.general.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j03_general/j03_general_edit_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j03_general/j03_general_edit_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.general.",
+    "replacement_id": null
   }
 ]
