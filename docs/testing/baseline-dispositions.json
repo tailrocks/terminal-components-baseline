@@ -1074,5 +1074,410 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.statushints.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-alt_keys-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-alt_keys-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-autoscroll-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-autoscroll-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-autoscroll_ms-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-autoscroll_ms-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-card-heading-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-card-heading-boundary.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-caret_shape-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-caret_shape-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-click_skips_animation-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-click_skips_animation-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-color-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-color-boundary.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-defaults",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-double_click_ms-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-double_click_ms-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-double_click_slop-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-double_click_slop-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-edit_entry-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-edit_entry-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-end_edit_on_dead_space-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-end_edit_on_dead_space-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-field_keys-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-field_keys-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-flash_ms-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-flash_ms-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-focus_fallback-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-focus_fallback-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-focus_on-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-focus_on-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-glyphs-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-glyphs-boundary.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-hover_refresh_after_scroll-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-hover_refresh_after_scroll-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-inactive-selection-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-inactive-selection-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-keyboard_protocol-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-keyboard_protocol-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-legacy_ctrl_punctuation-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-legacy_ctrl_punctuation-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-motion-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-motion-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-overrides-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-overrides-boundary.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-overrides-default",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-overrides-default.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-platform-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-platform-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-pointer_shapes-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-pointer_shapes-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-reveal-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-reveal-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-secondary_outside-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-secondary_outside-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-shift_wheel_horizontal-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-shift_wheel_horizontal-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-strings-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-strings-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-tooltips-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-tooltips-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-track_click-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_click-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-track_repeat-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_repeat-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-track_repeat_ms-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_repeat_ms-boundary.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-wheel-lines-boundary",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-wheel-lines-boundary.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/opt-shell-wheel-lines-default",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-wheel-lines-default.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-inspector-120x40",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-inspector-120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-inspector-narrow",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-inspector-narrow.tui.json",
+    "cols": 72,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-shell-override-120x40",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-shell-override-page-option",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-page-option.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-shell-override-reduced",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-reduced.tui.json",
+    "cols": 120,
+    "rows": 90,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-sidebar-policy-120x40",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-sidebar-policy-accordion",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-accordion.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-sidebar-policy-all-open",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-all-open.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.shell/sc-shell-sidebar-policy-current",
+    "path": "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-current.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.shell.",
+    "replacement_id": null
   }
 ]
