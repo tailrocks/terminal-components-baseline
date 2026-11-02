@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario hard-cases --color truecolor --motion reduced at 120×40, then first-use. Shell keys c and u are JackinCmd::Accounts and JackinCmd::Usage in src/bin/jackin/app.rs and pass select: None. Accounts key m is Go::Usage { select } in src/bin/jackin/screens/accounts.rs. Usage key m is Go::Accounts { select: self.selected } in src/bin/jackin/screens/usage.rs, so the same account stays selected. Esc or q from the list is Go::Manager; from the detail it returns to the list. Key r calls UsageScreen::refresh. Zero accounts, and a second r while every enabled account is already Refreshing, paint Nothing to refresh. A started refresh paints Reloading the broker projection · N account(s). UsageScreen::on_msg does not read World::refresh_fails. world_for(HardCases) in src/bin/jackin/domain/fixtures.rs sets refresh_fails, and AccountsScreen::apply_refresh in src/bin/jackin/screens/accounts.rs is the handler that would paint Usage broker unreachable: last good values kept. on_msg returns Outcome::Changed and sets Freshness::Failed only when the existing issue code is RateLimited, ProviderUnavailable, or CredentialFileMissing, keeping last_good_secs and the quota windows. Go stays at 57%, 45%, and 22% with Rate limited: retry after 25 min. Stale Work becomes · current · and keeps 76%. MiniMax keeps 8% and 47%. Credential lines use source.safe_detail() from src/bin/jackin/domain/account.rs through src/bin/jackin/screens/usage.rs. The plaintext secrets in src/bin/jackin/sim/onepassword.rs are not painted. Ctrl is not required; the route returns to the manager or to the same account.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "56a18c0387d2dc763d8546398fe14cd37894ec57",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J04.usage",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario accounts-mixed --color truecolor --motion reduced at 120×40. acct-codex-experiments is created with FreshnessInfo::refreshing in src/bin/jackin/domain/fixtures.rs, and UsageScreen::refresh in src/bin/jackin/screens/usage.rs skips an account that is already Refreshing, so that row never leaves the spinner. The shot removes it on Accounts so on_tick can paint broker · 1 min ago. The checkpoint is the open Go detail after r and before m: Status is available · error: Rate limited: retry after 25 min, windows stay 57%, 45%, and 22% (resets in 1 h 48 min), and Last good is kept from 3 h ago. The painted stale line is stale · last good 47 min ago, the usage detail, not the issue string Usage stale · last good 47 min ago. Missing is No credential found: ~/.kimi. After refresh, Work is · current · at 76%. That success is accounts-mixed, where refresh_fails is false. The failed Go frame is the issue-code path in UsageScreen::on_msg, which ignores refresh_fails, so the same last-good numbers remain where world_for(HardCases) sets refresh_fails. Usage broker unreachable is not painted. A second r paints Nothing to refresh while rows are still refreshing. Enter opens the detail. Narrow is resize(80, 24) before resize(120, 40). m returns to Accounts › OpenCode › Go subscription with Go subscription focused and 57% still shown. Credential text is safe_detail from src/bin/jackin/domain/account.rs. No raw secret from src/bin/jackin/sim/onepassword.rs is painted, and 38% or 76% is not painted on the Go frame.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "56a18c0387d2dc763d8546398fe14cd37894ec57",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j04_usage/j04_usage_usage_120x40.tui.json",
@@ -42,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "accounts-mixed",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b79edd5e68f21f63373cd45fc64ff1332cd16d973e1ebef005adc902293d2c27",
+        "expect_baseline": "missing",
+        "precondition": "J04.usage.usage.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "accounts-mixed",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bbe27b3204c544acfbb0de8e09ca804bf6b1a57bc2196229de6721fc2c12a3c7",
+        "expect_baseline": "missing",
+        "precondition": "J04.usage.usage.narrow"
+      }
     }
   ]
 }
