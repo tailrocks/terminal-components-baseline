@@ -9768,5 +9768,266 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_focus_mark",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_focus_mark.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_heading",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_heading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_hscroll",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_hscroll.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_meta_short",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_meta_short.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_nav",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_pad_x",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_pad_x.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_tail",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_tail.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_title_min",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_title_min.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_track_click",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/opt_panels_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_options",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_panels_after",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_panels_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_panels_before",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_panels_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_playground",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_route",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_states",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_panels/sc_panels_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.panels.",
+    "replacement_id": null
   }
 ]
