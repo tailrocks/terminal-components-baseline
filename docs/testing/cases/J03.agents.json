@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. Space dismisses Stand up, operator only when that line is showing. From the manager, s is JackinCmd::Settings in src/bin/jackin/app.rs. SettingsScreen::enter in src/bin/jackin/screens/settings.rs focuses the tab strip, and the crumb is Settings › global › General. ] three times calls set_tab. TAB_NAMES is General, Mounts, Environments, Agents, Trust, so the crumb is Settings › global › Agents and draw_agents paints Agent runtime mode. global() in src/bin/jackin/domain/fixtures.rs leaves Claude Code on AuthMode::Sync, Codex on ApiKey, and Kimi Code on Ignore. The test does not press Space, so agents_key does not run. Esc from the tab strip calls leave. change_count is 0, so Unsaved changes stays closed. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "bb83db161430c1d4625fb721d0e7577ba394773d",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J03.agents",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "Enter from the tab strip focuses body_focus AGENTS in src/bin/jackin/screens/settings.rs. The cursor starts on Claude Code. global() in src/bin/jackin/domain/fixtures.rs sets Claude Code to AuthMode::Sync. Space calls agents_key, and Agent::auth_modes in src/bin/jackin/domain/agent.rs puts ApiKey next. mode_label in src/bin/jackin/screens/config.rs paints api key. The status is Claude Code · api key · save to apply until StatusLine::expire in src/shell/status.rs clears it. The row keeps a warning • and the mode api key. strip_right paints • 1 change. Settings saved and Save settings are absent, so finish_save has not copied pending into the world. The checkpoint is that dirty Agents page, before Ctrl+S. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Both captures still show api key, the row •, and • 1 change. Ctrl+S calls open_preview. The dialog title is Save settings. The Agents fact is Claude Code → api key. The confirm button is Save. Cancel is focused, and activating Save calls start_save, which schedules GlobalSaved at 900 ms. The wall clock reaches Settings saved, then the manager. Reopening Agents shows Claude Code on api key, Codex still on api key, and Kimi Code still on ignore.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "bb83db161430c1d4625fb721d0e7577ba394773d",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_120x40.tui.json",
