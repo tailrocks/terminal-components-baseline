@@ -13989,5 +13989,248 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.diskcleanup.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/opt_workspaces_collapse_below",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_collapse_below.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/opt_workspaces_esc_returns",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_esc_returns.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/opt_workspaces_roster",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_roster.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/opt_workspaces_size",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_size.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/opt_workspaces_typed",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_typed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_options",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_playground",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_route",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_specimen_busy",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_busy.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_states",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_workspaces_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_workspaces_after",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_workspaces_before",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_workspaces/sc_workspaces_workspaces_dialog",
+    "path": "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_dialog.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.workspaces.",
+    "replacement_id": null
   }
 ]
