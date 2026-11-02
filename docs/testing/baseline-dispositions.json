@@ -3963,5 +3963,392 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.basictable.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_access.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_access.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_affordance.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_affordance.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_blur_action.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_blur_action.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_duplicate_keys.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_duplicate_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_horizontal.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_horizontal.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_keymap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_labels.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_labels.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_overflow_badges.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_overflow_badges.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_row_numbers.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_row_numbers.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_rows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_seams.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_seams.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_total.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_total.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_track_click.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_type_ahead.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_validator.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_validator.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/opt_datagrid_width_sample_rows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/opt_datagrid_width_sample_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_pending_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_pending_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_pending_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_pending_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_editing.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_editing.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_empty.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_error.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_focused.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_focused_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_loading.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_loading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_narrow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_pressed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_specimen_selected.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_datagrid/sc_datagrid_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_datagrid/sc_datagrid_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.datagrid.",
+    "replacement_id": null
   }
 ]
