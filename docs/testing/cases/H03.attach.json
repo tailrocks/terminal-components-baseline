@@ -6,27 +6,30 @@
       "owner_task": "H03.attach",
       "application": "holla",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Holla activities-multi at 120×40 in truecolor with paused motion and HOLLA_NO_HISTORY=1 opens the finder on Here. Ctrl+G opens Activities, five live. Four Downs move the row fill from frontend dev onto btm. Enter opens the btm screen (btm 0.11.1, detached). Esc returns to Search actions on Here. Ctrl+Q draws Stay and Stop and quit because activities are still live. Esc dismisses on Stay and the process keeps running. Confirming Stop and quit cannot reach exit 0 on this launch: fixtures.rs sets clock.running only when motion is not paused, World::tick returns before tick += 1 while the clock is stopped, and Cancelling never reaches TERM_EXIT_TICKS. The resistant-process launch is the one that exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "2d6ee992684dd96963546410f55ae44462c55e73",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "H03.attach",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch holla --scenario activities-multi --color truecolor --motion paused at 120x40; Ctrl+G; Down four times to btm; Enter",
+      "return_path": "Esc returns to the finder; Ctrl+Q draws Stay and Stop and quit; Esc stays"
     },
     {
       "case_id": "H03.attach.attach",
       "owner_task": "H03.attach",
       "application": "holla",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "On the detached btm monitor, Enter attaches. The status is Attached to btm, the hints are Ctrl+] and q, and the body is still the tick-0 banner btm 0.11.1. That open attached monitor is the checkpoint, at 120×40 and then at 80×24, and the narrow shot is taken before the terminal returns to 120×40. fixtures.rs sets clock.running when motion is not paused, World::tick in src/bin/holla/sim/world.rs returns before self.tick += 1 while the clock is stopped, and Activity::duration_ticks follows world.tick, so the spoken duration stays 0 s. The monitor:btm CPU line is at tick 1 and is not painted. Ctrl+] sets the status to Detached · the program keeps running in its tab. The banner remains and program exited is absent, so detach did not stop btm. Plain s, while not attached, sets Stopping btm and appends stop requested by holla · SIGTERM to the process group. Ctrl+G still shows frontend dev running and shows btm cancelling. The escalation launch uses reduced motion, because paused never reaches SIGKILL. It searches Run the stubborn worker, waits for ignoring SIGTERM…, and plain s waits until killed (SIGKILL) · descendants reaped. Quick no-op is not that output, Deploy the release does not run, and Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "2d6ee992684dd96963546410f55ae44462c55e73",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h03_attach/h03_attach_attach_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h03_attach/h03_attach_attach_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Detach, observe the monitor, attach, request stop, and escalate a resistant process.",
       "expected_results": "The task is still running after detach. Stop changes that task only.",
@@ -38,8 +41,84 @@
       "terminal_columns": 120,
       "terminal_rows": 40,
       "color_mode": "truecolor",
-      "motion_mode": "reduced",
-      "client_platform": "macos"
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "activities-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8c5bc9718de7643f0e7de745b5c2dc4c0816f0e9e6efc65bdee4867236ea7ec1",
+        "expect_baseline": "missing",
+        "precondition": "H03.attach.attach.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "activities-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1ab16e6b5b8241b97401c5c734cca22543c0852d28fe33cf3d33bf3d0d852577",
+        "expect_baseline": "missing",
+        "precondition": "H03.attach.attach.narrow"
+      }
     }
   ]
 }
