@@ -1,4 +1,5 @@
-use super::support::{App, Point, TABLEPRO, crop, find, find_all, row_text, text};
+use super::bins::TABLEPRO;
+use super::support::{App, Point, crop, find, find_all, row_text, text};
 
 fn inside(point: Point) -> Point {
     Point {

@@ -1,4 +1,5 @@
-use super::support::{App, HOLLA, find, text};
+use super::bins::HOLLA;
+use super::support::{App, find, text};
 
 fn holla(name: &str, scenario: &str) -> App {
     App::new(

@@ -12,7 +12,7 @@ Facts about the baseline below were read from the tree at `2565a0c` (branch `wt/
 
 **R3. Demo words stay in demo data.** The library carries no OpenShell word. D28 content ("gateway", "OpenShell provider", "Codex") comes from data that `jackin-preview` (new scenarios) and `jackin-tui` (real) supply. Existing scenarios keep their Docker and Capsule words in their existing fixture data.
 
-**R4. One implementation per behaviour.** The "Unsaved changes" dialog is built inline twice today (`editor.rs:505`, `settings.rs:370`). The role editor is the third user, so extract it once (`unsaved_dialog(id, changes)` in `console::screens::modals`) and migrate Editor and Settings in the same change. The dialog text and the baselines do not change.
+**R4. One implementation per behaviour.** The "Unsaved changes" dialog is built inline twice today (`editor.rs:505`, `settings.rs:370`). The role editor is the third user, so extract it once (`unsaved_dialog(id, changes)` in `jackin_console::screens::modals`) and migrate Editor and Settings in the same change. The dialog text and the baselines do not change.
 
 **R5. Glyph and colour policy.** Status marks come from `StatusKind` (`theme.rs:1749`) and the theme glyph tokens, never a literal status glyph in new code, and always have a word beside the mark, so `NO_COLOR` and `--glyphs ascii` keep the meaning.
 
@@ -22,7 +22,7 @@ Facts about the baseline below were read from the tree at `2565a0c` (branch `wt/
 
 ### 1.1 The gate: `World.surfaces`
 
-New file `console/domain/surfaces.rs`. `World` gets `pub surfaces: Surfaces` (default: all `None`). Each field turns on one family of screens.
+New file `apps/jackin/src/domain/surfaces.rs`. `World` gets `pub surfaces: Surfaces` (default: all `None`). Each field turns on one family of screens.
 
 ```rust
 #[derive(Debug, Clone, Default)]
@@ -151,7 +151,7 @@ Save is blocked while any finding exists. `Ctrl+S` with findings opens `InfoDial
 
 Help overlay: a `Role editor` section for `Route::RoleEditor`. Host menu File: `Save…`, `Cancel` (as Editor).
 
-### 2.6 Data interface (new, `console/domain/role.rs`)
+### 2.6 Data interface (new, `apps/jackin/src/domain/role.rs`)
 
 ```rust
 pub struct RoleAdmin { pub agents: Vec<Agent>, pub roles: Vec<RoleRecord> }
@@ -269,7 +269,7 @@ Host menu File for `Route::Roles`: `Add role…  a`, `Edit manifest…  e`, `Che
 
 ### 3.5 Data interface
 
-`RoleRecord.bindings` and `RoleAdmin.agents` (section 2.6); `AccountRegistry` and `Usability` are existing. `agents` is data because the library enum `Agent::ALL` has six agents and jackin runs one (Codex); the screen never reads `Agent::ALL`. The picker lists accounts from the existing `AccountRegistry` (`console/domain/account.rs`) filtered by provider.
+`RoleRecord.bindings` and `RoleAdmin.agents` (section 2.6); `AccountRegistry` and `Usability` are existing. `agents` is data because the library enum `Agent::ALL` has six agents and jackin runs one (Codex); the screen never reads `Agent::ALL`. The picker lists accounts from the existing `AccountRegistry` (`apps/jackin/src/domain/account.rs`) filtered by provider.
 
 ### 3.6 Precedence
 
@@ -318,7 +318,7 @@ The `General` `Stack` (`editor.rs:531`) gets one more fixed child only when `sur
 
 - `Checkbox` (`widgets/choice.rs`), label `Docker for the agent`, with a faint trailing hint like `macOS only` on Keep awake: `Off by default`; when checked `On · jackin-local · host.openshell.internal:18476`; when a role in this workspace turns it on itself `Always on for role reviewer`.
 - Checked state adds a one-line `Notice` of kind `Warning` below the row: `4 risks · press i to read them`.
-- Turning on opens `Dialog::facts` with `title_status(StatusKind::Warn)`, title `Turn on Docker for payments-platform?`, the four risks as `Prop`s (label and wrapped text), buttons `Cancel` and `Turn on`, initial focus on `Cancel` (`Dialog.initial_focus`). `Esc` cancels (the dialog's cancel action). Turning off needs no confirmation. One function in `console::screens::modals` builds this dialog for the workspace editor and the role editor.
+- Turning on opens `Dialog::facts` with `title_status(StatusKind::Warn)`, title `Turn on Docker for payments-platform?`, the four risks as `Prop`s (label and wrapped text), buttons `Cancel` and `Turn on`, initial focus on `Cancel` (`Dialog.initial_focus`). `Esc` cancels (the dialog's cancel action). Turning off needs no confirmation. One function in `jackin_console::screens::modals` builds this dialog for the workspace editor and the role editor.
 - `i` opens the same facts read-only (one `Close` button).
 - Save preview (`open_preview`): a `Prop` `Docker  off → on` with warning tone and a code line `~ docker false → true`. `Workspace::change_count` counts the field.
 - Manager detail, `Policies` row: `... · docker on`, only when on and only when the surface exists.
@@ -352,7 +352,7 @@ Risk texts (D24, four facts, one `DockerRiskText` each, in `DockerRisk::ALL` ord
 
 `Space` toggles (turn on asks first), `i` risks, `Ctrl+S` save with preview, `Esc` back (unsaved dialog). `Tab`/`Shift+Tab` order includes the row between Git pull and On dirty exit.
 
-### 4.5 Data interface (new, `console/domain/docker.rs`)
+### 4.5 Data interface (new, `apps/jackin/src/domain/docker.rs`)
 
 ```rust
 pub struct DockerSetting {
@@ -433,7 +433,7 @@ Route: `Go::Doctor`, crumb `Doctor`, deep link `--scenario doctor`.
 
 `↑↓ j k` move, `Home g`, `End G`, `Enter` or `Tab` details, `r` or `F5` run checks (F5 is the demo's "refresh now"), `y` copy the report (`cx.copy`), `Esc` back, `?` help, `q` leave. Host menu File: `Run checks  r`, `Copy report  y`.
 
-### 5.5 Data interface (new, `console/domain/doctor.rs`)
+### 5.5 Data interface (new, `apps/jackin/src/domain/doctor.rs`)
 
 ```rust
 pub struct DoctorSurface { pub noun: String, pub state: DoctorState }   // noun: "gateway" in jackin
@@ -602,7 +602,7 @@ pub struct LaunchContent { pub stages: StageList, pub words: LaunchWords, pub bu
 
 ### 7.2 Demo data
 
-`src/bin/jackin/sim/launch.rs` `content()` builds the 11 existing stages with the exact current labels, activities, durations `[14, 18, 26, 30, 8, 92, 22, 20, 18, 34, 16]`, `kind` (`BuildLog` on `Derived Image`, `Credentials { hold_at: 10 }` on `Credentials`), `skipped` on `Agent Binaries`, `container_at: Some(6)` on `Construct`, and the current `LaunchWords`. Labels stay in the library's old Title Case in this data (`Derived Image`, `Agent Binaries`) because they must be byte-identical.
+`apps/jackin/src/bin/jackin/sim/launch.rs` `content()` builds the 11 existing stages with the exact current labels, activities, durations `[14, 18, 26, 30, 8, 92, 22, 20, 18, 34, 16]`, `kind` (`BuildLog` on `Derived Image`, `Credentials { hold_at: 10 }` on `Credentials`), `skipped` on `Agent Binaries`, `container_at: Some(6)` on `Construct`, and the current `LaunchWords`. Labels stay in the library's old Title Case in this data (`Derived Image`, `Agent Binaries`) because they must be byte-identical.
 
 Scenario `launch-openshell` uses `SimBackend::openshell()` whose content is:
 
@@ -653,8 +653,8 @@ Regression proof (not a new test): `jackin_launch_reconnect`, `jackin_launch_fai
 Layout and shell: `ui::master_detail::MasterDetail`, `ui::layout::{Stack, StackScroll, Split}`, `widgets::panel::Panel`, `widgets::tabs::{Tabs, TabItem}`, `shell::Router`, `widgets::segments::Segment`, `widgets::keyhint::{hint, Hint}`, `widgets::menu::{MenuBar, MenuItem}`, `widgets::help::{HelpOverlay, HelpSection}`, `widgets::too_small::TooSmall`.
 Inputs: `widgets::input::TextInput`, `widgets::choice::{Checkbox, RadioGroup}`, `widgets::select::Select`, `widgets::button::{Button, ButtonRow, row_layout_right}`, `widgets::picker::Picker`, `widgets::option_list::Item`.
 Content: `widgets::props::{Prop, PropsList}`, `widgets::notice::{Notice, NoticeKind}`, `widgets::empty::{EmptyState, EmptyAction}`, `widgets::steps::{Step, StepRail, StepState}`, `widgets::viewport::{TextViewport, Span}`, `widgets::scrollbar`, `theme::StatusKind`, `ui::text::{fit, truncate, plural}`.
-Overlays: `widgets::dialog::Dialog` (`confirm`, `destructive`, `facts`, `title_status`, `actions`), `widgets::info_dialog::InfoDialog`, `widgets::form_dialog::{FormDialog, FormField}`, `console::screens::modals::file_browser`, `ui::leave::{LeaveGuard, Stakes}`.
-Console blocks: `console::screens::config::ConfigTabs` (list pattern), `console::screens::editor::EditorScreen`, `console::screens::accounts::AccountsScreen`, `console::screens::cockpit::CockpitScreen`, `console::screens::rowmenu::RowMenu`, `console::world::World`, `console::backend::{Backend, Effect}`, `console::launch::{LaunchContent, LaunchRun}`.
+Overlays: `widgets::dialog::Dialog` (`confirm`, `destructive`, `facts`, `title_status`, `actions`), `widgets::info_dialog::InfoDialog`, `widgets::form_dialog::{FormDialog, FormField}`, `jackin_console::screens::modals::file_browser`, `ui::leave::{LeaveGuard, Stakes}`.
+Console blocks: `jackin_console::screens::config::ConfigTabs` (list pattern), `jackin_console::screens::editor::EditorScreen`, `jackin_console::screens::accounts::AccountsScreen`, `jackin_console::screens::cockpit::CockpitScreen`, `jackin_console::screens::rowmenu::RowMenu`, `jackin_console::world::World`, `jackin_console::backend::{Backend, Effect}`, `jackin_console::launch::{LaunchContent, LaunchRun}`.
 Terminal feature: `terminal::{TerminalState, TerminalView, Modes, encode_key}`.
 Showcase: `Template`, `Section`, `page_options`, `ui::specimen::{StateGrid, SpecimenState}`.
 

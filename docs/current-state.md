@@ -1,8 +1,10 @@
 # Current state
 
-This repository is the design reference implementation: a single Rust
-crate, `junie-tui` (v0.1.0, edition 2024, Rust 1.99.1), that contains a
-terminal component library and four demonstration applications. It is
+This repository is the design reference implementation: a Cargo workspace
+of two crates (edition 2024, Rust 1.99.1). `junie-tui` (v0.1.0) holds the
+terminal component library and the showcase, tablepro and holla demo
+applications. `jackin-console` (`apps/jackin`) holds the jackin demo: a
+library of the jackin console screens plus the `jackin` binary. It is
 the exact authority for product appearance and interaction (see
 [product](product.md)). The modular multi-crate workspace described in
 [architecture](architecture.md) is the future refactoring state; it
@@ -20,9 +22,10 @@ does not exist in this tree yet.
 | `src/bin/showcase/` | Showcase: the executable component catalog (54 pages). Thin consumer: pages add wiring, demo data and option tables only. |
 | `src/bin/tablepro/` | TablePro: simulated database workbench (connections, explorer, query tabs, results, history). |
 | `src/bin/holla/` | Holla: simulated launcher/finder, files, disk cleanup, services. Backends are simulated; tests assert the next in-app consequence. |
-| `src/console/` | The jackin-preview screens as library blocks: manager, editor, accounts, usage, settings, cockpit, capsule, prelude, inspect and the modals, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
 | `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TerminalView`, `encode_key`. It renders a vt100 session from a byte stream and does no I/O. |
-| `src/bin/jackin/` | Jackin-preview: the command line, the fixture data and the simulated `Backend`. Binary name is `jackin` (`cargo run --bin jackin`). |
+| `apps/jackin/src/` | The `jackin-console` library (`jackin_console`): the jackin screens (manager, editor, accounts, usage, settings, cockpit, capsule, prelude, roles, doctor and the modals), the `domain` types, `rain` and the other jackin-only modules, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
+| `apps/jackin/src/bin/jackin/` | The jackin demo binary: the command line, the fixture data and the simulated `Backend`. Binary name is `jackin` (`cargo run --bin jackin`). |
+| `apps/jackin/tests/functional/` | The jackin journeys and their approved baselines (`baselines/functional/jackin_*.tui.json`), on the shared harness `tests/functional/support.rs`. |
 | `tests/functional/` | The only test estate: live PTY functional/integration tests plus the frozen visual gate. See [functional testing](functional-testing.md). |
 | `.velnor/config.toml` | Source of truth for generated CI (`.github/` is generated, never hand-edited). See [CI](ci.md). |
 
@@ -30,7 +33,7 @@ does not exist in this tree yet.
 
 | Feature | Default | Adds |
 | --- | --- | --- |
-| `cli` | yes | `clap`, the `cli` module and `Motion` as a `clap::ValueEnum`. The four binaries require it. |
+| `cli` | yes | `clap`, the `cli` module and `Motion` as a `clap::ValueEnum`. The four binaries require it; `jackin-console` enables it on its `junie-tui` dependency. |
 | `terminal` | no | `vt100` and the `terminal` module. |
 
 ## Rules that hold today

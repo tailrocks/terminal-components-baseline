@@ -8,11 +8,14 @@ use tui_test::{
     WaitQuietOptions,
 };
 
-pub const SHOWCASE: &str = env!("CARGO_BIN_EXE_showcase");
-pub const TABLEPRO: &str = env!("CARGO_BIN_EXE_tablepro");
-pub const HOLLA: &str = env!("CARGO_BIN_EXE_holla");
-pub const JACKIN: &str = env!("CARGO_BIN_EXE_jackin");
 const TIMEOUT: Duration = Duration::from_secs(10);
+
+fn evidence_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_TARGET_TMPDIR"))
+        .parent()
+        .expect("the target directory holds the tmp directory")
+        .join("functional")
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Point {
@@ -33,9 +36,7 @@ impl App {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        let directory = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("target/functional")
-            .join(format!("{name}-{}-{stamp}", std::process::id()));
+        let directory = evidence_root().join(format!("{name}-{}-{stamp}", std::process::id()));
         let home = directory.join("home");
         std::fs::create_dir_all(&home).expect("create isolated application home");
         let mut launch = LaunchOptions::new(bin)
@@ -161,7 +162,7 @@ impl App {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         let store = tuiscotti_latest::check::FrozenStore::new(
             &root.join("tests/functional/baselines"),
-            &root.join("target/functional/artifacts"),
+            &evidence_root().join("artifacts"),
         )
         .expect("open Tuiscotti frozen store");
         let outcome = store
