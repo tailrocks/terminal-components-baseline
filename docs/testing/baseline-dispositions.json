@@ -15087,5 +15087,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T02.data.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t02_commit/t02_commit_commit_120x40",
+    "path": "tests/functional/baselines/pre_refactor/t02_commit/t02_commit_commit_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T02.commit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t02_commit/t02_commit_commit_narrow",
+    "path": "tests/functional/baselines/pre_refactor/t02_commit/t02_commit_commit_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T02.commit.",
+    "replacement_id": null
   }
 ]
