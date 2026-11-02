@@ -15816,5 +15816,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged holla reference executable at fffe002 for H03.guards.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40",
+    "path": "tests/functional/baselines/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H04.snapshots-git.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow",
+    "path": "tests/functional/baselines/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H04.snapshots-git.",
+    "replacement_id": null
   }
 ]
