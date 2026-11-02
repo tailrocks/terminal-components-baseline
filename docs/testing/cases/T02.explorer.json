@@ -6,31 +6,34 @@
       "owner_task": "T02.explorer",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no page flag opens the connections screen at 120 by 40 in reduced motion. Clicking Development shows dev-db.internal.acme.io:5432, acme_dev, and acme_app. Connect finishes on the workbench at Query 1. Ctrl+Q exits.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "4406922903cd0c444a90ef702fd33d742726678f",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T02.explorer",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "tablepro --color truecolor --motion reduced at 120x40, with no --page flag. Click Development, then Connect.",
+      "return_path": "Ctrl+Q exits from the Development workbench"
     },
     {
       "case_id": "T02.explorer.tree",
       "owner_task": "T02.explorer",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Expanding analytics shows events. A click opens public \u203a organizations as a preview, and the next click pins that tab beside Query 1. A customers preview leaves the pinned organizations tab in place. A products preview replaces only the customers preview. Filtering the tree to customers opens public \u203a customers.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "4406922903cd0c444a90ef702fd33d742726678f",
       "evidence_paths": [],
-      "baseline_paths": [],
-      "scenario": null,
-      "action_sequence": "Expand a schema and open a table preview, then pin it.",
-      "expected_results": "The preview title is the chosen object. Pinning does not replace another pinned tab.",
-      "forbidden_effects": "A filter result opens a different object than the selected row.",
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_explorer/t02_explorer_tree_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t02_explorer/t02_explorer_tree_narrow.tui.json"
+      ],
+      "scenario": "Schema expansion, filtering, preview reuse, and a permanent open keep the selected object's identity.",
+      "action_sequence": "Expand analytics until events is visible. Open organizations as a preview, then pin it. Capture 120x40, narrow to 80x24 and capture before restoring 120x40. Open customers as a preview, replace that preview with products, reuse the pinned organizations tab, filter the tree to customers, and open that row.",
+      "expected_results": "The preview title is public \u203a organizations. Pinning clears the preview mark and leaves Query 1 in place. The customers preview title is public \u203a customers. The products preview title is public \u203a products and replaces only the preview slot. Reopening organizations returns public \u203a organizations without a second tab. The filtered open title is public \u203a customers.",
+      "forbidden_effects": "A filter result opens a different object than the selected row. The products preview does not replace Query 1 or the pinned organizations tab.",
       "checkpoint_ids": [
         "T02.explorer.tree.120x40",
         "T02.explorer.tree.narrow"
@@ -39,7 +42,122 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3617998687a09e2a08bea2dc8c70c18629a924dc10a9da27ffbe2e8f4364675f",
+        "expect_baseline": "missing",
+        "precondition": "organizations is pinned at 120 by 40 after the preview is promoted",
+        "case_id": "T02.explorer.tree",
+        "checkpoints": [
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+            "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+            "fixture_args": [
+              "--color",
+              "truecolor",
+              "--motion",
+              "reduced"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "3617998687a09e2a08bea2dc8c70c18629a924dc10a9da27ffbe2e8f4364675f",
+            "expect_baseline": "missing",
+            "precondition": "organizations is pinned at 120 by 40 after the preview is promoted",
+            "case_id": "T02.explorer.tree.120x40",
+            "checkpoint_id": "T02.explorer.tree.120x40"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+            "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+            "fixture_args": [
+              "--color",
+              "truecolor",
+              "--motion",
+              "reduced"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "7e50cf62c8d1ed3b174e9bcd17e0788b3b37914426453fbed276382e51862319",
+            "expect_baseline": "missing",
+            "precondition": "narrow explorer at 80 by 24 before the terminal returns to 120 by 40",
+            "case_id": "T02.explorer.tree.narrow",
+            "checkpoint_id": "T02.explorer.tree.narrow"
+          }
+        ]
+      }
     }
   ]
 }
