@@ -6843,5 +6843,311 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_backdrop.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_backdrop.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_cursor_style.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_cursor_style.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_delete_is_secondary.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_delete_is_secondary.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_dismiss.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_empty.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_fit.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_fit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_hints.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_hints.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_max_rows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_max_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_placeholder.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_placeholder.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_placement.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_placement.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_remote.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_remote.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/opt_pickers_width.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_pickers_after.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_pickers_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_pickers_before.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_pickers_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_specimen_empty.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_specimen_error.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_specimen_loading.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_loading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_pickers/sc_pickers_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
+    "replacement_id": null
   }
 ]
