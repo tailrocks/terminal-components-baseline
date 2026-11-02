@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with placeholder Type SQL and status Connected to Development. Loading schema is absent. Quit TablePro? is absent. Ctrl+Q exits 0 with no signal. The test does not inject focus.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "ed9a22484e8fef59aa4e1a75270d92480377fc32",
+      "execution_commit": "a4ae6ebe74cac044f4b13130d24750033f2049dd",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T05.quit",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "Query 1, connected to Development, receives SELECT 't05_quit_keep' AS marker. Esc commits that statement and does not revert it. Ctrl+Q opens Quit TablePro?. The body is 1 unsaved query will be lost. The actions are ▎Cancel and Quit. Save and Discard are absent. The open dialog is captured at 120×40, then at 80×24 while it is still up, and only then does the terminal return to 120×40. Enter on Cancel closes the dialog, keeps the marker SQL and Connected to Development, and leaves the process running. It does not return to the connection list. Ctrl+Q opens the dialog again. Right moves the gutter onto Quit. Enter confirms. The process exits 0 with no signal. The test does not call finish or kill the child.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "ed9a22484e8fef59aa4e1a75270d92480377fc32",
+      "execution_commit": "a4ae6ebe74cac044f4b13130d24750033f2049dd",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/t05_quit/t05_quit_quit_120x40.tui.json",
@@ -75,8 +75,8 @@
           "HOLLA_NO_HISTORY": "1"
         },
         "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
-        "candidate_sha256": "2cc9f26e1b0ad65e15ca0b3345905fa6cb277dc904d77f61aa15e8caa2b50155",
-        "expect_baseline": "missing",
+        "candidate_sha256": "1692781b4713a5156005998b2059d19fd030ebebdc1bc08cfb1c02b1031227b8",
+        "expect_baseline": "2cc9f26e1b0ad65e15ca0b3345905fa6cb277dc904d77f61aa15e8caa2b50155",
         "precondition": "T05.quit.quit.120x40"
       },
       "acceptance_receipt_also": {
