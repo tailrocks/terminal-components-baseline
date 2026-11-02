@@ -2130,7 +2130,7 @@
       "result": "PASS",
       "disposition_reason": "the task cell shows the typed Q while the edit is still open",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
+      "execution_commit": "392f74022d8d22122b45532e3c113a50498ab2fc",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_cells.tui.json"
