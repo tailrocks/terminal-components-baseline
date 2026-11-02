@@ -12729,5 +12729,230 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.taskrunner.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/opt_finder_preview",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_preview.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/opt_finder_query",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_query.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/opt_finder_risk_column",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_risk_column.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/opt_finder_scope",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_scope.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_finder_after",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_finder_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_finder_before",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_finder_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_options",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_playground",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_route",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_states",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_finder/sc_finder_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.finder.",
+    "replacement_id": null
   }
 ]
