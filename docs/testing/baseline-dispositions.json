@@ -16374,5 +16374,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J02.environments.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j03_agents/j03_agents_agents_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.agents.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j03_agents/j03_agents_agents_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.agents.",
+    "replacement_id": null
   }
 ]
