@@ -4647,5 +4647,320 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.celleditors.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_affordance.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_affordance.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_blur_action.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_blur_action.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_header_labels.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_header_labels.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_horizontal.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_horizontal.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_keymap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_numeric.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_numeric.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_overflow_marks.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_overflow_marks.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_reveal.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_reveal.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_rows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_track_click.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/opt_editable_type_ahead.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_cells.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_cells.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_editing.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_editing.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_empty.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_error.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_focused.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_narrow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_pressed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s03_editable/sc_editable_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.editable.",
+    "replacement_id": null
   }
 ]
