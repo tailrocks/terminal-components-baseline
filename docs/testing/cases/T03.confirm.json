@@ -6,27 +6,30 @@
       "owner_task": "T03.confirm",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120\u00d740 in truecolor with reduced motion. Down lands on Development and Enter connects. Query 1 in acme_prod \u203a public is accepted only once the status says Connected to Development and Loading schema is gone. Ctrl+Y opens Query history. Ctrl+W returns to Query 1. Ctrl+Q exits 0. This path does not open a confirmation dialog.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "f16f319425e2e4aadd793c665f7b1cb2f531d677",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T03.confirm",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; Down to Development; Enter",
+      "return_path": "Ctrl+Y opens Query history; Ctrl+W returns to Query 1; Ctrl+Q exits"
     },
     {
       "case_id": "T03.confirm.gates",
       "owner_task": "T03.confirm",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Development starts Silent. Ctrl+L opens Safe Mode \u00b7 this connection, and Enter on Alert saves that level. An UPDATE with a WHERE opens Execute write query? with fact Alert \u00b7 confirm before running, no type field, and Execute focused. Esc sets Cancelled \u00b7 nothing was executed and leaves no History entry for CancelMarkerT03. Safe Mode then opens the same dialog with fact Safe Mode \u00b7 type to confirm and the drawn label Type organizations to confirm. Esc cancels that dialog too, and History still has neither marker. The unarmed dialog is captured at 120\u00d740 and then at 80\u00d724, before the terminal returns to 120\u00d740. nope and the prefix organization set Does not match, leave the dialog open, and do not run. The exact token organizations runs once: UPDATE organizations \u00b7 8 rows affected \u00b7 12 ms, and History lists ExactMarkerT03 once. Ctrl+R opens a new Execute write query? dialog instead of running again. Esc on that dialog leaves the history count at one. The unsaved query quits through Quit TablePro?.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "f16f319425e2e4aadd793c665f7b1cb2f531d677",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t03_confirm/t03_confirm_gates_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t03_confirm/t03_confirm_gates_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Cancel an ordinary confirmation and a typed confirmation. Enter a wrong, partial, and exact phrase.",
       "expected_results": "Wrong and partial text do not execute. Exact text executes once.",
@@ -39,7 +42,79 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f30e91a0580cf09f277d00b9b9d4b2004c9a8b7f019e8a9dc260733a19f23fa0",
+        "expect_baseline": "missing",
+        "precondition": "T03.confirm.gates.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a264c77e0a04a5c61cc9b41fed67ae10b2ca3da6eea7bc862ade8bc3d3a2f169",
+        "expect_baseline": "missing",
+        "precondition": "T03.confirm.gates.narrow"
+      }
     }
   ]
 }
