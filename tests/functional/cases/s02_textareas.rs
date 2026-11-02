@@ -330,7 +330,7 @@ fn sections_narrow_then_wide() {
     );
 
     session.app.resize(120, 40);
-    let wide_states = session.app.wait_text("120×40");
+    let wide_states = session.app.wait_text("Anything to add");
     expect(
         &wide_states,
         &[
@@ -482,6 +482,7 @@ fn compare_levels_then_restore() {
     );
 
     session.app.resize(80, 24);
+    session.app.wait_absent("120×40");
     let narrow = wheel_until(&session, true, |screen| text(screen).contains("no color"));
     expect(
         &narrow,
@@ -511,6 +512,7 @@ fn compare_levels_then_restore() {
         ],
     );
     session.app.resize(120, 40);
+    session.app.wait_text("Anything to add");
     click_tab(&session, "Options");
     let options = session.app.wait_text("Page options");
     assert_defaults(&options, "Edit entry", "theme");
