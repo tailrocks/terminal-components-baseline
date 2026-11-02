@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. Space dismisses Stand up, operator only when that line is showing. From the manager, s calls Go::Settings in src/bin/jackin/app.rs. SettingsScreen::enter in src/bin/jackin/screens/settings.rs focuses the tab strip, and the crumb is Settings › global › General. ] four times calls set_tab, and TAB_NAMES is General, Mounts, Environments, Agents, Trust, so the crumb is Settings › global › Trust. render_trust paints the page title Role sources. global() in src/bin/jackin/domain/fixtures.rs stores github.com/chainargos/roles as kind git, trusted true, with 4 roles, and the row paints [✓] trusted. The test does not toggle a row. Esc from the tab strip calls leave. change_count is 0, so Unsaved changes stays closed and the manager returns. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "609c9e8ba1b99c2afd3d701616109c7ea47d9e46",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J03.trust",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "Enter from the tab strip focuses the trust list through body_focus in src/bin/jackin/screens/settings.rs. The first fixture row in global() in src/bin/jackin/domain/fixtures.rs is github.com/chainargos/roles, kind git, trusted true, 4 roles, and render_trust paints [✓] trusted. Space calls trust_key, which flips trusted and sets the status github.com/chainargos/roles · untrusted · save to apply. The row paints a warning • and [ ] untrusted. strip_right paints • 1 change. GlobalConfig::change_count in src/bin/jackin/sim/world.rs counts that one trust row. Nothing is written yet. The checkpoint is that dirty Trust page, before Esc and before Save. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Unsaved changes is absent. Settings saved is absent. The status sentence is timed, so the test asserts it while it is visible and then shoots the stable dirty list. The untrusted mark and • 1 change remain in both captures. Esc from the tab strip calls leave. change_count is 1, so the dialog title is Unsaved changes. The buttons are Cancel, Discard, and Save, and Cancel is focused. Activating Discard sets the status Discarded 1 change in on_layer_result and returns to the manager. Reopening Trust shows github.com/chainargos/roles as [✓] trusted and • 1 change is absent, so Discard did not save. Space toggles the same row to untrusted again. Ctrl+S calls open_preview. The dialog title is Save settings. The Trust fact includes github.com/chainargos/roles → untrusted. The confirm button is Save, not Clean up & save… or Save anyway. Activating Save calls start_save, which schedules GlobalSaved at 900 ms, and the wall clock reaches Settings saved, then the manager. Reopening Trust shows the same source as [ ] untrusted.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "609c9e8ba1b99c2afd3d701616109c7ea47d9e46",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j03_trust/j03_trust_trust_120x40.tui.json",
