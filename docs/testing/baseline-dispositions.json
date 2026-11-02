@@ -15564,5 +15564,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T05.quit.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h01_alternatives/h01_alternatives_alternatives_120x40",
+    "path": "tests/functional/baselines/pre_refactor/h01_alternatives/h01_alternatives_alternatives_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H01.alternatives.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h01_alternatives/h01_alternatives_alternatives_narrow",
+    "path": "tests/functional/baselines/pre_refactor/h01_alternatives/h01_alternatives_alternatives_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H01.alternatives.",
+    "replacement_id": null
   }
 ]
