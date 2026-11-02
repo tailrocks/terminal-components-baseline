@@ -6,27 +6,30 @@
       "owner_task": "T05.menus",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing lists Filter connections and Development and does not show Query 1 or Connected to Development. Shift+F10 on the Development row opens its context menu (Connect, Edit…, Duplicate, Delete…, New connection…, Filter) and not the app menu. Clicking the TablePro title opens an app menu whose only item is Quit TablePro. Enter on Development connects. The workbench shows Query 1 and Connected to Development, without Loading schema, Duplicate, or Open tabs…. The test ends on that screen.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "e97d95dc62b52bc7c05f83e5d7b164a0f6f2b593",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T05.menus",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; Shift+F10 on Development; click the TablePro title; Enter on Development",
+      "return_path": "Query 1 is showing with Connected to Development; the test ends on that screen"
     },
     {
       "case_id": "T05.menus.menus",
       "owner_task": "T05.menus",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro has no menu bar. Shift+F10 opens the focused object's context menu, and the highlighted command is the one that runs. On Connections the Development menu lists Connect, Edit…, Duplicate, Delete…, New connection…, and Filter, then closes without running a neighbour. The title menu there is TablePro and its only item is Quit TablePro. Connecting Development reaches Query 1 with status Connected to Development and no Loading schema. On the explorer, the set_updated_at function row shows Open disabled with reason Tables and views, plus Filter objects… and Refresh; Esc closes it without opening the object. Ctrl+O opens public.products. Shift+F10 on that grid shows Copy cell, Copy row, and Edit cell, and does not show the header commands. A right-click on the sku header shows Sort Ascending, Sort Descending, and Size Column to Fit. The statement SELECT name FROM products WHERE sku = 'SKU-01000' -- t05_menus_marker returns 1 row. On the result grid, Edit cell is disabled with reason Read-only rows, and Esc closes without editing. On Query history, Enter on Search focuses the search field and does not create Query 2 or rerun the statement. On the workbench, Enter on Open tabs… opens the tab list and Development stays connected. The current Query 1 tab menu is then opened and Up highlights disabled Switch to tab with reason Current tab, beside enabled New query tab. Both frames are that open menu, after the Opened note is gone and before Enter or Esc: 120×40, then 80×24, then the terminal returns to 120×40. Enter on Switch to tab leaves the menu and the SQL in place and does not add Query 2. Two Downs then Enter runs New query tab, and Query 2 appears. Moving back shows Query 1 still holding the statement. Ctrl+Q confirms Quit for the unsaved query and exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "e97d95dc62b52bc7c05f83e5d7b164a0f6f2b593",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t05_menus/t05_menus_menus_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t05_menus/t05_menus_menus_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Open every implemented shell menu and invoke an enabled command. Invoke a disabled command.",
       "expected_results": "The enabled command's result is visible. The disabled command does not change state.",
@@ -39,7 +42,79 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ef16d2d1709eac423aa9f8c00b0d0b427df55ff3c16f3bf4ae915444ee07a114",
+        "expect_baseline": "missing",
+        "precondition": "T05.menus.menus.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6ae9a882a8bf5f8a8caf809ccc54294edbc64c1eaf301db868206a671668eb1d",
+        "expect_baseline": "missing",
+        "precondition": "T05.menus.menus.narrow"
+      }
     }
   ]
 }
