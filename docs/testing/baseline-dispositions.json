@@ -5511,5 +5511,698 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S03.columns.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_check",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_check.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_click",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_content",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_content.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_empty",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_nav",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_reveal",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_reveal.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_scrollbar_gap",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_scrollbar_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_skip_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_skip_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_toggle_mods",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_toggle_mods.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_track_click",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_type_ahead",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/opt_lists_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/opt_lists_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_options",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_playground",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_route",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_select_after",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_select_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_select_before",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_select_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_focused_hover",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_loading",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_loading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_states",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_lists/sc_lists_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_lists/sc_lists_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.lists.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_alt_click",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_alt_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_branch",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_branch.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_click",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_divider",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_divider.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_indent",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_indent.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_marker",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_marker.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_nav",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_reserve_right",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_reserve_right.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_show_meta",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_show_meta.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_track_click",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_type_ahead",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/opt_trees_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_branches_after",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_branches_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_branches_before",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_branches_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_options",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_playground",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_route",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_busy",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_busy.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_focused_hover",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_loading",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_loading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_states",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_trees/sc_trees_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.trees.",
+    "replacement_id": null
   }
 ]
