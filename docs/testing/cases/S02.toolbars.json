@@ -6,42 +6,124 @@
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "--page toolbars opens the playground with the sidebar on Toolbars",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_route.tui.json"
+      ],
       "route": "toolbars",
       "label": "Toolbars",
       "entry_path": "--page toolbars",
-      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route"
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "cb69f2d7a53edc6e5cf1b42a6d42630ad38d8912336a3dbdc5728955d04c6bfb",
+        "expect_baseline": "missing",
+        "precondition": "--page toolbars opens the playground with the sidebar on Toolbars"
+      }
     },
     {
       "case_id": "sc.toolbars.playground",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground is the visible Toolbars section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_playground.tui.json"
+      ],
       "route": "toolbars",
-      "section_or_overlay": "playground"
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e2eb9d2bded93fb21ec359922b187028c1f3c21a1e12361a39d9cf2aa58393b1",
+        "expect_baseline": "missing",
+        "precondition": "playground is the visible Toolbars section"
+      }
     },
     {
       "case_id": "sc.toolbars.playground.120x40",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground tab at 120 by 40 after the narrow capture",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_playground_120x40.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -53,21 +135,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Toolbars playground section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page toolbars --motion paused at 120x40 and activate the playground tab."
+      "expected_results": "The playground shows the query row 'Run F5   Run all Shift+F5   Stop', the narrow row ending in \u00bb, idle Stop, and 'none yet' at 120 by 40.",
+      "forbidden_effects": "Page options, Compare levels, Wrap on, vim, Activated(0) \u00b7 Run, and the running state stay absent.",
+      "action_sequence": "Open --page toolbars, capture the playground at 80 by 24, then grow the terminal to 120 by 40 and open Playground.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8cb590beb746c6f3de66093fb7770dde3fb80813019558e5bbc52b6e611aeb77",
+        "expect_baseline": "missing",
+        "precondition": "playground tab at 120 by 40 after the narrow capture"
+      }
     },
     {
       "case_id": "sc.toolbars.playground.80x24",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground at 80 by 24 before the terminal grows",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_playground_80x24.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -79,35 +201,115 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Toolbars playground section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page toolbars --motion paused at 80x24 and activate the playground tab."
+      "expected_results": "The playground at 80 by 24 shows the truncated blurb ending in short\u2026, Query toolbar, Run F5, Run all, idle Stop, and behind \u00bb.",
+      "forbidden_effects": "The full blurb, the live-widget caption, the formatting row, Last, truecolor, and 120\u00d740 stay absent.",
+      "action_sequence": "Launch showcase --page toolbars --motion paused at 80x24 on the playground before the terminal grows.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2760294772f414044cfe676b446ff7b655d368156096fc061662f62fb8165888",
+        "expect_baseline": "missing",
+        "precondition": "playground at 80 by 24 before the terminal grows"
+      }
     },
     {
       "case_id": "sc.toolbars.options",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options is the visible Toolbars section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_options.tui.json"
+      ],
       "route": "toolbars",
-      "section_or_overlay": "options"
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "eecf48de4d55f03f3e4ace96e4b654af7f1f904844bdb800362bfe2d07925bf3",
+        "expect_baseline": "missing",
+        "precondition": "options is the visible Toolbars section"
+      }
     },
     {
       "case_id": "sc.toolbars.options.120x40",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options caption and every default value at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_options_120x40.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -119,21 +321,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Toolbars options section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page toolbars --motion paused at 120x40 and activate the options tab."
+      "expected_results": "Options shows Nav keys desktop, Wrap off, Skip disabled on, Gap 1, and Overflow button \u00bb at 120 by 40.",
+      "forbidden_effects": "vim, Wrap on, Skip disabled off, the playground caption, and Compare levels stay absent.",
+      "action_sequence": "Open Options after the 80 by 24 capture, then grow the terminal to 120 by 40.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a6b51d9a52c1ae85879ffb1e5ee143a69924df87399b5fc2b33125040beb6291",
+        "expect_baseline": "missing",
+        "precondition": "options caption and every default value at 120 by 40"
+      }
     },
     {
       "case_id": "sc.toolbars.options.80x24",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options at 80 by 24 before the terminal grows",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_options_80x24.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -145,35 +387,115 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Toolbars options section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page toolbars --motion paused at 80x24 and activate the options tab."
+      "expected_results": "Options at 80 by 24 shows desktop, Wrap off, Skip disabled on, Gap 1, and Overflow button \u00bb.",
+      "forbidden_effects": "vim, Wrap on, Skip disabled off, Query toolbar, truecolor, and 120\u00d740 stay absent.",
+      "action_sequence": "From the 80 by 24 playground, open Options before the terminal grows.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "dc2d639b5c643624577bdfe57357d03cb919c385ae36e30e2280cb2cf0cdda4f",
+        "expect_baseline": "missing",
+        "precondition": "options at 80 by 24 before the terminal grows"
+      }
     },
     {
       "case_id": "sc.toolbars.states",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states is the visible Toolbars section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_states.tui.json"
+      ],
       "route": "toolbars",
-      "section_or_overlay": "states"
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5b1a4ded187dacdd45b02da14cbfd0450d93b0ff05fa91473fae487a8e0a25ca",
+        "expect_baseline": "missing",
+        "precondition": "states is the visible Toolbars section"
+      }
     },
     {
       "case_id": "sc.toolbars.states.120x40",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states caption and the nine grid rows at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_states_120x40.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -185,21 +507,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Toolbars states section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page toolbars --motion paused at 120x40 and activate the states tab."
+      "expected_results": "States shows \u25cb Compare levels, the nine rows rest through narrow, \u25cf Wrap and \u25cf Bold on selected, and the narrow sample 'Run F5       \u00bb'.",
+      "forbidden_effects": "Busy, error, editing, empty, loading, \u25cf Compare levels, and 256 colors stay absent.",
+      "action_sequence": "Open States at 80 by 24, then grow the terminal to 120 by 40 before leaving the grid.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3dba6ed60d672eedd134c19fbe39aae7b49a094497a37d0367812c95aadd0ae5",
+        "expect_baseline": "missing",
+        "precondition": "states caption and the nine grid rows at 120 by 40"
+      }
     },
     {
       "case_id": "sc.toolbars.states.80x24",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid at 80 by 24 before the terminal grows",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_states_80x24.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -211,129 +573,447 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Toolbars states section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page toolbars --motion paused at 80x24 and activate the states tab."
+      "expected_results": "States at 80 by 24 shows \u25cb Compare levels and the nine row labels rest, hover, pressed, focused, focus + hover, selected, disabled, overflow, and narrow.",
+      "forbidden_effects": "Busy, error, editing, empty, loading, \u25cf Compare levels, truecolor, and 120\u00d740 stay absent.",
+      "action_sequence": "From the 80 by 24 options tab, open States before the terminal grows.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "502809aa646f0d11e8e59143ed0990f549b92fadc2be17f1cdd4ecf63af83f1d",
+        "expect_baseline": "missing",
+        "precondition": "states grid at 80 by 24 before the terminal grows"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.rest",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_rest.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "722d0020cbd6f4b824b86c776e1634e286626c74321305e1850fc2db2c3bfa8b",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.hover",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_hover.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "67b9a2d5635c3680df7be9b548b37d8329732827c1b5c49ba1df51c99ce8b8af",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.pressed",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_pressed.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "dcd426b171e20b30dd542a1c2d63dacec35c73c29ce336e86d7693a174ea94ed",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.focused",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_focused.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f0a31a9c675912b7127f7d1d6a65dda2446ba2c99665344fe9a7482f418196f3",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.focused_hover",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_focused_hover.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e05bc4b716a3f21f0f35e46b2352f87dcf63056f294eb85879c8164708510303",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.selected",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_selected.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8c5df50da1edca24c80e7188b93bbfc3e869c9e8d432a80fd830db745c6a6e20",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.disabled",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_disabled.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5f3194800cd3a1cac8a393e3434fa5694a1a60edd48ee3078cbc8119490afc9f",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.busy",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/toolbars.rs states_grid lines 289-303 build the Toolbars StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Overflow, and Narrow. The list omits SpecimenState::Busy.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -348,8 +1028,8 @@
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/toolbars.rs states_grid lines 289-303 build the Toolbars StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Overflow, and Narrow. The list omits SpecimenState::Error.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -364,8 +1044,8 @@
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/toolbars.rs states_grid lines 289-303 build the Toolbars StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Overflow, and Narrow. The list omits SpecimenState::Editing.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -373,15 +1053,15 @@
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": false
+      "catalog_listed": true
     },
     {
       "case_id": "sc.toolbars.specimen.empty",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/toolbars.rs states_grid lines 289-303 build the Toolbars StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Overflow, and Narrow. The list omits SpecimenState::Empty.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -396,8 +1076,8 @@
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/toolbars.rs states_grid lines 289-303 build the Toolbars StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Overflow, and Narrow. The list omits SpecimenState::Loading.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -412,65 +1092,226 @@
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_overflow.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0c32a8db689051e8e56e94e7ad6e0852df3f9bdfaf90a1a4976b6e5ae0d65660",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.specimen.narrow",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_specimen_narrow.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f6f6dfe7e06d7c3c207059250e8d08e92a5e3f4b1667ab15936dadd22144220d",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
     },
     {
       "case_id": "sc.toolbars.compare-levels",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "compare levels scrolled to no color at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_compare-levels_80x24.tui.json"
+      ],
       "route": "toolbars",
       "section_or_overlay": "states",
-      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
-      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
-      "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
+      "action_sequence": "Turn Compare levels on, scroll until 16 colors and no color are both visible, narrow the terminal before growing it back, then turn Compare levels off and open Options.",
+      "expected_results": "At 120 by 40 the scrolled bands show 16 colors and no color. At 80 by 24 \u25cf Compare levels and the truecolor band stay visible, and Options still shows the default values after Compare levels is turned off.",
+      "forbidden_effects": "Page options and the playground caption stay absent while the bands are open. The 120\u00d740 badge stays absent on the narrow capture. Turning Compare levels off does not change Nav keys, Wrap, Skip disabled, Gap, or Overflow.",
       "checkpoint_ids": [
         "sc.toolbars.compare-levels.120x40",
         "sc.toolbars.compare-levels.80x24"
-      ]
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "453ead8fbdb3eed3f878cad1d23149a83fec64dd9ad8aa12eccc793c34b5f89b",
+        "expect_baseline": "missing",
+        "precondition": "compare levels scrolled to no color at 120 by 40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f40f17f20c67056e1b2fbdfb568a8028e2b2737553c5acb24f5eb6da45e643b2",
+        "expect_baseline": "missing",
+        "precondition": "compare levels still on at 80 by 24 before restoring 120 by 40"
+      }
     },
     {
       "case_id": "opt.toolbars.nav",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "toolbars.nav=vim moves l from Run to Run all and leaves the other options",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_nav.tui.json"
+      ],
       "route": "toolbars",
       "option_values": [
         "desktop",
@@ -479,21 +1320,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set toolbars.nav from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Nav keys effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set toolbars.nav=vim through --opt, then press l on the focused query toolbar.",
+      "expected_results": "Options shows vim. l moves the focus bar from \u258eRun F5 to \u258eRun all, and the query row still shows \u25cb Wrap and \u25cf Line numbers.",
+      "forbidden_effects": "desktop, Wrap on, Activated(0) \u00b7 Run, and a toggle change stay absent.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--opt",
+          "toolbars.nav=vim",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "12bf22af78a61131ceecb9d95c4a2595588556869396997641064299f1b635f0",
+        "expect_baseline": "missing",
+        "precondition": "toolbars.nav=vim moves l from Run to Run all and leaves the other options"
+      }
     },
     {
       "case_id": "opt.toolbars.wrap",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "toolbars.wrap=on returns Right to Bold and leaves the other options",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_wrap.tui.json"
+      ],
       "route": "toolbars",
       "option_values": [
         "off",
@@ -502,21 +1385,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set toolbars.wrap from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Wrap effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set toolbars.wrap=on through --opt, focus the formatting toolbar, press End, then Right.",
+      "expected_results": "Options shows Wrap on. End lands on \u258e\u25cb Right and Right wraps back to \u258e\u25cb Bold.",
+      "forbidden_effects": "Wrap off, vim, Skip disabled off, and \u258e\u25cb Right after the wrap stay absent.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--opt",
+          "toolbars.wrap=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0220abe64d2710577cb285c4e228ed176f644e11c5d6303e68ab975002aa8216",
+        "expect_baseline": "missing",
+        "precondition": "toolbars.wrap=on returns Right to Bold and leaves the other options"
+      }
     },
     {
       "case_id": "opt.toolbars.skip_disabled",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "toolbars.skip_disabled=off stops on disabled Stop, Enter does not run it, and the next right is Format",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_skip_disabled.tui.json"
+      ],
       "route": "toolbars",
       "option_values": [
         "off",
@@ -525,79 +1450,240 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set toolbars.skip_disabled from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Skip disabled effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set toolbars.skip_disabled=off through --opt, move right from Run all onto Stop, press Enter, then Right.",
+      "expected_results": "Options shows Skip disabled off. Stop takes focus with no focus bar, Enter leaves the toolbar idle, and the next Right is \u258eFormat.",
+      "forbidden_effects": "Skip disabled on, Activated(2), the running state, and Toggled(6 stay absent.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--opt",
+          "toolbars.skip_disabled=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5003d4e855676fe608f2c6f3ab662451a1bb0f30040fdd58a45e114b7442b014",
+        "expect_baseline": "missing",
+        "precondition": "toolbars.skip_disabled=off stops on disabled Stop, Enter does not run it, and the next right is Format"
+      }
     },
     {
       "case_id": "opt.toolbars.gap",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "toolbars.gap=2 widens the query row, hides Run all behind \u00bb, and leaves the other options",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_gap.tui.json"
+      ],
       "route": "toolbars",
       "option_values": [
-        "0",
         "1",
         "2"
       ],
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set toolbars.gap from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Gap effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set toolbars.gap=2 through --opt and read the query row, the narrow row, and the overflow readout.",
+      "expected_results": "The query row shows 'Run F5    Run all'. The narrow row shows Run F5 and \u00bb without Run all. The readout starts 'Run all \u00b7 Stop'. Options shows Gap 2.",
+      "forbidden_effects": "The default 'Run F5   Run all' spacing, a narrow row that still fits Run all, and Gap 1 stay absent.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--opt",
+          "toolbars.gap=2",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f43c480e1f6d2faa1d771fbeaca69b721155c556fb5eb77756f9030bb6ae49aa",
+        "expect_baseline": "missing",
+        "precondition": "toolbars.gap=2 widens the query row, hides Run all behind \u00bb, and leaves the other options"
+      }
     },
     {
       "case_id": "opt.toolbars.overflow",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "toolbars.overflow=off clips the narrow bar with no more button and leaves the other options",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/opt_toolbars_overflow.tui.json"
+      ],
       "route": "toolbars",
       "option_values": [
         "\u00bb",
-        "\u2026",
         "off"
       ],
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set toolbars.overflow from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Overflow button effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set toolbars.overflow=off through --opt and read the narrow toolbar.",
+      "expected_results": "The narrow row shows 'Run F5   Run all Shift+F5' with no more button, and the readout is 'everything fits: no \u00bb button'. Options shows off.",
+      "forbidden_effects": "A trailing \u00bb or \u2026 on that narrow row, and the readout prefix 'behind \u00bb:', stay absent.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--opt",
+          "toolbars.overflow=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7a619c8a036367adf3c5c458e3e49cd345900e26fe67330335ff2a02cfbb0f44",
+        "expect_baseline": "missing",
+        "precondition": "toolbars.overflow=off clips the narrow bar with no more button and leaves the other options"
+      }
     },
     {
       "case_id": "sc.toolbars.actions",
       "owner_task": "S02.toolbars",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Run reports Activated(0), Line numbers toggles off, and the narrow overflow menu opens",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8d44c57089f7a4ce077346bf1c46339c6cca340d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s02_toolbars/sc_toolbars_actions.tui.json"
+      ],
       "route": "toolbars",
-      "action_sequence": "Run, stop, use shortcuts and toggles, and exercise alignment, wrapping, and overflow.",
-      "expected_results": "Each action happens once and the overflow item is the item that was chosen.",
-      "forbidden_effects": "Stop runs when the demonstration is idle, or Run starts a second job.",
+      "action_sequence": "Click Run on the query toolbar, click Line numbers on that same row, then click the narrow toolbar's \u00bb.",
+      "expected_results": "Run reports Activated(0) \u00b7 Run and 'running \u00b7 Stop is enabled, Run waits'. Line numbers becomes \u25cb and reports Toggled(6, false). The overflow menu footer contains Esc and Close.",
+      "forbidden_effects": "The idle Stop reason, the idle action template, Activated(6), and Toggled(6, true) stay absent. The query row does not return to \u25cf Line numbers when the menu opens.",
       "checkpoint_ids": [
-        "sc.toolbars.actions.before",
-        "sc.toolbars.actions.after"
+        "sc.toolbars.actions"
       ],
       "terminal_columns": 120,
-      "terminal_rows": 40
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "toolbars",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d02c425b5bb2b29ca5470dacb999cf789c05158cade97d3ebf7f71f6b512406f",
+        "expect_baseline": "missing",
+        "precondition": "Run reports Activated(0), Line numbers toggles off, and the narrow overflow menu opens"
+      }
     }
   ]
 }
