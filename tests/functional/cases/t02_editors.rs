@@ -58,7 +58,13 @@ fn connect(name: &str) -> App {
     flash_settle(&app);
     app.wait_text(HOST);
     click_connect(&app);
-    app.wait_text(QUERY);
+    // Query 1 is drawn during "Loading schema…", before the connected status.
+    app.wait_screen("development connected", |screen| {
+        let visible = text(screen);
+        visible.contains(CONNECTED)
+            && visible.contains(QUERY)
+            && !visible.contains("Loading schema")
+    });
     app
 }
 
