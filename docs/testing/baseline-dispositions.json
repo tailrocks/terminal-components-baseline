@@ -11208,5 +11208,275 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.diff.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_case",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_case.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_copy_key",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_copy_key.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_duration",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_duration.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_nav",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_reveal",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_reveal.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_scrollbar_gap",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_scrollbar_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_sheet",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_sheet.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_track_click",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_width",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/opt_textutilities_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_options",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_playground",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_route",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_specimen_loading",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_loading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_states",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_text_after",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_text_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_textutilities/sc_textutilities_text_before",
+    "path": "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_text_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.textutilities.",
+    "replacement_id": null
   }
 ]
