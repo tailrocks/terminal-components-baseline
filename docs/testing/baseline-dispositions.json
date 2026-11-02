@@ -16122,5 +16122,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J01.stop.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j01_refresh/j01_refresh_refresh_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J01.refresh.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j01_refresh/j01_refresh_refresh_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J01.refresh.",
+    "replacement_id": null
   }
 ]
