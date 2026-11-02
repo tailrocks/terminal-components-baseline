@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_route.tui.json"
@@ -63,7 +63,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.json"
@@ -117,7 +117,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.json"
@@ -183,7 +183,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_80x24.tui.json"
@@ -249,7 +249,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.json"
@@ -303,7 +303,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.json"
@@ -369,7 +369,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_80x24.tui.json"
@@ -435,7 +435,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
@@ -489,7 +489,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
@@ -555,7 +555,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_80x24.tui.json"
@@ -621,7 +621,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
@@ -677,7 +677,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -693,7 +693,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -709,7 +709,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -725,7 +725,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -741,7 +741,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -757,7 +757,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -773,7 +773,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -789,7 +789,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
@@ -845,7 +845,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
@@ -901,7 +901,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -917,7 +917,7 @@
       "result": "NOT_APPLICABLE",
       "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "statushints",
@@ -933,7 +933,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
@@ -989,7 +989,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
@@ -1045,7 +1045,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_120x40.tui.json",
@@ -1107,7 +1107,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_layer.tui.json"
@@ -1171,7 +1171,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_align.tui.json"
@@ -1236,7 +1236,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_width.tui.json"
@@ -1301,7 +1301,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_compact.tui.json"
@@ -1373,7 +1373,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_share.tui.json"
@@ -1452,7 +1452,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_priority.tui.json"
@@ -1525,7 +1525,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_status.tui.json"
@@ -1593,7 +1593,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_badge.tui.json"
@@ -1658,7 +1658,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_hidden.tui.json"
@@ -1723,7 +1723,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_too_small_min.tui.json"
@@ -1788,7 +1788,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_quit_hint.tui.json"
@@ -1853,7 +1853,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_brand.tui.json"
@@ -1918,7 +1918,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_before.tui.json",
@@ -1981,7 +1981,7 @@
       "result": "PASS",
       "disposition_reason": "Passed on the reference showcase through the PTY.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_before.tui.json",
