@@ -15420,5 +15420,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T04.tabs.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t04_close/t04_close_dirty_120x40",
+    "path": "tests/functional/baselines/pre_refactor/t04_close/t04_close_dirty_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T04.close.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t04_close/t04_close_dirty_narrow",
+    "path": "tests/functional/baselines/pre_refactor/t04_close/t04_close_dirty_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T04.close.",
+    "replacement_id": null
   }
 ]
