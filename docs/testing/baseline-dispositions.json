@@ -8769,5 +8769,761 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_checkbox",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_checkbox.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_choose",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_choose.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_dismiss",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_filter",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_filter.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_hidden_toggle",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_hidden_toggle.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_keys",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_path_bar",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_path_bar.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_show_hidden",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_show_hidden.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_source",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_source.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_stepper",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_stepper.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_type_ahead",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/opt_filebrowser_url_entry",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_url_entry.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_browse_after",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_browse_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_browse_before",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_browse_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_options",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_playground",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_route",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_specimen_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_states",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_filebrowser/sc_filebrowser_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.filebrowser.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/opt_emptyerror_actions",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_actions.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/opt_emptyerror_hint",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_hint.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/opt_emptyerror_kind",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_kind.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/opt_emptyerror_reason",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_reason.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_empty_after",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_empty_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_empty_before",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_empty_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_options",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_playground",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_route",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_states",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_emptyerror/sc_emptyerror_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.emptyerror.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/opt_notices_detail",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_detail.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/opt_notices_detail_tone",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_detail_tone.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/opt_notices_hint",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_hint.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/opt_notices_kind",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_kind.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/opt_notices_mark_cut",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_mark_cut.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/opt_notices_max_lines",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_max_lines.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/opt_notices_message_lines",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_message_lines.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/opt_notices_width",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_notices_after",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_notices_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_notices_before",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_notices_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_options",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_playground",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_route",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_states",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_notices/sc_notices_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
+    "replacement_id": null
   }
 ]
