@@ -6,31 +6,36 @@
       "owner_task": "J02.mounts",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. workspaces in src/bin/jackin/domain/fixtures.rs gives payments-platform two mounts: host ~/src/payments-platform at /workspace/payments-platform, and read-only host ~/src/shared-libs at /workspace/libs. One Down from Current directory focuses payments-platform. Key e on that workspace calls Go::Editor in src/bin/jackin/screens/manager.rs. ] in src/bin/jackin/screens/editor.rs moves General to Mounts, and the tab paints both destinations from the pending list in src/bin/jackin/screens/config.rs. Esc calls leave in editor.rs. change_count is 0, so Unsaved changes stays closed. No mount form opens, so FormDialog::take_result in src/ui/layers.rs does not run. Ctrl+Q exits 0. No new destination is stored.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J02.mounts",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; Down to payments-platform; e; ]",
+      "return_path": "Esc from a clean Mounts tab returns to the manager; Ctrl+Q exits 0"
     },
     {
       "case_id": "J02.mounts.mounts",
       "owner_task": "J02.mounts",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open New mount form from open_mount_form in src/bin/jackin/screens/config.rs, after Browse chooses ~/src/payments-platform/docs from fixtures.rs and Destination is /workspace/payments-platform, before Save. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. FormDialog::take_result in src/ui/layers.rs closes on FormAction::Save, and the layer is popped before the owner runs. save_mount in config.rs returns before pending.mounts.push when the host is still not chosen, when the destination is already a mount, and when the destination does not start with /. Those returns call with_top after the pop, so Choose the host directory first, the already-a-mount sentence, and Destination must be an absolute path inside the Construct are not painted, and no row is stored. A chosen host with destination /workspace/field-notes paints Mount /workspace/field-notes added · save to apply, and the original two destinations remain. Editing that row to /workspace/libs closes the same way: the row stays /workspace/field-notes and updated is absent. Editing it to /workspace/notes-renamed paints Mount /workspace/notes-renamed updated · save to apply. d paints Removed /workspace/notes-renamed · u restores until save, and u is not pressed. Adding /workspace/field-notes again and Ctrl+S calls open_preview in src/bin/jackin/screens/editor.rs. The focused line contains Cancel. Clean up & save… is absent. Confirm Save calls start_save, which schedules WorkspaceSaved at 900 ms, and the wall clock reaches Workspace payments-platform saved. Reopening Mounts shows /workspace/field-notes from ~/src/payments-platform/docs, plus the original two destinations. /workspace/notes and /workspace/notes-renamed are absent.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
-      "baseline_paths": [],
-      "scenario": null,
-      "action_sequence": "Add, edit, and remove a mount. Enter a destination conflict and an invalid path.",
-      "expected_results": "The invalid form does not partially apply. The saved mount matches the form.",
-      "forbidden_effects": "A conflict is stored.",
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j02_mounts/j02_mounts_mounts_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j02_mounts/j02_mounts_mounts_narrow.tui.json"
+      ],
+      "scenario": [
+        "returning"
+      ],
+      "action_sequence": "Reject a missing host, a destination conflict, and a relative path. Add, rename, and remove a mount, then save /workspace/field-notes and reopen.",
+      "expected_results": "A rejected Save stores no row. The reopened mount matches the saved form.",
+      "forbidden_effects": "A conflict or an invalid destination is stored.",
       "checkpoint_ids": [
         "J02.mounts.mounts.120x40",
         "J02.mounts.mounts.narrow"
@@ -39,7 +44,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3863432796a8841329209b8ad83616ff994f5cf51611ff1d2da943d816e2204c",
+        "expect_baseline": "missing",
+        "precondition": "J02.mounts.mounts.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "beaee656832f11c0f1e8241290fd666fe80ad6da58ddf581e08e9e18c1ae0f0a",
+        "expect_baseline": "missing",
+        "precondition": "J02.mounts.mounts.narrow"
+      }
     }
   ]
 }
