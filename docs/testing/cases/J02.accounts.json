@@ -6,31 +6,36 @@
       "owner_task": "J02.accounts",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. workspaces in src/bin/jackin/domain/fixtures.rs enables acct-claude-work on payments-platform and sets role_preferred for reviewer and Anthropic to that id. It does not set accounts.preferred. acct-claude-personal is Anthropic, display name Personal, and default_for_provider is true. acct-claude-work is display name Work and is not the provider default. effective_accounts in src/bin/jackin/domain/workspace.rs marks the inherited default preferred when no workspace preferred id is stored. Account::title in src/bin/jackin/domain/account.rs joins the surface name and the display name. UsageSurface::surface_name in src/bin/jackin/domain/agent.rs is Claude for Anthropic, and Provider::short is Anthropic. render_accounts in src/bin/jackin/screens/editor.rs paints the display name, [✓] or [ ], and ★ when preferred. Effective::label is inherited default or enabled here. One Down from Current directory focuses payments-platform. Key e calls Go::Editor in src/bin/jackin/screens/manager.rs. ] in src/bin/jackin/screens/editor.rs moves General to Mounts, Roles, Environments, and then Accounts. The Personal row is [✓], contains inherited default, and contains ★. The Work row is [✓], contains enabled here, and does not contain ★. Esc calls leave in editor.rs. change_count is 0, so Unsaved changes stays closed. Ctrl+Q exits 0. No account policy is stored.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J02.accounts",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; Down to payments-platform; e; ] four times",
+      "return_path": "Esc from a clean Accounts tab returns to the manager; Ctrl+Q exits 0"
     },
     {
       "case_id": "J02.accounts.bindings",
       "owner_task": "J02.accounts",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Reach Accounts the same way. The Personal row starts [✓] with inherited default and ★. The Work row starts [✓] with enabled here and no ★. Space on Personal calls accounts_key in src/bin/jackin/screens/editor.rs. Personal is the provider default, so disabled_defaults in src/bin/jackin/domain/workspace.rs gains acct-claude-personal and enabled loses it. The status is Claude · Personal · off for this Workspace · the global default stays registered, from Account::title in src/bin/jackin/domain/account.rs. The Personal row is [ ] and does not contain ★. p on the active Work row stores accounts.preferred for Anthropic. Provider::short in src/bin/jackin/domain/agent.rs is Anthropic, so the status is Preferred for Anthropic ★ Claude · Work. The Work row is [✓] and contains ★. The Personal row stays [ ] without ★. p is not sent to an inactive row, and the OpenAI rows are not changed. That list, before Ctrl+S, is the only checkpoint. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Claude · Personal is not the starred account in either capture. Ctrl+S calls open_preview in src/bin/jackin/screens/editor.rs. The title is Save workspace. The focused line contains Cancel. Clean up & save… is absent. Confirm Save calls start_save, which schedules WorkspaceSaved at 900 ms, and the wall clock reaches Workspace payments-platform saved. No advance_clock. Reopening the editor Accounts tab shows Work [✓] with ★ and enabled here, and Personal [ ] without ★ and without inherited default. The fallback inherited default is not the preferred Anthropic account. The workspace name is still payments-platform.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
-      "baseline_paths": [],
-      "scenario": null,
-      "action_sequence": "Change a binding and the default override, save, and reopen.",
-      "expected_results": "The reopened binding is the saved binding.",
-      "forbidden_effects": "Fallback shows a different account.",
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j02_accounts/j02_accounts_bindings_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j02_accounts/j02_accounts_bindings_narrow.tui.json"
+      ],
+      "scenario": [
+        "returning"
+      ],
+      "action_sequence": "Disable the inherited Personal default, prefer Work, save, and reopen Accounts.",
+      "expected_results": "Work stays enabled and preferred. Personal stays off. The workspace name stays payments-platform.",
+      "forbidden_effects": "The inherited default stays the preferred Anthropic account.",
       "checkpoint_ids": [
         "J02.accounts.bindings.120x40",
         "J02.accounts.bindings.narrow"
@@ -39,7 +44,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "697c00e8f6973ea9288246686383321fefb5f9559c76d9539a8386556bc3b2e0",
+        "expect_baseline": "missing",
+        "precondition": "J02.accounts.bindings.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8cc09577ba866f2c0b75a08efb0d42ddba218fc41d3af68064f6c513fdffde54",
+        "expect_baseline": "missing",
+        "precondition": "J02.accounts.bindings.narrow"
+      }
     }
   ]
 }
