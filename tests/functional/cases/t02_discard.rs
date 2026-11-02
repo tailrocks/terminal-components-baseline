@@ -91,7 +91,13 @@ fn connect_development(app: &App) {
         &["Authentication failed", "Could not reach the host"],
     );
     click_connect(app);
-    let work = app.wait_text(QUERY);
+    // Query 1 is drawn during "Loading schema…", before the connected status.
+    let work = app.wait_screen("development connected", |screen| {
+        let visible = text(screen);
+        visible.contains(CONNECTED)
+            && visible.contains(QUERY)
+            && !visible.contains("Loading schema")
+    });
     see(
         &work,
         &[CONNECTED, "acme_prod › public", QUERY],
