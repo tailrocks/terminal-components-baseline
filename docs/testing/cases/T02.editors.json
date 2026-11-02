@@ -6,31 +6,72 @@
       "owner_task": "T02.editors",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Development connects under reduced motion. Enter on the public.orders row opens that grid: the heading is public \u203a orders and total_amount is visible. Ctrl+W leaves Query 1, drops the orders tab, and shows no pending marker.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "4fac39d4b953424a4179ca64f46746b2373ec21e",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_route_120x40.tui.json"
+      ],
       "route": "T02.editors",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "click Development, click Connect, Enter on public.orders, scroll until total_amount is visible",
+      "return_path": "Ctrl+W closes the orders tab and leaves Query 1 with no pending marker",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "514ba1dcb1e098a5d96917867a11e6941395f515398c2070ab203dca1f60056c",
+        "expect_baseline": "missing",
+        "precondition": "rows 1\u201326 of 500 loaded \u00b7 1,203,338 total \u00b7 cols 4\u20136 of 14"
+      }
     },
     {
       "case_id": "T02.editors.types",
       "owner_task": "T02.editors",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "On public.orders the uuid editor keeps not-a-uuid with ! and then commits aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee. notes commits desk-note. total_amount keeps nope with ! and then commits 42.50. Enter on order_number leaves the number and draws order_number is read-only. status keeps nope with ! and then commits another allowed value. delivered_at keeps yesterday with !, commits 2020-01-01, and Delete draws NULL. is_gift toggles and stays non-null. shipping_address opens a viewer and does not show typed JSON. Minus marks the next row and leaves both rows. Duplicate and insert draw DEFAULT. The bar draws \u2022 4 pending \u00b7 1 update \u00b7 2 inserts \u00b7 1 delete. At 80\u00d724 that bar clips to \u2022 4 pending \u00b7 1 update \u00b7 2 inserts \u00b7\u2026 and desk-note stays visible.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "4fac39d4b953424a4179ca64f46746b2373ec21e",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_types_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_types_narrow.tui.json"
+      ],
       "scenario": null,
-      "action_sequence": "Edit one value in each implemented type family. Enter an invalid value and NULL where the cell allows it. Insert, duplicate, and delete a row.",
-      "expected_results": "Pending counts match the operations. An invalid value does not become the stored cell.",
-      "forbidden_effects": "Delete removes a row that was not selected.",
+      "action_sequence": "Open public.orders. View shipping_address. On one row, reject and commit id, status, total_amount, notes, and delivered_at. Enter on order_number. Toggle is_gift and press Delete. Clear delivered_at. Mark the next row with minus. Duplicate the edited row and insert a blank row.",
+      "expected_results": "Invalid uuid, number, enum, and date values stay in the editor with !. Valid values commit. The bool toggles. The json viewer does not change the cell. The bar draws \u2022 4 pending \u00b7 1 update \u00b7 2 inserts \u00b7 1 delete at 120\u00d740 and clips that detail at 80\u00d724.",
+      "forbidden_effects": "An invalid value becomes the stored cell. Delete removes a row that was not marked. is_gift draws NULL. The json viewer adds a pending row.",
       "checkpoint_ids": [
         "T02.editors.types.120x40",
         "T02.editors.types.narrow"
@@ -39,7 +80,79 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6788f70a385a6e23e7a8dab696241de90cc087b57b4c8944c653521e9e31b0f1",
+        "expect_baseline": "missing",
+        "precondition": "\u2022 4 pending \u00b7 1 update \u00b7 2 inserts \u00b7 1 delete"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7d391825b2ef4af2a960fbe7491ea2c432fa996d15f5719ed5298092fb9657d6",
+        "expect_baseline": "missing",
+        "precondition": "\u2022 4 pending \u00b7 1 update \u00b7 2 inserts \u00b7\u2026"
+      }
     }
   ]
 }
