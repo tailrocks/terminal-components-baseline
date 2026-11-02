@@ -10515,5 +10515,284 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.masterdetail.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_columns",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_columns.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_context",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_context.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_follow",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_follow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_hbar",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_hbar.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_precedence",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_precedence.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_profile",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_profile.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_skip_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_skip_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_timeout",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_timeout.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_track_click",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_type_ahead",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/opt_scrolling_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_options",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_playground",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_route",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_scroll_after",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_scroll_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_scroll_before",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_scroll_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_states",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s07_scrolling/sc_scrolling_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S07.scrolling.",
+    "replacement_id": null
   }
 ]
