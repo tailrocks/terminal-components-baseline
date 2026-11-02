@@ -15744,5 +15744,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged holla reference executable at fffe002 for H02.validation.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h03_output/h03_output_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/h03_output/h03_output_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H03.output.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h03_output/h03_output_states_narrow",
+    "path": "tests/functional/baselines/pre_refactor/h03_output/h03_output_states_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H03.output.",
+    "replacement_id": null
   }
 ]
