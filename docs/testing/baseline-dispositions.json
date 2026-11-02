@@ -16482,5 +16482,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J04.chooser.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j04_form/j04_form_form_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j04_form/j04_form_form_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J04.form.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j04_form/j04_form_form_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j04_form/j04_form_form_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J04.form.",
+    "replacement_id": null
   }
 ]
