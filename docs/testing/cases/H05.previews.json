@@ -6,30 +6,33 @@
       "owner_task": "H05.previews",
       "application": "holla",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-browser --color truecolor --motion reduced at 120×40 with HOLLA_NO_HISTORY=1 opens the finder on ~/work/site. parity.rs browser() sets that cwd. The catalog row is Browse ~/work/site (catalog.rs browse.files). Paste that label and Enter. The title is Files · ~/work/site and the listing has index.html, assets, and 16 entries. .env, SECRET=1, and todo.md are absent. Selecting index.html shows <html> and hello in the preview. Esc is shell Back and returns to the finder on Browse ~/work/site. Files · and index.html are gone. No Quit holla dialog is drawn. finish() sends Ctrl+Q and exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5d43b03e065c85429bfce8007a4806359e1ce744",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "H05.previews",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch holla --scenario parity-browser --color truecolor --motion reduced at 120x40; paste Browse ~/work/site; Enter",
+      "return_path": "Esc returns to the finder on Browse ~/work/site; Ctrl+Q exits 0"
     },
     {
       "case_id": "H05.previews.preview",
       "owner_task": "H05.previews",
       "application": "holla",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "parity-browser opens Files · ~/work/site with 16 entries and hidden files off. index.html shows <html> and hello. empty.txt shows empty file and Empty file. logo.png shows binary · NUL byte in the first 256 KiB; the 120-column pane cuts the rest before not shown. bad.txt shows binary · invalid UTF-8 · not shown. current is a symlink whose preview says link → ~/work/site/index.html and shows the html text, while the title stays ~/work/site. broken points at /Users/alex/work/site/missing. The pane shows the broken symbolic link stem, Enter does not navigate, and the status is broken · broken link → /Users/alex/work/site/missing. private is an unreadable directory: the detail starts /Users/alex/work/site/private: permission, Enter does not open it, and the status is private · permission denied. pipe shows the special file stem and the status pipe · special file. long.txt shows long lines cut at 4096 and, after Shift+End, a line ending x …. big.log is line {i} for i in 0..2100. The preview keeps the first 2000 lines and does not show line 2099. PageDown, Down, and Up scroll the preview while the file list stays put. End leaves line 1999 visible and line 0 gone. That open tail is the checkpoint, at 120×40 and then at 80×24, before the terminal returns to 120×40. The narrow frame shows line 1988 through line 1999. The hidden-toggle status lasts 5s of sim time. Idle ticks are 200ms and advance that clock 80ms, so the shot waits until Hidden entries hidden has left the footer. Ctrl+H flips show_hidden before current(), so the old cursor index is read in the new list. index.html is index 10 and that slot becomes current. .env is index 3 while hidden rows are shown, and hiding them leaves big.log. Both rows stay in ~/work/site. With hidden on, .env shows SECRET=1 and not <html>. After hiding, .env and SECRET=1 are gone and the count is 16 entries again. The same count is required before the toggle. Find inside the open log uses the query line 1500 and shows 1 of 1. Key::plain treats Shift as plain, and the preview closes on plain Left, so Shift+Left leaves the drawer. Shift+Home selects the parked line. y copies it. The status is Copied  1501 line 1500, which contains line 1500 and not <html> or SECRET=1. A later copy from index.html contains hello and not line 1500. Esc clears the selection. Left closes the drawer on the same file in ~/work/site. assets is not entered.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "5d43b03e065c85429bfce8007a4806359e1ce744",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h05_previews/h05_previews_preview_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h05_previews/h05_previews_preview_narrow.tui.json"
+      ],
       "scenario": null,
-      "action_sequence": "Show text, binary, missing, unreadable, and symlink previews when the fixture has them. Toggle hidden files. Find, select, and copy inside a large preview.",
-      "expected_results": "Hidden-file toggle keeps a valid selection. Preview scrolling leaves the file list in place.",
+      "action_sequence": "Preview each fixture kind, toggle hidden files, scroll big.log, then find, select, and copy inside the open preview.",
+      "expected_results": "The open big.log tail stays on the first 2000 lines. Copy returns that file's text.",
       "forbidden_effects": "Copy returns a different file's text.",
       "checkpoint_ids": [
         "H05.previews.preview.120x40",
@@ -39,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-browser",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3a1494c8ec5d0ca4abc0d84b5677c7b9a56697cb53e57607a16b3ef081739a81",
+        "expect_baseline": "missing",
+        "precondition": "H05.previews.preview.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-browser",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "64d301c1f6125d00591dcfb67456926d0695f95668bdaa237aaaca01fb2cf073",
+        "expect_baseline": "missing",
+        "precondition": "H05.previews.preview.narrow"
+      }
     }
   ]
 }
