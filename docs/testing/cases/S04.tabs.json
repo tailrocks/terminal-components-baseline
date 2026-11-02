@@ -6,42 +6,124 @@
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "--page tabs opens the playground with the sidebar focus on Tabs",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_route.tui.json"
+      ],
       "route": "tabs",
       "label": "Tabs",
       "entry_path": "--page tabs",
-      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route"
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2e41be8bece4b8259c6fea83bbf46380ac42924803e0f1dccd66a40489c1224c",
+        "expect_baseline": "missing",
+        "precondition": "--page tabs opens the playground with the sidebar focus on Tabs"
+      }
     },
     {
       "case_id": "sc.tabs.playground",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground is the visible Tabs section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground.tui.json"
+      ],
       "route": "tabs",
-      "section_or_overlay": "playground"
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0b220f72ffd4c86ac3ab1750a3c4ddd77b7a79da6ae9af973690f01fc4661f0e",
+        "expect_baseline": "missing",
+        "precondition": "playground is the visible Tabs section"
+      }
     },
     {
       "case_id": "sc.tabs.playground.120x40",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground tab at 120 by 40 after the narrow capture",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground_120x40.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -53,21 +135,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Tabs playground section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page tabs --motion paused at 120x40 and activate the playground tab."
+      "expected_results": "The Tabs playground is visible at 120 by 40 with orders.sql, the nested crumb, and the default keys line.",
+      "forbidden_effects": "Options, States, and an unsaved dialog are the visible section.",
+      "action_sequence": "Launch showcase --page tabs --motion paused at 80x24, capture the narrow playground, then grow to 120x40 and open Playground.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "24eaa723236f7de3fdb9f1eb74b8d667aa2959f31801a42955ca33e38205040e",
+        "expect_baseline": "missing",
+        "precondition": "playground tab at 120 by 40 after the narrow capture"
+      }
     },
     {
       "case_id": "sc.tabs.playground.80x24",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground at 80 by 24 before the terminal grows, with no section caption",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground_80x24.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -79,35 +201,115 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Tabs playground section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page tabs --motion paused at 80x24 and activate the playground tab."
+      "expected_results": "The Tabs playground is visible at 80 by 24 before the terminal grows, with a close mark and no section caption.",
+      "forbidden_effects": "The wide status chrome 120×40 is visible, and a section caption is active.",
+      "action_sequence": "Launch showcase --page tabs --motion paused at 80x24 and stay on Playground.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "db3582935d54faa783a1cb6776b93671b69835547580dc218db67b5e2cc6c312",
+        "expect_baseline": "missing",
+        "precondition": "playground at 80 by 24 before the terminal grows, with no section caption"
+      }
     },
     {
       "case_id": "sc.tabs.options",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options is the visible Tabs section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options.tui.json"
+      ],
       "route": "tabs",
-      "section_or_overlay": "options"
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "604f4f79481704b34fcff39a8720950d7e03e1c5541ef1c6d48fe10cd50cd4d5",
+        "expect_baseline": "missing",
+        "precondition": "options is the visible Tabs section"
+      }
     },
     {
       "case_id": "sc.tabs.options.120x40",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options caption and every default value at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options_120x40.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -119,21 +321,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Tabs options section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page tabs --motion paused at 120x40 and activate the options tab."
+      "expected_results": "Options at 120 by 40 shows every default: auto, always, width 3, default close button, n, x-delete, default key map, desktop, default +N button, passive off, gap 1, many, and the on toggles for new-tab, digits, middle-click, and overflow.",
+      "forbidden_effects": "A non-default option value is selected, and the playground editor strip is visible.",
+      "action_sequence": "Open Options after the 80 by 24 capture, then grow the terminal to 120x40.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "cd628ac9438e4adf8872c45232c639fcf1576f9393fd52438674e6d969629dbd",
+        "expect_baseline": "missing",
+        "precondition": "options caption and every default value at 120 by 40"
+      }
     },
     {
       "case_id": "sc.tabs.options.80x24",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options at 80 by 24 before the terminal grows, with the lower controls still below the fold",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options_80x24.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -145,35 +387,115 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Tabs options section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page tabs --motion paused at 80x24 and activate the options tab."
+      "expected_results": "Options at 80 by 24 shows the leading controls, including Close keys x-delete, before the terminal grows. The Key map value, Passive, Body gap, and many stay below the fold.",
+      "forbidden_effects": "The wide status chrome 120×40 is visible, and a section caption is active.",
+      "action_sequence": "Open Options at 80x24 before growing the terminal.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5c065b778e478fbf84b211c83334084a327e101596672a72fc5a620c46db56df",
+        "expect_baseline": "missing",
+        "precondition": "options at 80 by 24 before the terminal grows, with the lower controls still below the fold"
+      }
     },
     {
       "case_id": "sc.tabs.states",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states is the visible Tabs section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states.tui.json"
+      ],
       "route": "tabs",
-      "section_or_overlay": "states"
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5d8ff856bfdf7d915a3cbb3f276faf3ca146d663fa09ddcc27cfd0c936597df2",
+        "expect_baseline": "missing",
+        "precondition": "states is the visible Tabs section"
+      }
     },
     {
       "case_id": "sc.tabs.states.120x40",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states caption and every drawn specimen at 120 by 40 after the narrow capture",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states_120x40.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -185,21 +507,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Tabs states section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page tabs --motion paused at 120x40 and activate the states tab."
+      "expected_results": "States at 120 by 40 shows rest, hover, pressed, focused, focus + hover, busy, error, overflow, and narrow, with compare levels off.",
+      "forbidden_effects": "Compare levels is on, and selected, disabled, editing, empty, and loading are drawn.",
+      "action_sequence": "Open States at 80x24, capture it, then grow to 120x40.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2e0d4279059c79ed6e769d7a15b396698abf07d76096891b6d95a65c2a2dd053",
+        "expect_baseline": "missing",
+        "precondition": "states caption and every drawn specimen at 120 by 40 after the narrow capture"
+      }
     },
     {
       "case_id": "sc.tabs.states.80x24",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states at 80 by 24 before the terminal grows, showing rest and clipping error, overflow, and narrow",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states_80x24.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -211,97 +573,335 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Tabs states section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page tabs --motion paused at 80x24 and activate the states tab."
+      "expected_results": "States at 80 by 24 shows rest, hover, pressed, focused, focus + hover, and the start of busy, before the terminal grows. Error, overflow, and narrow stay below the fold.",
+      "forbidden_effects": "The wide status chrome 120×40 is visible, overflow, narrow, or 1› is fully visible, or compare levels is on.",
+      "action_sequence": "Open States at 80x24 before growing the terminal.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "53ebe6c657c1dd2ce08e30293018d5859dcc1229b69b44e7cfd75e1e1d6e7f45",
+        "expect_baseline": "missing",
+        "precondition": "states at 80 by 24 before the terminal grows, showing rest and clipping error, overflow, and narrow"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.rest",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the rest specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_rest.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0761dd016a5f6bf0c9729be1e211c5a98836870622e1e440b3cbbf86ed0bc6d9",
+        "expect_baseline": "missing",
+        "precondition": "the rest specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.hover",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the hover specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_hover.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f284c2b2e5a80ca4bbbcc9981226f782c37ca106801d7f8545781ea0e809f891",
+        "expect_baseline": "missing",
+        "precondition": "the hover specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.pressed",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the pressed specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_pressed.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "949f7ddb53d16584dc409377d435201ee9cba3a4b1fcf05dd2f753b618579711",
+        "expect_baseline": "missing",
+        "precondition": "the pressed specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.focused",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the focused specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_focused.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9a3088b5e86141d4c3fc0a924325340977c94dc1ccdea3640212990b59146225",
+        "expect_baseline": "missing",
+        "precondition": "the focused specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.focused_hover",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the focus + hover specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_focused_hover.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "520323d10690d295e3b70538e062c198647247d9a10626f120e375a2f07576dc",
+        "expect_baseline": "missing",
+        "precondition": "the focus + hover specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.selected",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/tabs.rs states_grid lines 382-397 draws Rest, Hover, Pressed, Focused, FocusedHover, Busy, Error, Overflow, and Narrow. The list omits SpecimenState::Selected.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -316,8 +916,8 @@
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/tabs.rs states_grid lines 382-397 draws Rest, Hover, Pressed, Focused, FocusedHover, Busy, Error, Overflow, and Narrow. The list omits SpecimenState::Disabled.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -332,40 +932,120 @@
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the busy specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_busy.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a85195bb917140b313c685a03b0f0b08af512ec4f1d1ec60feda1dad1ff3f621",
+        "expect_baseline": "missing",
+        "precondition": "the busy specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.error",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the error specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_error.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1d9db1102be001ac387cf25d519efa123fd1cbabaf03ea630e4ef8ec77aaabf2",
+        "expect_baseline": "missing",
+        "precondition": "the error specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.editing",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/tabs.rs states_grid lines 382-397 draws Rest, Hover, Pressed, Focused, FocusedHover, Busy, Error, Overflow, and Narrow. The list omits SpecimenState::Editing.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -380,8 +1060,8 @@
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/tabs.rs states_grid lines 382-397 draws Rest, Hover, Pressed, Focused, FocusedHover, Busy, Error, Overflow, and Narrow. The list omits SpecimenState::Empty.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -396,8 +1076,8 @@
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/tabs.rs states_grid lines 382-397 draws Rest, Hover, Pressed, Focused, FocusedHover, Busy, Error, Overflow, and Narrow. The list omits SpecimenState::Loading.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -412,65 +1092,226 @@
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the overflow specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_overflow.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f2e458f9261dd388e857a43202a50fb105dfb1ba9ac3b76d598b13268e683631",
+        "expect_baseline": "missing",
+        "precondition": "the overflow specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.specimen.narrow",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the narrow specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_narrow.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "01b6759c4786697cb27995520e974e0b75554d66f92873b80e9c9ae99ec3a551",
+        "expect_baseline": "missing",
+        "precondition": "the narrow specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.tabs.compare-levels",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "compare levels scrolled to no color at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_compare-levels_80x24.tui.json"
+      ],
       "route": "tabs",
       "section_or_overlay": "states",
-      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
-      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
+      "action_sequence": "Turn Compare levels on, scroll until the no color band is visible, narrow the terminal to 80x24, then turn Compare levels off and restore 120x40.",
+      "expected_results": "The no color band is visible at 120 by 40, and compare levels stays on at 80 by 24 before it is turned off.",
       "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
       "checkpoint_ids": [
         "sc.tabs.compare-levels.120x40",
         "sc.tabs.compare-levels.80x24"
-      ]
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e452b7307ed5f88f3f2f648ec2714edf59c3d08139809e79a71eebdb60998185",
+        "expect_baseline": "missing",
+        "precondition": "compare levels scrolled to no color at 120 by 40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5bfda703d4aaa46871db7a9a43859fefadd877b0a513901c162de0c09944f59f",
+        "expect_baseline": "missing",
+        "precondition": "compare levels still on at 80 by 24 before restoring 120 by 40"
+      }
     },
     {
       "case_id": "opt.tabs.rule",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "accent keeps a brighter active rule under the unsaved dialog than auto",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_rule.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "auto",
@@ -481,21 +1322,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.rule from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Active rule effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.rule from its default to another listed value through --opt.",
+      "expected_results": "Accent keeps a brighter active rule under the unsaved dialog than auto. Neutral rests grey, and focus-only turns the rule accent after orders.sql is selected.",
+      "forbidden_effects": "The accent rule under the dialog matches the dimmed auto rule, or another option value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.rule=accent",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8af7c5d5eccf7316a35c45997c50bbfd94bef7a3f63ecd8e2b838da33d795668",
+        "expect_baseline": "missing",
+        "precondition": "accent keeps a brighter active rule under the unsaved dialog than auto"
+      }
     },
     {
       "case_id": "opt.tabs.close_reveal",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "hover hides every close mark on the resting editor strip",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_reveal.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "always",
@@ -504,21 +1387,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.close_reveal from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Show \u00d7 effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.close_reveal from its default to another listed value through --opt.",
+      "expected_results": "Hover hides every close mark on the resting editor strip, and moving onto orders.sql shows a close mark.",
+      "forbidden_effects": "A close mark stays on the resting strip, or another option value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.close_reveal=hover",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e594170fbad63f2de96b214eb138fa3c502b29f88d99a3290b42dad6c172049c",
+        "expect_baseline": "missing",
+        "precondition": "hover hides every close mark on the resting editor strip"
+      }
     },
     {
       "case_id": "opt.tabs.close_w",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "close width 5 opens the unsaved dialog from a click two cells left of the mark",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_w.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "1",
@@ -528,21 +1453,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.close_w from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible \u00d7 target width effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.close_w from its default to another listed value through --opt.",
+      "expected_results": "Close width 1 ignores a click two cells left of the mark. Close width 5 opens the unsaved dialog from that same column.",
+      "forbidden_effects": "Width 1 opens the unsaved dialog from that click, or another option value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.close_w=5",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7613f5f6e89676421b495b68d1bd1ea155fc22e16a1ebae4dd476f309e814919",
+        "expect_baseline": "missing",
+        "precondition": "close width 5 opens the unsaved dialog from a click two cells left of the mark"
+      }
     },
     {
       "case_id": "opt.tabs.close_button",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the × button control shows danger while the other options stay at their defaults",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_button.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "default",
@@ -551,21 +1518,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.close_button from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible \u00d7 button effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.close_button from its default to another listed value through --opt.",
+      "expected_results": "The × button control shows danger, and the hovered orders.sql close mark is the danger red.",
+      "forbidden_effects": "The hovered mark stays the default colour, or another option value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.close_button=danger",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4b1ee44f85f71dab7af36f142b905768aa1616807a22876449368d95a3f32165",
+        "expect_baseline": "missing",
+        "precondition": "the × button control shows danger while the other options stay at their defaults"
+      }
     },
     {
       "case_id": "opt.tabs.allow_new",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "allow new off removes the trailing plus and the n new tab hint",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_allow_new.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "off",
@@ -574,21 +1583,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.allow_new from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible New-tab + effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.allow_new from its default to another listed value through --opt.",
+      "expected_results": "Allow new off removes the trailing plus and the n new tab hint, and n does not open a tab.",
+      "forbidden_effects": "The strip still ends with a plus, the keys line still says n new tab, or n opens untitled-1.sql.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.allow_new=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b6e114d72f3fcfef44514fff0776d49bbb599002de160d0bffff413648fcc845",
+        "expect_baseline": "missing",
+        "precondition": "allow new off removes the trailing plus and the n new tab hint"
+      }
     },
     {
       "case_id": "opt.tabs.new_key",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "new-tab key t replaces n new tab on the keys line",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_new_key.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "n",
@@ -598,21 +1649,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.new_key from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible New-tab key effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.new_key from its default to another listed value through --opt.",
+      "expected_results": "New-tab key t replaces n new tab on the keys line. n does nothing and t opens untitled-1.sql. none omits the new tab hint and n does nothing.",
+      "forbidden_effects": "n still opens a tab when the new-tab key is t or none.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.new_key=t",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3c27906609c9d5d8fb68109c02b7c8df5b385c58b50e95fdaf669b6262e7fc4d",
+        "expect_baseline": "missing",
+        "precondition": "new-tab key t replaces n new tab on the keys line"
+      }
     },
     {
       "case_id": "opt.tabs.close_keys",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "close keys delete replaces x close on the keys line",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_keys.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "x-delete",
@@ -621,21 +1714,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.close_keys from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Close keys effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.close_keys from its default to another listed value through --opt.",
+      "expected_results": "Close keys delete replaces x close on the keys line. x leaves Import open and delete closes it.",
+      "forbidden_effects": "x still closes Import, or delete leaves it open.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.close_keys=delete",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "590af67f1c8b515a618ed612b9516b0e111325db410bc2492d8552ea0e4f45c5",
+        "expect_baseline": "missing",
+        "precondition": "close keys delete replaces x close on the keys line"
+      }
     },
     {
       "case_id": "opt.tabs.keymap",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "ctrl map shows Ctrl+W close and Ctrl+T new tab",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_keymap.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "default",
@@ -644,21 +1779,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.keymap from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Key map effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.keymap from its default to another listed value through --opt.",
+      "expected_results": "The ctrl map shows Ctrl+W close and Ctrl+T new tab. x leaves Import open, Ctrl+W closes it, and Ctrl+T opens untitled-1.sql.",
+      "forbidden_effects": "x still closes Import, or Ctrl+W leaves it open.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.keymap=ctrl",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1ee39f3a1e0233297808c621ed8e50cab6ec3dd9d0eab791fa260bcbc90187b5",
+        "expect_baseline": "missing",
+        "precondition": "ctrl map shows Ctrl+W close and Ctrl+T new tab"
+      }
     },
     {
       "case_id": "opt.tabs.digit_jump",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "digits jump off removes 1–9 jump from the keys line",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_digit_jump.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "off",
@@ -667,21 +1844,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.digit_jump from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Digits jump effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.digit_jump from its default to another listed value through --opt.",
+      "expected_results": "Digits jump off removes 1–9 jump from the keys line, and 1 leaves orders.sql selected.",
+      "forbidden_effects": "1 returns to Overview.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.digit_jump=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "01511d7704b257bad3f5f667c56ad5faa3652a2db075eab58b3493de01cccc32",
+        "expect_baseline": "missing",
+        "precondition": "digits jump off removes 1–9 jump from the keys line"
+      }
     },
     {
       "case_id": "opt.tabs.nav",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "vim nav shows h l move and l selects orders.sql",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_nav.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "desktop",
@@ -690,21 +1909,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.nav from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Nav keys effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.nav from its default to another listed value through --opt.",
+      "expected_results": "Vim nav shows h l move, and l selects orders.sql. h returns to Overview, and Right still selects orders.sql.",
+      "forbidden_effects": "l leaves Overview selected.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.nav=vim",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e3542392007c530cdd25320524ee1f73892cd953782ef64a98606189f7b18fdf",
+        "expect_baseline": "missing",
+        "precondition": "vim nav shows h l move and l selects orders.sql"
+      }
     },
     {
       "case_id": "opt.tabs.wrap",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "wrap on from Overview selects events",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_wrap.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "off",
@@ -713,21 +1974,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.wrap from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Wrap effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.wrap from its default to another listed value through --opt.",
+      "expected_results": "Wrap on from Overview selects events. Wrap off leaves Overview selected when Left is pressed.",
+      "forbidden_effects": "Wrap on stays on Overview, or wrap off selects events.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.wrap=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "19036fb947810bfd15bc913d676c6d4125a0ee8b1e13974402ed28f855396d91",
+        "expect_baseline": "missing",
+        "precondition": "wrap on from Overview selects events"
+      }
     },
     {
       "case_id": "opt.tabs.middle_click",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "middle-click off removes middle-click closes from the keys line",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_middle_click.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "off",
@@ -736,21 +2039,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.middle_click from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Middle-click closes effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.middle_click from its default to another listed value through --opt.",
+      "expected_results": "Middle-click off removes middle-click closes from the keys line.",
+      "forbidden_effects": "The keys line still says middle-click closes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.middle_click=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8ced2f18e37d5d66af97812fb668a2e2c00f93fa668ccbe75e5e9efb14e4fd88",
+        "expect_baseline": "missing",
+        "precondition": "middle-click off removes middle-click closes from the keys line"
+      }
     },
     {
       "case_id": "opt.tabs.overflow_menu",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "overflow menu off removes the +N count and keeps the 7 chevron",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_overflow_menu.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "off",
@@ -759,21 +2104,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.overflow_menu from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Overflow +N effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.overflow_menu from its default to another listed value through --opt.",
+      "expected_results": "Overflow menu off removes the +N count, keeps the 7 chevron and the trailing plus, and Down does not list audit_log.",
+      "forbidden_effects": "The strip still shows +7, or Down opens audit_log.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.overflow_menu=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d6f0b64adae7fe41158d35320ef5785845a3eeec334601f9baa6b4ce61991f3b",
+        "expect_baseline": "missing",
+        "precondition": "overflow menu off removes the +N count and keeps the 7 chevron"
+      }
     },
     {
       "case_id": "opt.tabs.more_button",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the +N button control shows tight while the other options stay at their defaults",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_more_button.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "default",
@@ -782,21 +2169,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.more_button from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible +N button effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.more_button from its default to another listed value through --opt.",
+      "expected_results": "The +N button control shows tight. The editor strip still shows +7 and the same close marks.",
+      "forbidden_effects": "Tight removes the +7 count or a close mark.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.more_button=tight",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5c886ad4b87f59bc23ba3302fb04af4d4ef0f3d2e9ef13abe75530cb44f883df",
+        "expect_baseline": "missing",
+        "precondition": "the +N button control shows tight while the other options stay at their defaults"
+      }
     },
     {
       "case_id": "opt.tabs.passive",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "owner-focused draws a focus gutter on Overview and on the sidebar",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_passive.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "off",
@@ -806,21 +2235,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.passive from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Passive effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.passive from its default to another listed value through --opt.",
+      "expected_results": "Owner-focused draws a focus gutter on Overview and on the sidebar. Passive on leaves the shows-focus phrase off the keys line and draws no Overview gutter.",
+      "forbidden_effects": "Owner-focused leaves the Overview gutter off, or passive on draws it.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.passive=owner-focused",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "20ea806fde018f7c5d3d71da7bd8e51e5d5769ea000c26be86a0946370d4ecd7",
+        "expect_baseline": "missing",
+        "precondition": "owner-focused draws a focus gutter on Overview and on the sidebar"
+      }
     },
     {
       "case_id": "opt.tabs.gap",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "body gap 0 draws the nested crumb on the row above the default",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_gap.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "1",
@@ -829,21 +2300,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.gap from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Body gap effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.gap from its default to another listed value through --opt.",
+      "expected_results": "Body gap 0 draws the nested crumb on the row above the default.",
+      "forbidden_effects": "The crumb stays on the default row.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.gap=0",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "54dbb58f98e207e8a4c743c2674e40756a4b59905e6579d30121a54837cff91d",
+        "expect_baseline": "missing",
+        "precondition": "body gap 0 draws the nested crumb on the row above the default"
+      }
     },
     {
       "case_id": "opt.tabs.count",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "few tabs shows four items and no overflow chevron",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_count.tui.json"
+      ],
       "route": "tabs",
       "option_values": [
         "few",
@@ -852,31 +2365,150 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set tabs.count from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Tabs effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set tabs.count from its default to another listed value through --opt.",
+      "expected_results": "Few tabs shows four items and no overflow chevron. Left stays on Overview, End selects Migrate, and Right stays on Migrate.",
+      "forbidden_effects": "The strip shows 7›, +7, or Export.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--opt",
+          "tabs.count=few",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "877911e9b67a7296c09b8bfbc4dc0bcae2a6f57c022ef096e222f3b97bc3f447",
+        "expect_baseline": "missing",
+        "precondition": "few tabs shows four items and no overflow chevron"
+      }
     },
     {
       "case_id": "sc.tabs.tabs",
       "owner_task": "S04.tabs",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "editor strip before a tab change, with Overview active and Import still open",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_tabs_before.tui.json",
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_tabs_after.tui.json"
+      ],
       "route": "tabs",
-      "action_sequence": "Create, switch, and close tabs. Cancel, save, and discard a dirty tab. Use overflow, middle-click, and digit jumps.",
-      "expected_results": "Each tab keeps its own body. Closing one dirty tab does not close another. The selected accent is neutral under an overlay.",
-      "forbidden_effects": "A reused index activates a different tab.",
+      "action_sequence": "Capture the editor strip with Overview active, select orders.sql, move to Import and close it, then jump with 1, open a tab with n, open the overflow menu, jump with 2, and cancel, discard, and save the dirty orders.sql tab.",
+      "expected_results": "The before strip keeps Import open. After the close, Export is visible and Import is gone. Digit 1 returns to Overview, n opens untitled-1.sql, and digit 2 returns to orders.sql while untitled-1.sql scrolls off. Esc keeps orders.sql, Discard closes it, and Save closes it while Import stays.",
+      "forbidden_effects": "Closing Import opens the unsaved dialog. Digit 2 leaves untitled-1.sql on the visible strip. Discard or Save leaves orders.sql on the strip.",
       "checkpoint_ids": [
         "sc.tabs.tabs.before",
         "sc.tabs.tabs.after"
       ],
       "terminal_columns": 120,
-      "terminal_rows": 40
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3d0a947864655f1bfc49c23491233a79af7cfe943b0a2d2779fcaa173213ea01",
+        "expect_baseline": "missing",
+        "precondition": "editor strip before a tab change, with Overview active and Import still open"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "tabs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f81f4030cbd8737f503e309ac9b07098cdcfecc247d7b645ebcbc47d56494c55",
+        "expect_baseline": "missing",
+        "precondition": "editor strip after selecting Import and closing it, with Export visible"
+      }
     }
   ]
 }
