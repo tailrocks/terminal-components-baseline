@@ -16212,5 +16212,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged holla reference executable at fffe002 for H06.quit.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j02_save/j02_save_save_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j02_save/j02_save_save_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J02.save.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j02_save/j02_save_save_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j02_save/j02_save_save_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J02.save.",
+    "replacement_id": null
   }
 ]
