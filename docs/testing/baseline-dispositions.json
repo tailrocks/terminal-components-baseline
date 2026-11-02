@@ -15906,5 +15906,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged holla reference executable at fffe002 for H04.actions.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h05_files/h05_files_nav_120x40",
+    "path": "tests/functional/baselines/pre_refactor/h05_files/h05_files_nav_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H05.files.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h05_files/h05_files_nav_narrow",
+    "path": "tests/functional/baselines/pre_refactor/h05_files/h05_files_nav_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H05.files.",
+    "replacement_id": null
   }
 ]
