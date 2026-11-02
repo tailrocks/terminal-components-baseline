@@ -6,27 +6,30 @@
       "owner_task": "T02.data",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120x40 with reduced motion. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod, with status Connected to Development. Ctrl+O opens organizations, and the grid offers Enter Edit. Ctrl+W closes that clean tab and returns to Query 1. Ctrl+Q exits.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "1fceea51d319d07752448c9d50ce0a5c4d443e11",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T02.data",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect; Ctrl+O organizations",
+      "return_path": "Ctrl+W closes the organizations tab and returns to Query 1; Ctrl+Q exits"
     },
     {
       "case_id": "T02.data.kinds",
       "owner_task": "T02.data",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "On Development, the organizations name cell commits KindEdit on row be6dd084-a1f4-4d47-ae53-915ac89debab and keeps slug tessellate, with \u2022 1 pending \u00b7 1 update. active_customers is a view. Enter draws These rows come from a view, which cannot be edited. The view grid does not show KindEdit, 1 update, Preview SQL, or Saved, and its tab stays clean while the organizations tab keeps the pending mark. analytics.daily_revenue is a table whose columns are not primary keys and whose constraints list is empty, so primary_key() is empty. Enter draws This table has no primary key, so rows cannot be identified. at 120\u00d740 and at 80\u00d724. The data footer keeps the rows label (rows 1\u201327 of 500 loaded \u00b7 1,460 total at 120\u00d740, rows 1\u201311 of 500 loaded \u00b7 1,460 total at 80\u00d724) and does not draw read-only:. The 80\u00d724 frame is captured before the terminal returns to 120\u00d740. Quit confirms 1 pending row change will be lost.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "1fceea51d319d07752448c9d50ce0a5c4d443e11",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_data/t02_data_kinds_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t02_data/t02_data_kinds_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Open an editable table, a read-only view, and a table without a primary key.",
       "expected_results": "The read-only view rejects mutation with the current reason. The editable table accepts a valid edit.",
@@ -39,7 +42,79 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "10bb7a25bb47fdaa7722c2012f29911298270406fa603aedab46fb9f096cb1b8",
+        "expect_baseline": "missing",
+        "precondition": "T02.data.kinds.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5faf5c5676a1525398aa2f101a06ea2c4d9f79ef760cd669b86e0fae06acc34a",
+        "expect_baseline": "missing",
+        "precondition": "T02.data.kinds.narrow"
+      }
     }
   ]
 }
