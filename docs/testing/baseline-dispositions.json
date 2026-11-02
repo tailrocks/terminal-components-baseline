@@ -6483,5 +6483,365 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.sidebars.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_allow_new",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_allow_new.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_close_button",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_button.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_close_keys",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_close_reveal",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_reveal.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_close_w",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_w.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_count",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_count.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_digit_jump",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_digit_jump.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_gap",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_middle_click",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_middle_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_more_button",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_more_button.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_nav",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_new_key",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_new_key.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_overflow_menu",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_overflow_menu.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_passive",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_passive.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_rule",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_rule.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/opt_tabs_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_options",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_playground",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_route",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_busy",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_busy.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_focused_hover",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_states",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_tabs_after",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_tabs_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_tabs/sc_tabs_tabs_before",
+    "path": "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_tabs_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.tabs.",
+    "replacement_id": null
   }
 ]
