@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. Space dismisses Stand up, operator only when that line is showing. From the manager, s calls Go::Settings in src/bin/jackin/app.rs. Settings opens on General. ] twice calls set_tab in src/bin/jackin/screens/settings.rs. TAB_NAMES is General, Mounts, Environments, Agents, Trust, so the crumb is Settings › global › Environments. global() in src/bin/jackin/domain/fixtures.rs stores GH_TOKEN as a 1Password reference, EDITOR as plain nvim, and CARGO_NET_GIT_FETCH_WITH_CLI as plain true. env_rows in src/bin/jackin/screens/config.rs paints GH_TOKEN with a 16-asterisk mask and an [op] path, and EDITOR as four asterisks with source plain. Esc calls leave in settings.rs. change_count is 0, so Unsaved changes stays closed. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "ab0f077ce3f2f7c408592f9fe7fa1fbc7c07eb5d",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J03.environments",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "The checkpoint is the open New global environment key form from open_env_form in src/bin/jackin/screens/config.rs, after the key REVIEW_NOTE and the masked plain value are typed, before Save. build_rows skips the Global header because folded is None, so Home lands on GH_TOKEN. a on that row calls open_env_form with role None. Scope::label is global, so the title is New global environment key. n only edits a mount row. The value field is masked with reveal_tail(4) in src/widgets/input.rs, so desk-note-91 stays unpainted and the blurred field shows the tail e-91. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Settings saved and Save settings are absent on that form. FormDialog::take_result in src/ui/layers.rs closes on FormAction::Save before save_env runs. save_env stores REVIEW_NOTE on the pending global env and paints REVIEW_NOTE · added · save to apply. mask() in src/bin/jackin/domain/workspace.rs paints twelve asterisks. The second form chooses Host environment variable. form_changed shows the Host variable field, and save_env stores EnvValue::HostEnv, painting OPS_REF · added · save to apply. env_rows paints $OPS_REF and host env. Ctrl+S calls open_preview in src/bin/jackin/screens/settings.rs. The dialog title is Save settings and the confirm button is Save. Clean up & save… and Save anyway are absent. Confirm Save calls start_save, which schedules GlobalSaved at 900 ms, and the wall clock reaches Settings saved, then the manager. Reopening Environments shows REVIEW_NOTE masked as plain and OPS_REF as a host reference, plus GH_TOKEN, EDITOR, and CARGO_NET_GIT_FETCH_WITH_CLI. Key e on payments-platform calls Go::Editor. Three ] presses follow TAB_NAMES in src/bin/jackin/screens/editor.rs to Environments. DATABASE_URL from fixtures.rs is still present. REVIEW_NOTE and OPS_REF are absent there.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "ab0f077ce3f2f7c408592f9fe7fa1fbc7c07eb5d",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_120x40.tui.json",
