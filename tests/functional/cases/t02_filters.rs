@@ -187,7 +187,13 @@ fn open_organizations(app: &App) {
     click_list(app, "Development");
     flash_settle(app);
     app.key("enter");
-    app.wait_text("Query 1");
+    // Query 1 is drawn during "Loading schema…", before the connected status.
+    app.wait_screen("development connected", |screen| {
+        let visible = text(screen);
+        visible.contains("Connected to Development")
+            && visible.contains("Query 1")
+            && !visible.contains("Loading schema")
+    });
     app.key("down");
     app.key("down");
     app.key("enter");
