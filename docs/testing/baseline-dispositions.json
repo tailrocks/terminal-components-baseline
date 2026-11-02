@@ -11766,5 +11766,284 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.terminal.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/opt_settings_cell_nav",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_cell_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/opt_settings_desc_rows",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_desc_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/opt_settings_env_select",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_env_select.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/opt_settings_save_confirm",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_save_confirm.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/opt_settings_tab",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_tab.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/opt_settings_tab_dirty",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_tab_dirty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_options",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_playground",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_route",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_settings_after",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_settings_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_settings_before",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_settings_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_editing",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_editing.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_states",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s09_settings/sc_settings_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
+    "replacement_id": null
   }
 ]
