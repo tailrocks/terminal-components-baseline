@@ -15438,5 +15438,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T04.close.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t05_help/t05_help_help_120x40",
+    "path": "tests/functional/baselines/pre_refactor/t05_help/t05_help_help_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T05.help.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t05_help/t05_help_help_narrow",
+    "path": "tests/functional/baselines/pre_refactor/t05_help/t05_help_help_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T05.help.",
+    "replacement_id": null
   }
 ]
