@@ -6,42 +6,124 @@
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "--page editable opens the playground with the sidebar focus on Editable",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_route.tui.json"
+      ],
       "route": "editable",
       "label": "Editable",
       "entry_path": "--page editable",
-      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route"
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ee65dfc8b2f7992384afbab7c6d49ffe50736a14fa3c0ac4b2c8c0ad463401bd",
+        "expect_baseline": "missing",
+        "precondition": "--page editable opens the playground with the sidebar focus on Editable"
+      }
     },
     {
       "case_id": "sc.editable.playground",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground is the visible Editable section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground.tui.json"
+      ],
       "route": "editable",
-      "section_or_overlay": "playground"
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "37f5619a2ac29d2669e4327960bd0c0c981e92c81d9e6994a392f81635ec12a4",
+        "expect_baseline": "missing",
+        "precondition": "playground is the visible Editable section"
+      }
     },
     {
       "case_id": "sc.editable.playground.120x40",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground tab at 120 by 40 after the narrow capture",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground_120x40.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -53,21 +135,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Editable playground section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page editable --motion paused at 120x40 and activate the playground tab."
+      "expected_results": "The Editable playground is visible at 120 by 40 with task #1040 and 0 edits.",
+      "forbidden_effects": "Options, States, and an empty task list are not the visible section.",
+      "action_sequence": "Launch showcase --page editable --motion paused at 80x24, capture the narrow playground, then grow to 120x40 and open Playground.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7af6d22765d0037caa5e2186492e8bb0ae9f39862e02e6dd2bc9f4b355d86d66",
+        "expect_baseline": "missing",
+        "precondition": "playground tab at 120 by 40 after the narrow capture"
+      }
     },
     {
       "case_id": "sc.editable.playground.80x24",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "playground at 80 by 24 before the terminal grows, with no section caption",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground_80x24.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "playground",
       "checkpoint_ids": [
@@ -79,35 +201,115 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Editable playground section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page editable --motion paused at 80x24 and activate the playground tab."
+      "expected_results": "The Editable playground is visible at 80 by 24 before the terminal grows.",
+      "forbidden_effects": "The wide status chrome 120\u00d740 is visible, and a different section caption is active.",
+      "action_sequence": "Launch showcase --page editable --motion paused at 80x24 and stay on Playground.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4eb00fe619f35b73d0f93f50609a6e0f49426f9f86681b3a35b9f19cad0cccb2",
+        "expect_baseline": "missing",
+        "precondition": "playground at 80 by 24 before the terminal grows, with no section caption"
+      }
     },
     {
       "case_id": "sc.editable.options",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options is the visible Editable section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options.tui.json"
+      ],
       "route": "editable",
-      "section_or_overlay": "options"
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5330f23b494b5cec257ef566272084ca12fb389c09f79cc5a0d14830dfb91a7c",
+        "expect_baseline": "missing",
+        "precondition": "options is the visible Editable section"
+      }
     },
     {
       "case_id": "sc.editable.options.120x40",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options caption and every default value at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options_120x40.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -119,21 +321,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Editable options section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page editable --motion paused at 120x40 and activate the options tab."
+      "expected_results": "Options at 120 by 40 shows every default: tasks, off, focused, overflow marks on, numeric on, vim off, default key map, auto horizontal bar, reveal on, shell, commit, and default header labels.",
+      "forbidden_effects": "A non-default option value is selected, and the playground task list is visible.",
+      "action_sequence": "Open Options after the 80 by 24 capture, then grow the terminal to 120x40.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9279811b76917b8fe92f66002a0b502c77aca0e38de93c6fbaa80e4b7d6b8428",
+        "expect_baseline": "missing",
+        "precondition": "options caption and every default value at 120 by 40"
+      }
     },
     {
       "case_id": "sc.editable.options.80x24",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "options at 80 by 24 before the terminal grows, with the lower controls still below the fold",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options_80x24.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "options",
       "checkpoint_ids": [
@@ -145,35 +387,115 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Editable options section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page editable --motion paused at 80x24 and activate the options tab."
+      "expected_results": "Options at 80 by 24 shows the leading controls before the terminal grows. Track click, On blur, and Header menu labels are below the fold.",
+      "forbidden_effects": "The wide status chrome 120\u00d740 is visible, and a different section caption is active.",
+      "action_sequence": "Open Options at 80x24 before growing the terminal.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9f8b951fb91362e494b949f192fc111a113601eeeecde9f3027ba6b6625e3df1",
+        "expect_baseline": "missing",
+        "precondition": "options at 80 by 24 before the terminal grows, with the lower controls still below the fold"
+      }
     },
     {
       "case_id": "sc.editable.states",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states is the visible Editable section",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states.tui.json"
+      ],
       "route": "editable",
-      "section_or_overlay": "states"
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d138c6f4e59e2c114ce989947032d3cf7dc7f9339933c1c322a10561503d2a26",
+        "expect_baseline": "missing",
+        "precondition": "states is the visible Editable section"
+      }
     },
     {
       "case_id": "sc.editable.states.120x40",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states caption and the leading specimens at 120 by 40 after the narrow capture",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states_120x40.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -185,21 +507,61 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Editable states section is the visible section at 120 by 40.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page editable --motion paused at 120x40 and activate the states tab."
+      "expected_results": "States at 120 by 40 shows the leading specimens through error, with compare levels off.",
+      "forbidden_effects": "Compare levels is on, and focus + hover, busy, and loading are drawn.",
+      "action_sequence": "Open States at 80x24, capture it, then grow to 120x40 before paging to the later specimens.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1c668d69b67771c54ee5c4a48fb06ac6ce22beb32db934259eeba1d14a42f50e",
+        "expect_baseline": "missing",
+        "precondition": "states caption and the leading specimens at 120 by 40 after the narrow capture"
+      }
     },
     {
       "case_id": "sc.editable.states.80x24",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "section-size",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "states at 80 by 24 before the terminal grows, showing rest and clipping the later specimens",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states_80x24.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "checkpoint_ids": [
@@ -211,81 +573,279 @@
       "glyph_mode": "unicode",
       "motion_mode": "paused",
       "client_platform": "macos",
-      "expected_results": "The Editable states section is the visible section at 80 by 24.",
-      "forbidden_effects": "A different section's caption is the active caption.",
-      "action_sequence": "Launch showcase --page editable --motion paused at 80x24 and activate the states tab."
+      "expected_results": "States at 80 by 24 shows rest and clips the later specimens, before the terminal grows.",
+      "forbidden_effects": "The narrow specimen and No rows are fully visible, and compare levels is on.",
+      "action_sequence": "Open States at 80x24 before growing the terminal.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "de4c2f9729ce57ccc5e9a4eed6b325cf9618fc226a77f0bacd9396978ecee8cb",
+        "expect_baseline": "missing",
+        "precondition": "states at 80 by 24 before the terminal grows, showing rest and clipping the later specimens"
+      }
     },
     {
       "case_id": "sc.editable.specimen.rest",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the rest specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_rest.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "57e907cbc535052ce58f5caff366ebf4e788accff29c1666cf96db2d16671ae1",
+        "expect_baseline": "missing",
+        "precondition": "the rest specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.hover",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the hover specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_hover.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "74ba92af4759a2e95d5b889fccc5b4d6905072b5c43503d6433077e674d977d2",
+        "expect_baseline": "missing",
+        "precondition": "the hover specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.pressed",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the pressed specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_pressed.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2f251421a963ae6c4856bcc420369a536d71a7ba5ff510f559a70a2a124f8fb7",
+        "expect_baseline": "missing",
+        "precondition": "the pressed specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.focused",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the focused specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_focused.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "10e2d44f4a227cad15ac875b43ccb9a9e55933d2aaf786c0e5f13b136d57729b",
+        "expect_baseline": "missing",
+        "precondition": "the focused specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.focused_hover",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/editable.rs states_grid lines 207-210 draws Rest, Hover, Pressed, Focused, Editing, Error, Disabled, Empty, Overflow, and Narrow. The list omits SpecimenState::FocusedHover.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -300,8 +860,8 @@
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/editable.rs states_grid lines 207-210 draws Rest, Hover, Pressed, Focused, Editing, Error, Disabled, Empty, Overflow, and Narrow. The list omits SpecimenState::Selected. DataTable::supports draws Selected only when selection_mode is not None, and this page's sample leaves selection_mode as None.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -316,24 +876,64 @@
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the disabled specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_disabled.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7288790c97d000bd1a8aa98578556896142de72e28d0d663465a125568c62e52",
+        "expect_baseline": "missing",
+        "precondition": "the disabled specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.busy",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/editable.rs states_grid lines 207-210 draws Rest, Hover, Pressed, Focused, Editing, Error, Disabled, Empty, Overflow, and Narrow. The list omits SpecimenState::Busy. DataTable::supports returns false for Busy.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -348,56 +948,176 @@
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the error specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_error.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ca289eab28fb824aa994097ff34c9fc0d3cbcb75981dab9a65594754a28b1f15",
+        "expect_baseline": "missing",
+        "precondition": "the error specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.editing",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the editing specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_editing.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": false
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "360fff48e03bce7d0084b58b33cd38763b07d4b4f1b1edc988628a985ea5a0aa",
+        "expect_baseline": "missing",
+        "precondition": "the editing specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.empty",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the empty specimen shows No rows at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_empty.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ab75360b43c049cd816e22b5dd2f2a9a7cf03573a27c176e628166cc101eb543",
+        "expect_baseline": "missing",
+        "precondition": "the empty specimen shows No rows at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.loading",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/editable.rs states_grid lines 207-210 draws Rest, Hover, Pressed, Focused, Editing, Error, Disabled, Empty, Overflow, and Narrow. The list omits SpecimenState::Loading. DataTable::supports returns false for Loading.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
@@ -412,65 +1132,226 @@
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the overflow specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_overflow.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e9e2d95d9a096e94e222f038d83cb9837fa07a3506a07d29bda41df541a8abfd",
+        "expect_baseline": "missing",
+        "precondition": "the overflow specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.specimen.narrow",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "state",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the narrow specimen is fully visible at 120 by 40 and compare levels is off",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_narrow.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
       "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
-      "catalog_listed": true
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "18abc85461d8224c3236807f658e6304c57aa771533145a139e7033a20b275d1",
+        "expect_baseline": "missing",
+        "precondition": "the narrow specimen is fully visible at 120 by 40 and compare levels is off"
+      }
     },
     {
       "case_id": "sc.editable.compare-levels",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "compare levels scrolled to no color at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_compare-levels_80x24.tui.json"
+      ],
       "route": "editable",
       "section_or_overlay": "states",
-      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
-      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
+      "action_sequence": "Turn Compare levels on, scroll until the no color band is visible, narrow the terminal to 80x24, then turn Compare levels off and restore 120x40.",
+      "expected_results": "The no color band is visible at 120 by 40, and compare levels stays on at 80 by 24 before it is turned off.",
       "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
       "checkpoint_ids": [
         "sc.editable.compare-levels.120x40",
         "sc.editable.compare-levels.80x24"
-      ]
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c14b0dddc147a3bec88a6a31bd7c9e70fe25cd1a8f2a2083034cd8fa14b8b032",
+        "expect_baseline": "missing",
+        "precondition": "compare levels scrolled to no color at 120 by 40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3b2299b0e7515becab066a1aab84ec189db204b75e9a898c14d6154771fbb23a",
+        "expect_baseline": "missing",
+        "precondition": "compare levels still on at 80 by 24 before restoring 120 by 40"
+      }
     },
     {
       "case_id": "opt.editable.rows",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "rows empty draws No tasks yet and leaves the other options at their defaults",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_rows.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "tasks",
@@ -479,21 +1360,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.rows from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Rows effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.rows from its default to another listed value through --opt.",
+      "expected_results": "Rows empty draws No tasks yet and Tasks you create show up here, with 0 edits.",
+      "forbidden_effects": "Task #1040, Add rate limiting, and the 1\u201313 of 14 range stay visible.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.rows=empty",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2f5092251eac5891b468817504f1a631680800f31ab8d7db9410728ea992e4ac",
+        "expect_baseline": "missing",
+        "precondition": "rows empty draws No tasks yet and leaves the other options at their defaults"
+      }
     },
     {
       "case_id": "opt.editable.type_ahead",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "type-ahead task jumps to Write release notes and leaves the other options at their defaults",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_type_ahead.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "off",
@@ -503,21 +1426,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.type_ahead from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Type-ahead effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.type_ahead from its default to another listed value through --opt.",
+      "expected_results": "Type-ahead task moves the focus gutter onto #1043 Write release notes for 3.2.",
+      "forbidden_effects": "The full Add rate limiting to auth endpoints reveal stays on the focused footer.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.type_ahead=task",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "afd9d35afcb45a99b22d37a43fba9005e5d7fef13fe0967af43e3468291bbb3c",
+        "expect_baseline": "missing",
+        "precondition": "type-ahead task jumps to Write release notes and leaves the other options at their defaults"
+      }
     },
     {
       "case_id": "opt.editable.affordance",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "affordance always draws an owner chevron on every row and leaves the other options at their defaults",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_affordance.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "focused",
@@ -527,21 +1492,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.affordance from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible \u25be affordance effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.affordance from its default to another listed value through --opt.",
+      "expected_results": "Affordance always draws an owner chevron on every Owner cell, including rows that do not have the cursor.",
+      "forbidden_effects": "The owner chevron stays absent until an Owner cell is focused.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.affordance=always",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "14b39adbff90a6b5ed7754f338e32761204344103c55bc4a70de220204418e17",
+        "expect_baseline": "missing",
+        "precondition": "affordance always draws an owner chevron on every row and leaves the other options at their defaults"
+      }
     },
     {
       "case_id": "opt.editable.overflow_marks",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "overflow marks off leaves the header without an ellipsis at 80 by 24",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_overflow_marks.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "off",
@@ -550,21 +1557,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.overflow_marks from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Overflow marks effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.overflow_marks from its default to another listed value through --opt.",
+      "expected_results": "Overflow marks off leaves the 80 by 24 header without an ellipsis after Owner.",
+      "forbidden_effects": "The header row still ends with an ellipsis.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.overflow_marks=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "081fbe58433339fdd94a5830db80c024f7b3170b86ee9edf1aa2bb3a7aebc271",
+        "expect_baseline": "missing",
+        "precondition": "overflow marks off leaves the header without an ellipsis at 80 by 24"
+      }
     },
     {
       "case_id": "opt.editable.numeric",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "numeric off sorts Changes as text so 118 sits with the leading rows",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_numeric.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "off",
@@ -573,21 +1622,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.numeric from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Numeric ID and Changes effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.numeric from its default to another listed value through --opt.",
+      "expected_results": "Numeric off sorts Changes as text, so Generate API client and 118 lead the rows that numeric order places later.",
+      "forbidden_effects": "The numeric order keeps Write release notes and Remove legacy feature flags ahead of Fix flaky.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.numeric=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ac669ebe115b8cf61d04227327f7ee9e639c041631a49494ff08c694e1c44eb1",
+        "expect_baseline": "missing",
+        "precondition": "numeric off sorts Changes as text so 118 sits with the leading rows"
+      }
     },
     {
       "case_id": "opt.editable.nav",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "vim j moves the cell cursor to the next task and leaves the other options at their defaults",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_nav.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "off",
@@ -596,21 +1687,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.nav from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Vim keys effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.nav from its default to another listed value through --opt.",
+      "expected_results": "Vim j moves the cell cursor onto #1041 and reveals Migrate sessions table to UUID keys.",
+      "forbidden_effects": "j leaves the cursor on #1040.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.nav=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c868c3b64efc3b5d47b112dd30a562741161afb9a1403fe7fd07cdc86810ba68",
+        "expect_baseline": "missing",
+        "precondition": "vim j moves the cell cursor to the next task and leaves the other options at their defaults"
+      }
     },
     {
       "case_id": "opt.editable.keymap",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "custom key map sorts with o and s does not reverse the sort",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_keymap.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "default",
@@ -619,21 +1752,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.keymap from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Key map effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.keymap from its default to another listed value through --opt.",
+      "expected_results": "The custom key map sorts with o and leaves Task ascending after s.",
+      "forbidden_effects": "The footer still says s Sort, and s toggles the sort to descending.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.keymap=custom",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5495f0c43b26cd0f9447d85374f0757fad1b62f8cb57fb1ad05c7d1520b9fd27",
+        "expect_baseline": "missing",
+        "precondition": "custom key map sorts with o and s does not reverse the sort"
+      }
     },
     {
       "case_id": "opt.editable.horizontal",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "horizontal bar never drops the position label and shows the full tracing spans title at 80 by 24",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_horizontal.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "auto",
@@ -642,21 +1817,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.horizontal from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Horizontal bar effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.horizontal from its default to another listed value through --opt.",
+      "expected_results": "Horizontal bar never drops 1\u201313 of 14 at 80 by 24 and shows the full OpenTelemetry tracing spans text.",
+      "forbidden_effects": "The position label 1\u201313 of 14 stays visible.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.horizontal=never",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "33b715021a541bda5c145735f6667dc23242ebdfebe29da879adf15c4b7dadc9",
+        "expect_baseline": "missing",
+        "precondition": "horizontal bar never drops the position label and shows the full tracing spans title at 80 by 24"
+      }
     },
     {
       "case_id": "opt.editable.reveal",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "reveal off keeps the hovered task truncated and the owner on the same row",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_reveal.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "off",
@@ -665,21 +1882,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.reveal from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Reveal cut cells effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.reveal from its default to another listed value through --opt.",
+      "expected_results": "Reveal off keeps the hovered task truncated and leaves mira on that row.",
+      "forbidden_effects": "Hover expands the task to Add rate limiting to auth endpoints and pushes mira off the row.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.reveal=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "271a1e14d3e7486d930610fb989e44ceba35919b78bb96b376738105d1e28c8d",
+        "expect_baseline": "missing",
+        "precondition": "reveal off keeps the hovered task truncated and the owner on the same row"
+      }
     },
     {
       "case_id": "opt.editable.track_click",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "track click jump is selected and the table still opens on the first rows",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_track_click.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "shell",
@@ -689,21 +1948,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.track_click from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Track click effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.track_click from its default to another listed value through --opt.",
+      "expected_results": "Track click jump is the selected Options value, and the playground still opens on #1040 with 1\u201313 of 14.",
+      "forbidden_effects": "The option changes the first visible task or the sibling defaults.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.track_click=jump",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "59b76c2c360b59e1a97168e1432715df91595aecb3222530c6241887b8f6d12e",
+        "expect_baseline": "missing",
+        "precondition": "track click jump is selected and the table still opens on the first rows"
+      }
     },
     {
       "case_id": "opt.editable.blur_action",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "blurring an open edit cancels it and the status says Edit cancelled",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_blur_action.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "commit",
@@ -712,21 +2013,63 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.blur_action from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible On blur effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.blur_action from its default to another listed value through --opt.",
+      "expected_results": "Blurring an open edit with On blur cancel shows Edit cancelled and returns the playground to 0 edits without the typed Q.",
+      "forbidden_effects": "The status says Cell saved or the playground shows 1 edits.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.blur_action=cancel",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "fab16badcfcb60965e2bf47b4db1a9d3f52ef246776fe65f6440da01a067bb4c",
+        "expect_baseline": "missing",
+        "precondition": "blurring an open edit cancels it and the status says Edit cancelled"
+      }
     },
     {
       "case_id": "opt.editable.header_labels",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "option",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "header menu labels custom is selected and the page does not draw a header menu",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_header_labels.tui.json"
+      ],
       "route": "editable",
       "option_values": [
         "default",
@@ -735,31 +2078,110 @@
       "effect": "frame",
       "needs": [],
       "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
-      "action_sequence": "Set editable.header_labels from its default to another listed value through --opt or the Options control.",
-      "expected_results": "The visible Header menu labels effect matches the selected value.",
-      "forbidden_effects": "A different option's value changes."
+      "action_sequence": "Set editable.header_labels from its default to another listed value through --opt.",
+      "expected_results": "Header menu labels custom is selected, and a left click on the Task header still sorts ascending with Add OpenTelemetry first.",
+      "forbidden_effects": "The header menu strings Sort A to Z, Sort Z to A, Unsort, Fit Width, or Default Widths are drawn.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--opt",
+          "editable.header_labels=custom",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "baa28e81a7943939200bc1f80f44bc90ef1aad2e046f62d8948f0279ca874edc",
+        "expect_baseline": "missing",
+        "precondition": "header menu labels custom is selected and the page does not draw a header menu"
+      }
     },
     {
       "case_id": "sc.editable.cells",
       "owner_task": "S03.editable",
       "application": "showcase",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "the task cell shows the typed Q while the edit is still open",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_cells.tui.json"
+      ],
       "route": "editable",
-      "action_sequence": "Edit, validate, commit, and cancel a cell. Enter an out-of-range number and recover. Paste and move across cells.",
-      "expected_results": "Commit stores the typed value. Cancel restores the previous value. An invalid number does not replace the stored value.",
-      "forbidden_effects": "Blur commits when the page's blur policy says cancel.",
+      "action_sequence": "Focus the first task cell, press Enter, type Q, and capture the screen before commit or cancel.",
+      "expected_results": "The task cell shows the typed Q, the footer says Enter Apply and Esc Cancel, and the edit count stays 0.",
+      "forbidden_effects": "The status says Cell saved or Edit cancelled, or the meta shows 1 edits.",
       "checkpoint_ids": [
-        "sc.editable.cells.before",
-        "sc.editable.cells.after"
+        "sc.editable.cells"
       ],
       "terminal_columns": 120,
-      "terminal_rows": 40
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "editable",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2a1ad01a484a84296f54395ab52f677620bf3d1406b2afc065e9704a61b68d6d",
+        "expect_baseline": "missing",
+        "precondition": "the task cell shows the typed Q while the edit is still open"
+      }
     }
   ]
 }
