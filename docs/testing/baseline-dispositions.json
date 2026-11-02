@@ -12045,5 +12045,401 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S09.settings.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_completion_cursor",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_cursor.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_completion_dismiss",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_completion_fit",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_fit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_completion_nav",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_completion_placement",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_placement.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_completion_rows",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_completion_width",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_document",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_document.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_edit_entry",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_edit_entry.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_esc_reverts",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_esc_reverts.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_field_keys",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_field_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_highlighter",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_highlighter.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_horizontal",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_horizontal.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_indent",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_indent.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_nav",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_read_only",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_read_only.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_scrollbar_gap",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_scrollbar_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_segmenter",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_segmenter.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_tab_leaves",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_tab_leaves.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_text_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_text_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/opt_codeeditor_track_click",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_track_click.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_edit_after",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_edit_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_edit_before",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_edit_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_options",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_playground",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_route",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_specimen_busy",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_busy.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_specimen_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_specimen_editing",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_editing.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_states",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s08_codeeditor/sc_codeeditor_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S08.codeeditor.",
+    "replacement_id": null
   }
 ]
