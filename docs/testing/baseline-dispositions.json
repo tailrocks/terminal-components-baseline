@@ -16572,5 +16572,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.failure.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j05_logs/j05_logs_logs_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j05_logs/j05_logs_logs_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.logs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j05_logs/j05_logs_logs_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j05_logs/j05_logs_logs_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.logs.",
+    "replacement_id": null
   }
 ]
