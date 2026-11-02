@@ -16248,5 +16248,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J01.prelude.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j02_general/j02_general_general_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j02_general/j02_general_general_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J02.general.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j02_general/j02_general_general_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j02_general/j02_general_general_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J02.general.",
+    "replacement_id": null
   }
 ]
