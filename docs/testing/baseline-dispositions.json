@@ -7752,5 +7752,365 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogkinds.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_accelerators.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_accelerators.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_ack_enter.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_ack_enter.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_backdrop.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_backdrop.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_body_scroll.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_body_scroll.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_button_row.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_button_row.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_cancel_label.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_cancel_label.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_chrome.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_chrome.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_close_button.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_close_button.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_confirm_index.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_confirm_index.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_dismiss.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_edit_entry.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_edit_entry.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_guard_destructive.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_guard_destructive.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_guard_dirty.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_guard_dirty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_keymap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_max_height.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_max_height.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_mnemonics.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_mnemonics.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_outer_margin.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_outer_margin.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_placement.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_placement.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/opt_dialogs_width.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_dialogs_after.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_dialogs_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_dialogs_before.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_dialogs_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_specimen_editing.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_editing.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_specimen_focused.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s05_dialogs/sc_dialogs_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.dialogs.",
+    "replacement_id": null
   }
 ]
