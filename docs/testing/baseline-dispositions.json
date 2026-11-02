@@ -14682,5 +14682,248 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/opt_launchcockpit_numbered",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_numbered.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/opt_launchcockpit_outcome",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_outcome.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/opt_launchcockpit_selectable",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_selectable.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/opt_launchcockpit_wrap",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_after",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_before",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_build",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_build.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancel",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancel.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancelled",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancelled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_credentials",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_credentials.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_options",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_playground",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_route",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_states",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_launchcockpit/sc_launchcockpit_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.launchcockpit.",
+    "replacement_id": null
   }
 ]
