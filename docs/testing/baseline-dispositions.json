@@ -2352,5 +2352,203 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.buttons.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_blur_action",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_blur_action.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_edit_entry",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_edit_entry.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_field_keys",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_field_keys.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_focus_select",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_focus_select.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_label_hit",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_label_hit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_plain_label",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_plain_label.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_pointer_select",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_pointer_select.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_readout",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_readout.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_required_message",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_required_message.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_text_keymap",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_text_keymap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/opt_inputs_wrap_label",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_wrap_label.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_edit_after",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_edit_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_edit_before",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_edit_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_route",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_inputs/sc_inputs_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.inputs.",
+    "replacement_id": null
   }
 ]
