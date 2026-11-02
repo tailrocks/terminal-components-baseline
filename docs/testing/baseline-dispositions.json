@@ -174,5 +174,464 @@
     "rows": 40,
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 after reconnect. Receipt docs/testing/acceptance-receipts/functional_jackin_launch_reconnected.json."
+  },
+  {
+    "id": "pre_refactor/s01_overview/opt_overview_kind",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/opt_overview_kind.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/opt_overview_ladder",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/opt_overview_ladder.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/opt_overview_mods",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/opt_overview_mods.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/opt_overview_plane",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/opt_overview_plane.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_options",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_playground",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_route",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_specimen_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_specimen_focused_hover",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_specimen_focused_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_specimen_selected",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_specimen_selected.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_states",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_tokens_after",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_tokens_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s01_overview/sc_overview_tokens_before",
+    "path": "tests/functional/baselines/pre_refactor/s01_overview/sc_overview_tokens_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.overview.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_clickable",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_clickable.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_collapsed",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_collapsed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_collapsed_rail",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_collapsed_rail.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_width",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_navigate_after",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_navigate_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_navigate_before",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_navigate_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_options",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_playground",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_rail_after",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_rail_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_rail_before",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_rail_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_route",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_hover",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_pressed",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_states",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/sc_breadcrumbsrails_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "replacement_id": null
   }
 ]
