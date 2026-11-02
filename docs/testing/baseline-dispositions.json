@@ -14466,5 +14466,221 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T01.connections.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/opt_readonlyreport_copyable",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_copyable.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/opt_readonlyreport_notices",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_notices.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/opt_readonlyreport_offline",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_offline.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/opt_readonlyreport_visual",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_visual.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_options",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_playground",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_report_after",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_report_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_report_before",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_report_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_route",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_focused",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_focused.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_loading",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_loading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_states",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s10_readonlyreport/sc_readonlyreport_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.readonlyreport.",
+    "replacement_id": null
   }
 ]
