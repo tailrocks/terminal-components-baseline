@@ -8553,5 +8553,221 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.popupstooltips.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/opt_progress_label_width",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/opt_progress_label_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/opt_progress_meter_visual",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/opt_progress_meter_visual.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/opt_progress_reserve_value",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/opt_progress_reserve_value.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/opt_progress_stale_style",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/opt_progress_stale_style.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_options",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_playground",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_progress_after",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_progress_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_progress_before",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_progress_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_route",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_specimen_empty",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_empty.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_specimen_loading",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_loading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_states",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_progress/sc_progress_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.progress.",
+    "replacement_id": null
   }
 ]
