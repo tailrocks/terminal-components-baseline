@@ -14439,5 +14439,32 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S10.accountsusage.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t01_connections/t01_connections_route_120x40",
+    "path": "tests/functional/baselines/pre_refactor/t01_connections/t01_connections_route_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T01.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t01_connections/t01_connections_select_120x40",
+    "path": "tests/functional/baselines/pre_refactor/t01_connections/t01_connections_select_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T01.connections.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/t01_connections/t01_connections_status_120x40",
+    "path": "tests/functional/baselines/pre_refactor/t01_connections/t01_connections_status_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged tablepro reference executable at fffe002 for T01.connections.",
+    "replacement_id": null
   }
 ]
