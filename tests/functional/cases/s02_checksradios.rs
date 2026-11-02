@@ -471,13 +471,30 @@ fn sections_narrow_then_wide() {
     );
 
     app.resize(120, 40);
+    // A resize frame can show the overflow label before the later columns.
     let wide_states = app.wait_screen("states grown to 120 by 40", |screen| {
+        if screen.cols() != 120 || screen.rows() != 40 {
+            return false;
+        }
         let raw = text(screen);
-        screen.cols() == 120
-            && screen.rows() == 40
-            && raw.contains("120×40")
-            && raw.contains("overflow       ")
-            && raw.contains(STATES)
+        if !raw.contains("120×40") || !raw.contains(STATES) {
+            return false;
+        }
+        let overflow = (0..screen.rows())
+            .map(|row| row_text(screen, row))
+            .find(|line| line.contains("overflow       "));
+        let disabled = (0..screen.rows())
+            .map(|row| row_text(screen, row))
+            .find(|line| line.contains("disabled       "));
+        match (overflow, disabled) {
+            (Some(overflow), Some(disabled)) => {
+                overflow.contains("Label…")
+                    && overflow.contains('–')
+                    && overflow.contains("──●")
+                    && disabled.contains("──● Label")
+            }
+            _ => false,
+        }
     });
     assert_states(&wide_states, true);
     see(
