@@ -2721,5 +2721,140 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.forms.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/opt_checksradios_disabled",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/opt_checksradios_hit",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_hit.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/opt_checksradios_mixed",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_mixed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/opt_checksradios_radio_nav",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_radio_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_choice_after",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_choice_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_choice_before",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_choice_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_route",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s02_checksradios/sc_checksradios_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S02.checksradios.",
+    "replacement_id": null
   }
 ]
