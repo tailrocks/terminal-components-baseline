@@ -354,7 +354,21 @@ fn holla_disk_tree_and_plan_review_flows() {
     app.visual("functional/holla_disk_tree");
     app.finish();
 
-    let plan = holla("holla-plan-review", "upgrade-plan");
+    let plan = App::new(
+        "holla-plan-review",
+        HOLLA,
+        &[
+            "--scenario",
+            "upgrade-plan",
+            "--motion",
+            "paused",
+            "--frame",
+            "48",
+        ],
+        120,
+        40,
+        "truecolor",
+    );
     plan.wait_text("8 steps · 8 included");
     for _ in 0..5 {
         plan.key("down");
