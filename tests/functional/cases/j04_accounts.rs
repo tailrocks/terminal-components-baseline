@@ -10,7 +10,7 @@
 //! completion. `strip_right` paints a spinner from `now_ms`, so that row is
 //! removed before the shot. The checkpoint is the later Work dialog.
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 
@@ -344,6 +344,14 @@ fn seam_point(screen: &TerminalSnapshot) -> Point {
     }
 }
 
+fn on_work(screen: &TerminalSnapshot) -> bool {
+    text(screen).contains(WORK_CRUMB)
+}
+
+fn work_settled(screen: &TerminalSnapshot) -> bool {
+    on_work(screen) && quiet_accounts(screen)
+}
+
 fn hide_retry(app: &App) {
     let seam = seam_point(&app.screen());
     app.move_to(seam);
@@ -351,9 +359,25 @@ fn hide_retry(app: &App) {
     let parked = Point { x: 100, y: seam.y };
     app.drag_to(parked);
     app.up(parked);
-    app.wait_screen("retry out of view", |screen| {
-        text(screen).contains(WORK_CRUMB) && quiet_accounts(screen)
-    });
+    // The seam drag can move the selection off Work. A poll cannot put it
+    // back, so recover with keys and only then let the caller press `d`.
+    let deadline = Instant::now() + Duration::from_secs(10);
+    loop {
+        let screen = app.screen();
+        if !on_work(&screen) {
+            select_until(app, "work after seam", shows(WORK_CRUMB));
+            continue;
+        }
+        if work_settled(&screen) && app.try_sustained(Duration::from_millis(200), work_settled) {
+            return;
+        }
+        assert!(
+            Instant::now() < deadline,
+            "retry out of view\n{}",
+            text(&app.screen())
+        );
+        std::thread::sleep(Duration::from_millis(25));
+    }
 }
 
 fn checkbox_lines(screen: &TerminalSnapshot) -> Vec<String> {
@@ -365,7 +389,21 @@ fn checkbox_lines(screen: &TerminalSnapshot) -> Vec<String> {
 }
 
 fn show_mixed(app: &App) {
-    let overview = app.wait_text(OVERVIEW);
+    // The crumb is painted before the tree and the warning list. Waiting on
+    // the crumb alone accepts a partial frame that is missing Go or Kimi.
+    let overview = app.wait_screen("mixed overview", |screen| {
+        let visible = text(screen);
+        visible.contains(OVERVIEW)
+            && visible.contains(PERSONAL)
+            && visible.contains(WORK)
+            && visible.contains(PRIMARY)
+            && visible.contains(EXPERIMENTS)
+            && visible.contains(GO)
+            && !visible.contains(REVOKED)
+            && visible.contains("1Password available")
+            && visible.contains(MISSING)
+            && secrets_clear(screen)
+    });
     assert_secrets(&overview);
     let visible = text(&overview);
     assert!(visible.contains(PERSONAL), "{visible}");
