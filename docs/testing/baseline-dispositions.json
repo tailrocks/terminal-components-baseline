@@ -7149,5 +7149,338 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S05.pickers.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_dismiss.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_dismiss.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_edge_margin.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_edge_margin.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_extra_key.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_extra_key.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_fit.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_fit.tui.json",
+    "cols": 120,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_hide_owner_focus.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_hide_owner_focus.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_max_rows.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_max_rows.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_menu_key.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_menu_key.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_min_width.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_min_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_moves_cursor.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_moves_cursor.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_nav.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_nav.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_placement.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_placement.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_release_selects.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_release_selects.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_shift_f10.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_shift_f10.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_title.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_title.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_type_ahead.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_type_ahead.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_unknown_key.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_unknown_key.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/opt_menus_wrap.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_wrap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_compare-levels_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_compare-levels_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_menus_dismissed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_menus_dismissed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_menus_open.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_menus_open.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_options.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_options_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_options_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_playground.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_playground_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_playground_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_route.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_specimen_disabled.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_disabled.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_specimen_hover.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_hover.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_specimen_narrow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_specimen_overflow.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_specimen_pressed.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_pressed.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_specimen_rest.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_states.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_states_120x40.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s04_menus/sc_menus_states_80x24.tui",
+    "path": "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S04.menus.",
+    "replacement_id": null
   }
 ]
