@@ -16410,5 +16410,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.trust.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j03_environments/j03_environments_env_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.environments.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j03_environments/j03_environments_env_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J03.environments.",
+    "replacement_id": null
   }
 ]
