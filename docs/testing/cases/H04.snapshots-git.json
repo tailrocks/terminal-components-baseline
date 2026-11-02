@@ -6,27 +6,30 @@
       "owner_task": "H04.snapshots-git",
       "application": "holla",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Holla --scenario rust-dirty --color truecolor --motion reduced at 120×40 with history off opens the finder on ~/work/holla. Pasting Show git status selects that row. Enter opens Git status, and the body contains the status command. Esc is shell Back and returns to the finder on Show git status. The modified-file line and --porcelain=v2 are gone. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "f27ab8b742e65eedbba403c7868ed2bab249276d",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "H04.snapshots-git",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch holla --scenario rust-dirty --color truecolor --motion reduced at 120x40; paste Show git status; Enter",
+      "return_path": "Esc returns to Show git status; Ctrl+Q exits 0"
     },
     {
       "case_id": "H04.snapshots-git.git",
       "owner_task": "H04.snapshots-git",
       "application": "holla",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "rust-dirty is ~/work/holla on main, 3 behind, 4 unstaged, 1 untracked, and 1 stashed. Modified files include src/bin/holla/app.rs. Paste Show git status and Enter. The title is Git status. The body contains $ git -C /Users/alex/work/holla status --porcelain=v2 --branch --show-stash and M src/bin/holla/app.rs. Follow-ups are Pull and Open lazygit, and the page names holla and ~/work/holla. index file corrupt, ~/work/svc, ~/work/repos, and $ git diff --stat are absent. That open page is captured at 120×40 and then at 80×24, before Esc. Pull is not activated. At 80 columns the status command is clipped. Paste Review 5 modified files. The title is Modified files. The body contains $ git diff --stat, src/bin/holla/app.rs, and files changed, and stash@{ is absent. The shared status command still carries --show-stash. Paste Show stash (1). src/bin/holla/screens/snapshot.rs draws git, git-diff, and git-stash in one builder, so the title stays Git status, the worktree fact includes 1 stashed, and the body has the status command with no stash entry list and no $ git diff --stat. parity-git-batch is ~/work/repos with children alpha, beta, gamma, and delta. Paste Status across 5 child projects. The title is Status across child projects. The body lists alpha and delta. Pull every child project and Switch every project to its primary branch are visible and are not activated. src/bin/holla/app.rs is absent. Delta stores command_failure index file corrupt in src/bin/holla/domain/parity.rs, and the executor child two stores the same string. The git-all rows print summary() and block_reason() from src/bin/holla/domain/stack.rs, which omit command_failure, so index file corrupt is not drawn on alpha or delta. A separate unavailable snapshot cannot be opened: git.hygiene_unavailable in src/bin/holla/domain/catalog.rs launches snapshot git only when command_failure is on git_here, and the shipped failures are on those children. src/bin/holla/domain/outcomes.rs prints fatal: {failure} when a git command runs, and this leaf does not run one. parity-cargo is ~/work/engine with GitState::clean on main. Show git status contains the engine status command and has no M line.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "f27ab8b742e65eedbba403c7868ed2bab249276d",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Open git, git-diff, git-stash, and git-all.",
       "expected_results": "Each body is that family. The follow-up action names the same repository.",
@@ -39,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "rust-dirty",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "872854b17f868157004a37b5f3abcddbf6c35be3bd9c8121b98f0a8f95a0b6de",
+        "expect_baseline": "missing",
+        "precondition": "H04.snapshots-git.git.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "rust-dirty",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5cac61932b44c3979bebf8d9b59b2d724e25f6b3dfccd9a9ab0e50322818ca80",
+        "expect_baseline": "missing",
+        "precondition": "H04.snapshots-git.git.narrow"
+      }
     }
   ]
 }
