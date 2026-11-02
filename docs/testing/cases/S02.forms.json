@@ -1501,11 +1501,10 @@
       "result": "PASS",
       "disposition_reason": "states caption every state, drawn by the widget is active at 120 by 40",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
+      "execution_commit": "b63305d17a81e76e2f193fa2a5126e3a3470d0a9",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_specimen_narrow.tui.json"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -1545,47 +1544,9 @@
           "HOLLA_NO_HISTORY": "1"
         },
         "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
-        "candidate_sha256": "f0d806556207b5a4fe4fafdbd2cc577358b3e557e30f0a703c0d20b5108622c3",
+        "candidate_sha256": "1a0cbf3ff7087af25990484dcf4dd38ad00cb90150be141fa3e3a485ca2864f3",
         "expect_baseline": "missing",
-        "precondition": "states caption every state, drawn by the widget is active at 120 by 40"
-      },
-      "acceptance_receipt_also": {
-        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
-        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
-        "toolchain": {
-          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
-          "cargo": "1.99.1 (5f94df478 2026-08-27)",
-          "nextest": "0.9.148",
-          "tuiscotti_cli": "0.4.0",
-          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
-          "tuiscotti_tui_test": "0.2.1",
-          "mise": "2026.10.25",
-          "velnor_actions": "0.1.70",
-          "host": "aarch64-apple-darwin"
-        },
-        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
-        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
-        "fixture_args": [
-          "--page",
-          "forms",
-          "--color",
-          "truecolor",
-          "--motion",
-          "paused"
-        ],
-        "env": {
-          "TERM": "xterm-256color",
-          "COLORTERM": "truecolor",
-          "LANG": "C.UTF-8",
-          "LC_ALL": "C.UTF-8",
-          "TZ": "UTC",
-          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
-          "HOLLA_NO_HISTORY": "1"
-        },
-        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
-        "candidate_sha256": "31d0a6eb3a19f8c5b848d9f0124f4df0830720296c03078ce1d4b3dd65280e8b",
-        "expect_baseline": "missing",
-        "precondition": "states at 80 by 24 before the terminal grows, showing rest, hover, and focused"
+        "precondition": "states grid paged to the narrow row at 120 by 40"
       }
     },
     {
@@ -1891,7 +1852,7 @@
       "application": "showcase",
       "kind": "option",
       "result": "PASS",
-      "disposition_reason": "forms.desc_rows=2 places Optional · Markdown on the line after the placeholder",
+      "disposition_reason": "forms.desc_rows=2 places Optional \u00b7 Markdown on the line after the placeholder",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
@@ -1948,7 +1909,7 @@
         "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
         "candidate_sha256": "62c25c9204132958c2fb37dcff795607f83037d52340320f3261071b36858457",
         "expect_baseline": "missing",
-        "precondition": "forms.desc_rows=2 places Optional · Markdown on the line after the placeholder"
+        "precondition": "forms.desc_rows=2 places Optional \u00b7 Markdown on the line after the placeholder"
       }
     },
     {
@@ -1957,7 +1918,7 @@
       "application": "showcase",
       "kind": "option",
       "result": "PASS",
-      "disposition_reason": "Help text toggled off from the Options control removes Optional · Markdown and the reviewer help line",
+      "disposition_reason": "Help text toggled off from the Options control removes Optional \u00b7 Markdown and the reviewer help line",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
@@ -2011,7 +1972,7 @@
         "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
         "candidate_sha256": "6e8c1c9b7d3867faa9122ced578fcf38a59969f912e972aa5452e7f6007d3390",
         "expect_baseline": "missing",
-        "precondition": "Help text toggled off from the Options control removes Optional · Markdown and the reviewer help line"
+        "precondition": "Help text toggled off from the Options control removes Optional \u00b7 Markdown and the reviewer help line"
       }
     },
     {
