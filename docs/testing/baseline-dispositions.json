@@ -15852,5 +15852,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged holla reference executable at fffe002 for H04.snapshots-docker.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40",
+    "path": "tests/functional/baselines/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H04.snapshots-host.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow",
+    "path": "tests/functional/baselines/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H04.snapshots-host.",
+    "replacement_id": null
   }
 ]
