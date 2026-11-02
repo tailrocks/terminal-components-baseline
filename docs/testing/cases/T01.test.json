@@ -60,12 +60,13 @@
       "application": "tablepro",
       "kind": "transition",
       "result": "PASS",
-      "disposition_reason": "Test, Save, Save & connect, and Cancel are separate results on distinct edits. With motion paused, Test connection on renamed Devtest leaves Edit connection open and paints ⠋ on the Test connection button. The list still shows Development. That frame has no Connected · Pos…, no Connection time…, no Connection saved, and no Query 1. With motion reduced, Production shows ✓ Connected · Pos…. The full sentence Connected · PostgreSQL 16.3 · 12 ms is not painted: connections.rs render_form caps the card with width.min(84) and truncates the status after the last button. Analytics shows ✗ Connection time…. The full sentence Connection timed out after 10 s is not painted. Save on renamed Devnote closes the form, shows Connection saved and Devnote, and does not show Query 1. Pressing e reopens Edit connection on Devnote with the four buttons and Connection saved still visible. Save & connect on renamed Prodlink with motion paused closes the form, shows Connection saved and ⠋ Opening SSH tunnel…, and does not show Query 1. The same action on renamed Locallink with motion reduced reaches Query 1 and Connected to Locallink. Cancel on renamed Staging returns to Staging and staging-db.acme.io. Nope is gone. Connection saved, both test results, and Query 1 are absent.",
+      "disposition_reason": "Test, Save, Save & connect, and Cancel are separate results on distinct edits. With motion paused, Test connection on renamed Devtest leaves Edit connection open and paints ⠋ on the Test connection button. The list still shows Development. That frame has no Connected · Pos…, no Connection time…, no Connection saved, and no Query 1. With motion reduced, Production shows ✓ Connected · Pos…. The full sentence Connected · PostgreSQL 16.3 · 12 ms is not painted: connections.rs render_form caps the card with width.min(84) and truncates the status after the last button. Analytics shows ✗ Connection time…. The full sentence Connection timed out after 10 s is not painted. Save on renamed Devnote closes the form, shows Connection saved and Devnote, and does not show Query 1. Pressing e reopens Edit connection on Devnote with the four buttons and Connection saved still visible. Save & connect on renamed Prodlink with motion paused closes the form, shows Connection saved and ⠋ Opening SSH tunnel…, and does not show Query 1. The same action on renamed Locallink with motion reduced reaches Query 1 and Connected to Locallink. Cancel on renamed Staging returns to Staging and staging-db.acme.io. Nope is gone. Connection saved, both test results, and Query 1 are absent. At 80×24 that same paused Devtest frame still shows Edit connection, Devtest, and ⠋ Test connection. The page is below collapse_below(80), so the list is off the frame and the name Development is not painted. The finished result strings, Connection saved, and Query 1 stay absent.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": "50a9ae94243d29765d89f013d656fdec5afb8601",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t01_test/t01_test_actions_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/t01_test/t01_test_actions_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t01_test/t01_test_actions_narrow.tui.json"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -108,13 +109,50 @@
       "expected_results": "Test leaves the form open and does not save. A paused test stays on the busy button. A reduced test shows the truncated success or timeout glyph. Save closes the form with Connection saved and does not open the workbench. Save & connect saves and starts connecting. Paused motion stays on Opening SSH tunnel. Reduced motion opens Query 1. Cancel returns to the original connection.",
       "forbidden_effects": "Cancel writes the edit. A paused Test shows a finished connection result. Plain Save shows Query 1 or a test result. The paused Save & connect frame shows Query 1.",
       "checkpoint_ids": [
-        "T01.test.actions.120x40"
+        "T01.test.actions.120x40",
+        "T01.test.actions.narrow"
       ],
       "terminal_columns": 120,
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "paused",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c3518389b14501dc833f3875e99c9945865cebc232f8329510d6bdc4c3715ac9",
+        "expect_baseline": "missing",
+        "precondition": "paused Test connection stays busy on unsaved Devtest at 80x24"
+      }
     }
   ]
 }

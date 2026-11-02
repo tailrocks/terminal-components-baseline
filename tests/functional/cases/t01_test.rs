@@ -156,6 +156,17 @@ fn shot(app: &App, case_id: &str) {
     app.visual(&visual_id(case_id));
 }
 
+fn shot_narrow(app: &App) {
+    let screen = app.screen();
+    assert_eq!(
+        (screen.cols(), screen.rows()),
+        (80, 24),
+        "narrow terminal\n{}",
+        text(&screen)
+    );
+    app.visual(&visual_id("t01_test.actions.narrow"));
+}
+
 #[test]
 fn route_opens_the_form_and_cancel_returns() {
     let app = open("t01-route", "paused");
@@ -222,6 +233,31 @@ fn testing_paused() {
     );
     forbid(&busy, results_and_workbench());
     shot(&app, "t01_test.actions.120x40");
+    app.resize(80, 24);
+    // Page width is below collapse_below(80), so the list is not on this frame.
+    let narrow = app.wait_screen("actions narrow", |screen| {
+        if screen.cols() != 80 || screen.rows() != 24 {
+            return false;
+        }
+        let visible = text(screen);
+        visible.contains(FORM)
+            && visible.contains("Devtest")
+            && visible.contains("⠋")
+            && visible.contains("Test connection")
+    });
+    require(&narrow, &[FORM, "Devtest", "⠋", "Test connection"]);
+    forbid(
+        &narrow,
+        &[FULL_OK, FULL_ERR, SAVED, WORKBENCH, "Development"],
+    );
+    shot_narrow(&app);
+    app.resize(120, 40);
+    app.wait_screen("actions restored", |screen| {
+        screen.cols() == 120
+            && screen.rows() == 40
+            && text(screen).contains(FORM)
+            && text(screen).contains("Cancel")
+    });
     click_action(&app, "Cancel");
     let returned = app.wait_absent(FORM);
     require(&returned, &["Development", "dev-db.internal.acme.io"]);
