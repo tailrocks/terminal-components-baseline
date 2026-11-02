@@ -15762,5 +15762,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged holla reference executable at fffe002 for H03.output.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h03_picker/h03_picker_picker_120x40",
+    "path": "tests/functional/baselines/pre_refactor/h03_picker/h03_picker_picker_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H03.picker.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h03_picker/h03_picker_picker_narrow",
+    "path": "tests/functional/baselines/pre_refactor/h03_picker/h03_picker_picker_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H03.picker.",
+    "replacement_id": null
   }
 ]
