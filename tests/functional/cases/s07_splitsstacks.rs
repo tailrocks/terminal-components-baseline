@@ -734,13 +734,16 @@ fn compare_levels_narrows_before_restore() {
     shot(&app, "sc.splitsstacks.compare-levels.120x40");
 
     app.resize(80, 24);
-    let narrow = app.wait_screen("compare redraw at 80 by 24", |screen| {
+    app.wait_screen("compare redraw at 80 by 24", |screen| {
         screen.cols() == 80 && screen.rows() == 24 && text(screen).contains(TITLE)
     });
+    // The first paint after a shrink can still show the wide scroll offset.
+    // Decide from the settled frame, then use the same wheel as the wide reveal.
+    let mut narrow = app.settle();
     if !text(&narrow).contains("no color") {
         reveal_text(&app, "no color");
+        narrow = app.settle();
     }
-    let narrow = app.settle();
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     see(
         &narrow,
