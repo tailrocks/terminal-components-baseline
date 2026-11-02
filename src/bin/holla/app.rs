@@ -178,7 +178,7 @@ impl App {
         for _ in 0..frame {
             app.on_tick();
         }
-        app.world.clock.running = running;
+        app.world.clock.running = running && !app.shell.clock_steps;
         app
     }
 
@@ -2999,6 +2999,14 @@ impl shell::App for App {
     }
     fn on_input(&mut self, input: Input) -> Outcome {
         self.handle_input(input)
+    }
+    fn advance_clock(&mut self, ms: u64) -> Option<Outcome> {
+        Some(junie_tui::clock::run_step(
+            self,
+            |a| &mut a.world.clock,
+            ms,
+            Self::on_tick,
+        ))
     }
     fn on_blur(&mut self, ch: FocusChange) -> Outcome {
         self.blur_all(ch)

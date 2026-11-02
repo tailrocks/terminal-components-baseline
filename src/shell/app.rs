@@ -346,9 +346,7 @@ pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
     let logged = input.clone();
 
     let step = match &input {
-        Input::Paste(text) if app.shell().clock_steps && app.shell().motion == Motion::Paused => {
-            crate::clock::ClockStep::parse(text)
-        }
+        Input::Paste(text) if app.shell().clock_steps => crate::clock::ClockStep::parse(text),
         _ => None,
     };
     let mut out = match step.and_then(|ms| app.advance_clock(ms)) {

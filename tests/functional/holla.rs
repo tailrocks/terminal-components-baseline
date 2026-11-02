@@ -25,6 +25,7 @@ fn holla_finder_search_runs_selected_task_and_records_result() {
     app.paste("cargo check");
     app.wait_text("▎ cargo check");
     app.key("enter");
+    app.advance_clock(1_500);
     let done = app.wait_screen("successful task result", |s| {
         let t = text(s);
         t.contains("succeeded") && t.contains("exit 0") && t.contains("Finished `dev` profile")
@@ -137,6 +138,7 @@ fn holla_trust_cancel_then_run_uses_the_child_directory() {
     app.key("enter");
     app.wait_text("arguments");
     app.key("ctrl+s");
+    app.advance_clock(2_500);
     let launched = app.wait_screen("frontend test has its own activity and output", |screen| {
         let visible = text(screen);
         visible

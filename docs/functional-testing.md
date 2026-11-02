@@ -115,10 +115,14 @@ effects, and teardown; preserve the same terminal interaction layer.
 
 Use `--motion paused --frame <n>` for held-state and static view tests.
 Holla and TablePro asynchronous operations need normal/reduced motion.
-Jackin additionally supports opt-in `JUNIE_TUI_TEST_CLOCK=1`; the helper's
-`advance_clock(ms)` sends its documented bracketed-paste clock request. Do
-not assume every application implements that clock. Never send clock input
-as a substitute for a domain interaction.
+Jackin and Holla additionally support opt-in `JUNIE_TUI_TEST_CLOCK=1`, which
+the helper always sets: wall time then never moves the simulated clock (so a
+relative label such as "live · 3 s ago" cannot drift under load), and the
+helper's `advance_clock(ms)` sends its documented bracketed-paste clock
+request to step it. A Holla journey that waits for a task or activity to
+progress calls `advance_clock` first. Do not assume every application
+implements that clock. Never send clock input as a substitute for a domain
+interaction.
 
 ## Write one journey around observable contracts
 
