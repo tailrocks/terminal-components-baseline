@@ -15924,5 +15924,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged holla reference executable at fffe002 for H05.files.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h04_plan/h04_plan_plan_120x40",
+    "path": "tests/functional/baselines/pre_refactor/h04_plan/h04_plan_plan_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H04.plan.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/h04_plan/h04_plan_plan_narrow",
+    "path": "tests/functional/baselines/pre_refactor/h04_plan/h04_plan_plan_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged holla reference executable at fffe002 for H04.plan.",
+    "replacement_id": null
   }
 ]
