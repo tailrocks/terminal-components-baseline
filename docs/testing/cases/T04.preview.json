@@ -6,27 +6,30 @@
       "owner_task": "T04.preview",
       "application": "tablepro",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. A click on Development, then Connect, finishes on Query 1 with Connected to Development after Loading schema has left the screen. One click on products in the explorer opens public › products with meta preview · 9 cols, and Query 1 stays in the strip. Nothing is unsaved, so Ctrl+Q exits 0 through the quit guard without a dialog.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "775c224af8b3f8420258b2c21ef32a29a6425e54",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "T04.preview",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect; click products in the explorer",
+      "return_path": "public › products preview with Query 1 still open; Ctrl+Q exits 0"
     },
     {
       "case_id": "T04.preview.preview",
       "owner_task": "T04.preview",
       "application": "tablepro",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Clicking products once opens public › products as a preview (preview · 9 cols) beside Query 1. Clicking products again pins that same tab (9 cols, and the meta no longer contains preview) without a second products tab. Ctrl+T opens Query 2, and typing SELECT 't04_preview_dirty' AS marker leaves that statement in the editor. Clicking organizations opens a new preview and leaves the pinned products tab and Query 2 in the strip. Activating Query 2 still shows the marker. Clicking customers replaces the organizations preview in place: the organizations tab is gone, customers is preview · 11 cols, products stays pinned, and Query 2 still contains the marker. That customers screen is captured at 120×40 and at 80×24, with the narrow shot taken before the terminal returns to 120×40. Ctrl+Q asks to quit because 1 unsaved query will be lost; Right then Enter confirms and the process exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "775c224af8b3f8420258b2c21ef32a29a6425e54",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t04_preview/t04_preview_preview_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t04_preview/t04_preview_preview_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Preview an object, pin a tab, dirty another tab, and preview again.",
       "expected_results": "The pinned and dirty tabs keep their identities and SQL.",
@@ -39,7 +42,79 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "622ebf39f64cf43155c0c5d9919ca342b4d2f13dc879916e0f1f44196ba0cc6e",
+        "expect_baseline": "missing",
+        "precondition": "T04.preview.preview.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "dda9043cd5fc83c97932d4d2d57ae4e36361959555d462ddf7743bdca0fce4cf",
+        "expect_baseline": "missing",
+        "precondition": "T04.preview.preview.narrow"
+      }
     }
   ]
 }
