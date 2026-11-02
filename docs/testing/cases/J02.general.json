@@ -6,27 +6,30 @@
       "owner_task": "J02.general",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40 opens the manager. ManagerScreen::new in src/bin/jackin/screens/manager.rs selects Current directory. Space dismisses Stand up, operator when that line is showing. Down focuses payments-platform. Key e in that file opens the editor only for a workspace row. The crumb in src/bin/jackin/screens/editor.rs is Workspaces › payments-platform › edit. fixtures.rs sets keep_awake true, so Keep awake paints [✓]. Escape with no edit does not open Unsaved changes. The manager still lists payments-platform, 7f3a, c41e, infra-control-plane, release-automation, and customer-portal. data-pipeline, auth-service, and ▲ stale are absent. Ctrl+Q exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J02.general",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; Down to payments-platform; e",
+      "return_path": "Escape with no edit returns to the manager; payments-platform stays listed; Ctrl+Q exits 0"
     },
     {
       "case_id": "J02.general.general",
       "owner_task": "J02.general",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open Save workspace preview from open_preview in src/bin/jackin/screens/editor.rs, after the name, working directory, and keep-awake edits, before Cancel and before Save. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. A cancelled keep-awake toggle comes first: leave opens Unsaved changes, Discard paints Discarded 1 change, and the reopened editor still shows payments-platform with Keep awake [✓]. Theme::DEFAULT_EDIT_ENTRY is Immediate, so the first character replaces the Name selection until the field is payments-lab. Enter paints Name payments-lab · save to apply. Tab leaves Name because resume leaves name.editing set and general_key ignores Down while that flag is set. Enter on Choose… opens the workdir picker. open_workdir_picker builds the host subdirectory as /workspace/payments-platform/crates, and fixtures.rs sets that directory's meta to 6 items. picker.rs caps the label column at 45% of the 72-column list, so the row paints /workspace/payments-pl… and 6 items. Enter paints Working directory /workspace/payments-platform/crates · save to apply. Space clears Keep awake. change_count in src/bin/jackin/domain/workspace.rs is 3. Esc on the preview paints Not saved · keep editing and does not write. The reopened preview shows Save workspace, payments-lab, 3 changes, and ~ keep_awake true → false. Dialog width is 66, so the Working dir fact stays one truncated line, /workspace/payments-platform → /workspace/paym…, and Scope ends ~/.jackin/workspaces/paymen…. The 120×40 editor field still paints /workspace/payments-platform/crates. At 80×24 that field sits under the dialog, so the narrow shot keeps the same truncated Working dir fact and does not paint the full crates path. Confirm Save waits on the wall clock for Workspace payments-lab saved. The manager lists payments-lab and does not list a workspace row named payments-platform. Reopening paints Workspaces › payments-lab › edit, the name payments-lab, the crates working directory, and Keep awake [ ].",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j02_general/j02_general_general_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j02_general/j02_general_general_narrow.tui.json"
+      ],
       "scenario": [
         "returning"
       ],
@@ -48,8 +51,8 @@
       "owner_task": "J02.general",
       "application": "jackin",
       "kind": "scenario",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The general journey is the evidence. src/bin/jackin/domain/fixtures.rs returning data is payments-platform with keep_awake true, visible instance ids 7f3a and c41e, and siblings infra-control-plane, release-automation, and customer-portal. The test launches --scenario returning and does not assert hard-cases identities.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
