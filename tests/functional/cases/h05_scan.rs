@@ -1,1 +1,518 @@
-//! Scaffold for H05.scan. Behaviour is added by that leaf only.
+//! Holla disk scan, driven through the real binary.
+//!
+//! Tuiscotti test ids are `[a-z0-9_-]` segments, so the baseline directory is
+//! `pre_refactor/h05_scan/` and each checkpoint's dots become underscores.
+//!
+//! Catalog item `disk.usage` is labeled `Analyze disk usage` and launches
+//! `Launch::Disk` of the scenario cwd. The page crumb is `Disk › Usage`.
+//! `parity-disk-scan` does not open that page; its cwd paints `~/work/data`
+//! and its meter is `611 of 926 GB`. `x` while a scan is running sets
+//! `Scan cancelled · the partial tree stays and is labelled partial` and the
+//! banner `partial · scan cancelled`. `r` starts a new scan. `disk.overview`
+//! is `Disk overview` (`Launch::Disk` with an empty path). Enter on a home
+//! folder is `Go::Analyze`. `disk-cleanup` pushes the disk page itself at
+//! `~/work` with `842 of 926 GB` and `/Volumes/Backup`.
+
+use std::time::{Duration, Instant};
+
+use tui_test::TerminalSnapshot;
+
+use crate::support::{App, HOLLA, Launch, text, try_launch};
+
+const LABEL: &str = "Analyze disk usage";
+const OVERVIEW: &str = "Disk overview";
+const CRUMB: &str = "Disk › Usage";
+const OVERVIEW_CRUMB: &str = "Disk › Overview";
+const TITLE: &str = "Disk usage · ~/work/data";
+const WORK_TITLE: &str = "Disk usage · ~/work";
+const DOCUMENTS_TITLE: &str = "Disk usage · ~/Documents";
+const DOCUMENTS: &str = "~/Documents";
+const METER: &str = "611 of 926 GB";
+const CLEANUP_METER: &str = "842 of 926 GB";
+const BACKUP: &str = "/Volumes/Backup";
+const COMPLETE: &str = "scan complete";
+const PARTIAL: &str = "partial · scan cancelled";
+const CANCELLED: &str = "Scan cancelled · the partial tree stays and is labelled partial";
+const RESCAN: &str = "Rescanning · cached hints stay until live sizes arrive";
+const LIVE: &str = "live · complete";
+const UNREADABLE: &str = "2 unreadable · grant Full Disk Access to include them";
+const HEADER: &str = "cached sizes are hints with their age · Enter analyses live";
+const EVICTED: &str = "evicted to iCloud · never materialised by the scan";
+const LINK_DETAIL: &str = "symbolic link · never traversed";
+const FINDER: &str = "Search actions";
+const QUIT: &str = "Quit holla";
+const WIDE: &str = "H05.scan.scan.120x40";
+const NARROW: &str = "H05.scan.scan.narrow";
+
+fn visual_id(checkpoint: &str) -> String {
+    format!(
+        "pre_refactor/h05_scan/{}",
+        checkpoint.replace('.', "_").to_ascii_lowercase()
+    )
+}
+
+fn launch(name: &str, scenario: &str) -> App {
+    let mut launch = Launch::new(name, HOLLA);
+    launch.cols = 120;
+    launch.rows = 40;
+    launch.color = Some("truecolor".to_string());
+    launch.motion = Some("reduced".to_string());
+    launch.args = vec!["--scenario".to_string(), scenario.to_string()];
+    try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
+}
+
+fn launch_parity(name: &str) -> App {
+    let app = launch(name, "parity-disk-scan");
+    app.wait_text(FINDER);
+    app
+}
+
+fn see(screen: &TerminalSnapshot, present: &[&str], absent: &[&str]) {
+    let visible = text(screen);
+    for item in present {
+        assert!(visible.contains(item), "missing {item:?}\n{visible}");
+    }
+    for item in absent {
+        assert!(!visible.contains(item), "forbidden {item:?}\n{visible}");
+    }
+}
+
+fn collapsed(screen: &TerminalSnapshot) -> String {
+    text(screen)
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+fn detail_origin(line: &str) -> Option<usize> {
+    let mut offset = 0;
+    while let Some(rel) = line[offset..].find('─') {
+        let at = offset + rel;
+        let run = line[at..].chars().take_while(|c| *c == '─').count();
+        // The page rule is a long run of `─` after a space. The chrome rule
+        // is the heavy `━` and must not be used, or wrapped detail values
+        // are read through the tree column.
+        if at > 40 && run >= 20 && line[..at].ends_with(' ') {
+            return Some(at);
+        }
+        offset = at + run * '─'.len_utf8();
+    }
+    None
+}
+
+fn detail_collapsed(screen: &TerminalSnapshot) -> String {
+    let visible = text(screen);
+    let lines: Vec<&str> = visible.lines().collect();
+    let Some(origin) = lines.iter().find_map(|line| detail_origin(line)) else {
+        return String::new();
+    };
+    lines
+        .iter()
+        .map(|line| line.get(origin..).unwrap_or(""))
+        .collect::<Vec<_>>()
+        .join(" ")
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+fn has_phrase(screen: &TerminalSnapshot, phrase: &str) -> bool {
+    collapsed(screen).contains(phrase) || detail_collapsed(screen).contains(phrase)
+}
+
+fn screen_text(app: &App) -> String {
+    text(&app.screen())
+}
+
+fn named(screen: &TerminalSnapshot, name: &str) -> bool {
+    text(screen).lines().any(|line| {
+        let Some(mark) = line.find('▎') else {
+            return false;
+        };
+        let tail = &line[mark + '▎'.len_utf8()..];
+        let Some(at) = tail.find(name) else {
+            return false;
+        };
+        if at > 16 {
+            return false;
+        }
+        let before = tail[..at].chars().next_back();
+        let after = tail[at + name.len()..].chars().next();
+        !before.is_some_and(|c| c.is_ascii_alphanumeric() || c == '.')
+            && !after.is_some_and(|c| c.is_ascii_alphanumeric())
+    })
+}
+
+fn cancelled(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(PARTIAL) && visible.contains(CANCELLED) && !visible.contains(COMPLETE)
+}
+
+fn cancelled_banner(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(PARTIAL) && !visible.contains(COMPLETE)
+}
+
+/// Busy rows paint `spinner_frame(now_ms / 80)`. Cancel freezes the revealed
+/// count, and the next resize paints whichever frame the clock has reached.
+/// Idle ticks advance that clock without redrawing, so sample resizes until
+/// the frame is the first glyph. Otherwise the checkpoint follows catalog time.
+fn first_spinner(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains('⠋')
+        && ["⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+            .iter()
+            .all(|glyph| !visible.contains(glyph))
+}
+
+fn settle_spinner(app: &App, cols: u16, rows: u16, ready: impl Fn(&TerminalSnapshot) -> bool) {
+    let start = Instant::now();
+    loop {
+        let bumped = cols + 1;
+        app.resize(bumped, rows);
+        app.wait_screen("spinner bump", move |screen| {
+            screen.cols() == u32::from(bumped) && screen.rows() == u32::from(rows)
+        });
+        app.resize(cols, rows);
+        let screen = app.wait_screen("spinner sample", |screen| {
+            screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && ready(screen)
+        });
+        if first_spinner(&screen) {
+            return;
+        }
+        if start.elapsed() > Duration::from_secs(4) {
+            panic!("spinner did not reach the first frame\n{}", text(&screen));
+        }
+        std::thread::sleep(Duration::from_millis(40));
+    }
+}
+
+fn nudge(app: &App, ready: impl Fn(&TerminalSnapshot) -> bool) {
+    std::thread::sleep(Duration::from_millis(200));
+    let screen = app.screen();
+    let cols = u16::try_from(screen.cols()).expect("cols");
+    let rows = u16::try_from(screen.rows()).expect("rows");
+    let nudged = cols + 1;
+    app.resize(nudged, rows);
+    app.wait_screen("nudged", |screen| {
+        screen.cols() == u32::from(nudged) && screen.rows() == u32::from(rows) && ready(screen)
+    });
+    app.resize(cols, rows);
+    app.wait_screen("size restored", |screen| {
+        screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && ready(screen)
+    });
+}
+
+fn shot(app: &App, checkpoint: &str) {
+    app.visual(&visual_id(checkpoint));
+}
+
+fn open_catalog(app: &App, label: &str) {
+    app.paste(label);
+    let wanted = label.to_string();
+    app.wait_screen("catalog row", move |screen| {
+        text(screen).contains(&format!("▎ {wanted}"))
+    });
+    app.key("enter");
+}
+
+fn focus_named(app: &App, name: &str) {
+    app.key("home");
+    for _ in 0..120 {
+        if named(&app.screen(), name) {
+            return;
+        }
+        let before = screen_text(app);
+        app.key("down");
+        let wanted = name.to_string();
+        let previous = before;
+        app.wait_screen("cursor", move |screen| {
+            named(screen, &wanted) || text(screen) != previous
+        });
+    }
+    assert!(
+        named(&app.screen(), name),
+        "cursor never reached {name}\n{}",
+        screen_text(app)
+    );
+}
+
+fn expand_for(app: &App, child: &str) {
+    let before = screen_text(app);
+    app.key("right");
+    let previous = before;
+    let wanted = child.to_string();
+    app.wait_screen("expanded", move |screen| {
+        text(screen).contains(wanted.as_str()) || text(screen) != previous
+    });
+    until_visible(app, child);
+}
+
+fn until_visible(app: &App, needle: &str) {
+    for _ in 0..120 {
+        if screen_text(app).contains(needle) {
+            return;
+        }
+        let before = screen_text(app);
+        app.key("down");
+        let wanted = needle.to_string();
+        let previous = before;
+        app.wait_screen("scroll", move |screen| {
+            text(screen).contains(wanted.as_str()) || text(screen) != previous
+        });
+    }
+    assert!(
+        screen_text(app).contains(needle),
+        "missing {needle}\n{}",
+        screen_text(app)
+    );
+}
+
+fn back_to_finder(app: &App) {
+    for _ in 0..6 {
+        let visible = screen_text(app);
+        if !visible.contains("Disk ›") && visible.contains(FINDER) && !visible.contains(QUIT) {
+            return;
+        }
+        app.key("escape");
+        let previous = visible;
+        app.wait_screen("toward finder", move |screen| text(screen) != previous);
+    }
+    let visible = screen_text(app);
+    assert!(
+        !visible.contains("Disk ›") && visible.contains(FINDER) && !visible.contains(QUIT),
+        "finder did not return\n{visible}"
+    );
+}
+
+#[test]
+fn h05_scan_route_returns_to_the_finder() {
+    let app = launch_parity("h05-scan-route");
+    let landing = app.screen();
+    assert_eq!((landing.cols(), landing.rows()), (120, 40));
+    see(&landing, &[FINDER], &[CRUMB, QUIT]);
+
+    open_catalog(&app, LABEL);
+    let page = app.wait_screen("disk usage", |screen| {
+        let visible = text(screen);
+        visible.contains(CRUMB) && visible.contains(TITLE) && !visible.contains(QUIT)
+    });
+    assert_eq!((page.cols(), page.rows()), (120, 40));
+    see(
+        &page,
+        &[CRUMB, TITLE, METER],
+        &[QUIT, BACKUP, CLEANUP_METER],
+    );
+
+    app.key("escape");
+    let finder = app.wait_screen("finder restored", |screen| {
+        let visible = text(screen);
+        !visible.contains(CRUMB) && visible.contains(LABEL) && !visible.contains(QUIT)
+    });
+    see(&finder, &[LABEL], &[CRUMB, QUIT, TITLE]);
+    app.finish();
+}
+
+#[test]
+fn h05_scan_scan_cancels_completes_and_changes_root() {
+    let app = launch_parity("h05-scan-scan");
+    open_catalog(&app, LABEL);
+    // Poll without `wait_screen`: that records a snapshot before returning, and
+    // the write can cross the next 80ms scan tick. `x` then freezes either 2
+    // or 4 nodes. This observation is still the first `scanning` frame.
+    let started = Instant::now();
+    let progress = loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        if visible.contains(CRUMB) && visible.contains("scanning") && !visible.contains(COMPLETE) {
+            break screen;
+        }
+        assert!(
+            started.elapsed() < Duration::from_secs(3) && !visible.contains(COMPLETE),
+            "scan was not cancelled while it was running\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(5));
+    };
+    see(
+        &progress,
+        &[CRUMB, TITLE, "scanning"],
+        &[COMPLETE, QUIT, BACKUP],
+    );
+    app.key("x");
+
+    let quiet = app.wait_screen("cancelled tree", |screen| {
+        screen.cols() == 120 && screen.rows() == 40 && cancelled(screen)
+    });
+    see(
+        &quiet,
+        &[PARTIAL, CANCELLED, TITLE, METER],
+        &[COMPLETE, CLEANUP_METER, BACKUP, QUIT],
+    );
+
+    nudge(&app, cancelled);
+    settle_spinner(&app, 120, 40, cancelled);
+    shot(&app, WIDE);
+
+    app.resize(80, 24);
+    let narrowed = app.wait_screen("narrow cancelled tree", |screen| {
+        screen.cols() == 80 && screen.rows() == 24 && cancelled_banner(screen)
+    });
+    see(
+        &narrowed,
+        &[PARTIAL, TITLE],
+        &[COMPLETE, CLEANUP_METER, BACKUP],
+    );
+    nudge(&app, cancelled_banner);
+    settle_spinner(&app, 80, 24, cancelled_banner);
+    shot(&app, NARROW);
+
+    app.resize(120, 40);
+    let restored = app.wait_screen("cancelled tree restored", |screen| {
+        screen.cols() == 120 && screen.rows() == 40 && cancelled(screen)
+    });
+    see(
+        &restored,
+        &[PARTIAL, CANCELLED, "~/work/data"],
+        &[COMPLETE, CLEANUP_METER, BACKUP],
+    );
+
+    app.key("r");
+    let rescanning = app.wait_screen("rescan", |screen| {
+        text(screen).contains(RESCAN) && !text(screen).contains(COMPLETE)
+    });
+    see(&rescanning, &[RESCAN, TITLE], &[COMPLETE, PARTIAL]);
+
+    let done = app.wait_screen("scan finished", |screen| {
+        let visible = text(screen);
+        visible.contains(COMPLETE)
+            && visible.contains(LIVE)
+            && visible.contains(UNREADABLE)
+            && !visible.contains(PARTIAL)
+    });
+    see(
+        &done,
+        &[
+            COMPLETE,
+            LIVE,
+            UNREADABLE,
+            TITLE,
+            METER,
+            "sparse.img",
+            ".hidden",
+            "media",
+            "locked",
+            "cloud",
+            "skip-me",
+            "many",
+        ],
+        &[PARTIAL, "hint only", CLEANUP_METER, BACKUP, QUIT],
+    );
+
+    focus_named(&app, "media");
+    let media = app.screen();
+    assert!(
+        named(&media, "media") && !text(&media).contains("hint only"),
+        "revealed media still shows the cache hint\n{}",
+        text(&media)
+    );
+    expand_for(&app, "a.mov");
+    until_visible(&app, "a-copy.mov");
+    until_visible(&app, "link");
+    focus_named(&app, "link");
+    let link = app.wait_screen("symlink detail", |screen| {
+        named(screen, "link") && has_phrase(screen, LINK_DETAIL)
+    });
+    assert!(
+        has_phrase(&link, LINK_DETAIL),
+        "missing symlink detail\n{}",
+        text(&link)
+    );
+
+    focus_named(&app, ".hidden");
+    expand_for(&app, "h.bin");
+
+    focus_named(&app, "locked");
+    let locked = app.wait_screen("locked detail", |screen| {
+        named(screen, "locked") && text(screen).contains("permission denied")
+    });
+    assert!(
+        has_phrase(&locked, "permission denied"),
+        "missing permission denied\n{}",
+        text(&locked)
+    );
+
+    focus_named(&app, "cloud");
+    let cloud = app.wait_screen("cloud detail", |screen| {
+        named(screen, "cloud") && text(screen).contains("dataless") && has_phrase(screen, EVICTED)
+    });
+    assert!(
+        has_phrase(&cloud, EVICTED)
+            && text(&cloud).contains("dataless")
+            && !text(&cloud).contains("hint only"),
+        "missing dataless detail\n{}",
+        text(&cloud)
+    );
+
+    focus_named(&app, "skip-me");
+    expand_for(&app, "s.bin");
+
+    focus_named(&app, "many");
+    expand_for(&app, "f059.bin");
+    until_visible(&app, "f000.bin");
+    assert!(
+        !screen_text(&app).contains("hint only"),
+        "many must not paint a cache hint\n{}",
+        screen_text(&app)
+    );
+
+    back_to_finder(&app);
+    open_catalog(&app, OVERVIEW);
+    let overview = app.wait_screen("disk overview", |screen| {
+        let visible = text(screen);
+        visible.contains(OVERVIEW_CRUMB) && visible.contains(HEADER) && !visible.contains(COMPLETE)
+    });
+    see(
+        &overview,
+        &[OVERVIEW_CRUMB, HEADER, "unscanned"],
+        &[COMPLETE, "sparse.img", "stale", QUIT],
+    );
+
+    focus_named(&app, DOCUMENTS);
+    app.key("enter");
+    let documents = app.wait_screen("documents scan", |screen| {
+        let visible = text(screen);
+        visible.contains(DOCUMENTS_TITLE) && !visible.contains(TITLE) && !visible.contains(COMPLETE)
+    });
+    see(
+        &documents,
+        &[DOCUMENTS_TITLE],
+        &[TITLE, "sparse.img", COMPLETE, QUIT],
+    );
+
+    back_to_finder(&app);
+    let finder = app.screen();
+    see(&finder, &[FINDER], &[CRUMB, QUIT, DOCUMENTS_TITLE]);
+    app.finish();
+}
+
+#[test]
+fn h05_scan_scenario_disk_cleanup_is_not_parity() {
+    let app = launch("h05-scan-disk-cleanup", "disk-cleanup");
+    let page = app.wait_screen("cleanup disk page", |screen| {
+        let visible = text(screen);
+        visible.contains(CRUMB)
+            && visible.contains(WORK_TITLE)
+            && visible.contains(CLEANUP_METER)
+            && visible.contains(BACKUP)
+            && !visible.contains("sparse.img")
+            && !visible.contains("evicted.bin")
+            && !visible.contains(METER)
+    });
+    assert_eq!((page.cols(), page.rows()), (120, 40));
+    see(
+        &page,
+        &[CRUMB, WORK_TITLE, CLEANUP_METER, BACKUP],
+        &["sparse.img", "evicted.bin", METER, QUIT],
+    );
+    app.finish();
+}
