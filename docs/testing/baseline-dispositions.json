@@ -9525,5 +9525,248 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.notices.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/opt_meters_detail",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_detail.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/opt_meters_detail_tone",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_detail_tone.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/opt_meters_label_gap",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_label_gap.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/opt_meters_label_width",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_label_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/opt_meters_meter_width",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_meter_width.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/opt_meters_offline",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_offline.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/opt_meters_stale_style",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_stale_style.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/opt_meters_visual",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_visual.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_compare-levels_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_compare-levels_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_compare-levels_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_compare-levels_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_meters_after",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_meters_after.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_meters_before",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_meters_before.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_options",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_options_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_options_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_playground",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_playground_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_playground_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_route",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_route.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_specimen_error",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_error.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_specimen_loading",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_loading.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_specimen_narrow",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_narrow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_specimen_overflow",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_overflow.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_specimen_rest",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_rest.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_states",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_states_120x40",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/s06_meters/sc_meters_states_80x24",
+    "path": "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states_80x24.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S06.meters.",
+    "replacement_id": null
   }
 ]
