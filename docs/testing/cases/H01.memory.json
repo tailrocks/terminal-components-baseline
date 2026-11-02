@@ -6,27 +6,30 @@
       "owner_task": "H01.memory",
       "application": "holla",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "Holla opens the finder for scenario parity-history at 120×40 in truecolor with reduced motion and history enabled. The arguments are --scenario parity-history --frame 800. The screen shows Here, Recent here, ~/work/holla, and mbp. history not saved and frecency.json are absent. Ctrl+Q through finish() exits 0 with no signal.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "465a9b489ab0f494d45abe9fb5222e7179db58e7",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "H01.memory",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "holla --scenario parity-history --frame 800 --color truecolor --motion reduced at 120x40 with history enabled",
+      "return_path": "finder; Ctrl+Q exits 0"
     },
     {
       "case_id": "H01.memory.memory",
       "owner_task": "H01.memory",
       "application": "holla",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "History on and history off are separate processes of scenario parity-history. With history on, Suggested here is cargo build, cargo test, Pull, cargo check, then Run check. Those rows carry used 3 times here, used 20 times here, and used once here, and Recent here says everything used here is suggested above. Search for pull keeps that query, shows Results · 3, and keeps used 20 times here. With history off, Suggested here starts Run check then Run fmt, Recent here says nothing used here yet, and the same search keeps pull with Results · 3 and the row reason up to date, without used 20 times here. The settled pull search is captured at 120×40 and then at 80×24 before the terminal returns to 120×40. Learned queries do not draw: ranking drops a word miss before the remembered boost, so neither pull for git.fetch nor Ünï  Code for cargo.clippy appears. The 25-use git.pull seed draws as used 20 times here.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "465a9b489ab0f494d45abe9fb5222e7179db58e7",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h01_memory/h01_memory_memory_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h01_memory/h01_memory_memory_narrow.tui.json"
+      ],
       "scenario": [
         "parity-history"
       ],
@@ -41,23 +44,119 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-history",
+          "--frame",
+          "800",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8913e6fad8edb49ff6329f988b00636c7f058d0b39761bf6edcdd9696c51b868",
+        "expect_baseline": "missing",
+        "precondition": "H01.memory.memory.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-history",
+          "--frame",
+          "800",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "629e507ec488f710d88f4b7a984f8f1821e6c2b8337a98dcd0daa3b6bcebabc5",
+        "expect_baseline": "missing",
+        "precondition": "H01.memory.memory.narrow"
+      }
     },
     {
       "case_id": "H01.memory.scenario.parity-history",
       "owner_task": "H01.memory",
       "application": "holla",
       "kind": "scenario",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "A separate launch of scenario parity-history shows holla · Rust project, mbp · local, and ~/work/holla, with the seeded Suggested order. Clean Docker completely, prod-eu-1, From acme, index.html, café, and devbox are absent. This row has no baseline.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "465a9b489ab0f494d45abe9fb5222e7179db58e7",
       "evidence_paths": [],
       "baseline_paths": [],
       "scenario": "parity-history",
       "action_sequence": "Launch the application with scenario parity-history and exercise the surface owned by H01.memory.",
       "expected_results": "The visible fixture data belongs to parity-history.",
       "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H01.memory.failure",
+      "owner_task": "H01.memory",
+      "application": "holla",
+      "kind": "transition",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/holla/domain/parity.rs history() stores a live UsageStore and sets persisted.frecency to UsageStore::serialize(), which is valid schema v1. src/bin/holla/domain/usage.rs records load_error only inside UsageStore::load, for unreadable JSON, an unknown schema, or a missing schema, and no screen reads that field. save_error stays None, so save() does not return it. The parity-history PTY never shows a malformed frecency.json or a save failure.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-history"
+      ],
+      "action_sequence": "Load malformed memory and a save failure when the fixture provides them.",
+      "expected_results": "Save failure keeps the current search text.",
+      "forbidden_effects": "A memory failure clears the query."
     }
   ]
 }
