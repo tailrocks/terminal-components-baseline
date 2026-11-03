@@ -122,30 +122,27 @@ impl Button {
         !self.disabled && !self.busy && !self.control.is_fixed()
     }
 
+    pub fn activate(&mut self) -> (Outcome, bool) {
+        if !self.disabled && !self.busy && self.control.refuse() {
+            (Outcome::Consumed, false)
+        } else if self.can_activate() {
+            self.toggle_if_needed();
+            (Outcome::Changed, true)
+        } else {
+            (Outcome::Consumed, false)
+        }
+    }
+
     pub fn on_key(&mut self, key: &Key) -> (Outcome, bool) {
         if key.is(KeyCode::Enter) || key.is_char(' ') {
-            if !self.disabled && !self.busy && self.control.refuse() {
-                (Outcome::Consumed, false)
-            } else if self.can_activate() {
-                self.toggle_if_needed();
-                (Outcome::Changed, true)
-            } else {
-                (Outcome::Consumed, false)
-            }
+            self.activate()
         } else {
             (Outcome::Ignored, false)
         }
     }
 
     pub fn on_click(&mut self) -> bool {
-        if !self.disabled && !self.busy && self.control.refuse() {
-            false
-        } else if self.can_activate() {
-            self.toggle_if_needed();
-            true
-        } else {
-            false
-        }
+        self.activate().1
     }
 
     fn toggle_if_needed(&mut self) {

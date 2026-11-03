@@ -159,9 +159,13 @@ impl FixedControlsPage {
         self.rows.render(r, buf, ctx, bg);
     }
 
-    fn refusal(cx: &mut Cx) {
-        if let Some(id) = take_refusal() {
-            cx.refused(id);
+    fn refusal(&self, cx: &mut Cx) {
+        if let Some(reason) = take_refusal() {
+            if self.opts.value("fixedcontrols.status") == "sticky" {
+                cx.sticky(reason.text);
+            } else {
+                cx.refused(reason);
+            }
         }
     }
 }
@@ -229,7 +233,7 @@ impl Page for FixedControlsPage {
                 } else {
                     Outcome::Ignored
                 };
-                Self::refusal(cx);
+                self.refusal(cx);
                 out
             }
             PageEvent::Pointer(ev) => {
@@ -260,7 +264,7 @@ impl Page for FixedControlsPage {
                 {
                     cx.focus.focus(id);
                 }
-                Self::refusal(cx);
+                self.refusal(cx);
                 out
             }
             _ => Outcome::Ignored,

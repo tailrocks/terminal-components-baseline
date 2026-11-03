@@ -1728,11 +1728,10 @@ pub static TERMINAL: &[Opt] = &[
     ),
 ];
 
-pub static FIXED_CONTROLS: &[Opt] = &[Opt::new(
-    "fixedcontrols.state",
-    "Controls",
-    &["fixed", "live"],
-)];
+pub static FIXED_CONTROLS: &[Opt] = &[
+    Opt::new("fixedcontrols.state", "Controls", &["fixed", "live"]),
+    Opt::new("fixedcontrols.status", "Reason status", &["5 s", "sticky"]),
+];
 
 pub static TERMINAL_PANE: &[Opt] = &[
     Opt::new(

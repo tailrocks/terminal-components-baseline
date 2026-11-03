@@ -1,4 +1,4 @@
-use std::cell::{Cell, RefCell};
+use std::cell::RefCell;
 
 use crate::ui::text::width;
 
@@ -77,38 +77,18 @@ impl Control {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct ReasonId(u16);
-
-impl ReasonId {
-    pub fn text(self) -> String {
-        TABLE.with_borrow(|table| table[usize::from(self.0)].text.clone())
-    }
-}
-
 thread_local! {
-    static TABLE: RefCell<Vec<Reason>> = const { RefCell::new(Vec::new()) };
-    static SLOT: Cell<Option<ReasonId>> = const { Cell::new(None) };
-}
-
-fn intern(reason: &Reason) -> ReasonId {
-    TABLE.with_borrow_mut(|table| {
-        let at = table.iter().position(|r| r == reason).unwrap_or_else(|| {
-            table.push(reason.clone());
-            table.len() - 1
-        });
-        ReasonId(u16::try_from(at).expect("fewer than 65536 distinct reasons"))
-    })
+    static SLOT: RefCell<Option<Reason>> = const { RefCell::new(None) };
 }
 
 pub fn raise(reason: &Reason) {
-    SLOT.set(Some(intern(reason)));
+    SLOT.replace(Some(reason.clone()));
 }
 
-pub fn take_refusal() -> Option<ReasonId> {
+pub fn take_refusal() -> Option<Reason> {
     SLOT.take()
 }
 
 pub fn clear_refusal() {
-    SLOT.set(None);
+    SLOT.replace(None);
 }

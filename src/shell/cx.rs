@@ -13,6 +13,8 @@ pub enum Request<R, W: ?Sized = (), G = ()> {
 
     StatusAs(String, StatusKind),
 
+    Sticky(String),
+
     Progress(String, super::JobKey),
 
     Open(Box<dyn Layer<R, W>>, LayerTag),
@@ -36,7 +38,7 @@ impl<R, W: ?Sized, G> Request<R, W, G> {
     pub fn allowed_in_background(&self) -> bool {
         matches!(
             self,
-            Self::Status(..) | Self::StatusAs(..) | Self::Progress(..)
+            Self::Status(..) | Self::StatusAs(..) | Self::Sticky(..) | Self::Progress(..)
         )
     }
 }
@@ -94,8 +96,12 @@ impl<'a, R, W: ?Sized, G> Cx<'a, R, W, G> {
         self.requests.push(Request::StatusAs(s.into(), kind));
     }
 
-    pub fn refused(&mut self, reason: crate::core::refusal::ReasonId) {
-        self.status(reason.text());
+    pub fn sticky(&mut self, s: impl Into<String>) {
+        self.requests.push(Request::Sticky(s.into()));
+    }
+
+    pub fn refused(&mut self, reason: crate::core::refusal::Reason) {
+        self.status(reason.text);
     }
 
     pub fn progress(&mut self, job: super::JobKey, s: impl Into<String>) {

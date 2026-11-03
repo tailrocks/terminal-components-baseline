@@ -10,6 +10,8 @@ struct Message<P> {
     payload: P,
 
     job: Option<JobKey>,
+
+    sticky: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -66,7 +68,19 @@ impl<P> StatusLine<P> {
             at: self.now,
             payload,
             job: None,
+            sticky: false,
         });
+    }
+
+    pub fn set_sticky_with(&mut self, text: impl Into<String>, payload: P) {
+        self.set_with(text, Tone::Secondary, payload);
+        if let Some(m) = self.message.as_mut() {
+            m.sticky = true;
+        }
+    }
+
+    pub fn is_sticky(&self) -> bool {
+        self.message.as_ref().is_some_and(|m| m.sticky)
     }
 
     pub fn end_job(&mut self, job: JobKey) -> bool {
@@ -125,7 +139,7 @@ impl<P> StatusLine<P> {
         let due = self
             .message
             .as_ref()
-            .is_some_and(|m| m.tone != Tone::Error && now.since(m.at) >= self.ttl_ms);
+            .is_some_and(|m| m.tone != Tone::Error && !m.sticky && now.since(m.at) >= self.ttl_ms);
         if due {
             self.message = None;
         }
@@ -141,7 +155,7 @@ impl<P> StatusLine<P> {
             ),
             Input::Tick | Input::Resize(..) | Input::External(_) => false,
         };
-        if acts && self.is_error() {
+        if acts && (self.is_error() || self.is_sticky()) {
             self.message = None;
             return true;
         }
@@ -157,6 +171,15 @@ impl<P: Default> StatusLine<P> {
     pub fn set_at(&mut self, text: impl Into<String>, tone: Tone, now: Moment) {
         self.observe(now);
         self.set(text, tone)
+    }
+
+    pub fn sticky(&mut self, text: impl Into<String>) {
+        self.set_sticky_with(text, P::default())
+    }
+
+    pub fn sticky_at(&mut self, text: impl Into<String>, now: Moment) {
+        self.observe(now);
+        self.sticky(text)
     }
 
     pub fn error(&mut self, text: impl Into<String>) {

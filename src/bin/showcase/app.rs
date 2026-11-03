@@ -1007,8 +1007,13 @@ impl App {
         if i != self.page().index() {
             requests = shell::background(requests).collect();
         }
+        let posted = !requests.is_empty();
         self.apply_requests(requests, i);
-        out
+        if posted {
+            out.or(Outcome::Changed)
+        } else {
+            out
+        }
     }
 
     fn apply_requests(&mut self, requests: Vec<Request>, owner: usize) {
@@ -1018,6 +1023,7 @@ impl App {
                 Request::StatusAs(s, kind) => {
                     self.shell.status.set_at(s, kind.tone(), self.clock.now());
                 }
+                Request::Sticky(s) => self.shell.status.sticky_at(s, self.clock.now()),
                 Request::Progress(s, job) => {
                     self.shell.status.progress_at(job, s, self.clock.now());
                 }

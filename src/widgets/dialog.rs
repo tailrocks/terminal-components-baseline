@@ -546,8 +546,9 @@ impl Dialog {
             return v;
         }
 
-        let usable =
-            |i: usize, b: &Button| !b.disabled && (Some(i) != self.confirm_index || self.armed());
+        let usable = |i: usize, b: &Button| {
+            b.can_activate() && (Some(i) != self.confirm_index || self.armed())
+        };
         let enabled = self
             .actions
             .iter()
@@ -576,7 +577,7 @@ impl Dialog {
         if matches!(self.body, DialogBody::Text(_)) {
             if let Some(k) = crate::core::keymap::hint_key(&self.keymap, DialogCmd::Confirm)
                 && let Some(p) = self.actions.iter().find(|b| {
-                    matches!(b.kind, ButtonKind::Primary | ButtonKind::Danger) && !b.disabled
+                    matches!(b.kind, ButtonKind::Primary | ButtonKind::Danger) && b.can_activate()
                 })
             {
                 v.push(Hint::new(k, p.label.clone()));
@@ -794,6 +795,15 @@ impl Dialog {
         self
     }
 
+    fn activate_action(&mut self, i: usize) -> Outcome {
+        let (out, activated) = self.actions[i].activate();
+        if activated {
+            self.finish(DialogResult::Action(i))
+        } else {
+            out
+        }
+    }
+
     fn finish(&mut self, r: DialogResult) -> Outcome {
         if let DialogResult::Action(i) = r
             && Some(i) == self.confirm_index
@@ -899,7 +909,7 @@ impl Dialog {
                         matches!(b.kind, ButtonKind::Primary | ButtonKind::Danger) && !b.disabled
                     });
                     return match primary {
-                        Some(p) => self.finish(DialogResult::Action(p)),
+                        Some(p) => self.activate_action(p),
                         None => Outcome::Consumed,
                     };
                 }
@@ -914,10 +924,8 @@ impl Dialog {
         }
 
         if let Some(i) = self.mnemonic_action(key) {
-            let usable =
-                !self.actions[i].disabled && (Some(i) != self.confirm_index || self.armed());
-            return if usable {
-                self.finish(DialogResult::Action(i))
+            return if Some(i) != self.confirm_index || self.armed() {
+                self.activate_action(i)
             } else {
                 Outcome::Consumed
             };

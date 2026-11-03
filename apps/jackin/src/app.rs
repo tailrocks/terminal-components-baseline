@@ -1563,6 +1563,10 @@ impl App {
             match r {
                 Request::Status(s, tone) => self.set_status(&s, tone),
                 Request::StatusAs(s, kind) => self.set_status(&s, kind.tone()),
+                Request::Sticky(s) => {
+                    let now = self.world.clock.now();
+                    self.shell.status.sticky_at(s, now);
+                }
                 Request::Progress(s, job) => {
                     let now = self.world.clock.now();
                     self.shell.status.progress_at(job, s, now);

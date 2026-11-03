@@ -430,8 +430,8 @@ test-module removal).
 
 ## The standard for every functional test
 
-Every test in this target follows one standardized pattern, with no
-exceptions and no legacy-API tests:
+Every test in this target follows one standardized pattern, with the one
+exception below and no legacy-API tests:
 
 1. Launch the real executable through the shared `support::App` harness
    (`tui_test` / `tuiscotti-tui-test =0.2.1`, isolated environment, bounded
@@ -451,11 +451,16 @@ exceptions and no legacy-API tests:
    relative-time readout wait for that element to fade or freeze the
    app clock (`--motion paused`) first.
 
-The one exception is the key tests of the fixed-controls page
-(`showcase_fixed_controls_*`), which assert refusals, reasons and status
-expiry and end without a baseline, as P9.3 test plan v6 section 5.2
-requires for refusal tests. The page itself has the baseline
-`showcase_page_fixedcontrols`.
+The one exception: a key test of a page that asserts refusals, reasons and
+status expiry may end with `app.finish()` and no baseline. P9.3 design v6
+section 5.2 (last paragraph) requires one such test per refusal in each B4
+step, "a PTY test that passes or fails without a baseline file". The
+fixed-controls tests `showcase_fixed_controls_*` are of this kind; the page
+itself has the baseline `showcase_page_fixedcontrols`, and the focused,
+refused state has `showcase_fixedcontrols_focused_refused`. Other tests
+already end without a baseline (for example
+`tablepro_connect_development_opens_workbench` and
+`jackin_roles_add_role`).
 
 The legacy Tuiscotti 0.2 dependency is removed entirely; nothing in the
 repository uses it.

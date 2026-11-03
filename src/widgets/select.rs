@@ -199,23 +199,10 @@ impl Select {
     }
 
     fn would_edit(&self, key: &Key) -> bool {
-        if matches!(key.code, KeyCode::Enter | KeyCode::Char(' ')) {
-            return true;
-        }
-        let precedence = self
-            .type_ahead_precedence
-            .unwrap_or_else(crate::core::list::TypeAheadPrecedence::current);
-        match KeyStep::ordered(key, &self.list.nav, self.list.type_ahead, precedence) {
-            Some(KeyStep::Type(_)) => true,
-            _ => {
-                key.plain()
-                    && !matches!(key.code, KeyCode::Char(_))
-                    && matches!(
-                        self.list.nav.action(key),
-                        Some(Nav::Up | Nav::Down | Nav::Left | Nav::Right)
-                    )
-            }
-        }
+        let mut probe = self.clone();
+        probe.control = Control::Live;
+        let (out, action) = probe.on_key(key);
+        out != Outcome::Ignored || action.is_some()
     }
 
     pub fn mixed(mut self, placeholder: &str) -> Self {

@@ -4,7 +4,7 @@ use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::focus::{Focus, FocusRing};
 use junie_tui::core::hit::HitRegistry;
 use junie_tui::core::id::WidgetId;
-use junie_tui::core::refusal::{Control, Reason, ReasonId, clear_refusal, take_refusal};
+use junie_tui::core::refusal::{Control, Reason, clear_refusal, take_refusal};
 use junie_tui::shell::{Cx, Request, StatusLine};
 use junie_tui::theme::{ColorLevel, Theme, Tone};
 use junie_tui::ui::ctx::{Interaction, RenderCtx};
@@ -30,7 +30,7 @@ fn reason() -> Reason {
 }
 
 fn taken() -> Option<String> {
-    take_refusal().map(ReasonId::text)
+    take_refusal().map(|r| r.text)
 }
 
 fn draw(
@@ -131,7 +131,6 @@ fn a_fixed_select_refuses_open_arrows_typing_and_clicks() {
         KeyCode::Char(' '),
         KeyCode::Down,
         KeyCode::Up,
-        KeyCode::Right,
         KeyCode::Char('s'),
     ] {
         let (out, action) = fixed.on_key(&key(k));
@@ -148,7 +147,7 @@ fn a_fixed_select_refuses_open_arrows_typing_and_clicks() {
     );
     assert_eq!(taken().as_deref(), Some(WHY));
     assert!(!fixed.open && fixed.value() == "ask");
-    for k in [KeyCode::Tab, KeyCode::Esc] {
+    for k in [KeyCode::Tab, KeyCode::Esc, KeyCode::Right] {
         assert_eq!(fixed.on_key(&key(k)).0, Outcome::Ignored, "{k:?}");
         assert_eq!(taken(), None, "{k:?}");
     }

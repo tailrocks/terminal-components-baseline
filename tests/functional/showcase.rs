@@ -1228,3 +1228,24 @@ fn showcase_fixed_controls_show_the_full_reason_at_80x24() {
     assert!(text(&s).contains("[ ] Keep awake"));
     app.finish();
 }
+
+#[test]
+fn showcase_fixedcontrols_focused_refused() {
+    let app = App::new(
+        "showcase-fixed-refused",
+        SHOWCASE,
+        &["--page", "fixedcontrols", "--motion", "paused"],
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("Keep awake");
+    app.settle();
+    app.key("tab");
+    app.key("tab");
+    app.key("space");
+    let refused = refused_with(&app, FIXED_KEEP_AWAKE);
+    assert!(row_with(&refused, "Keep awake").contains('▎'));
+    assert!(text(&refused).contains("[ ] Keep awake"));
+    app.visual("functional/showcase_fixedcontrols_focused_refused");
+}
