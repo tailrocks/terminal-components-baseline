@@ -8,7 +8,7 @@
 //! this leaf does not send it. macOS field keys select the phrase with
 //! `ctrl+l`.
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 
@@ -39,6 +39,28 @@ const NARROW: &str = "H06.gate.confirm.narrow";
 
 const FOREIGN: &[&str] = &["vm.img", "~/work/big", "sparse.img", "842 of 926"];
 const IDEA_IDS: &[&str] = &[".idea", "workspace.xml", "app.iml", "~/work/ide"];
+
+/// Ctrl+Q opens the quit guard while a cleanup job or a gate is up.
+fn quit_blocked(visible: &str) -> bool {
+    visible.contains("gate 1 of 2")
+        || visible.contains(GATE2)
+        || visible.contains("Cleanup ·")
+        || visible.contains("Cleanup running")
+        || visible.contains("running ·")
+        || visible.contains("quitting waits")
+        || visible.contains("A cleanup is running")
+        || visible.contains("Quit holla")
+}
+
+fn should_escape(visible: &str) -> bool {
+    if visible.contains("Cleanup running") || visible.contains("running ·") {
+        return visible.contains(GATE2) || visible.contains("Quit holla");
+    }
+    visible.contains("gate 1 of 2")
+        || visible.contains(GATE2)
+        || visible.contains("Quit holla")
+        || visible.contains("Cleanup ·")
+}
 
 fn visual_id(checkpoint: &str) -> String {
     format!(
@@ -443,29 +465,47 @@ fn h06_gate_confirm_rejects_partial_wrong_and_stale_text() {
     app.key("enter");
     app.type_text(PHRASE);
     app.key("enter");
+    // The first job can finish before these keys land. Its "4 trashed" footer
+    // stays up through the next gate, including a phrase mismatch when the
+    // remaining set is no longer four items. A second job may also start.
     let second = app.wait_screen("second confirmation", |screen| {
         let visible = text(screen);
-        visible.contains(STILL_RUNNING) || visible.contains("4 trashed")
+        visible.contains(STILL_RUNNING)
+            || visible.contains(MISMATCH)
+            || visible.contains("4 trashed")
+            || visible.contains("4 failed")
+            || visible.contains("Cleanup report")
     });
     see(&second, &[], &[STOP_FAILED]);
     if text(&second).contains(STILL_RUNNING) {
         see(&second, &[STILL_RUNNING], &[STOP_FAILED]);
     }
-    if !text(&second).contains("4 trashed") {
-        app.wait_screen("cleanup settled", |screen| {
-            text(screen).contains("4 trashed")
-        });
-    }
-    for _ in 0..4 {
+    let started = Instant::now();
+    let mut stable = Instant::now();
+    loop {
         let visible = text(&app.screen());
-        if !visible.contains("Cleanup ·")
-            && !visible.contains("gate 1 of 2")
-            && !visible.contains(GATE2)
-        {
-            break;
+        if !quit_blocked(&visible) {
+            if stable.elapsed() >= Duration::from_millis(300) {
+                break;
+            }
+        } else {
+            stable = Instant::now();
+            assert!(
+                started.elapsed() < Duration::from_secs(12),
+                "cleanup did not settle\n{visible}"
+            );
+            if should_escape(&visible) {
+                app.key("escape");
+                let previous = visible.clone();
+                let escape_at = Instant::now();
+                while text(&app.screen()) == previous
+                    && escape_at.elapsed() < Duration::from_millis(500)
+                {
+                    std::thread::sleep(Duration::from_millis(20));
+                }
+            }
         }
-        app.key("escape");
-        app.wait_screen("toward finder", |screen| text(screen) != visible);
+        std::thread::sleep(Duration::from_millis(20));
     }
     app.finish();
 }
