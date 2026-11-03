@@ -16968,5 +16968,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X03.glyphs.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x03_motion/x03_motion_motion_120x40",
+    "path": "tests/functional/baselines/pre_refactor/x03_motion/x03_motion_motion_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X03.motion.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x03_motion/x03_motion_motion_narrow",
+    "path": "tests/functional/baselines/pre_refactor/x03_motion/x03_motion_motion_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X03.motion.",
+    "replacement_id": null
   }
 ]
