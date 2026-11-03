@@ -276,12 +276,26 @@ fn check_frame(app: &crate::support::App, screen: &TerminalSnapshot, test_id: &s
         .expect("open Tuiscotti frozen store");
     let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
     if let CheckOutcome::Failure(failure) = outcome {
+        let fields = failure.changed_fields();
+        // Cells already match the accepted options frame. A hidden cursor is
+        // not drawn; the terminal parks it on different cells of otherwise
+        // equal frames.
+        let parked = failure.changed_cell_total() == 0
+            && !screen.cursor().visible()
+            && !fields.is_empty()
+            && fields
+                .iter()
+                .all(|field| field == "cursor.col" || field == "cursor.row");
+        if parked {
+            return;
+        }
         panic!(
-            "{test_id} {} sha {} path {} cells {}",
+            "{test_id} {} sha {} path {} cells {} fields {}",
             failure.reason(),
             failure.candidate_sha256(),
             failure.candidate_path().display(),
-            failure.changed_cell_total()
+            failure.changed_cell_total(),
+            fields.join(",")
         );
     }
 }
