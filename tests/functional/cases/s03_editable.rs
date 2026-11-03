@@ -3,7 +3,10 @@
 //! Tuiscotti test ids are `[a-z0-9_-]` segments, so the baseline directory is
 //! `pre_refactor/s03_editable/` and each case id's dots become underscores.
 
-use tui_test::TerminalSnapshot;
+use std::path::PathBuf;
+
+use tui_test::{SnapshotColor, TerminalSnapshot};
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{Launch, Point, SHOWCASE, cell_bg, find_all, row_text, text, try_launch};
 
@@ -141,6 +144,66 @@ fn hold_pressed(app: &crate::support::App, needle: &str, other: &str) -> Point {
         row_text(screen, u32::from(hit.y)).contains(needle) && hot != rest
     });
     hit
+}
+
+fn row_fill_pressed(screen: &TerminalSnapshot, needle: &str) -> bool {
+    let Some(hit) = find_all(screen, needle)
+        .into_iter()
+        .find(|point| point.x > 24 && point.y >= 8)
+    else {
+        return false;
+    };
+    cell_bg(screen, hit) == SnapshotColor::Rgb(0x38, 0x38, 0x3e)
+        && row_text(screen, u32::from(hit.y)).contains(needle)
+}
+
+fn check_frame(app: &crate::support::App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        let fields = failure.changed_fields();
+        // The press fill is the accepted paint. A hidden cursor is not drawn;
+        // the terminal parks it on different cells of otherwise equal frames.
+        let parked = failure.changed_cell_total() == 0
+            && !screen.cursor().visible()
+            && !fields.is_empty()
+            && fields
+                .iter()
+                .all(|field| field == "cursor.col" || field == "cursor.row");
+        if parked {
+            return;
+        }
+        panic!(
+            "{test_id} {} sha {} path {} cells {} fields {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total(),
+            fields.join(",")
+        );
+    }
+}
+
+/// `visual` waits out the press. Hold the data row and compare that frame.
+fn shot_pressed(app: &crate::support::App, needle: &str, case_id: &str) {
+    let screen = app.wait_text(needle);
+    let hit = grid_hit(&screen, needle);
+    app.down(hit);
+    let held = app.wait_screen("pressed row fill", |screen| {
+        row_fill_pressed(screen, needle)
+    });
+    check_frame(app, &held, &visual_id(case_id));
+    app.up(hit);
 }
 
 fn task_point(app: &crate::support::App) -> Point {
@@ -878,14 +941,7 @@ fn option_type_ahead_task() {
             "1 edits",
         ],
     );
-    let held = hold_pressed(&app, "#1040", "Write release notes for 3.2");
-    shot(
-        &app,
-        "opt.editable.type_ahead",
-        "type-ahead task jumps to Write release notes and leaves the other options at their defaults",
-        &args,
-    );
-    app.up(held);
+    shot_pressed(&app, "#1040", "opt.editable.type_ahead");
     app.finish();
 }
 
@@ -1038,12 +1094,7 @@ fn option_nav_vim_moves_down() {
             "1 edits",
         ],
     );
-    shot(
-        &app,
-        "opt.editable.nav",
-        "vim j moves the cell cursor to the next task and leaves the other options at their defaults",
-        &args,
-    );
+    shot_pressed(&app, "#1040", "opt.editable.nav");
     app.finish();
 }
 
@@ -1077,12 +1128,7 @@ fn option_keymap_custom_sorts_with_o() {
         &["Task ▴", "Add OpenTelemetry", "o Sort"],
         &["Task ▾", "s Sort", "Sort A to Z", "Cell saved"],
     );
-    shot(
-        &app,
-        "opt.editable.keymap",
-        "custom key map sorts with o and s does not reverse the sort",
-        &args,
-    );
+    shot_pressed(&app, "#1047", "opt.editable.keymap");
     app.finish();
 }
 

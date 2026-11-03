@@ -3,9 +3,12 @@
 //! Tuiscotti test ids are `[a-z0-9_-]` segments, so the baseline directory is
 //! `pre_refactor/s03_datagrid/` and each case id's dots become underscores.
 
-use tui_test::TerminalSnapshot;
+use std::path::PathBuf;
 
-use crate::support::{Launch, Point, SHOWCASE, find_all, row_text, text, try_launch};
+use tui_test::{SnapshotColor, TerminalSnapshot};
+use tuiscotti_latest::check::CheckOutcome;
+
+use crate::support::{Launch, Point, SHOWCASE, cell_bg, find_all, row_text, text, try_launch};
 
 const TITLE: &str = "Tables › Data grid";
 const BLURB: &str = "Typed cells, a pending-change queue, paging and local sort";
@@ -159,6 +162,65 @@ fn opt_args(pair: &str) -> [&str; 4] {
 
 fn shot(app: &crate::support::App, case_id: &str, _precondition: &str, _args: &[&str]) {
     app.visual(&visual_id(case_id));
+}
+
+fn check_frame(app: &crate::support::App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        let fields = failure.changed_fields();
+        let parked = failure.changed_cell_total() == 0
+            && !screen.cursor().visible()
+            && !fields.is_empty()
+            && fields
+                .iter()
+                .all(|field| field == "cursor.col" || field == "cursor.row");
+        if parked {
+            return;
+        }
+        panic!(
+            "{test_id} {} sha {} path {} cells {} fields {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total(),
+            fields.join(",")
+        );
+    }
+}
+
+/// The accepted Options page still has the tab pressed, gutter included.
+/// `visual` returns after that fill drops back to the overlay rest colour.
+fn shot_options_held(app: &crate::support::App, case_id: &str) {
+    let screen = app.screen();
+    let tab = find_all(&screen, "Options")
+        .into_iter()
+        .find(|hit| hit.y == 4)
+        .unwrap_or_else(|| panic!("Options tab\n{}", text(&screen)));
+    app.down(tab);
+    let held = app.wait_screen("options tab held", |screen| {
+        let Some(hit) = find_all(screen, "Options")
+            .into_iter()
+            .find(|hit| hit.y == 4)
+        else {
+            return false;
+        };
+        cell_bg(screen, hit) == SnapshotColor::Rgb(0x4a, 0x4a, 0x52)
+            && row_text(screen, 4).contains("▎Options")
+            && text(screen).contains("cancel")
+    });
+    check_frame(app, &held, &visual_id(case_id));
+    app.up(tab);
 }
 
 fn see_loaded(screen: &TerminalSnapshot) {
@@ -1271,11 +1333,6 @@ fn option_blur_cancel() {
         &[TITLE, CAP_OPT, "cancel", "default"],
         &[CAP_PLAY, "Compare levels", "strict", "commit"],
     );
-    shot(
-        &app,
-        "opt.datagrid.blur_action",
-        "on blur is cancel and the validator stays default",
-        &args,
-    );
+    shot_options_held(&app, "opt.datagrid.blur_action");
     app.finish();
 }
