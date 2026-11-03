@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "showcase --help is parsed by junie_tui::cli::parse in src/cli.rs and exits before junie_tui::shell::run. The command about in src/bin/showcase/main.rs is the long_about \"Junie-tui — Junie-inspired Ratatui design system laboratory\". Measured on the reference showcase, that launch exits 0. The test reads the about line at 200×80, where the help still fits, and calls expect_exited(0). It does not call finish, so Ctrl+Q is not sent. The overview blurb in src/bin/showcase/pages/overview.rs stays absent.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "0000000000000000000000000000000000000000",
+      "execution_commit": "db4e7052e301c914dd7a57996fea7d5bed9d6179",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "X01.cli",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "junie_tui::cli::parse in src/cli.rs exits from clap before any shell::run. Measured on the reference binaries, --help exits 0 and a bad argument exits 2. showcase parse_page in src/bin/showcase/main.rs says unknown page {value:?}. holla and jackin parse_scenario in src/bin/holla/main.rs and src/bin/jackin/main.rs say unknown scenario {value:?}. tablepro connection_index in src/bin/tablepro/main.rs says no connection named {name:?} and exits before shell::run. showcase parse_opt in src/bin/showcase/options.rs says expected KEY=VALUE, unknown option, or invalid value. apply_opt in src/bin/showcase/app.rs applies each OptSet in order, so a later chrome.brand replaces the earlier one and the chrome readout paints brand compact. An invalid option is not exit 0 and the full-screen UI is absent. Clap is built without wrap_help, so showcase --help is taller than 40 rows. The 120×40 and separate 80×24 frames both show Print help (see a summary with '-h'), --opt <KEY=VALUE>, and SHOWCASE_NO_MOTION from cli_after_help in src/bin/showcase/main.rs. The about line has scrolled off both viewports. The overview blurb stays absent. finish is used only after the later option is visible.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "0000000000000000000000000000000000000000",
+      "execution_commit": "db4e7052e301c914dd7a57996fea7d5bed9d6179",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/x01_cli/x01_cli_cli_120x40.tui.json",
