@@ -136,7 +136,11 @@ fn reach_7f3a(app: &App) {
 
 fn open_purge(app: &App) -> TerminalSnapshot {
     app.key("p");
-    let dialog = app.wait_text(TITLE);
+    // The title paints before the dialog draws Cancel.
+    let dialog = app.wait_screen("purge dialog", |screen| {
+        let visible = text(screen);
+        visible.contains(TITLE) && visible.contains("Cancel") && visible.contains(RISK)
+    });
     see(
         &dialog,
         &[

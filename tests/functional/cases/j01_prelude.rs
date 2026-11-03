@@ -74,14 +74,22 @@ fn open(name: &str) -> App {
     try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
 }
 
+fn manager_ready(screen: &TerminalSnapshot) -> bool {
+    // The detail pane names the directory before the tree lists the workspaces.
+    text(screen).contains(DIRECTORY)
+        && lists_workspace(screen, PAYMENTS)
+        && lists_workspace(screen, INFRA)
+        && lists_workspace(screen, RELEASE)
+        && lists_workspace(screen, CUSTOMER)
+}
+
 fn reach_manager(app: &App) -> TerminalSnapshot {
     let screen = app.wait_screen("manager or intro", |screen| {
-        let visible = text(screen);
-        visible.contains(DIRECTORY) || visible.contains("Stand up, operator")
+        manager_ready(screen) || text(screen).contains("Stand up, operator")
     });
     if text(&screen).contains("Stand up, operator") {
         app.key("space");
-        return app.wait_text(DIRECTORY);
+        return app.wait_screen("manager", manager_ready);
     }
     screen
 }
@@ -370,7 +378,15 @@ fn j01_prelude_steps() {
     );
     replace_focused(&app, BAD_HOST, GIT_URL);
     app.key("enter");
-    let git_dest = wait_title(&app, DEST_TITLE);
+    // Step 2's title paints over the unresolved error before that line clears.
+    let git_dest = app.wait_screen("git destination", |screen| {
+        let visible = text(screen);
+        visible.contains(DEST_TITLE)
+            && visible.contains("Default")
+            && visible.contains(WORK_PATH)
+            && !visible.contains(BAD_HOST)
+            && !visible.contains(COULD_NOT)
+    });
     let git = text(&git_dest);
     // ChoiceDialog::width(58) cuts this source line before " · git".
     assert!(
