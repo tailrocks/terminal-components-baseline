@@ -3,7 +3,11 @@
 //! Tuiscotti state ids allow only `[a-z0-9_-]` segments. Dotted case ids are stored as
 //! `pre_refactor/s02_textareas/<case id with '.' replaced by '_'>`.
 
-use tui_test::TerminalSnapshot;
+use std::path::PathBuf;
+use std::time::{Duration, Instant};
+
+use tui_test::{SnapshotColor, TerminalSnapshot};
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{Launch, Point, SHOWCASE, find_all, row_text, text, try_launch};
 
@@ -68,6 +72,67 @@ fn test_id(case_id: &str) -> String {
 
 fn see(session: &AppSession, case_id: &str, _precondition: &str) {
     session.app.visual(&test_id(case_id));
+}
+
+fn check_frame(app: &crate::support::App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
+    }
+}
+
+/// The first paint after keyboard navigation clips the commit message.
+/// `fix stuff` is on the following paint.
+fn wait_commit(app: &crate::support::App) -> TerminalSnapshot {
+    app.wait_screen("commit message", |screen| {
+        let raw = text(screen);
+        raw.contains(TASK) && raw.contains(FIX) && raw.contains(JUNIE)
+    })
+}
+
+/// The accepted label-hit frame still paints Playground with the press flash
+/// and parks the cursor on the hint row. A later paint locks the released tab.
+fn label_shot(screen: &TerminalSnapshot) -> bool {
+    let raw = text(screen);
+    if !raw.contains(PLACEHOLDER)
+        || !raw.contains("Anything the agent")
+        || !raw.contains(FIX)
+        || !raw.contains(TOP)
+        || raw.contains(EDITING)
+        || raw.contains("ZZ")
+    {
+        return false;
+    }
+    let cursor = screen.cursor();
+    if cursor.col() != 53 || cursor.row() != 39 || cursor.visible() {
+        return false;
+    }
+    let Some(hit) = find_all(screen, "Playground")
+        .into_iter()
+        .find(|hit| hit.y <= 5)
+    else {
+        return false;
+    };
+    screen
+        .cell_at(u32::from(hit.x), u32::from(hit.y))
+        .is_some_and(|cell| cell.bg() == SnapshotColor::Rgb(0x4a, 0x4a, 0x52))
 }
 
 fn click_filtered(session: &AppSession, needle: &str, pred: impl Fn(&Point) -> bool) {
@@ -199,7 +264,7 @@ fn route_by_page_keyboard_and_pointer() {
     for _ in 0..9 {
         keys.app.key("]");
     }
-    let entered = keys.app.wait_text(TASK);
+    let entered = wait_commit(&keys.app);
     expect(
         &entered,
         &[CRUMB, BLURB, PLAY_CAPTION, TASK, FIX, TOP],
@@ -218,14 +283,14 @@ fn route_by_page_keyboard_and_pointer() {
         &[TASK, FIX, "Task description"],
     );
     keys.app.key("]");
-    let again = keys.app.wait_text(TASK);
+    let again = wait_commit(&keys.app);
     expect(&again, &[CRUMB, TASK, FIX], &["payments-gateway"]);
     click_left(&keys, "Overview");
     let pointed_back = keys.app.wait_text(OVERVIEW);
     expect(&pointed_back, &[OVERVIEW], &[TASK, FIX]);
     click_left(&keys, "Inputs & forms");
     click_left(&keys, "Text areas");
-    let pointed = keys.app.wait_text(TASK);
+    let pointed = wait_commit(&keys.app);
     expect(
         &pointed,
         &[CRUMB, PLAY_CAPTION, TASK, FIX, "1–8 of 28"],
@@ -940,18 +1005,51 @@ fn label_hit_off() {
     assert_defaults(&options, "Label click focuses", "off");
     click_tab(&session, "Playground");
     session.app.key("escape");
-    click_body(&session, "Notes");
-    let ignored = session.app.settle();
+    let playground = session.app.wait_text("Notes");
+    let tab = find_all(&playground, "Playground")
+        .into_iter()
+        .find(|hit| hit.y <= 5)
+        .expect("Playground tab");
+    let notes = find_all(&playground, "Notes")
+        .into_iter()
+        .find(|hit| hit.x > 24)
+        .expect("Notes label");
+    let mut ignored = None;
+    for _ in 0..6 {
+        session.app.click(tab);
+        session.app.key("escape");
+        session.app.click(notes);
+        let started = Instant::now();
+        let mut since: Option<Instant> = None;
+        while started.elapsed() < Duration::from_millis(700) {
+            let screen = session.app.screen();
+            if label_shot(&screen) {
+                let held = since.get_or_insert_with(Instant::now);
+                if held.elapsed() >= Duration::from_millis(300) {
+                    ignored = Some(screen);
+                    break;
+                }
+            } else {
+                since = None;
+            }
+            std::thread::sleep(Duration::from_millis(15));
+        }
+        if ignored.is_some() {
+            break;
+        }
+    }
+    let ignored = ignored.unwrap_or_else(|| {
+        panic!(
+            "Notes click did not keep the Playground press flash\n{}",
+            text(&session.app.screen())
+        )
+    });
     expect(
         &ignored,
         &[PLACEHOLDER, "Anything the agent", FIX, TOP],
         &[EDITING, "ZZ"],
     );
-    see(
-        &session,
-        "opt.textareas.label_hit",
-        "textareas.label_hit=off ignores a click on the Notes label and leaves the placeholder",
-    );
+    check_frame(&session.app, &ignored, &test_id("opt.textareas.label_hit"));
     click_body(&session, PLACEHOLDER);
     let editing = session.app.wait_text(EDITING);
     expect(&editing, &[EDITING, PLACEHOLDER], &[IDLE, "ZZ"]);
