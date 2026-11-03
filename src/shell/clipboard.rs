@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::sync::Arc;
 
 use crate::core::edit::clipboard;
 use crate::theme::Tone;
@@ -9,9 +10,15 @@ thread_local! {
     static OUT: RefCell<Vec<String>> = const { RefCell::new(Vec::new()) };
 }
 
+pub trait NativeClipboard: Send + Sync + std::fmt::Debug {
+    fn write(&self, text: &str) -> bool;
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Copied {
     Copied { chars: usize },
+
+    Requested { chars: usize },
 
     Unsupported,
 
@@ -20,17 +27,19 @@ pub enum Copied {
 
 impl Copied {
     pub fn ok(&self) -> bool {
-        matches!(self, Self::Copied { .. })
+        matches!(self, Self::Copied { .. } | Self::Requested { .. })
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct Clipboard {
     pub osc52: bool,
 
     pub limit: usize,
 
     pub write: bool,
+
+    pub native: Option<Arc<dyn NativeClipboard>>,
 }
 
 impl Default for Clipboard {
@@ -47,6 +56,7 @@ impl Clipboard {
             osc52: true,
             limit: Self::DEFAULT_LIMIT,
             write: true,
+            native: None,
         }
     }
 
@@ -65,9 +75,21 @@ impl Clipboard {
         self
     }
 
+    pub fn native(mut self, sink: Arc<dyn NativeClipboard>) -> Self {
+        self.native = Some(sink);
+        self
+    }
+
     pub fn copy(&self, text: &str) -> Copied {
         clipboard::copy(text);
-        self.system(text)
+        let native = self.native.as_ref().map(|sink| sink.write(text));
+        match (self.system(text), native) {
+            (Copied::Copied { chars }, Some(false)) => Copied::Requested { chars },
+            (_, Some(true)) => Copied::Copied {
+                chars: text.chars().count(),
+            },
+            (result, _) => result,
+        }
     }
 
     fn system(&self, text: &str) -> Copied {
@@ -89,9 +111,10 @@ impl Clipboard {
         }
     }
 
-    pub fn install(self) {
+    pub fn install(&self) {
+        let this = self.clone();
         clipboard::set_hook(move |t| {
-            self.system(t);
+            this.system(t);
         });
     }
 
@@ -110,6 +133,10 @@ impl Clipboard {
                     Tone::Secondary,
                 )
             }
+            Copied::Requested { .. } => (
+                "Copy requested · this terminal may ignore OSC 52".to_owned(),
+                Tone::Warning,
+            ),
             Copied::Unsupported => (
                 "Not copied · this terminal does not accept OSC 52".to_owned(),
                 Tone::Error,

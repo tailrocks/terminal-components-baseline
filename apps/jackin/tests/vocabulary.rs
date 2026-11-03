@@ -7,10 +7,10 @@ use jackin_console::app::{App, Route};
 use jackin_console::domain::instance::{DaemonSnapshot, InstanceStatus};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::MountSource;
-use jackin_console::fixtures::world_for;
-use jackin_console::scenario::{Motion, Scenario};
+use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::screens::Go;
 use jackin_console::world::{DaemonHealth, Msg};
+use junie_tui::motion::Motion;
 use junie_tui::theme::{ColorLevel, Theme, Tone};
 
 fn squash(text: &str) -> String {
@@ -32,7 +32,7 @@ fn pair(scenario: Scenario, keys: &str) -> (String, String) {
     press(&mut demo, keys);
     let mut world = world_for(scenario);
     world.surfaces.vocabulary = Vocabulary::openshell();
-    let mut live = app_with(world);
+    let mut live = app_with(scenario, world);
     press(&mut live, keys);
     (screen(&mut demo), screen(&mut live))
 }
@@ -53,6 +53,9 @@ fn the_openshell_words_avoid_the_false_strings() {
             "discard",
             "{state}",
         ] {
+            if banned == "Capsule" && (name == "capsule" || name.starts_with("daemon.")) {
+                continue;
+            }
             assert!(!text.contains(banned), "{name} says {banned}: {text}");
         }
     }
@@ -60,8 +63,8 @@ fn the_openshell_words_avoid_the_false_strings() {
 
 #[test]
 fn the_openshell_vocabulary_renames_the_demo_words() {
-    const SAME: [&str; 1] = ["status.superseded"];
-    let demo = Vocabulary::default();
+    const SAME: [&str; 2] = ["status.superseded", "capsule"];
+    let demo = Vocabulary::demo();
     let openshell = Vocabulary::openshell();
     let (demo, live) = (demo.fields(), openshell.fields());
     assert_eq!(
@@ -206,7 +209,7 @@ fn the_editor_workdir_hint_follows_the_words() {
 
 fn go_pair(scenario: Scenario, go: impl Fn() -> Go) -> (String, String) {
     let [demo, live] = worlds(scenario).map(|world| {
-        let mut app = app_with(world);
+        let mut app = app_with(scenario, world);
         screen(&mut app);
         app.go(go());
         screen(&mut app)
@@ -246,7 +249,7 @@ fn the_still_inside_status_follows_the_words() {
 #[test]
 fn the_outro_caption_follows_the_words() {
     let [demo, live] = worlds(Scenario::OutroLast).map(|world| {
-        let mut app = App::for_scenario(
+        let mut app = app_with_world(
             Scenario::OutroLast,
             world,
             Motion::Reduced,
@@ -272,7 +275,7 @@ fn the_about_dialog_follows_the_data() {
     let open_host = ["f10", "right", "right", "down", "enter"].join(" ");
     let (host_demo, _) = pair(Scenario::Returning, &open_host);
     let brand = |world| {
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::CapsuleMulti, world);
         screen(&mut app);
         click(&mut app, 3, 0);
         press(&mut app, "enter");
@@ -280,12 +283,12 @@ fn the_about_dialog_follows_the_data() {
     };
     let capsule_demo = screen(&mut brand(world_for(Scenario::CapsuleMulti)));
     let mut world = live_world(Scenario::Returning);
-    world.surfaces.about = Some(rows.clone());
-    let mut app = app_with(world);
+    world.surfaces.about = rows.clone();
+    let mut app = app_with(Scenario::Returning, world);
     press(&mut app, &open_host);
     let host_live = screen(&mut app);
     let mut world = live_world(Scenario::CapsuleMulti);
-    world.surfaces.about = Some(rows);
+    world.surfaces.about = rows;
     let capsule_live = screen(&mut brand(world));
     for demo in [&host_demo, &capsule_demo] {
         assert!(demo.contains("simulated · nothing here touches a real"));
@@ -305,13 +308,14 @@ fn the_debug_info_names_the_sandbox_and_the_version() {
     let mut live = live_world(Scenario::CapsuleMulti);
     live.surfaces.version = "1.4.0".into();
     let mut demo = app(Scenario::CapsuleMulti);
-    let mut live = app_with(live);
+    let mut live = app_with(Scenario::CapsuleMulti, live);
     for app in [&mut demo, &mut live] {
         press(app, "ctrl+b i");
     }
     let (demo, live) = (screen(&mut demo), screen(&mut live));
     assert!(demo.contains("Container ID") && squash(&demo).contains("Capsule 0.9.2"));
-    assert!(live.contains("Sandbox ID") && squash(&live).contains("jackin 1.4.0"));
+    assert!(squash(&live).contains("Sandbox jackin-payments-platform-7f3a"));
+    assert!(squash(&live).contains("jackin 1.4.0"));
     assert!(!live.contains("Container") && !live.contains("Capsule"));
 }
 
@@ -339,11 +343,11 @@ fn the_help_rows_name_the_sandbox() {
 fn the_inspect_dialog_follows_the_words() {
     let (demo, live) = pair(Scenario::Returning, "down right down i");
     assert!(demo.contains("Container 7f3a") && demo.contains("Daemon     attached"));
-    assert!(live.contains("Sandbox 7f3a") && live.contains("Terminal   attached"));
+    assert!(live.contains("Sandbox 7f3a") && live.contains("Capsule    attached"));
     assert!(!live.contains("Container"));
     let (demo, live) = pair(Scenario::Returning, "down right down down i");
     assert!(demo.contains("Daemon     unavailable"));
-    assert!(live.contains("Terminal   gateway unreachable"));
+    assert!(live.contains("Capsule    gateway unreachable"));
 }
 
 #[test]
@@ -355,14 +359,14 @@ fn the_instance_detail_follows_the_words() {
     assert!(live.contains("gateway · 3 s ago"));
     let (demo, live) = pair(Scenario::Returning, "down right down down");
     assert!(demo.contains("No live daemon (instance not running)"));
-    assert!(live.contains("No live terminal (sandbox not running)"));
+    assert!(live.contains("No live Capsule (sandbox not running)"));
     assert!(demo.contains("Live topology") && demo.contains("  unavailable"));
     assert!(live.contains("  unreachable"));
 }
 
 fn summary_pair(keys: &str) -> (String, String) {
     let [demo, live] = worlds(Scenario::Returning).map(|world| {
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         press(&mut app, keys);
         screen_at(&mut app, 80, 24)
     });
@@ -373,7 +377,7 @@ fn summary_pair(keys: &str) -> (String, String) {
 fn the_summary_lines_follow_the_words() {
     let (demo, live) = summary_pair("down right down");
     assert!(demo.contains("daemon · 3 tabs · 5 panes"));
-    assert!(live.contains("terminal · 3 tabs · 5 panes"));
+    assert!(live.contains("capsule · 3 tabs · 5 panes"));
     let (demo, live) = summary_pair("down right down down");
     assert!(demo.contains("daemon unavailable"));
     assert!(live.contains("gateway unreachable"));
@@ -384,12 +388,12 @@ fn the_summary_names_a_terminal_without_tabs() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
         world.instance_mut("jk-7f3a").expect("instance").daemon = DaemonSnapshot::NoTabs;
         world.daemons.remove("jk-7f3a");
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down");
         screen_at(&mut app, 80, 24)
     });
     assert!(demo.contains("daemon reports no tabs"));
-    assert!(live.contains("terminal · no tabs"));
+    assert!(live.contains("capsule · no tabs"));
 }
 
 #[test]
@@ -398,7 +402,7 @@ fn the_roster_card_follows_the_words() {
         let id = world.running()[0].id.clone();
         world.daemons.remove(&id);
         world.instance_mut(&id).expect("instance").daemon = DaemonSnapshot::Unavailable;
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         screen_at(&mut app, 170, 40)
     });
     assert!(demo.contains("· daemon unavailable"));
@@ -409,7 +413,7 @@ fn the_roster_card_follows_the_words() {
 fn the_health_chip_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
         world.daemon_health = DaemonHealth::Stale;
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         screen(&mut app)
     });
     assert!(demo.contains("▲ daemon stale"));
@@ -419,7 +423,7 @@ fn the_health_chip_follows_the_words() {
 #[test]
 fn the_quit_dialog_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|world| {
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         screen(&mut app);
         app.go(Go::Attach {
             instance: "jk-9b02".into(),
@@ -467,7 +471,7 @@ fn the_purge_dialog_follows_the_words() {
     let instance = world.instance_mut("jk-7f3a").expect("instance");
     let session = instance.sessions.as_ref().expect("sessions")[0].clone();
     instance.sessions = Ok(vec![session; 10]);
-    let mut app = app_with(world);
+    let mut app = app_with(Scenario::Returning, world);
     press(&mut app, "down right down p");
     assert!(squash(&screen(&mut app)).contains("10 preserved sessions · changed project copy"));
 }
@@ -484,7 +488,7 @@ fn the_purge_dialog_names_a_clean_copy() {
         instance.status = InstanceStatus::RestoreAvailable;
         instance.uncommitted = 0;
         instance.unpushed = 0;
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down p");
         squash(&screen(&mut app))
     };
@@ -504,7 +508,7 @@ fn the_purge_dialog_names_a_clean_copy() {
 #[test]
 fn the_purge_status_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|world| {
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         screen(&mut app);
         app.deliver(&Msg::Purged {
             instance: "jk-c41e".into(),
@@ -529,7 +533,7 @@ fn the_github_dialog_follows_the_words() {
 #[test]
 fn the_role_trust_dialog_follows_the_words() {
     let trust = |world| {
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down e");
         click_text(&mut app, "Roles");
         press(&mut app, "down down down down down enter");
@@ -556,7 +560,7 @@ fn the_workspace_menu_names_the_github_url() {
 fn the_failed_setup_instance_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
         world.instance_mut("jk-7f3a").expect("instance").status = InstanceStatus::FailedSetup;
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down enter");
         let status = screen(&mut app);
         press(&mut app, "esc shift+f10");
@@ -573,7 +577,7 @@ fn the_last_session_status_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
         world.instance_mut("jk-7f3a").expect("instance").status = InstanceStatus::CleanExited;
         world.daemons.remove("jk-7f3a");
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         screen(&mut app);
         app.go(Go::Attach {
             instance: "jk-9b02".into(),
@@ -599,8 +603,8 @@ fn the_export_prompt_follows_the_words() {
 fn the_terminal_screen_names_itself_by_the_words() {
     let (demo, live) = pair(Scenario::CapsuleMulti, "f10 right right right right enter");
     assert!(demo.contains("Capsule › payments") && demo.contains("  Capsule  "));
-    assert!(live.contains("Terminal › payments") && live.contains("  Terminal  "));
-    assert!(!live.contains("Capsule"));
+    assert!(live.contains("Capsule › payments") && live.contains("  Capsule  "));
+    assert!(!live.contains("Terminal"));
 }
 
 #[test]
@@ -608,7 +612,7 @@ fn the_terminal_without_tabs_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
         world.instance_mut("jk-7f3a").expect("instance").daemon = DaemonSnapshot::NoTabs;
         world.daemons.remove("jk-7f3a");
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down");
         let detail = screen(&mut app);
         press(&mut app, "i");
@@ -616,8 +620,8 @@ fn the_terminal_without_tabs_follows_the_words() {
     });
     assert!(demo.contains("Daemon reports no tabs"));
     assert!(squash(&demo).contains("Daemon attached · no tabs"));
-    assert!(live.contains("No terminal tabs open"));
-    assert!(squash(&live).contains("Terminal attached · no tabs"));
+    assert!(live.contains("No Capsule tabs open"));
+    assert!(squash(&live).contains("Capsule attached · no tabs"));
 }
 
 #[test]
@@ -625,7 +629,7 @@ fn the_unreachable_gateway_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|mut world| {
         world.instance_mut("jk-7f3a").expect("instance").daemon = DaemonSnapshot::Unavailable;
         world.daemons.remove("jk-7f3a");
-        let mut app = app_with(world);
+        let mut app = app_with(Scenario::Returning, world);
         press(&mut app, "down right down");
         screen(&mut app)
     });
@@ -633,8 +637,8 @@ fn the_unreachable_gateway_follows_the_words() {
     assert!(live.contains("Gateway unreachable — showing saved sessions"));
 }
 
-fn run(world: jackin_console::world::World, keys: &str) -> App {
-    let mut app = app_with(world);
+fn run(scenario: Scenario, world: jackin_console::world::World, keys: &str) -> App {
+    let mut app = app_with(scenario, world);
     press(&mut app, keys);
     app
 }
@@ -653,13 +657,13 @@ fn capsule_world(live: bool) -> jackin_console::world::World {
 #[test]
 fn the_github_dialog_copies_the_pull_request_url() {
     let keys = format!("{GITHUB_OPEN} {GITHUB_COPY}");
-    let live = run(capsule_world(true), &keys);
+    let live = run(Scenario::CapsuleMulti, capsule_world(true), &keys);
     assert_eq!(
         live.world.clipboard.as_deref(),
         Some("https://github.com/chainargos/payments-platform/pull/482")
     );
     assert_eq!(live.shell.status.text(), Some("Copied the GitHub URL"));
-    let demo = run(capsule_world(false), &keys);
+    let demo = run(Scenario::CapsuleMulti, capsule_world(false), &keys);
     assert_eq!(demo.world.clipboard, None);
 }
 
@@ -669,7 +673,11 @@ fn the_github_dialog_copies_the_branch_url_without_a_pull_request() {
     for instance in &mut world.instances {
         instance.pr = None;
     }
-    let live = run(world, &format!("{GITHUB_OPEN} {GITHUB_COPY}"));
+    let live = run(
+        Scenario::CapsuleMulti,
+        world,
+        &format!("{GITHUB_OPEN} {GITHUB_COPY}"),
+    );
     assert_eq!(
         live.world.clipboard.as_deref(),
         Some("https://github.com/chainargos/payments-platform/tree/feature/settlement-backoff")
@@ -685,7 +693,7 @@ fn the_github_dialog_copies_nothing_without_a_matching_repository() {
         repo.full_name = "chainargos/unrelated".into();
         repo.url = "https://github.com/chainargos/unrelated".into();
         world.github = vec![repo];
-        run(world, &keys)
+        run(Scenario::CapsuleMulti, world, &keys)
     };
     let live = unrelated(true);
     assert_eq!(live.world.clipboard, None);
@@ -705,12 +713,20 @@ const MOUNT_OPEN: &str = "down down down down e 2 down o";
 
 #[test]
 fn the_mount_open_error_has_the_error_tone() {
-    let live = run(live_world(Scenario::Returning), MOUNT_OPEN);
+    let live = run(
+        Scenario::Returning,
+        live_world(Scenario::Returning),
+        MOUNT_OPEN,
+    );
     assert_eq!(
         live.shell.status.get(),
         Some(("no GitHub URL for this mount", Tone::Error))
     );
-    let demo = run(world_for(Scenario::Returning), MOUNT_OPEN);
+    let demo = run(
+        Scenario::Returning,
+        world_for(Scenario::Returning),
+        MOUNT_OPEN,
+    );
     assert_eq!(
         demo.shell.status.get(),
         Some(("Opened ~/src/customer-portal on GitHub", Tone::Secondary))
@@ -728,12 +744,20 @@ fn the_git_mount_follows_the_words() {
         ws.mounts[0].source = MountSource::Git("github.com/chainargos/payments-platform".into());
         world
     };
-    let demo = run(git(world_for(Scenario::Returning)), MOUNT_OPEN);
+    let demo = run(
+        Scenario::Returning,
+        git(world_for(Scenario::Returning)),
+        MOUNT_OPEN,
+    );
     assert_eq!(
         demo.shell.status.text(),
         Some("Opened https://github.com/chainargos/payments-platform in the browser")
     );
-    let live = run(git(live_world(Scenario::Returning)), MOUNT_OPEN);
+    let live = run(
+        Scenario::Returning,
+        git(live_world(Scenario::Returning)),
+        MOUNT_OPEN,
+    );
     assert_eq!(
         live.shell.status.text(),
         Some("GitHub · https://github.com/chainargos/payments-platform")
@@ -749,7 +773,7 @@ fn lifecycle_row(live: bool, status: InstanceStatus) -> String {
     let instance = world.instance_mut("jk-7f3a").expect("instance");
     instance.status = status;
     instance.unpushed = 2;
-    let mut app = app_with(world);
+    let mut app = app_with(Scenario::Returning, world);
     press(&mut app, "down right down");
     let screen = screen(&mut app);
     let line = screen
@@ -846,12 +870,12 @@ fn unexported_world(live: bool) -> jackin_console::world::World {
 
 fn unexported_captures(live: bool) -> Vec<(&'static str, String)> {
     let at = |keys: &str, width: u16, height: u16| {
-        let mut app = app_with(unexported_world(live));
+        let mut app = app_with(Scenario::Returning, unexported_world(live));
         press(&mut app, keys);
         screen_at(&mut app, width, height)
     };
     let capsule = |keys: &str| {
-        let mut app = app_with(unexported_world(live));
+        let mut app = app_with(Scenario::Returning, unexported_world(live));
         screen(&mut app);
         app.go(Go::Attach {
             instance: "jk-9b02".into(),
@@ -889,7 +913,7 @@ fn the_unexported_word_replaces_unpushed() {
 #[test]
 fn the_dirty_quit_dialog_follows_the_words() {
     let steps = |live: bool| {
-        let mut app = app_with(unexported_world(live));
+        let mut app = app_with(Scenario::Returning, unexported_world(live));
         screen(&mut app);
         app.go(Go::Attach {
             instance: "jk-9b02".into(),

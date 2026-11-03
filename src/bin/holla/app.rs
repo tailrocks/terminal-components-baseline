@@ -2409,7 +2409,7 @@ impl App {
             .write(false);
         let copied = clipboard.copy(&value);
         match copied {
-            shell::Copied::Copied { .. } => {
+            shell::Copied::Copied { .. } | shell::Copied::Requested { .. } => {
                 let shown = truncate(&value.replace('\n', " · "), 40);
                 self.world.clipboard = Some(value);
                 self.clipboard_gen += 1;

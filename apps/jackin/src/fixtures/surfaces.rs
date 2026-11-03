@@ -1,18 +1,41 @@
 use std::collections::BTreeSet;
 
+use crate::domain::account::{AccountForm, Provenance};
 use crate::domain::agent::{Agent, AuthMode};
 use crate::domain::docker::{DockerRiskText, DockerSetting, EngineState};
 use crate::domain::doctor::{DoctorState, DoctorSurface};
 use crate::domain::fixed::Fixed;
+use crate::domain::openshell;
+use crate::domain::role::LaunchRoleRule;
 use crate::domain::role::{
     AccountOrder, RoleAdmin, RoleCheckState, RoleEnvEntry, RoleManifestDoc, RoleRecord,
 };
+use crate::domain::surfaces::Surfaces;
 use crate::domain::vocabulary::Vocabulary;
-use crate::domain::workspace::{
-    AllowedRoles, DirtyExitPolicy, EnvValue, Isolation, Mount, RoleSource,
-};
+use crate::domain::workspace::{AllowedRoles, EnvValue, RoleSource};
+use crate::fixtures::{Scenario, about_rows};
 use crate::sim;
 use crate::world::World;
+
+impl Surfaces {
+    pub fn demo(scenario: Scenario) -> Self {
+        Self {
+            roles: None,
+            docker: None,
+            doctor: None,
+            vocabulary: Vocabulary::demo(),
+            account_form: AccountForm::default(),
+            agent_blocked: None,
+            launch_role: LaunchRoleRule::Demo,
+            wizard: None,
+            fixed: None,
+            version: "0.9.2".into(),
+            cockpit_version: Some("0.6.4 · preview".into()),
+            config_path: None,
+            about: about_rows(scenario),
+        }
+    }
+}
 
 pub const GATEWAY: &str = "jackin-local";
 const ENDPOINT: &str = "host.openshell.internal:18476";
@@ -180,51 +203,27 @@ fn plain(e: &crate::domain::workspace::EnvVar) -> bool {
     matches!(e.value, EnvValue::Plain(_))
 }
 
-pub const PROJECT: &str = "/sandbox/project";
-
 pub fn fixed(w: &mut World) {
-    w.surfaces.vocabulary = Vocabulary::openshell();
-    let fixed = Fixed::openshell();
-    w.global.coauthor_trailer = false;
-    w.global.dco_signoff = false;
-    w.global.mounts.clear();
+    openshell::surfaces(&mut w.surfaces);
+    w.surfaces.config_path = Some(format!("{}/.config/jackin/config.toml", w.home));
+    openshell::global(&mut w.global);
+    w.global
+        .agent_modes
+        .insert(Fixed::openshell().launchable, AuthMode::Sync);
     w.global.env.retain(plain);
-    w.global.role_env.clear();
-    w.global.agent_modes = Agent::ALL
-        .into_iter()
-        .map(|a| {
-            let mode = if a == fixed.launchable {
-                AuthMode::Sync
-            } else {
-                AuthMode::Ignore
-            };
-            (a, mode)
-        })
-        .collect();
-    for row in &mut w.global.trust {
-        row.trusted = true;
-    }
-    w.surfaces.fixed = Some(fixed);
-    let accounts: Vec<_> = w
-        .accounts
-        .accounts
-        .iter()
-        .filter(|a| !a.default_for_provider)
-        .map(|a| a.id.clone())
-        .collect();
     for a in &mut w.accounts.accounts {
-        a.enabled = true;
+        openshell::account(a);
+        if a.provenance == [Provenance::LiveHost] {
+            a.provenance = vec![Provenance::ConfiguredSource];
+        }
+        if a.display_name == "discovered" {
+            a.display_name = "host login".into();
+        }
     }
+    w.roles.iter_mut().for_each(openshell::role);
+    w.instances.iter_mut().for_each(openshell::instance);
     for ws in &mut w.workspaces {
-        ws.workdir = PROJECT.into();
-        ws.mounts =
-            vec![Mount::host(&format!("~/src/{}", ws.name), PROJECT).isolation(Isolation::Clone)];
-        ws.keep_awake = false;
-        ws.git_pull = false;
-        ws.dirty_policy = DirtyExitPolicy::Ask;
-        ws.accounts.disabled_defaults.clear();
-        ws.accounts.enabled = accounts.iter().cloned().collect();
-        ws.accounts.role_preferred.clear();
+        openshell::workspace(ws, &format!("~/src/{}", ws.name), &w.accounts);
         if ws.name == "release-automation" {
             ws.roles.allowed = AllowedRoles::Custom(vec!["backend".into(), "ghost-role".into()]);
         }

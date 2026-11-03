@@ -7,18 +7,16 @@ use jackin_console::app::App;
 use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::{is_credential_reference, looks_secret};
-use jackin_console::fixtures::world_for;
-use jackin_console::scenario::{Motion, Scenario};
+use jackin_console::fixtures::{Scenario, app_for};
 use junie_tui::core::event::Input;
+use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
 use junie_tui::ui::text::width;
 
 fn fixed() -> App {
-    let scenario = Scenario::OpenshellFixed;
-    App::for_scenario(
-        scenario,
-        world_for(scenario),
+    app_for(
+        Scenario::OpenshellFixed,
         Motion::Reduced,
         10_000,
         Theme::for_level(ColorLevel::TrueColor),

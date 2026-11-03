@@ -2,8 +2,7 @@
 
 use jackin_console::arbiter::DiscoveryError;
 use jackin_console::domain::instance::DaemonSnapshot;
-use jackin_console::fixtures::world_for;
-use jackin_console::scenario::Scenario;
+use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::{Snapshot, World};
 
 fn snapshot_of(w: &World) -> Snapshot {
@@ -54,7 +53,6 @@ fn apply_leaves_the_console_state_alone() {
     );
     target.apply(snapshot_of(&source));
     assert_eq!(target.daemons.keys().cloned().collect::<Vec<_>>(), daemons);
-    assert_eq!(target.scenario, Scenario::CapsuleMulti);
     assert_eq!((target.home, target.cwd), (home, cwd));
     assert_eq!((target.fs, target.clock.now_ms), (fs, now_ms));
 }

@@ -18,6 +18,7 @@ pub struct Fixed {
     pub env_sources: Reason,
     pub role_env: Reason,
     pub launchable: Agent,
+    pub launch_usage_only: String,
     pub agent_launchable: Reason,
     pub agent_other: Reason,
     pub agent_notes: [String; 2],
@@ -40,6 +41,8 @@ impl Fixed {
             env_sources: Reason::new("Plain values only · use an account for credentials"),
             role_env: Reason::new("Set role variables in a workspace instead"),
             launchable: Agent::Codex,
+            launch_usage_only: "launch needs a local Codex login · this source is usage only"
+                .into(),
             agent_launchable: Reason::new("Set by each account · change it in Accounts (c)"),
             agent_other: Reason::new("No credentials · jackin launches Codex only"),
             agent_notes: [

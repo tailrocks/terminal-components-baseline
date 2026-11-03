@@ -2,11 +2,12 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
 use crate::backend::{
-    Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, ValidationOutcome,
+    Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, OpSession, ValidationOutcome,
 };
 use crate::domain::account::CredentialSource;
 use crate::domain::agent::Provider;
-use crate::launch::LaunchContent;
+use crate::domain::launch::LaunchContent;
+use crate::launch::{LaunchPlan, LaunchTarget};
 use crate::panes::SessionScript;
 use crate::world::{Msg, World};
 
@@ -17,8 +18,17 @@ pub mod provider;
 pub mod scripts;
 pub mod surfaces;
 
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+enum LaunchRule {
+    #[default]
+    Clean,
+    FailNetwork,
+    HardCases,
+}
+
 #[derive(Debug, Default)]
 pub struct SimBackend {
+    launch: LaunchRule,
     save_fails_once: AtomicBool,
     bind_fails_once: AtomicBool,
     doctor_runs: AtomicUsize,
@@ -30,9 +40,17 @@ impl SimBackend {
         Arc::new(SimBackend::default())
     }
 
-    pub fn failing_first_save() -> Arc<dyn Backend> {
+    pub fn failing_launch() -> Arc<dyn Backend> {
+        Arc::new(SimBackend {
+            launch: LaunchRule::FailNetwork,
+            ..SimBackend::default()
+        })
+    }
+
+    pub fn hard_cases() -> Arc<dyn Backend> {
         Arc::new(SimBackend {
             save_fails_once: AtomicBool::new(true),
+            launch: LaunchRule::HardCases,
             ..SimBackend::default()
         })
     }
@@ -206,6 +224,26 @@ impl Backend for SimBackend {
             launch::openshell_content()
         } else {
             launch::content()
+        }
+    }
+
+    fn launch_plan(&self, world: &World, target: &LaunchTarget) -> LaunchPlan {
+        match self.launch {
+            LaunchRule::Clean => LaunchPlan::Clean,
+            LaunchRule::FailNetwork => LaunchPlan::FailNetwork,
+            LaunchRule::HardCases => {
+                if world.op.session() == OpSession::Locked
+                    && target.account.as_deref().is_some_and(|a| {
+                        a.contains("work") || a.contains("grok") || a.contains("codex-primary")
+                    })
+                {
+                    LaunchPlan::CredentialsLocked
+                } else if target.role == "sre" {
+                    LaunchPlan::BlockedSidecar
+                } else {
+                    LaunchPlan::Clean
+                }
+            }
         }
     }
 

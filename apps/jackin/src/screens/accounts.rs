@@ -444,7 +444,7 @@ impl AccountsScreen {
                 a.usage.freshness.phase = Freshness::Failed;
                 a.issue = Some(crate::domain::account::RecoverableIssue::new(
                     IssueCode::OpLocked,
-                    "1Password locked: unlock the app and retry",
+                    crate::backend::OpError::Locked.message(),
                     crate::domain::account::Recoverability::Retryable,
                 ));
                 outcome = "failed · 1Password locked";

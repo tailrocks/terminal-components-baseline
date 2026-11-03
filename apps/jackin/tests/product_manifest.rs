@@ -80,6 +80,20 @@ fn violations(package: &Value) -> Vec<String> {
     if clap.is_none_or(|d| d["optional"] != true) {
         out.push("`clap` must be an optional dependency, enabled only by `demo`".into());
     }
+    let features = package["features"].as_object().expect("features");
+    for (name, list) in features.iter().filter(|(name, _)| *name != "demo") {
+        for entry in list.as_array().expect("feature list") {
+            let entry = entry.as_str().expect("feature entry");
+            let enables_clap = ["clap", "dep:clap", "clap?"]
+                .iter()
+                .any(|c| entry == *c || entry.starts_with(&format!("{c}/")));
+            if enables_clap {
+                out.push(format!(
+                    "`clap` is enabled by the feature `{name}` through `{entry}`; only `demo` may enable it"
+                ));
+            }
+        }
+    }
     let demo = feature(package, "demo");
     if demo != Some(vec!["dep:clap".into(), "junie-tui/cli".into()]) {
         out.push(format!(
@@ -123,6 +137,48 @@ fn manifest_shape() {
     let meta = metadata();
     let found = violations(package(&meta));
     assert!(found.is_empty(), "{}", found.join("\n"));
+}
+
+#[test]
+fn only_the_demo_may_enable_clap() {
+    let package = |features: Value| {
+        serde_json::json!({
+            "name": "jackin-console",
+            "features": features,
+            "dependencies": [{ "name": "clap", "optional": true }],
+            "targets": [],
+        })
+    };
+    let clean = package(serde_json::json!({
+        "default": [],
+        "demo": ["dep:clap", "junie-tui/cli"],
+        "product": [],
+    }));
+    let found = violations(&clean);
+    assert!(
+        found
+            .iter()
+            .all(|v| !v.contains("only `demo` may enable it")),
+        "{found:?}"
+    );
+    for (feature, entry) in [
+        ("product", "dep:clap"),
+        ("cli", "clap/derive"),
+        ("tools", "clap"),
+    ] {
+        let mut features = serde_json::json!({
+            "default": [],
+            "demo": ["dep:clap", "junie-tui/cli"],
+            "product": [],
+        });
+        features[feature] = serde_json::json!([entry]);
+        let found = violations(&package(features));
+        let named = format!("`clap` is enabled by the feature `{feature}` through `{entry}`");
+        assert!(
+            found.iter().any(|v| v.starts_with(&named)),
+            "{feature}: {found:?}"
+        );
+    }
 }
 
 #[test]

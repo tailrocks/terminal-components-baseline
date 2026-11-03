@@ -44,6 +44,7 @@ use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::instance::AgentState;
 use crate::domain::usage::Freshness;
+use crate::domain::vocabulary::{Vocabulary, fill_in};
 use crate::panes::{
     Daemon, Direction, MAX_LABEL, MIN_PANE_COLS, MIN_PANE_ROWS, PaneId, PaneNode, Seam, nearest,
 };
@@ -159,7 +160,7 @@ impl CapsuleScreen {
             pane_rects: vec![],
             seams: vec![],
             tabs: Tabs::with_items(STRIP, vec![]),
-            menubar: Self::build_menubar(&w.surfaces.vocabulary.info_label()),
+            menubar: Self::build_menubar(&w.surfaces.vocabulary),
             tab_menu: None,
             context: ContextConfig::DEFAULT,
             body: Rect::ZERO,
@@ -243,7 +244,8 @@ impl CapsuleScreen {
         }
     }
 
-    fn build_menubar(info_label: &str) -> MenuBar {
+    fn build_menubar(words: &Vocabulary) -> MenuBar {
+        let info_label = words.info_label();
         let entries: Vec<(&str, Vec<MenuItem>)> = vec![
             (
                 "File",
@@ -262,7 +264,7 @@ impl CapsuleScreen {
                 "Edit",
                 vec![
                     MenuItem::new("Copy selection").shortcut("y"),
-                    MenuItem::new("Paste clipboard"),
+                    MenuItem::new(&words.paste_label),
                     MenuItem::new("Clear selection").shortcut("Esc").separator(),
                     MenuItem::new("Clear pane").shortcut("Ctrl+B Ctrl+L"),
                 ],
@@ -273,7 +275,7 @@ impl CapsuleScreen {
                     MenuItem::new("Zoom pane").shortcut("Ctrl+B z"),
                     MenuItem::new("Redraw").shortcut("Ctrl+B r").separator(),
                     MenuItem::new("Usage").shortcut("Ctrl+B u"),
-                    MenuItem::new(info_label).shortcut("Ctrl+B i"),
+                    MenuItem::new(&info_label).shortcut("Ctrl+B i"),
                     MenuItem::new("GitHub context"),
                     MenuItem::new("Inspect changes"),
                 ],
@@ -304,10 +306,10 @@ impl CapsuleScreen {
         MenuBar::new(MENUBAR, entries).brand(Lockup::new(crate::app::BRAND_MARK))
     }
 
-    fn open_brand_menu(&mut self) {
+    fn open_brand_menu(&mut self, w: &World) {
         let anchor = self.menubar.brand_area;
         let items = vec![
-            MenuItem::new("About jackin-preview"),
+            MenuItem::new(&w.surfaces.vocabulary.about_label),
             MenuItem::new("Usage").shortcut("Ctrl+B u").separator(),
             MenuItem::new("Workspace manager").shortcut("Ctrl+B d"),
         ];
@@ -336,9 +338,9 @@ impl CapsuleScreen {
             copy = copy.reason("Select text first");
             clear = clear.reason("Nothing is selected");
         }
-        let mut paste = MenuItem::new("Paste clipboard");
+        let mut paste = MenuItem::new(&w.surfaces.vocabulary.paste_label);
         if w.clipboard.is_none() {
-            paste = paste.reason("The clipboard is empty");
+            paste = paste.reason(w.surfaces.vocabulary.paste_empty_reason.as_str());
         }
         let mut zoom = MenuItem::new("Zoom pane").shortcut("Ctrl+B z").separator();
         if zoomed {
@@ -426,7 +428,7 @@ impl CapsuleScreen {
                     Some(text) => {
                         let path = text.lines().next().unwrap_or("").trim().to_owned();
                         self.export_kind = Some((label.contains("reveal"), false));
-                        self.finish_export(&path, cx);
+                        self.finish_export(&path, w, cx);
                     }
                     None => cx.status("Select a path in a pane first"),
                 }
@@ -450,7 +452,7 @@ impl CapsuleScreen {
                     None => cx.status("Nothing selected"),
                 }
             }
-            "Paste clipboard" => {
+            l if l == w.surfaces.vocabulary.paste_label => {
                 let text = w.clipboard.clone();
                 match text {
                     Some(t) => {
@@ -468,7 +470,7 @@ impl CapsuleScreen {
                         }
                         cx.status("Pasted into the focused pane");
                     }
-                    None => cx.status("Preview clipboard is empty"),
+                    None => cx.status(w.surfaces.vocabulary.paste_empty.as_str()),
                 }
             }
             "Clear selection" => {
@@ -483,7 +485,7 @@ impl CapsuleScreen {
                     && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
                 {
                     pane.clear();
-                    cx.status("Pane cleared");
+                    cx.status(w.surfaces.vocabulary.pane_cleared.as_str());
                 }
             }
             "Zoom pane" | "Unzoom pane" => self.toggle_zoom(w, cx),
@@ -511,8 +513,11 @@ impl CapsuleScreen {
             "Quit" => self.request_exit(w, cx),
             "Key reference" => cx.help(),
             "Command palette" => self.open_palette(w, cx),
-            "About jackin-preview" => self.open_about(w, cx),
-            _ => cx.status(format!("{label}: not available in the preview")),
+            l if l == w.surfaces.vocabulary.about_label => self.open_about(w, cx),
+            _ => cx.status(fill_in(
+                &w.surfaces.vocabulary.command_unavailable,
+                &[("label", label)],
+            )),
         }
     }
 
@@ -729,7 +734,7 @@ impl CapsuleScreen {
         let _ = d;
 
         self.pending_spawn = Some((intent, agent, account, ws, now));
-        cx.status("spawning");
+        cx.status(w.surfaces.vocabulary.pane_starting.as_str());
     }
 }
 
@@ -924,7 +929,9 @@ impl CapsuleScreen {
 
                 "Stage image from clipboard path"
                 | "Paste image from host clipboard"
-                | "Stage image without pasting" => ("Not in this preview", true),
+                | "Stage image without pasting" => {
+                    (w.surfaces.vocabulary.detail_unavailable.as_str(), true)
+                }
                 _ => ("host", false),
             };
             let matched: Vec<usize> = if q.is_empty() {
@@ -985,7 +992,7 @@ impl CapsuleScreen {
                     .unwrap_or_default();
                 let path = text.lines().next().unwrap_or("").trim().to_owned();
                 self.export_kind = Some((cmd.ends_with("reveal"), cmd.ends_with("open")));
-                self.finish_export(&path, cx);
+                self.finish_export(&path, w, cx);
             }
             "Stage image from clipboard path"
             | "Paste image from host clipboard"
@@ -1023,11 +1030,14 @@ impl CapsuleScreen {
                 }
             }
             "Quit" => self.request_exit(w, cx),
-            _ => cx.status(format!("{cmd}: not available in the preview")),
+            _ => cx.status(fill_in(
+                &w.surfaces.vocabulary.command_unavailable,
+                &[("label", cmd)],
+            )),
         }
     }
 
-    fn finish_export(&mut self, path: &str, cx: &mut Cx) {
+    fn finish_export(&mut self, path: &str, w: &World, cx: &mut Cx) {
         let (reveal, open) = self.export_kind.take().unwrap_or((false, false));
         if path.is_empty() {
             cx.error("Enter a path");
@@ -1045,36 +1055,52 @@ impl CapsuleScreen {
             cx.status("Export cancelled");
             return;
         }
-        let mut s = format!(
-            "Exported to ~/Downloads/jackin/payments-platform/{}",
-            path.trim_start_matches('/')
+        let words = &w.surfaces.vocabulary;
+        let workspace = self
+            .daemon(w)
+            .map(|d| d.workspace.as_str())
+            .unwrap_or_default();
+        let mut s = fill_in(
+            &words.export_done,
+            &[
+                ("workspace", workspace),
+                ("path", path.trim_start_matches('/')),
+            ],
         );
-        if reveal {
-            s.push_str(" · revealed in Finder");
+        if reveal && let Some(note) = &words.export_revealed {
+            s.push_str(note);
         }
-        if open {
-            s.push_str(" · opened on host");
+        if open && let Some(note) = &words.export_opened {
+            s.push_str(note);
         }
         cx.status(s);
     }
 
     fn confirm_close(&mut self, tab: bool, w: &World, cx: &mut Cx) {
+        let words = &w.surfaces.vocabulary;
         let d = if tab {
             Dialog::destructive(
                 WidgetId::of("capsule.closetab"),
                 "Close tab?",
-                "Reap every pane in this tab. Unsaved state across all panes is lost.",
+                &words.close_tab_body,
                 "Close tab",
             )
         } else {
+            let runs_agent = self
+                .focused_pane(w)
+                .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
+                .is_some_and(|p| p.proc.agent.is_some());
             Dialog::destructive(
                 WidgetId::of("capsule.closepane"),
                 "Close pane?",
-                "Reap the focused pane's agent. Unsaved state in that pane is lost.",
+                if runs_agent {
+                    &words.close_agent_body
+                } else {
+                    &words.close_shell_body
+                },
                 "Close pane",
             )
         };
-        let _ = w;
         cx.open(d, LayerTag::new(if tab { "closetab" } else { "closepane" }));
     }
 
@@ -1194,14 +1220,15 @@ impl CapsuleScreen {
             },
             None => "(none)".into(),
         };
-        let noun = &w.surfaces.vocabulary.container_noun;
-        let props = vec![
-            Prop::new(noun, i.container_id()).copyable(),
-            Prop::new(
-                &format!("{noun} ID"),
-                format!("3f9c{}e21a", clip(&i.run_id.replace('-', ""), 8)),
-            )
-            .copyable(),
+        let v = &w.surfaces.vocabulary;
+        let noun = &v.container_noun;
+        let mut props = vec![Prop::new(noun, i.container_id()).copyable()];
+        if let Some(id) = &v.sandbox_id {
+            let run8 = clip(&i.run_id.replace('-', ""), 8);
+            props
+                .push(Prop::new(&format!("{noun} ID"), fill_in(id, &[("run8", &run8)])).copyable());
+        }
+        props.extend([
             Prop::new("Role", i.role.clone()),
             Prop::new("Agent", agent),
             Prop::new("Workdir", i.workdir.clone()),
@@ -1210,12 +1237,13 @@ impl CapsuleScreen {
                 w.surfaces.vocabulary.version_label.as_str(),
                 w.surfaces.version.as_str(),
             ),
-            Prop::new("Invocation ID", format!("{}-4f11", i.run_id)).copyable(),
-            Prop::new(
-                "Host log",
-                format!("file:///Users/alexey/.jackin/logs/{}.log", i.run_id),
-            ),
-        ];
+        ]);
+        if let Some(id) = &v.invocation_id {
+            props.push(Prop::new("Invocation ID", fill_in(id, &[("run", &i.run_id)])).copyable());
+        }
+        if let Some(log) = &v.host_log {
+            props.push(Prop::new("Host log", fill_in(log, &[("run", &i.run_id)])));
+        }
         let _ = ws;
         let d = InfoDialog::new(WidgetId::of("capsule.info"), "Debug info", props)
             .meta("Enter copies the row · y copies");
@@ -1929,7 +1957,7 @@ impl Page<Jackin> for CapsuleScreen {
                     let label = self.menubar.menus[mi][ii].item.label.clone();
                     self.run_menu(&label, None, w, cx);
                 }
-                Some(MenuBarAction::Brand) => self.open_brand_menu(),
+                Some(MenuBarAction::Brand) => self.open_brand_menu(w),
                 _ => {}
             }
             return o.or(Outcome::Changed);
@@ -2225,7 +2253,7 @@ impl Page<Jackin> for CapsuleScreen {
                 },
             ) => {
                 let p = text.unwrap_or_default();
-                self.finish_export(&p, cx);
+                self.finish_export(&p, w, cx);
             }
             ("info", ModalResult::Info(InfoResult::Copy(v)))
             | ("github", ModalResult::Info(InfoResult::Copy(v))) => {
@@ -2883,7 +2911,7 @@ impl CapsuleScreen {
                     let label = self.menubar.menus[mi][ii].item.label.clone();
                     self.run_menu(&label, None, w, cx);
                 }
-                Some(MenuBarAction::Brand) => self.open_brand_menu(),
+                Some(MenuBarAction::Brand) => self.open_brand_menu(w),
                 _ => {}
             }
             return o.or(Outcome::Changed);

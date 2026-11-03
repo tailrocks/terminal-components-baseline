@@ -7,8 +7,7 @@ use jackin_console::domain::role::{
     LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
 };
 use jackin_console::domain::workspace::{AllowedRoles, Workspace};
-use jackin_console::fixtures::world_for;
-use jackin_console::scenario::Scenario;
+use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::{LaunchSource, World};
 
 fn world(rule: LaunchRoleRule) -> World {
@@ -141,7 +140,7 @@ fn the_picker_disables_every_row_while_no_role_resolves() {
     let mut world = world(LaunchRoleRule::Configured);
     world.workspaces[0].roles.default = None;
     world.workspaces[0].roles.last = None;
-    let mut app = app_with(world);
+    let mut app = app_with(Scenario::Returning, world);
     press(&mut app, "down enter");
     let screen = screen(&mut app);
     assert!(
@@ -164,7 +163,7 @@ fn the_picker_disables_every_row_while_no_role_resolves() {
 fn the_picker_keeps_its_rows_while_a_role_resolves() {
     let mut world = world(LaunchRoleRule::Configured);
     world.workspaces[0].roles.default = Some("the-architect".into());
-    let mut app = app_with(world);
+    let mut app = app_with(Scenario::Returning, world);
     press(&mut app, "down enter");
     let screen = screen(&mut app);
     assert!(

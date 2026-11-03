@@ -7,11 +7,12 @@ use crate::domain::account::{
 };
 use crate::domain::agent::{Agent, Provider};
 use crate::domain::instance::InstanceId;
+use crate::domain::launch::LaunchContent;
 use crate::domain::onepassword::OpReference;
 use crate::domain::role::RoleManifestDoc;
 use crate::domain::usage::AccountUsage;
 use crate::domain::workspace::{RoleName, WorkspaceId};
-use crate::launch::LaunchContent;
+use crate::launch::{LaunchPlan, LaunchTarget};
 use crate::panes::SessionScript;
 use crate::world::{Msg, World};
 
@@ -334,6 +335,10 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
     ) -> ChangeSet;
 
     fn launch_content(&self) -> Arc<LaunchContent>;
+
+    fn launch_plan(&self, _world: &World, _target: &LaunchTarget) -> LaunchPlan {
+        LaunchPlan::Clean
+    }
 
     fn session_script(&self) -> Arc<dyn SessionScript>;
 }

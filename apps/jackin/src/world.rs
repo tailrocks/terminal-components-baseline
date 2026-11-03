@@ -16,7 +16,6 @@ use crate::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
 };
 use crate::panes::Daemon;
-use crate::scenario::Scenario;
 use junie_tui::clock::SimClock;
 use junie_tui::shell::JobKey;
 
@@ -214,7 +213,6 @@ pub struct HealthView {
 }
 
 pub struct World {
-    pub scenario: Scenario,
     pub clock: SimClock,
     pub time: TimeSource,
     pub arbiter: Arbiter,
@@ -238,13 +236,19 @@ pub struct World {
 
     pub refresh_fails: bool,
 
-    pub takeover_at_ms: Option<i64>,
+    pub takeover_at_ms: Option<Takeover>,
 
     pub session_accounts: BTreeMap<(InstanceId, u64), AccountId>,
 
     pub discovery_pending: bool,
 
     pub surfaces: Surfaces,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Takeover {
+    pub at_ms: i64,
+    pub by: String,
 }
 
 pub trait WallSource: std::fmt::Debug + Send + Sync {
@@ -260,7 +264,7 @@ pub enum TimeSource {
     Wall(Arc<dyn WallSource>),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Snapshot {
     pub workspaces: Vec<Workspace>,
     pub roles: Vec<RoleEntry>,
@@ -273,7 +277,6 @@ pub struct Snapshot {
 }
 
 pub struct WorldParts {
-    pub scenario: Scenario,
     pub clock: SimClock,
     pub time: TimeSource,
     pub arbiter: Arbiter,
@@ -295,15 +298,14 @@ pub struct WorldParts {
 
 impl WorldParts {
     pub fn new(
-        scenario: Scenario,
         clock: SimClock,
         home: String,
         cwd: String,
         op: Box<dyn OnePassword>,
         backend: Arc<dyn Backend>,
+        surfaces: Surfaces,
     ) -> Self {
         Self {
-            scenario,
             last_refresh_secs: clock.now_secs(),
             clock,
             time: TimeSource::Sim,
@@ -320,7 +322,7 @@ impl WorldParts {
             backend,
             fs: vec![],
             github: vec![],
-            surfaces: Surfaces::default(),
+            surfaces,
         }
     }
 
@@ -338,7 +340,6 @@ impl WorldParts {
 impl World {
     pub fn new(parts: WorldParts) -> Self {
         let WorldParts {
-            scenario,
             clock,
             time,
             arbiter,
@@ -358,7 +359,6 @@ impl World {
             surfaces,
         } = parts;
         let mut world = Self {
-            scenario,
             clock,
             time,
             arbiter,
@@ -444,24 +444,11 @@ impl World {
 
     pub fn about_props(&self) -> Vec<junie_tui::widgets::props::Prop> {
         use junie_tui::widgets::props::Prop;
-        match &self.surfaces.about {
-            Some(rows) => rows
-                .iter()
-                .map(|(label, value)| Prop::new(label, value.as_str()))
-                .collect(),
-            None => vec![
-                Prop::new("Product", "jackin-preview · deterministic redesign preview"),
-                Prop::new("Scenario", self.scenario.name()),
-                Prop::new(
-                    "Construct",
-                    "simulated · nothing here touches a real container",
-                ),
-                Prop::new(
-                    "Design system",
-                    "Junie-inspired Ratatui components (junie_tui)",
-                ),
-            ],
-        }
+        self.surfaces
+            .about
+            .iter()
+            .map(|(label, value)| Prop::new(label, value.as_str()))
+            .collect()
     }
 
     pub fn docker_on(&self, ws: Option<WorkspaceId>, role: &str) -> bool {
@@ -537,20 +524,17 @@ impl World {
                 d.tick(now);
             }
         }
-        if let Some(at) = self.takeover_at_ms
-            && now >= at
-        {
-            self.takeover_at_ms = None;
-            if let Some(i) = self
+        if self.takeover_at_ms.as_ref().is_some_and(|t| now >= t.at_ms)
+            && let Some(Takeover { by, .. }) = self.takeover_at_ms.take()
+            && let Some(i) = self
                 .instances
                 .iter()
                 .find(|i| i.status == InstanceStatus::Running)
-            {
-                due.push(Msg::Takeover {
-                    instance: i.id.clone(),
-                    by: "tty004 · MacBook".into(),
-                });
-            }
+        {
+            due.push(Msg::Takeover {
+                instance: i.id.clone(),
+                by,
+            });
         }
         due
     }
@@ -619,6 +603,10 @@ impl World {
         }
     }
 
+    pub fn config_file(&self) -> String {
+        self.tilde(self.surfaces.config_path.as_deref().unwrap_or_default())
+    }
+
     pub fn new_instance_id(&self) -> String {
         let n = self.instances.len() as u32 + 0x7f3a + 0x1234 * 3;
         format!("jk-{:04x}", n & 0xffff)
@@ -684,7 +672,7 @@ impl World {
                     }
                     match &e.usable {
                         Usability::Ready => ready.push(e.id.clone()),
-                        u => blocked.push((e.id.clone(), u.label())),
+                        u => blocked.push((e.id.clone(), u.label(self.surfaces.fixed.as_ref()))),
                     }
                 }
             }
@@ -692,7 +680,7 @@ impl World {
                 if let Some(a) = self.accounts.default_for(provider) {
                     match crate::domain::workspace::usability_of(a) {
                         Usability::Ready => ready.push(a.id.clone()),
-                        u => blocked.push((a.id.clone(), u.label())),
+                        u => blocked.push((a.id.clone(), u.label(self.surfaces.fixed.as_ref()))),
                     }
                 }
                 if ready.is_empty()
@@ -736,11 +724,8 @@ impl World {
         }
         let block = if ready.is_empty() {
             blocked.first().map(|(id, why)| {
-                let launch_block = self
-                    .accounts
-                    .get(id)
-                    .and_then(|a| a.launch_blocked.as_deref());
-                if launch_block == Some(why.as_str()) {
+                let launch_block = self.accounts.get(id).and_then(|a| a.launch_blocked);
+                if launch_block.is_some_and(|b| b.text(self.surfaces.fixed.as_ref()) == *why) {
                     return why.clone();
                 }
                 let name = self

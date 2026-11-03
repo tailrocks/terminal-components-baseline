@@ -27,7 +27,7 @@ pub enum LaunchRole {
 pub const NO_DEFAULT_ROLE: &str = "no default role · set it in Roles";
 pub const NO_SAVED_WORKSPACE: &str = "no saved workspace · press n, then set a default role";
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RoleAdmin {
     pub agents: Vec<Agent>,
     pub roles: Vec<RoleRecord>,

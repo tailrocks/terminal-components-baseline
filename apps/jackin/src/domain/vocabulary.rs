@@ -94,6 +94,30 @@ pub struct Vocabulary {
     pub env_op_label: String,
     pub trust_hint: String,
     pub agent_no_credentials: String,
+
+    pub about_label: String,
+    pub paste_label: String,
+    pub paste_empty: String,
+    pub paste_empty_reason: String,
+    pub command_unavailable: String,
+    pub detail_unavailable: String,
+    pub pane_starting: String,
+    pub pane_cleared: String,
+    pub close_tab_body: String,
+    pub close_agent_body: String,
+    pub close_shell_body: String,
+    pub export_done: String,
+    pub export_revealed: Option<String>,
+    pub export_opened: Option<String>,
+    pub host_log: Option<String>,
+    pub workspace_config: Option<String>,
+    pub global_config: Option<String>,
+    pub save_error_workspace: String,
+    pub save_error_global: String,
+    pub save_error_next: String,
+    pub sandbox_id: Option<String>,
+    pub invocation_id: Option<String>,
+    pub attached_status: String,
 }
 
 impl Vocabulary {
@@ -103,7 +127,7 @@ impl Vocabulary {
             instances_where: "on the gateway".into(),
             still_inside: "Still running on the gateway".into(),
             health_noun: "gateway".into(),
-            capsule: "Terminal".into(),
+            capsule: "Capsule".into(),
             version_label: "jackin".into(),
             container_noun: "Sandbox".into(),
             quit_lines: [
@@ -135,16 +159,16 @@ impl Vocabulary {
                     .into(),
             },
             daemon: DaemonWords {
-                inspect_label: "Terminal".into(),
+                inspect_label: "Capsule".into(),
                 inspect_unavailable: "gateway unreachable".into(),
-                no_tabs: "No terminal tabs open".into(),
+                no_tabs: "No Capsule tabs open".into(),
                 unavailable_running: "Gateway unreachable — showing saved sessions".into(),
-                unavailable_stopped: "No live terminal (sandbox not running)".into(),
+                unavailable_stopped: "No live Capsule (sandbox not running)".into(),
                 topology_source: "gateway · {ago}".into(),
                 topology_unavailable: "unreachable".into(),
                 card_unavailable: "running {duration} · gateway unreachable".into(),
-                list_tabs: "terminal · {tabs} · {panes}".into(),
-                list_no_tabs: "terminal · no tabs".into(),
+                list_tabs: "capsule · {tabs} · {panes}".into(),
+                list_no_tabs: "capsule · no tabs".into(),
                 list_unavailable: "gateway unreachable".into(),
             },
             lifecycle: LifecycleWords {
@@ -192,6 +216,31 @@ impl Vocabulary {
             env_op_label: "1Password item / field".into(),
             trust_hint: "Show source".into(),
             agent_no_credentials: "no credentials handed to the sandbox".into(),
+
+            about_label: "About jackin".into(),
+            paste_label: "Paste last copy".into(),
+            paste_empty: "Nothing copied in this console yet".into(),
+            paste_empty_reason: "Nothing copied yet".into(),
+            command_unavailable: "{label}: not supported".into(),
+            detail_unavailable: "Not supported".into(),
+            pane_starting: "Starting…".into(),
+            pane_cleared: "Scrollback cleared".into(),
+            close_tab_body: "Closes every pane in this tab. Codex panes keep running; shells end."
+                .into(),
+            close_agent_body: "Codex keeps running in the sandbox. This pane detaches.".into(),
+            close_shell_body: "The shell ends. Unsaved state in it is lost.".into(),
+            export_done: "Exported to ~/Downloads/jackin/{workspace}/{path}".into(),
+            export_revealed: None,
+            export_opened: None,
+            host_log: None,
+            workspace_config: Some("{config}".into()),
+            global_config: Some("{config}".into()),
+            save_error_workspace: "Could not write {config}.".into(),
+            save_error_global: "Could not write {config}.".into(),
+            save_error_next: "check disk space and permissions, then Save again".into(),
+            sandbox_id: None,
+            invocation_id: None,
+            attached_status: "Attached to {name}".into(),
         }
     }
 
@@ -279,6 +328,35 @@ impl Vocabulary {
             ("env_op_label", &self.env_op_label),
             ("trust_hint", &self.trust_hint),
             ("agent_no_credentials", &self.agent_no_credentials),
+            ("about_label", &self.about_label),
+            ("paste_label", &self.paste_label),
+            ("paste_empty", &self.paste_empty),
+            ("paste_empty_reason", &self.paste_empty_reason),
+            ("command_unavailable", &self.command_unavailable),
+            ("detail_unavailable", &self.detail_unavailable),
+            ("pane_starting", &self.pane_starting),
+            ("pane_cleared", &self.pane_cleared),
+            ("close_tab_body", &self.close_tab_body),
+            ("close_agent_body", &self.close_agent_body),
+            ("close_shell_body", &self.close_shell_body),
+            ("export_done", &self.export_done),
+            (
+                "export_revealed",
+                self.export_revealed.as_deref().unwrap_or(""),
+            ),
+            ("export_opened", self.export_opened.as_deref().unwrap_or("")),
+            ("host_log", self.host_log.as_deref().unwrap_or("")),
+            (
+                "workspace_config",
+                self.workspace_config.as_deref().unwrap_or(""),
+            ),
+            ("global_config", self.global_config.as_deref().unwrap_or("")),
+            ("save_error_workspace", &self.save_error_workspace),
+            ("save_error_global", &self.save_error_global),
+            ("save_error_next", &self.save_error_next),
+            ("sandbox_id", self.sandbox_id.as_deref().unwrap_or("")),
+            ("invocation_id", self.invocation_id.as_deref().unwrap_or("")),
+            ("attached_status", &self.attached_status),
         ]
     }
 
@@ -324,108 +402,6 @@ impl Vocabulary {
 
     pub fn noun_lower(&self) -> String {
         self.container_noun.to_lowercase()
-    }
-}
-
-impl Default for Vocabulary {
-    fn default() -> Self {
-        Self {
-            construct: "the Construct".into(),
-            instances_where: "in the Construct".into(),
-            still_inside: "Still inside the Construct".into(),
-            health_noun: "daemon".into(),
-            capsule: "Capsule".into(),
-            version_label: "Capsule".into(),
-            container_noun: "Container".into(),
-            quit_lines: [
-                "! Quitting force-stops the container immediately.".into(),
-                "! Work not saved outside the container will be lost.".into(),
-            ],
-            unexported_word: "unpushed".into(),
-            quit_dirty_keep: "Quit & keep changes".into(),
-            quit_dirty_discard: "Quit & discard changes".into(),
-            quit_discard_title: "Quit and discard changes?".into(),
-            quit_discard_action: "discard every uncommitted change and unpushed commit".into(),
-            quit_discard_button: "Discard".into(),
-            last_session_ended: "Last session ended · the Capsule shuts down".into(),
-            never_reached: "never reached the Capsule".into(),
-            session_choice: "Session choice · picked for this session in Capsule".into(),
-            status: StatusWords {
-                running: "Container and Capsule daemon are live.".into(),
-                clean_exited: "The final session ended cleanly; the container is stopped.".into(),
-                crashed:
-                    "The Capsule daemon stopped unexpectedly; the container is kept for inspection."
-                        .into(),
-                preserved_dirty:
-                    "Stopped with uncommitted changes in the Workspace; kept until you decide."
-                        .into(),
-                preserved_unpushed:
-                    "Stopped with commits that were never pushed; kept until you decide.".into(),
-                restore_available: "Stopped cleanly with a restorable Capsule layout.".into(),
-                superseded: "Replaced by a newer instance for the same Workspace.".into(),
-                purged: "Container and records were removed.".into(),
-                failed_setup: "Launch failed before the Capsule was ready; nothing to attach to."
-                    .into(),
-            },
-            daemon: DaemonWords {
-                inspect_label: "Daemon".into(),
-                inspect_unavailable: "unavailable".into(),
-                no_tabs: "Daemon reports no tabs".into(),
-                unavailable_running: "Daemon unavailable — showing manifest sessions".into(),
-                unavailable_stopped: "No live daemon (instance not running)".into(),
-                topology_source: "daemon · {ago}".into(),
-                topology_unavailable: "unavailable".into(),
-                card_unavailable: "running {duration} · daemon unavailable".into(),
-                list_tabs: "daemon · {tabs} · {panes}".into(),
-                list_no_tabs: "daemon reports no tabs".into(),
-                list_unavailable: "daemon unavailable".into(),
-            },
-            lifecycle: LifecycleWords {
-                restored: "Restored {id} · container restarted".into(),
-                stop_body: "The container stops and every session in it ends. The instance record stays reconnectable ({state}).".into(),
-                purge_action: "purge the instance record and its container".into(),
-                purge_scope: "1 container · {sessions} · {copy}".into(),
-                copy_dirty: "worktree with changes".into(),
-                copy_clean: "clean worktree".into(),
-                risk_dirty: "uncommitted changes in the worktree are lost".into(),
-                risk_clean: "the container and its recovery state are removed".into(),
-                purged: "Purged {id} · container, sidecar, volume and recovery state removed".into(),
-            },
-
-            project_tab: "Mounts".into(),
-            project_one: "mount".into(),
-            project_many: "mounts".into(),
-            project_card: "{source} · {mode} {isolation}".into(),
-            first_use: "{path} is mounted at its own path inside the Construct. Enter launches with defaults; n creates a saved workspace.".into(),
-            role_access: "The role can access mounted workspace files.".into(),
-            destination_heading: "Mount destination".into(),
-            git_url_help: [
-                "Enter a GitHub repository URL. The repository is cloned into the".into(),
-                "Construct at launch; the branch is chosen in the mount row.".into(),
-            ],
-            read_only_label: "Mount read-only".into(),
-
-            github_workspace: "Opened {url} on the host".into(),
-            github_git_mount: "Opened https://{url} in the browser".into(),
-            github_repo_mount: Some("Opened {url} on GitHub".into()),
-            github_copies_url: false,
-            github_open_label: "Open PR…".into(),
-            github_open_meta: "open uses a gated host action".into(),
-            github_copied: "Opened the pull request on the host (gated host action)".into(),
-            github_no_url: "No GitHub URL to open for this instance".into(),
-            github_menu: "Open on GitHub".into(),
-            trust_browser: "Opened https://{source} in the browser".into(),
-            trust_reveal: "Revealed {source} in Finder".into(),
-            export_placeholder: "workspace path or /jackin/run/…".into(),
-            trailer_sample: "Co-authored-by: <agent> <noreply@…>   ·   Signed-off-by: Alexey Zhokhov <alexey@chainargos.com>".into(),
-
-            env_plain_label: "Plain text  (masked)".into(),
-            env_plain_placeholder: "typed once · masked afterwards".into(),
-            env_plain_help: None,
-            env_op_label: "1Password item / field  (recommended for secrets)".into(),
-            trust_hint: "Open source".into(),
-            agent_no_credentials: "no credentials handed to the container".into(),
-        }
     }
 }
 

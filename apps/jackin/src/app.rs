@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use junie_tui::clock::Clock;
 use junie_tui::core::event::{External, Input, Key, Outcome};
 use junie_tui::core::focus::FocusChange;
@@ -7,8 +9,9 @@ use junie_tui::core::pointer::{
     MouseTarget, PointerEvent, PointerHost, PointerParts, PointerRouter,
 };
 use junie_tui::core::response::Response;
+use junie_tui::motion::Motion;
 use junie_tui::runtime::ExternalReceiver;
-use junie_tui::shell::{self, Chrome, Menus, PageKey, Router, Shell};
+use junie_tui::shell::{self, Chrome, Menus, NativeClipboard, PageKey, Router, Shell};
 use junie_tui::theme::{Theme, Tone};
 use junie_tui::ui::ctx::{RenderCtx, fill};
 use junie_tui::ui::layer::{
@@ -25,11 +28,13 @@ use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::{Position, Rect};
 
 use crate::arbiter::{EntryDecision, ExitDecision};
+use crate::domain::instance::InstanceId;
 use crate::domain::instance::InstanceStatus;
-use crate::launch::LaunchPlan;
+use crate::domain::vocabulary::fill_in;
+use crate::launch::LaunchTarget;
 use crate::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_ROLES, TAB_USAGE};
+use crate::panes::PaneId;
 use crate::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
-use crate::scenario::{Motion, Scenario};
 use crate::screens::capsule::CapsuleScreen;
 use crate::screens::cockpit::CockpitScreen;
 use crate::screens::editor::EditorScreen;
@@ -87,7 +92,7 @@ impl Route {
 }
 
 type Layers = ShellLayers<ModalResult, World, Route>;
-type Entry = LayerEntry<ModalResult, World, Route>;
+type ClosedLayer = LayerEntry<ModalResult, World, Route>;
 
 #[derive(Debug, Clone)]
 pub enum Remote {
@@ -95,9 +100,51 @@ pub enum Remote {
     Reloaded(Box<Snapshot>),
 }
 
+pub type LaunchEntry = LaunchTarget;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EntryPage {
+    Manager,
+    Accounts,
+    Roles {
+        select: Option<String>,
+    },
+    RoleEditor {
+        role: String,
+    },
+    Launch(LaunchEntry),
+    Attach {
+        instance: InstanceId,
+        pane: Option<PaneId>,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Entry {
+    pub page: EntryPage,
+    pub outro_when_framed: bool,
+}
+
+#[derive(Debug, Clone)]
+pub enum ClipboardMode {
+    Preview,
+    Host(Arc<dyn NativeClipboard>),
+}
+
+#[derive(Debug, Clone)]
+pub struct AppOptions {
+    pub motion: Motion,
+    pub frame: u64,
+    pub theme: Theme,
+    pub clipboard: ClipboardMode,
+}
+
+pub fn assemble(world: World, entry: Entry, options: AppOptions) -> App {
+    App::new(world, entry, options)
+}
+
 pub struct App {
     pub theme: Theme,
-    pub scenario: Scenario,
     pub world: World,
     pub intro: Option<IntroState>,
     pub outro: Option<OutroState>,
@@ -124,24 +171,26 @@ pub struct App {
 }
 
 impl App {
-    pub fn for_scenario(
-        scenario: Scenario,
-        mut world: World,
-        motion: Motion,
-        frame: u64,
-        theme: Theme,
-    ) -> Self {
+    pub fn new(mut world: World, entry: Entry, options: AppOptions) -> Self {
+        let AppOptions {
+            motion,
+            frame,
+            theme,
+            clipboard,
+        } = options;
         world.clock.running = motion != Motion::Paused;
         let mut shell = Shell::new();
         shell.motion = motion;
 
-        shell.clipboard = shell::Clipboard::new().write(false);
+        shell.clipboard = match clipboard {
+            ClipboardMode::Preview => shell::Clipboard::new().write(false),
+            ClipboardMode::Host(sink) => shell::Clipboard::new().native(sink),
+        };
         let router = crate::pages::router(&world);
         let keys = shell_keys(&world);
         let host_menus = Self::build_host_menu(Route::Manager, &world);
         let mut app = Self {
             theme,
-            scenario,
             world,
             intro: None,
             outro: None,
@@ -159,7 +208,7 @@ impl App {
             exit_after_status: None,
             external: None,
         };
-        app.start(frame);
+        app.start(entry, frame);
         app
     }
 
@@ -183,19 +232,16 @@ impl App {
         }
     }
 
-    fn start(&mut self, frame: u64) {
-        match self.scenario {
-            Scenario::OutroLast if frame > 0 => {
-                self.world.arbiter.set_running(0);
-                let decision = self.world.arbiter.request_exit(self.world.now_ms());
-                let elapsed = match decision {
-                    ExitDecision::Outro { elapsed_secs } => elapsed_secs,
-                    _ => Some(8_040),
-                };
-                self.outro = Some(OutroState::new(self.shell.motion, elapsed, frame));
-                return;
-            }
-            _ => {}
+    fn start(&mut self, entry: Entry, frame: u64) {
+        if entry.outro_when_framed && frame > 0 {
+            self.world.arbiter.set_running(0);
+            let decision = self.world.arbiter.request_exit(self.world.now_ms());
+            let elapsed = match decision {
+                ExitDecision::Outro { elapsed_secs } => elapsed_secs,
+                _ => Some(8_040),
+            };
+            self.outro = Some(OutroState::new(self.shell.motion, elapsed, frame));
+            return;
         }
         match self.world.arbiter.request_entry() {
             EntryDecision::PlayIntro => {
@@ -227,39 +273,17 @@ impl App {
             }
         }
 
-        match self.scenario {
-            Scenario::AccountsMixed => self.go(Go::Accounts { select: None }),
-            Scenario::RoleEditor => self.go(Go::RoleEditor {
-                role: "sentinel".into(),
-            }),
-            Scenario::RoleBinding => self.go(Go::Roles {
-                select: Some("sentinel".into()),
-            }),
-            Scenario::LaunchRunning | Scenario::LaunchFailure | Scenario::LaunchOpenshell => {
-                let plan = if self.scenario == Scenario::LaunchFailure {
-                    LaunchPlan::FailNetwork
-                } else {
-                    LaunchPlan::Clean
-                };
-                let (role, agent, account) = if self.scenario == Scenario::LaunchOpenshell {
-                    (
-                        "sentinel",
-                        crate::domain::agent::Agent::Codex,
-                        "acct-codex-primary",
-                    )
-                } else {
-                    (
-                        "the-architect",
-                        crate::domain::agent::Agent::ClaudeCode,
-                        "acct-claude-work",
-                    )
-                };
+        match entry.page {
+            EntryPage::Manager => {}
+            EntryPage::Accounts => self.go(Go::Accounts { select: None }),
+            EntryPage::Roles { select } => self.go(Go::Roles { select }),
+            EntryPage::RoleEditor { role } => self.go(Go::RoleEditor { role }),
+            EntryPage::Launch(target) => {
                 self.go(Go::Launch {
-                    workspace: Some(1),
-                    role: role.into(),
-                    agent,
-                    account: Some(account.into()),
-                    plan,
+                    workspace: target.workspace,
+                    role: target.role,
+                    agent: target.agent,
+                    account: target.account,
                 });
                 if frame > 0 {
                     let (_, reqs) = self.shell.deliver(true, |cx| {
@@ -271,11 +295,7 @@ impl App {
                     self.apply_requests(reqs, Route::Cockpit);
                 }
             }
-            Scenario::CapsuleMulti | Scenario::OutroLast => self.go(Go::Attach {
-                instance: "jk-7f3a".into(),
-                pane: None,
-            }),
-            _ => {}
+            EntryPage::Attach { instance, pane } => self.go(Go::Attach { instance, pane }),
         }
     }
 
@@ -712,7 +732,10 @@ impl App {
         }
         let help = vec![
             (MenuItem::new("Key reference").shortcut("?"), HostCmd::Help),
-            (MenuItem::new("About jackin-preview"), HostCmd::About),
+            (
+                MenuItem::new(&world.surfaces.vocabulary.about_label),
+                HostCmd::About,
+            ),
         ];
         Menus::new()
             .menu("File", file)
@@ -1307,7 +1330,7 @@ impl App {
         o.or(Outcome::Changed)
     }
 
-    fn layer_closed(&mut self, entry: Entry, r: ModalResult) -> Outcome {
+    fn layer_closed(&mut self, entry: ClosedLayer, r: ModalResult) -> Outcome {
         let cancel_index = entry.get::<Dialog>().and_then(|d| d.cancel_index);
         let r = match r {
             ModalResult::Help => return Outcome::Changed,
@@ -1661,15 +1684,15 @@ impl App {
                 role,
                 agent,
                 account,
-                plan,
             } => {
                 let page = Page::Cockpit(Box::new(CockpitScreen::new(
                     &self.world,
-                    workspace,
-                    role,
-                    agent,
-                    account,
-                    plan,
+                    LaunchTarget {
+                        workspace,
+                        role,
+                        agent,
+                        account,
+                    },
                     self.shell.motion,
                 )));
                 self.open_page(page);
@@ -1711,10 +1734,11 @@ impl App {
                         .get(&instance)
                         .map(|d| d.workspace.clone())
                         .unwrap_or_default();
-                    self.set_status(
-                        &format!("Attached to {name} · tabs and panes restored"),
-                        Tone::Secondary,
+                    let status = fill_in(
+                        &self.world.surfaces.vocabulary.attached_status,
+                        &[("name", &name)],
                     );
+                    self.set_status(&status, Tone::Secondary);
                 }
             }
             Go::NewSession {

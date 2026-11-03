@@ -190,10 +190,16 @@ impl SettingsScreen {
         let mut facts = vec![
             Prop::new(
                 "Scope",
-                format!(
-                    "global config · {}",
-                    w.tilde(&format!("{}/.jackin/config.toml", w.home))
-                ),
+                match &w.surfaces.vocabulary.global_config {
+                    Some(path) => format!(
+                        "global config · {}",
+                        w.tilde(&fill_in(
+                            path,
+                            &[("home", &w.home), ("config", &w.config_file())]
+                        ))
+                    ),
+                    None => "global config".to_owned(),
+                },
             ),
             Prop::new("Changes", plural(n, "change", "changes")),
         ];
@@ -346,10 +352,13 @@ impl SettingsScreen {
                 vec![
                     Prop::new(
                         "Error",
-                        "write failed: ~/.jackin/config.toml is not writable (EACCES)",
+                        fill_in(
+                            &w.surfaces.vocabulary.save_error_global,
+                            &[("config", &w.config_file())],
+                        ),
                     ),
                     Prop::new("State", "your edits are intact · nothing was written"),
-                    Prop::new("Next", "fix the permission and Save again"),
+                    Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
                 ],
             )
             .error()

@@ -38,6 +38,7 @@ use crate::domain::account::AccountId;
 use crate::domain::agent::Provider;
 use crate::domain::docker::{DockerSetting, EngineState};
 use crate::domain::fixed::Fixed;
+use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, Effective, RoleEntry, RoleName, RoleSource, Workspace,
     WorkspaceId,
@@ -387,13 +388,20 @@ impl EditorScreen {
             ),
             Prop::new(
                 "Scope",
-                format!(
-                    "workspace config · {}",
-                    w.tilde(&format!(
-                        "{}/.jackin/workspaces/{}.toml",
-                        w.home, self.pending.name
-                    ))
-                ),
+                match &w.surfaces.vocabulary.workspace_config {
+                    Some(path) => format!(
+                        "workspace config · {}",
+                        w.tilde(&fill_in(
+                            path,
+                            &[
+                                ("home", &w.home),
+                                ("name", &self.pending.name),
+                                ("config", &w.config_file()),
+                            ]
+                        ))
+                    ),
+                    None => "workspace config".to_owned(),
+                },
             ),
             Prop::new("Changes", plural(n.max(1), "change", "changes")),
         ];
@@ -523,10 +531,13 @@ impl EditorScreen {
                 vec![
                     Prop::new(
                         "Error",
-                        "write failed: ~/.jackin/workspaces is not writable (EACCES)",
+                        fill_in(
+                            &w.surfaces.vocabulary.save_error_workspace,
+                            &[("config", &w.config_file())],
+                        ),
                     ),
                     Prop::new("State", "your edits are intact · nothing was written"),
-                    Prop::new("Next", "fix the permission and Save again"),
+                    Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
                 ],
             )
             .error()
@@ -1265,7 +1276,8 @@ impl EditorScreen {
                         }
                         None => "available".to_owned(),
                     };
-                    let status = crate::domain::workspace::usability_of(a).label();
+                    let status =
+                        crate::domain::workspace::usability_of(a).label(w.surfaces.fixed.as_ref());
                     let status_tone = if a.enabled && status == "ready" {
                         t.text_muted
                     } else {

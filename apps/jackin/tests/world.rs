@@ -1,20 +1,20 @@
 #![cfg(feature = "demo")]
 
 use jackin_console::arbiter::{Arbiter, DiscoveryError};
-use jackin_console::fixtures::{HOME, world_for};
-use jackin_console::scenario::{CLOCK, Scenario};
+use jackin_console::domain::surfaces::Surfaces;
+use jackin_console::fixtures::{CLOCK, HOME, Scenario, world_for};
 use jackin_console::sim::SimBackend;
 use jackin_console::sim::onepassword::SimOnePassword;
 use jackin_console::world::{DaemonHealth, World, WorldParts};
 
 fn parts() -> WorldParts {
     WorldParts::new(
-        Scenario::Returning,
         CLOCK,
         HOME.into(),
         format!("{HOME}/src/demo"),
         Box::new(SimOnePassword::fixture(CLOCK.now_secs())),
         SimBackend::shared(),
+        Surfaces::demo(Scenario::Returning),
     )
 }
 
@@ -22,7 +22,13 @@ fn parts() -> WorldParts {
 fn every_scenario_builds_a_world_that_names_it() {
     for scenario in Scenario::ALL {
         let world = world_for(scenario);
-        assert_eq!(world.scenario, scenario, "{}", scenario.name());
+        let named = world
+            .surfaces
+            .about
+            .iter()
+            .find(|(label, _)| label == "Scenario")
+            .map(|(_, value)| value.as_str());
+        assert_eq!(named, Some(scenario.name()), "{}", scenario.name());
     }
     assert!(world_for(Scenario::FirstUse).workspaces.is_empty());
     assert!(world_for(Scenario::FirstUse).discovery_pending);

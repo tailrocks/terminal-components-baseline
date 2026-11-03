@@ -4,7 +4,7 @@ use ratatui::style::{Color, Modifier, Style};
 
 use junie_tui::theme::Theme;
 
-use crate::scenario::Motion;
+use junie_tui::motion::Motion;
 
 pub const TICK_MS: u64 = 33;
 

@@ -1,0 +1,396 @@
+#![cfg(feature = "demo")]
+
+mod common;
+
+use std::sync::{Arc, Mutex};
+
+use common::*;
+use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, Route, assemble};
+use jackin_console::backend::OpSession;
+use jackin_console::fixtures::{Scenario, app_for, app_with_world, entry_for, world_for};
+use jackin_console::rain::INTRO_END;
+use junie_tui::core::event::{Input, Mouse, MouseKind};
+use junie_tui::motion::Motion;
+use junie_tui::runtime::Application;
+use junie_tui::shell::NativeClipboard;
+use junie_tui::theme::{ColorLevel, Theme};
+use ratatui::layout::Position;
+
+fn theme() -> Theme {
+    Theme::for_level(ColorLevel::TrueColor)
+}
+
+struct Start {
+    scenario: Scenario,
+    frame: u64,
+    route: Route,
+    shows: &'static [&'static str],
+}
+
+const fn start(
+    scenario: Scenario,
+    frame: u64,
+    route: Route,
+    shows: &'static [&'static str],
+) -> Start {
+    Start {
+        scenario,
+        frame,
+        route,
+        shows,
+    }
+}
+
+const CLAUDE_LAUNCH: &[&str] = &[
+    "Launch › payments-platform › the-architect",
+    "Claude Code · Anthropic / Claude · account Claude · Work",
+];
+
+const START_TABLE: &[Start] = &[
+    start(Scenario::FirstUse, 0, Route::Intro, &[]),
+    start(
+        Scenario::FirstUse,
+        INTRO_END,
+        Route::Manager,
+        &["Workspaces"],
+    ),
+    start(Scenario::Returning, 0, Route::Manager, &["Workspaces"]),
+    start(
+        Scenario::AccountsMixed,
+        0,
+        Route::Accounts,
+        &["Accounts › Overview"],
+    ),
+    start(Scenario::LaunchRunning, 0, Route::Cockpit, CLAUDE_LAUNCH),
+    start(Scenario::LaunchRunning, 30, Route::Cockpit, CLAUDE_LAUNCH),
+    start(Scenario::LaunchFailure, 0, Route::Cockpit, CLAUDE_LAUNCH),
+    start(Scenario::LaunchFailure, 30, Route::Cockpit, CLAUDE_LAUNCH),
+    start(
+        Scenario::LaunchOpenshell,
+        30,
+        Route::Cockpit,
+        &[
+            "Launch › payments-platform › sentinel",
+            "Codex · OpenAI · account Codex · Primary",
+        ],
+    ),
+    start(
+        Scenario::CapsuleMulti,
+        0,
+        Route::Capsule,
+        &["jackin-payments-pl…form-7f3a"],
+    ),
+    start(
+        Scenario::OutroLast,
+        0,
+        Route::Capsule,
+        &["jackin-payments-pl…form-7f3a"],
+    ),
+    start(Scenario::OutroLast, 30, Route::Outro, &["Enter Skip"]),
+    start(
+        Scenario::HardCases,
+        0,
+        Route::Manager,
+        &["Could not confirm running instances: instance index unreadable"],
+    ),
+    start(
+        Scenario::RoleEditor,
+        0,
+        Route::RoleEditor,
+        &["Roles › sentinel › edit"],
+    ),
+    start(
+        Scenario::RoleBinding,
+        0,
+        Route::Roles,
+        &["Roles › sentinel", "▎ ✓ sentinel"],
+    ),
+    start(Scenario::DockerSetting, 0, Route::Manager, &["Workspaces"]),
+    start(Scenario::DockerNoEngine, 0, Route::Manager, &["Workspaces"]),
+    start(Scenario::Doctor, 0, Route::Manager, &["Workspaces"]),
+    start(
+        Scenario::OpenshellFixed,
+        0,
+        Route::Manager,
+        &["Workspaces", "inside the sandbox"],
+    ),
+];
+
+fn manager_entry() -> Entry {
+    Entry {
+        page: EntryPage::Manager,
+        outro_when_framed: false,
+    }
+}
+
+fn options(frame: u64, clipboard: ClipboardMode) -> AppOptions {
+    AppOptions {
+        motion: Motion::Paused,
+        frame,
+        theme: theme(),
+        clipboard,
+    }
+}
+
+#[test]
+fn start_table_matches_the_old_scenarios() {
+    for row in START_TABLE {
+        let mut app = app_for(row.scenario, Motion::Paused, row.frame, theme());
+        let label = format!("{} at frame {}", row.scenario.name(), row.frame);
+        assert_eq!(app.route(), row.route, "{label}");
+        let text = screen(&mut app);
+        for shown in row.shows {
+            assert!(text.contains(shown), "{label} lacks {shown:?}:\n{text}");
+        }
+    }
+    let covered: Vec<_> = START_TABLE.iter().map(|r| r.scenario).collect();
+    for scenario in Scenario::ALL {
+        assert!(
+            covered.contains(&scenario),
+            "{} has no row",
+            scenario.name()
+        );
+    }
+}
+
+#[test]
+fn roles_page_selects_the_named_role() {
+    let mut app = assemble(
+        world_for(Scenario::RoleBinding),
+        Entry {
+            page: EntryPage::Roles {
+                select: Some("the-architect".into()),
+            },
+            outro_when_framed: false,
+        },
+        options(INTRO_END, ClipboardMode::Preview),
+    );
+    assert_eq!(app.route(), Route::Roles);
+    let text = screen(&mut app);
+    assert!(
+        text.contains("Roles › the-architect"),
+        "lacks \"Roles › the-architect\":\n{text}"
+    );
+}
+
+#[test]
+fn launch_failure_plan_fails_the_network_stage() {
+    let mut app = app(Scenario::LaunchFailure);
+    assert_eq!(app.route(), Route::Cockpit);
+    let text = screen(&mut app);
+    for shown in [
+        "Launch failed",
+        "The Construct network could not be attached",
+        "! Network failed",
+    ] {
+        assert!(text.contains(shown), "lacks {shown:?}:\n{text}");
+    }
+}
+
+#[test]
+fn outro_only_when_framed() {
+    for scenario in Scenario::ALL {
+        assert_eq!(
+            entry_for(scenario).outro_when_framed,
+            scenario == Scenario::OutroLast,
+            "{}",
+            scenario.name()
+        );
+    }
+    let attach = |outro_when_framed| Entry {
+        page: EntryPage::Attach {
+            instance: "jk-7f3a".into(),
+            pane: None,
+        },
+        outro_when_framed,
+    };
+    let route = |entry, frame| {
+        assemble(
+            world_for(Scenario::OutroLast),
+            entry,
+            options(frame, ClipboardMode::Preview),
+        )
+        .route()
+    };
+    assert_eq!(route(attach(true), 0), Route::Capsule);
+    assert_eq!(route(attach(true), 30), Route::Outro);
+    assert_eq!(route(attach(false), 30), Route::Capsule);
+}
+
+#[test]
+fn product_entry_is_manager() {
+    for scenario in Scenario::ALL {
+        let app = assemble(
+            world_for(scenario),
+            manager_entry(),
+            options(INTRO_END, ClipboardMode::Preview),
+        );
+        assert_eq!(app.route(), Route::Manager, "{}", scenario.name());
+    }
+}
+
+const LOCK: &str = "1Password locked: unlock the app and retry";
+
+fn launch_hard_cases(world: jackin_console::world::World, picks: &str) -> App {
+    let mut app = app_with_world(Scenario::HardCases, world, Motion::Full, 0, theme());
+    press(&mut app, picks);
+    assert_eq!(app.route(), Route::Cockpit);
+    app
+}
+
+fn ticks_until_lock(app: &mut App) -> bool {
+    for tick in 0..150 {
+        Application::handle(app, Input::Tick);
+        if tick % 10 == 9 && screen(app).contains(LOCK) {
+            return true;
+        }
+    }
+    false
+}
+
+#[test]
+fn hard_cases_credentials_plan() {
+    const CODEX: &str = "down enter down enter";
+    const CLAUDE_PERSONAL: &str = "down enter enter";
+
+    let mut locked = launch_hard_cases(world_for(Scenario::HardCases), CODEX);
+    assert!(ticks_until_lock(&mut locked), "{}", screen(&mut locked));
+
+    let mut world = world_for(Scenario::HardCases);
+    world.op.set_session(OpSession::SignedIn);
+    let mut signed_in = launch_hard_cases(world, CODEX);
+    assert!(!ticks_until_lock(&mut signed_in));
+    assert!(screen(&mut signed_in).contains("✓ 03 Credentials"));
+
+    let mut personal = launch_hard_cases(world_for(Scenario::HardCases), CLAUDE_PERSONAL);
+    assert!(!ticks_until_lock(&mut personal));
+}
+
+#[derive(Debug)]
+struct Sink {
+    accepts: bool,
+    writes: Mutex<Vec<String>>,
+}
+
+impl Sink {
+    fn new(accepts: bool) -> Arc<Self> {
+        Arc::new(Self {
+            accepts,
+            writes: Mutex::new(Vec::new()),
+        })
+    }
+
+    fn writes(&self) -> Vec<String> {
+        self.writes.lock().expect("sink lock").clone()
+    }
+}
+
+impl NativeClipboard for Sink {
+    fn write(&self, text: &str) -> bool {
+        self.writes.lock().expect("sink lock").push(text.to_owned());
+        self.accepts
+    }
+}
+
+const DEBUG_ROW_OSC52: &str = "\x1b]52;c;amFja2luLXBheW1lbnRzLXBsYXRmb3JtLTdmM2E=\x07";
+const SELECTED: &str = "the settlement retry loop so failed ba";
+const SELECTED_OSC52: &str = "\x1b]52;c;dGhlIHNldHRsZW1lbnQgcmV0cnkgbG9vcCBzbyBmYWlsZWQgYmE=\x07";
+
+struct Copy {
+    status: String,
+    output: Vec<String>,
+}
+
+fn capsule(clipboard: ClipboardMode) -> App {
+    let mut app = assemble(
+        world_for(Scenario::CapsuleMulti),
+        entry_for(Scenario::CapsuleMulti),
+        options(INTRO_END, clipboard),
+    );
+    screen(&mut app);
+    app
+}
+
+fn copied(app: &mut App) -> Copy {
+    let status = app
+        .shell
+        .status
+        .text()
+        .expect("a copy sets the status")
+        .to_owned();
+    Copy {
+        status,
+        output: Application::take_output(app),
+    }
+}
+
+fn copy_debug_row(clipboard: ClipboardMode) -> Copy {
+    let mut app = capsule(clipboard);
+    press(&mut app, "ctrl+b i");
+    let _ = Application::take_output(&mut app);
+    press(&mut app, "y");
+    copied(&mut app)
+}
+
+fn copy_selection(clipboard: ClipboardMode) -> Copy {
+    let mut app = capsule(clipboard);
+    let _ = Application::take_output(&mut app);
+    for (kind, x) in [
+        (MouseKind::Down, 12),
+        (MouseKind::Drag, 30),
+        (MouseKind::Drag, 50),
+        (MouseKind::Up, 50),
+    ] {
+        Application::handle(
+            &mut app,
+            Input::Mouse(Mouse::new(kind, Position::new(x, 7))),
+        );
+        screen(&mut app);
+    }
+    copied(&mut app)
+}
+
+#[test]
+fn clipboard_modes() {
+    let sink = Sink::new(true);
+    let host = copy_selection(ClipboardMode::Host(sink.clone()));
+    assert_eq!(sink.writes(), [SELECTED]);
+    assert_eq!(host.output, [SELECTED_OSC52]);
+
+    let preview = copy_selection(ClipboardMode::Preview);
+    assert!(preview.output.is_empty(), "{:?}", preview.output);
+    assert_eq!(preview.status, "Copied selection");
+
+    let counted = copy_debug_row(ClipboardMode::Preview);
+    assert!(counted.output.is_empty(), "{:?}", counted.output);
+    assert_eq!(
+        counted.status,
+        "Copied 29 characters · jackin-payments-platform-7f3a"
+    );
+}
+
+#[test]
+fn native_sink_decides_the_wording() {
+    let accepting = Sink::new(true);
+    let accepted = copy_selection(ClipboardMode::Host(accepting.clone()));
+    assert_eq!(accepted.status, "Copied selection");
+    assert_eq!(accepting.writes(), [SELECTED]);
+    assert_eq!(accepted.output, [SELECTED_OSC52]);
+
+    let refusing = Sink::new(false);
+    let refused = copy_selection(ClipboardMode::Host(refusing.clone()));
+    assert_eq!(
+        refused.status,
+        "Copy requested · this terminal may ignore OSC 52"
+    );
+    assert_eq!(refusing.writes(), [SELECTED]);
+    assert_eq!(refused.output, [SELECTED_OSC52]);
+
+    let counted = Sink::new(true);
+    let counted = copy_debug_row(ClipboardMode::Host(counted));
+    assert_eq!(
+        counted.status,
+        "Copied 29 characters · jackin-payments-platform-7f3a"
+    );
+    assert_eq!(counted.output, [DEBUG_ROW_OSC52]);
+}
