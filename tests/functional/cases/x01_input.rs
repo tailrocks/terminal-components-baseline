@@ -246,9 +246,18 @@ fn assert_checkpoints() {
     check_frame(&app, &wide, WIDE_ID);
 
     app.resize(80, 24);
-    let narrow = app.wait_screen(NARROW_ID, |screen| {
-        text(screen).contains(TOKEN) && screen.cols() == 80 && screen.rows() == 24
+    // The first 80×24 paint still has the wide page clipped around the
+    // dialog. The paste is already visible there. The reference frame is the
+    // later paint, with the narrow footer and the width fact.
+    app.wait_screen("narrow dialog chrome", |screen| {
+        let visible = text(screen);
+        screen.cols() == 80
+            && screen.rows() == 24
+            && visible.contains(TOKEN)
+            && visible.contains("Enter Rename")
+            && visible.contains("width 54")
     });
+    let narrow = app.settle();
     require(&narrow, TITLE);
     require(&narrow, HELP);
     refuse(&narrow, RENAMED);
