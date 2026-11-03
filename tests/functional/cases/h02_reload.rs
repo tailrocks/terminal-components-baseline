@@ -142,13 +142,19 @@ fn open_config(app: &App) -> TerminalSnapshot {
 
 fn back_to_finder(app: &App) {
     app.key("escape");
+    // Esc paints the finder list while the file preview still holds
+    // `id = "wipe"`. The restored row is the frame after that preview closes.
     let finder = app.wait_screen("finder row restored", |screen| {
+        let visible = text(screen);
         selected(screen, ROW)
-            && text(screen).contains(QUERY)
-            && text(screen).contains("Results · 1")
-            && !text(screen).contains(TITLE)
-            && !text(screen).contains(DEPLOY)
-            && !text(screen).contains(REREAD)
+            && visible.contains(QUERY)
+            && visible.contains("Results · 1")
+            && !visible.contains(TITLE)
+            && !visible.contains(DEPLOY)
+            && !visible.contains(WIPE)
+            && !visible.contains(MULTI)
+            && !visible.contains(REREAD)
+            && !visible.contains("discovering")
     });
     see(
         &finder,

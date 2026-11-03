@@ -178,7 +178,12 @@ fn search(app: &App, history: bool) -> TerminalSnapshot {
 #[test]
 fn route_opens_memory_finder_and_quits() {
     let app = launch("h01-memory-route", true);
-    let finder = app.wait_text(PLACEHOLDER);
+    // The placeholder paints before the seeded Recent section. The route
+    // checkpoint is that section, not the first search field.
+    let finder = app.wait_screen("seeded finder", |screen| {
+        let visible = text(screen);
+        visible.contains(PLACEHOLDER) && visible.contains("Recent here")
+    });
     assert_eq!((finder.cols(), finder.rows()), (120, 40));
     see(
         &finder,
