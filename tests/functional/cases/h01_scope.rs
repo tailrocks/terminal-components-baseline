@@ -81,7 +81,7 @@ fn field(screen: &TerminalSnapshot, label: &str) -> String {
             let index = start + rel;
             let end = index + label.len();
             let before = index == 0 || line.as_bytes()[index - 1].is_ascii_whitespace();
-            let after = line[end..].as_bytes();
+            let after = &line.as_bytes()[end..];
             // Preview values are column-aligned. A single space is a hint, not the field.
             if before && after.len() >= 2 && after[0] == b' ' && after[1] == b' ' {
                 let value = line[end..].trim().trim_end_matches(['┃', '┆', '│']).trim();

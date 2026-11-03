@@ -390,6 +390,7 @@ fn git_batch_family() {
     app.finish();
 }
 
+#[allow(clippy::too_many_arguments)]
 fn direct_family(
     name: &str,
     scenario: &str,
@@ -408,6 +409,7 @@ fn direct_family(
     app.finish();
 }
 
+#[allow(clippy::too_many_arguments)]
 fn confirmed_family(
     name: &str,
     scenario: &str,

@@ -161,7 +161,7 @@ fn prove_success(app: &App) {
     reach_manager(app);
     expand_payments(app);
     app.key("down");
-    let first = app.wait_screen("7f3a before refresh", |screen| shows_running(screen));
+    let first = app.wait_screen("7f3a before refresh", shows_running);
     let before = text(&first);
     assert!(
         before.contains("c41e"),
@@ -234,7 +234,7 @@ fn prove_failure(app: &App) {
     reach_manager(app);
     expand_payments(app);
     app.key("down");
-    let first = app.wait_screen("7f3a before failed refresh", |screen| shows_running(screen));
+    let first = app.wait_screen("7f3a before failed refresh", shows_running);
     let before = text(&first);
     assert!(
         before.contains("data-pipeline"),

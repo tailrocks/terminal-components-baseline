@@ -161,13 +161,9 @@ fn refuse_before_output(app: &App) -> bool {
 }
 
 fn open_when_line(app: &App) -> Option<TerminalSnapshot> {
-    if poll_for(app, Duration::from_secs(4), |screen| {
+    poll_for(app, Duration::from_secs(4), |screen| {
         text(screen).contains("lines · b build log")
-    })
-    .is_none()
-    {
-        return None;
-    }
+    })?;
     app.key("b");
     poll_for(app, Duration::from_millis(400), |screen| {
         text(screen).contains(DOCKER)

@@ -836,8 +836,8 @@ fn confirm_options(app: &App, check: impl Fn(&TerminalSnapshot)) {
 fn finish_option(app: &App, case_id: &str, check: impl Fn(&TerminalSnapshot)) {
     let screen = app.settle();
     check(&screen);
-    assert_size(&app, 120, 40);
-    shot(&app, case_id);
+    assert_size(app, 120, 40);
+    shot(app, case_id);
     app.finish();
 }
 

@@ -147,6 +147,7 @@ fn assert_toggle(screen: &TerminalSnapshot, label: &str, state: &str) {
     );
 }
 
+#[allow(clippy::too_many_arguments)]
 fn assert_disk_options(
     screen: &TerminalSnapshot,
     mode: &str,

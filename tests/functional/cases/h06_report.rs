@@ -125,14 +125,15 @@ fn trash_count(screen: &TerminalSnapshot) -> usize {
     let flat = flat(screen);
     let parts: Vec<&str> = flat.split(' ').collect();
     for window in parts.windows(3) {
-        if window[0] == "trash" && window[2].starts_with("item") {
-            if let Ok(count) = window[1].parse::<usize>() {
-                assert!(
-                    flat.contains(&format!("trash {count} item")),
-                    "count {count} is not the painted phrase\n{flat}"
-                );
-                return count;
-            }
+        if window[0] == "trash"
+            && window[2].starts_with("item")
+            && let Ok(count) = window[1].parse::<usize>()
+        {
+            assert!(
+                flat.contains(&format!("trash {count} item")),
+                "count {count} is not the painted phrase\n{flat}"
+            );
+            return count;
         }
     }
     panic!("no trash count on gate 1\n{flat}");

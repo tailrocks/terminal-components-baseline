@@ -276,7 +276,7 @@ fn jackin_copy() {
 
 fn copy_report(app: &App) {
     app.wait_text("Copy report");
-    click_one(&app, "Copy report", |screen, hit| {
+    click_one(app, "Copy report", |screen, hit| {
         hit.y > 4 && row_text(screen, u32::from(hit.y)).contains("Copy report")
     });
     app.wait_text(REPORT);

@@ -270,7 +270,7 @@ fn open_inspector(app: &App) -> TerminalSnapshot {
     );
     for label in &VIEW_ITEMS[1..] {
         app.key("down");
-        app.wait_screen(*label, |screen| {
+        app.wait_screen(label, |screen| {
             filled_label(screen, &cursor_bg) == Some(*label)
         });
     }

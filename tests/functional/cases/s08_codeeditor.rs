@@ -204,10 +204,6 @@ fn click_side(app: &App, label: &str) {
     click_where(app, label, |hit| hit.x < 24);
 }
 
-fn click_button(app: &App, label: &str) {
-    click_where(app, label, |hit| hit.y > 4 && hit.x >= 26);
-}
-
 fn click_code(app: &App, label: &str) {
     click_where(app, label, |hit| hit.x > 30 && hit.y > 6);
 }

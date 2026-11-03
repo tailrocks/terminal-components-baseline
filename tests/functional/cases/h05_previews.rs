@@ -88,12 +88,7 @@ fn title_path(screen: &TerminalSnapshot) -> String {
     let marker = "Files · ";
     for line in text(screen).lines() {
         if let Some(rest) = line.split(marker).nth(1) {
-            return rest
-                .trim()
-                .split_whitespace()
-                .next()
-                .unwrap_or("")
-                .to_string();
+            return rest.split_whitespace().next().unwrap_or("").to_string();
         }
     }
     String::new()

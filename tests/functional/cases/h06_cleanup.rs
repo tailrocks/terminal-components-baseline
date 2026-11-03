@@ -187,7 +187,7 @@ fn open_cleanup(app: &App) -> TerminalSnapshot {
 }
 
 fn absent_others(screen: &TerminalSnapshot) {
-    see(screen, &[], &[FOREIGN, PROTECTED].concat().as_slice());
+    see(screen, &[], [FOREIGN, PROTECTED].concat().as_slice());
 }
 
 #[test]

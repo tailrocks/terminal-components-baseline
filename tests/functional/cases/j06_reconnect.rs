@@ -196,7 +196,7 @@ fn attach(app: &App) -> TerminalSnapshot {
         text(&app.screen())
     );
     app.key("enter");
-    app.wait_screen("attached", |screen| wide_capsule(screen))
+    app.wait_screen("attached", wide_capsule)
 }
 
 fn detach(app: &App) -> TerminalSnapshot {

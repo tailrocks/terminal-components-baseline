@@ -352,7 +352,7 @@ fn assert_running_wide(screen: &TerminalSnapshot) {
             "Restart",
             "4 of 5",
         ],
-        &forbidden_run(),
+        forbidden_run(),
     );
     assert!(
         !flat(screen).contains("matches for"),

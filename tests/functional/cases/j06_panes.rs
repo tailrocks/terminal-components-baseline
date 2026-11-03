@@ -70,7 +70,7 @@ fn open(name: &str) -> App {
     try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
 }
 
-fn glyph<'a>(screen: &'a TerminalSnapshot, x: u16, y: u16) -> &'a str {
+fn glyph(screen: &TerminalSnapshot, x: u16, y: u16) -> &str {
     screen
         .cell_at(u32::from(x), u32::from(y))
         .map(|cell| cell.text())

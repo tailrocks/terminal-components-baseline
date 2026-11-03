@@ -166,7 +166,7 @@ fn assert_omitted(screen: &TerminalSnapshot) {
     }
 }
 
-fn cell<'a>(screen: &'a TerminalSnapshot, x: u16, y: u16) -> &'a str {
+fn cell(screen: &TerminalSnapshot, x: u16, y: u16) -> &str {
     screen
         .cell_at(u32::from(x), u32::from(y))
         .map(|item| item.text())
@@ -943,7 +943,7 @@ fn confirm_options(app: &App, check: impl Fn(&TerminalSnapshot)) {
 fn finish_option(app: &App, case_id: &str, check: impl Fn(&TerminalSnapshot)) {
     let screen = app.settle();
     check(&screen);
-    assert_size(&app, 120, 40);
+    assert_size(app, 120, 40);
     shot(app, case_id);
     app.finish();
 }

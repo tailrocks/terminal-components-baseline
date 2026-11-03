@@ -152,6 +152,7 @@ fn assert_toggle(screen: &TerminalSnapshot, label: &str, state: &str) {
     );
 }
 
+#[allow(clippy::too_many_arguments)]
 fn assert_option_values(
     screen: &TerminalSnapshot,
     width: &str,
