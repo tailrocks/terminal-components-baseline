@@ -980,7 +980,7 @@ impl CapsuleScreen {
                 let open = cmd.ends_with("open");
                 self.export_kind = Some((reveal, open));
                 let input = TextInput::new(WidgetId::of("capsule.export.path"), "Path")
-                    .placeholder("workspace path or /jackin/run/…")
+                    .placeholder(&w.surfaces.vocabulary.export_placeholder)
                     .help("Copies to ~/Downloads/jackin/ on the host")
                     .plain_label();
                 let d = Dialog::prompt(WidgetId::of("capsule.export"), cmd, input, "Export");
@@ -1212,7 +1212,7 @@ impl CapsuleScreen {
             Prop::new("Agent", agent),
             Prop::new("Workdir", i.workdir.clone()),
             Prop::new("Instance", i.id.trim_start_matches("jk-").to_owned()),
-            Prop::new("Capsule", "0.9.2"),
+            Prop::new(w.surfaces.vocabulary.capsule.as_str(), "0.9.2"),
             Prop::new("Invocation ID", format!("{}-4f11", i.run_id)).copyable(),
             Prop::new(
                 "Host log",
@@ -2090,7 +2090,7 @@ impl Page<Jackin> for CapsuleScreen {
                     let empty = d.tabs.is_empty();
                     crate::world::refresh_snapshots(w);
                     if empty {
-                        cx.status("Last session ended · the Capsule shuts down");
+                        cx.status(w.surfaces.vocabulary.last_session_ended.clone());
                         self.end_instance(false, cx);
                     } else {
                         cx.status(if tab_closed {
@@ -2113,7 +2113,7 @@ impl Page<Jackin> for CapsuleScreen {
                     let empty = d.tabs.is_empty();
                     crate::world::refresh_snapshots(w);
                     if empty {
-                        cx.status("Last session ended · the Capsule shuts down");
+                        cx.status(w.surfaces.vocabulary.last_session_ended.clone());
                         self.end_instance(false, cx);
                     } else {
                         cx.status("Tab closed");
@@ -2221,7 +2221,7 @@ impl Page<Jackin> for CapsuleScreen {
                 cx.copy(v);
             }
             ("github", ModalResult::Info(InfoResult::Action(0))) => {
-                cx.status("Opened the pull request on the host (gated host action)");
+                cx.status(w.surfaces.vocabulary.github_pull_request.clone());
             }
             ("usage", _) => {}
             (_, ModalResult::Cancelled)
@@ -2385,8 +2385,8 @@ impl Page<Jackin> for CapsuleScreen {
         let d = self.daemon(w);
         let ws = d.map(|d| d.workspace.as_str()).unwrap_or("instance");
         match d.and_then(|d| d.active_tab().map(|t| d.tab_label(t, &|_| None))) {
-            Some(tab) => format!("Capsule › {ws} › {tab}"),
-            None => format!("Capsule › {ws}"),
+            Some(tab) => format!("{} › {ws} › {tab}", w.surfaces.vocabulary.capsule),
+            None => format!("{} › {ws}", w.surfaces.vocabulary.capsule),
         }
     }
 

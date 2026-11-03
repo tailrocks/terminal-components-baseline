@@ -66,8 +66,10 @@ tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/
 
 The legacy Tuiscotti 0.2 live API (git rev `a1ea27f`), `libtest-mimic` and
 the old `sha2` oracle pin are removed: nothing in the repository references
-them. No test constructs widgets or application state in-process, and no
-test calls event handlers directly. The immutable `visual-baseline` git
+them. No functional test constructs widgets or application state
+in-process, and none calls event handlers directly. The only in-process
+tests are the data tests described under
+[Library data tests](#library-data-tests). The immutable `visual-baseline` git
 tag and its release are untouched; they remain a historical visual oracle,
 not a test gate.
 
@@ -86,6 +88,21 @@ by the `App::visual` frozen check at the end of every functional test,
 with one approved `.tui.json` baseline per test in
 `tests/functional/baselines/`. The frozen `visual-baseline` tag is not
 moved, deleted or retargeted.
+
+## Library data tests
+
+`apps/jackin/tests/*.rs` (beside the `functional/` journeys) prove the
+data API that `jackin-console` offers another crate: `World::new`,
+`Snapshot`, the time source, external messages, `Vocabulary`, the
+account, launch-role and wizard data. They build the real `App` and
+`World` from the `fixtures` feature, drive it with keys through the
+`Application` trait, render into a test buffer and assert text and
+state. They add no visual baseline and are not journeys: a user-visible
+flow still needs a functional journey. `cargo nextest run --all-targets`
+runs them; the CI `functional` suite does not.
+
+Each test has a named break (a one-edit change to the library that must
+turn it red) recorded in [P9.3 red and green](P9.3-red-green.md).
 
 ## The test boundary
 

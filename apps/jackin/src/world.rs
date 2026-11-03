@@ -7,7 +7,10 @@ use crate::domain::account::{AccountId, AccountRegistry};
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorReport, DoctorState};
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus};
-use crate::domain::role::{AccountOrder, RoleFinding, RoleRecord};
+use crate::domain::role::{
+    AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE, RoleFinding,
+    RoleRecord,
+};
 use crate::domain::surfaces::Surfaces;
 use crate::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
@@ -614,7 +617,7 @@ impl World {
             ),
             None => (AccountOrder::Demo, None),
         };
-        crate::domain::precedence::resolve_account(
+        let mut resolved = crate::domain::precedence::resolve_account(
             provider,
             ws,
             role,
@@ -622,7 +625,11 @@ impl World {
             &self.accounts,
             order,
             binding,
-        )
+        );
+        if resolved.level == crate::domain::precedence::PrecedenceLevel::Session {
+            resolved.why = self.surfaces.vocabulary.session_choice.clone();
+        }
+        resolved
     }
 
     pub fn agent_mode(&self, agent: Agent) -> AuthMode {
@@ -679,6 +686,16 @@ impl World {
                 }
             }
         }
+        if let Some(limit) = &self.surfaces.agent_blocked
+            && agent != limit.launchable
+        {
+            return AgentOffer {
+                accounts: vec![],
+                preselected: None,
+                blocked: Some(limit.text.clone()),
+                configured: !ready.is_empty() || !blocked.is_empty(),
+            };
+        }
         if self.agent_mode(agent) == AuthMode::Ignore {
             return AgentOffer {
                 accounts: vec![],
@@ -702,6 +719,13 @@ impl World {
         }
         let block = if ready.is_empty() {
             blocked.first().map(|(id, why)| {
+                let launch_block = self
+                    .accounts
+                    .get(id)
+                    .and_then(|a| a.launch_blocked.as_deref());
+                if launch_block == Some(why.as_str()) {
+                    return why.clone();
+                }
                 let name = self
                     .accounts
                     .get(id)
@@ -720,6 +744,33 @@ impl World {
         }
     }
 
+    pub fn launch_role(&self, from: LaunchSource) -> LaunchRole {
+        match self.surfaces.launch_role {
+            LaunchRoleRule::Demo => LaunchRole::Role(match from {
+                LaunchSource::Row(ws) => ws
+                    .and_then(|x| x.roles.default.clone().or(x.roles.last.clone()))
+                    .unwrap_or_else(|| "the-architect".into()),
+                LaunchSource::CurrentDir(_) => "the-architect".into(),
+            }),
+            LaunchRoleRule::Configured => {
+                let (LaunchSource::Row(ws) | LaunchSource::CurrentDir(ws)) = from;
+                if let Some(default) = ws.and_then(|x| x.roles.default.clone()) {
+                    return LaunchRole::Role(default);
+                }
+                let mut allowed = self
+                    .roles
+                    .iter()
+                    .filter(|r| ws.is_none_or(|x| x.roles.allows(&r.name)))
+                    .map(|r| r.name.clone());
+                match (allowed.next(), allowed.next()) {
+                    (Some(only), None) => LaunchRole::Role(only),
+                    _ if ws.is_some() => LaunchRole::Unavailable(NO_DEFAULT_ROLE.into()),
+                    _ => LaunchRole::Unavailable(NO_SAVED_WORKSPACE.into()),
+                }
+            }
+        }
+    }
+
     pub fn offered_agents(
         &self,
         ws: Option<&Workspace>,
@@ -731,6 +782,12 @@ impl World {
             .filter(|(_, o)| o.configured)
             .collect()
     }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum LaunchSource<'a> {
+    Row(Option<&'a Workspace>),
+    CurrentDir(Option<&'a Workspace>),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

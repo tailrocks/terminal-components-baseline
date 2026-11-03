@@ -42,6 +42,25 @@ does not exist in this tree yet.
 and `sim` modules and the `jackin` binary. A consumer that supplies its
 own `World` and `Backend` turns it off.
 
+## jackin-console data hooks
+
+A consumer changes content, never structure, through `World` fields and
+`Surfaces` (`domain::surfaces`). Every default is the fixture behaviour,
+so the approved baselines do not move.
+
+| Hook | Default | What it changes |
+| --- | --- | --- |
+| `World::new(WorldParts)` | | Builds a `World` without a struct literal; later fields get defaults. |
+| `World.time` | `TimeSource::Sim` | `Wall(WallSource)` follows the host clock and UTC offset in `World::tick`. |
+| `World::apply(Snapshot)` | | Replaces workspaces, roles, instances, global config, accounts, surfaces and GitHub repos; keeps panes, jobs, clock and filesystem. |
+| `App::with_external`, `Remote` | no receiver | Lets another thread send `Remote::Msg` or `Remote::Reloaded` to the app. |
+| `Surfaces.vocabulary` | demo words | Names the project, sandbox, terminal and GitHub strings (`Vocabulary::openshell()` is the OpenShell set). |
+| `Surfaces.account_form` | four providers, three sources | Provider and source lists, labels, the preselected source and the 1Password note. |
+| `Account.launch_blocked`, `Account.edit_blocked` | `None` | A usage-only account is not offered for launch; an account the form cannot represent keeps its other actions. |
+| `Surfaces.agent_blocked` | `None` | Every agent except one is a disabled launch row with a reason. |
+| `Surfaces.launch_role` | `Demo` | `Configured` resolves the launch role from the default or the only allowed role, else the picker rows are disabled with a reason. |
+| `Surfaces.wizard` | `None` | One fixed destination, no edit step, no subfolders, and the name from the source folder. |
+
 ## Rules that hold today
 
 - Behaviour lives in the shared library (`src/core`, `src/shell`,

@@ -68,11 +68,7 @@ pub fn resolve_account(
     if let Some(s) = session
         && in_set(s)
     {
-        candidates.push((
-            PrecedenceLevel::Session,
-            s.clone(),
-            "Session choice · picked for this session in Capsule".into(),
-        ));
+        candidates.push((PrecedenceLevel::Session, s.clone(), String::new()));
     }
     let workspace_choice = || {
         ws.and_then(|w| w.accounts.preferred.get(&provider).map(|id| (w, id)))

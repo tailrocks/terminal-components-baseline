@@ -27,6 +27,7 @@ use super::modals::InfoDialog;
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::Effect;
 use crate::domain::agent::{Agent, AuthMode};
+use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::RoleName;
 use crate::world::{GlobalConfig, Msg, World, job};
 use junie_tui::ui::text::plural;
@@ -378,7 +379,7 @@ impl SettingsScreen {
         }
     }
 
-    fn render_general(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
+    fn render_general(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, w: &World) {
         let t = ctx.theme;
         let bg = t.canvas;
         let x = area.x + 2;
@@ -424,7 +425,15 @@ impl SettingsScreen {
             t.secondary().bg(bg).add_modifier(Modifier::BOLD),
         );
         y += 1;
-        buf.set_string(x, y, junie_tui::ui::reveal::cut(Rect::new(x, y, area.width.saturating_sub(4), 1), "Co-authored-by: <agent> <noreply@…>   ·   Signed-off-by: Alexey Zhokhov <alexey@chainargos.com>"), t.muted().bg(bg));
+        buf.set_string(
+            x,
+            y,
+            junie_tui::ui::reveal::cut(
+                Rect::new(x, y, area.width.saturating_sub(4), 1),
+                &w.surfaces.vocabulary.trailer_sample,
+            ),
+            t.muted().bg(bg),
+        );
     }
 
     fn render_trust(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
@@ -736,7 +745,7 @@ impl SettingsScreen {
         Outcome::Changed
     }
 
-    fn trust_key(&mut self, key: &Key, cx: &mut Cx) -> Outcome {
+    fn trust_key(&mut self, key: &Key, w: &World, cx: &mut Cx) -> Outcome {
         let n = self.pending.trust.len();
         if n == 0 {
             return Outcome::Ignored;
@@ -761,11 +770,12 @@ impl SettingsScreen {
             }
             KeyCode::Char('o') => {
                 let r = &self.pending.trust[self.trust_cursor];
-                if r.kind == "git" && r.source.contains("github.com") {
-                    cx.status(format!("Opened https://{} in the browser", r.source));
+                let template = if r.kind == "git" && r.source.contains("github.com") {
+                    &w.surfaces.vocabulary.trust_browser
                 } else {
-                    cx.status(format!("Revealed {} in Finder", r.source));
-                }
+                    &w.surfaces.vocabulary.trust_reveal
+                };
+                cx.status(fill_in(template, &[("source", r.source.as_str())]));
             }
             _ => return Outcome::Ignored,
         }
@@ -941,7 +951,7 @@ impl Page<Jackin> for SettingsScreen {
                     }
                 }
             }
-            StTab::Trust if focus == Some(TRUST) => self.trust_key(key, cx),
+            StTab::Trust if focus == Some(TRUST) => self.trust_key(key, w, cx),
             StTab::Agents if focus == Some(AGENTS) => self.agents_key(key, w, cx),
             t if t.cfg().is_some() && self.cfg.owns(t.cfg().unwrap(), focus) => {
                 let o = self.cfg.on_key(t.cfg().unwrap(), key, w, cx);
@@ -1111,7 +1121,7 @@ impl Page<Jackin> for SettingsScreen {
         );
         self.row_status = None;
         match self.tab {
-            StTab::General => self.render_general(body, buf, ctx),
+            StTab::General => self.render_general(body, buf, ctx, w),
             StTab::Trust => self.render_trust(body, buf, ctx),
             StTab::Agents => self.render_agents(body, buf, ctx, w),
             t => {
@@ -1319,7 +1329,7 @@ impl SettingsScreen {
                                 code: KeyCode::Char(' '),
                                 mods: ratatui::crossterm::event::KeyModifiers::NONE,
                             };
-                            return self.trust_key(&k, cx);
+                            return self.trust_key(&k, w, cx);
                         }
                         return Outcome::Changed;
                     }

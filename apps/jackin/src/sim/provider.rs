@@ -470,6 +470,7 @@ pub fn refresh_duration_ms(a: &Account) -> i64 {
         Provider::Zai => 1_050,
         Provider::Moonshot => 350,
         Provider::MiniMax => 1_600,
+        Provider::Cursor | Provider::Gemini | Provider::Openrouter => 700,
     };
     base + (a.id.len() as i64 % 5) * 40
 }

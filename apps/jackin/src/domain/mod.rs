@@ -8,4 +8,5 @@ pub mod precedence;
 pub mod role;
 pub mod surfaces;
 pub mod usage;
+pub mod vocabulary;
 pub mod workspace;

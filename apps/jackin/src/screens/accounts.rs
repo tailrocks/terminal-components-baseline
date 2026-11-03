@@ -37,7 +37,7 @@ use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::{CheckRow, Effect, FolderProbe, ValidationOutcome, apply_validation};
 use crate::domain::account::{
     Account, AccountId, AccountOrigin, CredentialSource, DetectedKind, DuplicateProbe, IssueCode,
-    Lifecycle, ValidationState, fingerprint, masked, tail_of,
+    Lifecycle, SourceKind, ValidationState, fingerprint, masked, tail_of,
 };
 use crate::domain::agent::{Provider, UsageSurface};
 use crate::domain::onepassword::OpReference;
@@ -54,13 +54,6 @@ pub const INSPECTOR: WidgetId = WidgetId::of("accounts.inspector");
 pub const SEAM: WidgetId = WidgetId::of("accounts.seam");
 pub const FORM: WidgetId = WidgetId::of("accounts.form");
 pub const MENU: WidgetId = WidgetId::of("accounts.menu");
-
-const REGISTERABLE: [Provider; 4] = [
-    Provider::Anthropic,
-    Provider::OpenAi,
-    Provider::XAi,
-    Provider::OpenCode,
-];
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Sel {
@@ -115,14 +108,22 @@ impl Default for AccountsScreen {
     }
 }
 
-fn provider_label(p: Provider) -> &'static str {
-    match p {
-        Provider::Anthropic => "Claude Code · Anthropic / Claude",
-        Provider::OpenAi => "Codex · OpenAI",
-        Provider::XAi => "Grok Build · xAI / Grok",
-        Provider::OpenCode => "OpenCode · OpenCode",
-        _ => "",
-    }
+fn chosen_provider(w: &World, index: usize) -> Provider {
+    let list = &w.surfaces.account_form.providers;
+    list[index.min(list.len() - 1)].provider
+}
+
+fn chosen_source(w: &World, index: usize) -> SourceKind {
+    let list = &w.surfaces.account_form.sources;
+    list[index.min(list.len() - 1)].kind
+}
+
+fn source_index(w: &World, kind: SourceKind) -> Option<usize> {
+    w.surfaces
+        .account_form
+        .sources
+        .iter()
+        .position(|s| s.kind == kind)
 }
 
 impl AccountsScreen {
@@ -501,20 +502,25 @@ impl AccountsScreen {
             Some(a) => format!("Edit account · {}", a.title()),
             None => "New account".into(),
         };
+        let data = &w.surfaces.account_form;
         let provider_idx = editing
             .map(|a| {
-                REGISTERABLE
+                data.providers
                     .iter()
-                    .position(|p| *p == a.provider)
+                    .position(|c| c.provider == a.provider)
                     .unwrap_or(0)
             })
             .unwrap_or(0);
-        let source_idx = match editing.map(|a| &a.source) {
-            Some(CredentialSource::LocalFolder { .. }) => 1,
-            Some(CredentialSource::PlainApiKey { .. }) => 2,
-            _ => 0,
+        let source_idx = match editing {
+            Some(a) => a
+                .source
+                .kind()
+                .and_then(|k| source_index(w, k))
+                .unwrap_or(0),
+            None => data.default_source.unwrap_or(0),
         };
-        let labels: Vec<&str> = REGISTERABLE.iter().map(|p| provider_label(*p)).collect();
+        let labels: Vec<&str> = data.providers.iter().map(|c| c.label.as_str()).collect();
+        let source_labels: Vec<&str> = data.sources.iter().map(|c| c.label.as_str()).collect();
         let mut fields = vec![
             FormField::input(
                 "name",
@@ -539,11 +545,7 @@ impl AccountsScreen {
                 RadioGroup::new(
                     FORM.sub("source"),
                     "Credential source",
-                    &[
-                        "1Password item / field  (recommended)",
-                        "Local agent folder",
-                        "Plain-text API key",
-                    ],
+                    &source_labels,
                     source_idx,
                 ),
             ),
@@ -554,7 +556,13 @@ impl AccountsScreen {
                 "not chosen",
                 "Choose…",
             ),
-            FormField::note("op_note", vec![]),
+            FormField::note(
+                "op_note",
+                data.op_note
+                    .iter()
+                    .map(|n| (n.clone(), Tone::Muted))
+                    .collect(),
+            ),
             FormField::input(
                 "folder",
                 TextInput::new(FORM.sub("folder"), "Local folder")
@@ -628,8 +636,8 @@ impl AccountsScreen {
     }
 
     fn reveal(form: &mut FormDialog, w: &World) {
-        let provider = REGISTERABLE[form.choice("provider").min(3)];
-        let source = form.choice("source");
+        let provider = chosen_provider(w, form.choice("provider"));
+        let source = chosen_source(w, form.choice("source"));
         form.set_note(
             "link",
             vec![(
@@ -642,12 +650,15 @@ impl AccountsScreen {
                 Tone::Muted,
             )],
         );
-        form.set_visible("op", source == 0);
-        form.set_visible("op_note", source == 0);
-        form.set_visible("folder", source == 1);
-        form.set_visible("browse", source == 1);
-        form.set_visible("key", source == 2);
-        form.set_visible("endpoint", provider.supports_endpoint() && source != 1);
+        form.set_visible("op", source == SourceKind::OnePassword);
+        form.set_visible("op_note", source == SourceKind::OnePassword);
+        form.set_visible("folder", source == SourceKind::LocalFolder);
+        form.set_visible("browse", source == SourceKind::LocalFolder);
+        form.set_visible("key", source == SourceKind::PlainApiKey);
+        form.set_visible(
+            "endpoint",
+            provider.supports_endpoint() && source != SourceKind::LocalFolder,
+        );
         if let Some(f) = form.field_mut("folder")
             && let super::modals::FieldKindW::Input(i) = &mut f.kind
         {
@@ -655,6 +666,8 @@ impl AccountsScreen {
                 Provider::Anthropic => "~/.claude".into(),
                 Provider::OpenAi => "~/.codex  (CODEX_HOME)".into(),
                 Provider::XAi => "~/.grok".into(),
+                Provider::Gemini => "~/.gemini".into(),
+                Provider::Cursor => "~/.cursor".into(),
                 _ => "~/.local/share/opencode".into(),
             };
             i.label = provider.folder_label().to_owned();
@@ -665,9 +678,8 @@ impl AccountsScreen {
             i.label = provider.plain_key_label().to_owned();
         }
         if let Some((_, b)) = form.actions.iter_mut().find(|(n, _)| n == "plain") {
-            b.disabled = source != 0;
+            b.disabled = source != SourceKind::OnePassword;
         }
-        let _ = w;
     }
 
     fn run_validation(
@@ -695,12 +707,12 @@ impl AccountsScreen {
                 })
                 .unwrap_or(0)
         };
-        let provider = REGISTERABLE[choice("provider").min(3)];
-        let source = choice("source");
+        let provider = chosen_provider(w, choice("provider"));
+        let source = chosen_source(w, choice("source"));
         let now = w.now_secs();
         let ctx = self.form.as_ref().ok_or("no form")?;
         match source {
-            0 => {
+            SourceKind::OnePassword => {
                 let r = ctx
                     .op_ref
                     .clone()
@@ -713,7 +725,7 @@ impl AccountsScreen {
                     now,
                 ))
             }
-            1 => {
+            SourceKind::LocalFolder => {
                 let path = get("folder");
                 if path.trim().is_empty() {
                     return Err("Enter or browse to the local agent folder".into());
@@ -729,7 +741,7 @@ impl AccountsScreen {
                     now,
                 ))
             }
-            _ => {
+            SourceKind::PlainApiKey => {
                 let key = get("key");
                 if key.trim().is_empty() {
                     return Err("API key required: the field is empty".into());
@@ -806,8 +818,8 @@ impl AccountsScreen {
             });
             return;
         }
-        let provider = REGISTERABLE[choice("provider").min(3)];
-        let source_idx = choice("source");
+        let provider = chosen_provider(w, choice("provider"));
+        let source_kind = chosen_source(w, choice("source"));
 
         let outcome = match self.run_validation(&values, w) {
             Ok(o) => o,
@@ -820,9 +832,9 @@ impl AccountsScreen {
             return;
         };
         let editing = ctx.editing.clone();
-        let source = match source_idx {
-            0 => CredentialSource::OnePassword(ctx.op_ref.clone().unwrap()),
-            1 => {
+        let source = match source_kind {
+            SourceKind::OnePassword => CredentialSource::OnePassword(ctx.op_ref.clone().unwrap()),
+            SourceKind::LocalFolder => {
                 let path = get("folder").trim().to_owned();
                 let detected = match w.backend.probe_folder(&path) {
                     FolderProbe::Found(k) => k,
@@ -830,7 +842,7 @@ impl AccountsScreen {
                 };
                 CredentialSource::LocalFolder { path, detected }
             }
-            _ => {
+            SourceKind::PlainApiKey => {
                 let key = get("key");
                 CredentialSource::PlainApiKey {
                     fingerprint: fingerprint(&key),
@@ -905,7 +917,7 @@ impl AccountsScreen {
             ),
         };
         let purpose = get("purpose").trim().to_owned();
-        let endpoint = if provider.supports_endpoint() && source_idx != 1 {
+        let endpoint = if provider.supports_endpoint() && source_kind != SourceKind::LocalFolder {
             let e = get("endpoint").trim().to_owned();
             if e.is_empty() { None } else { Some(e) }
         } else {
@@ -1119,7 +1131,7 @@ impl AccountsScreen {
                 Some(a) if a.mutations_allowed() => vec![
                     mk("refresh", "Refresh", ButtonKind::Secondary),
                     mk("validate", "Validate", ButtonKind::Secondary),
-                    mk("edit", "Edit…", ButtonKind::Secondary),
+                    mk("edit", "Edit…", ButtonKind::Secondary).disabled(!a.edit_allowed()),
                     mk("default", "Set default", ButtonKind::Secondary)
                         .disabled(a.default_for_provider || !a.enabled),
                     mk(
@@ -1154,7 +1166,7 @@ impl AccountsScreen {
             ("validate", Some(id)) => self.validate_account(&id, w, cx),
             ("edit", Some(id)) => {
                 if let Some(a) = w.accounts.get(&id).cloned() {
-                    self.open_form(Some(&a), w, cx);
+                    self.edit_account(&a, w, cx);
                 }
             }
             ("default", Some(id)) => self.set_default(&id, w, cx),
@@ -1164,6 +1176,14 @@ impl AccountsScreen {
             _ => return Outcome::Consumed,
         }
         Outcome::Changed
+    }
+
+    fn edit_account(&mut self, a: &Account, w: &World, cx: &mut Cx) {
+        match (&a.edit_blocked, a.mutations_allowed()) {
+            (_, false) => cx.status("Discovered accounts are read-only · register a copy with a"),
+            (Some(why), true) => cx.status(why.clone()),
+            (None, true) => self.open_form(Some(a), w, cx),
+        }
     }
 
     fn menu_items(&self, sel: &Sel, w: &World) -> (String, Vec<(MenuItem, &'static str)>) {
@@ -1181,6 +1201,10 @@ impl AccountsScreen {
                         m.reason(read_only)
                     }
                 };
+                let edit = match (&a.edit_blocked, a.mutations_allowed()) {
+                    (Some(why), true) => item("Edit…", "e").reason(why),
+                    _ => gate(item("Edit…", "e")),
+                };
                 let default = if !a.mutations_allowed() {
                     item("Set default", "Space").reason(read_only)
                 } else if a.default_for_provider {
@@ -1196,7 +1220,7 @@ impl AccountsScreen {
                         (item("Refresh", "r"), "refresh"),
                         (item("Validate", "v"), "validate"),
                         (item("Show usage", "m").separator(), "usage"),
-                        (gate(item("Edit…", "e")), "edit"),
+                        (edit, "edit"),
                         (default, "default"),
                         (
                             gate(item(if a.enabled { "Disable" } else { "Enable" }, "t"))
@@ -2208,11 +2232,7 @@ impl Page<Jackin> for AccountsScreen {
                 }
                 KeyCode::Char('e') if key.plain() => {
                     if let Some(a) = self.selected_account(w).cloned() {
-                        if a.mutations_allowed() {
-                            self.open_form(Some(&a), w, cx);
-                        } else {
-                            cx.status("Discovered accounts are read-only · register a copy with a");
-                        }
+                        self.edit_account(&a, w, cx);
                         return Outcome::Changed;
                     }
                 }
@@ -2468,15 +2488,14 @@ impl Page<Jackin> for AccountsScreen {
                         cx.open(b, LayerTag::new("browse"));
                     }
                     "plain" => {
-                        let w2 = w.op.clone();
+                        let plain = source_index(w, SourceKind::PlainApiKey).unwrap_or(0);
                         cx.with_top::<FormDialog>(move |f| {
                             if let Some(field) = f.field_mut("source")
                                 && let super::modals::FieldKindW::Radio(r) = &mut field.kind
                             {
-                                r.selected = 2;
-                                r.cursor = 2;
+                                r.selected = plain;
+                                r.cursor = plain;
                             }
-                            let _ = &w2;
                         });
                         cx.with_top::<FormDialog>(|f| {
                             f.set_visible("op", false);
@@ -2539,19 +2558,18 @@ impl Page<Jackin> for AccountsScreen {
                     ctx.validation = None;
                 }
                 let endpoint = w.op.endpoint_of(&r);
+                let caveat = w.surfaces.account_form.op_note.clone();
                 cx.with_top::<FormDialog>(move |f| {
                     f.set_chooser("op", &path, None);
-                    f.set_note(
-                        "op_note",
-                        vec![
-                            (meta, Tone::Muted),
-                            (
-                                "only the reference is saved · the value is resolved at launch"
-                                    .into(),
-                                Tone::Faint,
-                            ),
-                        ],
-                    );
+                    let mut lines = vec![
+                        (meta, Tone::Muted),
+                        (
+                            "only the reference is saved · the value is resolved at launch".into(),
+                            Tone::Faint,
+                        ),
+                    ];
+                    lines.extend(caveat.map(|n| (n, Tone::Muted)));
+                    f.set_note("op_note", lines);
                     f.set_note("validation", vec![]);
                     if let Some(e) = endpoint {
                         f.set_text(
@@ -2669,11 +2687,14 @@ impl Page<Jackin> for AccountsScreen {
             Sel::Account(id) => {
                 let account = w.accounts.get(id);
                 let reg = account.is_some_and(|a| a.mutations_allowed());
+                let editable = account.is_some_and(|a| a.edit_allowed());
                 let enabled = account.is_some_and(|a| a.enabled);
                 v.push(hint("Enter", "Details"));
                 v.push(hint("r", "Refresh"));
-                if reg {
+                if editable {
                     v.push(hint("e", "Edit…"));
+                }
+                if reg {
                     v.push(hint("Space", "Default"));
                     v.push(junie_tui::widgets::keyhint::toggle_hint(
                         "t", enabled, "Disable", "Enable",

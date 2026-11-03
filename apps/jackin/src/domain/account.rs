@@ -347,6 +347,9 @@ pub struct Account {
 
     pub endpoint: Option<Endpoint>,
     pub usage: AccountUsage,
+
+    pub launch_blocked: Option<String>,
+    pub edit_blocked: Option<String>,
 }
 
 impl Account {
@@ -371,6 +374,8 @@ impl Account {
             issue: None,
             endpoint: None,
             usage: AccountUsage::none(),
+            launch_blocked: None,
+            edit_blocked: None,
         }
     }
 
@@ -393,6 +398,10 @@ impl Account {
 
     pub fn mutations_allowed(&self) -> bool {
         self.origin == AccountOrigin::Registered
+    }
+
+    pub fn edit_allowed(&self) -> bool {
+        self.mutations_allowed() && self.edit_blocked.is_none()
     }
 
     pub fn title(&self) -> String {
@@ -560,5 +569,74 @@ impl AccountRegistry {
                 .then(a.display_name.cmp(&b.display_name))
         });
         v
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SourceKind {
+    OnePassword,
+    LocalFolder,
+    PlainApiKey,
+}
+
+impl CredentialSource {
+    pub fn kind(&self) -> Option<SourceKind> {
+        match self {
+            CredentialSource::OnePassword(_) => Some(SourceKind::OnePassword),
+            CredentialSource::LocalFolder { .. } => Some(SourceKind::LocalFolder),
+            CredentialSource::PlainApiKey { .. } => Some(SourceKind::PlainApiKey),
+            CredentialSource::HostEnv { .. } => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProviderChoice {
+    pub provider: Provider,
+    pub label: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SourceChoice {
+    pub kind: SourceKind,
+    pub label: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AccountForm {
+    pub providers: Vec<ProviderChoice>,
+    pub sources: Vec<SourceChoice>,
+    pub default_source: Option<usize>,
+    pub op_note: Option<String>,
+}
+
+impl Default for AccountForm {
+    fn default() -> Self {
+        let provider = |provider, label: &str| ProviderChoice {
+            provider,
+            label: label.into(),
+        };
+        let source = |kind, label: &str| SourceChoice {
+            kind,
+            label: label.into(),
+        };
+        Self {
+            providers: vec![
+                provider(Provider::Anthropic, "Claude Code · Anthropic / Claude"),
+                provider(Provider::OpenAi, "Codex · OpenAI"),
+                provider(Provider::XAi, "Grok Build · xAI / Grok"),
+                provider(Provider::OpenCode, "OpenCode · OpenCode"),
+            ],
+            sources: vec![
+                source(
+                    SourceKind::OnePassword,
+                    "1Password item / field  (recommended)",
+                ),
+                source(SourceKind::LocalFolder, "Local agent folder"),
+                source(SourceKind::PlainApiKey, "Plain-text API key"),
+            ],
+            default_source: None,
+            op_note: None,
+        }
     }
 }

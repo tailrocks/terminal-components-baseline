@@ -64,6 +64,12 @@ impl Effective {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WizardDefaults {
+    pub destination: String,
+    pub destination_label: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Usability {
     Ready,
 
@@ -99,6 +105,9 @@ pub struct EffectiveAccount {
 pub fn usability_of(a: &super::account::Account) -> Usability {
     if !a.enabled {
         return Usability::Disabled("disabled globally".into());
+    }
+    if let Some(why) = &a.launch_blocked {
+        return Usability::Invalid(why.clone());
     }
     match a.lifecycle {
         Lifecycle::Available => Usability::Ready,

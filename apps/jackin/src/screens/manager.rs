@@ -37,9 +37,11 @@ use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::Effect;
 use crate::domain::agent::Agent;
 use crate::domain::instance::{DaemonSnapshot, InstanceStatus};
+use crate::domain::role::LaunchRole;
+use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::LaunchPlan;
-use crate::world::{DaemonHealth, Health, Msg, World, job};
+use crate::world::{DaemonHealth, Health, LaunchSource, Msg, World, job};
 use junie_tui::ui::context::ContextAnchor;
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::menu::MenuItem;
@@ -398,31 +400,52 @@ impl ManagerScreen {
     }
 
     fn open_launch_picker(&mut self, w: &World, cx: &mut Cx) {
-        let (ws, role) = match &self.selected {
-            RowKey::Workspace(id) => {
-                let ws = w.workspace(*id);
+        let (ws, launch_role) = match &self.selected {
+            RowKey::Workspace(id) => (
+                Some(*id),
+                w.launch_role(LaunchSource::Row(w.workspace(*id))),
+            ),
+            RowKey::CurrentDir => {
+                let saved = w.cwd_workspace();
                 (
-                    Some(*id),
-                    ws.and_then(|x| x.roles.default.clone().or(x.roles.last.clone()))
-                        .unwrap_or("the-architect".into()),
+                    saved.map(|x| x.id),
+                    w.launch_role(LaunchSource::CurrentDir(saved)),
                 )
             }
-            RowKey::CurrentDir => (w.cwd_workspace().map(|x| x.id), "the-architect".into()),
             _ => return,
         };
-        self.pending_launch = Some((ws, role.clone()));
+        let (role, unavailable) = match launch_role {
+            LaunchRole::Role(role) => (role, None),
+            LaunchRole::Unavailable(why) => (String::new(), Some(why)),
+        };
+        self.pending_launch = unavailable.is_none().then(|| (ws, role.clone()));
         let mut p = Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent");
         p.set_searchable(false);
         p.list.width = (84, 84);
+        let shown_role = if unavailable.is_some() {
+            "no role"
+        } else {
+            role.as_str()
+        };
         let mut scope = match ws.and_then(|id| w.workspace(id)) {
-            Some(x) => format!("{} › {role}", x.name),
-            None => format!("{} › {role}", w.tilde(&w.cwd)),
+            Some(x) => format!("{} › {shown_role}", x.name),
+            None => format!("{} › {shown_role}", w.tilde(&w.cwd)),
         };
         if w.docker_on(ws, &role) {
             scope.push_str(" · Docker is on for this launch");
         }
         p.scope = Some(scope);
-        let (items, targets) = agent_rows(w, ws, Some(&role));
+        let (items, targets) = agent_rows(w, ws, unavailable.is_none().then_some(role.as_str()));
+        let items = match &unavailable {
+            Some(why) => items
+                .into_iter()
+                .map(|i| Item {
+                    tag: Some("unavailable".into()),
+                    ..i.detail(why.clone()).disabled(true)
+                })
+                .collect(),
+            None => items,
+        };
         p.set_items(items);
         self.picker_targets = targets;
         cx.open(p, LayerTag::new("launch"));
@@ -515,8 +538,9 @@ impl ManagerScreen {
             }
             InstanceStatus::FailedSetup => {
                 cx.error(format!(
-                    "Cannot reconnect: {} never reached the Capsule · launch again",
-                    id.trim_start_matches("jk-")
+                    "Cannot reconnect: {} {} · launch again",
+                    id.trim_start_matches("jk-"),
+                    w.surfaces.vocabulary.never_reached
                 ));
             }
             InstanceStatus::CleanExited => {
@@ -565,7 +589,9 @@ impl ManagerScreen {
                 format!(
                     "{} · {}",
                     i.workdir,
-                    plural(ws.map(|x| x.mounts.len()).unwrap_or(1), "mount", "mounts")
+                    w.surfaces
+                        .vocabulary
+                        .count(ws.map(|x| x.mounts.len()).unwrap_or(1))
                 ),
             ),
             Prop::new("Run id", i.run_id.clone()).copyable(),
@@ -715,7 +741,10 @@ impl ManagerScreen {
         };
         let repo = w.github.iter().find(|r| r.full_name.ends_with(&ws.name));
         match repo {
-            Some(r) => cx.status(format!("Opened {} on the host", r.url)),
+            Some(r) => cx.status(fill_in(
+                &w.surfaces.vocabulary.github_workspace,
+                &[("url", r.url.as_str())],
+            )),
             None => cx.status(format!("No GitHub source for {}", ws.name)),
         }
     }
@@ -737,7 +766,7 @@ impl ManagerScreen {
                 } else {
                     let why = match i.status {
                         InstanceStatus::Crashed => "crashed (exit 137) · inspect or purge it",
-                        InstanceStatus::FailedSetup => "never reached the Capsule",
+                        InstanceStatus::FailedSetup => w.surfaces.vocabulary.never_reached.as_str(),
                         _ => "exited · launch the workspace again",
                     };
                     item("Reconnect", "Enter").reason(why)
@@ -774,7 +803,10 @@ impl ManagerScreen {
                     (item("Launch…", "Enter"), "launch"),
                     (item("Edit", "e"), "edit"),
                     (item("Prewarm", "w"), "prewarm"),
-                    (item("Open on GitHub", "o").separator(), "github"),
+                    (
+                        item(&w.surfaces.vocabulary.github_menu, "o").separator(),
+                        "github",
+                    ),
                     (item("Delete…", "d").danger(), "delete"),
                 ],
             ),
@@ -782,7 +814,7 @@ impl ManagerScreen {
                 let saved = w.cwd_workspace().is_some();
                 let not_saved = "not a saved workspace";
                 let edit = item("Edit", "e");
-                let github = item("Open on GitHub", "o");
+                let github = item(&w.surfaces.vocabulary.github_menu, "o");
                 (
                     "Current directory".into(),
                     vec![
@@ -1250,18 +1282,22 @@ impl ManagerScreen {
                         let mut facts = vec![
                             Prop::new("Working dir", ws.workdir.clone()),
                             Prop::new(
-                                "Mounts",
+                                w.surfaces.vocabulary.project_tab.as_str(),
                                 if ws.mounts.is_empty() {
                                     "none".into()
                                 } else {
                                     ws.mounts
                                         .iter()
                                         .map(|m| {
-                                            format!(
-                                                "{} · {} {}",
-                                                w.tilde(m.source_label()),
-                                                m.mode_label(),
-                                                m.isolation.label().to_lowercase()
+                                            let source = w.tilde(m.source_label());
+                                            let isolation = m.isolation.label().to_lowercase();
+                                            fill_in(
+                                                &w.surfaces.vocabulary.project_card,
+                                                &[
+                                                    ("source", source.as_str()),
+                                                    ("mode", m.mode_label()),
+                                                    ("isolation", isolation.as_str()),
+                                                ],
                                             )
                                         })
                                         .collect::<Vec<_>>()
@@ -1392,10 +1428,12 @@ impl ManagerScreen {
                         }
                     }
                     None => {
-                        let e = EmptyState::new("Create a workspace from this directory.").hint(&format!(
-                            "{} is mounted at its own path inside the Construct. Enter launches with defaults; n creates a saved workspace.",
-                            w.tilde(&w.cwd)
-                        ));
+                        let e = EmptyState::new("Create a workspace from this directory.").hint(
+                            &fill_in(
+                                &w.surfaces.vocabulary.first_use,
+                                &[("path", w.tilde(&w.cwd).as_str())],
+                            ),
+                        );
                         empty::render(
                             Rect::new(
                                 inner.x,
@@ -1461,7 +1499,11 @@ impl ManagerScreen {
                     ),
                     Prop::new(
                         "Lifecycle",
-                        format!("{} · {}", i.status.label(), i.status.description()),
+                        format!(
+                            "{} · {}",
+                            i.status.label(),
+                            w.surfaces.vocabulary.status_description(i.status)
+                        ),
                     )
                     .tone(match i.status {
                         InstanceStatus::Crashed | InstanceStatus::FailedSetup => Tone::Error,
@@ -2617,7 +2659,7 @@ impl ManagerScreen {
                         format!(
                             "{} · {} · {}",
                             ws.workdir,
-                            plural(ws.mounts.len(), "mount", "mounts"),
+                            w.surfaces.vocabulary.count(ws.mounts.len()),
                             plural(ws.env_count(), "var", "vars")
                         ),
                         Tone::Secondary,
