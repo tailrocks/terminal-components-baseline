@@ -23,7 +23,7 @@ const ID: WidgetId = WidgetId::of("fixedcontrols");
 const KEEP_AWAKE: &str = "Always off · the host decides";
 const DIRTY_EXIT: &str = "Always ask · the policy is managed";
 const TYPED_KEY: &str = "Not available · managed by policy";
-const DISABLE: &str = "Cannot disable · every item stays on";
+const DISABLE: &str = "Cannot disable · all stay on";
 const MANAGED_ROW: &str = "Managed by policy · cannot be changed";
 
 pub fn page() -> Box<dyn Page> {
@@ -194,7 +194,7 @@ impl Page for FixedControlsPage {
         "Fixed controls"
     }
     fn blurb(&self) -> &'static str {
-        "Controls with one true value: focusable, drawn disabled, refusing every edit with a reason"
+        "One true value: focusable, drawn disabled, refuses every edit"
     }
 
     fn render(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {

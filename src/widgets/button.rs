@@ -122,8 +122,12 @@ impl Button {
         !self.disabled && !self.busy && !self.control.is_fixed()
     }
 
+    pub fn refuse(&self) -> bool {
+        !self.disabled && !self.busy && self.control.refuse()
+    }
+
     pub fn activate(&mut self) -> (Outcome, bool) {
-        if !self.disabled && !self.busy && self.control.refuse() {
+        if self.refuse() {
             (Outcome::Consumed, false)
         } else if self.can_activate() {
             self.toggle_if_needed();

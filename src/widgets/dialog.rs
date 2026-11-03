@@ -806,6 +806,11 @@ impl Dialog {
 
     fn finish(&mut self, r: DialogResult) -> Outcome {
         if let DialogResult::Action(i) = r
+            && self.actions.get(i).is_some_and(Button::refuse)
+        {
+            return Outcome::Consumed;
+        }
+        if let DialogResult::Action(i) = r
             && Some(i) == self.confirm_index
             && !self.armed()
         {

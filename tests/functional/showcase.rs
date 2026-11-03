@@ -1102,11 +1102,11 @@ fn showcase_terminal_pane_fits_120x20() {
 const FIXED_KEEP_AWAKE: &str = "Always off · the host decides";
 const FIXED_DIRTY_EXIT: &str = "Always ask · the policy is managed";
 const FIXED_TYPED_KEY: &str = "Not available · managed by policy";
-const FIXED_DISABLE: &str = "Cannot disable · every item stays on";
+const FIXED_DISABLE: &str = "Cannot disable · all stay on";
 const FIXED_MANAGED_ROW: &str = "Managed by policy · cannot be changed";
 
-fn fixed_page(name: &str, opts: &[&str], cols: u16, rows: u16) -> App {
-    let mut args = vec!["--page", "fixedcontrols", "--motion", "reduced"];
+fn fixed_page_in(name: &str, opts: &[&str], cols: u16, rows: u16, motion: &str) -> App {
+    let mut args = vec!["--page", "fixedcontrols", "--motion", motion];
     for opt in opts {
         args.extend(["--opt", opt]);
     }
@@ -1114,6 +1114,10 @@ fn fixed_page(name: &str, opts: &[&str], cols: u16, rows: u16) -> App {
     app.wait_text("Keep awake");
     app.settle();
     app
+}
+
+fn fixed_page(name: &str, opts: &[&str], cols: u16, rows: u16) -> App {
+    fixed_page_in(name, opts, cols, rows, "reduced")
 }
 
 fn footer_row(screen: &TerminalSnapshot) -> String {
@@ -1128,8 +1132,12 @@ fn refused_with(app: &App, reason: &str) -> TerminalSnapshot {
 }
 
 fn status_gone(app: &App, reason: &str) -> TerminalSnapshot {
-    app.advance_clock(6_000);
     app.wait_screen("status expired", |s| !footer_row(s).contains(reason))
+}
+
+fn status_cleared(app: &App, reason: &str) -> TerminalSnapshot {
+    app.key("f9");
+    app.wait_screen("status cleared", |s| !footer_row(s).contains(reason))
 }
 
 fn row_with(screen: &TerminalSnapshot, needle: &str) -> String {
@@ -1138,29 +1146,44 @@ fn row_with(screen: &TerminalSnapshot, needle: &str) -> String {
 
 #[test]
 fn showcase_fixed_controls_refuse_with_a_reason_and_never_leak_it() {
-    let app = fixed_page("showcase-fixed", &[], 120, 40);
+    let app = fixed_page_in(
+        "showcase-fixed",
+        &["fixedcontrols.status=sticky"],
+        120,
+        40,
+        "paused",
+    );
     let initial = app.screen();
     assert!(row_with(&initial, "Keep awake").contains(FIXED_KEEP_AWAKE));
     assert!(text(&initial).contains(FIXED_DIRTY_EXIT));
     assert!(!footer_row(&initial).contains(FIXED_KEEP_AWAKE));
 
-    app.click(inside(find(&initial, "Keep awake")));
-    let clicked = refused_with(&app, FIXED_KEEP_AWAKE);
-    assert!(text(&clicked).contains("[ ] Keep awake"));
-    assert!(row_with(&clicked, "Keep awake").contains('▎'));
+    app.key("tab");
+    app.key("tab");
     app.key("space");
     let keyed = refused_with(&app, FIXED_KEEP_AWAKE);
     assert!(text(&keyed).contains("[ ] Keep awake"));
+    assert!(row_with(&keyed, "Keep awake").contains('▎'));
     assert_eq!(footer_row(&keyed).matches(FIXED_KEEP_AWAKE).count(), 1);
+    status_cleared(&app, FIXED_KEEP_AWAKE);
+    app.click(inside(find(&app.screen(), "Keep awake")));
+    let clicked = refused_with(&app, FIXED_KEEP_AWAKE);
+    assert!(text(&clicked).contains("[ ] Keep awake"));
+    status_cleared(&app, FIXED_KEEP_AWAKE);
 
-    status_gone(&app, FIXED_KEEP_AWAKE);
     app.key("tab");
-    app.settle();
-    assert!(!footer_row(&app.screen()).contains(FIXED_KEEP_AWAKE));
-    app.click(inside(find(&app.screen(), "Notify on exit")));
+    app.key("space");
     app.wait_text("[ ] Notify on exit");
     assert!(!footer_row(&app.screen()).contains(FIXED_KEEP_AWAKE));
+    app.click(inside(find(&app.screen(), "Notify on exit")));
+    app.wait_text("[✓] Notify on exit");
+    assert!(!footer_row(&app.screen()).contains(FIXED_KEEP_AWAKE));
 
+    app.key("tab");
+    app.key("enter");
+    let select = refused_with(&app, FIXED_DIRTY_EXIT);
+    assert!(!text(&select).contains("keep"));
+    status_cleared(&app, FIXED_DIRTY_EXIT);
     let label = find(&app.screen(), "On dirty exit");
     app.click(Point {
         x: label.x + 2,
@@ -1168,14 +1191,18 @@ fn showcase_fixed_controls_refuse_with_a_reason_and_never_leak_it() {
     });
     let select = refused_with(&app, FIXED_DIRTY_EXIT);
     assert!(!text(&select).contains("keep"));
-    app.key("enter");
-    refused_with(&app, FIXED_DIRTY_EXIT);
+    status_cleared(&app, FIXED_DIRTY_EXIT);
 
+    app.key("tab");
+    app.key("enter");
+    refused_with(&app, FIXED_DISABLE);
+    status_cleared(&app, FIXED_DISABLE);
     app.click(inside(find(&app.screen(), "Disable")));
     refused_with(&app, FIXED_DISABLE);
+    status_cleared(&app, FIXED_DISABLE);
 
-    app.click(inside(find(&app.screen(), "Password manager")));
-    app.wait_text("(●) Password manager");
+    app.key("tab");
+    app.key("down");
     app.key("down");
     let landed = app.wait_screen("cursor lands on the fixed option", |s| {
         row_with(s, "Typed key").contains('▎')
@@ -1186,20 +1213,74 @@ fn showcase_fixed_controls_refuse_with_a_reason_and_never_leak_it() {
     app.key("space");
     let radio = refused_with(&app, FIXED_TYPED_KEY);
     assert!(text(&radio).contains("(●) Password manager"));
+    status_cleared(&app, FIXED_TYPED_KEY);
     app.click(inside(find(&app.screen(), "Typed key")));
     let radio = refused_with(&app, FIXED_TYPED_KEY);
     assert!(text(&radio).contains("(●) Password manager"));
+    status_cleared(&app, FIXED_TYPED_KEY);
 
+    app.key("tab");
+    app.key("down");
+    app.wait_screen("cursor lands on the fixed row", |s| {
+        row_with(s, "Managed policy").contains('▎')
+    });
+    app.key("space");
+    let list = refused_with(&app, FIXED_MANAGED_ROW);
+    assert!(!row_with(&list, "Managed policy").contains('✓'));
+    status_cleared(&app, FIXED_MANAGED_ROW);
     app.click(inside(find(&app.screen(), "Managed policy")));
     let list = refused_with(&app, FIXED_MANAGED_ROW);
     assert!(!row_with(&list, "Managed policy").contains('✓'));
-    status_gone(&app, FIXED_MANAGED_ROW);
+    status_cleared(&app, FIXED_MANAGED_ROW);
     app.click(inside(find(&app.screen(), "Team policy")));
     let live = app.wait_screen("a live row ticks", |s| {
         row_with(s, "Team policy").contains('✓')
     });
     assert!(!footer_row(&live).contains(FIXED_MANAGED_ROW));
     app.finish();
+}
+
+#[test]
+fn showcase_fixed_controls_reason_fades_after_five_seconds() {
+    let app = fixed_page("showcase-fixed-fade", &[], 120, 40);
+    app.key("tab");
+    app.key("tab");
+    app.key("space");
+    refused_with(&app, FIXED_KEEP_AWAKE);
+    let gone = status_gone(&app, FIXED_KEEP_AWAKE);
+    assert!(text(&gone).contains("[ ] Keep awake"));
+    app.finish();
+}
+
+#[test]
+fn showcase_fixed_controls_sticky_reason_stays_until_the_next_key() {
+    for (mode, stays) in [("5 s", true), ("sticky", false)] {
+        let value = format!("fixedcontrols.status={mode}");
+        let app = fixed_page_in(
+            &format!("showcase-fixed-{}", mode.replace(' ', "")),
+            &[&value],
+            120,
+            40,
+            "paused",
+        );
+        app.key("tab");
+        app.key("tab");
+        app.key("space");
+        refused_with(&app, FIXED_KEEP_AWAKE);
+        app.key("tab");
+        let next = app.wait_screen("focus moves to the live sibling", |s| {
+            row_with(s, "Notify on exit").contains('▎')
+        });
+        if stays {
+            assert!(footer_row(&next).contains(FIXED_KEEP_AWAKE), "{mode}");
+        } else {
+            let cleared = app.wait_screen("the next key clears a sticky reason", |s| {
+                !footer_row(s).contains(FIXED_KEEP_AWAKE)
+            });
+            assert!(!footer_row(&cleared).contains(FIXED_KEEP_AWAKE), "{mode}");
+        }
+        app.finish();
+    }
 }
 
 #[test]

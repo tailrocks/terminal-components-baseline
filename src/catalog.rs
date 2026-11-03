@@ -1399,6 +1399,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("widgets::button::Button::width"),
     Capability::function("widgets::button::Button::hint"),
     Capability::function("widgets::button::Button::can_activate"),
+    Capability::function("widgets::button::Button::refuse"),
     Capability::function("widgets::button::Button::activate"),
     Capability::function("widgets::button::Button::on_key"),
     Capability::function("widgets::button::Button::on_click"),

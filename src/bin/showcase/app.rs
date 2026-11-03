@@ -1007,13 +1007,8 @@ impl App {
         if i != self.page().index() {
             requests = shell::background(requests).collect();
         }
-        let posted = !requests.is_empty();
         self.apply_requests(requests, i);
-        if posted {
-            out.or(Outcome::Changed)
-        } else {
-            out
-        }
+        out
     }
 
     fn apply_requests(&mut self, requests: Vec<Request>, owner: usize) {
