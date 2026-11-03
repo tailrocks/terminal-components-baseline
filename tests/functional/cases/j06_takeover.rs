@@ -331,10 +331,13 @@ fn j06_takeover_route() {
         _clock.elapsed() < Duration::from_secs(15),
         "payments attach was too late to catch the takeover"
     );
+    // Capsule ticks are 80 ms of sim time. A loaded partition slips that
+    // timer, so the 45 s deadline can land after 70 s of wall time. 84 s
+    // still finishes inside the 90 s profile kill.
     let overlay = wait_for(
         &app,
         "takeover overlay",
-        Duration::from_secs(70),
+        Duration::from_secs(84),
         || {},
         wide_overlay,
     );
