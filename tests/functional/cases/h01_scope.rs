@@ -212,7 +212,15 @@ fn h01_scope_route() {
 #[test]
 fn h01_scope_scope() {
     let app = open("h01-scope-scope", "monorepo-child");
-    let here = app.wait_text(HERE);
+    // The first paint lists Suggested here before Recent here is drawn.
+    let here = app.wait_screen("here scope list", |screen| {
+        let visible = text(screen);
+        visible.contains(HERE)
+            && visible.contains("Suggested here")
+            && visible.contains("nothing used here yet")
+            && visible.contains("acme › frontend")
+            && !visible.contains(PARENT_SET)
+    });
     see(
         &here,
         &[
