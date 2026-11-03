@@ -888,8 +888,12 @@ fn s01_inspector_sections() {
 fn s01_sidebar_all() {
     let args = ["--page", "overview", "--nav", "all"];
     let app = launch("s01-nav-all", &args, 120, 40);
-    let open = app.wait_text("Chrome");
-    assert!(text(&open).contains("Buttons"));
+    // The first paint lists Chrome before the rest of the expanded groups
+    // arrive. Buttons is the row that proves All has opened Inputs.
+    let open = app.wait_screen("nav all expanded", |screen| {
+        let visible = text(screen);
+        visible.contains("Chrome") && visible.contains("Buttons")
+    });
     assert!(row_text(&open, 0).contains("Overview"));
     expect_visual(
         &app,
