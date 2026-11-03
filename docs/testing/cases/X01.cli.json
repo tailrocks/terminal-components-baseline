@@ -6,27 +6,30 @@
       "owner_task": "X01.cli",
       "application": "cross",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "showcase --help is parsed by junie_tui::cli::parse in src/cli.rs and exits before junie_tui::shell::run. The command about in src/bin/showcase/main.rs is the long_about \"Junie-tui — Junie-inspired Ratatui design system laboratory\". Measured on the reference showcase, that launch exits 0. The test reads the about line at 200×80, where the help still fits, and calls expect_exited(0). It does not call finish, so Ctrl+Q is not sent. The overview blurb in src/bin/showcase/pages/overview.rs stays absent.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "0000000000000000000000000000000000000000",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "X01.cli",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "showcase --help --color truecolor --motion reduced",
+      "return_path": "the process exits 0 from clap help; Ctrl+Q is not sent"
     },
     {
       "case_id": "X01.cli.cli",
       "owner_task": "X01.cli",
       "application": "cross",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "junie_tui::cli::parse in src/cli.rs exits from clap before any shell::run. Measured on the reference binaries, --help exits 0 and a bad argument exits 2. showcase parse_page in src/bin/showcase/main.rs says unknown page {value:?}. holla and jackin parse_scenario in src/bin/holla/main.rs and src/bin/jackin/main.rs say unknown scenario {value:?}. tablepro connection_index in src/bin/tablepro/main.rs says no connection named {name:?} and exits before shell::run. showcase parse_opt in src/bin/showcase/options.rs says expected KEY=VALUE, unknown option, or invalid value. apply_opt in src/bin/showcase/app.rs applies each OptSet in order, so a later chrome.brand replaces the earlier one and the chrome readout paints brand compact. An invalid option is not exit 0 and the full-screen UI is absent. Clap is built without wrap_help, so showcase --help is taller than 40 rows. The 120×40 and separate 80×24 frames both show Print help (see a summary with '-h'), --opt <KEY=VALUE>, and SHOWCASE_NO_MOTION from cli_after_help in src/bin/showcase/main.rs. The about line has scrolled off both viewports. The overview blurb stays absent. finish is used only after the later option is visible.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "0000000000000000000000000000000000000000",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x01_cli/x01_cli_cli_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/x01_cli/x01_cli_cli_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Run --help and an unknown page, scenario, connection, option key, and option value for each binary. Repeat --opt and observe precedence.",
       "expected_results": "The exit status and the error name the bad argument. A valid option is accepted.",
@@ -39,7 +42,81 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--help",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3131d6320b14ce01dfb04e09a9dce7bab5c162deea2611e8769501202ed92f1b",
+        "expect_baseline": "missing",
+        "precondition": "X01.cli.cli.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--help",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6c986d13ec6ffa36caedd751f7789ccda4084646e575d32b82d772f508f8d3d3",
+        "expect_baseline": "missing",
+        "precondition": "X01.cli.cli.narrow"
+      }
     }
   ]
 }
