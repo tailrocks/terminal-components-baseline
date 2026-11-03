@@ -40,6 +40,7 @@ partitions = 1
 build = "inline"
 timeout_minutes = 15
 test_threads = 4
+required = true
 triggers = ["pull_request", "push", "workflow_dispatch"]
 dispatch_inputs = { tier = ["functional"] }
 artifacts = [{ name = "functional-terminal-evidence", paths = ["target/functional", "target/nextest/functional"], when = "failure", retention_days = 14 }]

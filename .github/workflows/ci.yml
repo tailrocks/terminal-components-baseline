@@ -484,6 +484,7 @@ jobs:
       - plan
       - rust-jackin-console
       - rust-junie-tui
+      - suite-functional
       - jactionlint
     if: ${{ !cancelled() }}
     steps:
@@ -531,7 +532,7 @@ jobs:
         env:
           VELNOR_INTERNAL_OP: write-request-v1
           VELNOR_NEEDS_JSON: ${{ toJSON(needs) }}
-          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-jackin-console\",\"rust-junie-tui\"]"
+          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-jackin-console\",\"rust-junie-tui\",\"suite-functional\"]"
           VELNOR_REQUEST_FILE: ${{ runner.temp }}/velnor/request/merge-v1-request.json
         run: "\"$RUNNER_TEMP\"'/velnor/bin/velnor-actions-0.1.72'"
       - name: Merge reports
@@ -539,7 +540,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VELNOR_INTERNAL_OP: merge-v1
           VELNOR_NEEDS_JSON: ${{ toJSON(needs) }}
-          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-jackin-console\",\"rust-junie-tui\"]"
+          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-jackin-console\",\"rust-junie-tui\",\"suite-functional\"]"
           VELNOR_REQUEST_FILE: ${{ runner.temp }}/velnor/request/merge-v1-request.json
         run: "\"$RUNNER_TEMP\"'/velnor/bin/velnor-actions-0.1.72'"
       - name: Publish final report

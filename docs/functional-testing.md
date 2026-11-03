@@ -20,13 +20,15 @@ Install the repository's pinned tools, then run:
 
 ```sh
 mise install
-cargo nextest run --locked --test functional --no-tests fail
+cargo nextest run --locked --workspace --profile functional --no-tests fail
 ```
 
-The named profile is convenient for CI and retains a JUnit report:
+This is the command CI runs in `suite-functional`. The profile selects
+the `functional` target of both workspace crates and retains a JUnit
+report. To run the target without the profile:
 
 ```sh
-cargo nextest run --locked --workspace --profile functional --no-tests fail
+cargo nextest run --locked --test functional --no-tests fail
 ```
 
 Filter one journey during development, without hiding missing tests:
@@ -99,7 +101,9 @@ account, launch-role and wizard data. They build the real `App` and
 `Application` trait, render into a test buffer and assert text and
 state. They add no visual baseline and are not journeys: a user-visible
 flow still needs a functional journey. `cargo nextest run --all-targets`
-runs them; the CI `functional` suite does not.
+runs them, and so do the `Rust / junie-tui` and `Rust / jackin-console`
+CI jobs (`nextest run --profile ci --package <crate>`); the `functional`
+suite does not.
 
 Each test has a named break (a one-edit change to the library that must
 turn it red) recorded in [P9.3 red and green](P9.3-red-green.md).
@@ -324,12 +328,11 @@ sizes and colors does not replace distinct domain journeys.
 ## CI and failure evidence
 
 The source configuration is [.velnor/config.toml](../.velnor/config.toml)
-(`compile_driver = "cargo"`: Velnor's mbx driver requires host-seeded
-tool caches that GitHub-hosted runners do not provide, so CI builds with
-cargo directly; local builds run through mr-boxington via the mise
-postinstall `mbx setup`). The dedicated functional suite runs on PRs and
-branch pushes and can be selected manually with `tier=functional`. Its
-generated command is:
+(`compile_driver = "mbx"`: CI and local builds both run cargo through
+mr-boxington; local setup is the mise postinstall `mbx setup`). The
+dedicated functional suite runs on PRs and branch pushes and can be
+selected manually with `tier=functional`. Its generated command, run
+through `mbx`, is:
 
 ```sh
 cargo nextest run --workspace --no-tests fail --profile functional
@@ -347,9 +350,9 @@ session and removes the child home after assertion failure. A cleanup kill
 does not count as a successful application exit.
 
 Velnor generates the workflows; change its configuration and run
-`velnor-actions generate`, never hand-edit generated YAML. Require the
-dedicated `suite-functional` check in branch protection so the functional
-gate is a separate merge gate, not only part of the aggregate job.
+`velnor-actions generate`, never hand-edit generated YAML. The suite sets
+`required = true`, so the aggregate `Required` check needs
+`suite-functional`. `Required` is the check to require in branch protection.
 
 On a failure, read the action trace and the last frame first. Classify the
 failure as an incorrect locator/precondition, input-mode/routing failure,

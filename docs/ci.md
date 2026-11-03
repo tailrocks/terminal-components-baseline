@@ -9,7 +9,8 @@ change the config and run `velnor-actions generate`.
 
 - **Plan** — computes the job matrix (15-minute timeout; the full
   history checkout is large).
-- **Suite (functional)** — the PTY journeys:
+- **Suite (functional)** — the PTY journeys and screenshot baselines, a
+  required check (`required = true`):
   `cargo nextest run --workspace --profile functional --no-tests fail`
   (the profile's default filter selects `binary(functional)`). It must
   pass with 0 skipped before merge. See
@@ -22,9 +23,9 @@ change the config and run `velnor-actions generate`.
   `cargo fmt --check` and `cargo doc`. A new test target needs no CI
   change. The `ci` profile in `.config/nextest.toml` must keep no
   `default-filter`, or targets drop out of this job.
-- **Required** — the verdict job. Its `needs` are Plan, both Rust jobs
-  and jactionlint, as listed in the generated `ci.yml`. The functional
-  suite is not among them (the suite entry sets no `required = true`).
+- **Required** — the verdict job. Its `needs` are Plan, both Rust jobs,
+  `suite-functional` and jactionlint, as listed in the generated
+  `ci.yml`.
 - **DCO** — every commit must carry `Signed-off-by`
   (`git commit -s`, committer Alexey Zhokhov
   <alexey@zhokhov.com>).
