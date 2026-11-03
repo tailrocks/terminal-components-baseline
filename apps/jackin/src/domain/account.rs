@@ -1,4 +1,5 @@
 use super::agent::{Agent, Provider, UsageSurface};
+use super::fixed::Fixed;
 use super::onepassword::OpReference;
 use super::usage::{AccountUsage, Freshness};
 
@@ -15,6 +16,23 @@ impl EditBlocked {
         Self {
             text: text.to_owned(),
             short: short.to_owned(),
+        }
+    }
+}
+
+/// Why an account cannot launch. The words are `Fixed` data.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LaunchBlock {
+    UsageOnlySource,
+}
+
+impl LaunchBlock {
+    pub const ALL: [LaunchBlock; 1] = [Self::UsageOnlySource];
+
+    pub fn text(self, fixed: Option<&Fixed>) -> String {
+        match (self, fixed) {
+            (Self::UsageOnlySource, Some(f)) => f.launch_usage_only.clone(),
+            (Self::UsageOnlySource, None) => "unavailable".into(),
         }
     }
 }
@@ -363,7 +381,7 @@ pub struct Account {
     pub endpoint: Option<Endpoint>,
     pub usage: AccountUsage,
 
-    pub launch_blocked: Option<String>,
+    pub launch_blocked: Option<LaunchBlock>,
     pub edit_blocked: Option<EditBlocked>,
 }
 
@@ -625,33 +643,62 @@ pub struct AccountForm {
     pub op_note: Option<String>,
 }
 
+fn provider_choices() -> Vec<ProviderChoice> {
+    let provider = |provider, label: &str| ProviderChoice {
+        provider,
+        label: label.into(),
+    };
+    vec![
+        provider(Provider::Anthropic, "Claude Code · Anthropic / Claude"),
+        provider(Provider::OpenAi, "Codex · OpenAI"),
+        provider(Provider::XAi, "Grok Build · xAI / Grok"),
+        provider(Provider::OpenCode, "OpenCode · OpenCode"),
+    ]
+}
+
+fn source_choices(labels: [&str; 3]) -> Vec<SourceChoice> {
+    [
+        SourceKind::OnePassword,
+        SourceKind::LocalFolder,
+        SourceKind::PlainApiKey,
+    ]
+    .into_iter()
+    .zip(labels)
+    .map(|(kind, label)| SourceChoice {
+        kind,
+        label: label.into(),
+    })
+    .collect()
+}
+
 impl Default for AccountForm {
     fn default() -> Self {
-        let provider = |provider, label: &str| ProviderChoice {
-            provider,
-            label: label.into(),
-        };
-        let source = |kind, label: &str| SourceChoice {
-            kind,
-            label: label.into(),
-        };
         Self {
-            providers: vec![
-                provider(Provider::Anthropic, "Claude Code · Anthropic / Claude"),
-                provider(Provider::OpenAi, "Codex · OpenAI"),
-                provider(Provider::XAi, "Grok Build · xAI / Grok"),
-                provider(Provider::OpenCode, "OpenCode · OpenCode"),
-            ],
-            sources: vec![
-                source(
-                    SourceKind::OnePassword,
-                    "1Password item / field  (recommended)",
-                ),
-                source(SourceKind::LocalFolder, "Local agent folder"),
-                source(SourceKind::PlainApiKey, "Plain-text API key"),
-            ],
+            providers: provider_choices(),
+            sources: source_choices([
+                "1Password item / field  (recommended)",
+                "Local agent folder",
+                "Plain-text API key",
+            ]),
             default_source: None,
             op_note: None,
+        }
+    }
+}
+
+impl AccountForm {
+    /// Only a local Codex login can launch, so the local folder is the
+    /// recommended source and the preselected one.
+    pub fn openshell() -> Self {
+        Self {
+            providers: provider_choices(),
+            sources: source_choices([
+                "1Password item / field  (usage only)",
+                "Local agent folder  (recommended)",
+                "Plain-text API key",
+            ]),
+            default_source: Some(1),
+            op_note: Some("Usage only · launching Codex needs a local login".into()),
         }
     }
 }

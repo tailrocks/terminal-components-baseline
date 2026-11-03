@@ -1,18 +1,41 @@
 use std::collections::BTreeSet;
 
+use crate::domain::account::AccountForm;
 use crate::domain::agent::{Agent, AuthMode};
 use crate::domain::docker::{DockerRiskText, DockerSetting, EngineState};
 use crate::domain::doctor::{DoctorState, DoctorSurface};
 use crate::domain::fixed::Fixed;
+use crate::domain::role::LaunchRoleRule;
 use crate::domain::role::{
     AccountOrder, RoleAdmin, RoleCheckState, RoleEnvEntry, RoleManifestDoc, RoleRecord,
 };
+use crate::domain::surfaces::Surfaces;
 use crate::domain::vocabulary::Vocabulary;
 use crate::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, EnvValue, Isolation, Mount, RoleSource,
 };
+use crate::fixtures::{Scenario, about_rows};
 use crate::sim;
 use crate::world::World;
+
+impl Surfaces {
+    pub fn demo(scenario: Scenario) -> Self {
+        Self {
+            roles: None,
+            docker: None,
+            doctor: None,
+            vocabulary: Vocabulary::demo(),
+            account_form: AccountForm::default(),
+            agent_blocked: None,
+            launch_role: LaunchRoleRule::Demo,
+            wizard: None,
+            fixed: None,
+            version: "0.9.2".into(),
+            cockpit_version: Some("0.6.4 · preview".into()),
+            about: about_rows(scenario),
+        }
+    }
+}
 
 pub const GATEWAY: &str = "jackin-local";
 const ENDPOINT: &str = "host.openshell.internal:18476";

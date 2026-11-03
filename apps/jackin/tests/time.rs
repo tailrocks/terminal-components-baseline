@@ -3,7 +3,8 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicI64, Ordering};
 
-use jackin_console::fixtures::{CLOCK, HOME};
+use jackin_console::domain::surfaces::Surfaces;
+use jackin_console::fixtures::{CLOCK, HOME, Scenario};
 use jackin_console::sim::SimBackend;
 use jackin_console::sim::onepassword::SimOnePassword;
 use jackin_console::world::{WallSource, World, WorldParts};
@@ -46,6 +47,7 @@ fn parts() -> WorldParts {
         format!("{HOME}/src/demo"),
         Box::new(SimOnePassword::fixture(CLOCK.now_secs())),
         SimBackend::shared(),
+        Surfaces::demo(Scenario::Returning),
     )
 }
 

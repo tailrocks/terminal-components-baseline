@@ -25,12 +25,14 @@ use crate::sim::SimBackend;
 use crate::sim::onepassword::SimOnePassword;
 use crate::sim::scripts::SimScripts;
 use crate::world::{
-    DaemonHealth, FsEntry, GithubRepo, GlobalConfig, TrustRow, World, WorldParts, refresh_snapshots,
+    DaemonHealth, FsEntry, GithubRepo, GlobalConfig, Takeover, TrustRow, World, WorldParts,
+    refresh_snapshots,
 };
 use junie_tui::ui::layout::SplitDir;
 
 pub mod scenario;
 pub mod surfaces;
+pub mod vocabulary;
 
 pub use scenario::{
     CLOCK, EPOCH_SECS, Scenario, UTC_OFFSET_SECS, app_for, app_with_world, entry_for,
@@ -1084,7 +1086,7 @@ fn accounts_hard(now: i64) -> AccountRegistry {
     r
 }
 
-fn about_rows(scenario: Scenario) -> Vec<(String, String)> {
+pub(super) fn about_rows(scenario: Scenario) -> Vec<(String, String)> {
     [
         ("Product", "jackin-preview · deterministic redesign preview"),
         ("Scenario", scenario.name()),
@@ -1112,16 +1114,13 @@ fn base_world(scenario: Scenario) -> World {
         fs: fs(),
         github: github(),
         last_refresh_secs: now - 3,
-        surfaces: Surfaces {
-            about: about_rows(scenario),
-            ..Surfaces::default()
-        },
         ..WorldParts::new(
             clock,
             HOME.into(),
             format!("{HOME}/src/payments-platform"),
             Box::new(SimOnePassword::fixture(now)),
             SimBackend::shared(),
+            Surfaces::demo(scenario),
         )
     })
 }
@@ -1507,7 +1506,10 @@ pub fn world_for(scenario: Scenario) -> World {
             }
             w.arbiter.discovery = Err(DiscoveryError::IndexUnreadable);
             w.arbiter.entered_at_ms = None;
-            w.takeover_at_ms = Some(45_000);
+            w.takeover_at_ms = Some(Takeover {
+                at_ms: 45_000,
+                by: "tty004 · MacBook".into(),
+            });
             w
         }
     }

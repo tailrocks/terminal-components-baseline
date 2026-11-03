@@ -4,9 +4,10 @@ mod common;
 
 use common::*;
 use jackin_console::domain::account::{
-    Account, AccountForm, EditBlocked, ProviderChoice, SourceChoice, SourceKind,
+    Account, AccountForm, EditBlocked, LaunchBlock, ProviderChoice, SourceChoice, SourceKind,
 };
 use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider, UsageSurface};
+use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::workspace::{Usability, usability_of};
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::World;
@@ -27,8 +28,10 @@ fn codex_ids(world: &World) -> Vec<String> {
 }
 
 fn block_codex(world: &mut World) {
+    world.surfaces.fixed = Some(Fixed::openshell());
     for id in codex_ids(world) {
-        world.accounts.get_mut(&id).expect("account").launch_blocked = Some(USAGE_ONLY.into());
+        world.accounts.get_mut(&id).expect("account").launch_blocked =
+            Some(LaunchBlock::UsageOnlySource);
     }
 }
 
@@ -64,10 +67,14 @@ fn form(sources: &[(SourceKind, &str)], default_source: Option<usize>) -> Accoun
 fn a_launch_block_makes_the_account_unusable() {
     let mut account = first_account(&returning());
     assert_eq!(usability_of(&account), Usability::Ready);
-    account.launch_blocked = Some(USAGE_ONLY.into());
+    account.launch_blocked = Some(LaunchBlock::UsageOnlySource);
     assert_eq!(
         usability_of(&account),
-        Usability::Invalid(USAGE_ONLY.into())
+        Usability::Blocked(LaunchBlock::UsageOnlySource)
+    );
+    assert_eq!(
+        usability_of(&account).label(Some(&Fixed::openshell())),
+        USAGE_ONLY
     );
     account.enabled = false;
     assert_eq!(

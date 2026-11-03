@@ -1,6 +1,7 @@
 #![cfg(feature = "demo")]
 
 use jackin_console::arbiter::{Arbiter, DiscoveryError};
+use jackin_console::domain::surfaces::Surfaces;
 use jackin_console::fixtures::{CLOCK, HOME, Scenario, world_for};
 use jackin_console::sim::SimBackend;
 use jackin_console::sim::onepassword::SimOnePassword;
@@ -13,6 +14,7 @@ fn parts() -> WorldParts {
         format!("{HOME}/src/demo"),
         Box::new(SimOnePassword::fixture(CLOCK.now_secs())),
         SimBackend::shared(),
+        Surfaces::demo(Scenario::Returning),
     )
 }
 

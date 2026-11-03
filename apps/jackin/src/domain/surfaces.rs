@@ -7,7 +7,7 @@ use super::role::{LaunchRoleRule, RoleAdmin};
 use super::vocabulary::Vocabulary;
 use super::workspace::WizardDefaults;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Surfaces {
     pub roles: Option<RoleAdmin>,
     pub docker: Option<DockerSetting>,
@@ -19,23 +19,53 @@ pub struct Surfaces {
     pub wizard: Option<WizardDefaults>,
     pub fixed: Option<Fixed>,
     pub version: String,
+    pub cockpit_version: Option<String>,
     pub about: Vec<(String, String)>,
 }
 
-impl Default for Surfaces {
-    fn default() -> Self {
+/// What a live host knows about itself. Every other static field of
+/// `Surfaces::openshell` is baseline data.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LiveFacts {
+    pub version: String,
+}
+
+impl Surfaces {
+    pub fn openshell(facts: LiveFacts) -> Self {
+        let LiveFacts { version } = facts;
         Self {
             roles: None,
             docker: None,
             doctor: None,
-            vocabulary: Vocabulary::default(),
-            account_form: AccountForm::default(),
-            agent_blocked: None,
-            launch_role: LaunchRoleRule::default(),
-            wizard: None,
-            fixed: None,
-            version: "0.9.2".into(),
+            vocabulary: Vocabulary::openshell(),
+            account_form: AccountForm::openshell(),
+            agent_blocked: Some(AgentBlocked::openshell()),
+            launch_role: LaunchRoleRule::Configured,
+            wizard: Some(WizardDefaults::openshell()),
+            fixed: Some(Fixed::openshell()),
+            version,
+            cockpit_version: None,
             about: Vec::new(),
         }
+    }
+
+    pub fn roles(mut self, roles: RoleAdmin) -> Self {
+        self.roles = Some(roles);
+        self
+    }
+
+    pub fn docker(mut self, docker: DockerSetting) -> Self {
+        self.docker = Some(docker);
+        self
+    }
+
+    pub fn doctor(mut self, doctor: DoctorSurface) -> Self {
+        self.doctor = Some(doctor);
+        self
+    }
+
+    pub fn about(mut self, rows: Vec<(String, String)>) -> Self {
+        self.about = rows;
+        self
     }
 }

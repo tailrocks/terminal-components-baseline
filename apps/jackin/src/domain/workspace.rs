@@ -1,7 +1,8 @@
 use std::collections::{BTreeMap, BTreeSet};
 
-use super::account::{AccountId, AccountRegistry, Lifecycle};
+use super::account::{AccountId, AccountRegistry, LaunchBlock, Lifecycle};
 use super::agent::Provider;
+use super::fixed::Fixed;
 
 pub type WorkspaceId = u32;
 pub type RoleName = String;
@@ -69,21 +70,32 @@ pub struct WizardDefaults {
     pub destination_label: String,
 }
 
+impl WizardDefaults {
+    pub fn openshell() -> Self {
+        Self {
+            destination: "/sandbox/project".into(),
+            destination_label: "Project folder".into(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Usability {
     Ready,
 
     Disabled(String),
     NeedsLogin,
+    Blocked(LaunchBlock),
     Invalid(String),
 }
 
 impl Usability {
-    pub fn label(&self) -> String {
+    pub fn label(&self, fixed: Option<&Fixed>) -> String {
         match self {
             Usability::Ready => "ready".into(),
             Usability::Disabled(r) => r.clone(),
             Usability::NeedsLogin => "needs login".into(),
+            Usability::Blocked(b) => b.text(fixed),
             Usability::Invalid(r) => r.clone(),
         }
     }
@@ -106,8 +118,8 @@ pub fn usability_of(a: &super::account::Account) -> Usability {
     if !a.enabled {
         return Usability::Disabled("disabled globally".into());
     }
-    if let Some(why) = &a.launch_blocked {
-        return Usability::Invalid(why.clone());
+    if let Some(block) = a.launch_blocked {
+        return Usability::Blocked(block);
     }
     match a.lifecycle {
         Lifecycle::Available => Usability::Ready,

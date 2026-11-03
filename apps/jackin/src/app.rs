@@ -731,7 +731,10 @@ impl App {
         }
         let help = vec![
             (MenuItem::new("Key reference").shortcut("?"), HostCmd::Help),
-            (MenuItem::new("About jackin-preview"), HostCmd::About),
+            (
+                MenuItem::new(&world.surfaces.vocabulary.about_label),
+                HostCmd::About,
+            ),
         ];
         Menus::new()
             .menu("File", file)

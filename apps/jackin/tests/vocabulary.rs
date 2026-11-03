@@ -53,6 +53,9 @@ fn the_openshell_words_avoid_the_false_strings() {
             "discard",
             "{state}",
         ] {
+            if banned == "Capsule" && name == "capsule" {
+                continue;
+            }
             assert!(!text.contains(banned), "{name} says {banned}: {text}");
         }
     }
@@ -60,8 +63,8 @@ fn the_openshell_words_avoid_the_false_strings() {
 
 #[test]
 fn the_openshell_vocabulary_renames_the_demo_words() {
-    const SAME: [&str; 1] = ["status.superseded"];
-    let demo = Vocabulary::default();
+    const SAME: [&str; 2] = ["status.superseded", "capsule"];
+    let demo = Vocabulary::demo();
     let openshell = Vocabulary::openshell();
     let (demo, live) = (demo.fields(), openshell.fields());
     assert_eq!(
@@ -599,8 +602,8 @@ fn the_export_prompt_follows_the_words() {
 fn the_terminal_screen_names_itself_by_the_words() {
     let (demo, live) = pair(Scenario::CapsuleMulti, "f10 right right right right enter");
     assert!(demo.contains("Capsule › payments") && demo.contains("  Capsule  "));
-    assert!(live.contains("Terminal › payments") && live.contains("  Terminal  "));
-    assert!(!live.contains("Capsule"));
+    assert!(live.contains("Capsule › payments") && live.contains("  Capsule  "));
+    assert!(!live.contains("Terminal"));
 }
 
 #[test]

@@ -7,11 +7,12 @@ use crate::domain::account::{
 };
 use crate::domain::agent::{Agent, Provider};
 use crate::domain::instance::InstanceId;
+use crate::domain::launch::LaunchContent;
 use crate::domain::onepassword::OpReference;
 use crate::domain::role::RoleManifestDoc;
 use crate::domain::usage::AccountUsage;
 use crate::domain::workspace::{RoleName, WorkspaceId};
-use crate::launch::{LaunchContent, LaunchPlan, LaunchTarget};
+use crate::launch::{LaunchPlan, LaunchTarget};
 use crate::panes::SessionScript;
 use crate::world::{Msg, World};
 

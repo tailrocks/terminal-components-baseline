@@ -6,19 +6,26 @@ const DEMO_DIRS: [&str; 3] = ["fixtures/", "sim/", "bin/"];
 enum Scope {
     OutsideDemo,
     Everywhere,
-    OnlyIn(&'static str),
+    OnlyIn(&'static [&'static str]),
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Kind {
+    Tokens,
+    Literal,
+    Alias,
 }
 
 struct Rule {
     text: &'static str,
-    literal: bool,
+    kind: Kind,
     scope: Scope,
 }
 
 const fn code(text: &'static str) -> Rule {
     Rule {
         text,
-        literal: false,
+        kind: Kind::Tokens,
         scope: Scope::OutsideDemo,
     }
 }
@@ -26,7 +33,18 @@ const fn code(text: &'static str) -> Rule {
 const fn literal(text: &'static str) -> Rule {
     Rule {
         text,
-        literal: true,
+        kind: Kind::Literal,
+        scope: Scope::OutsideDemo,
+    }
+}
+
+/// A demo module named without a `::` after it: an alias, a re-export or a
+/// `use` group. Named in a path or in a `use` item, and not followed by `::`
+/// (the `code` rule of the same name reports that case).
+const fn alias(text: &'static str) -> Rule {
+    Rule {
+        text,
+        kind: Kind::Alias,
         scope: Scope::OutsideDemo,
     }
 }
@@ -34,6 +52,8 @@ const fn literal(text: &'static str) -> Rule {
 const RULES: &[Rule] = &[
     code("sim ::"),
     code("fixtures ::"),
+    alias("sim"),
+    alias("fixtures"),
     code("Scenario"),
     code("AgentProcess"),
     code("SessionScript"),
@@ -45,7 +65,7 @@ const RULES: &[Rule] = &[
     code("CLOCK"),
     Rule {
         text: "feature = \"product\"",
-        literal: false,
+        kind: Kind::Tokens,
         scope: Scope::Everywhere,
     },
     literal("roles-experimental"),
@@ -58,74 +78,53 @@ const RULES: &[Rule] = &[
     literal("Preview clipboard is empty"),
     literal("revealed in Finder"),
     literal("/.jackin/"),
-    literal("Close tab?"),
-    literal("Close pane?"),
     literal("Reap every pane in this tab"),
     literal("Reap the focused pane's agent"),
     literal("spawning"),
     literal("Pane cleared"),
+    literal("Paste clipboard"),
+    literal("opened on host"),
     Rule {
         text: "1Password locked: unlock the app and retry",
-        literal: true,
-        scope: Scope::OnlyIn("launch.rs"),
+        kind: Kind::Literal,
+        scope: Scope::OnlyIn(&["launch.rs", "screens/accounts.rs"]),
     },
     literal("tty004"),
     literal("EACCES"),
 ];
 
-/// A token that still sits in the library, the file it sits in and the step that moves it.
-/// A moving step deletes its rows; a row that no longer matches fails the scan.
-type Pending = (&'static str, &'static str, &'static str);
+/// A token that still sits in the library, the file it sits in, how many times,
+/// and the step that moves it. A moving step deletes its rows. A row whose
+/// count is not the real count fails the scan: fewer is stale, more reports
+/// the extra occurrences.
+type Pending = (&'static str, &'static str, usize, &'static str);
 
 const PENDING: &[Pending] = &[
-    ("About jackin-preview", "app.rs", "B3b"),
-    ("/.jackin/", "screens/capsule.rs", "B3b"),
-    ("About jackin-preview", "screens/capsule.rs", "B3b"),
-    ("Close pane?", "screens/capsule.rs", "B3b"),
-    ("Close tab?", "screens/capsule.rs", "B3b"),
-    ("Not in this preview", "screens/capsule.rs", "B3b"),
-    ("Pane cleared", "screens/capsule.rs", "B3b"),
-    ("Preview clipboard is empty", "screens/capsule.rs", "B3b"),
-    ("Reap every pane in this tab", "screens/capsule.rs", "B3b"),
-    ("Reap the focused pane's agent", "screens/capsule.rs", "B3b"),
-    (
-        "file:///Users/alexey/.jackin/logs/",
-        "screens/capsule.rs",
-        "B3b",
-    ),
-    ("in the preview", "screens/capsule.rs", "B3b"),
-    ("payments-platform", "screens/capsule.rs", "B3b"),
-    ("revealed in Finder", "screens/capsule.rs", "B3b"),
-    ("spawning", "screens/capsule.rs", "B3b"),
-    ("0.6.4 · preview", "screens/cockpit.rs", "B3b"),
-    ("/.jackin/", "screens/editor.rs", "B3b and B6"),
-    ("/.jackin/", "screens/settings.rs", "B3b and B6"),
-    ("refresh_fails", "screens/accounts.rs", "B6"),
-    ("EACCES", "screens/editor.rs", "B6"),
-    ("next_workspace_id", "screens/editor.rs", "B6"),
-    ("roles-experimental", "screens/editor.rs", "B6"),
+    ("refresh_fails", "screens/accounts.rs", 1, "B6"),
+    ("next_workspace_id", "screens/editor.rs", 3, "B6"),
+    ("roles-experimental", "screens/editor.rs", 1, "B6"),
     (
         "last_seen_secs = w . clock . now_secs",
         "screens/manager.rs",
+        1,
         "B6",
     ),
-    ("refresh_fails", "screens/manager.rs", "B6"),
-    ("next_workspace_id", "screens/prelude.rs", "B6"),
-    ("EACCES", "screens/settings.rs", "B6"),
-    ("next_workspace_id", "world.rs", "B6"),
-    ("refresh_fails", "world.rs", "B6"),
-    ("takeover_at_ms", "world.rs", "B6"),
-    ("tty004", "world.rs", "B6"),
+    ("refresh_fails", "screens/manager.rs", 1, "B6"),
+    ("next_workspace_id", "screens/prelude.rs", 1, "B6"),
+    ("next_workspace_id", "world.rs", 7, "B6"),
+    ("refresh_fails", "world.rs", 2, "B6"),
+    ("takeover_at_ms", "world.rs", 4, "B6"),
+    ("LaunchPlan", "backend.rs", 3, "B7a"),
     (
         "1Password locked: unlock the app and retry",
         "launch.rs",
+        1,
         "B7a",
     ),
-    ("LaunchPlan", "backend.rs", "B7a"),
-    ("LaunchPlan", "launch.rs", "B7a"),
-    ("SessionScript", "backend.rs", "B8a"),
-    ("AgentProcess", "panes.rs", "B8a"),
-    ("SessionScript", "panes.rs", "B8a"),
+    ("LaunchPlan", "launch.rs", 10, "B7a"),
+    ("SessionScript", "backend.rs", 2, "B8a"),
+    ("AgentProcess", "panes.rs", 5, "B8a"),
+    ("SessionScript", "panes.rs", 6, "B8a"),
 ];
 
 struct Source {
@@ -303,58 +302,88 @@ fn applies(rule: &Rule, path: &str) -> bool {
     match rule.scope {
         Scope::OutsideDemo => !in_demo_dir(path),
         Scope::Everywhere => true,
-        Scope::OnlyIn(file) => path == file || path.ends_with(&format!("/{file}")),
+        Scope::OnlyIn(files) => files.contains(&path),
     }
 }
 
 fn matches_at(rule: &Rule, tokens: &[(usize, Lexeme)]) -> Vec<usize> {
-    if rule.literal {
-        return tokens
+    match rule.kind {
+        Kind::Literal => tokens
             .iter()
             .filter_map(|(line, l)| match l {
                 Lexeme::Str(s) if s.contains(rule.text) => Some(*line),
                 _ => None,
             })
-            .collect();
+            .collect(),
+        Kind::Tokens => {
+            let words: Vec<&str> = rule.text.split(' ').collect();
+            tokens
+                .windows(words.len())
+                .filter(|w| {
+                    w.iter()
+                        .map(|(_, l)| l.word())
+                        .eq(words.iter().map(|s| s.to_string()))
+                })
+                .map(|w| w[0].0)
+                .collect()
+        }
+        Kind::Alias => alias_lines(rule.text, tokens),
     }
-    let words: Vec<&str> = rule.text.split(' ').collect();
-    tokens
-        .windows(words.len())
-        .filter(|w| {
-            w.iter()
-                .map(|(_, l)| l.word())
-                .eq(words.iter().map(|s| s.to_string()))
-        })
-        .map(|w| w[0].0)
-        .collect()
+}
+
+fn alias_lines(name: &str, tokens: &[(usize, Lexeme)]) -> Vec<usize> {
+    let is = |at: Option<&(usize, Lexeme)>, word: &str| at.is_some_and(|(_, l)| l.word() == word);
+    let mut in_use = false;
+    let mut lines = Vec::new();
+    for (i, (line, lexeme)) in tokens.iter().enumerate() {
+        match lexeme.word().as_str() {
+            "use" => in_use = true,
+            ";" => in_use = false,
+            word if word == name => {
+                let after = is(tokens.get(i + 1), "::");
+                let before = i > 0 && is(tokens.get(i - 1), "::");
+                if !after && (before || in_use) {
+                    lines.push(*line);
+                }
+            }
+            _ => {}
+        }
+    }
+    lines
 }
 
 fn scan(sources: &[Source], pending: &[Pending]) -> Report {
     let mut report = Report::default();
-    let mut used = vec![false; pending.len()];
+    let mut seen = vec![0usize; pending.len()];
     for source in sources {
         let tokens = lex(&source.text);
         for rule in RULES.iter().filter(|r| applies(r, &source.path)) {
-            for line in matches_at(rule, &tokens) {
-                let slot = pending
-                    .iter()
-                    .position(|(t, f, _)| *t == rule.text && *f == source.path);
-                match slot {
-                    Some(k) => used[k] = true,
-                    None => report.unexpected.push(Finding {
-                        token: rule.text,
-                        file: source.path.clone(),
-                        line,
-                    }),
-                }
+            let lines = matches_at(rule, &tokens);
+            if lines.is_empty() {
+                continue;
             }
+            let slot = pending
+                .iter()
+                .position(|(t, f, ..)| *t == rule.text && *f == source.path);
+            let allowed = slot.map_or(0, |k| pending[k].2);
+            if let Some(k) = slot {
+                seen[k] += lines.len();
+            }
+            report
+                .unexpected
+                .extend(lines.into_iter().skip(allowed).map(|line| Finding {
+                    token: rule.text,
+                    file: source.path.clone(),
+                    line,
+                }));
         }
     }
-    for (k, (token, file, step)) in pending.iter().enumerate() {
-        if !used[k] {
-            report
-                .stale
-                .push(format!("({token:?}, {file:?}, {step:?})"));
+    for (k, (token, file, count, step)) in pending.iter().enumerate() {
+        if seen[k] < *count {
+            report.stale.push(format!(
+                "({token:?}, {file:?}, {count}, {step:?}) matches {} time(s)",
+                seen[k]
+            ));
         }
     }
     report
@@ -497,20 +526,67 @@ fn test_cfg_demo_module_is_reported() {
 #[test]
 fn stale_pending_entry_fails() {
     let tree = [src("world.rs", "fn clean() {}")];
-    let pending = [("CLOCK", "world.rs", "B2c")];
+    let pending = [("CLOCK", "world.rs", 1, "B2c")];
     let report = scan(&tree, &pending);
     assert!(report.unexpected.is_empty());
     assert_eq!(
         report.stale,
-        vec![r#"("CLOCK", "world.rs", "B2c")"#.to_owned()]
+        vec![r#"("CLOCK", "world.rs", 1, "B2c") matches 0 time(s)"#.to_owned()]
     );
     let tree = [src("world.rs", "let c = CLOCK;")];
     assert!(scan(&tree, &pending).is_clean());
 }
 
 #[test]
+fn a_pending_row_counts_occurrences() {
+    let pending = [("payments-platform", "screens/capsule.rs", 1, "B3b")];
+    let one = [src(
+        "screens/capsule.rs",
+        "const A: &str = \"payments-platform\";",
+    )];
+    assert!(scan(&one, &pending).is_clean());
+    let two = [src(
+        "screens/capsule.rs",
+        "const A: &str = \"payments-platform\";\nconst B: &str = \"payments-platform\";",
+    )];
+    assert_eq!(
+        scan(&two, &pending).unexpected,
+        vec![Finding {
+            token: "payments-platform",
+            file: "screens/capsule.rs".into(),
+            line: 2
+        }]
+    );
+    let two_rows = [("payments-platform", "screens/capsule.rs", 2, "B3b")];
+    assert!(scan(&two, &two_rows).is_clean());
+    assert_eq!(scan(&one, &two_rows).stale.len(), 1);
+}
+
+#[test]
+fn demo_modules_are_not_reachable_through_an_alias() {
+    for (text, name) in [
+        ("pub use crate::sim as simulated;", "sim"),
+        ("use crate::sim;", "sim"),
+        ("use crate::{fixtures, world};", "fixtures"),
+        ("use crate::{world, sim as s};", "sim"),
+        ("use jackin_console::fixtures as demo;", "fixtures"),
+    ] {
+        let found = scan(&[src("domain/workspace.rs", text)], &[]).unexpected;
+        assert_eq!(found.len(), 1, "{text}: {found:?}");
+        assert_eq!(found[0].token, name, "{text}");
+    }
+    let quiet = [src(
+        "domain/workspace.rs",
+        "use crate::world::World;\nfn f(sim: u8) -> u8 { sim }\nlet fixtures_dir = a::b;",
+    )];
+    assert_eq!(scan(&quiet, &[]), Report::default());
+    let demo_side = [src("sim/mod.rs", "pub use crate::fixtures as f;")];
+    assert_eq!(scan(&demo_side, &[]), Report::default());
+}
+
+#[test]
 fn demo_literal_in_domain_fails() {
-    for literal in ["payments-platform", "roles-experimental", "Close tab?"] {
+    for literal in ["payments-platform", "roles-experimental", "Paste clipboard"] {
         let text = format!("fn f() -> &'static str {{ \"the {literal} row\" }}");
         let tree = [src("domain/workspace.rs", &text)];
         let found = scan(&tree, &[]).unexpected;
@@ -522,19 +598,15 @@ fn demo_literal_in_domain_fails() {
         "// payments-platform\n/* roles-experimental */ fn f() {}",
     )];
     assert_eq!(scan(&commented, &[]), Report::default());
+    let sentence = "const A: &str = \"1Password locked: unlock the app and retry\";";
     let scoped = [
-        src(
-            "screens/accounts.rs",
-            "const A: &str = \"1Password locked: unlock the app and retry\";",
-        ),
-        src(
-            "launch.rs",
-            "const A: &str = \"1Password locked: unlock the app and retry\";",
-        ),
+        src("screens/accounts.rs", sentence),
+        src("launch.rs", sentence),
+        src("backend.rs", sentence),
     ];
     let found = scan(&scoped, &[]).unexpected;
-    assert_eq!(found.len(), 1);
-    assert_eq!(found[0].file, "launch.rs");
+    let files: Vec<&str> = found.iter().map(|f| f.file.as_str()).collect();
+    assert_eq!(files, ["screens/accounts.rs", "launch.rs"]);
 }
 
 #[test]

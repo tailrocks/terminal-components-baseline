@@ -6,7 +6,8 @@ use crate::backend::{
 };
 use crate::domain::account::CredentialSource;
 use crate::domain::agent::Provider;
-use crate::launch::{LaunchContent, LaunchPlan, LaunchTarget};
+use crate::domain::launch::LaunchContent;
+use crate::launch::{LaunchPlan, LaunchTarget};
 use crate::panes::SessionScript;
 use crate::world::{Msg, World};
 

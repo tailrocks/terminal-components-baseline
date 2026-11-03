@@ -10,11 +10,12 @@ use jackin_console::backend::{
 };
 use jackin_console::domain::account::{AccountRegistry, CredentialSource};
 use jackin_console::domain::agent::Provider;
+use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::onepassword::OpReference;
+use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::domain::workspace::{
     AccountPolicy, AllowedRoles, DirtyExitPolicy, RolePolicy, Workspace,
 };
-use jackin_console::launch::LaunchContent;
 use jackin_console::panes::SessionScript;
 use jackin_console::rain::INTRO_END;
 use jackin_console::world::{Snapshot, World, WorldParts};
@@ -127,6 +128,9 @@ fn empty_world() -> World {
         "/home/dev".into(),
         Box::new(SignedInOnly),
         Arc::new(TestBackendData),
+        Surfaces::openshell(LiveFacts {
+            version: "1.4.0".into(),
+        }),
     ))
 }
 

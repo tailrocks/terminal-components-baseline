@@ -4,6 +4,7 @@ pub mod docker;
 pub mod doctor;
 pub mod fixed;
 pub mod instance;
+pub mod launch;
 pub mod onepassword;
 pub mod precedence;
 pub mod role;

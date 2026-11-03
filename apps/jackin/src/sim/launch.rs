@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use crate::launch::{LaunchContent, LaunchFailure, LaunchWords, StageKind, StageList, StageSpec};
+use crate::domain::launch::{
+    LaunchContent, LaunchFailure, LaunchWords, StageKind, StageList, StageSpec,
+};
 
 pub const BUILD_LOG: [&str; 44] = [
     "#1 [internal] load build definition from Dockerfile.derived",
@@ -142,60 +144,20 @@ pub const OPENSHELL_BUILD_LOG: [&str; 12] = [
     "#6 exporting to image",
 ];
 
-fn openshell_stages() -> StageList {
-    StageList::new(
-        StageSpec::new("image", "Image build", "Building the role image…", 30)
-            .kind(StageKind::BuildLog),
-        [
-            StageSpec::new(
-                "provider",
-                "OpenShell provider",
-                "Preparing the OpenShell provider…",
-                10,
-            ),
-            StageSpec::new("sandbox", "Sandbox", "Creating the sandbox…", 22).container_at(6),
-            StageSpec::new("credentials", "Credentials", "Resolving credentials…", 14)
-                .kind(StageKind::Credentials { hold_at: 10 }),
-            StageSpec::new("upload", "Upload", "Uploading the project…", 30),
-            StageSpec::new(
-                "hooks",
-                "Hooks",
-                "Running the setup and preflight hooks…",
-                18,
-            ),
-            StageSpec::new("codex", "Codex", "Starting {agent}…", 16),
-        ],
-    )
-}
-
 pub fn openshell_content() -> Arc<LaunchContent> {
-    let stages = openshell_stages();
-    let sandbox = stages.position("sandbox").unwrap_or(0);
+    let base = LaunchContent::openshell();
     Arc::new(LaunchContent {
-        stages,
-        words: LaunchWords {
-            unit: "Sandbox".into(),
-            unit_missing: "not created".into(),
-            log_title: "Image build".into(),
-            log_waiting: "(waiting for build output…)".into(),
-            build_failed: "Image build failed".into(),
-            ready_activity: "Codex is running · opening the session".into(),
-            credentials_resolved: "resolved in memory · discarded".into(),
-        },
         build_log: OPENSHELL_BUILD_LOG
             .iter()
             .map(|l| (*l).to_owned())
             .collect(),
-        agent_provider_only: true,
-        name_slug: Some(7),
         network_failure: LaunchFailure {
-            stage: sandbox,
-            summary: "The sandbox could not be created".into(),
-            next_step: "Run jackin doctor, fix the failing check, then launch again.".into(),
             detail: vec![
                 "gateway: jackin-local".into(),
                 "sandbox: create failed".into(),
             ],
+            ..base.network_failure.clone()
         },
+        ..base
     })
 }

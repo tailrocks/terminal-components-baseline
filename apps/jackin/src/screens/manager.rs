@@ -1385,7 +1385,10 @@ impl ManagerScreen {
                                     line.push_str(" ★");
                                 }
                                 if !e.usable.is_ready() {
-                                    line.push_str(&format!(" · {}", e.usable.label()));
+                                    line.push_str(&format!(
+                                        " · {}",
+                                        e.usable.label(w.surfaces.fixed.as_ref())
+                                    ));
                                 }
                                 line
                             })

@@ -26,9 +26,10 @@ use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::instance::{Instance, InstanceStatus};
+use crate::domain::launch::StageKind;
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::workspace::WorkspaceId;
-use crate::launch::{LaunchEvent, LaunchRun, LaunchTarget, StageKind};
+use crate::launch::{LaunchEvent, LaunchRun, LaunchTarget};
 use crate::world::World;
 use junie_tui::motion::Motion;
 
@@ -458,7 +459,13 @@ impl CockpitScreen {
                 ),
             ),
             Prop::new("Run id", self.run.run_id.clone()).copyable(),
-            Prop::new("jackin", "0.6.4 · preview"),
+            Prop::new(
+                "jackin",
+                w.surfaces
+                    .cockpit_version
+                    .as_deref()
+                    .unwrap_or(&w.surfaces.version),
+            ),
         ];
         if let Some(c) = &self.container {
             props.insert(
