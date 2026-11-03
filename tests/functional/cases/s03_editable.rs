@@ -5,7 +5,7 @@
 
 use tui_test::TerminalSnapshot;
 
-use crate::support::{Launch, Point, SHOWCASE, find_all, row_text, text, try_launch};
+use crate::support::{Launch, Point, SHOWCASE, cell_bg, find_all, row_text, text, try_launch};
 
 const TITLE: &str = "Editable tables";
 const BLURB: &str = "Navigation is reversed cell; editing is a cursor. They never look alike.";
@@ -117,6 +117,30 @@ fn click_side(app: &crate::support::App, label: &str) {
 
 fn shot(app: &crate::support::App, case_id: &str, _precondition: &str, _args: &[&str]) {
     app.visual(&visual_id(case_id));
+}
+
+fn grid_hit(screen: &TerminalSnapshot, needle: &str) -> Point {
+    find_all(screen, needle)
+        .into_iter()
+        .filter(|point| point.x > 24 && point.y >= 8)
+        .min_by_key(|point| (point.y, point.x))
+        .unwrap_or_else(|| panic!("no grid cell {needle}\n{}", text(screen)))
+}
+
+/// The accepted frame keeps one data row in the pressed fill after the
+/// cursor has moved. Under load the click release clears that fill before
+/// the shot. Hold the row so the fill is present for the capture.
+fn hold_pressed(app: &crate::support::App, needle: &str, other: &str) -> Point {
+    let screen = app.wait_text(needle);
+    let hit = grid_hit(&screen, needle);
+    let other_hit = grid_hit(&screen, other);
+    app.down(hit);
+    app.wait_screen("pressed row", |screen| {
+        let hot = cell_bg(screen, hit);
+        let rest = cell_bg(screen, other_hit);
+        row_text(screen, u32::from(hit.y)).contains(needle) && hot != rest
+    });
+    hit
 }
 
 fn task_point(app: &crate::support::App) -> Point {
@@ -854,12 +878,14 @@ fn option_type_ahead_task() {
             "1 edits",
         ],
     );
+    let held = hold_pressed(&app, "#1040", "Write release notes for 3.2");
     shot(
         &app,
         "opt.editable.type_ahead",
         "type-ahead task jumps to Write release notes and leaves the other options at their defaults",
         &args,
     );
+    app.up(held);
     app.finish();
 }
 
@@ -970,12 +996,14 @@ fn option_numeric_off_sorts_changes_as_text() {
         header.contains('▴'),
         "Changes did not sort ascending: {header}"
     );
+    let held = hold_pressed(&app, "Write release notes for 3.2", "Add rate limiting");
     shot(
         &app,
         "opt.editable.numeric",
         "numeric off sorts Changes as text so 118 sits with the leading rows",
         &args,
     );
+    app.up(held);
     app.finish();
 }
 

@@ -379,7 +379,18 @@ fn sections_narrow_then_wide() {
     );
 
     app.resize(120, 40);
-    let wide_states = app.wait_text(CAP_STATES);
+    // The states caption paints before the specimen rows. "hover" is one of
+    // those later rows.
+    let wide_states = app.wait_screen("wide states", |screen| {
+        let visible = text(screen);
+        screen.cols() == 120
+            && screen.rows() == 40
+            && visible.contains(CAP_STATES)
+            && visible.contains("hover")
+            && visible.contains("pressed")
+            && visible.contains("focused")
+            && visible.contains("focus + hover")
+    });
     see(
         &wide_states,
         &[
