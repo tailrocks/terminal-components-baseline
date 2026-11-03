@@ -243,6 +243,14 @@ fn nav_column(screen: &tui_test::TerminalSnapshot) -> Vec<String> {
         .collect()
 }
 
+/// Sidebar rows without the hint bar. A wheel moves the pointer, and the hint
+/// on the last row can appear while the sidebar list stays put.
+fn sidebar_rows(screen: &tui_test::TerminalSnapshot) -> Vec<String> {
+    let mut rows = nav_column(screen);
+    rows.pop();
+    rows
+}
+
 const DEFAULT_CASES: &[(&str, &str)] = &[
     ("opt.shell.color", "default"),
     ("opt.shell.glyphs", "default"),
@@ -748,10 +756,13 @@ fn wheel_grid(
     case_role: &str,
 ) {
     let app = launch(name, args, 120, 40);
-    let initial = app.wait_text("Northwind Traders");
+    let initial = app.wait_screen("sidebar settled", |screen| {
+        text(screen).contains("Northwind Traders")
+            && nav_column(screen).iter().any(|row| row.contains("Screens"))
+    });
     assert!(row_text(&initial, 0).contains("Tables › Data grid"));
     let cell = find(&initial, "1001");
-    let before = nav_column(&initial);
+    let before = sidebar_rows(&initial);
     app.wheel(
         Point {
             x: cell.x + 2,
@@ -764,7 +775,7 @@ fn wheel_grid(
         let row = row_text(screen, u32::from(cell.y));
         row.contains(expect_id) && row.contains(expect_name)
     });
-    assert_eq!(nav_column(&down), before, "wheel moved the sidebar");
+    assert_eq!(sidebar_rows(&down), before, "wheel moved the sidebar");
     assert!(row_text(&down, 0).contains("Tables › Data grid"));
     expect_visual(
         &app,
