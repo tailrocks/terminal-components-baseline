@@ -134,6 +134,18 @@ fn click_main(app: &crate::support::App, needle: &str) {
     click_filtered(app, needle, |hit| hit.x > 24);
 }
 
+/// The states gallery repeats the playground value. The playground control
+/// is the top one in the main column.
+fn click_top_main(app: &crate::support::App, needle: &str) {
+    let screen = app.wait_text(needle);
+    let hit = find_all(&screen, needle)
+        .into_iter()
+        .filter(|hit| hit.x > 24)
+        .min_by_key(|hit| hit.y)
+        .unwrap_or_else(|| panic!("no main {needle:?}\n{}", text(&screen)));
+    app.click(hit);
+}
+
 fn column_of(screen: &TerminalSnapshot, row: u16, byte: usize) -> u16 {
     let mut offset = 0;
     for (column, cell) in screen.row(u32::from(row)).expect("row").iter().enumerate() {
@@ -858,7 +870,7 @@ fn selects_choose_dismiss_and_disabled() {
     app.click_text("Playground");
     app.wait_text("created_at");
 
-    click_main(&app, "created_at");
+    click_top_main(&app, "created_at");
     let opened = app.wait_text("▴");
     expect(
         &opened,
@@ -874,7 +886,7 @@ fn selects_choose_dismiss_and_disabled() {
         &["Sort by → total", "Sort by →", "▴", "Mixed"],
     );
 
-    click_main(&app, "created_at");
+    click_top_main(&app, "created_at");
     app.wait_text("▴");
     app.key("down");
     app.key("enter");
