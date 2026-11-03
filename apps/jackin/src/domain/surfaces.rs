@@ -20,6 +20,7 @@ pub struct Surfaces {
     pub fixed: Option<Fixed>,
     pub version: String,
     pub cockpit_version: Option<String>,
+    pub config_path: Option<String>,
     pub about: Vec<(String, String)>,
 }
 
@@ -28,11 +29,15 @@ pub struct Surfaces {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LiveFacts {
     pub version: String,
+    pub config_path: String,
 }
 
 impl Surfaces {
     pub fn openshell(facts: LiveFacts) -> Self {
-        let LiveFacts { version } = facts;
+        let LiveFacts {
+            version,
+            config_path,
+        } = facts;
         Self {
             roles: None,
             docker: None,
@@ -45,6 +50,7 @@ impl Surfaces {
             fixed: Some(Fixed::openshell()),
             version,
             cockpit_version: None,
+            config_path: Some(config_path),
             about: Vec::new(),
         }
     }

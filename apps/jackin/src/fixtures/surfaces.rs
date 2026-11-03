@@ -32,6 +32,7 @@ impl Surfaces {
             fixed: None,
             version: "0.9.2".into(),
             cockpit_version: Some("0.6.4 · preview".into()),
+            config_path: None,
             about: about_rows(scenario),
         }
     }
@@ -207,6 +208,7 @@ pub const PROJECT: &str = "/sandbox/project";
 
 pub fn fixed(w: &mut World) {
     w.surfaces.vocabulary = Vocabulary::openshell();
+    w.surfaces.config_path = Some(format!("{}/.config/jackin/config.toml", w.home));
     let fixed = Fixed::openshell();
     w.global.coauthor_trailer = false;
     w.global.dco_signoff = false;

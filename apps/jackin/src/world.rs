@@ -603,6 +603,10 @@ impl World {
         }
     }
 
+    pub fn config_file(&self) -> String {
+        self.tilde(self.surfaces.config_path.as_deref().unwrap_or_default())
+    }
+
     pub fn new_instance_id(&self) -> String {
         let n = self.instances.len() as u32 + 0x7f3a + 0x1234 * 3;
         format!("jk-{:04x}", n & 0xffff)

@@ -98,6 +98,7 @@ pub struct Vocabulary {
     pub about_label: String,
     pub paste_label: String,
     pub paste_empty: String,
+    pub paste_empty_reason: String,
     pub command_unavailable: String,
     pub detail_unavailable: String,
     pub pane_starting: String,
@@ -113,6 +114,10 @@ pub struct Vocabulary {
     pub global_config: Option<String>,
     pub save_error_workspace: String,
     pub save_error_global: String,
+    pub save_error_next: String,
+    pub sandbox_id: Option<String>,
+    pub invocation_id: Option<String>,
+    pub attached_status: String,
 }
 
 impl Vocabulary {
@@ -154,16 +159,16 @@ impl Vocabulary {
                     .into(),
             },
             daemon: DaemonWords {
-                inspect_label: "Terminal".into(),
+                inspect_label: "Capsule".into(),
                 inspect_unavailable: "gateway unreachable".into(),
-                no_tabs: "No terminal tabs open".into(),
+                no_tabs: "No Capsule tabs open".into(),
                 unavailable_running: "Gateway unreachable — showing saved sessions".into(),
-                unavailable_stopped: "No live terminal (sandbox not running)".into(),
+                unavailable_stopped: "No live Capsule (sandbox not running)".into(),
                 topology_source: "gateway · {ago}".into(),
                 topology_unavailable: "unreachable".into(),
                 card_unavailable: "running {duration} · gateway unreachable".into(),
-                list_tabs: "terminal · {tabs} · {panes}".into(),
-                list_no_tabs: "terminal · no tabs".into(),
+                list_tabs: "capsule · {tabs} · {panes}".into(),
+                list_no_tabs: "capsule · no tabs".into(),
                 list_unavailable: "gateway unreachable".into(),
             },
             lifecycle: LifecycleWords {
@@ -215,8 +220,9 @@ impl Vocabulary {
             about_label: "About jackin".into(),
             paste_label: "Paste last copy".into(),
             paste_empty: "Nothing copied in this console yet".into(),
-            command_unavailable: "{label}: not available".into(),
-            detail_unavailable: "Not available".into(),
+            paste_empty_reason: "Nothing copied yet".into(),
+            command_unavailable: "{label}: not supported".into(),
+            detail_unavailable: "Not supported".into(),
             pane_starting: "Starting…".into(),
             pane_cleared: "Scrollback cleared".into(),
             close_tab_body: "Closes every pane in this tab. Codex panes keep running; shells end."
@@ -227,10 +233,14 @@ impl Vocabulary {
             export_revealed: None,
             export_opened: None,
             host_log: None,
-            workspace_config: None,
-            global_config: None,
-            save_error_workspace: "The workspace config could not be written.".into(),
-            save_error_global: "The global config could not be written.".into(),
+            workspace_config: Some("{config}".into()),
+            global_config: Some("{config}".into()),
+            save_error_workspace: "Could not write {config}.".into(),
+            save_error_global: "Could not write {config}.".into(),
+            save_error_next: "check disk space and permissions, then Save again".into(),
+            sandbox_id: None,
+            invocation_id: None,
+            attached_status: "Attached to {name}".into(),
         }
     }
 
@@ -321,6 +331,7 @@ impl Vocabulary {
             ("about_label", &self.about_label),
             ("paste_label", &self.paste_label),
             ("paste_empty", &self.paste_empty),
+            ("paste_empty_reason", &self.paste_empty_reason),
             ("command_unavailable", &self.command_unavailable),
             ("detail_unavailable", &self.detail_unavailable),
             ("pane_starting", &self.pane_starting),
@@ -342,6 +353,10 @@ impl Vocabulary {
             ("global_config", self.global_config.as_deref().unwrap_or("")),
             ("save_error_workspace", &self.save_error_workspace),
             ("save_error_global", &self.save_error_global),
+            ("save_error_next", &self.save_error_next),
+            ("sandbox_id", self.sandbox_id.as_deref().unwrap_or("")),
+            ("invocation_id", self.invocation_id.as_deref().unwrap_or("")),
+            ("attached_status", &self.attached_status),
         ]
     }
 

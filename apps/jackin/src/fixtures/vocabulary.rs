@@ -102,6 +102,7 @@ impl Vocabulary {
             about_label: "About jackin-preview".into(),
             paste_label: "Paste clipboard".into(),
             paste_empty: "Preview clipboard is empty".into(),
+            paste_empty_reason: "The clipboard is empty".into(),
             command_unavailable: "{label}: not available in the preview".into(),
             detail_unavailable: "Not in this preview".into(),
             pane_starting: "spawning".into(),
@@ -122,6 +123,10 @@ impl Vocabulary {
                 .into(),
             save_error_global: "write failed: ~/.jackin/config.toml is not writable (EACCES)"
                 .into(),
+            save_error_next: "fix the permission and Save again".into(),
+            sandbox_id: Some("3f9c{run8}e21a".into()),
+            invocation_id: Some("{run}-4f11".into()),
+            attached_status: "Attached to {name} · tabs and panes restored".into(),
         }
     }
 }

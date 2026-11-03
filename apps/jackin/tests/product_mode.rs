@@ -130,6 +130,7 @@ fn empty_world() -> World {
         Arc::new(TestBackendData),
         Surfaces::openshell(LiveFacts {
             version: "1.4.0".into(),
+            config_path: "/home/dev/.config/jackin/config.toml".into(),
         }),
     ))
 }

@@ -10,6 +10,7 @@ use jackin_console::domain::workspace::WizardDefaults;
 fn live() -> Surfaces {
     Surfaces::openshell(LiveFacts {
         version: "1.4.0".into(),
+        config_path: "/home/dev/.config/jackin/config.toml".into(),
     })
 }
 
@@ -27,6 +28,7 @@ fn surfaces_openshell_sets_every_field() {
         fixed,
         version,
         cockpit_version,
+        config_path,
         about,
     } = live();
     assert_eq!(fixed, Some(Fixed::openshell()));
@@ -34,6 +36,10 @@ fn surfaces_openshell_sets_every_field() {
     assert_eq!(launch_role, LaunchRoleRule::Configured);
     assert_eq!(version, "1.4.0");
     assert_eq!(cockpit_version, None);
+    assert_eq!(
+        config_path.as_deref(),
+        Some("/home/dev/.config/jackin/config.toml")
+    );
     assert_eq!(account_form.default_source, Some(1));
     let labels: Vec<&str> = account_form
         .sources
@@ -136,6 +142,7 @@ mod demo {
         let mut world = world_for(Scenario::CapsuleMulti);
         world.surfaces = Surfaces::openshell(LiveFacts {
             version: "1.4.0".into(),
+            config_path: "/home/dev/.config/jackin/config.toml".into(),
         });
         let mut app = app_with(Scenario::CapsuleMulti, world);
         press(&mut app, "f10 right right right right enter");
@@ -279,7 +286,7 @@ mod demo {
         });
         assert!(demo_stage.contains("Not in this preview"));
         assert!(
-            live_stage.contains("Not available") && !live_stage.contains("Not in this preview")
+            live_stage.contains("Not supported") && !live_stage.contains("Not in this preview")
         );
         let [demo_close, live_close] = pair(Scenario::CapsuleMulti)
             .map(|w| screen(&mut after(Scenario::CapsuleMulti, w, "ctrl+b x")));

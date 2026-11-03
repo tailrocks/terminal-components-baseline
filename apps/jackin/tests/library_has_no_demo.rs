@@ -84,6 +84,11 @@ const RULES: &[Rule] = &[
     literal("Pane cleared"),
     literal("Paste clipboard"),
     literal("opened on host"),
+    literal("The clipboard is empty"),
+    literal("fix the permission and Save again"),
+    literal("3f9c"),
+    literal("-4f11"),
+    literal("tabs and panes restored"),
     Rule {
         text: "1Password locked: unlock the app and retry",
         kind: Kind::Literal,

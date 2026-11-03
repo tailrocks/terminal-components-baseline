@@ -53,7 +53,7 @@ fn the_openshell_words_avoid_the_false_strings() {
             "discard",
             "{state}",
         ] {
-            if banned == "Capsule" && name == "capsule" {
+            if banned == "Capsule" && (name == "capsule" || name.starts_with("daemon.")) {
                 continue;
             }
             assert!(!text.contains(banned), "{name} says {banned}: {text}");
@@ -314,7 +314,8 @@ fn the_debug_info_names_the_sandbox_and_the_version() {
     }
     let (demo, live) = (screen(&mut demo), screen(&mut live));
     assert!(demo.contains("Container ID") && squash(&demo).contains("Capsule 0.9.2"));
-    assert!(live.contains("Sandbox ID") && squash(&live).contains("jackin 1.4.0"));
+    assert!(squash(&live).contains("Sandbox jackin-payments-platform-7f3a"));
+    assert!(squash(&live).contains("jackin 1.4.0"));
     assert!(!live.contains("Container") && !live.contains("Capsule"));
 }
 
@@ -342,11 +343,11 @@ fn the_help_rows_name_the_sandbox() {
 fn the_inspect_dialog_follows_the_words() {
     let (demo, live) = pair(Scenario::Returning, "down right down i");
     assert!(demo.contains("Container 7f3a") && demo.contains("Daemon     attached"));
-    assert!(live.contains("Sandbox 7f3a") && live.contains("Terminal   attached"));
+    assert!(live.contains("Sandbox 7f3a") && live.contains("Capsule    attached"));
     assert!(!live.contains("Container"));
     let (demo, live) = pair(Scenario::Returning, "down right down down i");
     assert!(demo.contains("Daemon     unavailable"));
-    assert!(live.contains("Terminal   gateway unreachable"));
+    assert!(live.contains("Capsule    gateway unreachable"));
 }
 
 #[test]
@@ -358,7 +359,7 @@ fn the_instance_detail_follows_the_words() {
     assert!(live.contains("gateway · 3 s ago"));
     let (demo, live) = pair(Scenario::Returning, "down right down down");
     assert!(demo.contains("No live daemon (instance not running)"));
-    assert!(live.contains("No live terminal (sandbox not running)"));
+    assert!(live.contains("No live Capsule (sandbox not running)"));
     assert!(demo.contains("Live topology") && demo.contains("  unavailable"));
     assert!(live.contains("  unreachable"));
 }
@@ -376,7 +377,7 @@ fn summary_pair(keys: &str) -> (String, String) {
 fn the_summary_lines_follow_the_words() {
     let (demo, live) = summary_pair("down right down");
     assert!(demo.contains("daemon · 3 tabs · 5 panes"));
-    assert!(live.contains("terminal · 3 tabs · 5 panes"));
+    assert!(live.contains("capsule · 3 tabs · 5 panes"));
     let (demo, live) = summary_pair("down right down down");
     assert!(demo.contains("daemon unavailable"));
     assert!(live.contains("gateway unreachable"));
@@ -392,7 +393,7 @@ fn the_summary_names_a_terminal_without_tabs() {
         screen_at(&mut app, 80, 24)
     });
     assert!(demo.contains("daemon reports no tabs"));
-    assert!(live.contains("terminal · no tabs"));
+    assert!(live.contains("capsule · no tabs"));
 }
 
 #[test]
@@ -619,8 +620,8 @@ fn the_terminal_without_tabs_follows_the_words() {
     });
     assert!(demo.contains("Daemon reports no tabs"));
     assert!(squash(&demo).contains("Daemon attached · no tabs"));
-    assert!(live.contains("No terminal tabs open"));
-    assert!(squash(&live).contains("Terminal attached · no tabs"));
+    assert!(live.contains("No Capsule tabs open"));
+    assert!(squash(&live).contains("Capsule attached · no tabs"));
 }
 
 #[test]

@@ -193,7 +193,10 @@ impl SettingsScreen {
                 match &w.surfaces.vocabulary.global_config {
                     Some(path) => format!(
                         "global config · {}",
-                        w.tilde(&fill_in(path, &[("home", &w.home)]))
+                        w.tilde(&fill_in(
+                            path,
+                            &[("home", &w.home), ("config", &w.config_file())]
+                        ))
                     ),
                     None => "global config".to_owned(),
                 },
@@ -347,9 +350,15 @@ impl SettingsScreen {
                 WidgetId::of("settings.savefail"),
                 "Settings error",
                 vec![
-                    Prop::new("Error", w.surfaces.vocabulary.save_error_global.as_str()),
+                    Prop::new(
+                        "Error",
+                        fill_in(
+                            &w.surfaces.vocabulary.save_error_global,
+                            &[("config", &w.config_file())],
+                        ),
+                    ),
                     Prop::new("State", "your edits are intact · nothing was written"),
-                    Prop::new("Next", "fix the permission and Save again"),
+                    Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
                 ],
             )
             .error()

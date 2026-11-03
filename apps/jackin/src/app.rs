@@ -30,6 +30,7 @@ use ratatui::layout::{Position, Rect};
 use crate::arbiter::{EntryDecision, ExitDecision};
 use crate::domain::instance::InstanceId;
 use crate::domain::instance::InstanceStatus;
+use crate::domain::vocabulary::fill_in;
 use crate::launch::LaunchTarget;
 use crate::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_ROLES, TAB_USAGE};
 use crate::panes::PaneId;
@@ -1733,10 +1734,11 @@ impl App {
                         .get(&instance)
                         .map(|d| d.workspace.clone())
                         .unwrap_or_default();
-                    self.set_status(
-                        &format!("Attached to {name} · tabs and panes restored"),
-                        Tone::Secondary,
+                    let status = fill_in(
+                        &self.world.surfaces.vocabulary.attached_status,
+                        &[("name", &name)],
                     );
+                    self.set_status(&status, Tone::Secondary);
                 }
             }
             Go::NewSession {

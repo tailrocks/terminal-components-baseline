@@ -340,7 +340,7 @@ impl CapsuleScreen {
         }
         let mut paste = MenuItem::new(&w.surfaces.vocabulary.paste_label);
         if w.clipboard.is_none() {
-            paste = paste.reason("The clipboard is empty");
+            paste = paste.reason(w.surfaces.vocabulary.paste_empty_reason.as_str());
         }
         let mut zoom = MenuItem::new("Zoom pane").shortcut("Ctrl+B z").separator();
         if zoomed {
@@ -1220,14 +1220,15 @@ impl CapsuleScreen {
             },
             None => "(none)".into(),
         };
-        let noun = &w.surfaces.vocabulary.container_noun;
-        let mut props = vec![
-            Prop::new(noun, i.container_id()).copyable(),
-            Prop::new(
-                &format!("{noun} ID"),
-                format!("3f9c{}e21a", clip(&i.run_id.replace('-', ""), 8)),
-            )
-            .copyable(),
+        let v = &w.surfaces.vocabulary;
+        let noun = &v.container_noun;
+        let mut props = vec![Prop::new(noun, i.container_id()).copyable()];
+        if let Some(id) = &v.sandbox_id {
+            let run8 = clip(&i.run_id.replace('-', ""), 8);
+            props
+                .push(Prop::new(&format!("{noun} ID"), fill_in(id, &[("run8", &run8)])).copyable());
+        }
+        props.extend([
             Prop::new("Role", i.role.clone()),
             Prop::new("Agent", agent),
             Prop::new("Workdir", i.workdir.clone()),
@@ -1236,9 +1237,11 @@ impl CapsuleScreen {
                 w.surfaces.vocabulary.version_label.as_str(),
                 w.surfaces.version.as_str(),
             ),
-            Prop::new("Invocation ID", format!("{}-4f11", i.run_id)).copyable(),
-        ];
-        if let Some(log) = &w.surfaces.vocabulary.host_log {
+        ]);
+        if let Some(id) = &v.invocation_id {
+            props.push(Prop::new("Invocation ID", fill_in(id, &[("run", &i.run_id)])).copyable());
+        }
+        if let Some(log) = &v.host_log {
             props.push(Prop::new("Host log", fill_in(log, &[("run", &i.run_id)])));
         }
         let _ = ws;
