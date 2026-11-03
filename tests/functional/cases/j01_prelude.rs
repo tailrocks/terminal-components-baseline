@@ -9,9 +9,11 @@
 //! `returning` leaves `save_fails_once` false, so the first save succeeds.
 //! `create` does not write the file. The editor preview does.
 
+use std::path::PathBuf;
 use std::time::Duration;
 
 use tui_test::TerminalSnapshot;
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{App, JACKIN, Launch, Point, find_all, row_text, text, try_launch};
 
@@ -228,9 +230,36 @@ fn nudge(app: &App, quiet_frame: impl Fn(&TerminalSnapshot) -> bool) {
     });
 }
 
-fn shot(app: &App, checkpoint: &str) {
+fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
+    }
+}
+
+/// `visual` waits for a quiet screen, and that wait outlives the 5 s cancel
+/// status. Compare the frame that still shows it.
+fn shot_held(app: &App, checkpoint: &str) {
     nudge(app, status_duplicate);
-    app.visual(&visual_id(checkpoint));
+    let screen = app.wait_screen("cancelled status", status_duplicate);
+    check_frame(app, &screen, &visual_id(checkpoint));
 }
 
 fn preview_button(app: &App, label: &str) -> Point {
@@ -280,13 +309,10 @@ fn open_source(app: &App) -> TerminalSnapshot {
         text(&screen)
     );
     app.key("n");
-    let source = wait_title(app, SOURCE_TITLE);
-    assert!(
-        focused_line(&source).contains(".."),
-        "parent row\n{}",
-        text(&source)
-    );
-    source
+    // The dialog title paints before the parent row is focused.
+    app.wait_screen(SOURCE_TITLE, |screen| {
+        text(screen).contains(SOURCE_TITLE) && focused_line(screen).contains("..")
+    })
 }
 
 #[test]
@@ -419,21 +445,24 @@ fn j01_prelude_steps() {
     assert!(text(&edit).contains(WORK_PATH), "{}", text(&edit));
     assert!(!text(&edit).contains(WORK_TITLE), "{}", text(&edit));
     app.key("escape");
-    let back_dest = wait_title(&app, DEST_TITLE);
-    assert!(
-        focused_line(&back_dest).contains(EDIT_OPTION),
-        "Edit destination stays selected\n{}",
-        text(&back_dest)
-    );
+    // The destination title paints before focus returns to this option.
+    app.wait_screen("edit destination stays selected", |screen| {
+        text(screen).contains(DEST_TITLE)
+            && !text(screen).contains(EDIT_TITLE)
+            && focused_line(screen).contains(EDIT_OPTION)
+    });
     app.key("enter");
-    let edit_again = wait_title(&app, EDIT_TITLE);
+    // The edit title paints before focus lands in the path field.
+    let edit_again = app.wait_screen("destination field", |screen| {
+        text(screen).contains(EDIT_TITLE)
+            && !text(screen).contains(WORK_TITLE)
+            && focused_line(screen).contains(WORK_PATH)
+    });
     assert!(
         text(&edit_again).contains(WORK_PATH),
         "{}",
         text(&edit_again)
     );
-    let field = focused_line(&edit_again);
-    assert!(field.contains(WORK_PATH), "destination field\n{field}");
     app.key("enter");
     let workdir = wait_title(&app, WORK_TITLE);
     assert!(text(&workdir).contains(WORK_PATH), "{}", text(&workdir));
@@ -470,13 +499,15 @@ fn j01_prelude_steps() {
     let checkpoint = app.wait_screen("duplicate name", duplicate_open);
     assert_eq!((checkpoint.cols(), checkpoint.rows()), (120, 40));
     rearm_cancelled_duplicate(&app);
-    shot(&app, WIDE);
+    // `visual` waits for a quiet screen, and that wait outlives the 5 s
+    // cancel status on both sizes.
+    shot_held(&app, WIDE);
     app.resize(80, 24);
     let narrow = app.wait_screen("80x24", |screen| {
         screen.cols() == 80 && screen.rows() == 24 && status_duplicate(screen)
     });
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
-    shot(&app, NARROW);
+    shot_held(&app, NARROW);
     app.resize(120, 40);
     app.wait_screen("120x40 again", |screen| {
         screen.cols() == 120 && screen.rows() == 40 && duplicate_open(screen)

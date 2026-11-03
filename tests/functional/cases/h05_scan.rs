@@ -186,32 +186,42 @@ fn spinner_frame_ready(
         && first_spinner(screen)
 }
 
-/// The accepted frame is the first spinner glyph. A follow-up paint replaces
-/// it before `visual` locks, so return the frame that held the glyph.
-fn hold_first_spinner(
+/// The chrome names the size it laid out. A resize can report the new grid
+/// while the previous layout, one column wider, is still on screen.
+fn labelled_size(screen: &TerminalSnapshot, cols: u16, rows: u16) -> bool {
+    text(screen).contains(&format!("{cols}×{rows}"))
+}
+
+/// The accepted frame is the first spinner glyph at this size, while the
+/// cancel status is still up. A 200 ms identical hold skips that paint: the
+/// layout corrects, or the glyph advances, and the status then expires.
+fn capture_labelled_spinner(
     app: &App,
     cols: u16,
     rows: u16,
     ready: &impl Fn(&TerminalSnapshot) -> bool,
 ) -> Option<TerminalSnapshot> {
-    let started = Instant::now();
-    let mut seen = app.screen();
+    let seen = app.screen();
     if !spinner_frame_ready(&seen, cols, rows, ready) {
         return None;
     }
-    let cursor = seen.cursor_local();
-    let glyphs = text(&seen);
-    while started.elapsed() < Duration::from_millis(200) {
-        std::thread::sleep(Duration::from_millis(40));
-        seen = app.screen();
-        if !spinner_frame_ready(&seen, cols, rows, ready)
-            || seen.cursor_local() != cursor
-            || text(&seen) != glyphs
-        {
+    if labelled_size(&seen, cols, rows) && text(&seen).contains(CANCELLED) {
+        return Some(seen);
+    }
+    // The grid is already the target size and the glyph is the first one.
+    // Give the chrome one beat to drop the previous size from its status.
+    let started = Instant::now();
+    while started.elapsed() < Duration::from_millis(150) {
+        std::thread::sleep(Duration::from_millis(10));
+        let seen = app.screen();
+        if !spinner_frame_ready(&seen, cols, rows, ready) {
             return None;
         }
+        if labelled_size(&seen, cols, rows) && text(&seen).contains(CANCELLED) {
+            return Some(seen);
+        }
     }
-    Some(seen)
+    None
 }
 
 fn settle_spinner(
@@ -231,10 +241,14 @@ fn settle_spinner(
         let screen = app.wait_screen("spinner sample", |screen| {
             screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && ready(screen)
         });
-        if first_spinner(&screen) {
-            if let Some(held) = hold_first_spinner(app, cols, rows, &ready) {
-                return held;
-            }
+        if !text(&screen).contains(CANCELLED) {
+            panic!(
+                "cancel status left before the first spinner\n{}",
+                text(&screen)
+            );
+        }
+        if let Some(held) = capture_labelled_spinner(app, cols, rows, &ready) {
+            return held;
         }
         if start.elapsed() > Duration::from_secs(12) {
             panic!("spinner did not reach the first frame\n{}", text(&screen));
