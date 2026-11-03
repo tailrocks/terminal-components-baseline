@@ -429,17 +429,38 @@ impl World {
                 at_secs: report.at_secs,
             },
             None => HealthView {
-                noun: self
-                    .surfaces
-                    .doctor
-                    .as_ref()
-                    .map_or_else(|| "daemon".into(), |d| d.noun.clone()),
+                noun: self.surfaces.doctor.as_ref().map_or_else(
+                    || self.surfaces.vocabulary.health_noun.clone(),
+                    |d| d.noun.clone(),
+                ),
                 health: match self.daemon_health {
                     DaemonHealth::Healthy => Health::Healthy,
                     DaemonHealth::Stale => Health::Stale,
                 },
                 at_secs: self.last_refresh_secs,
             },
+        }
+    }
+
+    pub fn about_props(&self) -> Vec<junie_tui::widgets::props::Prop> {
+        use junie_tui::widgets::props::Prop;
+        match &self.surfaces.about {
+            Some(rows) => rows
+                .iter()
+                .map(|(label, value)| Prop::new(label, value.as_str()))
+                .collect(),
+            None => vec![
+                Prop::new("Product", "jackin-preview · deterministic redesign preview"),
+                Prop::new("Scenario", self.scenario.name()),
+                Prop::new(
+                    "Construct",
+                    "simulated · nothing here touches a real container",
+                ),
+                Prop::new(
+                    "Design system",
+                    "Junie-inspired Ratatui components (junie_tui)",
+                ),
+            ],
         }
     }
 
@@ -617,19 +638,15 @@ impl World {
             ),
             None => (AccountOrder::Demo, None),
         };
-        let mut resolved = crate::domain::precedence::resolve_account(
+        crate::domain::precedence::resolve_account(
             provider,
             ws,
             role,
-            session,
+            session.map(|s| (s, self.surfaces.vocabulary.session_choice.as_str())),
             &self.accounts,
             order,
             binding,
-        );
-        if resolved.level == crate::domain::precedence::PrecedenceLevel::Session {
-            resolved.why = self.surfaces.vocabulary.session_choice.clone();
-        }
-        resolved
+        )
     }
 
     pub fn agent_mode(&self, agent: Agent) -> AuthMode {

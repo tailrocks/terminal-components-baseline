@@ -53,7 +53,7 @@ pub fn resolve_account(
     provider: Provider,
     ws: Option<&Workspace>,
     role: Option<&str>,
-    session: Option<&AccountId>,
+    session: Option<(&AccountId, &str)>,
     registry: &AccountRegistry,
     order: AccountOrder,
     binding: Option<&AccountId>,
@@ -65,10 +65,10 @@ pub fn resolve_account(
             .is_none_or(|e| e.iter().any(|x| &x.id == id && x.provider == provider))
     };
     let mut candidates: Vec<(PrecedenceLevel, AccountId, String)> = vec![];
-    if let Some(s) = session
+    if let Some((s, why)) = session
         && in_set(s)
     {
-        candidates.push((PrecedenceLevel::Session, s.clone(), String::new()));
+        candidates.push((PrecedenceLevel::Session, s.clone(), why.to_owned()));
     }
     let workspace_choice = || {
         ws.and_then(|w| w.accounts.preferred.get(&provider).map(|id| (w, id)))

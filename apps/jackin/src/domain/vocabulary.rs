@@ -14,13 +14,49 @@ pub struct StatusWords {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DaemonWords {
+    pub inspect_label: String,
+    pub inspect_unavailable: String,
+    pub no_tabs: String,
+    pub unavailable_running: String,
+    pub unavailable_stopped: String,
+    pub topology_source: String,
+    pub topology_unavailable: String,
+    pub card_unavailable: String,
+    pub list_tabs: String,
+    pub list_no_tabs: String,
+    pub list_unavailable: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LifecycleWords {
+    pub restored: String,
+    pub stop_body: String,
+    pub purge_action: String,
+    pub purge_scope: String,
+    pub copy_dirty: String,
+    pub copy_clean: String,
+    pub risk_dirty: String,
+    pub risk_clean: String,
+    pub purged: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Vocabulary {
     pub construct: String,
+    pub instances_where: String,
+    pub still_inside: String,
+    pub health_noun: String,
     pub capsule: String,
+    pub version_label: String,
+    pub container_noun: String,
+    pub quit_lines: [String; 2],
     pub last_session_ended: String,
     pub never_reached: String,
     pub session_choice: String,
     pub status: StatusWords,
+    pub daemon: DaemonWords,
+    pub lifecycle: LifecycleWords,
 
     pub project_tab: String,
     pub project_one: String,
@@ -35,7 +71,9 @@ pub struct Vocabulary {
     pub github_workspace: String,
     pub github_git_mount: String,
     pub github_repo_mount: String,
-    pub github_pull_request: String,
+    pub github_open_label: String,
+    pub github_open_meta: String,
+    pub github_copied: String,
     pub github_menu: String,
     pub trust_browser: String,
     pub trust_reveal: String,
@@ -51,25 +89,57 @@ impl Vocabulary {
     pub fn openshell() -> Self {
         Self {
             construct: "the sandbox".into(),
+            instances_where: "on the gateway".into(),
+            still_inside: "Still running on the gateway".into(),
+            health_noun: "gateway".into(),
             capsule: "Terminal".into(),
+            version_label: "jackin".into(),
+            container_noun: "Sandbox".into(),
+            quit_lines: [
+                "! Quitting detaches; the sandbox keeps running.".into(),
+                "! Work stays in the sandbox until you export it.".into(),
+            ],
             last_session_ended: "Last session ended · the sandbox keeps running".into(),
-            never_reached: "never became ready".into(),
-            session_choice: "Session choice · picked for this session in the terminal".into(),
+            never_reached: "never got ready".into(),
+            session_choice: "Session choice · picked for this session only".into(),
             status: StatusWords {
                 running: "The sandbox is running.".into(),
-                clean_exited: "The final session ended cleanly; the sandbox is stopped.".into(),
-                crashed: "The main process stopped unexpectedly; the sandbox is kept for inspection."
+                clean_exited: "The final session ended cleanly; nothing to attach to.".into(),
+                crashed: "The agent exited with an error; the sandbox is kept for inspection."
                     .into(),
-                preserved_dirty:
-                    "Stopped with uncommitted changes in the Workspace; kept until you decide."
-                        .into(),
-                preserved_unpushed:
-                    "Stopped with commits that were never pushed; kept until you decide.".into(),
-                restore_available: "Stopped cleanly; start it again to continue.".into(),
+                preserved_dirty: "Has uncommitted changes in the sandbox; kept until you decide."
+                    .into(),
+                preserved_unpushed: "Has commits that were never exported; kept until you decide."
+                    .into(),
+                restore_available: "Stopped cleanly; restore it to continue.".into(),
                 superseded: "Replaced by a newer instance for the same Workspace.".into(),
-                purged: "The sandbox and its records were removed.".into(),
+                purged: "The sandbox was deleted.".into(),
                 failed_setup: "Launch failed before the sandbox was ready; nothing to attach to."
                     .into(),
+            },
+            daemon: DaemonWords {
+                inspect_label: "Terminal".into(),
+                inspect_unavailable: "gateway unreachable".into(),
+                no_tabs: "No terminal tabs open".into(),
+                unavailable_running: "Gateway unreachable — showing saved sessions".into(),
+                unavailable_stopped: "No live terminal (sandbox not running)".into(),
+                topology_source: "gateway · {ago}".into(),
+                topology_unavailable: "unreachable".into(),
+                card_unavailable: "running {duration} · gateway unreachable".into(),
+                list_tabs: "terminal · {tabs} · {panes}".into(),
+                list_no_tabs: "terminal · no tabs".into(),
+                list_unavailable: "gateway unreachable".into(),
+            },
+            lifecycle: LifecycleWords {
+                restored: "Restored {id} · sandbox restarted".into(),
+                stop_body: "The sandbox stops and every session in it ends. You can restore it later ({state}).".into(),
+                purge_action: "delete the sandbox".into(),
+                purge_scope: "1 sandbox · {sessions} · {copy}".into(),
+                copy_dirty: "project copy with changes".into(),
+                copy_clean: "clean project copy".into(),
+                risk_dirty: "uncommitted changes in the sandbox are lost".into(),
+                risk_clean: "the sandbox is deleted".into(),
+                purged: "Purged {id} · the sandbox was deleted".into(),
             },
 
             project_tab: "Project".into(),
@@ -87,8 +157,10 @@ impl Vocabulary {
 
             github_workspace: "GitHub · {url}".into(),
             github_git_mount: "GitHub · https://{url}".into(),
-            github_repo_mount: "GitHub · {path}".into(),
-            github_pull_request: "GitHub · the pull request".into(),
+            github_repo_mount: "GitHub · {url}".into(),
+            github_open_label: "Copy URL".into(),
+            github_open_meta: "Enter copies the row · y copies".into(),
+            github_copied: "Copied the GitHub URL".into(),
             github_menu: "Show GitHub URL".into(),
             trust_browser: "Source · {source}".into(),
             trust_reveal: "Source · {source}".into(),
@@ -102,10 +174,17 @@ impl Vocabulary {
     }
 
     pub fn fields(&self) -> Vec<(&'static str, &str)> {
-        let s = &self.status;
+        let (s, d, l) = (&self.status, &self.daemon, &self.lifecycle);
         vec![
             ("construct", self.construct.as_str()),
+            ("instances_where", &self.instances_where),
+            ("still_inside", &self.still_inside),
+            ("health_noun", &self.health_noun),
             ("capsule", &self.capsule),
+            ("version_label", &self.version_label),
+            ("container_noun", &self.container_noun),
+            ("quit_lines.0", &self.quit_lines[0]),
+            ("quit_lines.1", &self.quit_lines[1]),
             ("last_session_ended", &self.last_session_ended),
             ("never_reached", &self.never_reached),
             ("session_choice", &self.session_choice),
@@ -118,6 +197,26 @@ impl Vocabulary {
             ("status.superseded", &s.superseded),
             ("status.purged", &s.purged),
             ("status.failed_setup", &s.failed_setup),
+            ("daemon.inspect_label", &d.inspect_label),
+            ("daemon.inspect_unavailable", &d.inspect_unavailable),
+            ("daemon.no_tabs", &d.no_tabs),
+            ("daemon.unavailable_running", &d.unavailable_running),
+            ("daemon.unavailable_stopped", &d.unavailable_stopped),
+            ("daemon.topology_source", &d.topology_source),
+            ("daemon.topology_unavailable", &d.topology_unavailable),
+            ("daemon.card_unavailable", &d.card_unavailable),
+            ("daemon.list_tabs", &d.list_tabs),
+            ("daemon.list_no_tabs", &d.list_no_tabs),
+            ("daemon.list_unavailable", &d.list_unavailable),
+            ("lifecycle.restored", &l.restored),
+            ("lifecycle.stop_body", &l.stop_body),
+            ("lifecycle.purge_action", &l.purge_action),
+            ("lifecycle.purge_scope", &l.purge_scope),
+            ("lifecycle.copy_dirty", &l.copy_dirty),
+            ("lifecycle.copy_clean", &l.copy_clean),
+            ("lifecycle.risk_dirty", &l.risk_dirty),
+            ("lifecycle.risk_clean", &l.risk_clean),
+            ("lifecycle.purged", &l.purged),
             ("project_tab", &self.project_tab),
             ("project_one", &self.project_one),
             ("project_many", &self.project_many),
@@ -131,7 +230,9 @@ impl Vocabulary {
             ("github_workspace", &self.github_workspace),
             ("github_git_mount", &self.github_git_mount),
             ("github_repo_mount", &self.github_repo_mount),
-            ("github_pull_request", &self.github_pull_request),
+            ("github_open_label", &self.github_open_label),
+            ("github_open_meta", &self.github_open_meta),
+            ("github_copied", &self.github_copied),
             ("github_menu", &self.github_menu),
             ("trust_browser", &self.trust_browser),
             ("trust_reveal", &self.trust_reveal),
@@ -164,13 +265,30 @@ impl Vocabulary {
     pub fn count(&self, n: usize) -> String {
         junie_tui::ui::text::plural(n, &self.project_one, &self.project_many)
     }
+
+    pub fn info_label(&self) -> String {
+        format!("{} info", self.container_noun)
+    }
+
+    pub fn noun_lower(&self) -> String {
+        self.container_noun.to_lowercase()
+    }
 }
 
 impl Default for Vocabulary {
     fn default() -> Self {
         Self {
             construct: "the Construct".into(),
+            instances_where: "in the Construct".into(),
+            still_inside: "Still inside the Construct".into(),
+            health_noun: "daemon".into(),
             capsule: "Capsule".into(),
+            version_label: "Capsule".into(),
+            container_noun: "Container".into(),
+            quit_lines: [
+                "! Quitting force-stops the container immediately.".into(),
+                "! Work not saved outside the container will be lost.".into(),
+            ],
             last_session_ended: "Last session ended · the Capsule shuts down".into(),
             never_reached: "never reached the Capsule".into(),
             session_choice: "Session choice · picked for this session in Capsule".into(),
@@ -191,6 +309,30 @@ impl Default for Vocabulary {
                 failed_setup: "Launch failed before the Capsule was ready; nothing to attach to."
                     .into(),
             },
+            daemon: DaemonWords {
+                inspect_label: "Daemon".into(),
+                inspect_unavailable: "unavailable".into(),
+                no_tabs: "Daemon reports no tabs".into(),
+                unavailable_running: "Daemon unavailable — showing manifest sessions".into(),
+                unavailable_stopped: "No live daemon (instance not running)".into(),
+                topology_source: "daemon · {ago}".into(),
+                topology_unavailable: "unavailable".into(),
+                card_unavailable: "running {duration} · daemon unavailable".into(),
+                list_tabs: "daemon · {tabs} · {panes}".into(),
+                list_no_tabs: "daemon reports no tabs".into(),
+                list_unavailable: "daemon unavailable".into(),
+            },
+            lifecycle: LifecycleWords {
+                restored: "Restored {id} · container restarted".into(),
+                stop_body: "The container stops and every session in it ends. The instance record stays reconnectable ({state}).".into(),
+                purge_action: "purge the instance record and its container".into(),
+                purge_scope: "1 container · {sessions} · {copy}".into(),
+                copy_dirty: "worktree with changes".into(),
+                copy_clean: "clean worktree".into(),
+                risk_dirty: "uncommitted changes in the worktree are lost".into(),
+                risk_clean: "the container and its recovery state are removed".into(),
+                purged: "Purged {id} · container, sidecar, volume and recovery state removed".into(),
+            },
 
             project_tab: "Mounts".into(),
             project_one: "mount".into(),
@@ -207,8 +349,10 @@ impl Default for Vocabulary {
 
             github_workspace: "Opened {url} on the host".into(),
             github_git_mount: "Opened https://{url} in the browser".into(),
-            github_repo_mount: "Opened {path} on GitHub".into(),
-            github_pull_request: "Opened the pull request on the host (gated host action)".into(),
+            github_repo_mount: "Opened {url} on GitHub".into(),
+            github_open_label: "Open PR…".into(),
+            github_open_meta: "open uses a gated host action".into(),
+            github_copied: "Opened the pull request on the host (gated host action)".into(),
             github_menu: "Open on GitHub".into(),
             trust_browser: "Opened https://{source} in the browser".into(),
             trust_reveal: "Revealed {source} in Finder".into(),

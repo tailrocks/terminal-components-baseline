@@ -81,10 +81,10 @@ fn the_wizard_data_creates_the_workspace_at_the_destination() {
     let mut app = live();
     press(&mut app, "n down space enter enter enter");
     assert_eq!(app.route(), Route::Editor);
-    let editor = screen(&mut app);
-    assert!(
-        editor.contains("▎ crates") || editor.contains("crates"),
-        "{editor}"
-    );
-    assert!(editor.contains("/sandbox/project"), "{editor}");
+    assert!(screen(&mut app).contains("crates"));
+    click_text(&mut app, "Project");
+    let project = screen(&mut app);
+    assert!(project.contains("Project"), "{project}");
+    assert!(project.contains("/sandbox/project"), "{project}");
+    assert!(!project.contains("Working directory"), "{project}");
 }

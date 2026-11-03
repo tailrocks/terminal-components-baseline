@@ -521,9 +521,9 @@ impl ManagerScreen {
                 w.daemons.insert(id.to_owned(), d);
                 crate::world::refresh_snapshots(w);
                 w.sync_arbiter();
-                cx.status(format!(
-                    "Restored {} · container restarted",
-                    id.trim_start_matches("jk-")
+                cx.status(fill_in(
+                    &w.surfaces.vocabulary.lifecycle.restored,
+                    &[("id", id.trim_start_matches("jk-"))],
                 ));
                 cx.go(Go::Attach {
                     instance: id.to_owned(),
@@ -559,7 +559,7 @@ impl ManagerScreen {
         let ws = i.workspace.and_then(|x| w.workspace(x));
         let account = w.account_for(i.agent.provider(), ws, Some(&i.role), None);
         let mut props = vec![
-            Prop::new("Container", i.container_id()).copyable(),
+            Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()).copyable(),
             Prop::new(
                 "Image",
                 format!(
@@ -601,13 +601,17 @@ impl ManagerScreen {
                 Tone::Secondary
             }),
         ];
+        let words = &w.surfaces.vocabulary.daemon;
         match &i.daemon {
-            DaemonSnapshot::Unavailable => {
-                props.push(Prop::new("Daemon", "unavailable").tone(Tone::Warning))
+            DaemonSnapshot::Unavailable => props.push(
+                Prop::new(&words.inspect_label, words.inspect_unavailable.as_str())
+                    .tone(Tone::Warning),
+            ),
+            DaemonSnapshot::NoTabs => {
+                props.push(Prop::new(&words.inspect_label, "attached · no tabs"))
             }
-            DaemonSnapshot::NoTabs => props.push(Prop::new("Daemon", "attached · no tabs")),
             DaemonSnapshot::Tabs(t) => props.push(Prop::new(
-                "Daemon",
+                &words.inspect_label,
                 format!(
                     "attached · {} · {}",
                     plural(t.len(), "tab", "tabs"),
@@ -617,7 +621,11 @@ impl ManagerScreen {
         }
         let d = InfoDialog::new(
             WidgetId::of("manager.info"),
-            &format!("Container {}", id.trim_start_matches("jk-")),
+            &format!(
+                "{} {}",
+                w.surfaces.vocabulary.container_noun,
+                id.trim_start_matches("jk-")
+            ),
             props,
         )
         .meta("read-only");
@@ -637,13 +645,16 @@ impl ManagerScreen {
         let d = Dialog::destructive(
             WidgetId::of("manager.stop"),
             &format!("Stop instance {short}?"),
-            &format!(
-                "The container stops and every session in it ends. The instance record stays reconnectable ({}).",
-                if i.is_dirty() {
-                    "preserved with uncommitted work"
-                } else {
-                    "restore available"
-                }
+            &fill_in(
+                &w.surfaces.vocabulary.lifecycle.stop_body,
+                &[(
+                    "state",
+                    if i.is_dirty() {
+                        "preserved with uncommitted work"
+                    } else {
+                        "restore available"
+                    },
+                )],
             ),
             "Stop",
         )
@@ -660,31 +671,40 @@ impl ManagerScreen {
             .map(|x| x.name.clone())
             .unwrap_or("current directory".into());
         let sessions = i.sessions.as_ref().map(|s| s.len()).unwrap_or(0);
+        let words = &w.surfaces.vocabulary.lifecycle;
         let facts = vec![
-            Prop::new("Action", "purge the instance record and its container").tone(Tone::Error),
+            Prop::new("Action", words.purge_action.as_str()).tone(Tone::Error),
             Prop::new(
                 "Target",
                 format!("{short} · {ws} › {} · {}", i.role, i.agent.label()),
             ),
             Prop::new(
                 "Scope",
-                format!(
-                    "1 container · {} · {}",
-                    plural(sessions, "preserved session", "preserved sessions"),
-                    if i.is_dirty() {
-                        "worktree with changes"
-                    } else {
-                        "clean worktree"
-                    }
+                fill_in(
+                    &words.purge_scope,
+                    &[
+                        (
+                            "sessions",
+                            &plural(sessions, "preserved session", "preserved sessions"),
+                        ),
+                        (
+                            "copy",
+                            if i.is_dirty() {
+                                &words.copy_dirty
+                            } else {
+                                &words.copy_clean
+                            },
+                        ),
+                    ],
                 ),
             )
             .tone(Tone::Secondary),
             Prop::new(
                 "Risk",
                 if i.is_dirty() {
-                    "uncommitted changes in the worktree are lost"
+                    words.risk_dirty.as_str()
                 } else {
-                    "the container and its recovery state are removed"
+                    words.risk_clean.as_str()
                 },
             )
             .tone(Tone::Warning),
@@ -909,14 +929,14 @@ impl ManagerScreen {
                     }
                 }
                 DaemonSnapshot::NoTabs => rows.push(DetailRow::Text(
-                    "Daemon reports no tabs".into(),
+                    w.surfaces.vocabulary.daemon.no_tabs.clone(),
                     Tone::Muted,
                 )),
                 DaemonSnapshot::Unavailable => rows.push(DetailRow::Text(
                     if i.status.is_live() {
-                        "Daemon unavailable — showing manifest sessions".into()
+                        w.surfaces.vocabulary.daemon.unavailable_running.clone()
                     } else {
-                        "No live daemon (instance not running)".into()
+                        w.surfaces.vocabulary.daemon.unavailable_stopped.clone()
                     },
                     Tone::Muted,
                 )),
@@ -1488,7 +1508,7 @@ impl ManagerScreen {
                             acc.level.label()
                         ),
                     ),
-                    Prop::new("Container", i.container_id()),
+                    Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()),
                     Prop::new(
                         "Started",
                         format!(
@@ -1542,9 +1562,13 @@ impl ManagerScreen {
                     "Live topology",
                     t.secondary().add_modifier(Modifier::BOLD),
                 );
+                let words = &w.surfaces.vocabulary.daemon;
                 let src = match &i.daemon {
-                    DaemonSnapshot::Unavailable => "unavailable".to_owned(),
-                    _ => format!("daemon · {}", w.clock.ago(i.last_seen_secs)),
+                    DaemonSnapshot::Unavailable => words.topology_unavailable.clone(),
+                    _ => fill_in(
+                        &words.topology_source,
+                        &[("ago", &w.clock.ago(i.last_seen_secs))],
+                    ),
                 };
                 let sw = width(&src) as u16;
                 if y < inner.bottom() && inner.width > sw + 16 {
@@ -1710,14 +1734,17 @@ impl ManagerScreen {
                     plural(tabs.len(), "tab", "tabs"),
                     plural(tabs.iter().map(|t| t.panes.len()).sum(), "pane", "panes")
                 ),
-                _ => format!(
-                    "running {} · daemon unavailable",
-                    junie_tui::ui::text::duration(
-                        std::time::Duration::from_secs(
-                            (w.now_secs() - i.created_secs).max(0) as u64
+                _ => fill_in(
+                    &w.surfaces.vocabulary.daemon.card_unavailable,
+                    &[(
+                        "duration",
+                        &junie_tui::ui::text::duration(
+                            std::time::Duration::from_secs(
+                                (w.now_secs() - i.created_secs).max(0) as u64
+                            ),
+                            junie_tui::ui::text::DurationStyle::Spoken,
                         ),
-                        junie_tui::ui::text::DurationStyle::Spoken
-                    )
+                    )],
                 ),
             };
             buf.set_string(
@@ -1969,9 +1996,9 @@ impl Page<Jackin> for ManagerScreen {
                 }
                 w.daemons.remove(instance);
                 w.sync_arbiter();
-                cx.status(format!(
-                    "Purged {} · container, sidecar, volume and recovery state removed",
-                    instance.trim_start_matches("jk-")
+                cx.status(fill_in(
+                    &w.surfaces.vocabulary.lifecycle.purged,
+                    &[("id", instance.trim_start_matches("jk-"))],
                 ));
             }
             Msg::Refreshed { ok: false } => {
@@ -2714,13 +2741,26 @@ impl ManagerScreen {
                     ],
                     one(
                         match &i.daemon {
-                            DaemonSnapshot::Tabs(tabs) => format!(
-                                "daemon · {} · {}",
-                                plural(tabs.len(), "tab", "tabs"),
-                                plural(tabs.iter().map(|t| t.panes.len()).sum(), "pane", "panes")
+                            DaemonSnapshot::Tabs(tabs) => fill_in(
+                                &w.surfaces.vocabulary.daemon.list_tabs,
+                                &[
+                                    ("tabs", &plural(tabs.len(), "tab", "tabs")),
+                                    (
+                                        "panes",
+                                        &plural(
+                                            tabs.iter().map(|t| t.panes.len()).sum(),
+                                            "pane",
+                                            "panes",
+                                        ),
+                                    ),
+                                ],
                             ),
-                            DaemonSnapshot::NoTabs => "daemon reports no tabs".into(),
-                            DaemonSnapshot::Unavailable => "daemon unavailable".into(),
+                            DaemonSnapshot::NoTabs => {
+                                w.surfaces.vocabulary.daemon.list_no_tabs.clone()
+                            }
+                            DaemonSnapshot::Unavailable => {
+                                w.surfaces.vocabulary.daemon.list_unavailable.clone()
+                            }
                         },
                         Tone::Muted,
                     ),

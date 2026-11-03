@@ -1402,7 +1402,7 @@ impl ConfigTabs {
                         MountSource::Host(p) if m.kind == MountKind::Repository => {
                             cx.status(fill_in(
                                 &w.surfaces.vocabulary.github_repo_mount,
-                                &[("path", w.tilde(p).as_str())],
+                                &[("url", w.tilde(p).as_str())],
                             ))
                         }
                         _ => cx.error("no GitHub URL for this mount"),
@@ -2026,7 +2026,7 @@ impl ConfigTabs {
                 "ro",
                 Checkbox::new(
                     f.sub("ro"),
-                    "Mount read-only",
+                    &w.surfaces.vocabulary.read_only_label,
                     m.as_ref().is_some_and(|m| m.readonly),
                 ),
             ),

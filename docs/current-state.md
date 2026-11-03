@@ -28,7 +28,7 @@ does not exist in this tree yet.
 | `apps/jackin/src/bin/jackin/` | The jackin demo binary: the command line over `fixtures` and `sim`. Binary name is `jackin` (`cargo run --bin jackin`). |
 | `apps/jackin/tests/*.rs` | Library tests of the `jackin-console` data API (`World`, `Snapshot`, the time source, external messages), run by `cargo nextest run --all-targets`. They are not part of the CI `functional` suite. |
 | `apps/jackin/tests/functional/` | The jackin journeys and their approved baselines (`baselines/functional/jackin_*.tui.json`), on the shared harness `tests/functional/support.rs`. |
-| `tests/functional/` | The only test estate: live PTY functional/integration tests plus the frozen visual gate. See [functional testing](functional-testing.md). |
+| `tests/functional/` | The root crate's test estate: live PTY functional/integration tests plus the frozen visual gate. See [functional testing](functional-testing.md). |
 | `.velnor/config.toml` | Source of truth for generated CI (`.github/` is generated, never hand-edited). See [CI](ci.md). |
 
 ## Cargo features
@@ -54,12 +54,13 @@ so the approved baselines do not move.
 | `World.time` | `TimeSource::Sim` | `Wall(WallSource)` follows the host clock and UTC offset in `World::tick`. |
 | `World::apply(Snapshot)` | | Replaces workspaces, roles, instances, global config, accounts, surfaces and GitHub repos; keeps panes, jobs, clock and filesystem. |
 | `App::with_external`, `Remote` | no receiver | Lets another thread send `Remote::Msg` or `Remote::Reloaded` to the app. |
-| `Surfaces.vocabulary` | demo words | Names the project, sandbox, terminal and GitHub strings (`Vocabulary::openshell()` is the OpenShell set). |
+| `Surfaces.vocabulary` | demo words | Names the project, sandbox, terminal, gateway, GitHub, quit, stop and purge strings (`Vocabulary::openshell()` is the OpenShell set; `DaemonWords` and `LifecycleWords` group the gateway and the stop and purge texts). |
+| `Surfaces.version`, `Surfaces.about` | `0.9.2`, `None` | The version shown in Debug info and the rows of the About dialog; `None` keeps the four demo rows (`World::about_props`). |
 | `Surfaces.account_form` | four providers, three sources | Provider and source lists, labels, the preselected source and the 1Password note. |
-| `Account.launch_blocked`, `Account.edit_blocked` | `None` | A usage-only account is not offered for launch; an account the form cannot represent keeps its other actions. |
+| `Account.launch_blocked`, `Account.edit_blocked` | `None` | A usage-only account is not offered for launch; an account the form cannot represent keeps its other actions. `edit_blocked` is an `Option<String>` until B4-0 retypes it (and the test in `account_data.rs`) to `Option<Reason>`. |
 | `Surfaces.agent_blocked` | `None` | Every agent except one is a disabled launch row with a reason. |
 | `Surfaces.launch_role` | `Demo` | `Configured` resolves the launch role from the default or the only allowed role, else the picker rows are disabled with a reason. |
-| `Surfaces.wizard` | `None` | One fixed destination, no edit step, no subfolders, and the name from the source folder. |
+| `Surfaces.wizard` | `None` | One fixed destination, no edit step, no subfolders, and the name from the source folder. The P9.3 design calls this `Fixed.wizard`; the code keeps `Surfaces.wizard`, and B4 does not move it. |
 
 ## Rules that hold today
 

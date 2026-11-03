@@ -686,17 +686,13 @@ impl OutroState {
         };
     }
 
-    pub fn caption(&self) -> Option<String> {
-        self.elapsed_secs.map(|s| {
-            format!(
-                "You were in the Construct for {}",
-                format_universe_duration(s)
-            )
-        })
+    pub fn caption(&self, place: &str) -> Option<String> {
+        self.elapsed_secs
+            .map(|s| format!("You were in {place} for {}", format_universe_duration(s)))
     }
 }
 
-pub fn render_outro(buf: &mut Buffer, area: Rect, state: &mut OutroState, t: &Theme) {
+pub fn render_outro(buf: &mut Buffer, area: Rect, state: &mut OutroState, place: &str, t: &Theme) {
     if area.is_empty() {
         return;
     }
@@ -719,7 +715,7 @@ pub fn render_outro(buf: &mut Buffer, area: Rect, state: &mut OutroState, t: &Th
         }
         OutroPhase::Caption => {
             fill_canvas(buf, area, t);
-            match (state.mode, state.caption()) {
+            match (state.mode, state.caption(place)) {
                 (Motion::Reduced, Some(text)) => {
                     draw_text(buf, area, &text, cy, Tone::Ladder(4), t)
                 }

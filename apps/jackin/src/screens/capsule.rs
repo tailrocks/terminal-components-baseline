@@ -159,7 +159,7 @@ impl CapsuleScreen {
             pane_rects: vec![],
             seams: vec![],
             tabs: Tabs::with_items(STRIP, vec![]),
-            menubar: Self::build_menubar(),
+            menubar: Self::build_menubar(&w.surfaces.vocabulary.info_label()),
             tab_menu: None,
             context: ContextConfig::DEFAULT,
             body: Rect::ZERO,
@@ -243,7 +243,7 @@ impl CapsuleScreen {
         }
     }
 
-    fn build_menubar() -> MenuBar {
+    fn build_menubar(info_label: &str) -> MenuBar {
         let entries: Vec<(&str, Vec<MenuItem>)> = vec![
             (
                 "File",
@@ -273,7 +273,7 @@ impl CapsuleScreen {
                     MenuItem::new("Zoom pane").shortcut("Ctrl+B z"),
                     MenuItem::new("Redraw").shortcut("Ctrl+B r").separator(),
                     MenuItem::new("Usage").shortcut("Ctrl+B u"),
-                    MenuItem::new("Container info").shortcut("Ctrl+B i"),
+                    MenuItem::new(info_label).shortcut("Ctrl+B i"),
                     MenuItem::new("GitHub context"),
                     MenuItem::new("Inspect changes"),
                 ],
@@ -405,20 +405,9 @@ impl CapsuleScreen {
     }
 
     fn open_about(&mut self, w: &World, cx: &mut Cx) {
-        let props = vec![
-            Prop::new("Product", "jackin-preview · deterministic redesign preview"),
-            Prop::new("Scenario", w.scenario.name()),
-            Prop::new(
-                "Construct",
-                "simulated · nothing here touches a real container",
-            ),
-            Prop::new(
-                "Design system",
-                "Junie-inspired Ratatui components (junie_tui)",
-            ),
-        ];
         let d =
-            super::modals::InfoDialog::new(WidgetId::of("capsule.about"), "About", props).width(64);
+            super::modals::InfoDialog::new(WidgetId::of("capsule.about"), "About", w.about_props())
+                .width(64);
         cx.open(d, LayerTag::new("about"));
     }
 
@@ -503,7 +492,7 @@ impl CapsuleScreen {
                 cx.status("Redrawn");
             }
             "Usage" => self.open_usage(w, cx),
-            "Container info" => self.open_container_info(w, cx),
+            l if l == w.surfaces.vocabulary.info_label() => self.open_container_info(w, cx),
             "GitHub context" => self.open_github(w, cx),
             "Inspect changes" => self.open_inspect(w, cx, false),
             "Change title…" | "Change tab title…" => {
@@ -1138,7 +1127,7 @@ impl CapsuleScreen {
             let mut d = Dialog::destructive(
                 WidgetId::of("capsule.exit"),
                 "Quit jackin❯?",
-                "! Quitting force-stops the container immediately.\n! Work not saved outside the container will be lost.",
+                &w.surfaces.vocabulary.quit_lines.join("\n"),
                 "Quit",
             );
             d.width = 60;
@@ -1201,10 +1190,11 @@ impl CapsuleScreen {
             },
             None => "(none)".into(),
         };
+        let noun = &w.surfaces.vocabulary.container_noun;
         let props = vec![
-            Prop::new("Container", i.container_id()).copyable(),
+            Prop::new(noun, i.container_id()).copyable(),
             Prop::new(
-                "Container ID",
+                &format!("{noun} ID"),
                 format!("3f9c{}e21a", clip(&i.run_id.replace('-', ""), 8)),
             )
             .copyable(),
@@ -1212,7 +1202,10 @@ impl CapsuleScreen {
             Prop::new("Agent", agent),
             Prop::new("Workdir", i.workdir.clone()),
             Prop::new("Instance", i.id.trim_start_matches("jk-").to_owned()),
-            Prop::new(w.surfaces.vocabulary.capsule.as_str(), "0.9.2"),
+            Prop::new(
+                w.surfaces.vocabulary.version_label.as_str(),
+                w.surfaces.version.as_str(),
+            ),
             Prop::new("Invocation ID", format!("{}-4f11", i.run_id)).copyable(),
             Prop::new(
                 "Host log",
@@ -1257,9 +1250,9 @@ impl CapsuleScreen {
         let d = InfoDialog::new(WidgetId::of("capsule.github"), "GitHub context", props)
             .action(Button::secondary(
                 WidgetId::of("capsule.github").sub("open"),
-                "Open PR…",
+                &w.surfaces.vocabulary.github_open_label,
             ))
-            .meta("open uses a gated host action");
+            .meta(&w.surfaces.vocabulary.github_open_meta);
         cx.open(d, LayerTag::new("github"));
     }
 
@@ -2221,7 +2214,7 @@ impl Page<Jackin> for CapsuleScreen {
                 cx.copy(v);
             }
             ("github", ModalResult::Info(InfoResult::Action(0))) => {
-                cx.status(w.surfaces.vocabulary.github_pull_request.clone());
+                cx.status(w.surfaces.vocabulary.github_copied.clone());
             }
             ("usage", _) => {}
             (_, ModalResult::Cancelled)

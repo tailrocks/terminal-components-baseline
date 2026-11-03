@@ -776,21 +776,7 @@ impl App {
     }
 
     fn open_about(&mut self) {
-        let props = vec![
-            junie_tui::widgets::props::Prop::new(
-                "Product",
-                "jackin-preview · deterministic redesign preview",
-            ),
-            junie_tui::widgets::props::Prop::new("Scenario", self.world.scenario.name()),
-            junie_tui::widgets::props::Prop::new(
-                "Construct",
-                "simulated · nothing here touches a real container",
-            ),
-            junie_tui::widgets::props::Prop::new(
-                "Design system",
-                "Junie-inspired Ratatui components (junie_tui)",
-            ),
-        ];
+        let props = self.world.about_props();
         let d = crate::screens::modals::InfoDialog::new(WidgetId::of("host.about"), "About", props)
             .width(64);
         self.open_layer(Box::new(d), LayerTag::new("about"), self.route());
@@ -864,6 +850,8 @@ impl App {
             .map(|s| s.crumb(&self.world))
             .unwrap_or_default();
         let capsule = self.world.surfaces.vocabulary.capsule.clone();
+        let info_hint = self.world.surfaces.vocabulary.info_label().to_lowercase();
+        let inspect_hint = format!("inspect {}", self.world.surfaces.vocabulary.noun_lower());
         let project = self.world.surfaces.vocabulary.project_tab.clone();
         let sections: Vec<(&str, Vec<(&str, &str)>)> = match self.route() {
             Route::Capsule => vec![
@@ -929,7 +917,7 @@ impl App {
                     "Launch",
                     vec![
                         ("b", "build log"),
-                        ("i", "container info"),
+                        ("i", &info_hint),
                         ("x", "cancel launch…"),
                         ("t", "toggle debug"),
                         ("Ctrl+Q", "quit · asks only about unsaved edits"),
@@ -1204,7 +1192,7 @@ impl App {
                         ("Enter r", "reconnect / restore"),
                         ("a", "new session"),
                         ("x", "open shell"),
-                        ("i", "inspect container"),
+                        ("i", &inspect_hint),
                         ("t", "stop"),
                         ("p", "purge…"),
                     ],
@@ -1754,9 +1742,9 @@ impl App {
                 let n = self.world.running_count();
                 self.set_status(
                     &format!(
-                        "Detached · {name} keeps running · {} in {}",
+                        "Detached · {name} keeps running · {} {}",
                         junie_tui::ui::text::plural(n, "instance", "instances"),
-                        self.world.surfaces.vocabulary.construct
+                        self.world.surfaces.vocabulary.instances_where
                     ),
                     Tone::Secondary,
                 );
@@ -1790,13 +1778,13 @@ impl App {
                     self.enter_route();
                     self.set_status(
                         &format!(
-                            "Launch failed · {} still running in {}",
+                            "Launch failed · {} still running {}",
                             junie_tui::ui::text::plural(
                                 self.world.running_count(),
                                 "instance",
                                 "instances"
                             ),
-                            self.world.surfaces.vocabulary.construct
+                            self.world.surfaces.vocabulary.instances_where
                         ),
                         Tone::Error,
                     );
@@ -1841,8 +1829,8 @@ impl App {
                     })
                     .collect();
                 let text = format!(
-                    "Still inside {} · {}",
-                    self.world.surfaces.vocabulary.construct,
+                    "{} · {}",
+                    self.world.surfaces.vocabulary.still_inside,
                     junie_tui::ui::text::plural(remaining, "instance remains", "instances remain")
                 );
                 self.router.manager_mut().still_inside =
@@ -1892,7 +1880,13 @@ impl App {
                     .outro
                     .take()
                     .unwrap_or_else(|| OutroState::new(self.shell.motion, None, 0));
-                rain::render_outro(buf, area, &mut state, &t);
+                rain::render_outro(
+                    buf,
+                    area,
+                    &mut state,
+                    &self.world.surfaces.vocabulary.construct,
+                    &t,
+                );
                 self.outro = Some(state);
             }
             Route::Handoff => {
