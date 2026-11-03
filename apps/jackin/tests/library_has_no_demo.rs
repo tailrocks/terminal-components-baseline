@@ -105,6 +105,9 @@ const RULES: &[Rule] = &[
 type Pending = (&'static str, &'static str, usize, &'static str);
 
 const PENDING: &[Pending] = &[
+    ("next_workspace_id", "domain/fixed_fields.rs", 1, "B6"),
+    ("refresh_fails", "domain/fixed_fields.rs", 1, "B6"),
+    ("takeover_at_ms", "domain/fixed_fields.rs", 1, "B6"),
     ("refresh_fails", "screens/accounts.rs", 1, "B6"),
     ("next_workspace_id", "screens/editor.rs", 3, "B6"),
     ("roles-experimental", "screens/editor.rs", 1, "B6"),

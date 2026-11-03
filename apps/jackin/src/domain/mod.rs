@@ -3,6 +3,7 @@ pub mod agent;
 pub mod docker;
 pub mod doctor;
 pub mod fixed;
+pub mod fixed_fields;
 pub mod instance;
 pub mod launch;
 pub mod onepassword;

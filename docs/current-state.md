@@ -76,6 +76,41 @@ is a compile error in both. The host adds its own data with the builders
 | `Surfaces.wizard` | `None` | (`WizardDefaults::openshell()`) One fixed destination, no edit step, no subfolders, and the name from the source folder. The P9.3 design calls this `Fixed.wizard`; the code keeps `Surfaces.wizard`, and B4 does not move it. |
 | `Surfaces.fixed` | `None` | `Fixed::openshell()` (`domain::fixed`) makes the workspace editor's `Keep awake`, `Git pull before launch`, `On dirty exit`, working directory `Choose…`, Project row and Add row, and the Accounts tab toggle `Control::Fixed`, each with its reason text, and refuses unchecking the last allowed role. In Settings it fixes the Co-author and DCO boxes (one shared reason line), the global Mounts Add row, the Trust toggle (`o` shows the source in a sticky status), every Agents row (the launchable agent and the others have their own reason and the two foot notes are data) and the global Role overrides (Add row, `a`, `s`, and a scope select that lists only `global`). In the env form it dims the 1Password and host variable sources under a plain-values note, refuses the `p` key, adds a note under a key name with `TOKEN`, `SECRET`, `PASSWORD` or `KEY`, and refuses a plain value that starts with `op://` or `openshell:resolve:` (any letter case, after leading space) with the typed key and value kept. Each screen refusal is posted by `App::on_route` through `screens::post_refusal`, and a refusal raised inside a modal by `App::post_layer_refusal`. The env form stays open on Save so an error shows, in every scenario. This is a deliberate change to the demo, limited to the error path: before B4b the demo form closed at once on any error raised by the save step (an empty value, a duplicate key), with no message and the typed input lost, and a valid Save is identical in both builds. The value input is required in every scenario (label `Value for the key *`, `Required` under it on an empty Save). A rename to a key already in the scope is rejected before anything is staged, so Esc after the error leaves no change. The OpenShell words for the three texts that would promise more than jackin does are `Vocabulary` data and the demo keeps its own: `env_op_label` (`1Password item / field`), `trust_hint` (`Show source`) and `agent_no_credentials` (`no credentials handed to the sandbox`). The scenario `openshell-fixed` renders it. |
 
+## Fixed fields of the OpenShell world
+
+`domain::fixed_fields` names the class of every field of the records a
+jackin world is made of. Fixed: the field holds one OpenShell value in every
+jackin world; `workspace_fixed`, `global_fixed`, `account_fixed`,
+`role_fixed`, `instance_fixed` and `surface_fixed` read it, and the tie
+compares it. Data: the host supplies it; the extractors name it `field: _`.
+Console: a `World` field the running console owns (`clock`, `backend`, `op`
+and the like) that projection never produces; it is also `field: _`. Every
+record is destructured without `..`, so a new field does not build until it
+has a class. `world_fixed(&World)` and `snapshot_fixed(&Snapshot)` give the
+same `FixedFields` view of a world and of a projection.
+
+| Record (fields) | Fixed | Data |
+| --- | --- | --- |
+| `Account` (21) | `enabled` (`true`), `origin` (`Registered`) | the other 19 |
+| `Workspace` (12) | `workdir` (`/sandbox/project`), `mounts` as one `MountShape`, `keep_awake` (`false`), `git_pull` (`false`), `dirty_policy` (`Ask`), `accounts` (below) | `id`, `name`, `roles`, `env`, `role_env`, `docker` |
+| `AccountPolicy` (4) | `disabled_defaults` (empty), `role_preferred` (empty), `enabled` (through `enabled_is_every_account`: every account is effective) | `preferred` |
+| `Mount` (8) | `destination`, `readonly`, `isolation` (`Clone`), `kind`, `scope`, the source being a host path, `drift`, `running_isolated` | the source path |
+| `GlobalConfig` (7) | `coauthor_trailer`, `dco_signoff` (`false`), `mounts` (empty), `role_env` (empty), `agent_modes` (every agent but `Fixed.launchable` is `Ignore`), `trust` through `TrustRow.trusted` | `env`, `agent_modes[launchable]` |
+| `TrustRow` (4) | `trusted` (`true`) | `source`, `kind`, `roles` |
+| `RoleEntry` (8) | `trusted` (`true`: a source is trusted because the operator configured it, D28) | `namespace`, `name`, `source`, `in_registry`, `description`, `load_error`, `fetch_error` |
+| `Instance` (18) | `workdir` (`/sandbox/project`) | the other 17 |
+| `AccountRegistry` (2) | `accounts`, each as an `Account` | `revision` |
+| `Surfaces` (13) | `vocabulary`, `fixed`, `account_form`, `agent_blocked`, `wizard`, `launch_role` | `roles`, `docker`, `doctor`, `version`, `cockpit_version`, `config_path`, `about` |
+| `World` (25) | `workspaces`, `roles`, `instances`, `global`, `accounts`, `surfaces` (through the extractors above) | `github`; Console: `clock`, `time`, `arbiter`, `home`, `cwd`, `next_workspace_id`, `daemons`, `op`, `backend`, `fs`, `clipboard`, `jobs`, `daemon_health`, `last_refresh_secs`, `refresh_fails`, `takeover_at_ms`, `session_accounts`, `discovery_pending` |
+| `Snapshot` (8) | `workspaces`, `roles`, `instances`, `global`, `accounts`, `surfaces` | `github`, `index_error` |
+
+Known residual hole: a field that is wrong in this table and wrong in the
+expected literal of a test passes every check. The destructuring forces a
+class for each field, and `tests/fixed_fields.rs` pins each Fixed value with
+a literal, but nothing derives the class from a second source. Only a review
+of this table closes the hole; `Fixed::openshell()` is the second source to
+read it against, because each of its reasons names a Fixed control.
+
 ## Rules that hold today
 
 - Behaviour lives in the shared library (`src/core`, `src/shell`,
