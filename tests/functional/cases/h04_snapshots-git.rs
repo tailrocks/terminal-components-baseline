@@ -234,7 +234,14 @@ fn h04_snapshots_git_git() {
     app.wait_text("full git status");
     clear_query(&app);
     open_row(&app, "Review 5 modified files", "diff stat");
-    let diff = app.wait_text("Modified files");
+    // The finder preview already says Modified files and clips the git
+    // command. The snapshot page is the frame that keeps the command whole.
+    let diff = app.wait_screen("modified files", |screen| {
+        let visible = text(screen);
+        visible.contains("Modified files")
+            && visible.contains(HOLLA_STATUS)
+            && visible.contains(DIFF_STAT)
+    });
     see(
         &diff,
         &[
@@ -259,7 +266,10 @@ fn h04_snapshots_git_git() {
     app.wait_text("Review 5 modified files");
     clear_query(&app);
     open_row(&app, "Show stash (1)", "list stashed changes");
-    let stash = app.wait_text("1 stashed");
+    let stash = app.wait_screen("stash", |screen| {
+        let visible = text(screen);
+        visible.contains("1 stashed") && visible.contains(HOLLA_STATUS) && visible.contains(ANCHOR)
+    });
     see(
         &stash,
         &[
