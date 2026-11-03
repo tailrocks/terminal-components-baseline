@@ -1,6 +1,7 @@
 use super::agent::{Agent, Provider, UsageSurface};
 use super::onepassword::OpReference;
 use super::usage::{AccountUsage, Freshness};
+use junie_tui::core::refusal::Reason;
 
 pub type AccountId = String;
 
@@ -349,7 +350,7 @@ pub struct Account {
     pub usage: AccountUsage,
 
     pub launch_blocked: Option<String>,
-    pub edit_blocked: Option<String>,
+    pub edit_blocked: Option<Reason>,
 }
 
 impl Account {

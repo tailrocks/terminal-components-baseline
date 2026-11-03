@@ -9,6 +9,7 @@ use crate::core::keymap::Nav;
 use crate::core::keymap::NavKeys;
 use crate::core::keymap::unassigned_chord;
 use crate::core::list::{Cursor, KeyStep, Moved, Navigable, RowSource};
+use crate::core::refusal::{Control, Reason};
 use crate::core::scroll::{Scrollable, TrackClick};
 use crate::theme::CursorStyle;
 use crate::ui::ctx::{RenderCtx, fill};
@@ -46,6 +47,7 @@ pub struct Select {
     pub selected: usize,
     pub open: bool,
     pub disabled: bool,
+    pub control: Control,
     pub help: String,
     pub area: Rect,
 
@@ -98,6 +100,7 @@ impl Select {
             selected,
             open: false,
             disabled: false,
+            control: Control::Live,
             help: String::new(),
             area: Rect::ZERO,
             list,
@@ -186,6 +189,35 @@ impl Select {
         self
     }
 
+    pub fn control(mut self, control: Control) -> Self {
+        self.control = control;
+        self
+    }
+
+    pub fn fixed(self, reason: Reason) -> Self {
+        self.control(Control::fixed(reason))
+    }
+
+    fn would_edit(&self, key: &Key) -> bool {
+        if matches!(key.code, KeyCode::Enter | KeyCode::Char(' ')) {
+            return true;
+        }
+        let precedence = self
+            .type_ahead_precedence
+            .unwrap_or_else(crate::core::list::TypeAheadPrecedence::current);
+        match KeyStep::ordered(key, &self.list.nav, self.list.type_ahead, precedence) {
+            Some(KeyStep::Type(_)) => true,
+            _ => {
+                key.plain()
+                    && !matches!(key.code, KeyCode::Char(_))
+                    && matches!(
+                        self.list.nav.action(key),
+                        Some(Nav::Up | Nav::Down | Nav::Left | Nav::Right)
+                    )
+            }
+        }
+    }
+
     pub fn mixed(mut self, placeholder: &str) -> Self {
         self.mixed = Some(placeholder.to_owned());
         self
@@ -245,6 +277,13 @@ impl Select {
             return (Outcome::Ignored, None);
         }
         if unassigned_chord::<()>(key, &[]) {
+            return (Outcome::Ignored, None);
+        }
+        if self.control.is_fixed() {
+            if self.would_edit(key) {
+                self.control.refuse();
+                return (Outcome::Consumed, None);
+            }
             return (Outcome::Ignored, None);
         }
 
@@ -381,6 +420,9 @@ impl Select {
             self.list.scroll.release();
             return (Outcome::Consumed, None);
         }
+        if id == self.id && self.control.refuse() {
+            return (Outcome::Consumed, None);
+        }
         if id == self.id {
             if let Some(p) = self.press.take()
                 && (p.opened || p.label)
@@ -451,6 +493,9 @@ impl Select {
         if id != self.id {
             return Outcome::Ignored;
         }
+        if self.control.refuse() {
+            return Outcome::Consumed;
+        }
         let label = self.label_hit && self.label_area.contains(pos);
         let opened = !label && self.press_drag && !self.open;
         if opened {
@@ -519,13 +564,14 @@ impl Select {
         let t = ctx.theme;
         self.list.scroll.begin(ctx.track_click);
         let mut s = ctx.state(self.id);
-        s.disabled = self.disabled;
-        if self.disabled {
+        s.fixed = self.control.is_fixed();
+        s.disabled = self.disabled || s.fixed;
+        if s.disabled {
             s.hovered = false;
             self.open = false;
         }
 
-        let label_style = if self.disabled {
+        let label_style = if s.disabled {
             t.faint().bg(bg)
         } else {
             t.label(s.focused).bg(bg)
@@ -570,7 +616,7 @@ impl Select {
             } else {
                 t.glyphs.chevron_closed
             },
-            fs.fg(if self.disabled {
+            fs.fg(if s.disabled {
                 t.disabled
             } else {
                 t.text_secondary

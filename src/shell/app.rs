@@ -361,7 +361,9 @@ pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
         out = out.or(Outcome::Changed);
     }
     out = out.or(blur_fan_out(app));
-    app.after_input(&logged, out)
+    let out = app.after_input(&logged, out);
+    crate::core::refusal::clear_refusal();
+    out
 }
 
 impl<A: App> Application for A {

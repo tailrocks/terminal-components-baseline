@@ -85,6 +85,7 @@ pub struct VisualState {
     pub pressed: bool,
     pub selected: bool,
     pub disabled: bool,
+    pub fixed: bool,
     pub error: bool,
     pub editing: bool,
     pub busy: bool,

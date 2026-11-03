@@ -32,6 +32,7 @@ pub mod editor;
 pub mod empty_error;
 pub mod file_browser;
 pub mod finder;
+pub mod fixed_controls;
 pub mod focus_navigation;
 pub mod forms;
 pub mod grid;

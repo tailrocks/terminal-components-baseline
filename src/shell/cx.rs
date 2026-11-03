@@ -94,6 +94,10 @@ impl<'a, R, W: ?Sized, G> Cx<'a, R, W, G> {
         self.requests.push(Request::StatusAs(s.into(), kind));
     }
 
+    pub fn refused(&mut self, reason: crate::core::refusal::ReasonId) {
+        self.status(reason.text());
+    }
+
     pub fn progress(&mut self, job: super::JobKey, s: impl Into<String>) {
         self.requests.push(Request::Progress(s.into(), job));
     }

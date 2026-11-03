@@ -11,6 +11,7 @@ use jackin_console::domain::workspace::{Usability, usability_of};
 use jackin_console::fixtures::world_for;
 use jackin_console::scenario::Scenario;
 use jackin_console::world::World;
+use junie_tui::core::refusal::Reason;
 
 const USAGE_ONLY: &str = "launch needs a local Codex login · this source is usage only";
 const OTHER_AGENT: &str = "usage only · jackin launches Codex only";
@@ -144,13 +145,17 @@ fn an_agent_block_replaces_the_settings_suffix() {
 fn a_blocked_edit_leaves_the_other_actions_open() {
     let reason = "reads $OPENAI_API_KEY · change it with jackin account add";
     let mut blocked = world_for(Scenario::AccountsMixed);
-    blocked.accounts.accounts[0].edit_blocked = Some(reason.into());
+    blocked.accounts.accounts[0].edit_blocked = Some(Reason::new(reason).short("env account"));
     let id = blocked.accounts.accounts[0].id.clone();
     assert!(!blocked.accounts.accounts[0].edit_allowed());
     assert!(blocked.accounts.accounts[0].mutations_allowed());
 
     let mut gated = app_with(blocked);
-    press(&mut gated, "down down e");
+    press(&mut gated, "down down shift+f10");
+    hover_text(&mut gated, "Edit…");
+    let menu = screen(&mut gated);
+    assert!(menu.contains(" env account "), "{menu}");
+    press(&mut gated, "esc e");
     let shown = screen(&mut gated);
     assert!(shown.contains(reason), "{shown}");
     assert!(!shown.contains("Edit account"));

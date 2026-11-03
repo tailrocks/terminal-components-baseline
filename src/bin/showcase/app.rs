@@ -94,6 +94,7 @@ pub enum PageId {
     Scrolling,
     Terminal,
     TerminalPane,
+    FixedControls,
     Editor,
     Diff,
     Grid,
@@ -155,11 +156,18 @@ pub const NAV_GROUPS: &[&str] = &[
     "Screens",
 ];
 
-pub const HIDDEN_ENTRIES: &[NavEntry] = &[NavEntry {
-    id: PageId::TerminalPane,
-    label: "Terminal pane",
-    group: "Text & code",
-}];
+pub const HIDDEN_ENTRIES: &[NavEntry] = &[
+    NavEntry {
+        id: PageId::TerminalPane,
+        label: "Terminal pane",
+        group: "Text & code",
+    },
+    NavEntry {
+        id: PageId::FixedControls,
+        label: "Fixed controls",
+        group: "Inputs & forms",
+    },
+];
 
 pub fn entries() -> impl Iterator<Item = &'static NavEntry> {
     NAV_ENTRIES.iter().chain(HIDDEN_ENTRIES)
@@ -714,6 +722,7 @@ impl App {
                     PageId::Scrolling => Box::new(scrolling::ScrollingPage::new()),
                     PageId::Terminal => Box::new(terminal::TerminalPage::new()),
                     PageId::TerminalPane => Box::new(terminal_pane::TerminalPanePage::new()),
+                    PageId::FixedControls => fixed_controls::page(),
                     PageId::Editor => Box::new(editor::EditorPage::new()),
                     PageId::Diff => Box::new(diff::DiffPage::new()),
                     PageId::Grid => Box::new(grid::GridPage::new()),

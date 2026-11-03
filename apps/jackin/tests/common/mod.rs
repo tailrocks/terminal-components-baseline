@@ -89,3 +89,21 @@ pub fn click_text(app: &mut App, text: &str) {
     let x = line[..line.find(text).expect("found")].chars().count();
     click(app, x as u16 + 1, y as u16);
 }
+
+pub fn hover_text(app: &mut App, text: &str) {
+    let screen = screen(app);
+    let (y, line) = screen
+        .lines()
+        .enumerate()
+        .find(|(_, l)| l.contains(text))
+        .unwrap_or_else(|| panic!("{text} not on screen:\n{screen}"));
+    let x = line[..line.find(text).expect("found")].chars().count();
+    Application::handle(
+        app,
+        Input::Mouse(Mouse::new(
+            MouseKind::Move,
+            ratatui::layout::Position::new(x as u16 + 1, y as u16),
+        )),
+    );
+    screen_at(app, 140, 40);
+}

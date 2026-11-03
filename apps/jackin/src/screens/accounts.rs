@@ -1181,7 +1181,7 @@ impl AccountsScreen {
     fn edit_account(&mut self, a: &Account, w: &World, cx: &mut Cx) {
         match (&a.edit_blocked, a.mutations_allowed()) {
             (_, false) => cx.status("Discovered accounts are read-only · register a copy with a"),
-            (Some(why), true) => cx.status(why.clone()),
+            (Some(why), true) => cx.status(why.text.clone()),
             (None, true) => self.open_form(Some(a), w, cx),
         }
     }
@@ -1202,7 +1202,9 @@ impl AccountsScreen {
                     }
                 };
                 let edit = match (&a.edit_blocked, a.mutations_allowed()) {
-                    (Some(why), true) => item("Edit…", "e").reason(why),
+                    (Some(why), true) => {
+                        item("Edit…", "e").reason(why.short.as_deref().unwrap_or(&why.text))
+                    }
                     _ => gate(item("Edit…", "e")),
                 };
                 let default = if !a.mutations_allowed() {

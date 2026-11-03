@@ -96,7 +96,9 @@ moved, deleted or retargeted.
 `apps/jackin/tests/*.rs` (beside the `functional/` journeys) prove the
 data API that `jackin-console` offers another crate: `World::new`,
 `Snapshot`, the time source, external messages, `Vocabulary`, the
-account, launch-role and wizard data. They build the real `App` and
+account, launch-role and wizard data, and the library's fixed state
+(`fixed.rs`, `reason.rs`: widgets rendered into a test buffer and driven
+with keys and clicks). They build the real `App` and
 `World` from the `fixtures` feature, drive it with keys through the
 `Application` trait, render into a test buffer and assert text and
 state. They add no visual baseline and are not journeys: a user-visible
@@ -448,6 +450,12 @@ exceptions and no legacy-API tests:
    before freezing, and tests that end beside a status flash or a live
    relative-time readout wait for that element to fade or freeze the
    app clock (`--motion paused`) first.
+
+The one exception is the key tests of the fixed-controls page
+(`showcase_fixed_controls_*`), which assert refusals, reasons and status
+expiry and end without a baseline, as P9.3 test plan v6 section 5.2
+requires for refusal tests. The page itself has the baseline
+`showcase_page_fixedcontrols`.
 
 The legacy Tuiscotti 0.2 dependency is removed entirely; nothing in the
 repository uses it.
