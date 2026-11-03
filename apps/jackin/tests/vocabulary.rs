@@ -678,11 +678,27 @@ fn the_github_dialog_copies_the_branch_url_without_a_pull_request() {
 
 #[test]
 fn the_github_dialog_copies_nothing_without_a_matching_repository() {
-    let mut world = capsule_world(true);
-    world.github.clear();
-    let live = run(world, &format!("{GITHUB_OPEN} {GITHUB_COPY}"));
+    let keys = format!("{GITHUB_OPEN} {GITHUB_COPY}");
+    let unrelated = |live: bool| {
+        let mut world = capsule_world(live);
+        let mut repo = world.github.remove(0);
+        repo.full_name = "chainargos/unrelated".into();
+        repo.url = "https://github.com/chainargos/unrelated".into();
+        world.github = vec![repo];
+        run(world, &keys)
+    };
+    let live = unrelated(true);
     assert_eq!(live.world.clipboard, None);
-    assert_eq!(live.shell.status.text(), Some("Copied the GitHub URL"));
+    assert_eq!(
+        live.shell.status.get(),
+        Some(("No GitHub URL for this sandbox", Tone::Error))
+    );
+    let demo = unrelated(false);
+    assert_eq!(demo.world.clipboard, None);
+    assert_eq!(
+        demo.shell.status.get(),
+        Some(("No GitHub URL to open for this instance", Tone::Error))
+    );
 }
 
 const MOUNT_OPEN: &str = "down down down down e 2 down o";

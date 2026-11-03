@@ -2233,12 +2233,15 @@ impl Page<Jackin> for CapsuleScreen {
             }
             ("github", ModalResult::Info(InfoResult::Action(0))) => {
                 let words = &w.surfaces.vocabulary;
-                if words.github_copies_url
-                    && let Some(url) = self.github_url(w)
-                {
-                    cx.copy(url);
+                match self.github_url(w) {
+                    Some(url) => {
+                        if words.github_copies_url {
+                            cx.copy(url);
+                        }
+                        cx.status(words.github_copied.clone());
+                    }
+                    None => cx.error(words.github_no_url.clone()),
                 }
-                cx.status(words.github_copied.clone());
             }
             ("usage", _) => {}
             (_, ModalResult::Cancelled)
