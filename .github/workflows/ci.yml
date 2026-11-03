@@ -552,6 +552,7 @@ jobs:
       - plan
       - rust-junie-tui-read
       - rust-junie-tui-write
+      - suite-functional
       - jactionlint
     if: ${{ !cancelled() }}
     steps:
@@ -599,7 +600,7 @@ jobs:
         env:
           VELNOR_INTERNAL_OP: write-request-v1
           VELNOR_NEEDS_JSON: ${{ toJSON(needs) }}
-          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-junie-tui-read\",\"rust-junie-tui-write\"]"
+          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-junie-tui-read\",\"rust-junie-tui-write\",\"suite-functional\"]"
           VELNOR_REQUEST_FILE: ${{ runner.temp }}/velnor/request/merge-v1-request.json
         run: "\"$RUNNER_TEMP\"'/velnor/bin/velnor-actions-0.1.71'"
       - name: Merge reports
@@ -607,7 +608,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VELNOR_INTERNAL_OP: merge-v1
           VELNOR_NEEDS_JSON: ${{ toJSON(needs) }}
-          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-junie-tui-read\",\"rust-junie-tui-write\"]"
+          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-junie-tui-read\",\"rust-junie-tui-write\",\"suite-functional\"]"
           VELNOR_REQUEST_FILE: ${{ runner.temp }}/velnor/request/merge-v1-request.json
         run: "\"$RUNNER_TEMP\"'/velnor/bin/velnor-actions-0.1.71'"
       - name: Publish final report
@@ -1234,7 +1235,7 @@ jobs:
       - name: Record state producer success
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; mkdir -p \"$RUNNER_TEMP/velnor\"; : > \"$RUNNER_TEMP/velnor/state-producer-ok\"'"
       - name: Upload suite artifact (functional-terminal-evidence)
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           if-no-files-found: warn

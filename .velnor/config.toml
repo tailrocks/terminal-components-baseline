@@ -41,5 +41,6 @@ build = "inline"
 timeout_minutes = 15
 test_threads = 4
 triggers = ["pull_request", "push", "workflow_dispatch"]
+required = true
 dispatch_inputs = { tier = ["functional"] }
-artifacts = [{ name = "functional-terminal-evidence", paths = ["target/functional", "target/nextest/functional"], when = "failure", retention_days = 14 }]
+artifacts = [{ name = "functional-terminal-evidence", paths = ["target/functional", "target/nextest/functional"], when = "always", retention_days = 14 }]
