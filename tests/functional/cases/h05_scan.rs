@@ -148,9 +148,15 @@ fn cancelled(screen: &TerminalSnapshot) -> bool {
     visible.contains(PARTIAL) && visible.contains(CANCELLED) && !visible.contains(COMPLETE)
 }
 
-fn cancelled_banner(screen: &TerminalSnapshot) -> bool {
+/// The reference capture is the cancel that froze two revealed nodes.
+/// That banner is `3%` and `2 entries`, and `data` has its live size.
+fn frozen_two(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
-    visible.contains(PARTIAL) && !visible.contains(COMPLETE)
+    visible.contains(PARTIAL)
+        && visible.contains("3%")
+        && visible.contains("2 entries")
+        && visible.contains("852.0 KiB")
+        && !visible.contains(COMPLETE)
 }
 
 /// Busy rows paint `spinner_frame(now_ms / 80)`. Cancel freezes the revealed
@@ -317,19 +323,23 @@ fn h05_scan_route_returns_to_the_finder() {
 fn h05_scan_scan_cancels_completes_and_changes_root() {
     let app = launch_parity("h05-scan-scan");
     open_catalog(&app, LABEL);
-    // Poll without `wait_screen`: that records a snapshot before returning, and
-    // the write can cross the next 80ms scan tick. `x` then freezes either 2
-    // or 4 nodes. This observation is still the first `scanning` frame.
+    // The first `scanning` paint can still be `0 of`. The reference banner is
+    // the next tick, `scanning · 2 of`, which cancel records as 3% and 2
+    // entries. Poll the live screen: `wait_screen` records before it returns,
+    // and that write can cross into the following tick.
     let started = Instant::now();
     let progress = loop {
         let screen = app.screen();
         let visible = text(&screen);
-        if visible.contains(CRUMB) && visible.contains("scanning") && !visible.contains(COMPLETE) {
+        if visible.contains(CRUMB)
+            && visible.contains("scanning · 2 of")
+            && !visible.contains(COMPLETE)
+        {
             break screen;
         }
         assert!(
             started.elapsed() < Duration::from_secs(3) && !visible.contains(COMPLETE),
-            "scan was not cancelled while it was running\n{visible}"
+            "scan did not show 2 revealed entries\n{visible}"
         );
         std::thread::sleep(Duration::from_millis(5));
     };
@@ -341,29 +351,29 @@ fn h05_scan_scan_cancels_completes_and_changes_root() {
     app.key("x");
 
     let quiet = app.wait_screen("cancelled tree", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && cancelled(screen)
+        screen.cols() == 120 && screen.rows() == 40 && frozen_two(screen)
     });
     see(
         &quiet,
-        &[PARTIAL, CANCELLED, TITLE, METER],
+        &[PARTIAL, CANCELLED, TITLE, METER, "3%", "2 entries"],
         &[COMPLETE, CLEANUP_METER, BACKUP, QUIT],
     );
 
-    nudge(&app, cancelled);
-    settle_spinner(&app, 120, 40, cancelled);
+    nudge(&app, frozen_two);
+    settle_spinner(&app, 120, 40, frozen_two);
     shot(&app, WIDE);
 
     app.resize(80, 24);
     let narrowed = app.wait_screen("narrow cancelled tree", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && cancelled_banner(screen)
+        screen.cols() == 80 && screen.rows() == 24 && frozen_two(screen)
     });
     see(
         &narrowed,
         &[PARTIAL, TITLE],
         &[COMPLETE, CLEANUP_METER, BACKUP],
     );
-    nudge(&app, cancelled_banner);
-    settle_spinner(&app, 80, 24, cancelled_banner);
+    nudge(&app, frozen_two);
+    settle_spinner(&app, 80, 24, frozen_two);
     shot(&app, NARROW);
 
     app.resize(120, 40);
