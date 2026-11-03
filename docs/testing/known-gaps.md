@@ -39,3 +39,27 @@ Historical parity is not claimed. The tag is not created.
 
 TablePro, Holla, and Jackin simulate their services.
 A passing journey does not prove PostgreSQL, Docker, a credential provider, a daemon, or a host export.
+
+## Pre-refactor protection
+
+These observations are not permission to change product behaviour.
+
+The suspend API gap stays open.
+`X02.suspend.suspend` is BLOCKED because tuiscotti-tui-test 0.2.1 `Pty::signal` cannot deliver TSTP or CONT.
+`App::key("ctrl+z")` left showcase running.
+The row is not `NOT_APPLICABLE`.
+
+The functional harness does not emit coverage receipts.
+`tests/functional/support.rs` writes session evidence under `target/functional/` and does not write `target/functional/receipts`.
+`scripts/check-refactor-coverage.py` requires a receipt for every PASS row.
+A clean run without hand-built receipt files fails `missing-receipt`.
+
+The Holla secret prompt has no quiet frame.
+`H03.input.prompts` is PASS and has no baseline, because the prompt never sits still.
+Do not invent a baseline.
+
+The CI generator limits stay as recorded in `C01`.
+Generated CI runs `mbx nextest run --workspace --no-tests fail --profile functional` and does not pass `--locked`.
+The inventory script is not a required CI step.
+Branch protection on this branch returned HTTP 404.
+macOS and Windows are unclaimed.
