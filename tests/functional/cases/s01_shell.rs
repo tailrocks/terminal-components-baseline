@@ -169,11 +169,12 @@ fn open_options(app: &App) {
 }
 
 fn finish_inspector(app: &App) {
-    app.key("escape");
-    if text(&app.screen()).contains("Inspector · on") {
-        app.key("i");
-        app.wait_absent("Inspector · on");
-    }
+    // Esc does not close a docked inspector. "i" is consumed while an
+    // inspector control has focus, so a following toggle never lands.
+    // The header control closes it from any focus.
+    let open = app.wait_text("Inspector · on");
+    app.click(find(&open, "Inspector · on"));
+    app.wait_absent("Inspector · on");
     app.finish();
 }
 
