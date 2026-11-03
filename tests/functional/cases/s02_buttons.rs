@@ -3,7 +3,11 @@
 //! Tuiscotti test ids are `[a-z0-9_-]` segments, so the baseline directory is
 //! `pre_refactor/s02_buttons/` and each case id's dots become underscores.
 
-use tui_test::TerminalSnapshot;
+use std::path::PathBuf;
+use std::time::{Duration, Instant};
+
+use tui_test::{SnapshotColor, TerminalSnapshot};
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{Launch, Point, SHOWCASE, find_all, row_text, text, try_launch};
 
@@ -117,6 +121,49 @@ fn click_body(app: &crate::support::App, label: &str, y_min: u16, y_max: u16) {
 
 fn shot(app: &crate::support::App, case_id: &str, _precondition: &str, _args: &[&str]) {
     app.visual(&visual_id(case_id));
+}
+
+fn check_frame(app: &crate::support::App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
+    }
+}
+
+/// The accepted wrap frame still paints Refresh with the press flash.
+/// `WallClock` drops that flash after 140 ms, and a later paint locks the
+/// released button.
+fn refresh_still_pressed(screen: &TerminalSnapshot) -> bool {
+    let Some(row) = (0..screen.rows()).find(|&row| {
+        let line = row_text(screen, row);
+        line.contains("▎Remove") && line.contains("Refresh")
+    }) else {
+        return false;
+    };
+    let line = row_text(screen, row);
+    let Some(at) = line.find("Refresh") else {
+        return false;
+    };
+    screen
+        .cell_at(at as u32, row)
+        .is_some_and(|cell| cell.bg() == SnapshotColor::Rgb(0x4a, 0x4a, 0x52))
 }
 
 fn reveal(app: &crate::support::App, needle: &str) {
@@ -959,15 +1006,29 @@ fn option_row_wrap_reaches_the_last_button() {
     assert!(line_after(&options, "Row align").contains("start"));
     assert!(line_after(&options, "Row width").contains("full"));
     click_tab(&app, "Playground");
-    click_where(&app, "Refresh", |hit| hit.y > 24);
-    let focused = app.wait_text("Refresh ✓");
-    let row = row_with(&focused, "Refresh");
-    assert!(
-        row.contains("▎Refresh"),
-        "Refresh did not take focus: {row}"
-    );
-    app.key("left");
-    let wrapped = app.wait_text("▎Remove");
+    let mut wrapped = None;
+    for _ in 0..6 {
+        click_where(&app, "Refresh", |hit| hit.y > 24);
+        app.key("left");
+        let started = Instant::now();
+        while started.elapsed() < Duration::from_millis(200) {
+            let screen = app.screen();
+            if refresh_still_pressed(&screen) {
+                wrapped = Some(screen);
+                break;
+            }
+            std::thread::sleep(Duration::from_millis(15));
+        }
+        if wrapped.is_some() {
+            break;
+        }
+    }
+    let wrapped = wrapped.unwrap_or_else(|| {
+        panic!(
+            "left from Refresh did not keep the press flash\n{}",
+            text(&app.screen())
+        )
+    });
     let row = row_with(&wrapped, "Refresh");
     assert!(
         row.contains("▎Remove") && !row.contains("▎Refresh"),
@@ -978,12 +1039,7 @@ fn option_row_wrap_reaches_the_last_button() {
         &["Refresh ✓", FITS, NEXT],
         &["Validate ✓", "behind", "Arrows wrap in the row off"],
     );
-    shot(
-        &app,
-        "opt.buttons.row_wrap",
-        "left from Refresh wraps to Remove; the row stays full width and the message stays on",
-        &args,
-    );
+    check_frame(&app, &wrapped, &visual_id("opt.buttons.row_wrap"));
     app.finish();
 }
 
