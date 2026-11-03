@@ -26,7 +26,7 @@ does not exist in this tree yet.
 | `apps/jackin/src/` | The `jackin-console` library (`jackin_console`): the jackin screens (manager, editor, accounts, usage, settings, cockpit, capsule, prelude, roles, doctor and the modals), the `domain` types, `rain` and the other jackin-only modules, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
 | `apps/jackin/src/fixtures/`, `apps/jackin/src/sim/` | The 14 fixture worlds (`fixtures::world_for`) and the simulated `Backend`, `OnePassword` and launch content, in the library behind the `fixtures` feature so the jackin repository can render the same worlds. |
 | `apps/jackin/src/bin/jackin/` | The jackin demo binary: the command line over `fixtures` and `sim`. Binary name is `jackin` (`cargo run --bin jackin`). |
-| `apps/jackin/tests/` | Library tests of the `jackin-console` data API (`world.rs`) beside the `functional/` journeys. |
+| `apps/jackin/tests/*.rs` | Library tests of the `jackin-console` data API (`World`, `Snapshot`, the time source, external messages), run by `cargo nextest run --all-targets`. They are not part of the CI `functional` suite. |
 | `apps/jackin/tests/functional/` | The jackin journeys and their approved baselines (`baselines/functional/jackin_*.tui.json`), on the shared harness `tests/functional/support.rs`. |
 | `tests/functional/` | The only test estate: live PTY functional/integration tests plus the frozen visual gate. See [functional testing](functional-testing.md). |
 | `.velnor/config.toml` | Source of truth for generated CI (`.github/` is generated, never hand-edited). See [CI](ci.md). |

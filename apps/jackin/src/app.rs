@@ -1,5 +1,5 @@
 use junie_tui::clock::Clock;
-use junie_tui::core::event::{Input, Key, Outcome};
+use junie_tui::core::event::{External, Input, Key, Outcome};
 use junie_tui::core::focus::FocusChange;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
@@ -7,6 +7,7 @@ use junie_tui::core::pointer::{
     MouseTarget, PointerEvent, PointerHost, PointerParts, PointerRouter,
 };
 use junie_tui::core::response::Response;
+use junie_tui::runtime::ExternalReceiver;
 use junie_tui::shell::{self, Chrome, Menus, PageKey, Router, Shell};
 use junie_tui::theme::{Theme, Tone};
 use junie_tui::ui::ctx::{RenderCtx, fill};
@@ -37,7 +38,7 @@ use crate::screens::prelude::PreludeScreen;
 use crate::screens::role_editor::RoleEditorScreen;
 use crate::screens::settings::SettingsScreen;
 use crate::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
-use crate::world::{Health, Msg, World};
+use crate::world::{Health, Msg, Snapshot, World};
 use junie_tui::shell::Page as _;
 use junie_tui::ui::leave::{LeaveGuard, Stakes};
 use junie_tui::widgets::brand::Lockup;
@@ -88,6 +89,12 @@ impl Route {
 type Layers = ShellLayers<ModalResult, World, Route>;
 type Entry = LayerEntry<ModalResult, World, Route>;
 
+#[derive(Debug, Clone)]
+pub enum Remote {
+    Msg(Msg),
+    Reloaded(Box<Snapshot>),
+}
+
 pub struct App {
     pub theme: Theme,
     pub scenario: Scenario,
@@ -113,6 +120,7 @@ pub struct App {
     intro_guard: u8,
     pub clipboard_gen: u32,
     exit_after_status: Option<i64>,
+    external: Option<ExternalReceiver>,
 }
 
 impl App {
@@ -149,9 +157,30 @@ impl App {
             intro_guard: 3,
             clipboard_gen: 0,
             exit_after_status: None,
+            external: None,
         };
         app.start(frame);
         app
+    }
+
+    pub fn with_external(mut self, receiver: ExternalReceiver) -> Self {
+        self.external = Some(receiver);
+        self
+    }
+
+    pub fn deliver(&mut self, msg: &Msg) -> Outcome {
+        self.dispatch_msg(msg)
+    }
+
+    fn on_external(&mut self, external: &External) -> Outcome {
+        match external.downcast_ref::<Remote>() {
+            Some(Remote::Msg(msg)) => self.dispatch_msg(msg),
+            Some(Remote::Reloaded(snapshot)) => {
+                self.world.apply((**snapshot).clone());
+                Outcome::Changed
+            }
+            None => Outcome::Ignored,
+        }
     }
 
     fn start(&mut self, frame: u64) {
@@ -330,6 +359,7 @@ impl App {
             Input::Resize(..) => Outcome::Changed,
             Input::Tick => self.on_tick(),
             Input::Mouse(m) => PointerRouter::route(self, m),
+            Input::External(external) => self.on_external(&external),
             other => shell::KeyRouter::input(self, other),
         }
     }
@@ -400,36 +430,36 @@ impl App {
         let route = self.route();
         out = out.or(self.on_route(route, Outcome::Ignored, |s, w, cx| s.on_tick(w, cx)));
 
-        for m in msgs {
+        for m in &msgs {
             out = out.or(self.dispatch_msg(m));
         }
         out
     }
 
-    fn dispatch_msg(&mut self, m: Msg) -> Outcome {
-        self.world.absorb(&m);
+    fn dispatch_msg(&mut self, m: &Msg) -> Outcome {
+        self.world.absorb(m);
         let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));
         let route = self.route();
         let (o, reqs) = self
             .shell
             .deliver(true, |cx| match self.router.screen_mut(route) {
-                Some(s) => s.on_msg(&m, &mut self.world, cx),
+                Some(s) => s.on_msg(m, &mut self.world, cx),
                 None => Outcome::Ignored,
             });
 
         let (o, behind) = self.shell.deliver(false, |cx| {
             let mut o = o;
             if !o.consumed() && route != Route::Manager {
-                o = self.router.manager_mut().on_msg(&m, &mut self.world, cx);
+                o = self.router.manager_mut().on_msg(m, &mut self.world, cx);
             }
             if !o.consumed() && route != Route::Accounts {
-                o = self.router.accounts_mut().on_msg(&m, &mut self.world, cx);
+                o = self.router.accounts_mut().on_msg(m, &mut self.world, cx);
             }
             if !o.consumed()
                 && route != Route::Roles
                 && let Some(roles) = self.router.roles_mut()
             {
-                o = roles.on_msg(&m, &mut self.world, cx);
+                o = roles.on_msg(m, &mut self.world, cx);
             }
             o
         });
@@ -2115,6 +2145,9 @@ impl shell::App for App {
     }
     fn on_blur(&mut self, ch: FocusChange) -> Outcome {
         self.blur_all(ch)
+    }
+    fn external(&self) -> Option<&ExternalReceiver> {
+        self.external.as_ref()
     }
     fn layer_open(&self) -> bool {
         !self.layers.is_empty()

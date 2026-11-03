@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use crate::arbiter::Arbiter;
+use crate::arbiter::{Arbiter, DiscoveryError};
 use crate::backend::{Backend, Effect, OnePassword};
 use crate::domain::account::{AccountId, AccountRegistry};
 use crate::domain::agent::{Agent, AuthMode, Provider};
@@ -213,6 +213,7 @@ pub struct HealthView {
 pub struct World {
     pub scenario: Scenario,
     pub clock: SimClock,
+    pub time: TimeSource,
     pub arbiter: Arbiter,
     pub home: String,
     pub cwd: String,
@@ -243,9 +244,35 @@ pub struct World {
     pub surfaces: Surfaces,
 }
 
+pub trait WallSource: std::fmt::Debug + Send + Sync {
+    fn epoch_millis(&self) -> i64;
+
+    fn utc_offset_secs(&self) -> i64;
+}
+
+#[derive(Debug, Clone, Default)]
+pub enum TimeSource {
+    #[default]
+    Sim,
+    Wall(Arc<dyn WallSource>),
+}
+
+#[derive(Debug, Clone)]
+pub struct Snapshot {
+    pub workspaces: Vec<Workspace>,
+    pub roles: Vec<RoleEntry>,
+    pub instances: Vec<Instance>,
+    pub global: GlobalConfig,
+    pub accounts: AccountRegistry,
+    pub surfaces: Surfaces,
+    pub github: Vec<GithubRepo>,
+    pub index_error: Option<DiscoveryError>,
+}
+
 pub struct WorldParts {
     pub scenario: Scenario,
     pub clock: SimClock,
+    pub time: TimeSource,
     pub arbiter: Arbiter,
     pub home: String,
     pub cwd: String,
@@ -276,6 +303,7 @@ impl WorldParts {
             scenario,
             last_refresh_secs: clock.now_secs(),
             clock,
+            time: TimeSource::Sim,
             arbiter: Arbiter::new(0),
             home,
             cwd,
@@ -292,6 +320,16 @@ impl WorldParts {
             surfaces: Surfaces::default(),
         }
     }
+
+    pub fn wall(mut self, source: Arc<dyn WallSource>) -> Self {
+        let ms = source.epoch_millis();
+        self.clock.epoch_secs = ms.div_euclid(1000);
+        self.clock.now_ms = ms.rem_euclid(1000);
+        self.clock.utc_offset_secs = source.utc_offset_secs();
+        self.last_refresh_secs = self.clock.now_secs();
+        self.time = TimeSource::Wall(source);
+        self
+    }
 }
 
 impl World {
@@ -299,6 +337,7 @@ impl World {
         let WorldParts {
             scenario,
             clock,
+            time,
             arbiter,
             home,
             cwd,
@@ -318,6 +357,7 @@ impl World {
         let mut world = Self {
             scenario,
             clock,
+            time,
             arbiter,
             home,
             cwd,
@@ -409,6 +449,33 @@ impl World {
         })
     }
 
+    pub fn apply(&mut self, snapshot: Snapshot) {
+        let Snapshot {
+            workspaces,
+            roles,
+            instances,
+            global,
+            accounts,
+            surfaces,
+            github,
+            index_error,
+        } = snapshot;
+        let next_free = workspaces.iter().map(|w| w.id + 1).max().unwrap_or(0);
+        self.next_workspace_id = self.next_workspace_id.max(next_free);
+        self.workspaces = workspaces;
+        self.roles = roles;
+        self.instances = instances;
+        self.global = global;
+        self.accounts = accounts;
+        self.surfaces = surfaces;
+        self.github = github;
+        refresh_snapshots(self);
+        self.arbiter.discovery = match index_error {
+            Some(error) => Err(error),
+            None => Ok(self.running_count()),
+        };
+    }
+
     pub fn absorb(&mut self, msg: &Msg) {
         if let (Msg::DoctorFinished(report), Some(d)) = (msg, self.surfaces.doctor.as_mut()) {
             d.state = DoctorState::Done(report.clone());
@@ -416,7 +483,14 @@ impl World {
     }
 
     pub fn tick(&mut self, interval_ms: i64) -> Vec<Msg> {
-        self.clock.advance(interval_ms);
+        match &self.time {
+            TimeSource::Sim => self.clock.advance(interval_ms),
+            TimeSource::Wall(source) if self.clock.running => {
+                self.clock.now_ms = source.epoch_millis() - self.clock.epoch_secs * 1000;
+                self.clock.utc_offset_secs = source.utc_offset_secs();
+            }
+            TimeSource::Wall(_) => {}
+        }
         if !self.clock.running {
             return vec![];
         }
