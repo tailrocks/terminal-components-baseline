@@ -16788,5 +16788,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X01.cli.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x01_env/x01_env_env_120x40",
+    "path": "tests/functional/baselines/pre_refactor/x01_env/x01_env_env_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X01.env.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x01_env/x01_env_env_narrow",
+    "path": "tests/functional/baselines/pre_refactor/x01_env/x01_env_env_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X01.env.",
+    "replacement_id": null
   }
 ]
