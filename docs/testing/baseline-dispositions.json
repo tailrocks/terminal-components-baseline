@@ -16698,5 +16698,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J06.reconnect.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j06_takeover/j06_takeover_takeover_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j06_takeover/j06_takeover_takeover_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J06.takeover.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j06_takeover/j06_takeover_takeover_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j06_takeover/j06_takeover_takeover_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J06.takeover.",
+    "replacement_id": null
   }
 ]
