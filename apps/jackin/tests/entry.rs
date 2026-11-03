@@ -9,11 +9,12 @@ use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, Rout
 use jackin_console::backend::OpSession;
 use jackin_console::fixtures::{Scenario, app_for, app_with_world, entry_for, world_for};
 use jackin_console::rain::INTRO_END;
-use junie_tui::core::event::Input;
+use junie_tui::core::event::{Input, Mouse, MouseKind};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::shell::NativeClipboard;
 use junie_tui::theme::{ColorLevel, Theme};
+use ratatui::layout::Position;
 
 fn theme() -> Theme {
     Theme::for_level(ColorLevel::TrueColor)
@@ -153,6 +154,40 @@ fn start_table_matches_the_old_scenarios() {
 }
 
 #[test]
+fn roles_page_selects_the_named_role() {
+    let mut app = assemble(
+        world_for(Scenario::RoleBinding),
+        Entry {
+            page: EntryPage::Roles {
+                select: Some("the-architect".into()),
+            },
+            outro_when_framed: false,
+        },
+        options(INTRO_END, ClipboardMode::Preview),
+    );
+    assert_eq!(app.route(), Route::Roles);
+    let text = screen(&mut app);
+    assert!(
+        text.contains("Roles › the-architect"),
+        "lacks \"Roles › the-architect\":\n{text}"
+    );
+}
+
+#[test]
+fn launch_failure_plan_fails_the_network_stage() {
+    let mut app = app(Scenario::LaunchFailure);
+    assert_eq!(app.route(), Route::Cockpit);
+    let text = screen(&mut app);
+    for shown in [
+        "Launch failed",
+        "The Construct network could not be attached",
+        "! Network failed",
+    ] {
+        assert!(text.contains(shown), "lacks {shown:?}:\n{text}");
+    }
+}
+
+#[test]
 fn outro_only_when_framed() {
     for scenario in Scenario::ALL {
         assert_eq!(
@@ -257,24 +292,26 @@ impl NativeClipboard for Sink {
     }
 }
 
-const DEBUG_ROW: &str = "jackin-payments-platform-7f3a";
 const DEBUG_ROW_OSC52: &str = "\x1b]52;c;amFja2luLXBheW1lbnRzLXBsYXRmb3JtLTdmM2E=\x07";
+const SELECTED: &str = "the settlement retry loop so failed ba";
+const SELECTED_OSC52: &str = "\x1b]52;c;dGhlIHNldHRsZW1lbnQgcmV0cnkgbG9vcCBzbyBmYWlsZWQgYmE=\x07";
 
 struct Copy {
     status: String,
     output: Vec<String>,
 }
 
-fn copy_debug_row(clipboard: ClipboardMode) -> Copy {
+fn capsule(clipboard: ClipboardMode) -> App {
     let mut app = assemble(
         world_for(Scenario::CapsuleMulti),
         entry_for(Scenario::CapsuleMulti),
         options(INTRO_END, clipboard),
     );
     screen(&mut app);
-    press(&mut app, "ctrl+b i");
-    let _ = Application::take_output(&mut app);
-    press(&mut app, "y");
+    app
+}
+
+fn copied(app: &mut App) -> Copy {
     let status = app
         .shell
         .status
@@ -283,36 +320,77 @@ fn copy_debug_row(clipboard: ClipboardMode) -> Copy {
         .to_owned();
     Copy {
         status,
-        output: Application::take_output(&mut app),
+        output: Application::take_output(app),
     }
+}
+
+fn copy_debug_row(clipboard: ClipboardMode) -> Copy {
+    let mut app = capsule(clipboard);
+    press(&mut app, "ctrl+b i");
+    let _ = Application::take_output(&mut app);
+    press(&mut app, "y");
+    copied(&mut app)
+}
+
+fn copy_selection(clipboard: ClipboardMode) -> Copy {
+    let mut app = capsule(clipboard);
+    let _ = Application::take_output(&mut app);
+    for (kind, x) in [
+        (MouseKind::Down, 12),
+        (MouseKind::Drag, 30),
+        (MouseKind::Drag, 50),
+        (MouseKind::Up, 50),
+    ] {
+        Application::handle(
+            &mut app,
+            Input::Mouse(Mouse::new(kind, Position::new(x, 7))),
+        );
+        screen(&mut app);
+    }
+    copied(&mut app)
 }
 
 #[test]
 fn clipboard_modes() {
     let sink = Sink::new(true);
-    let host = copy_debug_row(ClipboardMode::Host(sink.clone()));
-    assert_eq!(sink.writes(), [DEBUG_ROW]);
-    assert_eq!(host.output, [DEBUG_ROW_OSC52]);
+    let host = copy_selection(ClipboardMode::Host(sink.clone()));
+    assert_eq!(sink.writes(), [SELECTED]);
+    assert_eq!(host.output, [SELECTED_OSC52]);
 
-    let preview = copy_debug_row(ClipboardMode::Preview);
+    let preview = copy_selection(ClipboardMode::Preview);
     assert!(preview.output.is_empty(), "{:?}", preview.output);
-    assert!(preview.status.starts_with("Copied "), "{}", preview.status);
+    assert_eq!(preview.status, "Copied selection");
+
+    let counted = copy_debug_row(ClipboardMode::Preview);
+    assert!(counted.output.is_empty(), "{:?}", counted.output);
+    assert_eq!(
+        counted.status,
+        "Copied 29 characters · jackin-payments-platform-7f3a"
+    );
 }
 
 #[test]
 fn native_sink_decides_the_wording() {
-    let accepted = Sink::new(true);
-    let accepted = copy_debug_row(ClipboardMode::Host(accepted));
-    assert_eq!(
-        accepted.status,
-        "Copied 29 characters · jackin-payments-platform-7f3a"
-    );
+    let accepting = Sink::new(true);
+    let accepted = copy_selection(ClipboardMode::Host(accepting.clone()));
+    assert_eq!(accepted.status, "Copied selection");
+    assert_eq!(accepting.writes(), [SELECTED]);
+    assert_eq!(accepted.output, [SELECTED_OSC52]);
 
-    let refused = Sink::new(false);
-    let refused = copy_debug_row(ClipboardMode::Host(refused.clone()));
+    let refusing = Sink::new(false);
+    let refused = copy_selection(ClipboardMode::Host(refusing.clone()));
     assert_eq!(
         refused.status,
         "Copy requested · this terminal may ignore OSC 52"
     );
-    assert_eq!(refused.output, [DEBUG_ROW_OSC52]);
+    assert_eq!(refusing.writes(), [SELECTED]);
+    assert_eq!(refused.output, [SELECTED_OSC52]);
+
+    let counted = Sink::new(true);
+    let counted = copy_debug_row(ClipboardMode::Host(counted));
+    assert_eq!(
+        counted.status,
+        "Copied 29 characters · jackin-payments-platform-7f3a"
+    );
+    assert_eq!(counted.output, [DEBUG_ROW_OSC52]);
 }
