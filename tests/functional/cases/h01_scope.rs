@@ -370,7 +370,11 @@ fn h01_scope_scenario_monorepo_child() {
 #[test]
 fn h01_scope_scenario_remote_host() {
     let app = open("h01-scope-remote", "remote-host");
-    let here = app.wait_text(HERE);
+    // The scope chip is drawn before the footer names the detached revision.
+    let here = app.wait_screen("remote here", |screen| {
+        let visible = text(screen);
+        visible.contains(HERE) && visible.contains("v2.14.3")
+    });
     see(
         &here,
         &[
