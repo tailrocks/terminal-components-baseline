@@ -22,7 +22,7 @@ does not exist in this tree yet.
 | `src/bin/showcase/` | Showcase: the executable component catalog (54 sidebar pages, plus the hidden pages `terminalpane` and `fixedcontrols`). Thin consumer: pages add wiring, demo data and option tables only. |
 | `src/bin/tablepro/` | TablePro: simulated database workbench (connections, explorer, query tabs, results, history). |
 | `src/bin/holla/` | Holla: simulated launcher/finder, files, disk cleanup, services. Backends are simulated; tests assert the next in-app consequence. |
-| `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TerminalView`, `encode_key`. It renders a vt100 session from a byte stream and does no I/O. |
+| `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TermView`, `TermEvent`, `TerminalView`, `encode_key`. It renders a `termpane` grid fed from a byte stream, returns the events the stream raised (replies, title, clipboard, bell, notification, cwd, scrollback cleared) and does no I/O. |
 | `apps/jackin/src/` | The `jackin-console` library (`jackin_console`): the jackin screens (manager, editor, accounts, usage, settings, cockpit, capsule, prelude, roles, doctor and the modals), the `domain` types, `rain` and the other jackin-only modules, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
 | `apps/jackin/src/fixtures/`, `apps/jackin/src/sim/` | The 14 fixture worlds (`fixtures::world_for`) and the simulated `Backend`, `OnePassword` and launch content, in the library behind the `fixtures` feature so the jackin repository can render the same worlds. |
 | `apps/jackin/src/bin/jackin/` | The jackin demo binary: the command line over `fixtures` and `sim`. Binary name is `jackin` (`cargo run --bin jackin`). |
@@ -36,7 +36,7 @@ does not exist in this tree yet.
 | Feature | Default | Adds |
 | --- | --- | --- |
 | `cli` | yes | `clap`, the `cli` module and `Motion` as a `clap::ValueEnum`. The four binaries require it; `jackin-console` enables it on its `junie-tui` dependency. |
-| `terminal` | no | `vt100` and the `terminal` module. |
+| `terminal` | yes | `termpane` and the `terminal` module. |
 
 `jackin-console` has one feature, `fixtures` (default): the `fixtures`
 and `sim` modules and the `jackin` binary. A consumer that supplies its
@@ -93,6 +93,11 @@ so the approved baselines do not move.
 
 ## Known limits
 
+- `TerminalState::scrolled_off` is exact while the history is below its
+  limit (it follows the growth of `scrollback_len`). At the limit it sums
+  the primary-screen scroll operations that start at row 0, so a delete-line
+  at row 0 over-counts and the rows that `ESC[2J` keeps (termpane's
+  preserve-on-clear) are not counted.
 - The crate is a monolith: library and four binaries in one package.
   Splitting it is the refactoring programme in
   [architecture](architecture.md); no part of that split has landed.
