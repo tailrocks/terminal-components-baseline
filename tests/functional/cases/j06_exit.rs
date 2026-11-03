@@ -69,6 +69,8 @@ fn open(name: &str, scenario: &str) -> App {
     launch.color = Some("truecolor".to_string());
     launch.motion = Some("reduced".to_string());
     // `Launch::new` leaves the clock off. `App::new` would enable it for jackin.
+    // A clock-step paste is consumed only while motion is paused, and paused
+    // changes hint-bar bold. Reduced would type the paste into the focused pane.
     launch.clock = false;
     try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
 }
@@ -162,13 +164,20 @@ fn on_current(screen: &TerminalSnapshot) -> bool {
     manager_hard(screen) && line.contains(CURRENT) && !line.contains('▸') && !line.contains('▾')
 }
 
+fn capsule_hints(visible: &str) -> bool {
+    // Attach paints "Attached to … · tabs and panes restored" on the hint bar.
+    // That status hides the last hint, `Ctrl+Q`, until its five-second TTL.
+    // `Ctrl+B` is the first capsule hint and is on the first paint.
+    visible.contains("Ctrl+B") || visible.contains("Ctrl+Q")
+}
+
 fn dirty_capsule(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     screen.cols() == 120
         && screen.rows() == 40
         && visible.contains(DIRTY_IDENTITY)
         && visible.contains(CLAUDE)
-        && visible.contains("Ctrl+Q")
+        && capsule_hints(&visible)
         && !visible.contains(UNSAVED)
         && !visible.contains(CLEAN_TITLE)
         && !visible.contains(SECOND)
@@ -185,7 +194,7 @@ fn clean_capsule(screen: &TerminalSnapshot) -> bool {
         && screen.rows() == 40
         && visible.contains(CLEAN_IDENTITY)
         && visible.contains(CODEX)
-        && visible.contains("Ctrl+Q")
+        && capsule_hints(&visible)
         && !visible.contains(UNSAVED)
         && !visible.contains(CLEAN_TITLE)
         && !visible.contains(CLAUDE)
@@ -218,6 +227,7 @@ fn second_dialog(screen: &TerminalSnapshot, cols: u32, rows: u32) -> bool {
         && visible.contains(SECOND)
         && visible.contains("Discard")
         && visible.contains("Cancel")
+        && !visible.contains("tabs and panes restored")
         && !visible.contains(DISCARDED)
         && !visible.contains(KEPT)
         && !visible.contains(OUTRO)
@@ -491,9 +501,24 @@ fn inspect_return() {
     assert!(app.child_running(), "inspect quit the process");
 }
 
+fn status_cleared(screen: &TerminalSnapshot) -> bool {
+    dirty_capsule(screen) && !text(screen).contains("tabs and panes restored")
+}
+
 fn discard_shots_then_cancel() {
     let app = open("j06-exit-shots", "outro-last");
     app.wait_screen("capsule", dirty_capsule);
+    // Attach writes a status that owns the hint bar's right side for five
+    // seconds of sim time. The baseline is that bar after the status expires.
+    // Sim time lags the wall clock while the suite is busy, so the budget is
+    // wider than the TTL.
+    wait_settled(
+        &app,
+        "attach status cleared",
+        Duration::from_millis(200),
+        Duration::from_secs(25),
+        status_cleared,
+    );
     open_dirty(&app);
     move_choice(&app, INSPECT_ROW);
     move_choice(&app, KEEP_ROW);
