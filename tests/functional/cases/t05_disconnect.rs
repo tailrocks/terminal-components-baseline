@@ -4,9 +4,11 @@
 //! `pre_refactor/t05_disconnect/` and each checkpoint's dots become underscores.
 //! TablePro has no `--page` flag. It opens on Connections.
 
-use std::time::Duration;
+use std::path::PathBuf;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{App, Launch, TABLEPRO, find_all, row_text, text, try_launch};
 
@@ -172,7 +174,7 @@ fn flash_settle(app: &App) {
     }
 }
 
-fn dialog_open(screen: &TerminalSnapshot) -> bool {
+fn dialog_copy(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     let words = flat(screen);
     words.contains(TITLE)
@@ -180,13 +182,74 @@ fn dialog_open(screen: &TerminalSnapshot) -> bool {
         && visible.contains(&format!("{FOCUS}{CANCEL}"))
         && !visible.contains(&format!("{FOCUS}{CONFIRM}"))
         && words.contains(QUERY)
-        && words.contains(CONNECTED)
         && !words.contains(DISCONNECTED)
         && !words.contains(CONNECTIONS)
         && !words.contains("Unsaved changes")
         && !words.contains("will be discarded")
         && !words.contains("Save")
         && !words.contains("Discard")
+}
+
+fn dialog_open(screen: &TerminalSnapshot) -> bool {
+    dialog_copy(screen) && flat(screen).contains(CONNECTED)
+}
+
+fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
+    }
+}
+
+/// The connected toast lasts 5s. `visual` then keeps the next quiet frame, so
+/// a loaded run locks the footer after the toast has cleared. Hold the open
+/// dialog while the toast is up, and compare that frame.
+fn capture_dialog(app: &App, checkpoint: &str, cols: u32, rows: u32) {
+    let test_id = visual_id(checkpoint);
+    let deadline = Instant::now() + Duration::from_secs(8);
+    let mut good: Option<TerminalSnapshot> = None;
+    let mut since: Option<Instant> = None;
+    loop {
+        let screen = app.screen();
+        let ready = screen.cols() == cols && screen.rows() == rows && dialog_open(&screen);
+        if ready {
+            let same = good.as_ref().is_some_and(|prev| prev == &screen);
+            if same && since.expect("hold start").elapsed() >= Duration::from_millis(200) {
+                check_frame(app, &screen, &test_id);
+                return;
+            }
+            if !same {
+                good = Some(screen);
+                since = Some(Instant::now());
+            }
+        } else if let Some(prev) = good.take() {
+            check_frame(app, &prev, &test_id);
+            return;
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "{test_id} frame not seen\n{}",
+            text(&app.screen())
+        );
+        std::thread::sleep(Duration::from_millis(20));
+    }
 }
 
 fn assert_open_dialog(screen: &TerminalSnapshot) {
@@ -293,31 +356,25 @@ fn tablepro_disconnect_clean_returns_and_dirty_cancel_keeps_the_draft() {
     let opened = app.wait_text(TITLE);
     assert_open_dialog(&opened);
     flash_settle(&app);
-
-    let wide = app.screen();
-    assert_eq!((wide.cols(), wide.rows()), (120, 40));
-    assert_open_dialog(&wide);
-    app.visual(&visual_id(WIDE));
+    capture_dialog(&app, WIDE, 120, 40);
 
     app.resize(80, 24);
-    let narrowed = app.wait_screen("disconnect dialog at 80x24", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && dialog_open(screen)
-    });
-    assert_eq!((narrowed.cols(), narrowed.rows()), (80, 24));
-    assert_open_dialog(&narrowed);
-    app.visual(&visual_id(NARROW));
+    capture_dialog(&app, NARROW, 80, 24);
     app.resize(120, 40);
 
     let restored = app.wait_screen("disconnect dialog back at 120x40", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && dialog_open(screen)
+        screen.cols() == 120 && screen.rows() == 40 && dialog_copy(screen)
     });
-    assert_open_dialog(&restored);
+    assert!(
+        dialog_copy(&restored),
+        "disconnect dialog is not open\n{}",
+        text(&restored)
+    );
 
     app.key("enter");
     let kept = app.wait_screen("cancel keeps the draft", |screen| {
         let visible = text(screen);
         visible.contains(SQL)
-            && visible.contains(CONNECTED)
             && visible.contains(QUERY)
             && !visible.contains(TITLE)
             && !visible.contains(DISCONNECTED)
@@ -325,13 +382,17 @@ fn tablepro_disconnect_clean_returns_and_dirty_cancel_keeps_the_draft() {
     });
     see(
         &kept,
-        &[SQL, QUERY, CONNECTED],
+        &[SQL, QUERY, "acme_prod › public"],
         &[TITLE, BODY, DISCONNECTED, CONNECTIONS, "Query 2"],
     );
 
     choose_disconnect(&app);
-    let again = app.wait_text(TITLE);
-    assert_open_dialog(&again);
+    let again = app.wait_screen("disconnect dialog again", dialog_copy);
+    assert!(
+        dialog_copy(&again),
+        "disconnect dialog is not open\n{}",
+        text(&again)
+    );
     app.key("right");
     let armed = app.wait_screen("disconnect button focused", |screen| {
         let visible = text(screen);

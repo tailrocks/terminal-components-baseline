@@ -4,9 +4,11 @@
 //! `pre_refactor/t05_quit/` and each checkpoint's dots become underscores.
 //! TablePro has no `--page` flag. It opens on Connections.
 
+use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{App, Launch, TABLEPRO, find_all, row_text, text, try_launch};
 
@@ -141,16 +143,43 @@ fn focus_editor(app: &App) {
     app.wait_text("Ctrl+Space");
 }
 
-fn quit_dialog(screen: &TerminalSnapshot) -> bool {
+fn quit_copy(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     visible.contains(TITLE)
         && visible.contains(BODY)
         && visible.contains(CANCEL)
         && visible.contains(QUIT)
         && visible.contains(MARKER)
-        && visible.contains(CONNECTED)
         && !visible.contains("Save")
         && !visible.contains("Discard")
+}
+
+fn quit_dialog(screen: &TerminalSnapshot) -> bool {
+    quit_copy(screen) && text(screen).contains(CONNECTED)
+}
+
+fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
+    }
 }
 
 fn cancel_focused(screen: &TerminalSnapshot) -> bool {
@@ -163,7 +192,7 @@ fn quit_focused(screen: &TerminalSnapshot) -> bool {
 
 fn assert_cancel_focused(screen: &TerminalSnapshot) {
     let visible = text(screen);
-    assert!(quit_dialog(screen), "quit dialog is not open\n{visible}");
+    assert!(quit_copy(screen), "quit dialog is not open\n{visible}");
     assert!(cancel_focused(screen), "Cancel is not focused\n{visible}");
 }
 
@@ -194,20 +223,41 @@ fn flash_settle(app: &App) {
     }
 }
 
-/// The shot compares the settled frame. It does not resize.
+/// The connected toast lasts 5s. A resize paint can show the dialog before
+/// that footer line, and `visual` then locks the cleared toast. Hold the
+/// focused Cancel dialog while the toast is up, and compare that frame.
 fn shot(app: &App, checkpoint: &str, cols: u32, rows: u32) {
-    let before = app.screen();
-    assert_eq!(
-        (before.cols(), before.rows()),
-        (cols, rows),
-        "checkpoint {checkpoint}\n{}",
-        text(&before)
-    );
-    assert_cancel_focused(&before);
-    app.visual(&visual_id(checkpoint));
-    let after = app.screen();
-    assert_cancel_focused(&after);
-    assert_eq!((after.cols(), after.rows()), (cols, rows));
+    let test_id = visual_id(checkpoint);
+    let deadline = Instant::now() + Duration::from_secs(8);
+    let mut good: Option<TerminalSnapshot> = None;
+    let mut since: Option<Instant> = None;
+    loop {
+        let screen = app.screen();
+        let ready = screen.cols() == cols
+            && screen.rows() == rows
+            && quit_dialog(&screen)
+            && cancel_focused(&screen);
+        if ready {
+            let same = good.as_ref().is_some_and(|prev| prev == &screen);
+            if same && since.expect("hold start").elapsed() >= Duration::from_millis(200) {
+                check_frame(app, &screen, &test_id);
+                return;
+            }
+            if !same {
+                good = Some(screen);
+                since = Some(Instant::now());
+            }
+        } else if let Some(prev) = good.take() {
+            check_frame(app, &prev, &test_id);
+            return;
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "{test_id} frame not seen\n{}",
+            text(&app.screen())
+        );
+        std::thread::sleep(Duration::from_millis(20));
+    }
 }
 
 fn editor_left(screen: &TerminalSnapshot) -> bool {
@@ -248,11 +298,11 @@ fn leave_editor(app: &App) {
 fn confirm_focused_quit(app: &App) {
     app.key("right");
     let armed = app.wait_screen("quit focused", |screen| {
-        quit_dialog(screen) && quit_focused(screen)
+        quit_copy(screen) && quit_focused(screen)
     });
     see(
         &armed,
-        &[TITLE, BODY, QUIT, MARKER, CONNECTED],
+        &[TITLE, BODY, QUIT, MARKER],
         &["Save", "Discard", "Filter connections"],
     );
     app.key("enter");
@@ -316,7 +366,7 @@ fn tablepro_quit_dirty_cancel_keeps_sql_then_confirms() {
     app.resize(120, 40);
 
     let restored = app.wait_screen("quit dialog back at 120x40", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && quit_dialog(screen) && cancel_focused(screen)
+        screen.cols() == 120 && screen.rows() == 40 && quit_copy(screen) && cancel_focused(screen)
     });
     assert_cancel_focused(&restored);
 
@@ -325,7 +375,6 @@ fn tablepro_quit_dirty_cancel_keeps_sql_then_confirms() {
         let visible = text(screen);
         visible.contains(SQL)
             && visible.contains(MARKER)
-            && visible.contains(CONNECTED)
             && visible.contains(QUERY)
             && !visible.contains(TITLE)
             && !visible.contains(BODY)
@@ -334,7 +383,7 @@ fn tablepro_quit_dirty_cancel_keeps_sql_then_confirms() {
     assert!(app.child_running(), "cancel exited tablepro");
     see(
         &kept,
-        &[SQL, MARKER, QUERY, CONNECTED],
+        &[SQL, MARKER, QUERY, "acme_prod › public"],
         &[
             TITLE,
             BODY,
@@ -347,7 +396,7 @@ fn tablepro_quit_dirty_cancel_keeps_sql_then_confirms() {
 
     app.key("ctrl+q");
     let again = app.wait_screen("quit dialog again", |screen| {
-        quit_dialog(screen) && cancel_focused(screen)
+        quit_copy(screen) && cancel_focused(screen)
     });
     assert_cancel_focused(&again);
     confirm_focused_quit(&app);
