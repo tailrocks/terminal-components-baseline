@@ -6,27 +6,30 @@
       "owner_task": "J06.tabs",
       "application": "jackin",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario capsule-multi --color truecolor --motion reduced at 120×40. start in src/bin/jackin/app.rs matches Scenario::CapsuleMulti and calls Go::Attach for jk-7f3a. populated in src/bin/jackin/domain/fixtures.rs builds the payments-platform daemon with Claude pane 1, Codex pane 2, and a shell pane 3, focused on pane 1. boot_all in src/bin/jackin/sim/pty.rs stops at Await, so Claude shows Allow edit to src/settlement/config.rs? (y/n) and Claude Code v2.1.14. follow in src/widgets/viewport.rs keeps the Codex tail at Codex (Primary) and 12.4k tokens. The shell prompt is payments-platform ❯. Ctrl+B enters prefix mode in CapsuleScreen::on_key in src/bin/jackin/screens/capsule.rs. d calls handle_prefix_cmd, which calls detach. Go::Detach in src/bin/jackin/app.rs returns to the workspace manager and sets Detached · payments-platform keeps running. The permission question is gone. The test does not quit, and You were in the Construct from src/bin/jackin/rain.rs stays absent. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J06.tabs",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "jackin --scenario capsule-multi --color truecolor --motion reduced at 120x40",
+      "return_path": "Ctrl+B then d detaches to the workspace manager; the process stays there and does not play the outro"
     },
     {
       "case_id": "J06.tabs.layout",
       "owner_task": "J06.tabs",
       "application": "jackin",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "The same capsule-multi attach is the start. Ctrl+B then c, %, or \" calls spawn_flow in src/bin/jackin/screens/capsule.rs and opens a picker titled New tab, Split → Right, or Split ↓ Below. The list ends with Shell. Grok Build has one account in src/bin/jackin/domain/fixtures.rs, so picking it calls continue_spawn and sets Started Grok Build · account Team. OpenCode starts the same way, and Shell sets Started Shell. A new shell tab shows payments-platform ❯ and the marker typed into it. Returning to the previous tab still shows that pane's output. % splits Horizontal with new_first false and \" splits Vertical with new_first false, both in handle_prefix_cmd. The existing pane's output stays on its side of the seam. h, j, k, and l call move_focus. A marker typed after a focus move stays in that pane. z calls toggle_zoom: more than one leaf sets Zoomed · z restores the layout, a resize then sets Unzoom to resize, and z again sets Unzoomed and brings the other pane back. One leaf sets Nothing to zoom: one pane, and a resize with no split in that direction sets Nothing to resize in that direction. Pointer drag on the seam calls drag and drag_end, which sets Split resized. H calls resize, which clamps the percent to 5–95 and, when a child is under MIN_PANE_COLS + 2 or MIN_PANE_ROWS + 2 from src/bin/jackin/sim/pty.rs, restores the percent and cx.error Cannot resize: pane at minimum size. The seam still separates the panes, and both markers stay on their own sides. Prefix comma calls open_rename. The dialog title is Change tab title, the field is Label, the help is Empty restores the automatic name · 16 max, and the button is Rename. Enter sets Tab renamed from the rename layer result and the label zzren appears on the tab strip. Opening rename again and pressing Esc is Dialog action 0 in src/widgets/dialog.rs, which leaves the label. Prefix x with more than one leaf calls confirm_close(false). Dialog::destructive in src/widgets/dialog.rs focuses Cancel. The body starts Reap the focused pane's agent. Esc cancels, the dialog closes, and the marker and the other pane's output remain. Confirming Close pane calls close_pane in src/bin/jackin/sim/pty.rs. With other leaves left it returns false, and the layer result sets Pane closed. The surviving pane keeps its output. Prefix & calls confirm_close(true). Confirming Close tab calls close_tab. While tabs remain the status is Tab closed. When no tabs remain the layer sets Last session ended · the Capsule shuts down and calls end_instance(false). apply_requests in src/bin/jackin/app.rs applies that status and then Go::InstanceEnded in the same batch. leave_construct calls arbiter.request_exit in src/bin/jackin/arbiter.rs. jk-9b02 is still Running, so discovery is StillInside and the live status is Still inside the Construct · 1 instance remains on the workspace manager. You were in the Construct and Unsaved work — quit? stay absent. The checkpoints are the open Close pane? dialog, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40) and before Esc. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
       "execution_commit": null,
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_narrow.tui.json"
+      ],
       "scenario": null,
       "action_sequence": "Create a tab, a shell tab, and an agent tab. Split both ways, move focus, zoom, drag a seam, and resize by key. Refuse a minimum-size violation. Rename and close, including cancel, and close the last pane and last tab.",
       "expected_results": "The layout stays valid. Unaffected panes keep their output. Cancelled close leaves the pane.",
@@ -39,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "capsule-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5fbbfdcc636ead5fb1e0483cb2c5d6f1f41cff3155e30e60bb532f4f68724bdc",
+        "expect_baseline": "missing",
+        "precondition": "J06.tabs.layout.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "capsule-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f716068296782e88723166244941b4e3c088bb5ae2fd982753bbd62d36c9c30b",
+        "expect_baseline": "missing",
+        "precondition": "J06.tabs.layout.narrow"
+      }
     }
   ]
 }
