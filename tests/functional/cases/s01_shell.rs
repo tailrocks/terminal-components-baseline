@@ -398,7 +398,13 @@ fn s01_overrides_default() {
         "shell.overrides=none",
     ];
     let app = launch("s01-overrides-default", &args, 120, 40);
-    let screen = app.wait_text("no color · 120×40");
+    // The colour header paints before the sidebar groups.
+    let screen = app.wait_screen("mono sidebar", |screen| {
+        let body = text(screen);
+        body.contains("no color · 120×40")
+            && body.contains("▸ App shell")
+            && !body.contains("> App shell")
+    });
     let body = text(&screen);
     assert!(body.contains("▸ App shell"), "{body}");
     assert!(card_rule(&screen).contains('─'));
