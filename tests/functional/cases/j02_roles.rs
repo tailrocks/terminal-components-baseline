@@ -11,7 +11,7 @@
 //! dialog schedules `RoleLoaded` 1100 ms later on the sim clock. This test
 //! waits on the wall clock. It does not advance the test clock.
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 
@@ -65,10 +65,23 @@ fn open(name: &str) -> App {
 }
 
 fn reach_manager(app: &App) -> TerminalSnapshot {
-    let screen = app.wait_screen("manager or intro", |screen| {
-        let visible = text(screen);
-        visible.contains(DIRECTORY) || visible.contains("Stand up, operator")
-    });
+    let started = Instant::now();
+    let screen = loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        if visible.contains(DIRECTORY) || visible.contains("Stand up, operator") {
+            break screen;
+        }
+        assert!(
+            app.child_running(),
+            "jackin exited before the first frame\n{visible}"
+        );
+        assert!(
+            started.elapsed() < Duration::from_secs(25),
+            "timed out: manager or intro\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(25));
+    };
     if text(&screen).contains("Stand up, operator") {
         app.key("space");
         return app.wait_text(DIRECTORY);

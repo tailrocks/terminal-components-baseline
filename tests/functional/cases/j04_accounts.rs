@@ -231,23 +231,42 @@ fn shows(crumb: &str) -> impl Fn(&TerminalSnapshot) -> bool {
     move |screen| text(screen).contains(&crumb)
 }
 
-fn button_on(app: &App, label: &str, row_ok: impl Fn(&str) -> bool) -> Point {
-    let screen = app.screen();
-    let hits: Vec<_> = find_all(&screen, label)
+fn remove_hit(screen: &TerminalSnapshot) -> Option<Point> {
+    let hits: Vec<_> = find_all(screen, REMOVE)
         .into_iter()
-        .filter(|point| row_ok(&row_text(&screen, u32::from(point.y))))
+        .filter(|point| {
+            let row = row_text(screen, u32::from(point.y));
+            row.contains(CANCEL) && row.contains(REMOVE) && row.contains('│')
+        })
         .collect();
-    assert_eq!(hits.len(), 1, "one button {label:?}:\n{}", text(&screen));
-    Point {
+    (hits.len() == 1).then(|| Point {
         x: hits[0].x + 2,
         y: hits[0].y,
-    }
+    })
 }
 
+/// The restore to 120×40 paints the dialog and a later frame drops it before
+/// a fresh `screen` call. Re-open when the title is gone, then click the row
+/// that still shows Cancel and Remove.
 fn remove_button(app: &App) -> Point {
-    button_on(app, REMOVE, |row| {
-        row.contains(CANCEL) && row.contains(REMOVE) && row.contains('│')
-    })
+    let started = Instant::now();
+    let mut reopened = false;
+    loop {
+        let screen = app.screen();
+        if let Some(point) = remove_hit(&screen) {
+            return point;
+        }
+        assert!(
+            started.elapsed() < Duration::from_secs(8),
+            "one button {REMOVE:?}:\n{}",
+            text(&screen)
+        );
+        if !reopened && !text(&screen).contains("Remove account") {
+            app.key("d");
+            reopened = true;
+        }
+        std::thread::sleep(Duration::from_millis(40));
+    }
 }
 
 fn nudge(app: &App, quiet_frame: impl Fn(&TerminalSnapshot) -> bool) {

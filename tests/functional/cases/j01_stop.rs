@@ -6,7 +6,7 @@
 //! and the cursor column is part of the hash, so each shot nudges the width
 //! and comes back.
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 
@@ -48,12 +48,29 @@ fn open(name: &str) -> App {
 fn reach_manager(app: &App) -> TerminalSnapshot {
     // `returning` syncs the arbiter to live instances, so entry joins the
     // manager. Reduced motion holds the intro only when entry plays one.
-    let screen = app.wait_screen("manager or intro", |screen| {
-        let visible = text(screen);
-        visible.contains(DIRECTORY)
+    // Several Jackin processes start together in this partition. The first
+    // paint can arrive after the shared 10s wait, while the process is alive
+    // and the screen is still blank.
+    let started = Instant::now();
+    let screen = loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        if visible.contains(DIRECTORY)
             || visible.contains("Stand up, operator")
             || visible.contains("Knock, knock, operator.")
-    });
+        {
+            break screen;
+        }
+        assert!(
+            app.child_running(),
+            "jackin exited before the first frame\n{visible}"
+        );
+        assert!(
+            started.elapsed() < Duration::from_secs(25),
+            "timed out: manager or intro\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(25));
+    };
     if text(&screen).contains(DIRECTORY) {
         return screen;
     }
