@@ -92,7 +92,13 @@ fn shot(app: &App, checkpoint: &str) {
 
 fn confirm_quit(app: &App) {
     app.key("ctrl+q");
-    let guard = app.wait_text("Quit holla");
+    // The title paints before the actions. "Quit holla" alone is an empty dialog.
+    let guard = app.wait_screen("quit dialog", |screen| {
+        let visible = text(screen);
+        visible.contains("Quit holla")
+            && visible.contains("Stop and quit")
+            && visible.contains("Stay")
+    });
     see(&guard, &["Stop and quit", "Stay"], &[]);
     app.key("right");
     app.wait_screen("stop focused", |screen| {
@@ -395,7 +401,14 @@ fn h03_output_scenario_activities_multi() {
 #[test]
 fn h03_output_scenario_launch_failure() {
     let app = open("h03-output-launch-failure", "launch-failure");
-    let failed = app.wait_text(FAILED);
+    // The failed header paints before the log lines and the retry action.
+    let failed = app.wait_screen("launch failed", |screen| {
+        let visible = text(screen);
+        visible.contains(FAILED)
+            && visible.contains("ELIFECYCLE")
+            && visible.contains("Retry frontend dev")
+            && visible.contains("Open the mise task definition")
+    });
     see(
         &failed,
         &[
@@ -433,7 +446,13 @@ fn h03_output_scenario_launch_failure() {
     app.key("esc");
     app.wait_text("Search actions");
     app.key("alt+1");
-    let back = app.wait_text(FAILED);
+    let back = app.wait_screen("failed output restored", |screen| {
+        let visible = text(screen);
+        visible.contains(FAILED)
+            && visible.contains(EADDR)
+            && visible.contains("Retry frontend dev")
+            && !visible.contains("5120")
+    });
     see(&back, &[EADDR, "exit 1", "Retry frontend dev"], &["5120"]);
     app.finish();
 }
@@ -441,7 +460,13 @@ fn h03_output_scenario_launch_failure() {
 #[test]
 fn h03_output_scenario_parity_executor() {
     let app = open("h03-output-parity", "parity-executor");
-    let landing = app.wait_text("Emit a mixed stream");
+    // The action list paints before the scope path.
+    let landing = app.wait_screen("parity landing", |screen| {
+        let visible = text(screen);
+        visible.contains("Emit a mixed stream")
+            && visible.contains("~/work/batch")
+            && visible.contains("0 dirty · 1 behind")
+    });
     see(
         &landing,
         &[
