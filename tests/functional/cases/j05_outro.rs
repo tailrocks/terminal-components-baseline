@@ -126,7 +126,21 @@ fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
 }
 
 fn confirm_keep(app: &App) {
-    app.wait_screen("capsule", on_capsule);
+    // Attach covers `Ctrl+Q` for five seconds of sim time. A loaded
+    // partition slips that clock past the 10 s screen wait.
+    let deadline = Instant::now() + Duration::from_secs(25);
+    loop {
+        let screen = app.screen();
+        if on_capsule(&screen) {
+            break;
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "capsule frame not seen\n{}",
+            text(&screen)
+        );
+        std::thread::sleep(Duration::from_millis(25));
+    }
     app.key("ctrl+q");
     let dialog = app.wait_screen("unsaved quit", dirty_quit);
     assert!(

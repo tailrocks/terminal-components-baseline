@@ -105,6 +105,27 @@ fn refuse(screen: &TerminalSnapshot, needle: &str) {
     );
 }
 
+fn wait_ready(
+    app: &App,
+    reason: &str,
+    budget: Duration,
+    accept: impl Fn(&TerminalSnapshot) -> bool,
+) -> TerminalSnapshot {
+    let deadline = Instant::now() + budget;
+    loop {
+        let screen = app.screen();
+        if accept(&screen) {
+            return screen;
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "{reason} frame not seen\n{}",
+            text(&screen)
+        );
+        std::thread::sleep(Duration::from_millis(20));
+    }
+}
+
 fn wait_settled(
     app: &App,
     reason: &str,
@@ -448,9 +469,15 @@ fn discard_confirm() {
     refuse(&chosen, DISCARDED);
     refuse(&chosen, SECOND);
     app.key("enter");
-    let second = app.wait_screen("second discard prompt", |screen| {
-        second_wide(screen) && !text(screen).contains(DISCARDED)
-    });
+    // The second dialog is up while "tabs and panes restored" still owns
+    // the hint bar. That status is five seconds of sim time, and the 10 s
+    // screen wait ends first when the suite is busy.
+    let second = wait_ready(
+        &app,
+        "second discard prompt",
+        Duration::from_secs(25),
+        |screen| second_wide(screen) && !text(screen).contains(DISCARDED),
+    );
     refuse(&second, DISCARDED);
     refuse(&second, KEPT);
     app.type_text(TOKEN);
