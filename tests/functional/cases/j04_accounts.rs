@@ -269,6 +269,86 @@ fn take_revoked(app: &App) -> TerminalSnapshot {
     }
 }
 
+fn shows_both(screen: &TerminalSnapshot, crumb: &str, needle: &str) -> bool {
+    let visible = text(screen);
+    visible.contains(crumb) && visible.contains(needle)
+}
+
+/// The crumb is painted before the account issue. A later frame can also
+/// leave the row, so keep polling only while the crumb stays.
+fn hold_detail(app: &App, label: &str, crumb: &str, needle: &str) -> TerminalSnapshot {
+    let started = Instant::now();
+    loop {
+        let selected = select_until(app, label, shows(crumb));
+        if shows_both(&selected, crumb, needle) {
+            return selected;
+        }
+        let posted = Instant::now();
+        loop {
+            let screen = app.screen();
+            if shows_both(&screen, crumb, needle) {
+                return screen;
+            }
+            if !text(&screen).contains(crumb) || posted.elapsed() > Duration::from_secs(8) {
+                break;
+            }
+            assert!(
+                app.child_running() && started.elapsed() < Duration::from_secs(20),
+                "timed out: {label}\n{}",
+                text(&screen)
+            );
+            std::thread::sleep(Duration::from_millis(25));
+        }
+        assert!(
+            started.elapsed() < Duration::from_secs(20),
+            "timed out: {label}\n{}",
+            text(&app.screen())
+        );
+    }
+}
+
+/// `d` can land after the cursor has already moved to the next provider.
+/// Press it only while the crumb is still showing, and press again if the
+/// dialog does not open.
+fn remove_dialog(
+    app: &App,
+    label: &str,
+    crumb: &str,
+    ready: impl Fn(&TerminalSnapshot) -> bool,
+) -> TerminalSnapshot {
+    let started = Instant::now();
+    loop {
+        if !text(&app.screen()).contains(crumb) {
+            select_until(app, label, shows(crumb));
+        }
+        if !text(&app.screen()).contains(crumb) {
+            assert!(
+                started.elapsed() < Duration::from_secs(25),
+                "timed out: {label}\n{}",
+                text(&app.screen())
+            );
+            continue;
+        }
+        app.key("d");
+        let posted = Instant::now();
+        loop {
+            let screen = app.screen();
+            if ready(&screen) {
+                return screen;
+            }
+            assert!(
+                app.child_running() && started.elapsed() < Duration::from_secs(25),
+                "timed out: {label}\n{}",
+                text(&screen)
+            );
+            if posted.elapsed() > Duration::from_millis(900) {
+                break;
+            }
+            std::thread::sleep(Duration::from_millis(25));
+        }
+    }
+}
+
 fn remove_hit(screen: &TerminalSnapshot) -> Option<Point> {
     let hits: Vec<_> = find_all(screen, REMOVE)
         .into_iter()
@@ -543,9 +623,9 @@ fn j04_accounts_route() {
 fn j04_accounts_scenario_accounts_mixed() {
     let app = open("j04-accounts-scenario-accounts-mixed", "accounts-mixed");
     show_mixed(&app);
-    let missing = select_until(&app, "kimi", shows(KIMI_CRUMB));
+    let missing = hold_detail(&app, "kimi", KIMI_CRUMB, MISSING);
     assert!(text(&missing).contains(MISSING), "{}", text(&missing));
-    let denied = select_until(&app, "ci-bot", shows(CI_CRUMB));
+    let denied = hold_detail(&app, "ci-bot", CI_CRUMB, DENIED);
     assert!(text(&denied).contains(DENIED), "{}", text(&denied));
     assert!(!text(&denied).contains(REVOKED), "{}", text(&denied));
     assert_secrets(&denied);
@@ -604,9 +684,9 @@ fn j04_accounts_accounts() {
     });
     assert_eq!((opened.cols(), opened.rows()), (120, 40));
     show_mixed(&app);
-    let missing = select_until(&app, "kimi", shows(KIMI_CRUMB));
+    let missing = hold_detail(&app, "kimi", KIMI_CRUMB, MISSING);
     assert!(text(&missing).contains(MISSING), "{}", text(&missing));
-    let denied = select_until(&app, "ci-bot", shows(CI_CRUMB));
+    let denied = hold_detail(&app, "ci-bot", CI_CRUMB, DENIED);
     assert!(text(&denied).contains(DENIED), "{}", text(&denied));
 
     let primary = select_until(&app, "primary", shows(PRIMARY_CRUMB));
@@ -623,14 +703,13 @@ fn j04_accounts_accounts() {
     status_exact(&chosen, DEFAULT);
     assert_secrets(&chosen);
 
-    let experiments = select_until(&app, "experiments again", shows(EXP_CRUMB));
+    let experiments = hold_detail(&app, "experiments again", EXP_CRUMB, EXP_FP);
     assert!(
         text(&experiments).contains(EXP_FP),
         "{}",
         text(&experiments)
     );
-    app.key("d");
-    let exp_dialog = app.wait_screen("remove experiments", |screen| {
+    let exp_dialog = remove_dialog(&app, "experiments again", EXP_CRUMB, |screen| {
         text(screen).contains(EXP_TITLE) && focused_line(screen).contains(CANCEL)
     });
     let exp_body = dialog_body(&exp_dialog);
@@ -660,8 +739,7 @@ fn j04_accounts_accounts() {
 
     select_until(&app, "work again", shows(WORK_CRUMB));
     hide_retry(&app);
-    app.key("d");
-    let dialog = app.wait_screen("remove work", |screen| {
+    let dialog = remove_dialog(&app, "work again", WORK_CRUMB, |screen| {
         screen.cols() == 120 && screen.rows() == 40 && work_dialog(screen)
     });
     assert!(
