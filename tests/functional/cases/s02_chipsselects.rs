@@ -3,9 +3,13 @@
 //! Tuiscotti state ids allow only `[a-z0-9_-]` segments. Dotted case ids are
 //! stored as `pre_refactor/s02_chipsselects/<case id with '.' replaced by '_'>`.
 
-use tui_test::TerminalSnapshot;
+use std::path::PathBuf;
+use std::time::{Duration, Instant};
 
-use crate::support::{Launch, Point, SHOWCASE, find_all, row_text, text, try_launch};
+use tui_test::{SnapshotColor, TerminalSnapshot};
+use tuiscotti_latest::check::CheckOutcome;
+
+use crate::support::{Launch, Point, SHOWCASE, cell_bg, find_all, row_text, text, try_launch};
 
 const TITLE: &str = "Chips & selects";
 const BLURB: &str = "Removable chips, a popup select, and strips that drop what does not fit";
@@ -189,17 +193,102 @@ fn option_ready(screen: &TerminalSnapshot, label: &str) -> bool {
     true
 }
 
+/// The first Options paint can leave playground rows under the heading.
+/// "List cursor" is the last control on the 120×40 options page.
+fn options_page(screen: &TerminalSnapshot) -> bool {
+    let body = text(screen);
+    body.contains("Page options") && body.contains("List cursor") && !body.contains("Segment strip")
+}
+
 fn show_option(app: &crate::support::App, label: &str) -> TerminalSnapshot {
     app.click_text("Options");
-    let top = app.wait_text("Page options");
+    let started = Instant::now();
+    let mut top = app.wait_text("Page options");
+    while !options_page(&top) && started.elapsed() < Duration::from_millis(200) {
+        std::thread::sleep(Duration::from_millis(20));
+        top = app.screen();
+    }
+    // Tab completes that paint. Page Down is a second frame and, once the
+    // press flash has expired, it also scrolls the list during the later
+    // quiet wait. Only send it when the label is actually below this page.
+    let mut nudged = false;
+    if !options_page(&top) {
+        app.key("tab");
+        nudged = true;
+        top = app.wait_screen("options page painted", options_page);
+    }
     if option_ready(&top, label) {
         return top;
     }
-    app.key("tab");
+    if !nudged {
+        app.key("tab");
+    }
     app.key("pagedown");
     app.wait_screen(&format!("option {label}"), |screen| {
         option_ready(screen, label)
     })
+}
+
+fn options_tab(screen: &TerminalSnapshot) -> Point {
+    find_all(screen, "Options")
+        .into_iter()
+        .find(|hit| hit.y == 4)
+        .unwrap_or_else(|| panic!("Options tab\n{}", text(screen)))
+}
+
+fn tab_pressed(screen: &TerminalSnapshot) -> bool {
+    cell_bg(screen, options_tab(screen)) == SnapshotColor::Rgb(0x4a, 0x4a, 0x52)
+}
+
+fn tab_focused(screen: &TerminalSnapshot) -> bool {
+    row_text(screen, 4).contains('▎')
+}
+
+/// A Page Down drawn after the 140ms press flash paints the right list and
+/// the released tab. With focus-on-release, holding the button paints that
+/// fill again and leaves the keyboard focus where the list already has it.
+fn hold_options_press(app: &crate::support::App, screen: &TerminalSnapshot) -> TerminalSnapshot {
+    if tab_pressed(screen) {
+        return screen.clone();
+    }
+    let tab = options_tab(screen);
+    app.move_to(tab);
+    app.down(tab);
+    let held = app.wait_screen("options tab held", |screen| {
+        tab_pressed(screen) && !tab_focused(screen)
+    });
+    let held = held.clone();
+    app.up(tab);
+    held
+}
+
+fn check_frame(app: &crate::support::App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
+    }
+}
+
+fn shot_option(app: &crate::support::App, screen: &TerminalSnapshot, case_id: &str) {
+    let screen = hold_options_press(app, screen);
+    check_frame(app, &screen, &test_id(case_id));
 }
 
 fn assert_value(screen: &TerminalSnapshot, label: &str, value: &str) {
@@ -1017,7 +1106,19 @@ fn selects_choose_dismiss_and_disabled() {
 }
 
 fn boundary_value(name: &str, opt: &str, case_id: &str, label: &str, value: &str, sibling: &str) {
-    let app = open(name, 120, 40, &["--page", "chipsselects", "--opt", opt]);
+    let app = open(
+        name,
+        120,
+        40,
+        &[
+            "--page",
+            "chipsselects",
+            "--opt",
+            opt,
+            "--opt",
+            "shell.focus_on=release",
+        ],
+    );
     let screen = show_option(&app, label);
     assert_value(&screen, label, value);
     expect(
@@ -1026,16 +1127,24 @@ fn boundary_value(name: &str, opt: &str, case_id: &str, label: &str, value: &str
         &[CAP_PLAY, CAP_STATES, "Compare levels"],
     );
     assert_size(&screen, 120, 40);
-    see(
-        &app,
-        case_id,
-        &format!("{label} is {value} and {sibling} stays at its default"),
-    );
+    shot_option(&app, &screen, case_id);
     app.finish();
 }
 
 fn boundary_toggle(name: &str, opt: &str, case_id: &str, show: &str, hide: &str, sibling: &str) {
-    let app = open(name, 120, 40, &["--page", "chipsselects", "--opt", opt]);
+    let app = open(
+        name,
+        120,
+        40,
+        &[
+            "--page",
+            "chipsselects",
+            "--opt",
+            opt,
+            "--opt",
+            "shell.focus_on=release",
+        ],
+    );
     let screen = show_option(&app, show);
     expect(
         &screen,
@@ -1043,11 +1152,7 @@ fn boundary_toggle(name: &str, opt: &str, case_id: &str, show: &str, hide: &str,
         &[hide, CAP_PLAY, CAP_STATES, "Compare levels"],
     );
     assert_size(&screen, 120, 40);
-    see(
-        &app,
-        case_id,
-        &format!("{show} is visible and {hide} is absent"),
-    );
+    shot_option(&app, &screen, case_id);
     app.finish();
 }
 
