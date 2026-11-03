@@ -531,6 +531,21 @@ pub fn mask(v: &str) -> String {
     }
 }
 
+pub fn is_credential_reference(value: &str) -> bool {
+    let rest = value.trim_start_matches(|c: char| c.is_whitespace() || c == '\u{feff}');
+    ["op://", "openshell:resolve:"].iter().any(|prefix| {
+        rest.get(..prefix.len())
+            .is_some_and(|head| head.eq_ignore_ascii_case(prefix))
+    })
+}
+
+pub fn looks_secret(key: &str) -> bool {
+    let key = key.to_ascii_uppercase();
+    ["TOKEN", "SECRET", "PASSWORD", "KEY"]
+        .iter()
+        .any(|word| key.contains(word))
+}
+
 pub fn env_key_error(key: &str) -> Option<String> {
     let k = key.trim();
     if k.is_empty() {

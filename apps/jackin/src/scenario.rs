@@ -29,10 +29,12 @@ pub enum Scenario {
     Doctor,
 
     LaunchOpenshell,
+
+    OpenshellFixed,
 }
 
 impl Scenario {
-    pub const ALL: [Scenario; 14] = [
+    pub const ALL: [Scenario; 15] = [
         Scenario::FirstUse,
         Scenario::Returning,
         Scenario::AccountsMixed,
@@ -47,6 +49,7 @@ impl Scenario {
         Scenario::DockerNoEngine,
         Scenario::Doctor,
         Scenario::LaunchOpenshell,
+        Scenario::OpenshellFixed,
     ];
 
     pub fn name(self) -> &'static str {
@@ -65,6 +68,7 @@ impl Scenario {
             Scenario::DockerNoEngine => "docker-no-engine",
             Scenario::Doctor => "doctor",
             Scenario::LaunchOpenshell => "launch-openshell",
+            Scenario::OpenshellFixed => "openshell-fixed",
         }
     }
 

@@ -1395,10 +1395,17 @@ impl App {
             app: &self.world,
         };
         let o = top.layer.on_key(&key, &mut cx);
+        self.post_layer_refusal();
         if o == Outcome::Ignored && key.is(KeyCode::Esc) {
             return self.dismiss_layer(DismissReason::Esc);
         }
         self.settle_layers(o.or(Outcome::Consumed))
+    }
+
+    fn post_layer_refusal(&mut self) {
+        if let Some(reason) = junie_tui::core::refusal::take_refusal() {
+            self.set_status(&reason.text, Tone::Secondary);
+        }
     }
 
     fn dismiss_layer(&mut self, reason: DismissReason) -> Outcome {
@@ -1494,10 +1501,11 @@ impl App {
         if ev.is(Phase::Click) && ev.id == junie_tui::ui::modal::CLOSE {
             return self.dismiss_layer(DismissReason::CloseButton);
         }
-        match self
+        let handled = self
             .layers
-            .pointer(ev, &mut self.shell.focus, &self.shell.ring, &self.world)
-        {
+            .pointer(ev, &mut self.shell.focus, &self.shell.ring, &self.world);
+        self.post_layer_refusal();
+        match handled {
             LayerPointer::Handled(o) => self.settle_layers(o),
             LayerPointer::Dismissed(d) => self.dismissed(DismissReason::OutsideClick, d),
         }
@@ -1550,7 +1558,11 @@ impl App {
         let (o, reqs) = self
             .shell
             .deliver(shown, |cx| match self.router.screen_mut(route) {
-                Some(s) => f(s, &mut self.world, cx),
+                Some(s) => {
+                    let o = f(s, &mut self.world, cx);
+                    crate::screens::post_refusal(cx);
+                    o
+                }
                 None => absent,
             });
         o.or(self.apply_requests(reqs, route))

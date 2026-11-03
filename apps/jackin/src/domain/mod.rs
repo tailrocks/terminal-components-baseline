@@ -2,6 +2,7 @@ pub mod account;
 pub mod agent;
 pub mod docker;
 pub mod doctor;
+pub mod fixed;
 pub mod instance;
 pub mod onepassword;
 pub mod precedence;

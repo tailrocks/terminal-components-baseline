@@ -149,6 +149,12 @@ pub enum Go {
     Quit,
 }
 
+pub fn post_refusal(cx: &mut Cx) {
+    if let Some(reason) = junie_tui::core::refusal::take_refusal() {
+        cx.refused(reason);
+    }
+}
+
 pub type Request = junie_tui::shell::Request<ModalResult, World, Go>;
 
 pub type Cx<'a> = junie_tui::shell::Cx<'a, ModalResult, World, Go>;
