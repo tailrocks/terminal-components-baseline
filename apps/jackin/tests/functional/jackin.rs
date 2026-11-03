@@ -3,7 +3,7 @@ use tui_test::{SnapshotColor, TerminalSnapshot};
 
 use super::support::{App, Point, crop, find, find_all, row_text, text};
 
-const JACKIN: &str = env!("CARGO_BIN_EXE_jackin");
+const JACKIN: &str = env!("CARGO_BIN_EXE_jackin-preview");
 
 const PAUSED: &[&str] = &["--motion", "paused", "--frame", "40"];
 

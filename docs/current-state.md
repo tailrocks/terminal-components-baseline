@@ -4,7 +4,7 @@ This repository is the design reference implementation: a Cargo workspace
 of two crates (edition 2024, Rust 1.99.1). `junie-tui` (v0.1.0) holds the
 terminal component library and the showcase, tablepro and holla demo
 applications. `jackin-console` (`apps/jackin`) holds the jackin demo: a
-library of the jackin console screens plus the `jackin` binary. It is
+library of the jackin console screens plus the `jackin-preview` binary. It is
 the exact authority for product appearance and interaction (see
 [product](product.md)). The modular multi-crate workspace described in
 [architecture](architecture.md) is the future refactoring state; it
@@ -24,8 +24,8 @@ does not exist in this tree yet.
 | `src/bin/holla/` | Holla: simulated launcher/finder, files, disk cleanup, services. Backends are simulated; tests assert the next in-app consequence. |
 | `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TerminalView`, `encode_key`. It renders a vt100 session from a byte stream and does no I/O. |
 | `apps/jackin/src/` | The `jackin-console` library (`jackin_console`): the jackin screens (manager, editor, accounts, usage, settings, cockpit, capsule, prelude, roles, doctor and the modals), the `domain` types, `rain` and the other jackin-only modules, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
-| `apps/jackin/src/fixtures/`, `apps/jackin/src/sim/` | The 15 fixture worlds (`fixtures::world_for`; `openshell-fixed` is the one with `Surfaces.fixed` and the OpenShell words) and the simulated `Backend`, `OnePassword` and launch content, in the library behind the `fixtures` feature so the jackin repository can render the same worlds. |
-| `apps/jackin/src/bin/jackin/` | The jackin demo binary: the command line over `fixtures` and `sim`. Binary name is `jackin` (`cargo run --bin jackin`). |
+| `apps/jackin/src/fixtures/`, `apps/jackin/src/sim/` | The 15 fixture worlds (`fixtures::world_for`; `openshell-fixed` is the one with `Surfaces.fixed` and the OpenShell words) and the simulated `Backend`, `OnePassword` and launch content, in the library behind the `demo` feature so the jackin repository can render the same worlds. |
+| `apps/jackin/src/bin/jackin-preview/` | The jackin demo binary: the command line over `fixtures` and `sim`. Binary name is `jackin-preview` (`cargo run --bin jackin-preview --features demo`). |
 | `apps/jackin/tests/*.rs` | Library tests of the `jackin-console` data API (`World`, `Snapshot`, the time source, external messages), run by `cargo nextest run --all-targets`. They are not part of the CI `functional` suite. |
 | `apps/jackin/tests/functional/` | The jackin journeys and their approved baselines (`baselines/functional/jackin_*.tui.json`), on the shared harness `tests/functional/support.rs`. |
 | `tests/functional/` | The root crate's test estate: live PTY functional/integration tests plus the frozen visual gate. See [functional testing](functional-testing.md). |
@@ -38,9 +38,16 @@ does not exist in this tree yet.
 | `cli` | yes | `clap`, the `cli` module and `Motion` as a `clap::ValueEnum`. The four binaries require it; `jackin-console` enables it on its `junie-tui` dependency. |
 | `terminal` | no | `vt100` and the `terminal` module. |
 
-`jackin-console` has one feature, `fixtures` (default): the `fixtures`
-and `sim` modules and the `jackin` binary. A consumer that supplies its
-own `World` and `Backend` turns it off.
+`jackin-console` features (none is a default):
+
+| Feature | Adds |
+| --- | --- |
+| `demo` | `clap`, `junie-tui/cli`, the `fixtures` and `sim` modules, the `jackin-preview` binary and the `functional` test target. A consumer that supplies its own `World` and `Backend` leaves it off. |
+| `product` | Nothing. It lets the generated CI select the product shape (`--no-default-features --features product`); no code may test it. |
+
+`tests/product_manifest.rs` fixes this shape, and
+`tests/library_has_no_demo.rs` keeps demo names out of the library
+outside `fixtures/`, `sim/` and `bin/`.
 
 ## jackin-console data hooks
 

@@ -1,4 +1,4 @@
-#![cfg(feature = "fixtures")]
+#![cfg(feature = "demo")]
 
 use std::sync::Arc;
 use std::sync::atomic::{AtomicI64, Ordering};

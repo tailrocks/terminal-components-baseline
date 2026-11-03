@@ -1,4 +1,4 @@
-#![cfg(feature = "fixtures")]
+#![cfg(feature = "demo")]
 
 use jackin_console::app::{App, Remote};
 use jackin_console::domain::instance::InstanceStatus;
