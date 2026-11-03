@@ -214,6 +214,19 @@ fn finder_discovery_keeps_the_selected_identity() {
     );
     settled.finish();
 
+    // The preview age is tick * 80ms and leaves "0 s ago" after 12 ticks.
+    // Capture the wide frame on a fresh process before that tick.
+    let wide_app = open("h01-finder-discovery-wide", "parity-discovery");
+    let wide = wide_app.wait_screen("discovery at 0s", |screen| {
+        screen.cols() == 120
+            && screen.rows() == 40
+            && open_surface(screen)
+            && text(screen).contains("live · 0 s ago")
+    });
+    assert!(open_surface(&wide));
+    wide_app.visual(&visual_id(WIDE));
+    wide_app.finish();
+
     let app = open("h01-finder-discovery", "parity-discovery");
     let home = app.screen();
     assert_eq!((home.cols(), home.rows()), (120, 40));
@@ -285,7 +298,6 @@ fn finder_discovery_keeps_the_selected_identity() {
     let surface = app.wait_screen("discovery surface restored", open_surface);
     assert_eq!((surface.cols(), surface.rows()), (120, 40));
     assert!(open_surface(&surface));
-    app.visual(&visual_id(WIDE));
 
     app.resize(80, 24);
     let narrow = app.wait_screen("finder at 80x24", |screen| {
