@@ -3,10 +3,12 @@ use std::collections::BTreeSet;
 use crate::domain::agent::Agent;
 use crate::domain::docker::{DockerRiskText, DockerSetting, EngineState};
 use crate::domain::doctor::{DoctorState, DoctorSurface};
+use crate::domain::fixed::Fixed;
 use crate::domain::role::{
     AccountOrder, RoleAdmin, RoleCheckState, RoleEnvEntry, RoleManifestDoc, RoleRecord,
 };
-use crate::domain::workspace::RoleSource;
+use crate::domain::vocabulary::Vocabulary;
+use crate::domain::workspace::{DirtyExitPolicy, Isolation, Mount, RoleSource};
 use crate::sim;
 use crate::world::World;
 
@@ -170,4 +172,29 @@ pub fn doctor(w: &mut World) {
         noun: "gateway".into(),
         state: DoctorState::Done(sim::surfaces::doctor_report(1, at)),
     });
+}
+
+pub const PROJECT: &str = "/sandbox/project";
+
+pub fn fixed(w: &mut World) {
+    w.surfaces.vocabulary = Vocabulary::openshell();
+    w.surfaces.fixed = Some(Fixed::openshell());
+    let accounts: Vec<_> = w
+        .accounts
+        .accounts
+        .iter()
+        .filter(|a| !a.default_for_provider)
+        .map(|a| a.id.clone())
+        .collect();
+    for ws in &mut w.workspaces {
+        ws.workdir = PROJECT.into();
+        ws.mounts =
+            vec![Mount::host(&format!("~/src/{}", ws.name), PROJECT).isolation(Isolation::Clone)];
+        ws.keep_awake = false;
+        ws.git_pull = false;
+        ws.dirty_policy = DirtyExitPolicy::Ask;
+        ws.accounts.disabled_defaults.clear();
+        ws.accounts.enabled = accounts.iter().cloned().collect();
+        ws.accounts.role_preferred.clear();
+    }
 }

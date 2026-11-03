@@ -4,6 +4,7 @@ use junie_tui::core::hit::Axis;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::{MouseTarget, PointerEvent};
+use junie_tui::core::refusal::{Control, Reason, raise};
 use junie_tui::core::scroll::ScrollState;
 use junie_tui::shell::Page;
 use junie_tui::theme::Tone;
@@ -36,6 +37,7 @@ use crate::backend::Effect;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Provider;
 use crate::domain::docker::{DockerSetting, EngineState};
+use crate::domain::fixed::Fixed;
 use crate::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, Effective, RoleEntry, RoleName, RoleSource, Workspace,
     WorkspaceId,
@@ -179,6 +181,26 @@ impl EditorScreen {
             DirtyExitPolicy::Keep => 1,
             DirtyExitPolicy::Discard => 2,
         };
+        let control = |pick: fn(&Fixed) -> &Reason| {
+            w.surfaces
+                .fixed
+                .as_ref()
+                .map_or(Control::Live, |f| Control::fixed(pick(f).clone()))
+        };
+        let mut dirty_policy = Select::new(
+            DIRTY_POLICY,
+            "On dirty exit",
+            &[
+                "ask · show the exit dialog",
+                "keep · preserve changes silently",
+                "discard · drop changes silently",
+            ],
+            policy_idx,
+        )
+        .control(control(|f| &f.dirty_exit));
+        if let Some(f) = &w.surfaces.fixed {
+            dirty_policy = dirty_policy.help(&f.dirty_exit.text);
+        }
         let mut s = Self {
             workspace,
             name: TextInput::new(NAME, "Name")
@@ -195,20 +217,13 @@ impl EditorScreen {
                         None
                     }
                 }),
-            workdir_button: Button::secondary(WORKDIR, "Choose…"),
-            keep_awake: Checkbox::new(KEEP_AWAKE, "Keep awake", pending.keep_awake),
-            git_pull: Checkbox::new(GIT_PULL, "Git pull before launch", pending.git_pull),
+            workdir_button: Button::secondary(WORKDIR, "Choose…").control(control(|f| &f.workdir)),
+            keep_awake: Checkbox::new(KEEP_AWAKE, "Keep awake", pending.keep_awake)
+                .control(control(|f| &f.keep_awake)),
+            git_pull: Checkbox::new(GIT_PULL, "Git pull before launch", pending.git_pull)
+                .control(control(|f| &f.git_pull)),
             docker: Checkbox::new(DOCKER, "Docker for the agent", pending.docker),
-            dirty_policy: Select::new(
-                DIRTY_POLICY,
-                "On dirty exit",
-                &[
-                    "ask · show the exit dialog",
-                    "keep · preserve changes silently",
-                    "discard · drop changes silently",
-                ],
-                policy_idx,
-            ),
+            dirty_policy,
             original,
             pending,
             cfg,
@@ -554,6 +569,18 @@ impl EditorScreen {
         let t = ctx.theme;
         let bg = t.canvas;
         let fw = area.width.saturating_sub(4).min(72);
+        let inline_reason = |r: Rect, reason: &Reason, buf: &mut Buffer| {
+            let x = r.x + 30;
+            buf.set_string(
+                x,
+                r.y,
+                junie_tui::ui::reveal::cut(
+                    Rect::new(x, r.y, area.right().saturating_sub(x), 1),
+                    &reason.text,
+                ),
+                t.faint().bg(bg),
+            );
+        };
 
         let docker = w.surfaces.docker.as_ref();
         let docker_notices = self.docker_notices(w, fw.saturating_sub(4));
@@ -628,7 +655,9 @@ impl EditorScreen {
                     ctx,
                     bg,
                 );
-                let hint = if self.pending.workdir != self.original.workdir {
+                let hint = if let Some(f) = &w.surfaces.fixed {
+                    f.workdir.text.clone()
+                } else if self.pending.workdir != self.original.workdir {
                     format!(
                         "Inside {} · was {}",
                         w.surfaces.vocabulary.construct, self.original.workdir
@@ -650,7 +679,10 @@ impl EditorScreen {
                 let r = col(r);
                 self.keep_awake
                     .render(Rect::new(r.x, r.y, 30, 1), buf, ctx, bg);
-                buf.set_string(r.x + 30, r.y, "macOS only", t.faint().bg(bg));
+                match self.keep_awake.control.reason() {
+                    Some(reason) => inline_reason(r, reason, buf),
+                    None => buf.set_string(r.x + 30, r.y, "macOS only", t.faint().bg(bg)),
+                }
             }
             None => ctx.focus_stop(self.keep_awake.id),
         }
@@ -659,6 +691,9 @@ impl EditorScreen {
                 let r = col(r);
                 self.git_pull
                     .render(Rect::new(r.x, r.y, 30, 1), buf, ctx, bg);
+                if let Some(reason) = self.git_pull.control.reason() {
+                    inline_reason(r, reason, buf);
+                }
             }
             None => ctx.focus_stop(self.git_pull.id),
         }
@@ -701,6 +736,17 @@ impl EditorScreen {
             }
             None => ctx.focus_stop(self.dirty_policy.id),
         }
+    }
+
+    fn fixed_at(&self, focus: Option<WidgetId>) -> bool {
+        [
+            (KEEP_AWAKE, self.keep_awake.control.is_fixed()),
+            (GIT_PULL, self.git_pull.control.is_fixed()),
+            (DIRTY_POLICY, self.dirty_policy.control.is_fixed()),
+            (WORKDIR, self.workdir_button.control.is_fixed()),
+        ]
+        .into_iter()
+        .any(|(id, fixed)| fixed && focus == Some(id))
     }
 
     fn docker_hint(&self, d: &DockerSetting) -> String {
@@ -1285,6 +1331,10 @@ impl EditorScreen {
                 else {
                     return Outcome::Ignored;
                 };
+                if let Some(f) = &w.surfaces.fixed {
+                    raise(&f.enable_workspace);
+                    return Outcome::Consumed;
+                }
                 let Some(a) = w.accounts.get(&id).cloned() else {
                     return Outcome::Ignored;
                 };
@@ -1413,6 +1463,12 @@ impl EditorScreen {
                     };
                     if list.iter().any(|r| r == name) {
                         list.retain(|r| r != name);
+                        if let Some(f) = &w.surfaces.fixed
+                            && !list.iter().any(|r| all.contains(r))
+                        {
+                            cx.status(f.last_role.clone());
+                            return Outcome::Consumed;
+                        }
                         if self.pending.roles.default.as_deref() == Some(name.as_str()) {
                             self.pending.roles.default = None;
                         }
@@ -2285,6 +2341,7 @@ impl Page<Jackin> for EditorScreen {
                         } else {
                             junie_tui::widgets::widget_hints::EDIT
                         });
+                    } else if self.fixed_at(focus) {
                     } else if focus == Some(WORKDIR) {
                         v.push(hint("Enter", "Choose…"));
                     } else if focus == Some(DOCKER) && w.surfaces.docker.is_some() {
@@ -2305,7 +2362,9 @@ impl Page<Jackin> for EditorScreen {
                 },
                 EdTab::Accounts => match self.acct.rows.get(self.acct.cursor) {
                     Some(AcctRow::Account(_)) => {
-                        v.push(hint("Space", "Enable / disable"));
+                        if w.surfaces.fixed.is_none() {
+                            v.push(hint("Space", "Enable / disable"));
+                        }
                         v.push(hint("p", "Prefer"));
                         v.push(hint("/", "Filter"));
                         v.push(hint("c", "Manage accounts"));
@@ -2315,7 +2374,7 @@ impl Page<Jackin> for EditorScreen {
                         v.push(hint("c", "Manage accounts"));
                     }
                 },
-                t => v.extend(self.cfg.hints(t.cfg().unwrap(), focus)),
+                t => v.extend(self.cfg.hints(t.cfg().unwrap(), focus, w)),
             }
         }
         v.push(hint("[ ]", "Switch tab"));

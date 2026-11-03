@@ -1439,6 +1439,11 @@ pub fn world_for(scenario: Scenario) -> World {
             w.backend = SimBackend::openshell();
             w
         }
+        Scenario::OpenshellFixed => {
+            let mut w = populated(scenario, false);
+            surfaces::fixed(&mut w);
+            w
+        }
         Scenario::Returning
         | Scenario::AccountsMixed
         | Scenario::LaunchRunning

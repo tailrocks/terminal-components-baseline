@@ -24,7 +24,7 @@ does not exist in this tree yet.
 | `src/bin/holla/` | Holla: simulated launcher/finder, files, disk cleanup, services. Backends are simulated; tests assert the next in-app consequence. |
 | `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TerminalView`, `encode_key`. It renders a vt100 session from a byte stream and does no I/O. |
 | `apps/jackin/src/` | The `jackin-console` library (`jackin_console`): the jackin screens (manager, editor, accounts, usage, settings, cockpit, capsule, prelude, roles, doctor and the modals), the `domain` types, `rain` and the other jackin-only modules, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
-| `apps/jackin/src/fixtures/`, `apps/jackin/src/sim/` | The 14 fixture worlds (`fixtures::world_for`) and the simulated `Backend`, `OnePassword` and launch content, in the library behind the `fixtures` feature so the jackin repository can render the same worlds. |
+| `apps/jackin/src/fixtures/`, `apps/jackin/src/sim/` | The 15 fixture worlds (`fixtures::world_for`; `openshell-fixed` is the one with `Surfaces.fixed` and the OpenShell words) and the simulated `Backend`, `OnePassword` and launch content, in the library behind the `fixtures` feature so the jackin repository can render the same worlds. |
 | `apps/jackin/src/bin/jackin/` | The jackin demo binary: the command line over `fixtures` and `sim`. Binary name is `jackin` (`cargo run --bin jackin`). |
 | `apps/jackin/tests/*.rs` | Library tests of the `jackin-console` data API (`World`, `Snapshot`, the time source, external messages), run by `cargo nextest run --all-targets`. They are not part of the CI `functional` suite. |
 | `apps/jackin/tests/functional/` | The jackin journeys and their approved baselines (`baselines/functional/jackin_*.tui.json`), on the shared harness `tests/functional/support.rs`. |
@@ -61,6 +61,7 @@ so the approved baselines do not move.
 | `Surfaces.agent_blocked` | `None` | Every agent except one is a disabled launch row with a reason. |
 | `Surfaces.launch_role` | `Demo` | `Configured` resolves the launch role from the default or the only allowed role, else the picker rows are disabled with a reason. |
 | `Surfaces.wizard` | `None` | One fixed destination, no edit step, no subfolders, and the name from the source folder. The P9.3 design calls this `Fixed.wizard`; the code keeps `Surfaces.wizard`, and B4 does not move it. |
+| `Surfaces.fixed` | `None` | `Fixed::openshell()` (`domain::fixed`) makes the workspace editor's `Keep awake`, `Git pull before launch`, `On dirty exit`, working directory `Choose…`, Project row and Add row, and the Accounts tab toggle `Control::Fixed`, each with its reason text, and refuses unchecking the last allowed role. Each refusal is posted by `App::on_route` through `screens::post_refusal`. The scenario `openshell-fixed` renders it. |
 
 ## Rules that hold today
 

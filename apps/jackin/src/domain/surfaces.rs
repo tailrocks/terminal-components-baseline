@@ -2,6 +2,7 @@ use super::account::AccountForm;
 use super::agent::AgentBlocked;
 use super::docker::DockerSetting;
 use super::doctor::DoctorSurface;
+use super::fixed::Fixed;
 use super::role::{LaunchRoleRule, RoleAdmin};
 use super::vocabulary::Vocabulary;
 use super::workspace::WizardDefaults;
@@ -16,6 +17,7 @@ pub struct Surfaces {
     pub agent_blocked: Option<AgentBlocked>,
     pub launch_role: LaunchRoleRule,
     pub wizard: Option<WizardDefaults>,
+    pub fixed: Option<Fixed>,
     pub version: String,
     pub about: Option<Vec<(String, String)>>,
 }
@@ -31,6 +33,7 @@ impl Default for Surfaces {
             agent_blocked: None,
             launch_role: LaunchRoleRule::default(),
             wizard: None,
+            fixed: None,
             version: "0.9.2".into(),
             about: None,
         }

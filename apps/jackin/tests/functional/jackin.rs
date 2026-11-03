@@ -1,3 +1,6 @@
+use jackin_console::domain::fixed::Fixed;
+use tui_test::{SnapshotColor, TerminalSnapshot};
+
 use super::support::{App, Point, crop, find, find_all, row_text, text};
 
 const JACKIN: &str = env!("CARGO_BIN_EXE_jackin");
@@ -951,5 +954,387 @@ fn jackin_roles_add_role() {
     assert!(text(&added).contains("Roles › new-role") || text(&added).contains("Role · new-role"));
     assert!(text(&added).contains("6 roles"));
     assert!(!text(&added).contains("Not in this preview"));
+    app.finish();
+}
+
+fn fixed_app(name: &str) -> App {
+    scenario(name, "openshell-fixed", 120, 40)
+}
+
+fn open_fixed_editor(app: &App, downs: usize) -> TerminalSnapshot {
+    app.wait_text("Current directory");
+    for _ in 0..downs {
+        app.key("down");
+    }
+    app.key("e");
+    app.wait_text("Directory basename by default")
+}
+
+fn footer(screen: &TerminalSnapshot) -> String {
+    row_text(screen, screen.rows() - 1)
+}
+
+fn row_with(screen: &TerminalSnapshot, needle: &str) -> String {
+    row_text(screen, u32::from(find(screen, needle).y))
+}
+
+fn unchecked_rows(screen: &TerminalSnapshot) -> Vec<String> {
+    (0..screen.rows() - 1)
+        .map(|row| row_text(screen, row))
+        .filter(|row| row.contains("[ ]"))
+        .collect()
+}
+
+fn contrast(screen: &TerminalSnapshot, at: Point) -> f64 {
+    let cell = screen
+        .cell_at(u32::from(at.x), u32::from(at.y))
+        .expect("cell in viewport");
+    let luminance = |color: SnapshotColor| {
+        let SnapshotColor::Rgb(r, g, b) = color else {
+            panic!("a truecolor cell, got {color:?}");
+        };
+        let linear = |c: u8| {
+            let c = f64::from(c) / 255.0;
+            if c <= 0.03928 {
+                c / 12.92
+            } else {
+                ((c + 0.055) / 1.055).powf(2.4)
+            }
+        };
+        0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b)
+    };
+    let (a, b) = (luminance(cell.fg()), luminance(cell.bg()));
+    (a.max(b) + 0.05) / (a.min(b) + 0.05)
+}
+
+fn role_row(screen: &TerminalSnapshot, role: &str) -> String {
+    row_with(screen, &format!("] {role}"))
+}
+
+fn inside(point: Point) -> Point {
+    Point {
+        x: point.x + 2,
+        ..point
+    }
+}
+
+fn refused_with(app: &App, reason: &str) -> TerminalSnapshot {
+    app.wait_screen(&format!("status reads {reason}"), |s| {
+        footer(s).contains(reason)
+    })
+}
+
+fn status_expired(app: &App, reason: &str) -> TerminalSnapshot {
+    app.advance_clock(6_000);
+    app.wait_screen("status expired", |s| !footer(s).contains(reason))
+}
+
+fn nothing_changed(screen: &TerminalSnapshot) {
+    assert!(
+        !text(screen).contains("change"),
+        "a refusal marks no change:\n{}",
+        text(screen)
+    );
+}
+
+fn leave_without_a_prompt(app: &App) {
+    app.key("ctrl+s");
+    let nothing = app.wait_text("Nothing to save");
+    assert!(!text(&nothing).contains("Save workspace"));
+    app.key("esc");
+    app.key("esc");
+    let manager = app.wait_text("Current directory");
+    assert!(!text(&manager).contains("Unsaved changes"));
+}
+
+#[test]
+fn jackin_fixed_keep_awake_refuses_by_click_and_key() {
+    let reason = Fixed::openshell().keep_awake.text;
+    let app = fixed_app("jackin-fixed-keep-awake");
+    let editor = open_fixed_editor(&app, 1);
+    let row = row_with(&editor, "Keep awake");
+    assert!(
+        row.contains("[ ] Keep awake") && row.contains(&reason),
+        "{row}"
+    );
+    assert!(!text(&editor).contains("macOS only"));
+    app.visual("functional/jackin_fixed_editor_general");
+
+    app.click(inside(find(&editor, "Keep awake")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Keep awake").contains("[ ] Keep awake"));
+    assert!(row_with(&clicked, "Keep awake").contains('▎'));
+    assert!(!footer(&clicked).contains("Space Toggle"));
+    nothing_changed(&clicked);
+    status_expired(&app, &reason);
+
+    app.key("space");
+    let keyed = refused_with(&app, &reason);
+    assert!(row_with(&keyed, "Keep awake").contains("[ ] Keep awake"));
+    nothing_changed(&keyed);
+    let gone = status_expired(&app, &reason);
+    app.key("up");
+    app.click(find(&gone, "Roles"));
+    let later = app.wait_text("Allowed roles");
+    assert!(!footer(&later).contains(&reason));
+    app.key("esc");
+    let manager = app.wait_text("Current directory");
+    assert!(!text(&manager).contains("Unsaved changes"));
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_git_pull_refuses_by_key_and_click() {
+    let reason = Fixed::openshell().git_pull.text;
+    let app = fixed_app("jackin-fixed-git-pull");
+    let editor = open_fixed_editor(&app, 1);
+    let row = row_with(&editor, "Git pull before launch");
+    assert!(
+        row.contains("[ ] Git pull before launch") && row.contains(&reason),
+        "{row}"
+    );
+
+    for _ in 0..4 {
+        app.key("tab");
+    }
+    app.wait_screen("focus reaches git pull", |s| {
+        row_with(s, "Git pull before launch").contains('▎')
+    });
+    app.key("space");
+    let keyed = refused_with(&app, &reason);
+    assert!(row_with(&keyed, "Git pull before launch").contains("[ ] Git pull"));
+    assert!(row_with(&keyed, "Git pull before launch").contains('▎'));
+    nothing_changed(&keyed);
+    app.visual("functional/jackin_fixed_editor_general_refused");
+    status_expired(&app, &reason);
+
+    app.click(inside(find(&app.screen(), "Git pull before launch")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Git pull before launch").contains("[ ] Git pull"));
+    nothing_changed(&clicked);
+    status_expired(&app, &reason);
+    leave_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_dirty_exit_refuses_the_list_by_key_and_click() {
+    let reason = Fixed::openshell().dirty_exit.text;
+    let app = fixed_app("jackin-fixed-dirty-exit");
+    let editor = open_fixed_editor(&app, 1);
+    assert!(text(&editor).contains(&reason));
+    let value = "ask · show the exit dialog";
+    assert!(text(&editor).contains(value));
+
+    let field = find(&editor, value);
+    app.click(Point {
+        x: field.x + 2,
+        y: field.y,
+    });
+    let clicked = refused_with(&app, &reason);
+    assert!(!text(&clicked).contains("keep · preserve changes silently"));
+    nothing_changed(&clicked);
+    status_expired(&app, &reason);
+
+    for key in ["enter", "space", "down"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(text(&keyed).contains(value), "{key}");
+        assert!(
+            !text(&keyed).contains("keep · preserve changes silently"),
+            "{key}"
+        );
+        nothing_changed(&keyed);
+        status_expired(&app, &reason);
+    }
+    leave_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_working_directory_refuses_the_picker_by_key_and_click() {
+    let reason = Fixed::openshell().workdir.text;
+    let app = fixed_app("jackin-fixed-workdir");
+    let editor = open_fixed_editor(&app, 1);
+    assert!(row_with(&editor, "Choose…").contains("/sandbox/project"));
+    assert!(text(&editor).contains(&reason));
+    assert!(!text(&editor).contains("Inside the sandbox"));
+
+    app.click(inside(find(&editor, "Choose…")));
+    let clicked = refused_with(&app, &reason);
+    assert!(!text(&clicked).contains("mount · "), "no picker opens");
+    assert!(!footer(&clicked).contains("Enter Choose…"));
+    nothing_changed(&clicked);
+    status_expired(&app, &reason);
+
+    app.key("enter");
+    let keyed = refused_with(&app, &reason);
+    assert!(!text(&keyed).contains("mount · "), "no picker opens");
+    assert!(row_with(&keyed, "Choose…").contains("/sandbox/project"));
+    nothing_changed(&keyed);
+    status_expired(&app, &reason);
+    leave_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_project_row_keeps_its_paint_and_refuses_every_edit() {
+    let reason = Fixed::openshell().mounts.text;
+    let app = fixed_app("jackin-fixed-project");
+    open_fixed_editor(&app, 1);
+    app.key("]");
+    app.key("enter");
+    let project = app.wait_text("Destination");
+    let row = row_with(&project, "~/src/payments-platform");
+    for part in ["/sandbox/project", "rw", "clone", "host"] {
+        assert!(row.contains(part), "{part} in {row}");
+    }
+    assert!(!text(&project).contains("shared") && !text(&project).contains("worktree"));
+    assert!(text(&project).contains(&reason));
+    assert!(!text(&project).contains("Read-only") && !footer(&project).contains("Isolation"));
+    assert!(!footer(&project).contains("Remove") && !footer(&project).contains("Add mount"));
+    assert!(footer(&project).contains("Open source"));
+
+    for cell in ["/sandbox/project", "rw", "~/src/payments-platform"] {
+        let ratio = contrast(&project, find(&project, cell));
+        assert!(ratio >= 4.5, "{cell} is legible, contrast {ratio:.2}");
+    }
+    let add = contrast(&project, find(&project, "+ Add mount"));
+    assert!(add < 4.5, "the Add row is drawn fixed, contrast {add:.2}");
+    app.visual("functional/jackin_fixed_editor_project");
+
+    for key in ["enter", "e", "r", "i", "1", "2", "3", "d", "u", "a"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(
+            row_with(&keyed, "~/src/payments-platform").contains("rw"),
+            "{key}"
+        );
+        assert!(
+            row_with(&keyed, "~/src/payments-platform").contains("clone"),
+            "{key}"
+        );
+        assert!(!text(&keyed).contains("Add mount…"), "{key}");
+        nothing_changed(&keyed);
+        status_expired(&app, &reason);
+    }
+    app.click(inside(find(&app.screen(), "/sandbox/project")));
+    refused_with(&app, &reason);
+    status_expired(&app, &reason);
+
+    app.key("down");
+    let added = app.wait_screen("cursor reaches the Add row", |s| {
+        row_with(s, "+ Add mount").contains('▎')
+    });
+    assert!(!footer(&added).contains("Add mount"));
+    for key in ["enter", "a"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(!text(&keyed).contains("Add mount…"), "{key}");
+        nothing_changed(&keyed);
+        status_expired(&app, &reason);
+    }
+    app.click(inside(find(&app.screen(), "+ Add mount")));
+    refused_with(&app, &reason);
+    status_expired(&app, &reason);
+    leave_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_workspace_account_toggle_refuses_and_prefer_stays_live() {
+    let reason = Fixed::openshell().enable_workspace.text;
+    let app = fixed_app("jackin-fixed-accounts");
+    open_fixed_editor(&app, 1);
+    for _ in 0..4 {
+        app.key("]");
+    }
+    app.key("enter");
+    let accounts = app.wait_text("Active accounts");
+    assert!(
+        unchecked_rows(&accounts).is_empty(),
+        "every account is active"
+    );
+    assert!(text(&accounts).contains("[✓]"));
+    assert!(!footer(&accounts).contains("Enable / disable"));
+    assert!(footer(&accounts).contains("Prefer"));
+    app.visual("functional/jackin_fixed_editor_accounts");
+
+    for key in ["space", "enter"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(unchecked_rows(&keyed).is_empty(), "{key}");
+        nothing_changed(&keyed);
+        status_expired(&app, &reason);
+    }
+    app.click(inside(find(&app.screen(), "Personal")));
+    refused_with(&app, &reason);
+    status_expired(&app, &reason);
+    app.key("ctrl+s");
+    app.wait_text("Nothing to save");
+
+    app.key("down");
+    app.key("down");
+    app.key("p");
+    let preferred = app.wait_text("Preferred for");
+    assert!(text(&preferred).contains("1 change"));
+    assert!(!footer(&preferred).contains(&reason));
+    app.key("esc");
+    app.key("esc");
+    app.wait_text("Unsaved changes");
+    app.key("right");
+    app.wait_text("Enter Discard");
+    app.key("enter");
+    app.wait_text("Current directory");
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_last_allowed_role_cannot_be_unchecked() {
+    let reason = Fixed::openshell().last_role;
+    let app = fixed_app("jackin-fixed-last-role");
+    open_fixed_editor(&app, 3);
+    app.key("]");
+    app.key("]");
+    app.key("enter");
+    let roles = app.wait_text("Allowed roles");
+    assert!(role_row(&roles, "backend").contains("[✓]"));
+    assert!(role_row(&roles, "the-architect").contains("[ ]"));
+
+    app.wait_screen("cursor on the first role", |s| {
+        role_row(s, "the-architect").contains('▎')
+    });
+    app.key("down");
+    app.wait_screen("cursor on backend", |s| {
+        role_row(s, "backend").contains('▎')
+    });
+    app.key("space");
+    let refused = refused_with(&app, &reason);
+    assert!(role_row(&refused, "backend").contains("[✓]"));
+    nothing_changed(&refused);
+    status_expired(&app, &reason);
+
+    app.key("up");
+    app.key("space");
+    let added = app.wait_text("the-architect · allowed");
+    assert!(role_row(&added, "the-architect").contains("[✓]"));
+    assert!(text(&added).contains("1 change"));
+    app.key("down");
+    app.key("space");
+    let removed = app.wait_text("backend · not allowed");
+    assert!(role_row(&removed, "backend").contains("[ ]"));
+    assert!(!footer(&removed).contains(&reason));
+
+    app.key("up");
+    app.key("space");
+    let last = refused_with(&app, &reason);
+    assert!(role_row(&last, "the-architect").contains("[✓]"));
+    app.key("esc");
+    app.key("esc");
+    app.wait_text("Unsaved changes");
+    app.key("right");
+    app.wait_text("Enter Discard");
+    app.key("enter");
+    app.wait_text("Current directory");
     app.finish();
 }

@@ -5,6 +5,7 @@ use junie_tui::core::hit::Axis;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::PointerEvent;
+use junie_tui::core::refusal::raise;
 use junie_tui::core::scroll::ScrollState;
 use junie_tui::theme::Tone;
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
@@ -861,6 +862,7 @@ impl ConfigTabs {
         let range = st.scroll.visible_range();
         let rows = st.rows.clone();
         let mut status = None;
+        let project = self.project_fixed(tab, w);
         for (k, i) in range.enumerate() {
             let y = body.y + k as u16;
             let row = &rows[i];
@@ -868,6 +870,11 @@ impl ConfigTabs {
             let mut s = ctx.state(rid);
             s.focused = focused && i == cursor;
             s.selected = i == cursor;
+            let fixed_add = project && row.key == RowKey::AddMount;
+            if fixed_add {
+                s.fixed = true;
+                s.disabled = true;
+            }
             let style = if row.header {
                 Style::new().bg(bg)
             } else {
@@ -947,11 +954,15 @@ impl ConfigTabs {
                     x,
                     y,
                     &row.cells[0].0,
-                    style.fg(if s.focused {
-                        t.text_primary
+                    if fixed_add {
+                        style
                     } else {
-                        t.text_secondary
-                    }),
+                        style.fg(if s.focused {
+                            t.text_primary
+                        } else {
+                            t.text_secondary
+                        })
+                    },
                 );
             } else {
                 for (ci, (text, tone)) in row.cells.iter().enumerate() {
@@ -993,6 +1004,20 @@ impl ConfigTabs {
             ctx.clickable(rid, rect);
             if s.selected {
                 status = self.row_status(&row.key, hidden > 0, w);
+            }
+        }
+        if let (true, Some(f)) = (project, &w.surfaces.fixed) {
+            let (x, ny) = (body.x + 6, body.y + rows.len() as u16 + 1);
+            if ny < body.bottom() {
+                buf.set_string(
+                    x,
+                    ny,
+                    junie_tui::ui::reveal::cut(
+                        Rect::new(x, ny, row_w.saturating_sub(6), 1),
+                        &f.mounts.text,
+                    ),
+                    t.faint().bg(bg),
+                );
             }
         }
         let st = self.state(tab);
@@ -1175,14 +1200,17 @@ impl ConfigTabs {
         }
     }
 
-    pub fn hints(&self, tab: Tab, focus: Option<WidgetId>) -> Vec<Hint> {
+    pub fn hints(&self, tab: Tab, focus: Option<WidgetId>, w: &World) -> Vec<Hint> {
         if tab == Tab::Environments && focus == Some(self.ids.card) {
             return self.md.hints(focus);
         }
         let st = self.state_ref(tab);
         let key = st.rows.get(st.cursor).map(|r| r.key.clone());
         let mut v = vec![];
+        let project = self.project_fixed(tab, w);
         match (tab, key) {
+            (Tab::Mounts, Some(RowKey::Mount(_))) if project => v.push(hint("o", "Open source")),
+            (Tab::Mounts, _) if project => {}
             (Tab::Mounts, Some(RowKey::Mount(_))) => {
                 v.push(hint("Enter", "Edit…"));
                 v.push(hint("r", "Read-only"));
@@ -1278,6 +1306,12 @@ impl ConfigTabs {
         };
         let vp = st.scroll.viewport_len.max(1) as isize;
         let n = st.rows.len() as isize;
+        if self.project_fixed(tab, w) && Self::edits_project(&row.key, key) {
+            if let Some(f) = &w.surfaces.fixed {
+                raise(&f.mounts);
+            }
+            return Outcome::Consumed;
+        }
         match key.code {
             KeyCode::Up | KeyCode::Char('k') => {
                 self.move_cursor(tab, -1);
@@ -1487,6 +1521,23 @@ impl ConfigTabs {
             _ => return Outcome::Ignored,
         }
         Outcome::Changed
+    }
+
+    fn project_fixed(&self, tab: Tab, w: &World) -> bool {
+        tab == Tab::Mounts && self.scope == Scope::Workspace && w.surfaces.fixed.is_some()
+    }
+
+    fn edits_project(row: &RowKey, key: &Key) -> bool {
+        match (row, key.code) {
+            (RowKey::Mount(_), KeyCode::Char('a' | 'u'))
+            | (RowKey::AddMount, KeyCode::Char('a')) => key.plain(),
+            (RowKey::Mount(_), KeyCode::Enter | KeyCode::Delete)
+            | (RowKey::AddMount, KeyCode::Enter) => true,
+            (RowKey::Mount(_), KeyCode::Char(c)) => {
+                matches!(c, 'e' | 'n' | 'r' | 'i' | '1' | '2' | '3' | 'd')
+            }
+            _ => false,
+        }
     }
 
     fn row_title(row: &Row) -> String {

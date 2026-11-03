@@ -1152,7 +1152,7 @@ impl Page<Jackin> for SettingsScreen {
         self.cfg.render_menu(area, buf, ctx);
     }
 
-    fn hints(&self, focus: Option<WidgetId>, _w: &World) -> Vec<Hint> {
+    fn hints(&self, focus: Option<WidgetId>, w: &World) -> Vec<Hint> {
         if self.saving {
             return vec![hint("", "Saving…")];
         }
@@ -1185,7 +1185,7 @@ impl Page<Jackin> for SettingsScreen {
                     v.push(hint("d", "Remove override"));
                     v.push(hint("c", "Manage accounts"));
                 }
-                t => v.extend(self.cfg.hints(t.cfg().unwrap(), focus)),
+                t => v.extend(self.cfg.hints(t.cfg().unwrap(), focus, w)),
             }
         }
         v.push(hint("[ ]", "Switch tab"));

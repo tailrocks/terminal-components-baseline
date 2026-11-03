@@ -1550,7 +1550,11 @@ impl App {
         let (o, reqs) = self
             .shell
             .deliver(shown, |cx| match self.router.screen_mut(route) {
-                Some(s) => f(s, &mut self.world, cx),
+                Some(s) => {
+                    let o = f(s, &mut self.world, cx);
+                    crate::screens::post_refusal(cx);
+                    o
+                }
                 None => absent,
             });
         o.or(self.apply_requests(reqs, route))
