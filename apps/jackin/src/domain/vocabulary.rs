@@ -51,6 +51,12 @@ pub struct Vocabulary {
     pub version_label: String,
     pub container_noun: String,
     pub quit_lines: [String; 2],
+    pub unexported_word: String,
+    pub quit_dirty_keep: String,
+    pub quit_dirty_discard: String,
+    pub quit_discard_title: String,
+    pub quit_discard_action: String,
+    pub quit_discard_button: String,
     pub last_session_ended: String,
     pub never_reached: String,
     pub session_choice: String,
@@ -70,7 +76,8 @@ pub struct Vocabulary {
 
     pub github_workspace: String,
     pub github_git_mount: String,
-    pub github_repo_mount: String,
+    pub github_repo_mount: Option<String>,
+    pub github_copies_url: bool,
     pub github_open_label: String,
     pub github_open_meta: String,
     pub github_copied: String,
@@ -99,6 +106,12 @@ impl Vocabulary {
                 "! Quitting detaches; the sandbox keeps running.".into(),
                 "! Work stays in the sandbox until you export it.".into(),
             ],
+            unexported_word: "unexported".into(),
+            quit_dirty_keep: "Quit & keep the sandbox".into(),
+            quit_dirty_discard: "Quit & delete the sandbox".into(),
+            quit_discard_title: "Delete the sandbox and quit?".into(),
+            quit_discard_action: "delete the sandbox and all work in it".into(),
+            quit_discard_button: "Delete".into(),
             last_session_ended: "Last session ended · the sandbox keeps running".into(),
             never_reached: "never got ready".into(),
             session_choice: "Session choice · picked for this session only".into(),
@@ -132,13 +145,13 @@ impl Vocabulary {
             },
             lifecycle: LifecycleWords {
                 restored: "Restored {id} · sandbox restarted".into(),
-                stop_body: "The sandbox stops and every session in it ends. You can restore it later ({state}).".into(),
+                stop_body: "The sandbox stops and every session in it ends. You can restore it later.".into(),
                 purge_action: "delete the sandbox".into(),
-                purge_scope: "1 sandbox · {sessions} · {copy}".into(),
-                copy_dirty: "project copy with changes".into(),
+                purge_scope: "{sessions} · {copy}".into(),
+                copy_dirty: "changed project copy".into(),
                 copy_clean: "clean project copy".into(),
-                risk_dirty: "uncommitted changes in the sandbox are lost".into(),
-                risk_clean: "the sandbox is deleted".into(),
+                risk_dirty: "uncommitted or unexported work is lost".into(),
+                risk_clean: "the sandbox and its files are deleted".into(),
                 purged: "Purged {id} · the sandbox was deleted".into(),
             },
 
@@ -157,7 +170,8 @@ impl Vocabulary {
 
             github_workspace: "GitHub · {url}".into(),
             github_git_mount: "GitHub · https://{url}".into(),
-            github_repo_mount: "GitHub · {url}".into(),
+            github_repo_mount: None,
+            github_copies_url: true,
             github_open_label: "Copy URL".into(),
             github_open_meta: "Enter copies the row · y copies".into(),
             github_copied: "Copied the GitHub URL".into(),
@@ -185,6 +199,12 @@ impl Vocabulary {
             ("container_noun", &self.container_noun),
             ("quit_lines.0", &self.quit_lines[0]),
             ("quit_lines.1", &self.quit_lines[1]),
+            ("unexported_word", &self.unexported_word),
+            ("quit_dirty_keep", &self.quit_dirty_keep),
+            ("quit_dirty_discard", &self.quit_dirty_discard),
+            ("quit_discard_title", &self.quit_discard_title),
+            ("quit_discard_action", &self.quit_discard_action),
+            ("quit_discard_button", &self.quit_discard_button),
             ("last_session_ended", &self.last_session_ended),
             ("never_reached", &self.never_reached),
             ("session_choice", &self.session_choice),
@@ -229,7 +249,10 @@ impl Vocabulary {
             ("read_only_label", &self.read_only_label),
             ("github_workspace", &self.github_workspace),
             ("github_git_mount", &self.github_git_mount),
-            ("github_repo_mount", &self.github_repo_mount),
+            (
+                "github_repo_mount",
+                self.github_repo_mount.as_deref().unwrap_or(""),
+            ),
             ("github_open_label", &self.github_open_label),
             ("github_open_meta", &self.github_open_meta),
             ("github_copied", &self.github_copied),
@@ -262,6 +285,23 @@ impl Vocabulary {
         }
     }
 
+    pub fn status_label(&self, status: InstanceStatus) -> String {
+        match status {
+            InstanceStatus::PreservedUnpushed => format!("preserved · {}", self.unexported_word),
+            other => other.label().to_owned(),
+        }
+    }
+
+    pub fn dirty_summary(&self, i: &super::instance::Instance) -> String {
+        let word = &self.unexported_word;
+        match (i.uncommitted, i.unpushed) {
+            (0, 0) => "clean".into(),
+            (u, 0) => format!("{u} uncommitted"),
+            (0, p) => format!("{p} {word}"),
+            (u, p) => format!("{u} uncommitted · {p} {word}"),
+        }
+    }
+
     pub fn count(&self, n: usize) -> String {
         junie_tui::ui::text::plural(n, &self.project_one, &self.project_many)
     }
@@ -289,6 +329,12 @@ impl Default for Vocabulary {
                 "! Quitting force-stops the container immediately.".into(),
                 "! Work not saved outside the container will be lost.".into(),
             ],
+            unexported_word: "unpushed".into(),
+            quit_dirty_keep: "Quit & keep changes".into(),
+            quit_dirty_discard: "Quit & discard changes".into(),
+            quit_discard_title: "Quit and discard changes?".into(),
+            quit_discard_action: "discard every uncommitted change and unpushed commit".into(),
+            quit_discard_button: "Discard".into(),
             last_session_ended: "Last session ended · the Capsule shuts down".into(),
             never_reached: "never reached the Capsule".into(),
             session_choice: "Session choice · picked for this session in Capsule".into(),
@@ -349,7 +395,8 @@ impl Default for Vocabulary {
 
             github_workspace: "Opened {url} on the host".into(),
             github_git_mount: "Opened https://{url} in the browser".into(),
-            github_repo_mount: "Opened {url} on GitHub".into(),
+            github_repo_mount: Some("Opened {url} on GitHub".into()),
+            github_copies_url: false,
             github_open_label: "Open PR…".into(),
             github_open_meta: "open uses a gated host action".into(),
             github_copied: "Opened the pull request on the host (gated host action)".into(),

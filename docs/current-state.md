@@ -57,7 +57,7 @@ so the approved baselines do not move.
 | `Surfaces.vocabulary` | demo words | Names the project, sandbox, terminal, gateway, GitHub, quit, stop and purge strings (`Vocabulary::openshell()` is the OpenShell set; `DaemonWords` and `LifecycleWords` group the gateway and the stop and purge texts). |
 | `Surfaces.version`, `Surfaces.about` | `0.9.2`, `None` | The version shown in Debug info and the rows of the About dialog; `None` keeps the four demo rows (`World::about_props`). |
 | `Surfaces.account_form` | four providers, three sources | Provider and source lists, labels, the preselected source and the 1Password note. |
-| `Account.launch_blocked`, `Account.edit_blocked` | `None` | A usage-only account is not offered for launch; an account the form cannot represent keeps its other actions. `edit_blocked` is an `Option<Reason>` (`junie_tui::core::refusal::Reason`): the status shows `text`, the menu border shows `short`. |
+| `Account.launch_blocked`, `Account.edit_blocked` | `None` | A usage-only account is not offered for launch; an account the form cannot represent keeps its other actions. `edit_blocked` is an `Option<EditBlocked>` (`text` and a required `short`): the status shows `text`, the menu border shows `short`. |
 | `Surfaces.agent_blocked` | `None` | Every agent except one is a disabled launch row with a reason. |
 | `Surfaces.launch_role` | `Demo` | `Configured` resolves the launch role from the default or the only allowed role, else the picker rows are disabled with a reason. |
 | `Surfaces.wizard` | `None` | One fixed destination, no edit step, no subfolders, and the name from the source folder. The P9.3 design calls this `Fixed.wizard`; the code keeps `Surfaces.wizard`, and B4 does not move it. |
@@ -72,7 +72,7 @@ so the approved baselines do not move.
   selection distinct from focus, light-dismiss owned by the popup.
 - Behaviour is overridable in layers: app/profile policy, then
   per-widget setting, then user key remapping.
-- A control with one true value is `Control::Fixed(Reason)` (`core::refusal`): `Checkbox`, `Select`, `Button`, one `RadioGroup` option and one `ListItem` take `.fixed(reason)` or `.control(..)`. It stays in the focus ring, draws the disabled look with the `▎` gutter when focused, and refuses an edit: the value is untouched, the widget returns `Consumed` (`Select`, `Button`: `(Consumed, ..)`) and raises the reason into a thread-local slot. The call site reads the slot with `take_refusal()` (which clears it) and posts it with `Cx::refused`, a neutral status of the reason text alone that lasts 5 s. `shell::handle` clears an untaken slot at the end of each input. `Reason` limits: text 60 columns, `short` 20 (`Reason::within_limits`); `ContextMenu::reason_room` is the room of the menu border. The showcase page `fixedcontrols` shows it. `Table` rows have no fixed state yet.
+- A control with one true value is `Control::Fixed(Reason)` (`core::refusal`): `Checkbox`, `Select`, `Button`, one `RadioGroup` option and one `ListItem` take `.fixed(reason)` or `.control(..)`. It stays in the focus ring, draws the disabled look with the `▎` gutter when focused, and refuses an edit: the value is untouched, the widget returns `Consumed` (`Select`, `Button`: `(Consumed, ..)`) and raises the reason into a thread-local slot (`RefCell<Option<Reason>>`). The call site reads the slot with `take_refusal()` (which clears it) and posts it with `Cx::refused(Reason)`, a neutral status of the reason text alone that lasts 5 s. `shell::handle` clears the slot at the start and at the end of each input, and redraws whenever an input changed the status line (text or tone), so a refusal by key paints at once. `Cx::sticky` posts a neutral status that does not expire and clears on the next key, paste or mouse press (`StatusLine::set_sticky_with`); it is for text a user must read or copy. A `Dialog` routes its mnemonics and its confirm key through `Button::activate`, so a fixed action refuses there too and `Dialog::hints` does not offer it. A fixed `ListItem` keeps its checked state through every selection path. `Reason` limits: text 60 columns, `short` 20 (`Reason::within_limits`); `ContextMenu::reason_room` is the room of the menu border. The showcase page `fixedcontrols` shows it. `Table` rows have no fixed state yet.
 - The showcase demonstrates every library capability; the coverage
   gate is described in
   [shared components plan](architecture/shared-components-plan.md).
@@ -84,7 +84,8 @@ so the approved baselines do not move.
   verify consequence → reopen → clean exit), component families in
   Showcase and in a real consumer, colour matrix
   (truecolor/256/16/mono/`NO_COLOR`), normal and small sizes.
-- Every test ends in `App::visual("<id>")`, a `FrozenStore` check
+- Every test but the key tests of a refusal page ends in
+  `App::visual("<id>")` (see [functional testing](functional-testing.md)), a `FrozenStore` check
   against a committed baseline in `tests/functional/baselines/`.
   Baselines are approved only via the Tuiscotti CLI `accept` command.
 - Full account of the deleted legacy estate and its replacement

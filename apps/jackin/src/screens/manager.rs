@@ -77,7 +77,11 @@ fn status_word_tone(s: InstanceStatus, otherwise: Tone) -> Tone {
     if s.is_live() { Tone::Active } else { otherwise }
 }
 
-fn instance_line(i: &crate::domain::instance::Instance, tone: Tone) -> Vec<Span> {
+fn instance_line(
+    i: &crate::domain::instance::Instance,
+    tone: Tone,
+    words: &crate::domain::vocabulary::Vocabulary,
+) -> Vec<Span> {
     let (g, gt) = instance_mark(i.status);
     vec![
         Span::new(format!("{g} "), gt),
@@ -90,7 +94,10 @@ fn instance_line(i: &crate::domain::instance::Instance, tone: Tone) -> Vec<Span>
             ),
             tone,
         ),
-        Span::new(i.status.label(), status_word_tone(i.status, tone)),
+        Span::new(
+            words.status_label(i.status),
+            status_word_tone(i.status, tone),
+        ),
     ]
 }
 
@@ -284,9 +291,10 @@ impl ManagerScreen {
                             InstanceStatus::PreservedDirty => {
                                 ("preserved · dirty".into(), Tone::Secondary)
                             }
-                            InstanceStatus::PreservedUnpushed => {
-                                ("preserved · unpushed".into(), Tone::Secondary)
-                            }
+                            InstanceStatus::PreservedUnpushed => (
+                                w.surfaces.vocabulary.status_label(i.status),
+                                Tone::Secondary,
+                            ),
                             InstanceStatus::RestoreAvailable => {
                                 ("restore available".into(), Tone::Secondary)
                             }
@@ -423,7 +431,7 @@ impl ManagerScreen {
         p.set_searchable(false);
         p.list.width = (84, 84);
         let shown_role = if unavailable.is_some() {
-            "no role"
+            "no default role"
         } else {
             role.as_str()
         };
@@ -595,11 +603,13 @@ impl ManagerScreen {
                 ),
             ),
             Prop::new("Run id", i.run_id.clone()).copyable(),
-            Prop::new("Lifecycle", i.status.label()).tone(if i.status.is_live() {
-                Tone::Normal
-            } else {
-                Tone::Secondary
-            }),
+            Prop::new("Lifecycle", w.surfaces.vocabulary.status_label(i.status)).tone(
+                if i.status.is_live() {
+                    Tone::Normal
+                } else {
+                    Tone::Secondary
+                },
+            ),
         ];
         let words = &w.surfaces.vocabulary.daemon;
         match &i.daemon {
@@ -1257,7 +1267,11 @@ impl ManagerScreen {
                             .map(|x| x.name.as_str())
                             .unwrap_or("current directory")
                     ),
-                    format!("instance · {}", i.map(|x| x.status.label()).unwrap_or("?")),
+                    format!(
+                        "instance · {}",
+                        i.map(|x| w.surfaces.vocabulary.status_label(x.status))
+                            .unwrap_or_else(|| "?".into())
+                    ),
                 )
             }
             RowKey::NewWorkspace => ("New workspace".into(), "create".into()),
@@ -1429,7 +1443,7 @@ impl ManagerScreen {
                                 } else {
                                     Tone::Secondary
                                 };
-                                let line = instance_line(i, tone);
+                                let line = instance_line(i, tone, &w.surfaces.vocabulary);
                                 let text = junie_tui::widgets::viewport::line_text(&line);
                                 put(buf, y, &text, t.secondary());
                                 if y < inner.bottom() {
@@ -1521,7 +1535,7 @@ impl ManagerScreen {
                         "Lifecycle",
                         format!(
                             "{} · {}",
-                            i.status.label(),
+                            w.surfaces.vocabulary.status_label(i.status),
                             w.surfaces.vocabulary.status_description(i.status)
                         ),
                     )
@@ -1531,11 +1545,13 @@ impl ManagerScreen {
                         _ => Tone::Secondary,
                     })
                     .wrap(),
-                    Prop::new("Working tree", i.dirty_summary()).tone(if i.is_dirty() {
-                        Tone::Warning
-                    } else {
-                        Tone::Secondary
-                    }),
+                    Prop::new("Working tree", w.surfaces.vocabulary.dirty_summary(i)).tone(
+                        if i.is_dirty() {
+                            Tone::Warning
+                        } else {
+                            Tone::Secondary
+                        },
+                    ),
                 ];
                 let mut facts = facts;
                 if let Some(b) = &i.branch {
@@ -1813,7 +1829,7 @@ impl ManagerScreen {
                             "◌ {}  {ws} · {} · {}",
                             i.id.trim_start_matches("jk-"),
                             i.role,
-                            i.status.label()
+                            w.surfaces.vocabulary.status_label(i.status)
                         ),
                     ),
                     t.secondary().bg(bg),
@@ -2715,7 +2731,7 @@ impl ManagerScreen {
                     w.instances_of(Some(ws.id))
                         .iter()
                         .take(2)
-                        .map(|i| instance_line(i, Tone::Secondary)),
+                        .map(|i| instance_line(i, Tone::Secondary, &w.surfaces.vocabulary)),
                 )
                 .collect(),
                 None => vec![one(
@@ -2734,10 +2750,13 @@ impl ManagerScreen {
                             Tone::Secondary,
                         ),
                         Span::new(
-                            i.status.label(),
+                            w.surfaces.vocabulary.status_label(i.status),
                             status_word_tone(i.status, Tone::Secondary),
                         ),
-                        Span::new(format!(" · {}", i.dirty_summary()), Tone::Secondary),
+                        Span::new(
+                            format!(" · {}", w.surfaces.vocabulary.dirty_summary(i)),
+                            Tone::Secondary,
+                        ),
                     ],
                     one(
                         match &i.daemon {

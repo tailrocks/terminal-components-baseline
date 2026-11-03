@@ -98,15 +98,6 @@ impl Instance {
     pub fn is_dirty(&self) -> bool {
         self.uncommitted > 0 || self.unpushed > 0
     }
-
-    pub fn dirty_summary(&self) -> String {
-        match (self.uncommitted, self.unpushed) {
-            (0, 0) => "clean".into(),
-            (u, 0) => format!("{u} uncommitted"),
-            (0, p) => format!("{p} unpushed"),
-            (u, p) => format!("{u} uncommitted · {p} unpushed"),
-        }
-    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

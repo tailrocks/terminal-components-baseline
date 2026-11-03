@@ -1094,6 +1094,7 @@ impl CapsuleScreen {
                 .unwrap_or_default();
             let changed = inst.map(|i| i.uncommitted).unwrap_or(0) + touched.len();
             let unpushed = inst.map(|i| i.unpushed).unwrap_or(0);
+            let words = &w.surfaces.vocabulary;
             let ws = self
                 .daemon(w)
                 .map(|d| d.workspace.clone())
@@ -1105,13 +1106,16 @@ impl CapsuleScreen {
                 &[
                     "Start a new agent",
                     "Inspect changes",
-                    "Quit & keep changes",
-                    "Quit & discard changes",
+                    &words.quit_dirty_keep,
+                    &words.quit_dirty_discard,
                 ],
                 0,
             )
             .line(
-                format!("{ws}   • {changed} changed · {unpushed} unpushed"),
+                format!(
+                    "{ws}   • {changed} changed · {unpushed} {}",
+                    words.unexported_word
+                ),
                 Tone::Warning,
             )
             .buttons(
@@ -1218,31 +1222,42 @@ impl CapsuleScreen {
         cx.open(d, LayerTag::new("info"));
     }
 
+    fn github_url(&self, w: &World) -> Option<String> {
+        let i = w.instance(&self.instance)?;
+        let repo = w.github.iter().find(|r| {
+            r.full_name
+                .ends_with(&i.workdir.trim_start_matches("/workspace/").to_owned())
+        })?;
+        Some(match &i.pr {
+            Some((n, _)) => format!("{}/pull/{n}", repo.url),
+            None => format!(
+                "{}/tree/{}",
+                repo.url,
+                i.branch.clone().unwrap_or(i.default_branch.clone())
+            ),
+        })
+    }
+
     fn open_github(&mut self, w: &World, cx: &mut Cx) {
         let Some(i) = w.instance(&self.instance) else {
             return;
         };
-        let repo = w.github.iter().find(|r| {
-            r.full_name
-                .ends_with(&i.workdir.trim_start_matches("/workspace/").to_owned())
-        });
+        let url = self.github_url(w);
         let branch = i.branch.clone().unwrap_or(i.default_branch.clone());
         let mut props = vec![Prop::new("Branch", branch.clone())];
         match &i.pr {
             Some((n, title)) => {
                 props.push(Prop::new("Pull Request", format!("#{n}")));
                 props.push(Prop::new("PR Title", title.clone()));
-                if let Some(r) = repo {
-                    props.push(Prop::new("GitHub URL", format!("{}/pull/{n}", r.url)).copyable());
+                if let Some(url) = url {
+                    props.push(Prop::new("GitHub URL", url).copyable());
                 }
                 props.push(Prop::new("CI Status", "✓ passing").tone(Tone::Success));
             }
             None => {
                 props.push(Prop::new("Pull Request", "(none)").tone(Tone::Muted));
-                if let Some(r) = repo {
-                    props.push(
-                        Prop::new("GitHub URL", format!("{}/tree/{branch}", r.url)).copyable(),
-                    );
+                if let Some(url) = url {
+                    props.push(Prop::new("GitHub URL", url).copyable());
                 }
                 props.push(Prop::new("CI Status", "(unknown)").tone(Tone::Muted));
             }
@@ -1706,7 +1721,10 @@ impl CapsuleScreen {
                 parts.push(format!("• {changed} changed"));
             }
             if i.unpushed > 0 {
-                parts.push(format!("{} unpushed", i.unpushed));
+                parts.push(format!(
+                    "{} {}",
+                    i.unpushed, w.surfaces.vocabulary.unexported_word
+                ));
             }
             bar.left
                 .push(StatusItem::new(parts.join(" · "), Tone::Warning).priority(6));
@@ -2131,16 +2149,13 @@ impl Page<Jackin> for CapsuleScreen {
                     self.end_instance(false, cx);
                 }
                 _ => {
+                    let words = &w.surfaces.vocabulary;
                     let ws = self
                         .daemon(w)
                         .map(|d| d.workspace.clone())
                         .unwrap_or_default();
                     let facts = vec![
-                        Prop::new(
-                            "Action",
-                            "discard every uncommitted change and unpushed commit",
-                        )
-                        .tone(Tone::Error),
+                        Prop::new("Action", words.quit_discard_action.as_str()).tone(Tone::Error),
                         Prop::new(
                             "Target",
                             format!(
@@ -2152,11 +2167,14 @@ impl Page<Jackin> for CapsuleScreen {
                     ];
                     let d = Dialog::facts(
                         WidgetId::of("capsule.discard"),
-                        "Quit and discard changes?",
+                        &words.quit_discard_title,
                         facts,
                         vec![],
                         Some(&ws),
-                        Button::danger(WidgetId::of("capsule.discard").sub("ok"), "Discard"),
+                        Button::danger(
+                            WidgetId::of("capsule.discard").sub("ok"),
+                            &words.quit_discard_button,
+                        ),
                     );
                     cx.open(d, LayerTag::new("discard"));
                 }
@@ -2214,7 +2232,13 @@ impl Page<Jackin> for CapsuleScreen {
                 cx.copy(v);
             }
             ("github", ModalResult::Info(InfoResult::Action(0))) => {
-                cx.status(w.surfaces.vocabulary.github_copied.clone());
+                let words = &w.surfaces.vocabulary;
+                if words.github_copies_url
+                    && let Some(url) = self.github_url(w)
+                {
+                    cx.copy(url);
+                }
+                cx.status(words.github_copied.clone());
             }
             ("usage", _) => {}
             (_, ModalResult::Cancelled)

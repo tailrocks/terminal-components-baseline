@@ -1202,9 +1202,7 @@ impl AccountsScreen {
                     }
                 };
                 let edit = match (&a.edit_blocked, a.mutations_allowed()) {
-                    (Some(why), true) => {
-                        item("Edit…", "e").reason(why.short.as_deref().unwrap_or(&why.text))
-                    }
+                    (Some(why), true) => item("Edit…", "e").reason(&why.short),
                     _ => gate(item("Edit…", "e")),
                 };
                 let default = if !a.mutations_allowed() {

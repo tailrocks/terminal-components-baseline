@@ -1400,10 +1400,12 @@ impl ConfigTabs {
                             &[("url", u.as_str())],
                         )),
                         MountSource::Host(p) if m.kind == MountKind::Repository => {
-                            cx.status(fill_in(
-                                &w.surfaces.vocabulary.github_repo_mount,
-                                &[("url", w.tilde(p).as_str())],
-                            ))
+                            match &w.surfaces.vocabulary.github_repo_mount {
+                                Some(text) => {
+                                    cx.status(fill_in(text, &[("url", w.tilde(p).as_str())]));
+                                }
+                                None => cx.error("no GitHub URL for this mount"),
+                            }
                         }
                         _ => cx.error("no GitHub URL for this mount"),
                     }

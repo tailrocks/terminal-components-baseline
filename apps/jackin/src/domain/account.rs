@@ -1,9 +1,23 @@
 use super::agent::{Agent, Provider, UsageSurface};
 use super::onepassword::OpReference;
 use super::usage::{AccountUsage, Freshness};
-use junie_tui::core::refusal::Reason;
 
 pub type AccountId = String;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EditBlocked {
+    pub text: String,
+    pub short: String,
+}
+
+impl EditBlocked {
+    pub fn new(text: &str, short: &str) -> Self {
+        Self {
+            text: text.to_owned(),
+            short: short.to_owned(),
+        }
+    }
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AccountOrigin {
@@ -350,7 +364,7 @@ pub struct Account {
     pub usage: AccountUsage,
 
     pub launch_blocked: Option<String>,
-    pub edit_blocked: Option<Reason>,
+    pub edit_blocked: Option<EditBlocked>,
 }
 
 impl Account {

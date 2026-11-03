@@ -188,8 +188,8 @@ fn the_session_choice_reason_follows_the_words() {
 fn the_mount_open_status_follows_the_words() {
     let (demo, live) = pair(Scenario::Returning, "down down down down e 2 down o");
     assert!(demo.contains("Opened ~/src/customer-portal on GitHub"));
-    assert!(live.contains("GitHub · ~/src/customer-portal"));
-    assert!(!live.contains("Opened"));
+    assert!(live.contains("no GitHub URL for this mount"));
+    assert!(!live.contains("GitHub · ~/src/customer-portal") && !live.contains("Opened"));
 }
 
 #[test]
@@ -453,7 +453,7 @@ fn the_purge_dialog_follows_the_words() {
     assert!(demo.contains("purge the instance record and its container"));
     assert!(demo.contains("1 container · 2 preserved sessions"));
     assert!(live.contains("delete the sandbox"));
-    assert!(live.contains("1 sandbox · 2 preserved sessions"));
+    assert!(live.contains("2 preserved sessions · changed project copy"));
     assert!(!live.contains("container") && !live.contains("worktree"));
 }
 
