@@ -150,6 +150,23 @@ fn check_frame(app: &crate::support::App, screen: &TerminalSnapshot, test_id: &s
 /// The accepted wrap frame still paints Refresh with the press flash.
 /// `WallClock` drops that flash after 140 ms, and a later paint locks the
 /// released button.
+/// The accepted focus-visible frame keeps Run task on the press fill while
+/// Tab has already moved the gutter to Preview. The 140 ms flash is gone
+/// by the time `visual` settles, which then paints the released accent.
+fn run_task_pressed(screen: &TerminalSnapshot) -> bool {
+    let Some(row) = (0..screen.rows()).find(|&row| row_text(screen, row).contains("Run task"))
+    else {
+        return false;
+    };
+    let line = row_text(screen, row);
+    let Some(at) = line.find("Run task") else {
+        return false;
+    };
+    screen
+        .cell_at(at as u32, row)
+        .is_some_and(|cell| cell.bg() == SnapshotColor::Rgb(0x2e, 0x9a, 0x38))
+}
+
 fn refresh_still_pressed(screen: &TerminalSnapshot) -> bool {
     let Some(row) = (0..screen.rows()).find(|&row| {
         let line = row_text(screen, row);
@@ -829,7 +846,41 @@ fn option_focus_visible_hides_the_pointer_bar() {
     );
     click_tab(&app, "Playground");
     click_body(&app, "Run task", 8, 20);
-    let clicked = app.wait_text("Run task ✓");
+    // The press fill lasts 140 ms. Tab as soon as the click result is up,
+    // and keep the frame that still has that fill with the gutter on Preview.
+    // `visual` waits the fill out and then paints the released accent.
+    let started = Instant::now();
+    let mut tabbed = false;
+    let mut clicked = None;
+    let held = loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        let line = (0..screen.rows())
+            .map(|row| row_text(&screen, row))
+            .find(|line| line.contains("Run task"))
+            .unwrap_or_default();
+        let pressed = run_task_pressed(&screen);
+        if !tabbed && visible.contains("Run task ✓") && pressed && !line.contains('▎') {
+            clicked = Some(screen);
+            app.key("tab");
+            tabbed = true;
+            continue;
+        }
+        if tabbed
+            && pressed
+            && line.contains("▎Preview")
+            && !line.contains("▎Run")
+            && visible.contains("Run task ✓")
+        {
+            break screen;
+        }
+        assert!(
+            started.elapsed() < Duration::from_millis(400) && app.child_running(),
+            "pressed Run task with the Preview gutter was not seen (tabbed={tabbed} pressed={pressed})\n{line}\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(5));
+    };
+    let clicked = clicked.expect("click frame");
     let row = row_with(&clicked, "Run task");
     assert!(
         !row.contains('▎'),
@@ -840,19 +891,12 @@ fn option_focus_visible_hides_the_pointer_bar() {
         &["Run task ✓", "Preview", CAP_PLAY],
         &["Preview ✓", "▎Run task", "Working…"],
     );
-    app.key("tab");
-    let keyed = app.wait_text("▎");
     see(
-        &keyed,
+        &held,
         &["Run task ✓", "▎"],
         &["Preview ✓", "Working…", "Disabled primary ✓"],
     );
-    shot(
-        &app,
-        "opt.buttons.focus_visible",
-        "keyboard-only hides the bar on a pointer click and Tab shows it; siblings stay default",
-        &args,
-    );
+    check_frame(&app, &held, &visual_id("opt.buttons.focus_visible"));
     app.finish();
 }
 
