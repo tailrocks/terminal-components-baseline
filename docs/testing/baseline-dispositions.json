@@ -16842,5 +16842,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X01.clipboard.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x02_startup/x02_startup_start_120x40",
+    "path": "tests/functional/baselines/pre_refactor/x02_startup/x02_startup_start_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X02.startup.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x02_startup/x02_startup_start_narrow",
+    "path": "tests/functional/baselines/pre_refactor/x02_startup/x02_startup_start_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X02.startup.",
+    "replacement_id": null
   }
 ]
