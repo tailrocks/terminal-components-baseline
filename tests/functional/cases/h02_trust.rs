@@ -169,8 +169,17 @@ fn shot(app: &App, checkpoint: &str) {
 
 fn custom_drawn(screen: &TerminalSnapshot, cols: u32, rows: u32) -> bool {
     let visible = text(screen);
+    // At 120 columns the status bar paints `· 120×40`. The PTY grid changes
+    // first, and the 80-column dialog still matches the title and digest.
+    // That narrow dialog omits the size chip, so it must not still say 120×40.
+    let painted = if cols >= 100 {
+        visible.contains(&format!("· {cols}×{rows}"))
+    } else {
+        !visible.contains("· 120×40")
+    };
     screen.cols() == cols
         && screen.rows() == rows
+        && painted
         && visible.contains(TITLE)
         && visible.contains(FILE)
         && visible.contains("sha256:")

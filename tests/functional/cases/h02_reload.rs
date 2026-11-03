@@ -93,6 +93,12 @@ fn same_actions(visible: &str) -> bool {
         && !visible.contains(QUERY)
 }
 
+/// The status bar paints `· {cols}×{rows}` from the frame Holla just drew.
+/// The PTY grid changes first, and the previous frame still matches `reloaded`.
+fn painted(screen: &TerminalSnapshot, cols: u32, rows: u32) -> bool {
+    text(screen).contains(&format!("· {cols}×{rows}"))
+}
+
 fn reloaded(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     same_actions(&visible)
@@ -157,8 +163,7 @@ fn back_to_finder(app: &App) {
 }
 
 /// A same-size resize does not force a frame, and the cursor column is part
-/// of the hash. Nudge the width and come back. The narrow footer may omit a
-/// size chip, so this waits on the terminal size. The config page stays open.
+/// of the hash. Nudge the width and come back. The config page stays open.
 fn nudge(app: &App) {
     std::thread::sleep(Duration::from_millis(200));
     let screen = app.screen();
@@ -167,11 +172,17 @@ fn nudge(app: &App) {
     let nudged = cols + 1;
     app.resize(nudged, rows);
     app.wait_screen("nudged", |screen| {
-        screen.cols() == u32::from(nudged) && screen.rows() == u32::from(rows) && reloaded(screen)
+        screen.cols() == u32::from(nudged)
+            && screen.rows() == u32::from(rows)
+            && painted(screen, u32::from(nudged), u32::from(rows))
+            && reloaded(screen)
     });
     app.resize(cols, rows);
     app.wait_screen("size restored", |screen| {
-        screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && reloaded(screen)
+        screen.cols() == u32::from(cols)
+            && screen.rows() == u32::from(rows)
+            && painted(screen, u32::from(cols), u32::from(rows))
+            && reloaded(screen)
     });
 }
 
@@ -211,7 +222,7 @@ fn holla_reload_rereads_and_revokes_without_running() {
 
     app.resize(80, 24);
     let narrowed = app.wait_screen("config at 80x24", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && reloaded(screen)
+        screen.cols() == 80 && screen.rows() == 24 && painted(screen, 80, 24) && reloaded(screen)
     });
     assert_eq!((narrowed.cols(), narrowed.rows()), (80, 24));
     see(
@@ -233,7 +244,7 @@ fn holla_reload_rereads_and_revokes_without_running() {
     app.resize(120, 40);
 
     let restored = app.wait_screen("config back at 120x40", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && reloaded(screen)
+        screen.cols() == 120 && screen.rows() == 40 && painted(screen, 120, 40) && reloaded(screen)
     });
     see(&restored, &[REREAD, DEPLOY, MOVED], &[REVOKED, " running"]);
 
