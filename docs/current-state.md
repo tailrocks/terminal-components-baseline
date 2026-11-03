@@ -104,6 +104,18 @@ same `FixedFields` view of a world and of a projection.
 | `World` (25) | `workspaces`, `roles`, `instances`, `global`, `accounts`, `surfaces` (through the extractors above) | `github`; Console: `clock`, `time`, `arbiter`, `home`, `cwd`, `next_workspace_id`, `daemons`, `op`, `backend`, `fs`, `clipboard`, `jobs`, `daemon_health`, `last_refresh_secs`, `refresh_fails`, `takeover_at_ms`, `session_accounts`, `discovery_pending` |
 | `Snapshot` (8) | `workspaces`, `roles`, `instances`, `global`, `accounts`, `surfaces` | `github`, `index_error` |
 
+The normalizers of `domain::openshell` (`account`, `workspace`, `global`,
+`role`, `instance`, `surfaces`) hold the one definition of each Fixed value;
+the `openshell-fixed` world (`fixtures::surfaces::fixed`) and jackin's
+projection both call them, and `Surfaces::openshell` takes its six Fixed
+fields from `SurfaceFixed::openshell()`. `PROJECT_DIR` (`/sandbox/project`)
+is the working directory of workspaces, instances, the mount destination and
+the wizard. The `openshell-fixed` world holds no `Discovered` account:
+jackin has no host discovery (D25, D26), so its five demo `Discovered`
+accounts are `Registered` accounts (four named `host login`, one `ci-bot`,
+provenance `ConfiguredSource`), and the world takes the live `account_form`,
+`agent_blocked`, `launch_role` and `wizard`. No approved baseline moved.
+
 Known residual hole: a field that is wrong in this table and wrong in the
 expected literal of a test passes every check. The destructuring forces a
 class for each field, and `tests/fixed_fields.rs` pins each Fixed value with

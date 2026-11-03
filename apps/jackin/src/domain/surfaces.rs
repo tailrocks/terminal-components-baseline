@@ -3,6 +3,7 @@ use super::agent::AgentBlocked;
 use super::docker::DockerSetting;
 use super::doctor::DoctorSurface;
 use super::fixed::Fixed;
+use super::fixed_fields::SurfaceFixed;
 use super::role::{LaunchRoleRule, RoleAdmin};
 use super::vocabulary::Vocabulary;
 use super::workspace::WizardDefaults;
@@ -38,16 +39,24 @@ impl Surfaces {
             version,
             config_path,
         } = facts;
+        let SurfaceFixed {
+            vocabulary,
+            fixed,
+            account_form,
+            agent_blocked,
+            wizard,
+            launch_role,
+        } = SurfaceFixed::openshell();
         Self {
             roles: None,
             docker: None,
             doctor: None,
-            vocabulary: Vocabulary::openshell(),
-            account_form: AccountForm::openshell(),
-            agent_blocked: Some(AgentBlocked::openshell()),
-            launch_role: LaunchRoleRule::Configured,
-            wizard: Some(WizardDefaults::openshell()),
-            fixed: Some(Fixed::openshell()),
+            vocabulary,
+            account_form,
+            agent_blocked,
+            launch_role,
+            wizard,
+            fixed,
             version,
             cockpit_version: None,
             config_path: Some(config_path),

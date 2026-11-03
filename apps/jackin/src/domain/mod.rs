@@ -7,6 +7,7 @@ pub mod fixed_fields;
 pub mod instance;
 pub mod launch;
 pub mod onepassword;
+pub mod openshell;
 pub mod precedence;
 pub mod role;
 pub mod surfaces;

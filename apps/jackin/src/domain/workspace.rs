@@ -73,7 +73,7 @@ pub struct WizardDefaults {
 impl WizardDefaults {
     pub fn openshell() -> Self {
         Self {
-            destination: "/sandbox/project".into(),
+            destination: super::openshell::PROJECT_DIR.into(),
             destination_label: "Project folder".into(),
         }
     }

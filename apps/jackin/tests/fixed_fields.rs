@@ -3,17 +3,25 @@
 use std::collections::BTreeMap;
 
 use jackin_console::arbiter::DiscoveryError;
-use jackin_console::domain::account::{Account, AccountForm, AccountOrigin, AccountRegistry};
-use jackin_console::domain::agent::{Agent, AuthMode};
+use jackin_console::domain::account::{
+    Account, AccountForm, AccountIdentity, AccountOrigin, AccountRegistry, Confidence,
+    CredentialSource, DetectedKind, EditBlocked, Endpoint, IdentitySubject, IssueCode, LaunchBlock,
+    Lifecycle, Provenance, Recoverability, RecoverableIssue, ValidationLevel, ValidationState,
+};
+use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider, UsageSurface};
+use jackin_console::domain::docker::{DockerSetting, EngineState};
+use jackin_console::domain::doctor::{DoctorState, DoctorSurface};
 use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::fixed_fields::*;
-use jackin_console::domain::instance::Instance;
-use jackin_console::domain::role::LaunchRoleRule;
+use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus, ManifestError};
+use jackin_console::domain::openshell;
+use jackin_console::domain::role::{AccountOrder, LaunchRoleRule, RoleAdmin};
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
+use jackin_console::domain::usage::{AccountUsage, FreshnessInfo};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::{
-    DirtyExitPolicy, EnvVar, Isolation, Mount, MountKind, MountScope, MountSource, RoleEntry,
-    Workspace,
+    AccountPolicy, DirtyExitPolicy, EnvVar, Isolation, Mount, MountKind, MountScope, MountSource,
+    RoleEntry, RoleSource, WizardDefaults, Workspace,
 };
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::{GlobalConfig, Snapshot, TrustRow};
@@ -157,6 +165,82 @@ fn fixed_world_snapshot_and_world_views_agree() {
     assert_eq!(view.roles.len(), w.roles.len());
     assert_eq!(view.instances.len(), w.instances.len());
     assert_eq!(snapshot_fixed(&snapshot), view);
+}
+
+#[test]
+fn fixed_world_accounts() {
+    let w = world_for(Scenario::OpenshellFixed);
+    assert_eq!(w.accounts.accounts.len(), 12);
+    for a in &w.accounts.accounts {
+        assert_eq!(account_fixed(a), expected_account(), "{}", a.id);
+    }
+}
+
+#[test]
+fn fixed_world_roles() {
+    let w = world_for(Scenario::OpenshellFixed);
+    assert!(!w.roles.is_empty());
+    for r in &w.roles {
+        assert_eq!(
+            role_fixed(r),
+            RoleFixed { trusted: true },
+            "{}/{}",
+            r.namespace,
+            r.name
+        );
+    }
+}
+
+#[test]
+fn fixed_world_instances() {
+    let w = world_for(Scenario::OpenshellFixed);
+    assert!(!w.instances.is_empty());
+    for i in &w.instances {
+        assert_eq!(
+            instance_fixed(i),
+            InstanceFixed {
+                workdir: PROJECT.into()
+            },
+            "{}",
+            i.id
+        );
+    }
+}
+
+#[test]
+fn fixed_world_surfaces() {
+    let w = world_for(Scenario::OpenshellFixed);
+    let got = surface_fixed(&w.surfaces);
+    assert_eq!(got.vocabulary, Vocabulary::openshell(), "vocabulary");
+    assert_eq!(got.fixed, Some(Fixed::openshell()), "fixed");
+    assert_eq!(got.account_form, AccountForm::openshell(), "account_form");
+    assert_eq!(
+        got.agent_blocked,
+        Some(AgentBlocked::openshell()),
+        "agent_blocked"
+    );
+    assert_eq!(got.wizard, Some(WizardDefaults::openshell()), "wizard");
+    assert_eq!(got.launch_role, LaunchRoleRule::Configured, "launch_role");
+}
+
+#[test]
+fn fixed_world_view_is_the_openshell_constants() {
+    let w = world_for(Scenario::OpenshellFixed);
+    let view = world_fixed(&w);
+    assert_eq!(view.workspaces, vec![expected_workspace(); 4]);
+    assert_eq!(view.accounts, vec![expected_account(); 12]);
+    assert_eq!(view.global, expected_global());
+    assert_eq!(view.roles, vec![RoleFixed { trusted: true }; w.roles.len()]);
+    assert_eq!(
+        view.instances,
+        vec![
+            InstanceFixed {
+                workdir: PROJECT.into()
+            };
+            w.instances.len()
+        ]
+    );
+    assert_eq!(view.surfaces, SurfaceFixed::openshell());
 }
 
 fn workspace_case(name: &str, mutate: impl Fn(&mut Workspace), want: WorkspaceFixed) {
@@ -586,4 +670,403 @@ fn fixed_world_extractor_sees_every_surface_field() {
         },
         want,
     );
+}
+
+fn wrong_workspace(registry: &AccountRegistry) -> Workspace {
+    let default_id = registry
+        .accounts
+        .iter()
+        .find(|a| a.default_for_provider)
+        .expect("a default account")
+        .id
+        .clone();
+    let mut ws = Workspace::new(1, "x", "/elsewhere");
+    ws.keep_awake = true;
+    ws.dirty_policy = DirtyExitPolicy::Discard;
+    ws.mounts = vec![Mount::host("/a", "/b"), Mount::host("/c", "/d")];
+    ws.accounts.disabled_defaults.insert(default_id);
+    ws.accounts.role_preferred.insert(
+        ("r".into(), jackin_console::domain::agent::Provider::OpenAi),
+        plain_ids(registry).remove(0),
+    );
+    ws
+}
+
+#[test]
+fn fixed_world_normalizer_sets_every_fixed_account_field() {
+    let w = world_for(Scenario::OpenshellFixed);
+    let mut a: Account = w.accounts.accounts[0].clone();
+    a.enabled = false;
+    a.origin = AccountOrigin::Discovered;
+    assert_ne!(account_fixed(&a), expected_account());
+    openshell::account(&mut a);
+    assert_eq!(account_fixed(&a), expected_account());
+}
+
+#[test]
+fn fixed_world_normalizer_sets_every_fixed_workspace_field() {
+    let registry = world_for(Scenario::OpenshellFixed).accounts;
+    let mut ws = wrong_workspace(&registry);
+    assert!(ws.git_pull, "Workspace::new starts with git_pull on");
+    assert_ne!(workspace_fixed(&ws, &registry), expected_workspace());
+    openshell::workspace(&mut ws, "/host/x", &registry);
+    assert_eq!(workspace_fixed(&ws, &registry), expected_workspace());
+    assert_eq!(
+        ws.mounts[0].source,
+        MountSource::Host("/host/x".into()),
+        "the mount source is the host path that went in"
+    );
+}
+
+#[test]
+fn fixed_world_normalizer_sets_every_fixed_global_field() {
+    let launchable = Fixed::openshell().launchable;
+    let other = Agent::ALL
+        .into_iter()
+        .find(|a| *a != launchable)
+        .expect("a second agent");
+    let mut g = good_global();
+    g.coauthor_trailer = true;
+    g.dco_signoff = true;
+    g.mounts.push(Mount::host("/a", "/b"));
+    g.role_env.insert("r".into(), vec![EnvVar::plain("A", "b")]);
+    g.agent_modes.insert(other, AuthMode::Sync);
+    g.trust[0].trusted = false;
+    assert_ne!(global_fixed(&g), expected_global());
+    openshell::global(&mut g);
+    assert_eq!(global_fixed(&g), expected_global());
+    assert_eq!(g.agent_modes[&launchable], AuthMode::Sync);
+
+    let mut g = good_global();
+    g.agent_modes.clear();
+    openshell::global(&mut g);
+    assert_eq!(global_fixed(&g), expected_global());
+    assert_eq!(
+        g.agent_modes[&launchable],
+        AuthMode::Sync,
+        "a missing launchable row gets Sync"
+    );
+    let mut g = good_global();
+    g.agent_modes.insert(launchable, AuthMode::Ignore);
+    openshell::global(&mut g);
+    assert_eq!(
+        g.agent_modes[&launchable],
+        AuthMode::Ignore,
+        "the launchable row keeps the mode the account decided"
+    );
+}
+
+#[test]
+fn fixed_world_normalizer_sets_the_role_and_instance_fields() {
+    let w = world_for(Scenario::OpenshellFixed);
+    let mut role: RoleEntry = w.roles[0].clone();
+    role.trusted = false;
+    openshell::role(&mut role);
+    assert_eq!(role_fixed(&role), RoleFixed { trusted: true });
+    let mut instance: Instance = w.instances[0].clone();
+    instance.workdir = "/workspace/x".into();
+    openshell::instance(&mut instance);
+    assert_eq!(
+        instance_fixed(&instance),
+        InstanceFixed {
+            workdir: PROJECT.into()
+        }
+    );
+}
+
+#[test]
+fn fixed_world_normalizer_sets_every_fixed_surface_field() {
+    let mut s = Surfaces::demo(Scenario::Returning);
+    assert_ne!(surface_fixed(&s), SurfaceFixed::openshell());
+    openshell::surfaces(&mut s);
+    let got = surface_fixed(&s);
+    assert_eq!(got.vocabulary, Vocabulary::openshell(), "vocabulary");
+    assert_eq!(got.fixed, Some(Fixed::openshell()), "fixed");
+    assert_eq!(got.account_form, AccountForm::openshell(), "account_form");
+    assert_eq!(
+        got.agent_blocked,
+        Some(AgentBlocked::openshell()),
+        "agent_blocked"
+    );
+    assert_eq!(got.wizard, Some(WizardDefaults::openshell()), "wizard");
+    assert_eq!(got.launch_role, LaunchRoleRule::Configured, "launch_role");
+}
+
+fn probe_account() -> Account {
+    Account {
+        id: "probe-id".into(),
+        origin: AccountOrigin::Discovered,
+        display_name: "probe name".into(),
+        agent: Some(Agent::Amp),
+        provider: Provider::Zai,
+        surface: UsageSurface::Grok,
+        source: CredentialSource::HostEnv {
+            var: "PROBE_KEY".into(),
+            detected: DetectedKind::ZaiApiKeyEnv,
+        },
+        identity: AccountIdentity {
+            subject: Some(IdentitySubject::Handle("probe".into())),
+            plan: Some("probe plan".into()),
+        },
+        provenance: vec![Provenance::LiveHost],
+        confidence: Confidence::Estimated,
+        lifecycle: Lifecycle::NeedsLogin,
+        purpose: Some("probe purpose".into()),
+        enabled: false,
+        default_for_provider: true,
+        validation: ValidationState::Valid(ValidationLevel::QuotaReadable),
+        last_refresh_secs: Some(1234),
+        issue: Some(RecoverableIssue::new(
+            IssueCode::RateLimited,
+            "probe issue",
+            Recoverability::Retryable,
+        )),
+        endpoint: Some(Endpoint {
+            label: "probe endpoint".into(),
+            host: "probe.example".into(),
+        }),
+        usage: AccountUsage {
+            freshness: FreshnessInfo::current(4321),
+            windows: vec![],
+        },
+        launch_blocked: Some(LaunchBlock::UsageOnlySource),
+        edit_blocked: Some(EditBlocked::new("probe text", "probe")),
+    }
+}
+
+fn probe_instance() -> Instance {
+    Instance {
+        id: "jk-probe".into(),
+        container: "probe-container".into(),
+        workspace: Some(42),
+        workdir: "/workspace/probe".into(),
+        role: "probe-role".into(),
+        agent: Agent::Amp,
+        status: InstanceStatus::Crashed,
+        created_secs: 11,
+        last_seen_secs: 22,
+        run_id: "run-probe".into(),
+        sessions: Err(ManifestError::ReadError),
+        daemon: DaemonSnapshot::NoTabs,
+        branch: Some("probe-branch".into()),
+        pr: Some((7, "probe pr".into())),
+        default_branch: "probe-main".into(),
+        uncommitted: 3,
+        unpushed: 5,
+        accounts: vec!["probe-id".into()],
+    }
+}
+
+fn probe_surfaces() -> Surfaces {
+    Surfaces {
+        roles: Some(RoleAdmin {
+            agents: vec![Agent::Amp],
+            roles: vec![],
+            order: AccountOrder::Jackin,
+        }),
+        docker: Some(DockerSetting {
+            gateway: "probe-gateway".into(),
+            engine: EngineState::Missing,
+            risks: vec![],
+            role_enabled: Default::default(),
+        }),
+        doctor: Some(DoctorSurface {
+            noun: "probe".into(),
+            state: DoctorState::NeverRun,
+        }),
+        vocabulary: Vocabulary::demo(),
+        account_form: AccountForm::default(),
+        agent_blocked: None,
+        launch_role: LaunchRoleRule::Demo,
+        wizard: None,
+        fixed: None,
+        version: "7.7.7".into(),
+        cockpit_version: Some("7.7.8".into()),
+        config_path: Some("/probe/config.toml".into()),
+        about: vec![("probe".into(), "about".into())],
+    }
+}
+
+#[test]
+fn fixed_world_normalizers_leave_data_fields_alone() {
+    let registry = world_for(Scenario::OpenshellFixed).accounts;
+
+    let before = probe_account();
+    let mut after = before.clone();
+    openshell::account(&mut after);
+    assert_eq!(
+        after,
+        Account {
+            enabled: true,
+            origin: AccountOrigin::Registered,
+            ..before
+        }
+    );
+
+    let mut role = RoleEntry {
+        namespace: "probe-ns".into(),
+        name: "probe-role".into(),
+        source: RoleSource::Local {
+            path: "/probe".into(),
+        },
+        trusted: false,
+        in_registry: true,
+        description: "probe description".into(),
+        load_error: Some("probe load".into()),
+        fetch_error: Some("probe fetch".into()),
+    };
+    let before = role.clone();
+    openshell::role(&mut role);
+    assert_eq!(
+        role,
+        RoleEntry {
+            trusted: true,
+            ..before
+        }
+    );
+
+    let before = probe_instance();
+    let mut after = before.clone();
+    openshell::instance(&mut after);
+    assert_eq!(
+        after,
+        Instance {
+            workdir: PROJECT.into(),
+            ..before
+        }
+    );
+
+    let launchable = Fixed::openshell().launchable;
+    let mut g = good_global();
+    g.env = vec![EnvVar::plain("PROBE", "value")];
+    g.agent_modes.insert(launchable, AuthMode::Ignore);
+    g.trust[0].source = "probe-source".into();
+    g.trust[0].kind = "probe-kind";
+    g.trust[0].roles = 9;
+    let before = g.clone();
+    openshell::global(&mut g);
+    assert_eq!(g, before, "the global normalizer only writes Fixed fields");
+    let GlobalConfig {
+        coauthor_trailer: _,
+        dco_signoff: _,
+        mounts: _,
+        env,
+        role_env: _,
+        agent_modes,
+        trust,
+    } = &g;
+    assert_eq!(env, &before.env);
+    assert_eq!(agent_modes[&launchable], AuthMode::Ignore);
+    let TrustRow {
+        source,
+        kind,
+        trusted: _,
+        roles,
+    } = &trust[0];
+    assert_eq!(
+        (source.as_str(), *kind, *roles),
+        ("probe-source", "probe-kind", 9)
+    );
+
+    let before = probe_surfaces();
+    let mut after = before.clone();
+    openshell::surfaces(&mut after);
+    let Surfaces {
+        roles,
+        docker,
+        doctor,
+        vocabulary: _,
+        account_form: _,
+        agent_blocked: _,
+        launch_role: _,
+        wizard: _,
+        fixed: _,
+        version,
+        cockpit_version,
+        config_path,
+        about,
+    } = &after;
+    assert_eq!(roles, &before.roles);
+    assert_eq!(docker, &before.docker);
+    assert_eq!(doctor, &before.doctor);
+    assert_eq!(version, &before.version);
+    assert_eq!(cockpit_version, &before.cockpit_version);
+    assert_eq!(config_path, &before.config_path);
+    assert_eq!(about, &before.about);
+
+    let mut ws = wrong_workspace(&registry);
+    ws.id = 77;
+    ws.name = "probe".into();
+    ws.roles.default = Some("probe-role".into());
+    ws.env = vec![EnvVar::plain("PROBE", "value")];
+    ws.role_env
+        .insert("probe-role".into(), vec![EnvVar::plain("R", "v")]);
+    ws.docker = true;
+    ws.accounts
+        .preferred
+        .insert(Provider::OpenAi, plain_ids(&registry).remove(0));
+    let before = ws.clone();
+    openshell::workspace(&mut ws, "/host/probe", &registry);
+    let Workspace {
+        id,
+        name,
+        workdir: _,
+        mounts: _,
+        roles,
+        env,
+        role_env,
+        keep_awake: _,
+        git_pull: _,
+        docker,
+        accounts,
+        dirty_policy: _,
+    } = &ws;
+    assert_eq!(*id, before.id);
+    assert_eq!(name, &before.name);
+    assert_eq!(roles, &before.roles);
+    assert_eq!(env, &before.env);
+    assert_eq!(role_env, &before.role_env);
+    assert_eq!(*docker, before.docker);
+    let AccountPolicy {
+        disabled_defaults: _,
+        enabled,
+        preferred,
+        role_preferred: _,
+    } = accounts;
+    assert_eq!(preferred, &before.accounts.preferred);
+    assert_eq!(
+        enabled.iter().cloned().collect::<Vec<_>>(),
+        {
+            let mut ids = plain_ids(&registry);
+            ids.sort();
+            ids
+        },
+        "accounts.enabled is Fixed through the predicate; the normalizer writes the set"
+    );
+}
+
+#[test]
+fn fixed_world_normalizers_are_idempotent() {
+    let registry = world_for(Scenario::OpenshellFixed).accounts;
+    let mut ws = wrong_workspace(&registry);
+    openshell::workspace(&mut ws, "/host/x", &registry);
+    let once = ws.clone();
+    openshell::workspace(&mut ws, "/host/x", &registry);
+    assert_eq!(ws, once, "workspace");
+    let mut g = good_global();
+    g.coauthor_trailer = true;
+    openshell::global(&mut g);
+    let once = g.clone();
+    openshell::global(&mut g);
+    assert_eq!(g, once, "global");
+    let mut s = Surfaces::demo(Scenario::Returning);
+    openshell::surfaces(&mut s);
+    let once = s.clone();
+    openshell::surfaces(&mut s);
+    assert_eq!(s, once, "surfaces");
+    let mut a = probe_account();
+    openshell::account(&mut a);
+    let once = a.clone();
+    openshell::account(&mut a);
+    assert_eq!(a, once, "account");
 }
