@@ -312,7 +312,11 @@ fn open_new_env(app: &App) -> TerminalSnapshot {
         "refusing a unless the workspace section row is current\n{before}"
     );
     app.key("a");
-    let form = app.wait_screen("new env", |screen| text(screen).contains(NEW_ENV));
+    // The dialog title paints before the kind control.
+    let form = app.wait_screen("new env", |screen| {
+        let visible = text(screen);
+        visible.contains(NEW_ENV) && visible.contains("Plain text")
+    });
     require(&form, "Plain text");
     forbid(&form, DUP_SECRET);
     forbid(&form, FIXTURE_SECRET);

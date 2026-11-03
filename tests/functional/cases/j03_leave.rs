@@ -301,7 +301,14 @@ fn focus_tabs(app: &App) {
 fn leave_dialog(app: &App) -> TerminalSnapshot {
     focus_tabs(app);
     app.key("escape");
-    let dialog = app.wait_screen("unsaved changes", |screen| text(screen).contains(UNSAVED));
+    // The title paints before the wrapped body. The sentence is split
+    // across rows, so the check is the dialog interior, not one line.
+    let dialog = app.wait_screen("unsaved changes", |screen| {
+        text(screen).contains(UNSAVED)
+            && dialog_body(screen).contains(LOST)
+            && text(screen).contains(DISCARD)
+            && focused_line(screen).contains(CANCEL)
+    });
     assert!(
         dialog_body(&dialog).contains(LOST),
         "dialog body\n{}",
