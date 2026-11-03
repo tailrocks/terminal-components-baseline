@@ -351,13 +351,12 @@ fn loaded_sre(screen: &TerminalSnapshot) -> bool {
 
 fn load_sre(app: &App) -> TerminalSnapshot {
     app.key("a");
-    let picker = app.wait_screen("load role picker", |screen| {
+    // The dialog chrome paints before the registry rows. The first frame
+    // that says Load role does not yet contain chainargos/sre.
+    app.wait_screen("load role picker", |screen| {
         let visible = text(screen);
-        visible.contains(PICKER) && visible.contains(PICKER_SCOPE)
+        visible.contains(PICKER) && visible.contains(PICKER_SCOPE) && visible.contains(SRE)
     });
-    if !text(&picker).contains(SRE) {
-        panic!("sre row absent\n{}", text(&picker));
-    }
     app.key("s");
     app.key("r");
     app.key("e");

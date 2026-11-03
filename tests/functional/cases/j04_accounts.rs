@@ -231,6 +231,44 @@ fn shows(crumb: &str) -> impl Fn(&TerminalSnapshot) -> bool {
     move |screen| text(screen).contains(&crumb)
 }
 
+fn revoked_ready(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(REVOKED_CRUMB) && visible.contains(UNAUTHORIZED) && visible.contains(HTTP_401)
+}
+
+/// The walk can already be on the rejection. A later `screen` call sees the
+/// cursor on the next provider, so the matching frame is the one to keep.
+fn take_revoked(app: &App) -> TerminalSnapshot {
+    let started = Instant::now();
+    loop {
+        let selected = select_until(app, "revoked", shows(REVOKED_CRUMB));
+        if revoked_ready(&selected) {
+            return selected;
+        }
+        let posted = Instant::now();
+        loop {
+            let screen = app.screen();
+            if revoked_ready(&screen) {
+                return screen;
+            }
+            if !text(&screen).contains(REVOKED_CRUMB) || posted.elapsed() > Duration::from_secs(8) {
+                break;
+            }
+            assert!(
+                app.child_running(),
+                "jackin exited before the revoked detail\n{}",
+                text(&screen)
+            );
+            std::thread::sleep(Duration::from_millis(25));
+        }
+        assert!(
+            started.elapsed() < Duration::from_secs(20),
+            "timed out: revoked detail\n{}",
+            text(&app.screen())
+        );
+    }
+}
+
 fn remove_hit(screen: &TerminalSnapshot) -> Option<Point> {
     let hits: Vec<_> = find_all(screen, REMOVE)
         .into_iter()
@@ -552,15 +590,7 @@ fn j04_accounts_accounts() {
     );
     assert!(text(&locked).contains(REVOKED), "{}", text(&locked));
     assert_secrets(&locked);
-    select_until(&hard, "revoked", shows(REVOKED_CRUMB));
-    // The crumb is in the header before the detail replaces the previous
-    // account's quota. The rejection is the later paint.
-    let revoked = hard.wait_screen("revoked detail", |screen| {
-        let visible = text(screen);
-        visible.contains(REVOKED_CRUMB)
-            && visible.contains(UNAUTHORIZED)
-            && visible.contains(HTTP_401)
-    });
+    let revoked = take_revoked(&hard);
     let visible = text(&revoked);
     assert!(visible.contains(UNAUTHORIZED), "{visible}");
     assert!(visible.contains(HTTP_401), "{visible}");
