@@ -1,4 +1,4 @@
-#![cfg(feature = "fixtures")]
+#![cfg(feature = "demo")]
 
 mod common;
 

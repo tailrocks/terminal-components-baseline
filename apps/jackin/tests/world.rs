@@ -1,4 +1,4 @@
-#![cfg(feature = "fixtures")]
+#![cfg(feature = "demo")]
 
 use jackin_console::arbiter::{Arbiter, DiscoveryError};
 use jackin_console::fixtures::{HOME, world_for};

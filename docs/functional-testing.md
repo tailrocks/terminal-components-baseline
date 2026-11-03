@@ -24,8 +24,12 @@ cargo nextest run --locked --workspace --profile functional --no-tests fail
 ```
 
 This is the command CI runs in `suite-functional`. The profile selects
-the `functional` target of both workspace crates and retains a JUnit
-report. To run the target without the profile:
+the `functional` target of the workspace crates and retains a JUnit
+report. The `functional` target of `jackin-console` needs the feature
+`demo`, which is off by default, so this command runs the root journeys
+only. Add `--all-features` to include the jackin journeys; CI runs them in
+`Rust / jackin-console` (see [CI](ci.md#the-demo-feature)). To run the
+target without the profile:
 
 ```sh
 cargo nextest run --locked --test functional --no-tests fail
@@ -97,7 +101,7 @@ moved, deleted or retargeted.
 data API that `jackin-console` offers another crate: `World::new`,
 `Snapshot`, the time source, external messages, `Vocabulary`, the
 account, launch-role and wizard data. They build the real `App` and
-`World` from the `fixtures` feature, drive it with keys through the
+`World` from the `demo` feature, drive it with keys through the
 `Application` trait, render into a test buffer and assert text and
 state. The tests of the library's own types live in the library's root
 `tests/` directory instead: `fixed.rs` and `reason.rs` (the fixed
@@ -107,10 +111,22 @@ redraw rule, through a minimal `shell::App` in `tests/common/mod.rs`)
 and `status.rs` (the sticky status line). No test of a `junie-tui` type
 lives in `apps/jackin/tests`. These tests add no visual baseline and are
 not journeys: a user-visible flow still needs a functional journey.
-`cargo nextest run --all-targets` runs them, and so do the
+`cargo nextest run --all-features --all-targets` runs them, and so do the
 `Rust / junie-tui` and `Rust / jackin-console` CI jobs
-(`nextest run --profile ci --package <crate>`); the `functional` suite
+(`nextest run --profile ci --package <crate> --all-features`); the `functional` suite
 does not.
+
+Three files prove the packaging rule that the demo is off by default.
+`product_mode.rs` compiles only without `demo`: it builds a `World` from
+a test `Backend`, renders the manager and applies a pushed `Snapshot`, so
+the product shape is run, not only built. `product_manifest.rs` reads
+`cargo metadata` and fails when `default` is not empty, `clap` is not
+optional, `demo` or `product` change, or the `jackin-preview` binary or
+the `functional` target loses `required-features = ["demo"]`.
+`library_has_no_demo.rs` lexes `apps/jackin/src` outside `fixtures/`,
+`sim/` and `bin/` and fails on a demo name or literal; its `PENDING` list
+holds the demo items that later P9.3 steps still move, and a row that no
+longer matches fails.
 
 Each test has a named break (a one-edit change to the library that must
 turn it red) recorded in [P9.3 red and green](P9.3-red-green.md).
