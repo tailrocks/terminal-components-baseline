@@ -162,13 +162,55 @@ fn frozen_two(screen: &TerminalSnapshot) -> bool {
 /// Busy rows paint `spinner_frame(now_ms / 80)`. Cancel freezes the revealed
 /// count, and the next resize paints whichever frame the clock has reached.
 /// Idle ticks advance that clock without redrawing, so sample resizes until
-/// the frame is the first glyph. Otherwise the checkpoint follows catalog time.
+/// the frame is the first glyph. A resize can still be followed by one later
+/// paint. `visual` keeps the frame that stays still for 700ms, so hold the
+/// first glyph across that window and sample again when a later glyph arrives.
 fn first_spinner(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     visible.contains('⠋')
         && ["⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
             .iter()
             .all(|glyph| !visible.contains(glyph))
+}
+
+fn spinner_frame_ready(
+    screen: &TerminalSnapshot,
+    cols: u16,
+    rows: u16,
+    ready: &impl Fn(&TerminalSnapshot) -> bool,
+) -> bool {
+    screen.cols() == u32::from(cols)
+        && screen.rows() == u32::from(rows)
+        && ready(screen)
+        && first_spinner(screen)
+}
+
+/// The accepted frame is the first spinner glyph, and it has to be the glyph
+/// `visual` locks. A follow-up paint replaces it before that lock under load.
+fn hold_first_spinner(
+    app: &App,
+    cols: u16,
+    rows: u16,
+    ready: &impl Fn(&TerminalSnapshot) -> bool,
+) -> bool {
+    let started = Instant::now();
+    let mut seen = app.screen();
+    if !spinner_frame_ready(&seen, cols, rows, ready) {
+        return false;
+    }
+    let cursor = seen.cursor_local();
+    let glyphs = text(&seen);
+    while started.elapsed() < Duration::from_millis(1000) {
+        std::thread::sleep(Duration::from_millis(40));
+        seen = app.screen();
+        if !spinner_frame_ready(&seen, cols, rows, ready)
+            || seen.cursor_local() != cursor
+            || text(&seen) != glyphs
+        {
+            return false;
+        }
+    }
+    true
 }
 
 fn settle_spinner(app: &App, cols: u16, rows: u16, ready: impl Fn(&TerminalSnapshot) -> bool) {
@@ -183,10 +225,10 @@ fn settle_spinner(app: &App, cols: u16, rows: u16, ready: impl Fn(&TerminalSnaps
         let screen = app.wait_screen("spinner sample", |screen| {
             screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && ready(screen)
         });
-        if first_spinner(&screen) {
+        if first_spinner(&screen) && hold_first_spinner(app, cols, rows, &ready) {
             return;
         }
-        if start.elapsed() > Duration::from_secs(4) {
+        if start.elapsed() > Duration::from_secs(12) {
             panic!("spinner did not reach the first frame\n{}", text(&screen));
         }
         std::thread::sleep(Duration::from_millis(40));
