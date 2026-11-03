@@ -202,6 +202,17 @@ fn focused_line_text(visible: &str) -> String {
         .to_string()
 }
 
+/// The account row under a provider header. Refresh replaces the row's issue
+/// text with a spinner, so the detail string is not on screen until the row
+/// stays selected and that refresh finishes.
+fn focused_under(visible: &str, header: &str) -> bool {
+    let lines: Vec<&str> = visible.lines().collect();
+    let Some(index) = lines.iter().position(|line| line.contains('▎')) else {
+        return false;
+    };
+    index > 0 && lines[index - 1].contains(header) && lines[index].contains("discovered")
+}
+
 #[test]
 fn j04_usage_route() {
     let app = open("j04-usage-route", "hard-cases");
@@ -284,13 +295,19 @@ fn j04_usage_route() {
         "stale work stayed stale after refresh\n{}",
         text(&current)
     );
-    down_until(&app, "kimi missing", |visible| visible.contains(MISSING));
+    down_until(&app, "kimi row", |visible| focused_under(visible, "Kimi"));
+    let missing = app.wait_screen("kimi missing", |screen| {
+        let visible = text(screen);
+        focused_under(&visible, "Kimi") && visible.contains(MISSING)
+    });
+    no_secrets(&missing);
     down_until(&app, "minimax row", |visible| {
-        visible.contains("MiniMax · discovered")
+        focused_under(visible, "MiniMax")
     });
     let minimax = app.wait_screen("minimax last good", |screen| {
         let visible = text(screen);
-        visible.contains("MiniMax · discovered")
+        focused_under(&visible, "MiniMax")
+            && visible.contains("MiniMax · discovered")
             && visible.contains(PROVIDER_DOWN)
             && visible.contains("8%")
             && visible.contains("47%")
