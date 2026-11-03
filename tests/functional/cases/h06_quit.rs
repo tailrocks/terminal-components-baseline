@@ -252,14 +252,35 @@ fn open_cleanup_guard(app: &App) -> (TerminalSnapshot, u32, u32) {
 
 fn open_shot_guard(app: &App) -> TerminalSnapshot {
     app.key("enter");
-    app.wait_screen("report at 1 of 4", |screen| {
-        let visible = text(screen);
-        visible.contains(ONE_OF_FOUR) && !visible.contains(TITLE)
-    });
+    // The dialog freezes the count at the tick that handles Ctrl+Q. A
+    // recorded wait between seeing `1 of 4` and the key lets the next tick
+    // paint `2 of 4`, and the guard then never matches the baseline.
+    let started = Instant::now();
+    loop {
+        let visible = text(&app.screen());
+        if !visible.contains(TITLE) && visible.contains(ONE_OF_FOUR) {
+            break;
+        }
+        assert!(
+            app.child_running() && started.elapsed() < Duration::from_secs(8),
+            "report did not hold 1 of 4\n{visible}"
+        );
+        std::thread::yield_now();
+    }
     app.key("ctrl+q");
-    let dialog = app.wait_screen("quit guard at 1 of 4", |screen| {
-        dialog_painted(screen) && text(screen).contains(ONE_OF_FOUR) && text(screen).contains(LEAVE)
-    });
+    let started = Instant::now();
+    let dialog = loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        if dialog_painted(&screen) && visible.contains(ONE_OF_FOUR) && visible.contains(LEAVE) {
+            break screen;
+        }
+        assert!(
+            app.child_running() && started.elapsed() < Duration::from_secs(2),
+            "quit guard did not freeze at 1 of 4\n{visible}"
+        );
+        std::thread::yield_now();
+    };
     let body = dialog_prose(&dialog);
     assert!(
         body.contains(&cleanup_sentence(1, 4)),
