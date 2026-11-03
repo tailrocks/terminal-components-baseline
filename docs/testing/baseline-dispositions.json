@@ -16950,5 +16950,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X03.chrome.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x03_glyphs/x03_glyphs_glyphs_120x40",
+    "path": "tests/functional/baselines/pre_refactor/x03_glyphs/x03_glyphs_glyphs_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X03.glyphs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x03_glyphs/x03_glyphs_glyphs_narrow",
+    "path": "tests/functional/baselines/pre_refactor/x03_glyphs/x03_glyphs_glyphs_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X03.glyphs.",
+    "replacement_id": null
   }
 ]
