@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. start in src/bin/jackin/app.rs takes JoinActive, because populated in src/bin/jackin/domain/fixtures.rs inserts running jk-7f3a and jk-9b02 and sync_arbiter sets the count. Scenario::Returning does not call Go::Attach. ManagerScreen::new in src/bin/jackin/screens/manager.rs selects RowKey::CurrentDir and leaves workspaces collapsed. The first frame's focus gutter is on Current directory. Down selects payments-platform, Right expands it, and Down selects the jk-7f3a row. The row paints the id as 7f3a via trim_start_matches. Enter calls activate, then reconnect. InstanceStatus::Running calls Go::Attach with pane None. Go::Attach in src/bin/jackin/app.rs requires Running, sets attached_by to this terminal, opens CapsuleScreen, and sets Attached to payments-platform · tabs and panes restored. The identity bar shows payments-platform › the-architect. The daemon in fixtures.rs is the booted Claude pane, the Codex split, and the shell, focused on pane 1, plus the docs tab. Ctrl+B d calls detach in src/bin/jackin/screens/capsule.rs and Go::Detach, which returns to the manager, select_instance leaves 7f3a selected, and the status is Detached · payments-platform keeps running. The process stays there. You were in the Construct from src/bin/jackin/rain.rs stays absent. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "499dec0a2f1bbb2d3c4f518f94732881a884e870",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J06.reconnect",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "The same returning manager is the start. The focused row is 7f3a, the painted form of jk-7f3a, before Enter. Go::Attach in src/bin/jackin/app.rs opens that capsule and sets Attached to payments-platform · tabs and panes restored. Ctrl+B d calls detach in src/bin/jackin/screens/capsule.rs, then Go::Detach. select_instance leaves the same row selected, so the manager still shows 7f3a and the attach status is gone. Enter calls reconnect again. Go::Attach opens the same Running instance. That reconnected capsule is the checkpoint, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40). The manager title Workspaces is absent. The container id in src/bin/jackin/screens/capsule.rs would show 7f3a, and the identity bar drops it at both widths, so the shots show the attach status and, at 120 columns, payments-platform › the-architect. They are not the pre-launch manager. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "499dec0a2f1bbb2d3c4f518f94732881a884e870",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j06_reconnect/j06_reconnect_reconnect_120x40.tui.json",
