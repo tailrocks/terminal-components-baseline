@@ -761,10 +761,13 @@ fn compare_levels_narrows_before_restore() {
     shot(&app, "sc.accountsusage.compare-levels.120x40");
 
     app.resize(80, 24);
-    let narrow = app.wait_screen("compare redraw at 80 by 24", |screen| {
+    app.wait_screen("compare redraw at 80 by 24", |screen| {
         screen.cols() == 80 && screen.rows() == 24 && text(screen).contains(TITLE)
     });
-    if !text(&narrow).contains("no color") {
+    // The first 80×24 paint can still show the wide scroll, so "no color"
+    // is visible before this layout settles at the top.
+    let settled = app.settle();
+    if !text(&settled).contains("no color") {
         reveal_text(&app, "no color");
     }
     let narrow = app.settle();
