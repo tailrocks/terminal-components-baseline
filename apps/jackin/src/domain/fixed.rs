@@ -1,5 +1,7 @@
 use junie_tui::core::refusal::Reason;
 
+use super::agent::Agent;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Fixed {
     pub keep_awake: Reason,
@@ -10,6 +12,17 @@ pub struct Fixed {
     pub enable_workspace: Reason,
 
     pub last_role: String,
+
+    pub commits: Reason,
+    pub trust: Reason,
+    pub env_sources: Reason,
+    pub role_env: Reason,
+    pub launchable: Agent,
+    pub agent_launchable: Reason,
+    pub agent_other: Reason,
+    pub agent_notes: [String; 2],
+    pub env_secret_note: [String; 2],
+    pub env_reference: String,
 }
 
 impl Fixed {
@@ -22,6 +35,22 @@ impl Fixed {
             workdir: Reason::new("Always /sandbox/project · jackin uploads the project there"),
             enable_workspace: Reason::new("All accounts work here · press p to prefer one"),
             last_role: "Keep one role allowed, or allow all".into(),
+            commits: Reason::new("Both stay off · jackin does not edit commit messages"),
+            trust: Reason::new("Sources you add are trusted · remove the role to revoke"),
+            env_sources: Reason::new("Plain values only · jackin sends no secrets to the sandbox"),
+            role_env: Reason::new("Set role variables in a workspace instead"),
+            launchable: Agent::Codex,
+            agent_launchable: Reason::new("Set by each account · change it in Accounts (c)"),
+            agent_other: Reason::new("No credentials · jackin launches Codex only"),
+            agent_notes: [
+                "The mode comes from each account's credential source.".into(),
+                "jackin launches Codex only; other agents get no credentials.".into(),
+            ],
+            env_secret_note: [
+                "jackin keeps no secrets in env.".into(),
+                "Use an account for credentials.".into(),
+            ],
+            env_reference: "Plain values only · jackin stores no credential references".into(),
         }
     }
 }

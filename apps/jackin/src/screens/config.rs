@@ -36,7 +36,7 @@ use crate::domain::onepassword::OpReference;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{
     EnvValue, EnvVar, Isolation, Mount, MountKind, MountScope, MountSource, RoleName, Workspace,
-    env_key_error, mask,
+    env_key_error, is_credential_reference, looks_secret, mask,
 };
 use crate::world::{GlobalConfig, World};
 use junie_tui::ui::context::ContextAnchor;
@@ -862,7 +862,8 @@ impl ConfigTabs {
         let range = st.scroll.visible_range();
         let rows = st.rows.clone();
         let mut status = None;
-        let project = self.project_fixed(tab, w);
+        let mounts = self.mounts_fixed(tab, w);
+        let role_env = self.role_env_fixed(tab, w);
         for (k, i) in range.enumerate() {
             let y = body.y + k as u16;
             let row = &rows[i];
@@ -870,7 +871,8 @@ impl ConfigTabs {
             let mut s = ctx.state(rid);
             s.focused = focused && i == cursor;
             s.selected = i == cursor;
-            let fixed_add = project && row.key == RowKey::AddMount;
+            let fixed_add = mounts && row.key == RowKey::AddMount
+                || role_env && row.key == RowKey::AddRoleOverride;
             if fixed_add {
                 s.fixed = true;
                 s.disabled = true;
@@ -1006,16 +1008,13 @@ impl ConfigTabs {
                 status = self.row_status(&row.key, hidden > 0, w);
             }
         }
-        if let (true, Some(f)) = (project, &w.surfaces.fixed) {
+        if let Some(note) = self.fixed_note(tab, w) {
             let (x, ny) = (body.x + 6, body.y + rows.len() as u16 + 1);
             if ny < body.bottom() {
                 buf.set_string(
                     x,
                     ny,
-                    junie_tui::ui::reveal::cut(
-                        Rect::new(x, ny, row_w.saturating_sub(6), 1),
-                        &f.mounts.text,
-                    ),
+                    junie_tui::ui::reveal::cut(Rect::new(x, ny, row_w.saturating_sub(6), 1), note),
                     t.faint().bg(bg),
                 );
             }
@@ -1207,10 +1206,11 @@ impl ConfigTabs {
         let st = self.state_ref(tab);
         let key = st.rows.get(st.cursor).map(|r| r.key.clone());
         let mut v = vec![];
-        let project = self.project_fixed(tab, w);
+        let mounts = self.mounts_fixed(tab, w);
+        let fixed = w.surfaces.fixed.is_some();
         match (tab, key) {
-            (Tab::Mounts, Some(RowKey::Mount(_))) if project => v.push(hint("o", "Open source")),
-            (Tab::Mounts, _) if project => {}
+            (Tab::Mounts, Some(RowKey::Mount(_))) if mounts => v.push(hint("o", "Open source")),
+            (Tab::Mounts, _) if mounts => {}
             (Tab::Mounts, Some(RowKey::Mount(_))) => {
                 v.push(hint("Enter", "Edit…"));
                 v.push(hint("r", "Read-only"));
@@ -1230,8 +1230,12 @@ impl ConfigTabs {
             (Tab::Environments, Some(RowKey::Env(..))) => {
                 v.push(junie_tui::widgets::widget_hints::EDIT);
                 v.push(hint("m", "Show"));
-                v.push(hint("p", "1Password…"));
-                v.push(hint("s", "Scope…"));
+                if !fixed {
+                    v.push(hint("p", "1Password…"));
+                }
+                if !(fixed && self.scope == Scope::Global) {
+                    v.push(hint("s", "Scope…"));
+                }
                 v.push(hint("d", "Remove…"));
                 v.push(hint("a", "Add…"));
             }
@@ -1239,6 +1243,8 @@ impl ConfigTabs {
                 v.push(hint("←→", "Fold role"));
                 v.push(hint("a", "Add…"));
             }
+            (Tab::Environments, Some(RowKey::AddRoleOverride | RowKey::RoleSummary))
+                if self.role_env_fixed(tab, w) => {}
             (Tab::Environments, Some(RowKey::AddRoleOverride | RowKey::RoleSummary)) => {
                 v.push(hint("Enter", "Add role override…"));
             }
@@ -1306,11 +1312,23 @@ impl ConfigTabs {
         };
         let vp = st.scroll.viewport_len.max(1) as isize;
         let n = st.rows.len() as isize;
-        if self.project_fixed(tab, w) && Self::edits_project(&row.key, key) {
-            if let Some(f) = &w.surfaces.fixed {
+        if let Some(f) = &w.surfaces.fixed {
+            if self.mounts_fixed(tab, w) && Self::edits_project(&row.key, key) {
                 raise(&f.mounts);
+                return Outcome::Consumed;
             }
-            return Outcome::Consumed;
+            if self.role_env_fixed(tab, w) && Self::adds_role_override(&row.key, key) {
+                raise(&f.role_env);
+                return Outcome::Consumed;
+            }
+            if tab == Tab::Environments
+                && matches!(row.key, RowKey::Env(..))
+                && key.code == KeyCode::Char('p')
+                && key.plain()
+            {
+                raise(&f.env_sources);
+                return Outcome::Consumed;
+            }
         }
         match key.code {
             KeyCode::Up | KeyCode::Char('k') => {
@@ -1460,7 +1478,7 @@ impl ConfigTabs {
                 }
             }
             (RowKey::Mount(d), KeyCode::Char('s')) if self.scope == Scope::Global => {
-                self.open_scope_picker(RowKey::Mount(d.clone()), cx);
+                self.open_scope_picker(RowKey::Mount(d.clone()), w, cx);
             }
             (RowKey::RemovedMount(_), KeyCode::Enter) => return self.undo(tab, &row.key, w, cx),
             (RowKey::Env(r, k), KeyCode::Enter | KeyCode::Char('e')) => {
@@ -1492,7 +1510,7 @@ impl ConfigTabs {
                 cx.open(flow, LayerTag::new("cfg.env.op"));
             }
             (RowKey::Env(r, k), KeyCode::Char('s')) => {
-                self.open_scope_picker(RowKey::Env(r.clone(), k.clone()), cx);
+                self.open_scope_picker(RowKey::Env(r.clone(), k.clone()), w, cx);
             }
             (RowKey::Env(r, k), KeyCode::Char('d') | KeyCode::Delete) => {
                 if row.change == Change::Removed {
@@ -1523,8 +1541,32 @@ impl ConfigTabs {
         Outcome::Changed
     }
 
-    fn project_fixed(&self, tab: Tab, w: &World) -> bool {
-        tab == Tab::Mounts && self.scope == Scope::Workspace && w.surfaces.fixed.is_some()
+    fn mounts_fixed(&self, tab: Tab, w: &World) -> bool {
+        tab == Tab::Mounts && w.surfaces.fixed.is_some()
+    }
+
+    fn role_env_fixed(&self, tab: Tab, w: &World) -> bool {
+        tab == Tab::Environments && self.scope == Scope::Global && w.surfaces.fixed.is_some()
+    }
+
+    fn adds_role_override(row: &RowKey, key: &Key) -> bool {
+        match (row, key.code) {
+            (RowKey::RoleSummary | RowKey::AddRoleOverride, KeyCode::Char('a')) => key.plain(),
+            (RowKey::RoleSummary | RowKey::AddRoleOverride, KeyCode::Enter) => true,
+            (RowKey::Env(None, _), KeyCode::Char('s')) => key.plain(),
+            _ => false,
+        }
+    }
+
+    fn fixed_note<'a>(&self, tab: Tab, w: &'a World) -> Option<&'a str> {
+        let f = w.surfaces.fixed.as_ref()?;
+        if self.mounts_fixed(tab, w) {
+            Some(&f.mounts.text)
+        } else if self.role_env_fixed(tab, w) {
+            Some(&f.role_env.text)
+        } else {
+            None
+        }
     }
 
     fn edits_project(row: &RowKey, key: &Key) -> bool {
@@ -1917,9 +1959,11 @@ impl ConfigTabs {
         Outcome::Ignored
     }
 
-    fn scope_options(&self) -> Vec<String> {
+    fn scope_options(&self, w: &World) -> Vec<String> {
         let mut v = vec![self.scope.label().to_owned()];
-        v.extend(self.registry.iter().map(|r| format!("role {r}")));
+        if !(self.scope == Scope::Global && w.surfaces.fixed.is_some()) {
+            v.extend(self.registry.iter().map(|r| format!("role {r}")));
+        }
         v
     }
 
@@ -1937,8 +1981,8 @@ impl ConfigTabs {
             .unwrap_or(0)
     }
 
-    fn open_scope_picker(&mut self, key: RowKey, cx: &mut Cx) {
-        let opts = self.scope_options();
+    fn open_scope_picker(&mut self, key: RowKey, w: &World, cx: &mut Cx) {
+        let opts = self.scope_options(w);
         let refs: Vec<&str> = opts.iter().map(String::as_str).collect();
         let (title, current) = match &key {
             RowKey::Mount(d) => (
@@ -2098,7 +2142,7 @@ impl ConfigTabs {
             ),
         ];
         if self.scope == Scope::Global {
-            let opts = self.scope_options();
+            let opts = self.scope_options(w);
             let refs: Vec<&str> = opts.iter().map(String::as_str).collect();
             let idx = match m.as_ref().map(|m| &m.scope) {
                 Some(MountScope::Role(r)) => self.scope_index(Some(r)),
@@ -2157,8 +2201,23 @@ impl ConfigTabs {
             Some(EnvValue::OnePassword(r)) => Some(r.clone()),
             _ => None,
         };
-        let scope_opts = self.scope_options();
+        let scope_opts = self.scope_options(w);
         let scope_refs: Vec<&str> = scope_opts.iter().map(String::as_str).collect();
+        let mut sources = RadioGroup::new(
+            f.sub("src"),
+            "Value source",
+            &[
+                w.surfaces.vocabulary.env_plain_label.as_str(),
+                "1Password item / field  (recommended for secrets)",
+                "Host environment variable",
+            ],
+            src_idx,
+        );
+        if let Some(fx) = &w.surfaces.fixed {
+            sources = sources
+                .fixed_option(1, fx.env_sources.clone())
+                .fixed_option(2, fx.env_sources.clone());
+        }
         let mut fields = vec![
             FormField::input(
                 "key",
@@ -2168,19 +2227,7 @@ impl ConfigTabs {
                     .validator(env_key_error)
                     .value(e.as_ref().map(|e| e.key.as_str()).unwrap_or("")),
             ),
-            FormField::radio(
-                "src",
-                RadioGroup::new(
-                    f.sub("src"),
-                    "Value source",
-                    &[
-                        w.surfaces.vocabulary.env_plain_label.as_str(),
-                        "1Password item / field  (recommended for secrets)",
-                        "Host environment variable",
-                    ],
-                    src_idx,
-                ),
-            ),
+            FormField::radio("src", sources),
             FormField::input(
                 "value",
                 TextInput::new(
@@ -2239,6 +2286,29 @@ impl ConfigTabs {
             ),
         ];
         let _ = scope_word;
+        if let Some(fx) = &w.surfaces.fixed {
+            let key_at = fields
+                .iter()
+                .position(|x| x.name == "key")
+                .map_or(0, |i| i + 1);
+            let src_at = fields
+                .iter()
+                .position(|x| x.name == "src")
+                .map_or(0, |i| i + 1);
+            let secret = e.as_ref().is_some_and(|e| looks_secret(&e.key));
+            let lines = fx
+                .env_secret_note
+                .iter()
+                .map(|line| (line.clone(), Tone::Muted))
+                .collect();
+            let mut note = FormField::note("key_note", lines);
+            note.visible = secret;
+            fields.insert(
+                src_at,
+                FormField::note("src_note", vec![(fx.env_sources.text.clone(), Tone::Faint)]),
+            );
+            fields.insert(key_at, note);
+        }
         if e.is_some()
             && let Some(fld) = fields.iter_mut().find(|x| x.name == "key")
             && let FieldKindW::Input(i) = &mut fld.kind
@@ -2247,7 +2317,8 @@ impl ConfigTabs {
         }
         let mut form = FormDialog::new(f, &title, fields)
             .width(70)
-            .meta("environment");
+            .meta("environment")
+            .keep_open_on_save();
         form.set_visible("value", src_idx == 0);
         form.set_visible("op", src_idx == 1);
         form.set_visible("host", src_idx == 2);
@@ -2256,7 +2327,7 @@ impl ConfigTabs {
         cx.open(form, LayerTag::new("cfg.env"));
     }
 
-    pub fn form_changed(&mut self, tag: &LayerTag, form: &mut FormDialog, _w: &World) {
+    pub fn form_changed(&mut self, tag: &LayerTag, form: &mut FormDialog, w: &World) {
         match tag.kind {
             "cfg.mount" => {
                 let kind = form.choice("kind");
@@ -2269,6 +2340,9 @@ impl ConfigTabs {
                 form.set_visible("value", src == 0);
                 form.set_visible("op", src == 1);
                 form.set_visible("host", src == 2);
+                if w.surfaces.fixed.is_some() {
+                    form.set_visible("key_note", looks_secret(&form.text("key")));
+                }
                 form.error = None;
             }
             _ => {}
@@ -2325,13 +2399,15 @@ impl ConfigTabs {
                 Outcome::Changed
             }
             ("cfg.mount", ModalResult::Form(Some(values))) => self.save_mount(values, w, cx),
-            ("cfg.env", ModalResult::FormAction(name, _)) => {
-                if name == "choose:op" {
+            ("cfg.env", ModalResult::FormAction(name, values)) => match name.as_str() {
+                "choose:op" => {
                     let flow = OpFlow::new(self.ids.form.sub("op"), w.op.as_ref(), w.now_ms());
                     cx.open(flow, LayerTag::new("cfg.env.opform"));
+                    Outcome::Changed
                 }
-                Outcome::Changed
-            }
+                "save" => self.save_env(values, w, cx),
+                _ => Outcome::Changed,
+            },
             ("cfg.env.opform", ModalResult::Op(Some(r))) => {
                 let path = r.display_path();
                 let masked =
@@ -2555,7 +2631,7 @@ impl ConfigTabs {
         Outcome::Changed
     }
 
-    fn save_env(&mut self, values: FormValues, _w: &World, cx: &mut Cx) -> Outcome {
+    fn save_env(&mut self, values: FormValues, w: &World, cx: &mut Cx) -> Outcome {
         let key = text(&values, "key").trim().to_owned();
         if let Some(e) = env_key_error(&key) {
             cx.with_top::<FormDialog>(move |f| f.error = Some(e));
@@ -2566,6 +2642,13 @@ impl ConfigTabs {
                 let v = text(&values, "value");
                 if v.is_empty() {
                     cx.with_top::<FormDialog>(|f| f.error = Some("Value cannot be empty".into()));
+                    return Outcome::Changed;
+                }
+                if let Some(fx) = &w.surfaces.fixed
+                    && is_credential_reference(&v)
+                {
+                    let e = fx.env_reference.clone();
+                    cx.with_top::<FormDialog>(move |f| f.error = Some(e));
                     return Outcome::Changed;
                 }
                 EnvValue::Plain(v)

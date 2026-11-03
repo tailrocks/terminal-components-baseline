@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use crate::domain::agent::Agent;
+use crate::domain::agent::{Agent, AuthMode};
 use crate::domain::docker::{DockerRiskText, DockerSetting, EngineState};
 use crate::domain::doctor::{DoctorState, DoctorSurface};
 use crate::domain::fixed::Fixed;
@@ -8,7 +8,7 @@ use crate::domain::role::{
     AccountOrder, RoleAdmin, RoleCheckState, RoleEnvEntry, RoleManifestDoc, RoleRecord,
 };
 use crate::domain::vocabulary::Vocabulary;
-use crate::domain::workspace::{DirtyExitPolicy, Isolation, Mount, RoleSource};
+use crate::domain::workspace::{DirtyExitPolicy, EnvValue, Isolation, Mount, RoleSource};
 use crate::sim;
 use crate::world::World;
 
@@ -174,11 +174,35 @@ pub fn doctor(w: &mut World) {
     });
 }
 
+fn plain(e: &crate::domain::workspace::EnvVar) -> bool {
+    matches!(e.value, EnvValue::Plain(_))
+}
+
 pub const PROJECT: &str = "/sandbox/project";
 
 pub fn fixed(w: &mut World) {
     w.surfaces.vocabulary = Vocabulary::openshell();
-    w.surfaces.fixed = Some(Fixed::openshell());
+    let fixed = Fixed::openshell();
+    w.global.coauthor_trailer = false;
+    w.global.dco_signoff = false;
+    w.global.mounts.clear();
+    w.global.env.retain(plain);
+    w.global.role_env.clear();
+    w.global.agent_modes = Agent::ALL
+        .into_iter()
+        .map(|a| {
+            let mode = if a == fixed.launchable {
+                AuthMode::Sync
+            } else {
+                AuthMode::Ignore
+            };
+            (a, mode)
+        })
+        .collect();
+    for row in &mut w.global.trust {
+        row.trusted = true;
+    }
+    w.surfaces.fixed = Some(fixed);
     let accounts: Vec<_> = w
         .accounts
         .accounts
@@ -196,5 +220,9 @@ pub fn fixed(w: &mut World) {
         ws.accounts.disabled_defaults.clear();
         ws.accounts.enabled = accounts.iter().cloned().collect();
         ws.accounts.role_preferred.clear();
+        ws.env.retain(plain);
+        for vars in ws.role_env.values_mut() {
+            vars.retain(plain);
+        }
     }
 }

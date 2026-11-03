@@ -1037,6 +1037,14 @@ fn nothing_changed(screen: &TerminalSnapshot) {
     );
 }
 
+fn no_change_marker(screen: &TerminalSnapshot) {
+    let t = text(screen);
+    assert!(
+        !t.contains("1 change") && !t.contains(" changes"),
+        "a refusal marks no change:\n{t}"
+    );
+}
+
 fn leave_without_a_prompt(app: &App) {
     app.key("ctrl+s");
     let nothing = app.wait_text("Nothing to save");
@@ -1340,5 +1348,534 @@ fn jackin_fixed_last_allowed_role_cannot_be_unchecked() {
     app.wait_text("Enter Discard");
     app.key("enter");
     app.wait_text("Current directory");
+    app.finish();
+}
+
+fn open_fixed_settings(app: &App, tab: &str, presses: usize) -> TerminalSnapshot {
+    app.wait_text("Current directory");
+    app.key("s");
+    app.wait_text("Settings › global › General");
+    for _ in 0..presses {
+        app.key("]");
+    }
+    app.wait_text(&format!("Settings › global › {tab}"));
+    app.key("enter");
+    app.wait_screen("the tab body has focus", |s| {
+        !footer(s).contains("Enter Edit fields")
+    })
+}
+
+fn leave_settings_without_a_prompt(app: &App) {
+    app.key("ctrl+s");
+    let nothing = app.wait_text("Nothing to save");
+    assert!(!text(&nothing).contains("Save settings"));
+    app.key("esc");
+    app.key("esc");
+    let manager = app.wait_text("Current directory");
+    assert!(!text(&manager).contains("Unsaved changes"));
+}
+
+#[test]
+fn jackin_fixed_settings_commits_refuse_by_key_and_click() {
+    let reason = Fixed::openshell().commits.text;
+    let app = fixed_app("jackin-fixed-commits");
+    let general = open_fixed_settings(&app, "General", 0);
+    for label in ["Add Co-authored-by trailer", "Sign off commits (DCO)"] {
+        assert!(row_with(&general, label).contains("[ ]"), "{label}");
+    }
+    assert!(text(&general).contains(&reason));
+    assert!(text(&general).contains("None · jackin adds no trailers to commits"));
+    assert!(!text(&general).contains("Two independent flags"));
+    assert!(!footer(&general).contains("Space Toggle"));
+    app.visual("functional/jackin_fixed_settings_commits");
+
+    app.key("space");
+    let keyed = refused_with(&app, &reason);
+    assert!(row_with(&keyed, "Add Co-authored-by trailer").contains("[ ]"));
+    assert!(row_with(&keyed, "Add Co-authored-by trailer").contains('▎'));
+    no_change_marker(&keyed);
+    status_expired(&app, &reason);
+
+    app.key("down");
+    app.wait_screen("focus reaches the DCO box", |s| {
+        row_with(s, "Sign off commits (DCO)").contains('▎')
+    });
+    for key in ["space", "enter"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(
+            row_with(&keyed, "Sign off commits (DCO)").contains("[ ]"),
+            "{key}"
+        );
+        no_change_marker(&keyed);
+        status_expired(&app, &reason);
+    }
+
+    app.click(inside(find(&app.screen(), "Add Co-authored-by trailer")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Add Co-authored-by trailer").contains("[ ]"));
+    assert!(row_with(&clicked, "Add Co-authored-by trailer").contains('▎'));
+    no_change_marker(&clicked);
+    status_expired(&app, &reason);
+    app.click(inside(find(&app.screen(), "Sign off commits (DCO)")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Sign off commits (DCO)").contains("[ ]"));
+    no_change_marker(&clicked);
+    status_expired(&app, &reason);
+    leave_settings_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_settings_global_mounts_refuse_every_add() {
+    let reason = Fixed::openshell().mounts.text;
+    let app = fixed_app("jackin-fixed-global-mounts");
+    let mounts = open_fixed_settings(&app, "Mounts", 1);
+    let add = row_with(&mounts, "+ Add mount");
+    assert!(add.contains('▎'), "{add}");
+    assert!(text(&mounts).contains(&reason));
+    assert_eq!(
+        find_all(&mounts, "+ Add mount").len(),
+        1,
+        "the list holds only the Add row"
+    );
+    assert!(!footer(&mounts).contains("Add mount"));
+    let ratio = contrast(&mounts, find(&mounts, "+ Add mount"));
+    assert!(
+        ratio < 4.5,
+        "the Add row is drawn fixed, contrast {ratio:.2}"
+    );
+    app.visual("functional/jackin_fixed_settings_mounts");
+
+    for key in ["enter", "a"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(!text(&keyed).contains("Add mount…"), "{key}");
+        assert!(!text(&keyed).contains("Host directory"), "{key}");
+        no_change_marker(&keyed);
+        status_expired(&app, &reason);
+    }
+    app.click(inside(find(&app.screen(), "+ Add mount")));
+    let clicked = refused_with(&app, &reason);
+    assert!(!text(&clicked).contains("Host directory"));
+    no_change_marker(&clicked);
+    status_expired(&app, &reason);
+    leave_settings_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_settings_trust_refuses_the_toggle_and_shows_the_source() {
+    let reason = Fixed::openshell().trust.text;
+    let app = fixed_app("jackin-fixed-trust");
+    let trust = open_fixed_settings(&app, "Trust", 4);
+    let rows: Vec<String> = (0..trust.rows() - 1)
+        .map(|row| row_text(&trust, row))
+        .filter(|row| row.contains("[✓] trusted") || row.contains("[ ] untrusted"))
+        .collect();
+    assert_eq!(rows.len(), 4, "{}", text(&trust));
+    assert!(
+        rows.iter().all(|row| row.contains("[✓] trusted")),
+        "{rows:?}"
+    );
+    assert!(!text(&trust).contains("untrusted ["));
+    assert!(text(&trust).contains(&reason));
+    assert!(!text(&trust).contains("blocks + Load role"));
+    assert!(!footer(&trust).contains("Toggle trust"));
+    assert!(footer(&trust).contains("Open source"));
+    for cell in ["github.com/chainargos/roles", "[✓] trusted", "4 roles"] {
+        let at = find_all(&trust, cell)[0];
+        let ratio = contrast(&trust, at);
+        assert!(ratio >= 4.5, "{cell} is legible, contrast {ratio:.2}");
+    }
+    app.visual("functional/jackin_fixed_settings_trust");
+
+    for key in ["space", "enter"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(!text(&keyed).contains("[ ] untrusted"), "{key}");
+        no_change_marker(&keyed);
+        status_expired(&app, &reason);
+    }
+    app.click(inside(find(&app.screen(), "github.com/chainargos/roles")));
+    let clicked = refused_with(&app, &reason);
+    assert!(!text(&clicked).contains("[ ] untrusted"));
+    no_change_marker(&clicked);
+    status_expired(&app, &reason);
+
+    app.key("down");
+    app.key("o");
+    let shown = app.wait_text("Source · github.com/acme-labs/roles-experimental");
+    assert!(!text(&shown).contains("Opened") && !text(&shown).contains("Revealed"));
+    no_change_marker(&shown);
+    app.key("down");
+    app.key("down");
+    app.key("o");
+    app.wait_text("Source · git@corp:infra/roles");
+    leave_settings_without_a_prompt(&app);
+    app.finish();
+}
+
+fn agent_at(screen: &TerminalSnapshot, label: &str) -> Point {
+    find_all(screen, label)
+        .into_iter()
+        .find(|point| point.x < 12)
+        .unwrap_or_else(|| panic!("agent row {label}:\n{}", text(screen)))
+}
+
+fn agent_row(screen: &TerminalSnapshot, label: &str) -> String {
+    row_text(screen, u32::from(agent_at(screen, label).y))
+}
+
+#[test]
+fn jackin_fixed_settings_agents_refuse_every_row() {
+    let fixed = Fixed::openshell();
+    let app = fixed_app("jackin-fixed-agents");
+    let agents = open_fixed_settings(&app, "Agents", 3);
+    assert!(agent_row(&agents, "Codex").contains("sync"));
+    for agent in ["Claude Code", "Amp", "Kimi Code", "OpenCode", "Grok Build"] {
+        assert!(agent_row(&agents, agent).contains("ignore"), "{agent}");
+    }
+    for note in &fixed.agent_notes {
+        assert!(text(&agents).contains(note.as_str()), "{note}");
+    }
+    assert!(!text(&agents).contains("sync mirrors the host login"));
+    assert!(
+        !footer(&agents).contains("Cycle mode") && !footer(&agents).contains("Remove override")
+    );
+    assert!(footer(&agents).contains("Manage accounts"));
+    for cell in ["Claude Code", "Codex", "Amp"] {
+        let ratio = contrast(&agents, agent_at(&agents, cell));
+        assert!(ratio >= 4.5, "{cell} is legible, contrast {ratio:.2}");
+    }
+
+    for key in ["space", "enter", "d"] {
+        app.key(key);
+        let keyed = refused_with(&app, &fixed.agent_other.text);
+        assert!(agent_row(&keyed, "Claude Code").contains("ignore"), "{key}");
+        no_change_marker(&keyed);
+        status_expired(&app, &fixed.agent_other.text);
+    }
+    app.click(inside(agent_at(&app.screen(), "Claude Code")));
+    refused_with(&app, &fixed.agent_other.text);
+    status_expired(&app, &fixed.agent_other.text);
+
+    app.key("down");
+    app.wait_screen("cursor on Codex", |s| agent_row(s, "Codex").contains('▎'));
+    for key in ["enter", "d", "space"] {
+        app.key(key);
+        let keyed = refused_with(&app, &fixed.agent_launchable.text);
+        assert!(agent_row(&keyed, "Codex").contains("sync"), "{key}");
+        no_change_marker(&keyed);
+        if key != "space" {
+            status_expired(&app, &fixed.agent_launchable.text);
+        }
+    }
+    app.visual("functional/jackin_fixed_settings_agents");
+    status_expired(&app, &fixed.agent_launchable.text);
+
+    app.click(inside(agent_at(&app.screen(), "Codex")));
+    let clicked = refused_with(&app, &fixed.agent_launchable.text);
+    assert!(agent_row(&clicked, "Codex").contains("sync"));
+    no_change_marker(&clicked);
+    status_expired(&app, &fixed.agent_launchable.text);
+    for _ in 0..4 {
+        app.key("down");
+    }
+    app.wait_screen("cursor on Grok Build", |s| {
+        agent_row(s, "Grok Build").contains('▎')
+    });
+    app.key("space");
+    refused_with(&app, &fixed.agent_other.text);
+    leave_settings_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_settings_role_overrides_refuse_and_the_scope_lists_global() {
+    let reason = Fixed::openshell().role_env.text;
+    let app = fixed_app("jackin-fixed-role-env");
+    let env = open_fixed_settings(&app, "Environments", 2);
+    assert!(row_with(&env, "EDITOR").contains("plain"));
+    assert!(text(&env).contains("Role overrides"));
+    assert!(text(&env).contains(&reason));
+    for hint in ["Scope…", "1Password…"] {
+        assert!(!footer(&env).contains(hint), "{hint}");
+    }
+
+    for row in ["CARGO_NET_GIT_FET", "+ Add environment variable"] {
+        app.key("down");
+        app.wait_screen("the cursor steps down", |s| {
+            (0..s.rows())
+                .map(|r| row_text(s, r))
+                .any(|r| r.contains(row) && r.contains('▎'))
+        });
+    }
+    app.key("down");
+    let add = app.wait_screen("cursor on the Add role row", |s| {
+        row_with(s, "+ Add role override…").contains('▎')
+    });
+    assert!(!footer(&add).contains("Add role override"));
+    let ratio = contrast(&add, find(&add, "+ Add role override…"));
+    assert!(
+        ratio < 4.5,
+        "the Add row is drawn fixed, contrast {ratio:.2}"
+    );
+    let ratio = contrast(&add, find(&add, "EDITOR"));
+    assert!(
+        ratio >= 4.5,
+        "the data row stays legible, contrast {ratio:.2}"
+    );
+    app.visual("functional/jackin_fixed_settings_env");
+
+    for key in ["enter", "a"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(!text(&keyed).contains("no overrides yet"), "{key}");
+        no_change_marker(&keyed);
+        status_expired(&app, &reason);
+    }
+    app.click(inside(find(&app.screen(), "+ Add role override…")));
+    let clicked = refused_with(&app, &reason);
+    assert!(!text(&clicked).contains("no overrides yet"));
+    no_change_marker(&clicked);
+    status_expired(&app, &reason);
+
+    for _ in 0..3 {
+        app.key("up");
+    }
+    app.wait_screen("cursor on EDITOR", |s| row_with(s, "EDITOR").contains('▎'));
+    app.key("s");
+    let scoped = refused_with(&app, &reason);
+    assert!(!text(&scoped).contains("Scope for EDITOR"));
+    no_change_marker(&scoped);
+    status_expired(&app, &reason);
+
+    app.key("a");
+    let form = app.wait_text("New global environment key");
+    let label = find(&form, "Scope");
+    let value = find_all(&form, "global")
+        .into_iter()
+        .find(|p| p.y == label.y + 1)
+        .expect("the scope value sits under its label");
+    app.click(value);
+    let select = app.wait_screen("the scope list opens", |s| {
+        find_all(s, "global")
+            .into_iter()
+            .filter(|p| p.y > label.y)
+            .count()
+            >= 2
+    });
+    for role in ["the-architect", "backend", "reviewer", "sre"] {
+        assert!(
+            !text(&select).contains(&format!("role {role}")),
+            "the scope select lists only global:\n{}",
+            text(&select)
+        );
+    }
+    app.key("esc");
+    app.key("esc");
+    app.wait_text("Role overrides");
+    leave_settings_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_env_sources_refuse_the_radio_options_and_the_p_key() {
+    let reason = Fixed::openshell().env_sources.text;
+    let app = fixed_app("jackin-fixed-env-sources");
+    open_fixed_settings(&app, "Environments", 2);
+    app.key("p");
+    let p = refused_with(&app, &reason);
+    assert!(!text(&p).contains("1Password"), "no 1Password flow opens");
+    assert!(row_with(&p, "EDITOR").contains("plain"));
+    no_change_marker(&p);
+    status_expired(&app, &reason);
+
+    app.key("a");
+    app.wait_text("New global environment key");
+    app.key("tab");
+    let form = app.wait_screen("focus reaches the source radio", |s| {
+        row_with(s, "Plain text").contains('▎')
+    });
+    assert!(row_with(&form, "Plain text").contains("(●)"));
+    assert!(row_with(&form, "1Password item").contains("( )"));
+    assert!(row_with(&form, "Host environment variable").contains("( )"));
+    assert!(text(&form).contains(&reason));
+    assert!(text(&form).contains("value is stored as plain text"));
+    app.visual("functional/jackin_fixed_env_form");
+
+    app.key("down");
+    app.wait_screen("cursor on the 1Password option", |s| {
+        row_with(s, "1Password item").contains('▎')
+    });
+    for key in ["space", "enter"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(row_with(&keyed, "Plain text").contains("(●)"), "{key}");
+        assert!(row_with(&keyed, "1Password item").contains("( )"), "{key}");
+        assert!(text(&keyed).contains("Value for the key"), "{key}");
+        assert!(!text(&keyed).contains("not chosen"), "{key}");
+        status_expired(&app, &reason);
+    }
+    app.key("down");
+    app.wait_screen("cursor on the host option", |s| {
+        row_with(s, "Host environment variable").contains('▎')
+    });
+    for key in ["space", "enter"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(row_with(&keyed, "Plain text").contains("(●)"), "{key}");
+        assert!(
+            row_with(&keyed, "Host environment variable").contains("( )"),
+            "{key}"
+        );
+        assert!(
+            !text(&keyed).contains("Forwarded from the host shell"),
+            "{key}"
+        );
+        status_expired(&app, &reason);
+    }
+
+    app.click(inside(find(&app.screen(), "1Password item")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Plain text").contains("(●)"));
+    assert!(!text(&clicked).contains("not chosen"));
+    status_expired(&app, &reason);
+    app.click(inside(find(&app.screen(), "Host environment variable")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Plain text").contains("(●)"));
+    assert!(!text(&clicked).contains("Forwarded from the host shell"));
+    status_expired(&app, &reason);
+
+    app.key("esc");
+    let closed = app.wait_absent("New global environment key");
+    no_change_marker(&closed);
+    leave_settings_without_a_prompt(&app);
+    app.finish();
+}
+
+fn type_key_and_value(app: &App, key: &str, value: &str) {
+    app.key("a");
+    app.wait_text("New global environment key");
+    app.paste(key);
+    app.key("tab");
+    app.key("tab");
+    app.wait_screen("the value is being edited", |s| {
+        footer(s).contains("Enter Apply")
+    });
+    app.paste(value);
+    app.key("enter");
+    app.click(button(app, "Save"));
+}
+
+#[test]
+fn jackin_fixed_env_form_refuses_a_credential_reference_and_notes_a_secret_name() {
+    let fixed = Fixed::openshell();
+    let app = fixed_app("jackin-fixed-env-reference");
+    open_fixed_settings(&app, "Environments", 2);
+
+    app.key("a");
+    let form = app.wait_text("New global environment key");
+    assert!(!text(&form).contains(&fixed.env_secret_note[0]));
+    app.paste("EDITOR_THEME");
+    app.key("tab");
+    let plain = app.wait_screen("the key is committed", |s| {
+        row_with(s, "Plain text").contains('▎')
+    });
+    assert!(!text(&plain).contains(&fixed.env_secret_note[0]));
+    app.key("shift+tab");
+    app.key("enter");
+    app.key("ctrl+u");
+    app.paste("DEPLOY_TOKEN");
+    app.key("tab");
+    let noted = app.wait_text(&fixed.env_secret_note[0]);
+    assert!(text(&noted).contains(&fixed.env_secret_note[1]));
+    assert!(text(&noted).contains("DEPLOY_TOKEN"), "the input is kept");
+    app.key("esc");
+    app.wait_absent("New global environment key");
+
+    for reference in [
+        "op://vault/item/field",
+        "OP://V/I/F",
+        "openshell:resolve:env:X",
+    ] {
+        type_key_and_value(&app, "DEPLOY_TOKEN", reference);
+        let refused = app.wait_text(&fixed.env_reference);
+        assert!(
+            text(&refused).contains("New global environment key"),
+            "{reference}"
+        );
+        assert!(text(&refused).contains("DEPLOY_TOKEN"), "{reference}");
+        app.key("esc");
+        let closed = app.wait_absent("New global environment key");
+        assert!(
+            text(&closed).contains("2 vars"),
+            "{reference} was not stored"
+        );
+        assert!(
+            !text(&closed).contains("DEPLOY_TOKEN"),
+            "{reference} was not stored"
+        );
+    }
+
+    type_key_and_value(&app, "DEPLOY_TOKEN", "ghp_abc");
+    let saved = app.wait_text("DEPLOY_TOKEN · added · save to apply");
+    assert!(text(&saved).contains("3 vars"));
+    let added = find_all(&saved, "DEPLOY_TOKEN")[0];
+    assert!(row_text(&saved, u32::from(added.y)).contains("plain"));
+    app.key("esc");
+    app.key("esc");
+    app.wait_text("Unsaved changes");
+    app.key("right");
+    app.wait_text("Enter Discard");
+    app.key("enter");
+    app.wait_text("Current directory");
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_workspace_env_keeps_the_role_scope_live_and_refuses_the_sources() {
+    let reason = Fixed::openshell().env_sources.text;
+    let app = fixed_app("jackin-fixed-workspace-env");
+    open_fixed_editor(&app, 1);
+    for _ in 0..3 {
+        app.key("]");
+    }
+    app.key("enter");
+    let env = app.wait_screen("the env list has focus", |s| {
+        text(s).contains("Role overrides") && footer(s).contains("Enter Edit")
+    });
+    assert!(footer(&env).contains("Scope…"));
+    assert!(!footer(&env).contains("1Password…"));
+
+    app.key("p");
+    let keyed = refused_with(&app, &reason);
+    assert!(
+        !text(&keyed).contains("1Password"),
+        "no 1Password flow opens"
+    );
+    no_change_marker(&keyed);
+    status_expired(&app, &reason);
+
+    app.key("s");
+    let scope = app.wait_text("Scope for DATABASE_URL");
+    assert!(text(&scope).contains("role the-architect"));
+    app.key("esc");
+    app.wait_absent("Scope for DATABASE_URL");
+
+    for _ in 0..3 {
+        app.key("down");
+    }
+    app.wait_screen("cursor on the Add role row", |s| {
+        row_with(s, "+ Add role override…").contains('▎')
+    });
+    assert!(footer(&app.screen()).contains("Add role override"));
+    app.key("enter");
+    let picker = app.wait_text("no overrides yet");
+    assert!(!footer(&picker).contains(&Fixed::openshell().role_env.text));
+    app.key("esc");
+    app.wait_absent("no overrides yet");
+    leave_without_a_prompt(&app);
     app.finish();
 }

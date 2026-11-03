@@ -3,6 +3,7 @@ use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::{MouseTarget, PointerEvent};
+use junie_tui::core::refusal::{Control, raise};
 use junie_tui::shell::Page;
 use junie_tui::theme::Tone;
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
@@ -99,13 +100,19 @@ impl SettingsScreen {
             BASE,
             registry,
         );
+        let commits = w
+            .surfaces
+            .fixed
+            .as_ref()
+            .map_or(Control::Live, |f| Control::fixed(f.commits.clone()));
         Self {
             coauthor: Checkbox::new(
                 COAUTHOR,
                 "Add Co-authored-by trailer",
                 pending.coauthor_trailer,
-            ),
-            dco: Checkbox::new(DCO, "Sign off commits (DCO)", pending.dco_signoff),
+            )
+            .control(commits.clone()),
+            dco: Checkbox::new(DCO, "Sign off commits (DCO)", pending.dco_signoff).control(commits),
             original,
             pending,
             cfg,
@@ -411,10 +418,14 @@ impl SettingsScreen {
             );
         }
         y += 2;
+        let note = match &w.surfaces.fixed {
+            Some(f) => f.commits.text.as_str(),
+            None => "Two independent flags; both apply to every Workspace.",
+        };
         buf.set_string(
             x,
             y,
-            "Two independent flags; both apply to every Workspace.",
+            junie_tui::ui::reveal::cut(Rect::new(x, y, area.width.saturating_sub(4), 1), note),
             t.faint().bg(bg),
         );
         y += 2;
@@ -436,7 +447,7 @@ impl SettingsScreen {
         );
     }
 
-    fn render_trust(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
+    fn render_trust(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, w: &World) {
         let t = ctx.theme;
         let bg = t.canvas;
         let focused = ctx.interaction.focused(TRUST);
@@ -542,7 +553,19 @@ impl SettingsScreen {
             ctx.clickable(rid, rect);
         }
         let ny = body.y + self.pending.trust.len() as u16 + 1;
-        if ny + 1 < body.bottom() {
+        if let Some(f) = &w.surfaces.fixed {
+            if ny < body.bottom() {
+                buf.set_string(
+                    area.x + 2,
+                    ny,
+                    junie_tui::ui::reveal::cut(
+                        Rect::new(area.x + 2, ny, area.width.saturating_sub(4), 1),
+                        &f.trust.text,
+                    ),
+                    t.faint().bg(bg),
+                );
+            }
+        } else if ny + 1 < body.bottom() {
             buf.set_string(
                 area.x + 2,
                 ny,
@@ -566,7 +589,7 @@ impl SettingsScreen {
 
     fn render_agents(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, w: &World) {
         let natural = |a: ratatui::layout::Size| {
-            let notes: usize = AGENT_NOTES
+            let notes: usize = agent_notes(w)
                 .iter()
                 .map(|n| wrap(n, a.width.saturating_sub(4).max(1) as usize).len())
                 .sum();
@@ -697,7 +720,7 @@ impl SettingsScreen {
         }
 
         let mut ny = body.y + Agent::ALL.len() as u16 + 1;
-        for note in AGENT_NOTES {
+        for note in agent_notes(w) {
             for line in wrap(note, area.width.saturating_sub(4).max(1) as usize) {
                 if ny < area.bottom() {
                     buf.set_string(area.x + 2, ny, &line, t.faint().bg(bg));
@@ -707,9 +730,23 @@ impl SettingsScreen {
         }
     }
 
-    fn agents_key(&mut self, key: &Key, _w: &mut World, cx: &mut Cx) -> Outcome {
+    fn agents_key(&mut self, key: &Key, w: &mut World, cx: &mut Cx) -> Outcome {
         let n = Agent::ALL.len();
         let a = Agent::ALL[self.agents_cursor.min(n - 1)];
+        if let Some(f) = &w.surfaces.fixed
+            && key.plain()
+            && matches!(
+                key.code,
+                KeyCode::Char(' ') | KeyCode::Enter | KeyCode::Char('d')
+            )
+        {
+            raise(if a == f.launchable {
+                &f.agent_launchable
+            } else {
+                &f.agent_other
+            });
+            return Outcome::Consumed;
+        }
         match key.code {
             KeyCode::Up | KeyCode::Char('k') => {
                 self.agents_cursor = self.agents_cursor.saturating_sub(1)
@@ -759,6 +796,12 @@ impl SettingsScreen {
             }
             KeyCode::Home | KeyCode::Char('g') => self.trust_cursor = 0,
             KeyCode::End | KeyCode::Char('G') => self.trust_cursor = n - 1,
+            KeyCode::Char(' ') | KeyCode::Enter if w.surfaces.fixed.is_some() => {
+                if let Some(f) = &w.surfaces.fixed {
+                    raise(&f.trust);
+                }
+                return Outcome::Consumed;
+            }
             KeyCode::Char(' ') | KeyCode::Enter => {
                 let r = &mut self.pending.trust[self.trust_cursor];
                 r.trusted = !r.trusted;
@@ -775,7 +818,12 @@ impl SettingsScreen {
                 } else {
                     &w.surfaces.vocabulary.trust_reveal
                 };
-                cx.status(fill_in(template, &[("source", r.source.as_str())]));
+                let text = fill_in(template, &[("source", r.source.as_str())]);
+                if w.surfaces.fixed.is_some() {
+                    cx.sticky(text);
+                } else {
+                    cx.status(text);
+                }
             }
             _ => return Outcome::Ignored,
         }
@@ -1122,7 +1170,7 @@ impl Page<Jackin> for SettingsScreen {
         self.row_status = None;
         match self.tab {
             StTab::General => self.render_general(body, buf, ctx, w),
-            StTab::Trust => self.render_trust(body, buf, ctx),
+            StTab::Trust => self.render_trust(body, buf, ctx, w),
             StTab::Agents => self.render_agents(body, buf, ctx, w),
             t => {
                 self.row_status = self.cfg.render(t.cfg().unwrap(), body, buf, ctx, w);
@@ -1160,6 +1208,7 @@ impl Page<Jackin> for SettingsScreen {
             return junie_tui::widgets::row_menu::hints();
         }
         let mut v = vec![];
+        let fixed = w.surfaces.fixed.is_some();
         if focus == Some(TABS) {
             v.push(hint("←→", "Tab"));
             v.push(hint("1–5", "Jump"));
@@ -1173,16 +1222,22 @@ impl Page<Jackin> for SettingsScreen {
         } else {
             match self.tab {
                 StTab::General => {
-                    v.push(hint("Space", "Toggle"));
+                    if !fixed {
+                        v.push(hint("Space", "Toggle"));
+                    }
                     v.push(hint("↑↓", "Move"));
                 }
                 StTab::Trust => {
-                    v.push(hint("Space", "Toggle trust"));
+                    if !fixed {
+                        v.push(hint("Space", "Toggle trust"));
+                    }
                     v.push(hint("o", "Open source"));
                 }
                 StTab::Agents => {
-                    v.push(hint("Space", "Cycle mode"));
-                    v.push(hint("d", "Remove override"));
+                    if !fixed {
+                        v.push(hint("Space", "Cycle mode"));
+                        v.push(hint("d", "Remove override"));
+                    }
                     v.push(hint("c", "Manage accounts"));
                 }
                 t => v.extend(self.cfg.hints(t.cfg().unwrap(), focus, w)),
@@ -1351,3 +1406,10 @@ const AGENT_NOTES: [&str; 2] = [
     "sync mirrors the host login · api key and oauth token take material from the registry account",
     "ignore starts the agent without credentials and removes it from session pickers",
 ];
+
+fn agent_notes(w: &World) -> [&str; 2] {
+    match &w.surfaces.fixed {
+        Some(f) => [&f.agent_notes[0], &f.agent_notes[1]],
+        None => AGENT_NOTES,
+    }
+}
