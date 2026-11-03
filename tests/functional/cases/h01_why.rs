@@ -132,7 +132,11 @@ fn why_open(screen: &TerminalSnapshot) -> bool {
 
 fn back_on_b(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
+    // The title clears before the ranking paragraph leaves the grid.
     !visible.contains("Why is")
+        && !visible.contains(ORDER)
+        && !visible.contains(WHY_ITEM)
+        && !visible.contains("never changes the rank")
         && on_row(screen, ROW_B, ROW_A)
         && visible.contains(ROW_A)
         && visible

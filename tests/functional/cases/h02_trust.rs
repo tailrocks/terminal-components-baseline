@@ -207,8 +207,15 @@ fn open_mise(app: &App) {
     let results = app.wait_text("alias test");
     assert!(text(&results).contains("Run tests"), "{}", text(&results));
     app.key("enter");
-    let dialog = app.wait_text(MISE_TITLE);
-    app.wait_text("[tasks.test]");
+    // The title paints before the definition lists [tasks.test]. The
+    // checkpoint is that later frame, not the first title.
+    let dialog = app.wait_screen("mise trust dialog", |screen| {
+        let visible = text(screen);
+        visible.contains(MISE_TITLE)
+            && visible.contains("[tasks.test]")
+            && visible.contains("Trust this file")
+            && cancel_focused(screen)
+    });
     see(
         &dialog,
         &[
