@@ -2081,9 +2081,8 @@ dependencies = [
 
 [[package]]
 name = "termpane"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a57f9d35a6412cc3a0f21f8cee6d090852f59dee9f998ed341ce878e33a57700"
+version = "0.1.1"
+source = "git+https://github.com/tailrocks/termpane?rev=0707acca3cbf3333d4c1b0e6d88b7b69169233dc#0707acca3cbf3333d4c1b0e6d88b7b69169233dc"
 dependencies = [
  "compact_str 0.10.0",
  "smallvec",

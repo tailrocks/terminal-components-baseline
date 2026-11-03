@@ -145,9 +145,14 @@ fn scrolled_off_counts_only_rows_that_reach_history() {
     state.feed(b"\x1b[?1049h\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\x1b[?1049l");
     assert_eq!((state.scrollback_len(), state.scrolled_off()), (0, 0));
 
-    state.feed(b"\x1b[H\x1b[2Jone\r\ntwo\x1b[2J");
-    assert!(state.scrollback_len() > 0);
-    assert_eq!(state.scrolled_off(), state.scrollback_len() as u64);
+    state.feed(b"\x1b[H\x1b[2Jone\r\ntwo\r\nthree\r\nfour\r\nfive\r\nsix\r\nseven\r\neight");
+    let pushed = state.scrollback_len();
+    assert!(pushed > 0);
+    assert_eq!(state.scrolled_off(), pushed as u64);
+
+    state.feed(b"\x1b[2J\x1b[H");
+    assert_eq!(state.scrollback_len(), pushed);
+    assert_eq!(state.scrolled_off(), pushed as u64);
 }
 
 #[test]

@@ -3,7 +3,7 @@ use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::{Position, Rect};
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::widgets::Widget;
-use termpane::{DamageGrid, PassthroughEvent, ScrollOp};
+use termpane::{DamageGrid, EraseDisplayPolicy, PassthroughEvent, ScrollOp};
 
 use crate::core::event::Key;
 
@@ -71,8 +71,10 @@ impl TerminalState {
     }
 
     pub fn with_scrollback(rows: u16, cols: u16, limit: usize) -> Self {
+        let mut grid = DamageGrid::new(rows.max(1), cols.max(1), limit);
+        grid.set_erase_display_policy(EraseDisplayPolicy::Discard);
         Self {
-            grid: DamageGrid::new(rows.max(1), cols.max(1), limit),
+            grid,
             limit,
             scrolled_off: 0,
         }

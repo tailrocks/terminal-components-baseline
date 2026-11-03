@@ -96,8 +96,11 @@ so the approved baselines do not move.
 - `TerminalState::scrolled_off` is exact while the history is below its
   limit (it follows the growth of `scrollback_len`). At the limit it sums
   the primary-screen scroll operations that start at row 0, so a delete-line
-  at row 0 over-counts and the rows that `ESC[2J` keeps (termpane's
-  preserve-on-clear) are not counted.
+  at row 0 over-counts. `ESC[2J` discards the visible rows
+  (`EraseDisplayPolicy::Discard`), so it changes neither value.
+- `termpane` is a git dependency pinned to commit `0707acca` (termpane
+  `main`, which holds `EraseDisplayPolicy`). It becomes `=0.1.1` once
+  0.1.1 is published on crates.io; see [dependencies](dependencies.md).
 - The crate is a monolith: library and four binaries in one package.
   Splitting it is the refactoring programme in
   [architecture](architecture.md); no part of that split has landed.
