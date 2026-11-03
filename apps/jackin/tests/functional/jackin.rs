@@ -1816,7 +1816,15 @@ fn type_key_and_value(app: &App, key: &str, value: &str) {
     });
     app.paste(value);
     app.key("enter");
-    app.click(button(app, "Save"));
+    for stop in ["▾", "▎Cancel", "▎Save"] {
+        app.key("tab");
+        app.wait_screen("focus walks to the Save button", |s| {
+            (0..s.rows())
+                .map(|r| row_text(s, r))
+                .any(|r| r.contains('│') && r.contains(stop) && (stop != "▾" || r.contains('▎')))
+        });
+    }
+    app.key("enter");
 }
 
 #[test]
