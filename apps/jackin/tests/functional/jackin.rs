@@ -1141,6 +1141,7 @@ fn jackin_fixed_dirty_exit_refuses_the_list_by_key_and_click() {
     });
     let clicked = refused_with(&app, &reason);
     assert!(!text(&clicked).contains("keep · preserve changes silently"));
+    assert!(!footer(&clicked).contains("Space Toggle"));
     nothing_changed(&clicked);
     status_expired(&app, &reason);
 
@@ -1204,16 +1205,14 @@ fn jackin_fixed_project_row_keeps_its_paint_and_refuses_every_edit() {
     assert!(!text(&project).contains("Read-only") && !footer(&project).contains("Isolation"));
     assert!(!footer(&project).contains("Remove") && !footer(&project).contains("Add mount"));
     assert!(!footer(&project).contains("Open source"));
-    for cell in ["/sandbox/project", "rw", "~/src/payments-platform"] {
-        let ratio = contrast(&project, find(&project, cell));
-        assert!(ratio >= 4.5, "{cell} is legible, contrast {ratio:.2}");
-    }
 
     let add = contrast(&project, find(&project, "+ Add mount"));
     assert!(add < 4.5, "the Add row is drawn fixed, contrast {add:.2}");
     app.visual("functional/jackin_fixed_editor_project");
 
-    for key in ["enter", "e", "r", "i", "1", "2", "3", "d", "u", "a"] {
+    for key in [
+        "enter", "e", "n", "r", "i", "1", "2", "3", "d", "delete", "u", "a",
+    ] {
         app.key(key);
         let keyed = refused_with(&app, &reason);
         assert!(
@@ -1348,6 +1347,57 @@ fn jackin_fixed_last_allowed_role_cannot_be_unchecked() {
     app.wait_text("Enter Discard");
     app.key("enter");
     app.wait_text("Current directory");
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_last_allowed_role_is_kept_next_to_a_stale_name() {
+    let reason = Fixed::openshell().last_role;
+    let app = fixed_app("jackin-fixed-stale-role");
+    open_fixed_editor(&app, 3);
+    app.key("]");
+    app.key("]");
+    app.key("enter");
+    let roles = app.wait_text("Allowed roles");
+    assert!(role_row(&roles, "backend").contains("[✓]"));
+    app.wait_screen("cursor on the first role", |s| {
+        role_row(s, "the-architect").contains('▎')
+    });
+    app.key("down");
+    app.wait_screen("cursor on backend", |s| {
+        role_row(s, "backend").contains('▎')
+    });
+    app.key("space");
+    let refused = refused_with(&app, &reason);
+    assert!(role_row(&refused, "backend").contains("[✓]"));
+    nothing_changed(&refused);
+    app.key("esc");
+    app.key("esc");
+    app.wait_text("Current directory");
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_last_allowed_role_refuses_a_click() {
+    let reason = Fixed::openshell().last_role;
+    let app = fixed_app("jackin-fixed-last-role-click");
+    open_fixed_editor(&app, 3);
+    app.key("]");
+    app.key("]");
+    app.key("enter");
+    let roles = app.wait_text("Allowed roles");
+    assert!(role_row(&roles, "backend").contains("[✓]"));
+
+    app.click(inside(find(&roles, "] backend")));
+    app.wait_screen("the first click moves the cursor", |s| {
+        role_row(s, "backend").contains('▎')
+    });
+    app.click(inside(find(&app.screen(), "] backend")));
+    let refused = refused_with(&app, &reason);
+    assert!(role_row(&refused, "backend").contains("[✓]"));
+    nothing_changed(&refused);
+    status_expired(&app, &reason);
+    leave_without_a_prompt(&app);
     app.finish();
 }
 

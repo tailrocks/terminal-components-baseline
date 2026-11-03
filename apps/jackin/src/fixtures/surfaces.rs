@@ -8,7 +8,9 @@ use crate::domain::role::{
     AccountOrder, RoleAdmin, RoleCheckState, RoleEnvEntry, RoleManifestDoc, RoleRecord,
 };
 use crate::domain::vocabulary::Vocabulary;
-use crate::domain::workspace::{DirtyExitPolicy, EnvValue, Isolation, Mount, RoleSource};
+use crate::domain::workspace::{
+    AllowedRoles, DirtyExitPolicy, EnvValue, Isolation, Mount, RoleSource,
+};
 use crate::sim;
 use crate::world::World;
 
@@ -223,6 +225,9 @@ pub fn fixed(w: &mut World) {
         ws.accounts.disabled_defaults.clear();
         ws.accounts.enabled = accounts.iter().cloned().collect();
         ws.accounts.role_preferred.clear();
+        if ws.name == "release-automation" {
+            ws.roles.allowed = AllowedRoles::Custom(vec!["backend".into(), "ghost-role".into()]);
+        }
         ws.env.retain(plain);
         for vars in ws.role_env.values_mut() {
             vars.retain(plain);
