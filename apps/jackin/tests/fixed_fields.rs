@@ -173,6 +173,13 @@ fn fixed_world_accounts() {
     assert_eq!(w.accounts.accounts.len(), 12);
     for a in &w.accounts.accounts {
         assert_eq!(account_fixed(a), expected_account(), "{}", a.id);
+        assert_eq!(
+            a.provenance,
+            vec![Provenance::ConfiguredSource],
+            "{}: a registered account does not come from the live host",
+            a.id
+        );
+        assert_ne!(a.display_name, "discovered", "{}", a.id);
     }
 }
 
