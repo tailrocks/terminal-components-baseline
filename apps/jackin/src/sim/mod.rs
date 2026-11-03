@@ -1,14 +1,14 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
-use jackin_console::backend::{
+use crate::backend::{
     Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, ValidationOutcome,
 };
-use jackin_console::domain::account::CredentialSource;
-use jackin_console::domain::agent::Provider;
-use jackin_console::launch::LaunchContent;
-use jackin_console::panes::SessionScript;
-use jackin_console::world::{Msg, World};
+use crate::domain::account::CredentialSource;
+use crate::domain::agent::Provider;
+use crate::launch::LaunchContent;
+use crate::panes::SessionScript;
+use crate::world::{Msg, World};
 
 pub mod changes;
 pub mod launch;

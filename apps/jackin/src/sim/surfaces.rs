@@ -1,8 +1,6 @@
-use jackin_console::domain::doctor::{DoctorCheck, DoctorReport};
-use jackin_console::domain::role::{
-    FindingArea, RoleCheckState, RoleFinding, RoleManifestDoc, RoleRecord,
-};
-use jackin_console::domain::workspace::RoleSource;
+use crate::domain::doctor::{DoctorCheck, DoctorReport};
+use crate::domain::role::{FindingArea, RoleCheckState, RoleFinding, RoleManifestDoc, RoleRecord};
+use crate::domain::workspace::RoleSource;
 use junie_tui::theme::StatusKind;
 
 const FILES: [&str; 5] = [

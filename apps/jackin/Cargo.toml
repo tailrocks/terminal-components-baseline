@@ -14,10 +14,15 @@ doctest = false
 [[bin]]
 name = "jackin"
 path = "src/bin/jackin/main.rs"
+required-features = ["fixtures"]
 
 [[test]]
 name = "functional"
 path = "tests/functional/main.rs"
+
+[features]
+default = ["fixtures"]
+fixtures = []
 
 [dependencies]
 junie-tui = { path = "../..", default-features = false, features = ["cli"] }

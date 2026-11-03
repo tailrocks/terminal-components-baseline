@@ -24,7 +24,9 @@ does not exist in this tree yet.
 | `src/bin/holla/` | Holla: simulated launcher/finder, files, disk cleanup, services. Backends are simulated; tests assert the next in-app consequence. |
 | `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TerminalView`, `encode_key`. It renders a vt100 session from a byte stream and does no I/O. |
 | `apps/jackin/src/` | The `jackin-console` library (`jackin_console`): the jackin screens (manager, editor, accounts, usage, settings, cockpit, capsule, prelude, roles, doctor and the modals), the `domain` types, `rain` and the other jackin-only modules, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
-| `apps/jackin/src/bin/jackin/` | The jackin demo binary: the command line, the fixture data and the simulated `Backend`. Binary name is `jackin` (`cargo run --bin jackin`). |
+| `apps/jackin/src/fixtures/`, `apps/jackin/src/sim/` | The 14 fixture worlds (`fixtures::world_for`) and the simulated `Backend`, `OnePassword` and launch content, in the library behind the `fixtures` feature so the jackin repository can render the same worlds. |
+| `apps/jackin/src/bin/jackin/` | The jackin demo binary: the command line over `fixtures` and `sim`. Binary name is `jackin` (`cargo run --bin jackin`). |
+| `apps/jackin/tests/` | Library tests of the `jackin-console` data API (`world.rs`) beside the `functional/` journeys. |
 | `apps/jackin/tests/functional/` | The jackin journeys and their approved baselines (`baselines/functional/jackin_*.tui.json`), on the shared harness `tests/functional/support.rs`. |
 | `tests/functional/` | The only test estate: live PTY functional/integration tests plus the frozen visual gate. See [functional testing](functional-testing.md). |
 | `.velnor/config.toml` | Source of truth for generated CI (`.github/` is generated, never hand-edited). See [CI](ci.md). |
@@ -35,6 +37,10 @@ does not exist in this tree yet.
 | --- | --- | --- |
 | `cli` | yes | `clap`, the `cli` module and `Motion` as a `clap::ValueEnum`. The four binaries require it; `jackin-console` enables it on its `junie-tui` dependency. |
 | `terminal` | no | `vt100` and the `terminal` module. |
+
+`jackin-console` has one feature, `fixtures` (default): the `fixtures`
+and `sim` modules and the `jackin` binary. A consumer that supplies its
+own `World` and `Backend` turns it off.
 
 ## Rules that hold today
 

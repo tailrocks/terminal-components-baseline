@@ -1,9 +1,9 @@
-use jackin_console::backend::{
+use crate::backend::{
     FieldDescriptor, FieldKind, KeyOutcome, OnePassword, OpAccount, OpAccountState, OpError,
     OpField, OpItem, OpSession, OpVault, SecretClass, VaultAccess,
 };
-use jackin_console::domain::agent::Provider;
-use jackin_console::domain::onepassword::OpReference;
+use crate::domain::agent::Provider;
+use crate::domain::onepassword::OpReference;
 
 pub struct Secret {
     bytes: Vec<u8>,
@@ -409,7 +409,7 @@ impl SimOnePassword {
             });
         }
         Ok(FieldDescriptor {
-            masked: jackin_console::domain::account::masked(&f.tail),
+            masked: crate::domain::account::masked(&f.tail),
         })
     }
 

@@ -33,7 +33,7 @@ pub mod job {
     pub const DOCTOR: JobKey = JobKey::new("doctor");
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct GlobalConfig {
     pub coauthor_trailer: bool,
     pub dco_signoff: bool,
@@ -243,7 +243,109 @@ pub struct World {
     pub surfaces: Surfaces,
 }
 
+pub struct WorldParts {
+    pub scenario: Scenario,
+    pub clock: SimClock,
+    pub arbiter: Arbiter,
+    pub home: String,
+    pub cwd: String,
+    pub workspaces: Vec<Workspace>,
+    pub next_workspace_id: WorkspaceId,
+    pub roles: Vec<RoleEntry>,
+    pub instances: Vec<Instance>,
+    pub global: GlobalConfig,
+    pub accounts: AccountRegistry,
+    pub op: Box<dyn OnePassword>,
+    pub backend: Arc<dyn Backend>,
+    pub fs: Vec<FsEntry>,
+    pub github: Vec<GithubRepo>,
+    pub last_refresh_secs: i64,
+    pub surfaces: Surfaces,
+}
+
+impl WorldParts {
+    pub fn new(
+        scenario: Scenario,
+        clock: SimClock,
+        home: String,
+        cwd: String,
+        op: Box<dyn OnePassword>,
+        backend: Arc<dyn Backend>,
+    ) -> Self {
+        Self {
+            scenario,
+            last_refresh_secs: clock.now_secs(),
+            clock,
+            arbiter: Arbiter::new(0),
+            home,
+            cwd,
+            workspaces: vec![],
+            next_workspace_id: 1,
+            roles: vec![],
+            instances: vec![],
+            global: GlobalConfig::default(),
+            accounts: AccountRegistry::default(),
+            op,
+            backend,
+            fs: vec![],
+            github: vec![],
+            surfaces: Surfaces::default(),
+        }
+    }
+}
+
 impl World {
+    pub fn new(parts: WorldParts) -> Self {
+        let WorldParts {
+            scenario,
+            clock,
+            arbiter,
+            home,
+            cwd,
+            workspaces,
+            next_workspace_id,
+            roles,
+            instances,
+            global,
+            accounts,
+            op,
+            backend,
+            fs,
+            github,
+            last_refresh_secs,
+            surfaces,
+        } = parts;
+        let mut world = Self {
+            scenario,
+            clock,
+            arbiter,
+            home,
+            cwd,
+            workspaces,
+            next_workspace_id,
+            roles,
+            instances,
+            daemons: BTreeMap::new(),
+            global,
+            accounts,
+            op,
+            backend,
+            fs,
+            github,
+            clipboard: None,
+            jobs: vec![],
+            daemon_health: DaemonHealth::Healthy,
+            last_refresh_secs,
+            refresh_fails: false,
+            takeover_at_ms: None,
+            session_accounts: BTreeMap::new(),
+            discovery_pending: false,
+            surfaces,
+        };
+        world.sync_arbiter();
+        world
+    }
+
     pub fn now_secs(&self) -> i64 {
         self.clock.now_secs()
     }
