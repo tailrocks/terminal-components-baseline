@@ -16860,5 +16860,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X02.startup.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x02_resize/x02_resize_resize_120x40",
+    "path": "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X02.resize.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/x02_resize/x02_resize_resize_narrow",
+    "path": "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X02.resize.",
+    "replacement_id": null
   }
 ]
