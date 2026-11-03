@@ -71,6 +71,12 @@ fn see(screen: &TerminalSnapshot, present: &[&str], absent: &[&str]) {
     }
 }
 
+/// The status bar paints `· {cols}×{rows}` from the frame Holla just drew.
+/// The PTY grid changes first, and the previous frame still shows the selected row.
+fn painted(screen: &TerminalSnapshot, cols: u16, rows: u16) -> bool {
+    text(screen).contains(&format!("· {cols}×{rows}"))
+}
+
 fn src_selected(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     if !visible.contains(CRUMB)
@@ -101,11 +107,17 @@ fn nudge(app: &App, ready: impl Fn(&TerminalSnapshot) -> bool) {
     let nudged = cols + 1;
     app.resize(nudged, rows);
     app.wait_screen("nudged", |screen| {
-        screen.cols() == u32::from(nudged) && screen.rows() == u32::from(rows) && ready(screen)
+        screen.cols() == u32::from(nudged)
+            && screen.rows() == u32::from(rows)
+            && painted(screen, nudged, rows)
+            && ready(screen)
     });
     app.resize(cols, rows);
     app.wait_screen("size restored", |screen| {
-        screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && ready(screen)
+        screen.cols() == u32::from(cols)
+            && screen.rows() == u32::from(rows)
+            && painted(screen, cols, rows)
+            && ready(screen)
     });
 }
 
@@ -132,7 +144,10 @@ fn open_find(app: &App) {
 fn search_src(app: &App) -> TerminalSnapshot {
     app.paste(QUERY);
     app.wait_screen("src directory selected", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && src_selected(screen)
+        screen.cols() == 120
+            && screen.rows() == 40
+            && painted(screen, 120, 40)
+            && src_selected(screen)
     })
 }
 
@@ -188,7 +203,10 @@ fn h05_find_find_opens_the_selected_directory() {
 
     app.resize(80, 24);
     let narrowed = app.wait_screen("narrow find results", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && src_selected(screen)
+        screen.cols() == 80
+            && screen.rows() == 24
+            && painted(screen, 80, 24)
+            && src_selected(screen)
     });
     see(
         &narrowed,
@@ -200,7 +218,10 @@ fn h05_find_find_opens_the_selected_directory() {
 
     app.resize(120, 40);
     let restored = app.wait_screen("find results restored", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && src_selected(screen)
+        screen.cols() == 120
+            && screen.rows() == 40
+            && painted(screen, 120, 40)
+            && src_selected(screen)
     });
     see(
         &restored,
