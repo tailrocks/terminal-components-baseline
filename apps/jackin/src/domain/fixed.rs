@@ -37,7 +37,7 @@ impl Fixed {
             last_role: "Keep one role allowed · allow another first".into(),
             commits: Reason::new("Both stay off · jackin does not edit commit messages"),
             trust: Reason::new("Sources you add are trusted · remove the role to revoke"),
-            env_sources: Reason::new("Plain values only · jackin sends no secrets to the sandbox"),
+            env_sources: Reason::new("Plain values only · use an account for credentials"),
             role_env: Reason::new("Set role variables in a workspace instead"),
             launchable: Agent::Codex,
             agent_launchable: Reason::new("Set by each account · change it in Accounts (c)"),
@@ -47,10 +47,10 @@ impl Fixed {
                 "jackin launches Codex only; other agents get no credentials.".into(),
             ],
             env_secret_note: [
-                "jackin keeps no secrets in env.".into(),
+                "Keep secrets out of env. Values are stored as plain text.".into(),
                 "Use an account for credentials.".into(),
             ],
-            env_reference: "Plain values only · jackin stores no credential references".into(),
+            env_reference: "Plain values only · use an account for credentials".into(),
         }
     }
 }

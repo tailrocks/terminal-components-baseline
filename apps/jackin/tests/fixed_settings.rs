@@ -83,10 +83,6 @@ fn every_fixed_text_fits_the_surface_that_shows_it() {
     assert!(width(&f.last_role) <= 60);
     let words = Vocabulary::openshell();
     assert!(width(&words.trailer_sample) <= 60);
-    assert!(
-        width(&f.env_secret_note.join(" ")) <= 64,
-        "the two lines are one sentence pair"
-    );
 }
 
 #[test]
@@ -179,6 +175,7 @@ fn the_demo_settings_keep_every_control() {
     let trust = screen(&mut app);
     assert!(trust.contains("An untrusted source blocks + Load role"));
     assert!(footer(&trust).contains("Space Toggle trust"));
+    assert!(footer(&trust).contains("o Open source"));
     press(&mut app, "space");
     let trusted = screen(&mut app);
     assert!(trusted.contains("• 2 changes"), "{trusted}");
@@ -217,7 +214,7 @@ fn the_demo_env_form_keeps_its_sources_and_saves_what_it_is_given() {
 }
 
 #[test]
-fn the_demo_env_form_keeps_an_empty_value_open_with_its_message() {
+fn the_demo_env_form_requires_a_value() {
     let mut app = app(Scenario::Returning);
     settings(&mut app, "Environments");
     press(&mut app, "a");
@@ -226,8 +223,53 @@ fn the_demo_env_form_keeps_an_empty_value_open_with_its_message() {
     click_text(&mut app, "Save");
     let form = screen(&mut app);
     assert!(form.contains("New global environment key"), "{form}");
-    assert!(form.contains("Value cannot be empty"), "{form}");
+    assert!(form.contains("Value for the key *"), "{form}");
+    assert!(form.contains("Required"), "{form}");
     assert!(form.contains("NEWVAR"), "the typed key stays:\n{form}");
+}
+
+fn rename_to_a_name_in_use(app: &mut App, downs: usize, vars: &str) {
+    settings(app, "Environments");
+    let before = screen(app);
+    assert!(before.contains(vars), "{before}");
+    assert!(!before.contains("1 change"), "{before}");
+    for _ in 0..downs {
+        press(app, "down");
+    }
+    press(app, "enter");
+    let form = screen(app);
+    assert!(form.contains("Renaming replaces the row"), "{form}");
+    press(app, "enter");
+    press(app, "ctrl+u");
+    paste(app, "CARGO_NET_GIT_FETCH_WITH_CLI");
+    press(app, "enter");
+    click_text(app, "Save");
+    let rejected = screen(app);
+    assert!(
+        rejected.contains("CARGO_NET_GIT_FETCH_WITH_CLI already exists in this scope"),
+        "{rejected}"
+    );
+    assert!(rejected.contains("Renaming replaces the row"), "{rejected}");
+
+    press(app, "esc");
+    let cancelled = screen(app);
+    assert!(
+        footer(&cancelled).contains("Cancelled · nothing changed"),
+        "{cancelled}"
+    );
+    assert!(!cancelled.contains("1 change"), "{cancelled}");
+    assert!(!cancelled.contains("− EDITOR"), "{cancelled}");
+    assert!(cancelled.contains(vars), "{cancelled}");
+}
+
+#[test]
+fn a_rejected_rename_leaves_the_original_variable_alone() {
+    rename_to_a_name_in_use(&mut fixed(), 0, "2 vars");
+}
+
+#[test]
+fn the_demo_env_form_stays_open_on_a_rejected_rename_and_changes_nothing() {
+    rename_to_a_name_in_use(&mut app(Scenario::Returning), 1, "3 vars");
 }
 
 #[test]

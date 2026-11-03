@@ -702,7 +702,7 @@ impl SettingsScreen {
             };
             let dx = rect.x + 32;
             let detail = if mode == AuthMode::Ignore {
-                "no credentials handed to the container".to_owned()
+                w.surfaces.vocabulary.agent_no_credentials.clone()
             } else {
                 default
             };
@@ -1231,7 +1231,7 @@ impl Page<Jackin> for SettingsScreen {
                     if !fixed {
                         v.push(hint("Space", "Toggle trust"));
                     }
-                    v.push(hint("o", "Open source"));
+                    v.push(Hint::new("o", w.surfaces.vocabulary.trust_hint.clone()));
                 }
                 StTab::Agents => {
                     if !fixed {

@@ -91,6 +91,9 @@ pub struct Vocabulary {
     pub env_plain_label: String,
     pub env_plain_placeholder: String,
     pub env_plain_help: Option<String>,
+    pub env_op_label: String,
+    pub trust_hint: String,
+    pub agent_no_credentials: String,
 }
 
 impl Vocabulary {
@@ -186,6 +189,9 @@ impl Vocabulary {
             env_plain_label: "Plain text".into(),
             env_plain_placeholder: "type the value".into(),
             env_plain_help: Some("value is stored as plain text".into()),
+            env_op_label: "1Password item / field".into(),
+            trust_hint: "Show source".into(),
+            agent_no_credentials: "no credentials handed to the sandbox".into(),
         }
     }
 
@@ -270,6 +276,9 @@ impl Vocabulary {
                 "env_plain_help",
                 self.env_plain_help.as_deref().unwrap_or(""),
             ),
+            ("env_op_label", &self.env_op_label),
+            ("trust_hint", &self.trust_hint),
+            ("agent_no_credentials", &self.agent_no_credentials),
         ]
     }
 
@@ -413,6 +422,9 @@ impl Default for Vocabulary {
             env_plain_label: "Plain text  (masked)".into(),
             env_plain_placeholder: "typed once · masked afterwards".into(),
             env_plain_help: None,
+            env_op_label: "1Password item / field  (recommended for secrets)".into(),
+            trust_hint: "Open source".into(),
+            agent_no_credentials: "no credentials handed to the container".into(),
         }
     }
 }

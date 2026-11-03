@@ -1532,7 +1532,8 @@ fn jackin_fixed_settings_trust_refuses_the_toggle_and_shows_the_source() {
     assert!(text(&trust).contains(&reason));
     assert!(!text(&trust).contains("blocks + Load role"));
     assert!(!footer(&trust).contains("Toggle trust"));
-    assert!(footer(&trust).contains("Open source"));
+    assert!(footer(&trust).contains("o Show source"));
+    assert!(!footer(&trust).contains("Open source"));
     for cell in ["github.com/chainargos/roles", "[✓] trusted", "4 roles"] {
         let at = find_all(&trust, cell)[0];
         let ratio = contrast(&trust, at);
@@ -1751,6 +1752,9 @@ fn jackin_fixed_env_sources_refuse_the_radio_options_and_the_p_key() {
     assert!(row_with(&form, "Plain text").contains("(●)"));
     assert!(row_with(&form, "1Password item").contains("( )"));
     assert!(row_with(&form, "Host environment variable").contains("( )"));
+    assert!(!text(&form).contains("recommended for secrets"));
+    let ratio = contrast(&form, find(&form, &reason));
+    assert!(ratio >= 4.5, "the reason is legible, contrast {ratio:.2}");
     assert!(text(&form).contains(&reason));
     assert!(text(&form).contains("value is stored as plain text"));
 
@@ -1859,7 +1863,7 @@ fn jackin_fixed_env_form_refuses_a_credential_reference_and_notes_a_secret_name(
         "openshell:resolve:env:X",
     ] {
         type_key_and_value(&app, "DEPLOY_TOKEN", reference);
-        let refused = app.wait_text(&fixed.env_reference);
+        let refused = app.wait_text(&format!("! {}", fixed.env_reference));
         assert!(
             text(&refused).contains("New global environment key"),
             "{reference}"

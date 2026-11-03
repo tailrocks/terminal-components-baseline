@@ -2207,7 +2207,7 @@ impl ConfigTabs {
             "Value source",
             &[
                 w.surfaces.vocabulary.env_plain_label.as_str(),
-                "1Password item / field  (recommended for secrets)",
+                w.surfaces.vocabulary.env_op_label.as_str(),
                 "Host environment variable",
             ],
             src_idx,
@@ -2236,6 +2236,7 @@ impl ConfigTabs {
                         e.as_ref().map(|e| e.key.as_str()).unwrap_or("the key")
                     ),
                 )
+                .required(true)
                 .masked()
                 .reveal_tail(4)
                 .placeholder(&w.surfaces.vocabulary.env_plain_placeholder)
@@ -2304,7 +2305,7 @@ impl ConfigTabs {
             note.visible = secret;
             fields.insert(
                 src_at,
-                FormField::note("src_note", vec![(fx.env_sources.text.clone(), Tone::Faint)]),
+                FormField::note("src_note", vec![(fx.env_sources.text.clone(), Tone::Muted)]),
             );
             fields.insert(key_at, note);
         }
@@ -2440,7 +2441,6 @@ impl ConfigTabs {
                 self.editing = None;
                 Outcome::Changed
             }
-            ("cfg.env", ModalResult::Form(Some(values))) => self.save_env(values, w, cx),
             (
                 "cfg.env.remove",
                 ModalResult::Dialog {
@@ -2680,19 +2680,24 @@ impl ConfigTabs {
             return Outcome::Changed;
         };
         let role = self.scope_at(choice(&values, "scope"));
-        if let Some(o) = &original {
-            self.pending
-                .env_of_mut(from.as_deref())
-                .retain(|e| &e.key != o);
-        }
-        let list = self.pending.env_of_mut(role.as_deref());
-        if list.iter().any(|e| e.key == key) {
+        let renamed_in_place = role == from;
+        let taken = self
+            .pending
+            .env_of_mut(role.as_deref())
+            .iter()
+            .any(|e| e.key == key && !(renamed_in_place && original.as_ref() == Some(&e.key)));
+        if taken {
             cx.with_top::<FormDialog>(move |f| {
                 f.error = Some(format!("{key} already exists in this scope"))
             });
             return Outcome::Changed;
         }
-        list.push(EnvVar {
+        if let Some(o) = &original {
+            self.pending
+                .env_of_mut(from.as_deref())
+                .retain(|e| &e.key != o);
+        }
+        self.pending.env_of_mut(role.as_deref()).push(EnvVar {
             key: key.clone(),
             value,
         });
