@@ -558,8 +558,12 @@ fn compare_levels_then_restore() {
         *saw_16 |= body.contains("16 colors");
         *saw_none |= body.contains("no color");
     };
+    // Each colour name is one line. Two Page Down keys before the first
+    // paint skip `16 colors`, and the accepted shot is the later Page Down
+    // landing, so sample that paint and then let it settle.
     for _ in 0..4 {
         app.key("pageup");
+        let _ = app.settle();
     }
     for _ in 0..16 {
         note(
@@ -572,21 +576,23 @@ fn compare_levels_then_restore() {
             break;
         }
         app.key("pagedown");
-    }
-    if !saw_none {
-        let anchor = Point { x: 40, y: 18 };
-        for _ in 0..8 {
-            app.wheel(anchor, true, 4);
-            note(
-                &text(&app.screen()),
-                &mut saw_256,
-                &mut saw_16,
-                &mut saw_none,
-            );
-            if saw_none {
-                break;
+        let started = std::time::Instant::now();
+        let mut last = String::new();
+        let mut stable = std::time::Instant::now();
+        while started.elapsed() < std::time::Duration::from_millis(250) {
+            let body = text(&app.screen());
+            note(&body, &mut saw_256, &mut saw_16, &mut saw_none);
+            if body == last {
+                if stable.elapsed() >= std::time::Duration::from_millis(40) {
+                    break;
+                }
+            } else {
+                last = body;
+                stable = std::time::Instant::now();
             }
+            std::thread::sleep(std::time::Duration::from_millis(15));
         }
+        let _ = app.settle();
     }
     note(
         &text(&app.screen()),
