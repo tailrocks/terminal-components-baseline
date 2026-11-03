@@ -6,31 +6,34 @@
       "owner_task": "X02.resize",
       "application": "cross",
       "kind": "route",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "showcase --page pickers opens Pickers through parse_page and App::open_page in src/bin/showcase/main.rs. The screen is Overlays › Pickers with Open quickly at 120×40. That size is not below TooSmall::MIN_WIDTH or MIN_HEIGHT in src/widgets/too_small.rs, so render in src/shell/app.rs paints the page instead of Terminal too small. finish sends Ctrl+Q. QuitKeys::classify in src/ui/leave.rs returns LeaveKey::Quit for Ctrl+Q, and the process exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "0000000000000000000000000000000000000000",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "X02.resize",
-      "entry_path": "real binary arguments or keyboard path recorded by the leaf",
-      "return_path": "the leaf returns to the screen that opened the surface, or exits through the tested guard"
+      "entry_path": "showcase --page pickers --color truecolor --motion reduced",
+      "return_path": "The Pickers screen stays up, then finish sends Ctrl+Q and the process exits 0"
     },
     {
       "case_id": "X02.resize.resize",
       "owner_task": "X02.resize",
       "application": "cross",
       "kind": "transition",
-      "result": "BLOCKED",
-      "disposition_reason": "Assigned in the execution ledger. Not executed yet.",
+      "result": "PASS",
+      "disposition_reason": "TooSmall::applies in src/widgets/too_small.rs is true when width is below 72 or height is below 20. render paints Terminal too small and Need 72×20, have {w}×{h}. shell::render in src/shell/app.rs sets shell.too_small and paints that screen instead of the page. KeyRouter::paste and the too_small arm of once in src/shell/router.rs consume paste and non-quit keys, so each draft is entered before the shrink. No binary overrides the minimum: showcase too_small is TooSmall::new(BRAND) in src/bin/showcase/app.rs, tablepro is TooSmall::new(\"TablePro\") in src/bin/tablepro/app.rs, holla is TooSmall::new(BRAND_PADDED) in src/bin/holla/app.rs, and jackin is TooSmall::new(BRAND_PADDED) in src/bin/jackin/app.rs. 71×20 and 72×19 paint the too-small title and that size's Need line and hide the draft. 72×20 clears the title and shows the UI. Showcase Input::Resize in src/bin/showcase/app.rs returns Outcome::Changed and does not clear page or layer state. On forms, FormDraftX02 is absent while too small and present again at 72×20 and at the src/shell/reach.rs sizes above the minimum (80×24, 100×25, 106×29, 120×40, 160×50). 40×12 and 60×18 are too small. The Delete branch? dialog from src/bin/showcase/pages/dialogs.rs stays open at 72×20 with feat/rate-limit and cannot be undone. On taskrunner, 72×20 hides the log because the log slot is below the pipe in src/bin/showcase/pages/taskrunner.rs, and the visible proof is Pipeline · running. At 120×40 the log still shows Pipeline started. The checkpoint opens the quick picker, types schema, and keeps schema.rs, src/db/schema.rs, and All · Tab scope after growth. Cargo.toml stays filtered out. The 80×24 frame is captured before the return to 120×40, and the wide frame is that restored picker. Picker::on_other_key in src/widgets/picker.rs returns Consumed for Ctrl+Q, so Esc clears the query and a second Esc cancels before finish. Tablepro, holla --scenario first-use, and jackin --scenario first-use each paint Terminal too small at 71×20 and their own UI at 72×20 (Filter connections, Analyze disk usage, and Knock, knock, operator.) while the process is still running. Those three use kill_child. Launch::new leaves the clock off.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": null,
+      "execution_commit": "0000000000000000000000000000000000000000",
       "evidence_paths": [],
-      "baseline_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_narrow.tui.json"
+      ],
       "scenario": null,
-      "action_sequence": "Shrink to 71x20, 72x19, and 72x20 and to each source breakpoint below, at, and above. Do this with a form, a picker, a destructive gate, and running output open. Then grow.",
-      "expected_results": "The narrow checkpoint is the narrow size. After growth the same draft, selection, and focus remain.",
-      "forbidden_effects": "The narrow baseline is captured after the terminal returns to 120x40.",
+      "action_sequence": "On tablepro, holla --scenario first-use, and jackin --scenario first-use, resize to 71×20 and then to 72×20. On showcase --page dialogs, open Delete branch, then resize through 71×20, 72×19, and 72×20. On showcase --page taskrunner, run the pipeline, resize through those sizes, and return to 120×40. On showcase --page forms, commit FormDraftX02, resize through 71×20 and 72×19, restore 72×20, then walk 40×12, 60×18, 80×24, 100×25, 106×29, 120×40, and 160×50. On showcase --page pickers, open Open quickly and type schema at 120×40. Resize through 71×20 and 72×19, restore 72×20, capture 80×24, then capture the restored 120×40 frame. Esc clears the query, Esc closes the picker, then finish.",
+      "expected_results": "Below 72×20 the screen contains Terminal too small and Need 72×20, have {w}×{h}, and the draft is hidden. At 72×20 and above, the too-small title is gone and the same draft, dialog, or running pipeline is visible. The narrow checkpoint is 80×24 with schema.rs still shown. The wide checkpoint is the restored 120×40 picker. Tablepro shows Filter connections, holla shows Analyze disk usage, and jackin shows Knock, knock, operator. The process is still running after each restore.",
+      "forbidden_effects": "The too-small title remains at 72×20 or larger. A draft, the delete dialog, or the pipeline log is lost after growth. The narrow baseline is captured after the terminal returns to 120×40.",
       "checkpoint_ids": [
         "X02.resize.resize.120x40",
         "X02.resize.resize.narrow"
@@ -39,7 +42,83 @@
       "terminal_rows": 40,
       "color_mode": "truecolor",
       "motion_mode": "reduced",
-      "client_platform": "macos"
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "pickers",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ad8db65df5dcd824e1cb2eba24543a1cf762e8a46521c099abeff223171d2a1a",
+        "expect_baseline": "missing",
+        "precondition": "X02.resize.resize.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "pickers",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "317b4223bf623190e6e1e777b25421fe5a34b4e6dfafca2ea1156dcd5fd4f208",
+        "expect_baseline": "missing",
+        "precondition": "X02.resize.resize.narrow"
+      }
     }
   ]
 }
