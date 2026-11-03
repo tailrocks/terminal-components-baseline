@@ -465,7 +465,9 @@ itself has the baseline `showcase_page_fixedcontrols`, and the focused,
 refused state has `showcase_fixedcontrols_focused_refused`. Other tests
 already end without a baseline (for example
 `tablepro_connect_development_opens_workbench` and
-`jackin_roles_add_role`).
+`jackin_roles_add_role`). The jackin editor key tests `jackin_fixed_*` (P9.3 B4a, one per
+refusal on `Scenario::OpenshellFixed`) read each reason from
+`Fixed::openshell()`, and four of them also freeze a baseline.
 
 The legacy Tuiscotti 0.2 dependency is removed entirely; nothing in the
 repository uses it.
