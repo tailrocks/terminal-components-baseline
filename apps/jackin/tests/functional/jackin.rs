@@ -1184,7 +1184,9 @@ fn jackin_fixed_project_row_keeps_its_paint_and_refuses_every_edit() {
     open_fixed_editor(&app, 1);
     app.key("]");
     app.key("enter");
-    let project = app.wait_text("Destination");
+    let project = app.wait_screen("the Project list has focus", |s| {
+        text(s).contains("Destination") && footer(s).contains("Open source")
+    });
     let row = row_with(&project, "~/src/payments-platform");
     for part in ["/sandbox/project", "rw", "clone", "host"] {
         assert!(row.contains(part), "{part} in {row}");
@@ -1250,7 +1252,9 @@ fn jackin_fixed_workspace_account_toggle_refuses_and_prefer_stays_live() {
         app.key("]");
     }
     app.key("enter");
-    let accounts = app.wait_text("Active accounts");
+    let accounts = app.wait_screen("the account list has focus", |s| {
+        text(s).contains("Active accounts") && footer(s).contains("Prefer")
+    });
     assert!(
         unchecked_rows(&accounts).is_empty(),
         "every account is active"
