@@ -689,10 +689,9 @@ fn the_github_dialog_copies_nothing_without_a_matching_repository() {
     let keys = format!("{GITHUB_OPEN} {GITHUB_COPY}");
     let unrelated = |live: bool| {
         let mut world = capsule_world(live);
-        let mut repo = world.github.remove(0);
-        repo.full_name = "chainargos/unrelated".into();
-        repo.url = "https://github.com/chainargos/unrelated".into();
-        world.github = vec![repo];
+        for instance in &mut world.instances {
+            instance.github = None;
+        }
         run(Scenario::CapsuleMulti, world, &keys)
     };
     let live = unrelated(true);

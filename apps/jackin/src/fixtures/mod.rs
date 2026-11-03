@@ -302,6 +302,10 @@ fn instance(
         branch: None,
         pr: None,
         default_branch: "main".into(),
+        github: github()
+            .iter()
+            .find(|r| r.full_name.ends_with(wsname))
+            .map(Into::into),
         uncommitted: 0,
         unpushed: 0,
         accounts: vec![],

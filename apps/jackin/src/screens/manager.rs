@@ -515,7 +515,7 @@ impl ManagerScreen {
             InstanceStatus::RestoreAvailable
             | InstanceStatus::PreservedDirty
             | InstanceStatus::PreservedUnpushed => {
-                let wsname = i.workdir.trim_start_matches("/workspace/").to_owned();
+                let wsname = w.workspace_label(i);
                 let agent = i.agent;
                 let now_secs = w.clock.now_secs();
                 if let Some(inst) = w.instance_mut(id) {
@@ -571,7 +571,7 @@ impl ManagerScreen {
                 "Image",
                 format!(
                     "jackin/derived:{}-{}",
-                    i.workdir.trim_start_matches("/workspace/"),
+                    w.workspace_label(i),
                     junie_tui::ui::text::clip(i.run_id.trim_start_matches("run-"), 4)
                 ),
             ),
@@ -768,8 +768,7 @@ impl ManagerScreen {
             cx.status("Select a saved workspace to open its repository");
             return;
         };
-        let repo = w.github.iter().find(|r| r.full_name.ends_with(&ws.name));
-        match repo {
+        match w.workspace_repo(ws.id) {
             Some(r) => cx.status(fill_in(
                 &w.surfaces.vocabulary.github_workspace,
                 &[("url", r.url.as_str())],

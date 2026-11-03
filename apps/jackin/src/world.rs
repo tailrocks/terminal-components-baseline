@@ -6,7 +6,7 @@ use crate::backend::{Backend, Effect, OnePassword};
 use crate::domain::account::{AccountId, AccountRegistry};
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorReport, DoctorState};
-use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus};
+use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
 use crate::domain::role::{
     AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE, RoleFinding,
     RoleRecord,
@@ -104,6 +104,15 @@ pub struct GithubRepo {
     pub branches: Vec<String>,
     pub updated: String,
     pub url: String,
+}
+
+impl From<&GithubRepo> for RepoRef {
+    fn from(r: &GithubRepo) -> Self {
+        Self {
+            full_name: r.full_name.clone(),
+            url: r.url.clone(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -553,6 +562,26 @@ impl World {
                 m.source_label() == self.cwd || expand(&self.home, m.source_label()) == self.cwd
             })
         })
+    }
+
+    pub fn workspace_label(&self, i: &Instance) -> String {
+        i.workspace
+            .and_then(|id| self.workspace(id))
+            .map(|ws| ws.name.clone())
+            .unwrap_or_else(|| {
+                self.cwd
+                    .rsplit('/')
+                    .next()
+                    .unwrap_or("directory")
+                    .to_owned()
+            })
+    }
+
+    pub fn workspace_repo(&self, id: WorkspaceId) -> Option<&RepoRef> {
+        self.instances
+            .iter()
+            .filter(|i| i.workspace == Some(id))
+            .find_map(|i| i.github.as_ref())
     }
 
     pub fn instance(&self, id: &str) -> Option<&Instance> {

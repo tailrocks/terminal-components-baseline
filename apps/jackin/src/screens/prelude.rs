@@ -298,16 +298,15 @@ impl PreludeScreen {
         }
         if let Some(Source::Host { path, .. }) = &self.source {
             let src = path.trim_end_matches('/');
-            let mut subs: Vec<String> =
-                w.fs.iter()
-                    .filter(|e| {
-                        e.dir
-                            && e.path
-                                .rsplit_once('/')
-                                .is_some_and(|(parent, _)| parent == src)
-                    })
-                    .map(|e| format!("{}/{}", dest.trim_end_matches('/'), basename(&e.path)))
-                    .collect();
+            let mut subs: Vec<String> = w
+                .backend
+                .file_source(w)
+                .list(src)
+                .unwrap_or_default()
+                .iter()
+                .filter(|e| e.dir)
+                .map(|e| format!("{}/{}", dest.trim_end_matches('/'), basename(&e.path)))
+                .collect();
             subs.sort();
             rows.extend(subs);
         }

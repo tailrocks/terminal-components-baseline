@@ -63,6 +63,12 @@ impl InstanceStatus {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RepoRef {
+    pub full_name: String,
+    pub url: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Instance {
     pub id: InstanceId,
 
@@ -83,6 +89,7 @@ pub struct Instance {
     pub branch: Option<String>,
     pub pr: Option<(u32, String)>,
     pub default_branch: String,
+    pub github: Option<RepoRef>,
 
     pub uncommitted: usize,
     pub unpushed: usize,

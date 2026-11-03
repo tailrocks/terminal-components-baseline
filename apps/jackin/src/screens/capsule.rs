@@ -1252,10 +1252,7 @@ impl CapsuleScreen {
 
     fn github_url(&self, w: &World) -> Option<String> {
         let i = w.instance(&self.instance)?;
-        let repo = w.github.iter().find(|r| {
-            r.full_name
-                .ends_with(&i.workdir.trim_start_matches("/workspace/").to_owned())
-        })?;
+        let repo = i.github.as_ref()?;
         Some(match &i.pr {
             Some((n, _)) => format!("{}/pull/{n}", repo.url),
             None => format!(

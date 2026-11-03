@@ -394,6 +394,11 @@ impl CockpitScreen {
             pr: None,
             accounts: self.accounts.clone(),
             default_branch: "main".into(),
+            github: w
+                .github
+                .iter()
+                .find(|r| r.full_name.ends_with(&wsname))
+                .map(Into::into),
             uncommitted: 0,
             unpushed: 0,
         };

@@ -13,7 +13,9 @@ use jackin_console::domain::docker::{DockerSetting, EngineState};
 use jackin_console::domain::doctor::{DoctorState, DoctorSurface};
 use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::fixed_fields::*;
-use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus, ManifestError};
+use jackin_console::domain::instance::{
+    DaemonSnapshot, Instance, InstanceStatus, ManifestError, RepoRef,
+};
 use jackin_console::domain::openshell;
 use jackin_console::domain::role::{AccountOrder, LaunchRoleRule, RoleAdmin};
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
@@ -907,6 +909,10 @@ fn probe_instance() -> Instance {
         branch: Some("probe-branch".into()),
         pr: Some((7, "probe pr".into())),
         default_branch: "probe-main".into(),
+        github: Some(RepoRef {
+            full_name: "probe/repo".into(),
+            url: "https://probe.test/probe/repo".into(),
+        }),
         uncommitted: 3,
         unpushed: 5,
         accounts: vec!["probe-id".into()],

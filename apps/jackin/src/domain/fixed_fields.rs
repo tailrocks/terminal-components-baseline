@@ -257,6 +257,7 @@ pub fn instance_fixed(i: &Instance) -> InstanceFixed {
         branch: _,
         pr: _,
         default_branch: _,
+        github: _,
         uncommitted: _,
         unpushed: _,
         accounts: _,

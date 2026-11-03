@@ -19,6 +19,8 @@ use crate::world::{Msg, World};
 pub use junie_tui::widgets::diff::{
     DiffFile as ChangedFile, DiffHunk as Hunk, DiffLine, DiffStatus,
 };
+pub use junie_tui::widgets::file_browser::FileSource;
+use junie_tui::widgets::file_browser::{FileEntry, MemorySource};
 pub use junie_tui::widgets::inspect_changes::ChangeSet;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -341,4 +343,28 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
     }
 
     fn session_script(&self) -> Arc<dyn SessionScript>;
+
+    fn file_source(&self, world: &World) -> Box<dyn FileSource> {
+        Box::new(
+            MemorySource::new(
+                world
+                    .fs
+                    .iter()
+                    .map(|e| {
+                        let meta = match (&e.git, e.meta.as_str()) {
+                            (Some(b), _) => format!("git · {b}"),
+                            (None, m) => m.to_owned(),
+                        };
+                        let entry = if e.dir {
+                            FileEntry::dir(&e.path)
+                        } else {
+                            FileEntry::file(&e.path)
+                        };
+                        entry.meta(&meta)
+                    })
+                    .collect(),
+            )
+            .home(&world.home),
+        )
+    }
 }
