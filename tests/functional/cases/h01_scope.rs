@@ -403,7 +403,11 @@ fn h01_scope_scope() {
 #[test]
 fn h01_scope_scenario_monorepo_child() {
     let app = open("h01-scope-monorepo", "monorepo-child");
-    let here = app.wait_text(HERE);
+    // The scope marker paints while the In column still ellipsizes the path.
+    let here = app.wait_screen("monorepo child", |screen| {
+        let visible = text(screen);
+        visible.contains(HERE) && visible.contains("~/work/acme/apps/frontend")
+    });
     see(
         &here,
         &[
