@@ -9,12 +9,22 @@ change the config and run `velnor-actions generate`.
 
 - **Plan** — computes the job matrix (15-minute timeout; the full
   history checkout is large).
-- **Suite (functional)** — the required gate:
-  `cargo nextest run --locked --test functional --profile functional
-  --no-tests fail`. It must pass with 0 skipped before merge. See
+- **Suite (functional)** — the PTY journeys:
+  `cargo nextest run --workspace --profile functional --no-tests fail`
+  (the profile's default filter selects `binary(functional)`). It must
+  pass with 0 skipped before merge. See
   [functional testing](functional-testing.md) for the CI contract.
-- **Rust read / write** — clippy `-D warnings`, `cargo fmt --check`
-  and the repository checks on the changed surface.
+- **Rust / junie-tui** and **Rust / jackin-console** — one job per
+  default workspace member. Each runs `cargo nextest run --profile ci
+  --package <crate> --no-tests fail`, which selects every test target of
+  the package (the library, the binaries, `functional` and every other
+  `tests/*.rs` target), plus clippy `-D warnings` on `--all-targets`,
+  `cargo fmt --check` and `cargo doc`. A new test target needs no CI
+  change. The `ci` profile in `.config/nextest.toml` must keep no
+  `default-filter`, or targets drop out of this job.
+- **Required** — the verdict job. Its `needs` are Plan, both Rust jobs
+  and jactionlint, as listed in the generated `ci.yml`. The functional
+  suite is not among them (the suite entry sets no `required = true`).
 - **DCO** — every commit must carry `Signed-off-by`
   (`git commit -s`, committer Alexey Zhokhov
   <alexey@zhokhov.com>).
