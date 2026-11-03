@@ -521,6 +521,13 @@ fn g05_tests_do_not_invoke_accept() {
                 continue;
             }
             if kind.is_dir() {
+                // Baseline captures are about 1.9 GB. Reading every byte in an
+                // unoptimized test takes 27s when the machine is quiet and
+                // exceeds the functional profile's 90s kill when it is not.
+                // Those files are screenshots, not an accept invocation.
+                if path.file_name().is_some_and(|name| name == "baselines") {
+                    continue;
+                }
                 pending.push(path);
                 continue;
             }
