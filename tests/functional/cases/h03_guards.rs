@@ -15,7 +15,7 @@
 //! checkpoint launch. Stop and quit is confirmed there, and the exit code is
 //! observed on a reduced launch, where the clock runs. No `--frame`.
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 
@@ -219,7 +219,34 @@ fn choose_stop(app: &App) {
 }
 
 fn stop_and_quit(app: &App) {
-    choose_stop(app);
+    app.key("ctrl+q");
+    let dialog = app.wait_screen("quit guard", quit_open);
+    see(&dialog, &[QUIT, STAY, STOP_QUIT, RUNNING, DETACHED], &[]);
+    app.key("right");
+    app.key("enter");
+    // Reduced motion reaps the task three ticks after stop, then the shell
+    // exits on its own. `wait_screen` records that frame, and the record can
+    // outlast the process, so the following Ctrl+Q hits a closed PTY.
+    let started = Instant::now();
+    let stopping = loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        if !visible.contains(QUIT)
+            && !visible.contains(STOP_QUIT)
+            && !visible.contains(STAY)
+            && visible.contains("stopping")
+            && visible.contains(QUITTING)
+        {
+            break screen;
+        }
+        assert!(
+            started.elapsed() < Duration::from_secs(3) && app.child_running(),
+            "stop and quit did not stay up\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(5));
+    };
+    assert!(app.child_running(), "stop and quit exited before Ctrl+Q");
+    see(&stopping, &["stopping", QUITTING], &[QUIT, STOP_QUIT, STAY]);
     app.finish();
 }
 
