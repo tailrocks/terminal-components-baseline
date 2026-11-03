@@ -8,8 +8,7 @@ use jackin_console::domain::account::{
 };
 use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider, UsageSurface};
 use jackin_console::domain::workspace::{Usability, usability_of};
-use jackin_console::fixtures::world_for;
-use jackin_console::scenario::Scenario;
+use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::World;
 
 const USAGE_ONLY: &str = "launch needs a local Codex login · this source is usage only";
@@ -149,7 +148,7 @@ fn a_blocked_edit_leaves_the_other_actions_open() {
     assert!(!blocked.accounts.accounts[0].edit_allowed());
     assert!(blocked.accounts.accounts[0].mutations_allowed());
 
-    let mut gated = app_with(blocked);
+    let mut gated = app_with(Scenario::AccountsMixed, blocked);
     press(&mut gated, "down down shift+f10");
     hover_text(&mut gated, "Edit…");
     let menu = screen(&mut gated);
@@ -185,7 +184,7 @@ fn the_form_lists_come_from_the_data() {
         ],
         Some(0),
     );
-    let mut app = app_with(world);
+    let mut app = app_with(Scenario::AccountsMixed, world);
     press(&mut app, "a");
     let screen = screen(&mut app);
     assert!(screen.contains("Cursor · Cursor"), "{screen}");
@@ -204,7 +203,7 @@ fn the_default_source_decides_which_fields_show() {
     ];
     let mut world = world_for(Scenario::AccountsMixed);
     world.surfaces.account_form = form(&sources, None);
-    let mut app = app_with(world);
+    let mut app = app_with(Scenario::AccountsMixed, world);
     press(&mut app, "a");
     let plain = screen(&mut app);
     assert!(
@@ -215,7 +214,7 @@ fn the_default_source_decides_which_fields_show() {
 
     let mut world = world_for(Scenario::AccountsMixed);
     world.surfaces.account_form = form(&sources, Some(2));
-    let mut app = app_with(world);
+    let mut app = app_with(Scenario::AccountsMixed, world);
     press(&mut app, "a");
     let one_password = screen(&mut app);
     assert!(
@@ -256,7 +255,7 @@ fn the_picker_lists_blocked_agents_as_unavailable_rows() {
         launchable: Agent::Codex,
         text: OTHER_AGENT.into(),
     });
-    let mut app = app_with(world);
+    let mut app = app_with(Scenario::Returning, world);
     press(&mut app, "down enter");
     let screen = screen(&mut app);
     let row = |agent: &str| {

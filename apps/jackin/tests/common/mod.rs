@@ -1,19 +1,18 @@
 #![allow(dead_code)]
 
 use jackin_console::app::App;
-use jackin_console::fixtures::world_for;
-use jackin_console::scenario::{Motion, Scenario};
+use jackin_console::fixtures::{Scenario, app_for, app_with_world};
 use jackin_console::world::World;
 use junie_tui::core::event::{Input, Key, Mouse, MouseKind};
+use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
 use ratatui::Terminal;
 use ratatui::backend::TestBackend;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
-pub fn app_with(world: World) -> App {
-    let scenario = world.scenario;
-    App::for_scenario(
+pub fn app_with(scenario: Scenario, world: World) -> App {
+    app_with_world(
         scenario,
         world,
         Motion::Paused,
@@ -23,7 +22,12 @@ pub fn app_with(world: World) -> App {
 }
 
 pub fn app(scenario: Scenario) -> App {
-    app_with(world_for(scenario))
+    app_for(
+        scenario,
+        Motion::Paused,
+        10_000,
+        Theme::for_level(ColorLevel::TrueColor),
+    )
 }
 
 pub fn screen(app: &mut App) -> String {

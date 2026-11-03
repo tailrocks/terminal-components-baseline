@@ -12,6 +12,7 @@ use crate::domain::instance::{
     DaemonSnapshot, Instance, InstanceStatus, ManifestError, SessionRecord, SessionStatus,
 };
 use crate::domain::onepassword::OpReference;
+use crate::domain::surfaces::Surfaces;
 use crate::domain::usage::{
     AccountUsage, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
 };
@@ -20,7 +21,6 @@ use crate::domain::workspace::{
     Workspace,
 };
 use crate::panes::Daemon;
-use crate::scenario::Scenario;
 use crate::sim::SimBackend;
 use crate::sim::onepassword::SimOnePassword;
 use crate::sim::scripts::SimScripts;
@@ -29,7 +29,12 @@ use crate::world::{
 };
 use junie_tui::ui::layout::SplitDir;
 
+pub mod scenario;
 pub mod surfaces;
+
+pub use scenario::{
+    CLOCK, EPOCH_SECS, Scenario, UTC_OFFSET_SECS, app_for, app_with_world, entry_for,
+};
 
 pub const HOME: &str = "/Users/alexey";
 
@@ -1079,8 +1084,26 @@ fn accounts_hard(now: i64) -> AccountRegistry {
     r
 }
 
+fn about_rows(scenario: Scenario) -> Vec<(String, String)> {
+    [
+        ("Product", "jackin-preview · deterministic redesign preview"),
+        ("Scenario", scenario.name()),
+        (
+            "Construct",
+            "simulated · nothing here touches a real container",
+        ),
+        (
+            "Design system",
+            "Junie-inspired Ratatui components (junie_tui)",
+        ),
+    ]
+    .into_iter()
+    .map(|(label, value)| (label.to_owned(), value.to_owned()))
+    .collect()
+}
+
 fn base_world(scenario: Scenario) -> World {
-    let clock = crate::scenario::CLOCK;
+    let clock = CLOCK;
     let now = clock.now_secs();
     World::new(WorldParts {
         next_workspace_id: 100,
@@ -1089,8 +1112,11 @@ fn base_world(scenario: Scenario) -> World {
         fs: fs(),
         github: github(),
         last_refresh_secs: now - 3,
+        surfaces: Surfaces {
+            about: about_rows(scenario),
+            ..Surfaces::default()
+        },
         ..WorldParts::new(
-            scenario,
             clock,
             HOME.into(),
             format!("{HOME}/src/payments-platform"),
@@ -1444,10 +1470,14 @@ pub fn world_for(scenario: Scenario) -> World {
             surfaces::fixed(&mut w);
             w
         }
+        Scenario::LaunchFailure => {
+            let mut w = populated(scenario, false);
+            w.backend = SimBackend::failing_launch();
+            w
+        }
         Scenario::Returning
         | Scenario::AccountsMixed
         | Scenario::LaunchRunning
-        | Scenario::LaunchFailure
         | Scenario::CapsuleMulti => populated(scenario, false),
         Scenario::OutroLast => {
             let mut w = populated(scenario, false);
@@ -1468,7 +1498,7 @@ pub fn world_for(scenario: Scenario) -> World {
             w.op.set_session(OpSession::Locked);
             w.daemon_health = DaemonHealth::Stale;
             w.refresh_fails = true;
-            w.backend = SimBackend::failing_first_save();
+            w.backend = SimBackend::hard_cases();
 
             if let Some(r) = w.roles.iter_mut().find(|r| r.name == "writer") {
                 r.fetch_error = Some(

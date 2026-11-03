@@ -3,10 +3,10 @@
 use jackin_console::app::{App, Remote};
 use jackin_console::domain::instance::InstanceStatus;
 use jackin_console::domain::workspace::Workspace;
-use jackin_console::fixtures::world_for;
-use jackin_console::scenario::{Motion, Scenario};
+use jackin_console::fixtures::{Scenario, app_for};
 use jackin_console::world::{Msg, Snapshot};
 use junie_tui::core::event::{External, Input, Outcome};
+use junie_tui::motion::Motion;
 use junie_tui::runtime::{Application, ExternalSender, external_channel};
 use junie_tui::theme::{ColorLevel, Theme};
 use ratatui::Terminal;
@@ -15,9 +15,8 @@ use ratatui::backend::TestBackend;
 const STOPPED: &str = "jk-7f3a";
 
 fn app() -> App {
-    App::for_scenario(
+    app_for(
         Scenario::Returning,
-        world_for(Scenario::Returning),
         Motion::Paused,
         0,
         Theme::for_level(ColorLevel::TrueColor),

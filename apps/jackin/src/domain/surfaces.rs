@@ -19,7 +19,7 @@ pub struct Surfaces {
     pub wizard: Option<WizardDefaults>,
     pub fixed: Option<Fixed>,
     pub version: String,
-    pub about: Option<Vec<(String, String)>>,
+    pub about: Vec<(String, String)>,
 }
 
 impl Default for Surfaces {
@@ -35,7 +35,7 @@ impl Default for Surfaces {
             wizard: None,
             fixed: None,
             version: "0.9.2".into(),
-            about: None,
+            about: Vec::new(),
         }
     }
 }

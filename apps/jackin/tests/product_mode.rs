@@ -3,7 +3,7 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use jackin_console::app::{App, Remote};
+use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, Remote, assemble};
 use jackin_console::backend::{
     Backend, ChangeSet, Completion, Effect, FieldDescriptor, FolderProbe, OnePassword, OpAccount,
     OpError, OpField, OpItem, OpSession, OpVault, SecretClass, ValidationOutcome,
@@ -17,10 +17,10 @@ use jackin_console::domain::workspace::{
 use jackin_console::launch::LaunchContent;
 use jackin_console::panes::SessionScript;
 use jackin_console::rain::INTRO_END;
-use jackin_console::scenario::{Motion, Scenario};
 use jackin_console::world::{Snapshot, World, WorldParts};
 use junie_tui::clock::SimClock;
 use junie_tui::core::event::{Input, Key};
+use junie_tui::motion::Motion;
 use junie_tui::runtime::{Application, ExternalSender, external_channel};
 use junie_tui::theme::{ColorLevel, Theme};
 use ratatui::Terminal;
@@ -122,7 +122,6 @@ impl OnePassword for SignedInOnly {
 
 fn empty_world() -> World {
     World::new(WorldParts::new(
-        Scenario::Returning,
         SimClock::new(1_788_401_640, 0),
         "/home/dev".into(),
         "/home/dev".into(),
@@ -153,12 +152,18 @@ fn workspace(id: u32, name: &str) -> Workspace {
 }
 
 fn app_over(world: World) -> App {
-    App::for_scenario(
-        Scenario::Returning,
+    assemble(
         world,
-        Motion::Paused,
-        INTRO_END,
-        Theme::for_level(ColorLevel::TrueColor),
+        Entry {
+            page: EntryPage::Manager,
+            outro_when_framed: false,
+        },
+        AppOptions {
+            motion: Motion::Paused,
+            frame: INTRO_END,
+            theme: Theme::for_level(ColorLevel::TrueColor),
+            clipboard: ClipboardMode::Preview,
+        },
     )
 }
 
@@ -236,10 +241,10 @@ fn product_shape_renders_and_receives_a_snapshot() {
 #[test]
 fn product_shape_about_rows_come_from_the_surfaces() {
     let mut world = empty_world();
-    world.surfaces.about = Some(vec![
+    world.surfaces.about = vec![
         ("Product".into(), "jackin 1.4.0".into()),
         ("Mode".into(), "live".into()),
-    ]);
+    ];
     let mut app = app_over(world);
     press(
         &mut app,

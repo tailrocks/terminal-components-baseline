@@ -78,12 +78,6 @@ const RULES: &[Rule] = &[
 type Pending = (&'static str, &'static str, &'static str);
 
 const PENDING: &[Pending] = &[
-    ("Scenario", "app.rs", "B2c"),
-    ("CLOCK", "scenario.rs", "B2c"),
-    ("Scenario", "scenario.rs", "B2c"),
-    ("CLOCK", "screens/cockpit.rs", "B2c"),
-    ("Scenario", "screens/manager.rs", "B2c"),
-    ("Scenario", "world.rs", "B2c"),
     ("About jackin-preview", "app.rs", "B3b"),
     ("/.jackin/", "screens/capsule.rs", "B3b"),
     ("About jackin-preview", "screens/capsule.rs", "B3b"),
@@ -122,16 +116,13 @@ const PENDING: &[Pending] = &[
     ("refresh_fails", "world.rs", "B6"),
     ("takeover_at_ms", "world.rs", "B6"),
     ("tty004", "world.rs", "B6"),
-    ("LaunchPlan", "app.rs", "B7a"),
     (
         "1Password locked: unlock the app and retry",
         "launch.rs",
         "B7a",
     ),
+    ("LaunchPlan", "backend.rs", "B7a"),
     ("LaunchPlan", "launch.rs", "B7a"),
-    ("LaunchPlan", "screens/cockpit.rs", "B7a"),
-    ("LaunchPlan", "screens/manager.rs", "B7a"),
-    ("LaunchPlan", "screens/mod.rs", "B7a"),
     ("SessionScript", "backend.rs", "B8a"),
     ("AgentProcess", "panes.rs", "B8a"),
     ("SessionScript", "panes.rs", "B8a"),

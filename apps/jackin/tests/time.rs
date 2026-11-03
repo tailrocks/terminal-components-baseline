@@ -3,8 +3,7 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicI64, Ordering};
 
-use jackin_console::fixtures::HOME;
-use jackin_console::scenario::{CLOCK, Scenario};
+use jackin_console::fixtures::{CLOCK, HOME};
 use jackin_console::sim::SimBackend;
 use jackin_console::sim::onepassword::SimOnePassword;
 use jackin_console::world::{WallSource, World, WorldParts};
@@ -42,7 +41,6 @@ impl WallSource for FakeWall {
 
 fn parts() -> WorldParts {
     WorldParts::new(
-        Scenario::Returning,
         CLOCK,
         HOME.into(),
         format!("{HOME}/src/demo"),

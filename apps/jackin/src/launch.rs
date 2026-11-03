@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use junie_tui::widgets::steps::StepState;
 
+use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
+use crate::domain::workspace::WorkspaceId;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum StageKind {
@@ -99,6 +101,14 @@ pub struct LaunchWords {
     pub build_failed: String,
     pub ready_activity: String,
     pub credentials_resolved: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LaunchTarget {
+    pub workspace: Option<WorkspaceId>,
+    pub role: String,
+    pub agent: Agent,
+    pub account: Option<AccountId>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

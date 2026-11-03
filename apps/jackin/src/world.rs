@@ -16,7 +16,6 @@ use crate::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
 };
 use crate::panes::Daemon;
-use crate::scenario::Scenario;
 use junie_tui::clock::SimClock;
 use junie_tui::shell::JobKey;
 
@@ -214,7 +213,6 @@ pub struct HealthView {
 }
 
 pub struct World {
-    pub scenario: Scenario,
     pub clock: SimClock,
     pub time: TimeSource,
     pub arbiter: Arbiter,
@@ -273,7 +271,6 @@ pub struct Snapshot {
 }
 
 pub struct WorldParts {
-    pub scenario: Scenario,
     pub clock: SimClock,
     pub time: TimeSource,
     pub arbiter: Arbiter,
@@ -295,7 +292,6 @@ pub struct WorldParts {
 
 impl WorldParts {
     pub fn new(
-        scenario: Scenario,
         clock: SimClock,
         home: String,
         cwd: String,
@@ -303,7 +299,6 @@ impl WorldParts {
         backend: Arc<dyn Backend>,
     ) -> Self {
         Self {
-            scenario,
             last_refresh_secs: clock.now_secs(),
             clock,
             time: TimeSource::Sim,
@@ -338,7 +333,6 @@ impl WorldParts {
 impl World {
     pub fn new(parts: WorldParts) -> Self {
         let WorldParts {
-            scenario,
             clock,
             time,
             arbiter,
@@ -358,7 +352,6 @@ impl World {
             surfaces,
         } = parts;
         let mut world = Self {
-            scenario,
             clock,
             time,
             arbiter,
@@ -444,24 +437,11 @@ impl World {
 
     pub fn about_props(&self) -> Vec<junie_tui::widgets::props::Prop> {
         use junie_tui::widgets::props::Prop;
-        match &self.surfaces.about {
-            Some(rows) => rows
-                .iter()
-                .map(|(label, value)| Prop::new(label, value.as_str()))
-                .collect(),
-            None => vec![
-                Prop::new("Product", "jackin-preview · deterministic redesign preview"),
-                Prop::new("Scenario", self.scenario.name()),
-                Prop::new(
-                    "Construct",
-                    "simulated · nothing here touches a real container",
-                ),
-                Prop::new(
-                    "Design system",
-                    "Junie-inspired Ratatui components (junie_tui)",
-                ),
-            ],
-        }
+        self.surfaces
+            .about
+            .iter()
+            .map(|(label, value)| Prop::new(label, value.as_str()))
+            .collect()
     }
 
     pub fn docker_on(&self, ws: Option<WorkspaceId>, role: &str) -> bool {

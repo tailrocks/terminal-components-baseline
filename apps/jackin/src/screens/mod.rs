@@ -21,7 +21,6 @@ use crate::domain::agent::Agent;
 use crate::domain::instance::InstanceId;
 use crate::domain::onepassword::OpReference;
 use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
-use crate::launch::LaunchPlan;
 use crate::world::{Msg, World};
 use junie_tui::ui::layer::Layer;
 pub use junie_tui::ui::layer::LayerTag;
@@ -124,7 +123,6 @@ pub enum Go {
         role: String,
         agent: Agent,
         account: Option<AccountId>,
-        plan: LaunchPlan,
     },
     Attach {
         instance: InstanceId,

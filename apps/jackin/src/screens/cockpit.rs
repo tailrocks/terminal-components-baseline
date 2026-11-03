@@ -28,9 +28,9 @@ use crate::domain::agent::Agent;
 use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::workspace::WorkspaceId;
-use crate::launch::{LaunchEvent, LaunchPlan, LaunchRun, StageKind};
-use crate::scenario::Motion;
+use crate::launch::{LaunchEvent, LaunchRun, LaunchTarget, StageKind};
 use crate::world::World;
+use junie_tui::motion::Motion;
 
 pub const RAIL: WidgetId = WidgetId::of("cockpit.rail");
 pub const LOG: WidgetId = WidgetId::of("cockpit.log");
@@ -68,15 +68,14 @@ pub struct CockpitScreen {
 }
 
 impl CockpitScreen {
-    pub fn new(
-        w: &World,
-        workspace: Option<WorkspaceId>,
-        role: String,
-        agent: Agent,
-        account: Option<AccountId>,
-        plan: LaunchPlan,
-        motion: Motion,
-    ) -> Self {
+    pub fn new(w: &World, target: LaunchTarget, motion: Motion) -> Self {
+        let plan = w.backend.launch_plan(w, &target);
+        let LaunchTarget {
+            workspace,
+            role,
+            agent,
+            account,
+        } = target;
         let wsname = workspace
             .and_then(|id| w.workspace(id))
             .map(|x| x.name.clone())
@@ -94,7 +93,7 @@ impl CockpitScreen {
         let run_id = format!(
             "run-{}-{suffix}",
             junie_tui::ui::text::clip(
-                &crate::scenario::CLOCK
+                &w.clock
                     .stamp(w.now_secs())
                     .replace([' ', ':'], "-")
                     .replace('-', ""),

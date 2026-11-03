@@ -6,8 +6,7 @@ use common::*;
 use jackin_console::app::{App, Route};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::WizardDefaults;
-use jackin_console::fixtures::world_for;
-use jackin_console::scenario::Scenario;
+use jackin_console::fixtures::{Scenario, world_for};
 
 fn live() -> App {
     let mut world = world_for(Scenario::Returning);
@@ -16,7 +15,7 @@ fn live() -> App {
         destination: "/sandbox/project".into(),
         destination_label: "Project folder".into(),
     });
-    app_with(world)
+    app_with(Scenario::Returning, world)
 }
 
 #[test]

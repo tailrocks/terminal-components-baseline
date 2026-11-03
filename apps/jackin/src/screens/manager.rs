@@ -40,7 +40,6 @@ use crate::domain::instance::{DaemonSnapshot, InstanceStatus};
 use crate::domain::role::LaunchRole;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::WorkspaceId;
-use crate::launch::LaunchPlan;
 use crate::world::{DaemonHealth, Health, LaunchSource, Msg, World, job};
 use junie_tui::ui::context::ContextAnchor;
 use junie_tui::ui::text::plural;
@@ -2418,31 +2417,11 @@ impl Page<Jackin> for ManagerScreen {
                 let Some((ws, role)) = self.pending_launch.take() else {
                     return Outcome::Changed;
                 };
-                let plan = match w.scenario {
-                    crate::scenario::Scenario::LaunchFailure => LaunchPlan::FailNetwork,
-                    crate::scenario::Scenario::HardCases => {
-                        if w.op.session() == crate::backend::OpSession::Locked
-                            && account.as_deref().is_some_and(|a| {
-                                a.contains("work")
-                                    || a.contains("grok")
-                                    || a.contains("codex-primary")
-                            })
-                        {
-                            LaunchPlan::CredentialsLocked
-                        } else if role == "sre" {
-                            LaunchPlan::BlockedSidecar
-                        } else {
-                            LaunchPlan::Clean
-                        }
-                    }
-                    _ => LaunchPlan::Clean,
-                };
                 cx.go(Go::Launch {
                     workspace: ws,
                     role,
                     agent,
                     account,
-                    plan,
                 });
                 Outcome::Changed
             }

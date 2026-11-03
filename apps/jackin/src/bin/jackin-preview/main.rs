@@ -1,9 +1,7 @@
 use clap::Parser;
 use junie_tui::cli::CommonArgs;
 
-use jackin_console::app::App;
-use jackin_console::fixtures;
-use jackin_console::scenario::Scenario;
+use jackin_console::fixtures::{Scenario, app_for};
 
 const NO_MOTION_ENV: &str = "JACKIN_NO_MOTION";
 
@@ -53,13 +51,6 @@ fn cli_after_help() -> String {
 fn main() -> std::io::Result<()> {
     let cli: Cli = junie_tui::cli::parse(cli_after_help());
     let motion = cli.common.motion(NO_MOTION_ENV);
-    let world = fixtures::world_for(cli.scenario);
-    let mut app = App::for_scenario(
-        cli.scenario,
-        world,
-        motion,
-        cli.common.frame,
-        cli.common.theme(),
-    );
+    let mut app = app_for(cli.scenario, motion, cli.common.frame, cli.common.theme());
     junie_tui::shell::run(&mut app)
 }

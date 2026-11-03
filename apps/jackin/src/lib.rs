@@ -8,7 +8,6 @@ pub mod launch;
 pub mod pages;
 pub mod panes;
 pub mod rain;
-pub mod scenario;
 pub mod screens;
 #[cfg(feature = "demo")]
 pub mod sim;
