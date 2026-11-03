@@ -144,7 +144,16 @@ fn finder_discovery_keeps_the_selected_identity() {
     pending.finish();
 
     let ready = launch("h01-finder-ready", "parity-discovery", "paused", Some(8));
-    let ready_home = ready.wait_text(TESTS);
+    // The action list paints before the discovering status.
+    let ready_home = ready.wait_screen("frame 8 discovery", |screen| {
+        let visible = text(screen);
+        visible.contains(DISCOVERING)
+            && visible.contains("5 of 9")
+            && visible.contains(TESTS)
+            && visible.contains(KEPT)
+            && !visible.contains(PULL)
+            && !visible.contains(UNAVAILABLE)
+    });
     see(
         &ready_home,
         &[DISCOVERING, "5 of 9", TESTS, KEPT],
