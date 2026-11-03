@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. ManagerScreen::new in src/bin/jackin/screens/manager.rs selects Current directory with workspaces collapsed. Down, Right, Down selects the painted 7f3a row of jk-7f3a. fixtures.rs sets that instance uncommitted to 2 and unpushed to 1. Enter attaches through Go::Attach in src/bin/jackin/app.rs. F10 in CapsuleScreen::on_key in src/bin/jackin/screens/capsule.rs calls menubar.open_menu(0), the File menu. Right, Right reaches View. build_menubar lists Inspect changes with no shortcut, after Zoom pane, Redraw, Usage, Container info, and GitHub context. Five Downs move the menu fill onto Inspect changes. Enter calls open_inspect, which builds InspectChanges from changes_for in src/bin/jackin/sim/changes.rs using Daemon::touched_files. The Claude script in src/bin/jackin/sim/pty.rs touches src/settlement/retry.rs and src/settlement/mod.rs before Await. touched_files sorts them, and InspectChanges::new calls select_file(0), so the compact list opens on src/settlement/mod.rs. compact_key Down moves the gutter to src/settlement/retry.rs. Esc from the list calls leave and returns to the capsule. You were in the Construct from src/bin/jackin/rain.rs stays absent. The process stays running. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "0000000000000000000000000000000000000000",
+      "execution_commit": "28c395513647cc26bbb207c6e2325bee3723e28d",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "J06.inspect",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "The same attach and View › Inspect changes path opens InspectChanges in Compact mode from open_inspect in src/bin/jackin/screens/capsule.rs. compact_key Down in src/bin/jackin/screens/inspect.rs selects src/settlement/retry.rs. Enter calls select_file and sets open. draw_compact paints that file. hunks_for in src/bin/jackin/sim/changes.rs gives use rand::Rng; and the summary 3 hunks for a path containing retry. src/settlement/mod.rs, whose hunks_for line is pub mod backoff; and whose summary is 1 hunk, is absent, and the manager title Workspaces is absent. Those frames are the checkpoints, at 120×40 and after resize(80, 24), before resize(120, 40). hints() shows y Copy while the diff is open. ctrl+a is TextViewport::select_all in src/widgets/viewport.rs, and render paints Theme::selection over the diff. y is ViewportCmd::Copy. on_key returns ViewportAction::Copy of selected_text. compact_key keeps only the Outcome and drops that action, so no Copied status is painted. The visible copy result is the selected diff of src/settlement/retry.rs, and it stays free of src/settlement/mod.rs and pub mod backoff; for the hold. Esc returns to the list, Up selects src/settlement/mod.rs, Enter opens its diff, and the same select-all and y path holds pub mod backoff; and 1 hunk while src/settlement/retry.rs, use rand::Rng;, and 3 hunks stay absent. --frame is not used.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "0000000000000000000000000000000000000000",
+      "execution_commit": "28c395513647cc26bbb207c6e2325bee3723e28d",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/j06_inspect/j06_inspect_inspect_120x40.tui.json",
