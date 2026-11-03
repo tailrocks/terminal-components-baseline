@@ -415,11 +415,17 @@ fn j06_takeover_takeover() {
             }
         } else {
             let visible = text(&screen);
-            assert!(
-                visible.contains(IDENTITY) && !visible.contains(TAKEN) && !visible.contains(INFRA),
-                "overlay session left payments-platform before the takeover\n{visible}"
-            );
-            overlay_seen = None;
+            // The dialog is one paint, and a read can return the title before
+            // the body. That frame already says the attach was taken over, so
+            // it is not the payments session. Keep polling until the full copy
+            // holds. A frame with no takeover copy still has to be that session.
+            if !visible.contains(TAKEN) {
+                assert!(
+                    visible.contains(IDENTITY) && !visible.contains(INFRA),
+                    "overlay session left payments-platform before the takeover\n{visible}"
+                );
+                overlay_seen = None;
+            }
         }
         let held = stale_clock.elapsed() >= SIM_HOLD;
         let cleared = overlay_seen.is_some_and(|seen| seen.elapsed() >= STATUS_CLEAR);
