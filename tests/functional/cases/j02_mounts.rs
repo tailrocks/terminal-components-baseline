@@ -369,7 +369,22 @@ fn prepare_mount(app: &App, dest: &str) {
 fn open_new_mount(app: &App) -> TerminalSnapshot {
     focus_mounts_list(app);
     app.key("a");
-    let form = app.wait_screen("new mount", |screen| text(screen).contains(NEW_MOUNT));
+    // The title and the host radio paint before "not chosen", Browse, and
+    // the destination placeholder. The checkpoint is that later frame.
+    let form = app.wait_screen("new mount", |screen| {
+        let visible = text(screen);
+        visible.contains(NEW_MOUNT)
+            && visible.contains(HOST_KIND)
+            && visible.contains(NOT_CHOSEN)
+            && visible.contains(BROWSE)
+            && visible.contains(PLACEHOLDER)
+            && visible.lines().any(|line| {
+                line.contains(CANCEL)
+                    && line.contains(CONFIRM)
+                    && line.contains('│')
+                    && !line.contains("Save…")
+            })
+    });
     require(&form, HOST_KIND);
     require(&form, NOT_CHOSEN);
     form

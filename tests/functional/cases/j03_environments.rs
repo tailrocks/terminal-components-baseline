@@ -313,11 +313,15 @@ fn open_new_env(app: &App) -> TerminalSnapshot {
     // `a` on the GH_TOKEN row calls open_env_form(None) in config.rs.
     // `n` only edits a mount row.
     app.key("a");
-    let form = app.wait_screen("new env", |screen| text(screen).contains("environment key"));
-    let visible = text(&form);
-    if !visible.contains(NEW_ENV) {
-        panic!("painted title is not {NEW_ENV:?}\n{visible}");
-    }
+    // The title matches "environment key" before the radios paint. The
+    // checkpoint is the selected Plain text radio, with the key field ready.
+    let form = app.wait_screen("new env", |screen| {
+        let visible = text(screen);
+        visible.contains(NEW_ENV)
+            && radio_on(screen, PLAIN_SOURCE)
+            && !visible.contains(PLAIN)
+            && focused_line(screen).contains(DATABASE)
+    });
     require(&form, PLAIN_SOURCE);
     forbid(&form, PLAIN);
     form

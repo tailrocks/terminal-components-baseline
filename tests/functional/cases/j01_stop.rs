@@ -63,10 +63,15 @@ fn reach_manager(app: &App) -> TerminalSnapshot {
 
 fn dialog_open(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
+    // The title contains "Stop", and the body paints before the action row.
+    // The open dialog has the full preserve sentence and a bordered
+    // "Keep running" row. The two buttons may wrap, so they need not share
+    // that row.
     visible.contains(TITLE)
         && visible.contains(FACT)
-        && visible.contains(CONFIRM)
-        && visible.contains(CANCEL)
+        && visible
+            .lines()
+            .any(|line| line.contains(CANCEL) && line.contains('│'))
 }
 
 fn running_on(screen: &TerminalSnapshot, short: &str) -> bool {
@@ -108,21 +113,23 @@ fn painted_running(screen: &TerminalSnapshot) -> u32 {
     found[0]
 }
 
-fn dialog_action(app: &App, label: &str) -> Point {
-    let screen = app.screen();
-    let hits: Vec<_> = find_all(&screen, label)
+fn action_hits(screen: &TerminalSnapshot, label: &str) -> Vec<Point> {
+    find_all(screen, label)
         .into_iter()
         .filter(|point| {
-            let row = row_text(&screen, u32::from(point.y));
+            let row = row_text(screen, u32::from(point.y));
             row.contains(CANCEL) && row.contains('│')
         })
-        .collect();
-    assert_eq!(
-        hits.len(),
-        1,
-        "one stop-dialog action {label:?}:\n{}",
-        text(&screen)
-    );
+        .collect()
+}
+
+fn dialog_action(app: &App, label: &str) -> Point {
+    // A later `screen()` can land in the middle of the resize repaint, after
+    // the title and before the action row. Click the frame that has the row.
+    let screen = app.wait_screen("stop dialog action", |screen| {
+        dialog_open(screen) && action_hits(screen, label).len() == 1
+    });
+    let hits = action_hits(&screen, label);
     Point {
         x: hits[0].x + 2,
         y: hits[0].y,
