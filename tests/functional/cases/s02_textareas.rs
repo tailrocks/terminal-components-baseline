@@ -489,6 +489,14 @@ fn compare_levels_then_restore() {
         &["no color", CRUMB],
         &["Page options", "120×40", "○ Compare levels"],
     );
+    // The hidden cursor sits on the resize clamp until the text area places
+    // it. The accepted narrow frame has that caret at column 60.
+    session.app.wait_screen("narrow caret", |screen| {
+        screen.cols() == 80
+            && screen.rows() == 24
+            && text(screen).contains("no color")
+            && screen.cursor_local() == Some((60, 20))
+    });
     see(
         &session,
         "sc.textareas.compare-levels.80x24",
