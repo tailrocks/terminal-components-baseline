@@ -173,6 +173,40 @@ fn shot(app: &App, checkpoint: &str) {
     app.visual(&visual_id(checkpoint));
 }
 
+fn wide_dialog(screen: &TerminalSnapshot) -> bool {
+    screen.cols() == 120 && screen.rows() == 40 && dialog_open(screen)
+}
+
+fn baseline_hit(app: &App, checkpoint: &str) -> bool {
+    let root =
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    app.check_visual(&root, &visual_id(checkpoint)).is_pass()
+}
+
+/// The reference capture shows `last seen 4 s ago` and `daemon · 4 s ago`.
+/// A compare started on that second is still running when the next sim
+/// second replaces it, and the 700 ms window then holds the replacement.
+/// `3 s ago` is the second before the capture. Its boundary restarts the
+/// window on `4 s ago`.
+fn shoot_wide(app: &App) {
+    let previous = ["last seen 3 s ago", "daemon · 3 s ago"];
+    for _ in 0..4 {
+        app.wait_screen("before the previous age", |screen| {
+            let visible = text(screen);
+            wide_dialog(screen) && previous.iter().all(|item| !visible.contains(item))
+        });
+        app.wait_screen("previous age", |screen| {
+            let visible = text(screen);
+            wide_dialog(screen) && previous.iter().all(|item| visible.contains(item))
+        });
+        std::thread::sleep(Duration::from_millis(250));
+        if wide_dialog(&app.screen()) && baseline_hit(app, WIDE) {
+            return;
+        }
+    }
+    app.visual(&visual_id(WIDE));
+}
+
 fn show_9b02(app: &App) -> TerminalSnapshot {
     app.key("down");
     app.wait_text("c41e");
@@ -220,7 +254,8 @@ fn j01_stop_stop() {
         text(&dialog)
     );
     assert!(text(&dialog).contains(CONFIRM) && text(&dialog).contains(CANCEL));
-    shot(&app, WIDE);
+    nudge(&app, dialog_open);
+    shoot_wide(&app);
     app.resize(80, 24);
     let narrow = app.wait_screen("80x24", |screen| {
         screen.cols() == 80 && screen.rows() == 24 && dialog_open(screen)
