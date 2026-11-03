@@ -377,7 +377,16 @@ fn route_by_page_keyboard_and_pointer() {
 fn sections_narrow_then_wide() {
     let args = ["--page", "celleditors"];
     let app = page("s03-celleditors-sections", None, 80, 24);
-    let narrow_play = app.wait_text("Deployment targets");
+    // The header paints before the table rows. "Deployment targets" is not
+    // the playground frame until D-101 is on screen.
+    let narrow_play = app.wait_screen("narrow cell rows", |screen| {
+        let visible = text(screen);
+        visible.contains("Deployment targets")
+            && visible.contains("D-101")
+            && visible.contains("Production")
+            && visible.contains("qa-legacy")
+            && visible.contains("mars-1")
+    });
     see(
         &narrow_play,
         &[
