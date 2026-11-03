@@ -533,7 +533,15 @@ fn j04_accounts_accounts() {
     );
     assert!(text(&locked).contains(REVOKED), "{}", text(&locked));
     assert_secrets(&locked);
-    let revoked = select_until(&hard, "revoked", shows(REVOKED_CRUMB));
+    select_until(&hard, "revoked", shows(REVOKED_CRUMB));
+    // The crumb is in the header before the detail replaces the previous
+    // account's quota. The rejection is the later paint.
+    let revoked = hard.wait_screen("revoked detail", |screen| {
+        let visible = text(screen);
+        visible.contains(REVOKED_CRUMB)
+            && visible.contains(UNAUTHORIZED)
+            && visible.contains(HTTP_401)
+    });
     let visible = text(&revoked);
     assert!(visible.contains(UNAUTHORIZED), "{visible}");
     assert!(visible.contains(HTTP_401), "{visible}");
