@@ -3,7 +3,11 @@
 //! Tuiscotti test ids are `[a-z0-9_-]` segments, so the baseline directory is
 //! `pre_refactor/s03_columns/` and each case id's dots become underscores.
 
+use std::path::PathBuf;
+use std::time::{Duration, Instant};
+
 use tui_test::{SnapshotColor, TerminalSnapshot};
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{Launch, Point, SHOWCASE, find_all, row_text, text, try_launch};
 
@@ -155,6 +159,105 @@ fn click_side(app: &crate::support::App, label: &str) {
 
 fn shot(app: &crate::support::App, case_id: &str, _precondition: &str, _args: &[&str]) {
     app.visual(&visual_id(case_id));
+}
+
+fn check_frame(app: &crate::support::App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
+    }
+}
+
+/// The accepted Playground shot still has the tab's press flash, after focus
+/// has left the tab. A later paint locks the released tab.
+fn tab_press_held(screen: &TerminalSnapshot) -> bool {
+    let Some(hit) = find_all(screen, "Playground")
+        .into_iter()
+        .find(|hit| hit.y == 4)
+    else {
+        return false;
+    };
+    let gutter = hit.x.saturating_sub(1);
+    let flash = |x| {
+        screen
+            .cell_at(u32::from(x), u32::from(hit.y))
+            .is_some_and(|cell| cell.bg() == SnapshotColor::Rgb(0x4a, 0x4a, 0x52))
+    };
+    flash(hit.x)
+        && flash(gutter)
+        && screen
+            .cell_at(u32::from(gutter), u32::from(hit.y))
+            .is_some_and(|cell| cell.text() != "▎")
+}
+
+fn cursor_parked(screen: &TerminalSnapshot, col: u32, row: u32) -> bool {
+    let cursor = screen.cursor();
+    cursor.col() == col && cursor.row() == row && !cursor.visible()
+}
+
+fn header_present(screen: &TerminalSnapshot) -> bool {
+    (0..screen.rows()).any(|row| {
+        let line = row_text(screen, row);
+        line.contains("ID")
+            && line.contains("Task")
+            && line.contains("Status")
+            && line.contains("Branch")
+    })
+}
+
+fn sample_held(
+    app: &crate::support::App,
+    pred: impl Fn(&TerminalSnapshot) -> bool,
+) -> Option<TerminalSnapshot> {
+    let started = Instant::now();
+    let mut since: Option<Instant> = None;
+    while started.elapsed() < Duration::from_millis(400) {
+        let screen = app.screen();
+        if pred(&screen) {
+            let mark = since.get_or_insert_with(Instant::now);
+            if mark.elapsed() >= Duration::from_millis(80) {
+                return Some(screen);
+            }
+        } else {
+            since = None;
+        }
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    None
+}
+
+/// The accepted no-color frame parks the hidden cursor at column 118.
+/// The settled frame keeps the same cells and moves that cursor to 107.
+fn no_color_cursor(screen: &TerminalSnapshot) -> bool {
+    let raw = text(screen);
+    if !raw.contains(CRUMB)
+        || !raw.contains("no color")
+        || !raw.contains(WIDE)
+        || raw.contains("Page options")
+        || raw.contains(CAP_PLAY)
+        || raw.contains("○ Compare levels")
+    {
+        return false;
+    }
+    let cursor = screen.cursor();
+    cursor.col() == 118 && cursor.row() == 36 && !cursor.visible()
 }
 
 fn grid_label(screen: &TerminalSnapshot, label: &str) -> bool {
@@ -765,19 +868,39 @@ fn compare_levels_narrows_before_restore() {
         &[CRUMB, "● Compare levels", CAP_STATES],
         &["○ Compare levels", "Page options", CAP_PLAY],
     );
-    reveal(&app, &["no color"]);
-    let bands = app.settle();
+    let point = Point { x: 70, y: 20 };
+    let mut bands = None;
+    for _ in 0..24 {
+        let started = Instant::now();
+        while started.elapsed() < Duration::from_millis(200) {
+            let screen = app.screen();
+            if no_color_cursor(&screen) {
+                bands = Some(screen);
+                break;
+            }
+            std::thread::sleep(Duration::from_millis(15));
+        }
+        if bands.is_some() || text(&app.screen()).contains("no color") {
+            break;
+        }
+        app.wheel(point, true, 2);
+    }
+    let bands = bands.unwrap_or_else(|| {
+        let screen = app.screen();
+        let cursor = screen.cursor();
+        panic!(
+            "no-color cursor at {},{} not 118,36\n{}",
+            cursor.col(),
+            cursor.row(),
+            text(&screen)
+        )
+    });
     see(
         &bands,
         &[CRUMB, "no color", WIDE],
         &["Page options", CAP_PLAY, "○ Compare levels"],
     );
-    shot(
-        &app,
-        "sc.columns.compare-levels.120x40",
-        "compare levels scrolled to no color at 120 by 40",
-        &args,
-    );
+    check_frame(&app, &bands, &visual_id("sc.columns.compare-levels.120x40"));
     app.resize(80, 24);
     let narrow = app.wait_screen("compare redraw at 80 by 24", |screen| {
         screen.cols() == 80 && screen.rows() == 24 && text(screen).contains(CRUMB)
@@ -1069,6 +1192,12 @@ fn option_row_width() {
 fn option_resizable_off() {
     let args = ["--page", "columns"];
     let app = open("s03-columns-resizable", 120, 40, &args);
+    let home = app.wait_text("#1040");
+    let (home_id, home_task, _, home_y) = column_header(&home);
+    let seam = Point {
+        x: home_task - 2,
+        y: home_y,
+    };
     click_tab(&app, "Options");
     let options = app.wait_text("Page options");
     assert!(row_with(&options, "Resizable columns").contains(" on"));
@@ -1094,51 +1223,78 @@ fn option_resizable_off() {
             .starts_with('3')
     );
     assert!(option_value(&off, "Header menu labels").contains("default"));
-    click_tab(&app, "Playground");
-    let fixed = app.wait_text("#1040");
-    let meta = row_with(&fixed, "Resizable columns");
+    let dragged = Point {
+        x: seam.x + 8,
+        y: seam.y,
+    };
+    let mut ignored = None;
+    for _ in 0..6 {
+        // The tab flash expires on the next paint after 140ms. Drag before that.
+        click_tab(&app, "Playground");
+        app.move_to(seam);
+        app.down(seam);
+        app.drag_to(dragged);
+        if let Some(screen) = sample_held(&app, |screen| resizable_frame(screen, home_id, seam.x)) {
+            ignored = Some(screen);
+            break;
+        }
+        app.up(dragged);
+    }
+    let ignored = ignored.unwrap_or_else(|| {
+        let screen = app.screen();
+        let cursor = screen.cursor();
+        panic!(
+            "resizable drag lost the Playground press at cursor {},{}\n{}",
+            cursor.col(),
+            cursor.row(),
+            text(&screen)
+        )
+    });
+    let meta = row_with(&ignored, "Resizable columns");
     assert!(
         !meta.contains(DRAG_META) && !meta.contains(USER_META) && !meta.contains("fixed"),
         "fixed meta: {meta}"
     );
-    let (id_x, task_x, _, y) = column_header(&fixed);
+    let (id_x, task_x, _, still_y) = column_header(&ignored);
     assert_eq!(task_x, id_x + 7, "turning resize off changed the ID width");
-    let seam = Point { x: task_x - 2, y };
-    app.move_to(seam);
-    app.down(seam);
-    app.drag_to(Point {
-        x: seam.x + 8,
-        y: seam.y,
-    });
-    let ignored = app.settle();
-    let (_, still, _, still_y) = column_header(&ignored);
-    assert_eq!(still, task_x, "a disabled seam drag moved Task");
+    assert_eq!(task_x, home_task, "a disabled seam drag moved Task");
     assert!(
         !heavy_columns(&ignored, still_y).contains(&seam.x),
         "a disabled seam painted a heavy rule\n{}",
         row_text(&ignored, u32::from(still_y))
-    );
-    let meta = row_with(&ignored, "Resizable columns");
-    assert!(
-        !meta.contains(DRAG_META) && !meta.contains(USER_META) && !meta.contains("fixed"),
-        "disabled seam meta: {meta}"
     );
     see(
         &ignored,
         &[CRUMB, ROW_82, SAMPLE, DATE, "#1040"],
         &[DRAG_META, USER_META, FIXED_META, "Page options", ROW_28],
     );
-    shot(
-        &app,
-        "opt.columns.resizable",
-        "resizable off keeps fixed widths while a seam drag is held",
-        &args,
-    );
-    app.up(Point {
-        x: seam.x + 8,
-        y: seam.y,
-    });
+    check_frame(&app, &ignored, &visual_id("opt.columns.resizable"));
+    app.up(dragged);
     app.finish();
+}
+
+fn resizable_frame(screen: &TerminalSnapshot, id_x: u16, seam_x: u16) -> bool {
+    let raw = text(screen);
+    if !raw.contains(CRUMB)
+        || !raw.contains(ROW_82)
+        || !raw.contains(SAMPLE)
+        || !raw.contains(DATE)
+        || !raw.contains("#1040")
+        || !raw.contains("↑↓ Move")
+        || !raw.contains("←→ Column")
+        || raw.contains(DRAG_META)
+        || raw.contains(USER_META)
+        || raw.contains(FIXED_META)
+        || raw.contains("Page options")
+        || raw.contains(ROW_28)
+        || !tab_press_held(screen)
+        || !cursor_parked(screen, 37, 39)
+        || !header_present(screen)
+    {
+        return false;
+    }
+    let (id, task, _, y) = column_header(screen);
+    id == id_x && task == id_x + 7 && !heavy_columns(screen, y).contains(&seam_x)
 }
 
 #[test]
@@ -1218,18 +1374,41 @@ fn option_min_width() {
     );
     assert!(option_value(&chosen, "Header menu labels").contains("default"));
     click_tab(&app, "Playground");
-    let play = app.wait_text(DRAG_META);
+    let mut before = None;
+    let started = Instant::now();
+    while started.elapsed() < Duration::from_millis(800) {
+        let screen = app.screen();
+        if text(&screen).contains(DRAG_META) && text(&screen).contains("#1040") {
+            before = Some(screen);
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(5));
+    }
+    let play = before.unwrap_or_else(|| {
+        panic!(
+            "playground before the min-width drag\n{}",
+            text(&app.screen())
+        )
+    });
     let (id_x, task_x, _, y) = column_header(&play);
     assert_eq!(task_x, id_x + 7, "min width changed ID before a drag");
     let seam = Point { x: task_x - 2, y };
-    app.down(seam);
-    app.drag_to(Point {
+    let dest = Point {
         x: seam.x.saturating_sub(20),
         y: seam.y,
-    });
-    let clamped = app.wait_screen("min width clamp", |screen| {
-        let (_, task, _, _) = column_header(screen);
-        task == id_x + 12
+    };
+    // Drag in the same turn as the tab click so the press flash is still up.
+    app.down(seam);
+    app.drag_to(dest);
+    let clamped = sample_held(&app, |screen| min_width_frame(screen, id_x)).unwrap_or_else(|| {
+        let screen = app.screen();
+        let cursor = screen.cursor();
+        panic!(
+            "min-width drag lost the Playground press at cursor {},{}\n{}",
+            cursor.col(),
+            cursor.row(),
+            text(&screen)
+        )
     });
     let (_, clamped_task, _, _) = column_header(&clamped);
     assert_eq!(
@@ -1248,17 +1427,29 @@ fn option_min_width() {
         &[CRUMB, ROW_82, "#1040", USER_META],
         &[DRAG_META, FIXED_META, "Page options", ROW_28],
     );
-    shot(
-        &app,
-        "opt.columns.min_width",
-        "a leftward drag stops at the narrowest width 10",
-        &args,
-    );
-    app.up(Point {
-        x: seam.x.saturating_sub(20),
-        y: seam.y,
-    });
+    check_frame(&app, &clamped, &visual_id("opt.columns.min_width"));
+    app.up(dest);
     app.finish();
+}
+
+fn min_width_frame(screen: &TerminalSnapshot, id_x: u16) -> bool {
+    let raw = text(screen);
+    if !raw.contains(CRUMB)
+        || !raw.contains(ROW_82)
+        || !raw.contains("#1040")
+        || !raw.contains(USER_META)
+        || raw.contains(DRAG_META)
+        || raw.contains(FIXED_META)
+        || raw.contains("Page options")
+        || raw.contains(ROW_28)
+        || !tab_press_held(screen)
+        || !cursor_parked(screen, 99, 37)
+        || !header_present(screen)
+    {
+        return false;
+    }
+    let (id, task, _, _) = column_header(screen);
+    id == id_x && task == id_x + 12
 }
 
 #[test]

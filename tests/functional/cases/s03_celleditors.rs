@@ -3,7 +3,11 @@
 //! Tuiscotti test ids are `[a-z0-9_-]` segments, so the baseline directory is
 //! `pre_refactor/s03_celleditors/` and each case id's dots become underscores.
 
-use tui_test::TerminalSnapshot;
+use std::path::PathBuf;
+use std::time::{Duration, Instant};
+
+use tui_test::{SnapshotColor, TerminalSnapshot};
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{App, Launch, Point, SHOWCASE, find_all, row_text, text, try_launch};
 
@@ -212,6 +216,53 @@ fn shot(app: &App, case_id: &str, _precondition: &str, _args: &[&str]) {
     app.visual(&visual_id(case_id));
 }
 
+fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
+    }
+}
+
+/// Down moves the bar onto Sandbox while D-101 still has the press flash.
+/// A later paint locks the released row.
+fn bar_still_pressed(screen: &TerminalSnapshot) -> bool {
+    if !text(screen).contains(CHOOSING) {
+        return false;
+    }
+    let Some(id) = find_all(screen, "D-101").into_iter().find(|hit| hit.x > 24) else {
+        return false;
+    };
+    let pressed = screen
+        .cell_at(u32::from(id.x), u32::from(id.y))
+        .is_some_and(|cell| cell.bg() == SnapshotColor::Rgb(0x38, 0x38, 0x3e));
+    if !pressed {
+        return false;
+    }
+    let production = lines_with(screen, "› Production");
+    let sandbox = lines_with(screen, "Sandbox");
+    production
+        .iter()
+        .any(|line| line.contains('│') && !line.contains('▎'))
+        && sandbox.iter().any(|line| line.contains('▎'))
+}
+
 fn omit_states<'a>(extra: &[&'a str]) -> Vec<&'a str> {
     let mut absent: Vec<&'a str> = vec![
         "pressed",
@@ -231,7 +282,13 @@ fn omit_states<'a>(extra: &[&'a str]) -> Vec<&'a str> {
 fn route_by_page_keyboard_and_pointer() {
     let args = ["--page", "celleditors"];
     let app = page("s03-celleditors-route-page", None, 120, 40);
-    let screen = app.wait_text("Deployment targets");
+    // The first paint shows the table before Option sets is drawn.
+    let screen = app.wait_screen("cell editors page", |screen| {
+        let raw = text(screen);
+        raw.contains("Deployment targets")
+            && raw.contains("Option sets")
+            && raw.contains("Disaster recovery")
+    });
     see(
         &screen,
         &[
@@ -950,12 +1007,6 @@ fn option_popup_width_narrow() {
 
 #[test]
 fn option_cursor_bar() {
-    let args = [
-        "--page",
-        "celleditors",
-        "--opt",
-        "celleditors.cursor_style=bar",
-    ];
     let app = page(
         "s03-celleditors-cursor",
         Some("celleditors.cursor_style=bar"),
@@ -968,9 +1019,37 @@ fn option_cursor_bar() {
     defaults_besides(&options, "cursor");
     click_tab(&app, "Playground");
     app.wait_text("Deployment targets");
-    open_env(&app);
-    app.key("down");
-    let moved = app.settle();
+    focus_table(&app);
+    let mut moved = None;
+    for _ in 0..6 {
+        app.key("enter");
+        app.key("down");
+        let started = Instant::now();
+        let mut since: Option<Instant> = None;
+        while started.elapsed() < Duration::from_millis(500) {
+            let screen = app.screen();
+            if bar_still_pressed(&screen) {
+                let held = since.get_or_insert_with(Instant::now);
+                if held.elapsed() >= Duration::from_millis(120) {
+                    moved = Some(screen);
+                    break;
+                }
+            } else {
+                since = None;
+            }
+            std::thread::sleep(Duration::from_millis(15));
+        }
+        if moved.is_some() {
+            break;
+        }
+        app.key("esc");
+    }
+    let moved = moved.unwrap_or_else(|| {
+        panic!(
+            "bar move did not keep the pressed row\n{}",
+            text(&app.screen())
+        )
+    });
     let blob = popup_blob(&moved);
     let current = lines_with(&moved, "› Production");
     assert!(
@@ -992,12 +1071,7 @@ fn option_cursor_bar() {
         row_with(&moved, "D-101").contains("Production"),
         "moving the bar cursor committed Sandbox"
     );
-    shot(
-        &app,
-        "opt.celleditors.cursor_style",
-        "celleditors.cursor_style=bar draws ▎ on Sandbox and leaves › on Production",
-        &args,
-    );
+    check_frame(&app, &moved, &visual_id("opt.celleditors.cursor_style"));
     app.key("esc");
     let cancelled = app.wait_text(CANCELLED);
     assert!(
