@@ -143,6 +143,12 @@ fn phrase(count: usize) -> String {
     format!("TRASH {count} UNDER /Users/alex ON {HOST}")
 }
 
+/// The status bar paints `· {cols}×{rows}` from the frame Holla just drew.
+/// The PTY grid changes first, and the previous frame still matches `ready`.
+fn painted(screen: &TerminalSnapshot, cols: u16, rows: u16) -> bool {
+    text(screen).contains(&format!("· {cols}×{rows}"))
+}
+
 fn nudge(app: &App, ready: impl Fn(&TerminalSnapshot) -> bool) {
     std::thread::sleep(Duration::from_millis(200));
     let screen = app.screen();
@@ -151,11 +157,17 @@ fn nudge(app: &App, ready: impl Fn(&TerminalSnapshot) -> bool) {
     let nudged = cols + 1;
     app.resize(nudged, rows);
     app.wait_screen("nudged", |screen| {
-        screen.cols() == u32::from(nudged) && screen.rows() == u32::from(rows) && ready(screen)
+        screen.cols() == u32::from(nudged)
+            && screen.rows() == u32::from(rows)
+            && painted(screen, nudged, rows)
+            && ready(screen)
     });
     app.resize(cols, rows);
     app.wait_screen("size restored", |screen| {
-        screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && ready(screen)
+        screen.cols() == u32::from(cols)
+            && screen.rows() == u32::from(rows)
+            && painted(screen, cols, rows)
+            && ready(screen)
     });
 }
 
@@ -411,7 +423,10 @@ fn h06_report_results_match_the_simulation() {
 
     app.resize(80, 24);
     let narrowed = app.wait_screen("narrow report", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && narrow_report(screen)
+        screen.cols() == 80
+            && screen.rows() == 24
+            && painted(screen, 80, 24)
+            && narrow_report(screen)
     });
     see(&narrowed, &[REPORT], &[RUNNING, QUIT]);
     nudge(&app, narrow_report);
@@ -419,7 +434,10 @@ fn h06_report_results_match_the_simulation() {
 
     app.resize(120, 40);
     let restored = app.wait_screen("report restored", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && report_ready(screen)
+        screen.cols() == 120
+            && screen.rows() == 40
+            && painted(screen, 120, 40)
+            && report_ready(screen)
     });
     see(
         &restored,
