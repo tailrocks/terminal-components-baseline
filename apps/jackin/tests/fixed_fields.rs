@@ -17,11 +17,11 @@ use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus,
 use jackin_console::domain::openshell;
 use jackin_console::domain::role::{AccountOrder, LaunchRoleRule, RoleAdmin};
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
-use jackin_console::domain::usage::{AccountUsage, FreshnessInfo};
+use jackin_console::domain::usage::{AccountUsage, FreshnessInfo, QuotaWindow, WindowCategory};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::{
-    AccountPolicy, DirtyExitPolicy, EnvVar, Isolation, Mount, MountKind, MountScope, MountSource,
-    RoleEntry, RoleSource, WizardDefaults, Workspace,
+    AccountPolicy, AllowedRoles, DirtyExitPolicy, EnvVar, Isolation, Mount, MountKind, MountScope,
+    MountSource, RoleEntry, RoleSource, WizardDefaults, Workspace,
 };
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::{GlobalConfig, Snapshot, TrustRow};
@@ -108,12 +108,16 @@ fn good_global() -> GlobalConfig {
                 (a, mode)
             })
             .collect(),
-        trust: vec![TrustRow {
-            source: "github.com/acme-labs".into(),
-            kind: "git",
-            trusted: true,
-            roles: 2,
-        }],
+        trust: vec![trust_row(true)],
+    }
+}
+
+fn trust_row(trusted: bool) -> TrustRow {
+    TrustRow {
+        source: "github.com/acme-labs".into(),
+        kind: "git",
+        trusted,
+        roles: 2,
     }
 }
 
@@ -538,6 +542,25 @@ fn fixed_world_extractor_sees_every_global_field() {
         },
     );
     global_case(
+        "trust: the first of two rows is trusted, the second is not",
+        |g| g.trust.push(trust_row(false)),
+        GlobalFixed {
+            all_trusted: false,
+            ..base()
+        },
+    );
+    global_case(
+        "trust: the first of two rows is not trusted, the second is",
+        |g| {
+            g.trust[0].trusted = false;
+            g.trust.push(trust_row(true));
+        },
+        GlobalFixed {
+            all_trusted: false,
+            ..base()
+        },
+    );
+    global_case(
         "Data fields do not move the extractor",
         |g| {
             g.env = vec![EnvVar::plain("K", "v")];
@@ -680,21 +703,29 @@ fn fixed_world_extractor_sees_every_surface_field() {
 }
 
 fn wrong_workspace(registry: &AccountRegistry) -> Workspace {
-    let default_id = registry
+    let defaults: Vec<String> = registry
         .accounts
         .iter()
-        .find(|a| a.default_for_provider)
-        .expect("a default account")
-        .id
-        .clone();
+        .filter(|a| a.default_for_provider)
+        .map(|a| a.id.clone())
+        .collect();
+    let plain = plain_ids(registry);
+    assert!(
+        defaults.len() > 1 && plain.len() > 1,
+        "the registry needs two defaults and two other accounts to start every element wrong"
+    );
     let mut ws = Workspace::new(1, "x", "/elsewhere");
     ws.keep_awake = true;
     ws.dirty_policy = DirtyExitPolicy::Discard;
     ws.mounts = vec![Mount::host("/a", "/b"), Mount::host("/c", "/d")];
-    ws.accounts.disabled_defaults.insert(default_id);
+    ws.accounts.disabled_defaults = defaults.into_iter().collect();
     ws.accounts.role_preferred.insert(
         ("r".into(), jackin_console::domain::agent::Provider::OpenAi),
-        plain_ids(registry).remove(0),
+        plain[0].clone(),
+    );
+    ws.accounts.role_preferred.insert(
+        ("s".into(), jackin_console::domain::agent::Provider::Zai),
+        plain[1].clone(),
     );
     ws
 }
@@ -728,21 +759,34 @@ fn fixed_world_normalizer_sets_every_fixed_workspace_field() {
 #[test]
 fn fixed_world_normalizer_sets_every_fixed_global_field() {
     let launchable = Fixed::openshell().launchable;
-    let other = Agent::ALL
-        .into_iter()
-        .find(|a| *a != launchable)
-        .expect("a second agent");
     let mut g = good_global();
     g.coauthor_trailer = true;
     g.dco_signoff = true;
-    g.mounts.push(Mount::host("/a", "/b"));
-    g.role_env.insert("r".into(), vec![EnvVar::plain("A", "b")]);
-    g.agent_modes.insert(other, AuthMode::Sync);
-    g.trust[0].trusted = false;
+    g.mounts = vec![Mount::host("/a", "/b"), Mount::host("/c", "/d")];
+    g.role_env = BTreeMap::from([
+        ("r".into(), vec![EnvVar::plain("A", "b")]),
+        ("s".into(), vec![EnvVar::plain("C", "d")]),
+    ]);
+    for a in Agent::ALL.into_iter().filter(|a| *a != launchable) {
+        g.agent_modes.insert(a, AuthMode::Sync);
+    }
+    g.trust = vec![trust_row(false), trust_row(false), trust_row(false)];
+    assert!(g.mounts.len() > 1 && g.role_env.len() > 1);
+    assert!(
+        g.agent_modes
+            .iter()
+            .all(|(a, mode)| *a == launchable || *mode != AuthMode::Ignore),
+        "every agent but the launchable one starts wrong"
+    );
+    assert!(
+        g.trust.iter().all(|row| !row.trusted),
+        "every trust row starts wrong"
+    );
     assert_ne!(global_fixed(&g), expected_global());
     openshell::global(&mut g);
     assert_eq!(global_fixed(&g), expected_global());
     assert_eq!(g.agent_modes[&launchable], AuthMode::Sync);
+    assert_eq!(g.trust.len(), 3, "the rows stay, only `trusted` changes");
 
     let mut g = good_global();
     g.agent_modes.clear();
@@ -834,7 +878,12 @@ fn probe_account() -> Account {
         }),
         usage: AccountUsage {
             freshness: FreshnessInfo::current(4321),
-            windows: vec![],
+            windows: vec![QuotaWindow::pct(
+                "probe-window",
+                "probe window",
+                WindowCategory::Model,
+                37,
+            )],
         },
         launch_blocked: Some(LaunchBlock::UsageOnlySource),
         edit_blocked: Some(EditBlocked::new("probe text", "probe")),
@@ -1004,7 +1053,9 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
     let mut ws = wrong_workspace(&registry);
     ws.id = 77;
     ws.name = "probe".into();
+    ws.roles.allowed = AllowedRoles::Custom(vec!["probe-role".into(), "probe-other".into()]);
     ws.roles.default = Some("probe-role".into());
+    ws.roles.last = Some("probe-other".into());
     ws.env = vec![EnvVar::plain("PROBE", "value")];
     ws.role_env
         .insert("probe-role".into(), vec![EnvVar::plain("R", "v")]);
