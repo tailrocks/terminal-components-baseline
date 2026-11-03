@@ -13,9 +13,11 @@
 //! folder is `Go::Analyze`. `disk-cleanup` pushes the disk page itself at
 //! `~/work` with `842 of 926 GB` and `/Volumes/Backup`.
 
+use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
+use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{App, HOLLA, Launch, text, try_launch};
 
@@ -162,9 +164,8 @@ fn frozen_two(screen: &TerminalSnapshot) -> bool {
 /// Busy rows paint `spinner_frame(now_ms / 80)`. Cancel freezes the revealed
 /// count, and the next resize paints whichever frame the clock has reached.
 /// Idle ticks advance that clock without redrawing, so sample resizes until
-/// the frame is the first glyph. A resize can still be followed by one later
-/// paint. `visual` keeps the frame that stays still for 700ms, so hold the
-/// first glyph across that window and sample again when a later glyph arrives.
+/// the frame is the first glyph. A later paint can still replace that glyph.
+/// `visual` would lock the replacement, so compare the held first-glyph frame.
 fn first_spinner(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     visible.contains('⠋')
@@ -185,35 +186,40 @@ fn spinner_frame_ready(
         && first_spinner(screen)
 }
 
-/// The accepted frame is the first spinner glyph, and it has to be the glyph
-/// `visual` locks. A follow-up paint replaces it before that lock under load.
+/// The accepted frame is the first spinner glyph. A follow-up paint replaces
+/// it before `visual` locks, so return the frame that held the glyph.
 fn hold_first_spinner(
     app: &App,
     cols: u16,
     rows: u16,
     ready: &impl Fn(&TerminalSnapshot) -> bool,
-) -> bool {
+) -> Option<TerminalSnapshot> {
     let started = Instant::now();
     let mut seen = app.screen();
     if !spinner_frame_ready(&seen, cols, rows, ready) {
-        return false;
+        return None;
     }
     let cursor = seen.cursor_local();
     let glyphs = text(&seen);
-    while started.elapsed() < Duration::from_millis(1000) {
+    while started.elapsed() < Duration::from_millis(200) {
         std::thread::sleep(Duration::from_millis(40));
         seen = app.screen();
         if !spinner_frame_ready(&seen, cols, rows, ready)
             || seen.cursor_local() != cursor
             || text(&seen) != glyphs
         {
-            return false;
+            return None;
         }
     }
-    true
+    Some(seen)
 }
 
-fn settle_spinner(app: &App, cols: u16, rows: u16, ready: impl Fn(&TerminalSnapshot) -> bool) {
+fn settle_spinner(
+    app: &App,
+    cols: u16,
+    rows: u16,
+    ready: impl Fn(&TerminalSnapshot) -> bool,
+) -> TerminalSnapshot {
     let start = Instant::now();
     loop {
         let bumped = cols + 1;
@@ -225,13 +231,39 @@ fn settle_spinner(app: &App, cols: u16, rows: u16, ready: impl Fn(&TerminalSnaps
         let screen = app.wait_screen("spinner sample", |screen| {
             screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && ready(screen)
         });
-        if first_spinner(&screen) && hold_first_spinner(app, cols, rows, &ready) {
-            return;
+        if first_spinner(&screen) {
+            if let Some(held) = hold_first_spinner(app, cols, rows, &ready) {
+                return held;
+            }
         }
         if start.elapsed() > Duration::from_secs(12) {
             panic!("spinner did not reach the first frame\n{}", text(&screen));
         }
         std::thread::sleep(Duration::from_millis(40));
+    }
+}
+
+fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let artifacts = app.evidence_dir().join("check-artifacts");
+    let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+        .expect("open Tuiscotti frozen store");
+    let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+    if let CheckOutcome::Failure(failure) = outcome {
+        panic!(
+            "{test_id} {} sha {} path {} cells {}",
+            failure.reason(),
+            failure.candidate_sha256(),
+            failure.candidate_path().display(),
+            failure.changed_cell_total()
+        );
     }
 }
 
@@ -251,8 +283,8 @@ fn nudge(app: &App, ready: impl Fn(&TerminalSnapshot) -> bool) {
     });
 }
 
-fn shot(app: &App, checkpoint: &str) {
-    app.visual(&visual_id(checkpoint));
+fn shot(app: &App, checkpoint: &str, screen: &TerminalSnapshot) {
+    check_frame(app, screen, &visual_id(checkpoint));
 }
 
 fn open_catalog(app: &App, label: &str) {
@@ -402,8 +434,8 @@ fn h05_scan_scan_cancels_completes_and_changes_root() {
     );
 
     nudge(&app, frozen_two);
-    settle_spinner(&app, 120, 40, frozen_two);
-    shot(&app, WIDE);
+    let wide = settle_spinner(&app, 120, 40, frozen_two);
+    shot(&app, WIDE, &wide);
 
     app.resize(80, 24);
     let narrowed = app.wait_screen("narrow cancelled tree", |screen| {
@@ -415,8 +447,8 @@ fn h05_scan_scan_cancels_completes_and_changes_root() {
         &[COMPLETE, CLEANUP_METER, BACKUP],
     );
     nudge(&app, frozen_two);
-    settle_spinner(&app, 80, 24, frozen_two);
-    shot(&app, NARROW);
+    let narrow = settle_spinner(&app, 80, 24, frozen_two);
+    shot(&app, NARROW, &narrow);
 
     app.resize(120, 40);
     let restored = app.wait_screen("cancelled tree restored", |screen| {
