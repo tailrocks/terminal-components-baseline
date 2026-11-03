@@ -391,12 +391,18 @@ fn launch_running() {
         text(&cockpit)
     );
     app.key("ctrl+c");
+    // The cockpit already lists b5df as a failed setup before the abort is
+    // applied. The ack status is what shows the abort finished.
     let failed = app.wait_screen("aborted launch", |screen| {
         let visible = text(screen);
         visible.contains("b5df · payments-platform")
             && visible.contains(FAILED)
             && visible.contains("failed setup")
+            && visible.contains("still running in the Construct")
             && focused_line(screen).contains("b5df")
+            && !visible.contains("Cancel launch")
+            && !visible.contains("Abort now")
+            && !visible.contains("Resolving launch identity")
     });
     see(
         &failed,

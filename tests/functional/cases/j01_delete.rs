@@ -234,6 +234,38 @@ fn shot(app: &App, checkpoint: &str) {
     app.visual(&visual_id(checkpoint));
 }
 
+fn wide_dialog(screen: &TerminalSnapshot) -> bool {
+    screen.cols() == 120 && screen.rows() == 40 && payments_dialog(screen)
+}
+
+fn baseline_hit(app: &App, checkpoint: &str) -> bool {
+    let root =
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    app.check_visual(&root, &visual_id(checkpoint)).is_pass()
+}
+
+/// The reference capture shows `daemon · 4 s ago` beside the open dialog.
+/// A compare started on that second is still running when the next sim
+/// second replaces it, and the 700 ms window then holds the replacement.
+/// `3 s ago` is the second before the capture.
+fn shoot_wide(app: &App) {
+    nudge(app, payments_dialog);
+    let previous = "daemon · 3 s ago";
+    for _ in 0..4 {
+        app.wait_screen("before the previous age", |screen| {
+            wide_dialog(screen) && !text(screen).contains(previous)
+        });
+        app.wait_screen("previous age", |screen| {
+            wide_dialog(screen) && text(screen).contains(previous)
+        });
+        std::thread::sleep(Duration::from_millis(250));
+        if wide_dialog(&app.screen()) && baseline_hit(app, WIDE) {
+            return;
+        }
+    }
+    app.visual(&visual_id(WIDE));
+}
+
 fn assert_siblings(screen: &TerminalSnapshot) {
     assert!(lists_workspace(screen, INFRA), "{}", text(screen));
     assert!(lists_workspace(screen, RELEASE), "{}", text(screen));
@@ -287,7 +319,7 @@ fn j01_delete_delete() {
     focus_named(&app, PAYMENTS);
     let dialog = open_payments(&app);
     assert!(payments_dialog(&dialog), "{}", text(&dialog));
-    shot(&app, WIDE);
+    shoot_wide(&app);
     app.resize(80, 24);
     let narrow = app.wait_screen("80x24", |screen| {
         screen.cols() == 80 && screen.rows() == 24 && payments_dialog(screen)

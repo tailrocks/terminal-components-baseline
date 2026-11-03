@@ -43,14 +43,29 @@ const WIDE: &str = "pre_refactor/h06_quit/h06_quit_quit_120x40";
 const NARROW: &str = "pre_refactor/h06_quit/h06_quit_quit_narrow";
 
 fn launch(name: &str, scenario: &str) -> App {
+    launch_motion(name, scenario, "reduced", None)
+}
+
+/// Paused ticks every 500 ms. `--frame 4` finishes discovery while the clock
+/// is forced on, then the clock stops. Cleanup still steps on each tick, so
+/// the one-tick confirm status stays up long enough to read.
+fn launch_paused(name: &str, scenario: &str) -> App {
+    launch_motion(name, scenario, "paused", Some(4))
+}
+
+fn launch_motion(name: &str, scenario: &str, motion: &str, frame: Option<u64>) -> App {
     let mut launch = Launch::new(name, HOLLA);
     launch.cols = 120;
     launch.rows = 40;
     launch.color = Some("truecolor".to_string());
-    launch.motion = Some("reduced".to_string());
+    launch.motion = Some(motion.to_string());
     launch.history = false;
     launch.platform = "macos".to_string();
     launch.args = vec!["--scenario".to_string(), scenario.to_string()];
+    if let Some(frame) = frame {
+        launch.args.push("--frame".to_string());
+        launch.args.push(frame.to_string());
+    }
     let app = try_launch(launch).unwrap_or_else(|error| panic!("{error}"));
     app.wait_text("Search actions");
     app
@@ -291,7 +306,7 @@ fn painted(app: &App, needle: &str) -> String {
     }
 }
 
-fn press_confirm(app: &App, label: &str) {
+fn focus_confirm(app: &App, label: &str) {
     app.key("right");
     let marked = format!("▎{label}");
     let deadline = Instant::now() + Duration::from_secs(2);
@@ -304,7 +319,38 @@ fn press_confirm(app: &App, label: &str) {
         assert!(Instant::now() < deadline, "confirm not focused\n{visible}");
         std::thread::sleep(Duration::from_millis(10));
     }
+}
+
+fn press_confirm(app: &App, label: &str) {
+    focus_confirm(app, label);
     app.key("enter");
+}
+
+/// The confirm status is replaced by the next tick. Wait until a tick has
+/// just painted, then confirm, so the status is still the grid we read.
+fn confirm_after_tick(app: &App, label: &str) -> String {
+    focus_confirm(app, label);
+    std::thread::sleep(Duration::from_millis(30));
+    let opened = text(&app.screen());
+    let marked = format!("▎{label}");
+    assert!(
+        opened.contains(&marked) && opened.contains(TITLE),
+        "confirm lost the guard\n{opened}"
+    );
+    let started = Instant::now();
+    loop {
+        let visible = text(&app.screen());
+        if visible != opened && visible.contains(&marked) && visible.contains(TITLE) {
+            break;
+        }
+        assert!(
+            app.child_running() && started.elapsed() < Duration::from_secs(3),
+            "no tick before confirm\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(5));
+    }
+    app.key("enter");
+    painted(app, SETTLE)
 }
 
 fn wait_exit(app: &App) {
@@ -409,7 +455,7 @@ fn h06_quit_route_stay_returns() {
 
 #[test]
 fn h06_quit_guard_waits() {
-    let app = launch("h06-quit-cleanup-confirm", MAC);
+    let app = launch_paused("h06-quit-cleanup-confirm", MAC);
     show_services(&app, MAC);
     arm_cleanup(&app);
     let (dialog, _k, _t) = open_cleanup_guard(&app);
@@ -421,8 +467,7 @@ fn h06_quit_guard_waits() {
         &[STOP_QUIT, "postgresql@17", LINUX_PATH, "redis"],
     );
 
-    press_confirm(&app, LEAVE);
-    let waiting = painted(&app, SETTLE);
+    let waiting = confirm_after_tick(&app, LEAVE);
     assert!(
         app.child_running(),
         "confirm returned before the cleanup report"

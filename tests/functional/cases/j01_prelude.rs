@@ -154,6 +154,49 @@ fn duplicate_open(screen: &TerminalSnapshot) -> bool {
         && !visible.contains(SAVED)
 }
 
+/// The reference frame still shows the cancel status. It expires 5 s of sim
+/// time after Esc, and the wizard above outlives that.
+fn status_duplicate(screen: &TerminalSnapshot) -> bool {
+    duplicate_open(screen) && text(screen).contains(CANCELLED)
+}
+
+fn escape_until(app: &App, present: &str, absent: &str) {
+    let visible = text(&app.screen());
+    if visible.contains(present) && !visible.contains(absent) {
+        return;
+    }
+    app.key("escape");
+    app.wait_screen(present, |screen| {
+        let visible = text(screen);
+        visible.contains(present) && !visible.contains(absent)
+    });
+}
+
+fn rearm_cancelled_duplicate(app: &App) {
+    escape_until(app, WORK_TITLE, NAME_TITLE);
+    escape_until(app, EDIT_TITLE, WORK_TITLE);
+    escape_until(app, DEST_TITLE, EDIT_TITLE);
+    escape_until(app, SOURCE_TITLE, DEST_TITLE);
+    escape_until(app, CANCELLED, SOURCE_TITLE);
+    open_source(app);
+    app.key("g");
+    app.wait_screen("git url again", |screen| {
+        text(screen).contains(GIT_LABEL) && text(screen).contains(SOURCE_TITLE)
+    });
+    app.type_text(GIT_URL);
+    app.wait_screen("url typed again", |screen| {
+        text(screen).contains("chainargos/payments-platform")
+    });
+    app.key("enter");
+    wait_title(app, DEST_TITLE);
+    app.key("enter");
+    wait_title(app, WORK_TITLE);
+    app.key("enter");
+    wait_title(app, NAME_TITLE);
+    app.key("enter");
+    app.wait_screen("duplicate while cancelled", status_duplicate);
+}
+
 /// A same-size resize does not force a frame, and the cursor column is part
 /// of the hash. Nudge the width and come back while the dialog stays open.
 fn nudge(app: &App, quiet_frame: impl Fn(&TerminalSnapshot) -> bool) {
@@ -178,7 +221,7 @@ fn nudge(app: &App, quiet_frame: impl Fn(&TerminalSnapshot) -> bool) {
 }
 
 fn shot(app: &App, checkpoint: &str) {
-    nudge(app, duplicate_open);
+    nudge(app, status_duplicate);
     app.visual(&visual_id(checkpoint));
 }
 
@@ -410,10 +453,11 @@ fn j01_prelude_steps() {
     app.key("enter");
     let checkpoint = app.wait_screen("duplicate name", duplicate_open);
     assert_eq!((checkpoint.cols(), checkpoint.rows()), (120, 40));
+    rearm_cancelled_duplicate(&app);
     shot(&app, WIDE);
     app.resize(80, 24);
     let narrow = app.wait_screen("80x24", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && duplicate_open(screen)
+        screen.cols() == 80 && screen.rows() == 24 && status_duplicate(screen)
     });
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     shot(&app, NARROW);
