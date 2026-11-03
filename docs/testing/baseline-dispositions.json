@@ -16644,5 +16644,23 @@
     "status": "accepted",
     "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J06.panes.",
     "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j06_tabs/j06_tabs_layout_120x40",
+    "path": "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_120x40.tui.json",
+    "cols": 120,
+    "rows": 40,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J06.tabs.",
+    "replacement_id": null
+  },
+  {
+    "id": "pre_refactor/j06_tabs/j06_tabs_layout_narrow",
+    "path": "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_narrow.tui.json",
+    "cols": 80,
+    "rows": 24,
+    "status": "accepted",
+    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J06.tabs.",
+    "replacement_id": null
   }
 ]
