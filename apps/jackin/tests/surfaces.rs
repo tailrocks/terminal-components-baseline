@@ -142,19 +142,24 @@ mod demo {
         let live = screen(&mut app);
         assert!(
             live.contains("Capsule › payments") && live.contains("  Capsule  "),
-            "{live}"
+            "the live breadcrumb reads Capsule:\n{live}"
         );
-        assert!(!live.contains("Terminal"));
+        assert!(
+            !live.contains("Terminal"),
+            "the live word is not Terminal:\n{live}"
+        );
     }
 
     #[test]
     fn demo_surfaces_stay_unset() {
         for scenario in Scenario::ALL {
             let surfaces = Surfaces::demo(scenario);
-            assert!(surfaces.fixed.is_none(), "{}", scenario.name());
-            assert_eq!(surfaces.account_form.default_source, None);
-            assert_eq!(surfaces.account_form.op_note, None);
-            assert!(surfaces.agent_blocked.is_none() && surfaces.wizard.is_none());
+            let name = scenario.name();
+            assert_eq!(surfaces.fixed, None, "{name}");
+            assert_eq!(surfaces.account_form.default_source, None, "{name}");
+            assert_eq!(surfaces.account_form.op_note, None, "{name}");
+            assert_eq!(surfaces.agent_blocked, None, "{name}");
+            assert_eq!(surfaces.wizard, None, "{name}");
             assert_eq!(surfaces.launch_role, LaunchRoleRule::Demo);
             assert_eq!(surfaces.vocabulary, Vocabulary::demo());
             assert_eq!(surfaces.version, "0.9.2");
@@ -203,11 +208,14 @@ mod demo {
             let mut fixed = Fixed::openshell();
             let row = codex_row(blocked(Some(block), &fixed));
             let shown: String = block.text(Some(&fixed)).chars().take(30).collect();
-            assert!(row.contains(&shown), "{row}");
+            assert!(row.contains(&shown), "the row shows the Fixed text:\n{row}");
             assert!(row.contains("unavailable"), "{row}");
             fixed.launch_usage_only = "needs a local login".into();
             let row = codex_row(blocked(Some(block), &fixed));
-            assert!(row.contains("needs a local login"), "{row}");
+            assert!(
+                row.contains("needs a local login"),
+                "the row follows the Fixed field:\n{row}"
+            );
         }
         let world = blocked(None, &Fixed::openshell());
         let ws = world.workspaces[0].clone();
