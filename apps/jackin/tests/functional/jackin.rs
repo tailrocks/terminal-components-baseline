@@ -1,4 +1,7 @@
+use std::time::Duration;
+
 use jackin_console::domain::fixed::Fixed;
+use jackin_console::rain;
 use tui_test::{SnapshotColor, TerminalSnapshot};
 
 use super::support::{App, Point, crop, find, find_all, row_text, text};
@@ -341,7 +344,10 @@ fn jackin_first_use_empty_manager_and_intro() {
     );
     app.wait_text("Stand up, operator");
     app.key("space");
-    app.wait_text("Current directory");
+    app.wait_text_after_animation(
+        "Current directory",
+        Duration::from_millis(rain::INTRO_END * rain::TICK_MS),
+    );
     let empty = app.settle();
     assert!(
         text(&empty).contains("no instances"),

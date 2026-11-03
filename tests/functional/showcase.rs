@@ -575,11 +575,8 @@ fn showcase_keyboard_activation_after_click_focus() {
     app.wait_text("Preview ✓");
     app.key("tab");
     app.key("enter");
-    let done = app.wait_screen("keyboard activation fires the focused control", |s| {
-        let t = text(s);
-        t.contains("Run task ✓") || t.contains("Preview ✓")
-    });
-    assert!(text(&done).contains("Preview ✓"));
+    let done = app.wait_text("Cancel ✓");
+    assert!(!text(&done).contains("Preview ✓"));
     app.visual("functional/showcase_keyboard_activation");
     app.finish();
 }
