@@ -1312,6 +1312,16 @@ fn jackin_fixed_last_allowed_role_cannot_be_unchecked() {
     assert!(role_row(&roles, "backend").contains("[✓]"));
     assert!(role_row(&roles, "the-architect").contains("[ ]"));
 
+    app.key("end");
+    let stale = app.wait_text("] ghost-role");
+    let ghost = role_row(&stale, "ghost-role");
+    assert!(
+        ghost.contains("[✓]") && ghost.contains("not in registry"),
+        "{ghost}"
+    );
+    app.key("home");
+    app.wait_text("] the-architect");
+
     app.wait_screen("cursor on the first role", |s| {
         role_row(s, "the-architect").contains('▎')
     });
@@ -1346,33 +1356,6 @@ fn jackin_fixed_last_allowed_role_cannot_be_unchecked() {
     app.key("right");
     app.wait_text("Enter Discard");
     app.key("enter");
-    app.wait_text("Current directory");
-    app.finish();
-}
-
-#[test]
-fn jackin_fixed_last_allowed_role_is_kept_next_to_a_stale_name() {
-    let reason = Fixed::openshell().last_role;
-    let app = fixed_app("jackin-fixed-stale-role");
-    open_fixed_editor(&app, 3);
-    app.key("]");
-    app.key("]");
-    app.key("enter");
-    let roles = app.wait_text("Allowed roles");
-    assert!(role_row(&roles, "backend").contains("[✓]"));
-    app.wait_screen("cursor on the first role", |s| {
-        role_row(s, "the-architect").contains('▎')
-    });
-    app.key("down");
-    app.wait_screen("cursor on backend", |s| {
-        role_row(s, "backend").contains('▎')
-    });
-    app.key("space");
-    let refused = refused_with(&app, &reason);
-    assert!(role_row(&refused, "backend").contains("[✓]"));
-    nothing_changed(&refused);
-    app.key("esc");
-    app.key("esc");
     app.wait_text("Current directory");
     app.finish();
 }
@@ -1638,7 +1621,17 @@ fn jackin_fixed_settings_agents_refuse_every_row() {
     });
     app.key("space");
     refused_with(&app, &fixed.agent_other.text);
-    leave_settings_without_a_prompt(&app);
+
+    app.key("ctrl+s");
+    let nothing = app.wait_text("Nothing to save");
+    assert!(!text(&nothing).contains("Save settings"));
+    app.key("c");
+    let accounts = app.wait_screen("c opens the Accounts page", |s| {
+        text(s).contains("Accounts ›") && !text(s).contains("Settings ›")
+    });
+    assert!(!text(&accounts).contains("Unsaved changes"));
+    app.key("esc");
+    app.wait_text("Current directory");
     app.finish();
 }
 
@@ -1703,7 +1696,12 @@ fn jackin_fixed_settings_role_overrides_refuse_and_the_scope_lists_global() {
     status_expired(&app, &reason);
 
     app.key("a");
-    let form = app.wait_text("New global environment key");
+    let form = app.wait_screen("the form shows its Scope field and value", |s| {
+        let labels = find_all(s, "Scope");
+        text(s).contains("New global environment key")
+            && labels.len() == 1
+            && find_all(s, "global").iter().any(|p| p.y == labels[0].y + 1)
+    });
     let label = find(&form, "Scope");
     let value = find_all(&form, "global")
         .into_iter()
@@ -1752,11 +1750,11 @@ fn jackin_fixed_env_sources_refuse_the_radio_options_and_the_p_key() {
     assert!(row_with(&form, "Plain text").contains("(●)"));
     assert!(row_with(&form, "1Password item").contains("( )"));
     assert!(row_with(&form, "Host environment variable").contains("( )"));
+    assert!(text(&form).contains(&reason));
+    assert!(text(&form).contains("value is stored as plain text"));
     assert!(!text(&form).contains("recommended for secrets"));
     let ratio = contrast(&form, find(&form, &reason));
     assert!(ratio >= 4.5, "the reason is legible, contrast {ratio:.2}");
-    assert!(text(&form).contains(&reason));
-    assert!(text(&form).contains("value is stored as plain text"));
 
     app.key("down");
     app.wait_screen("cursor on the 1Password option", |s| {
@@ -1851,8 +1849,9 @@ fn jackin_fixed_env_form_refuses_a_credential_reference_and_notes_a_secret_name(
     app.key("ctrl+u");
     app.paste("DEPLOY_TOKEN");
     app.key("tab");
-    let noted = app.wait_text(&fixed.env_secret_note[0]);
-    assert!(text(&noted).contains(&fixed.env_secret_note[1]));
+    let noted = app.wait_screen("the form shows both note lines", |s| {
+        text(s).contains(&fixed.env_secret_note[0]) && text(s).contains(&fixed.env_secret_note[1])
+    });
     assert!(text(&noted).contains("DEPLOY_TOKEN"), "the input is kept");
     app.key("esc");
     app.wait_absent("New global environment key");
