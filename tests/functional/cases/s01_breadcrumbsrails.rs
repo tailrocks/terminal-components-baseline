@@ -536,7 +536,14 @@ fn navigate_folder_backspace_and_breadcrumb() {
 #[test]
 fn rail_collapse_keeps_the_path() {
     let app = page("s01-rail", &[], 120, 40);
-    let before = app.wait_text("Desktop");
+    // The first paint lists Desktop before the rail action row is drawn.
+    let before = app.wait_screen("rail path painted", |screen| {
+        let visible = text(screen);
+        visible.contains("Desktop")
+            && visible.contains("Disk › Users › alex")
+            && visible.contains("the live widget")
+            && rail_row(screen).is_some()
+    });
     assert_has(&before, "Disk › Users › alex");
     assert_has(&before, "the live widget");
     let before_rail = row_containing(&before, "Last RailAction");

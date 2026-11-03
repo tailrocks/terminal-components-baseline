@@ -141,9 +141,13 @@ fn skip_into_manager(app: &App, seen: Instant) -> TerminalSnapshot {
     let started = Instant::now();
     app.key("enter");
     let manager = app.wait_screen("manager after enter", first_use_manager);
+    // Reduced motion holds the intro for 45 ticks of 33 ms. Enter at 450 ms
+    // still leaves more than 600 ms of that hold, so a manager in this window
+    // is the skip. A loaded partition paints it after the old 400 ms bound.
     assert!(
-        started.elapsed() < Duration::from_millis(400),
-        "Enter did not skip the intro\n{}",
+        started.elapsed() < Duration::from_millis(600),
+        "Enter did not skip the intro after {} ms\n{}",
+        started.elapsed().as_millis(),
         text(&manager)
     );
     manager

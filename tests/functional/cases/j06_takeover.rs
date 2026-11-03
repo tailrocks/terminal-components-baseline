@@ -408,7 +408,11 @@ fn j06_takeover_takeover() {
     );
 
     let mut overlay_seen: Option<Instant> = None;
-    let budget = Instant::now() + Duration::from_secs(80);
+    // A loaded partition paints this overlay with the attach status still up
+    // as an 80 s budget expires. The status lasts 5 s, and the shot needs
+    // that line gone, so the wait is the late paint plus the 6 s clear.
+    // 87 s still returns before the 90 s profile kill.
+    let budget = Instant::now() + Duration::from_secs(87);
     loop {
         guard_stale(&stale, &mut polls);
         let screen = overlay.screen();
@@ -423,8 +427,13 @@ fn j06_takeover_takeover() {
             // it is not the payments session. Keep polling until the full copy
             // holds. A frame with no takeover copy still has to be that session.
             if !visible.contains(TAKEN) {
+                // The opening title leaves the menubar once the PR status is
+                // drawn. The shell prompt keeps the workspace name.
                 assert!(
-                    visible.contains(IDENTITY) && !visible.contains(INFRA),
+                    visible.contains(PAYMENTS)
+                        && !visible.contains(INFRA)
+                        && !visible.contains(PAGE)
+                        && !visible.contains(OUTRO),
                     "overlay session left payments-platform before the takeover\n{visible}"
                 );
                 overlay_seen = None;
