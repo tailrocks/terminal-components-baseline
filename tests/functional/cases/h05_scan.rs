@@ -192,6 +192,15 @@ fn labelled_size(screen: &TerminalSnapshot, cols: u16, rows: u16) -> bool {
     text(screen).contains(&format!("{cols}×{rows}"))
 }
 
+/// The accepted paint: first glyph, frozen banner, cancel status, and the
+/// chrome naming this size. A later resize can clear the footer before that
+/// paint is on screen again.
+fn holdable(screen: &TerminalSnapshot, cols: u16, rows: u16) -> bool {
+    spinner_frame_ready(screen, cols, rows, &frozen_two)
+        && labelled_size(screen, cols, rows)
+        && text(screen).contains(CANCELLED)
+}
+
 /// The accepted frame is the first spinner glyph at this size, while the
 /// cancel status is still up. A 200 ms identical hold skips that paint: the
 /// layout corrects, or the glyph advances, and the status then expires.
@@ -241,14 +250,17 @@ fn settle_spinner(
         let screen = app.wait_screen("spinner sample", |screen| {
             screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && ready(screen)
         });
-        if !text(&screen).contains(CANCELLED) {
+        if let Some(held) = capture_labelled_spinner(app, cols, rows, &ready) {
+            return held;
+        }
+        // The grid can already be the target size while the footer is still
+        // blank. That paint has the banner and no cancel line. It is not the
+        // status expiring; a complete frame names its size in the chrome.
+        if labelled_size(&screen, cols, rows) && !text(&screen).contains(CANCELLED) {
             panic!(
                 "cancel status left before the first spinner\n{}",
                 text(&screen)
             );
-        }
-        if let Some(held) = capture_labelled_spinner(app, cols, rows, &ready) {
-            return held;
         }
         if start.elapsed() > Duration::from_secs(12) {
             panic!("spinner did not reach the first frame\n{}", text(&screen));
@@ -460,8 +472,14 @@ fn h05_scan_scan_cancels_completes_and_changes_root() {
         &[PARTIAL, TITLE],
         &[COMPLETE, CLEANUP_METER, BACKUP],
     );
-    nudge(&app, frozen_two);
-    let narrow = settle_spinner(&app, 80, 24, frozen_two);
+    // The first 80×24 paint can already be the accepted frame. Nudging it
+    // starts another spinner cycle and the footer is blank until the next draw.
+    let narrow = if holdable(&narrowed, 80, 24) {
+        narrowed
+    } else {
+        nudge(&app, frozen_two);
+        settle_spinner(&app, 80, 24, frozen_two)
+    };
     shot(&app, NARROW, &narrow);
 
     app.resize(120, 40);
