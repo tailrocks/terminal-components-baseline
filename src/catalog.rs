@@ -3703,6 +3703,22 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("terminal::TerminalState::scrollback_len"),
     Capability::function("terminal::TerminalState::scrollback"),
     Capability::function("terminal::TerminalState::set_scrollback"),
+    Capability::function("terminal::TerminalState::with_scrollback"),
+    Capability::function("terminal::TerminalState::scrolled_off"),
+    Capability::function("terminal::TerminalState::view"),
+    Capability::ty("terminal::TermEvent"),
+    Capability::variant("terminal::TermEvent::Reply"),
+    Capability::variant("terminal::TermEvent::Title"),
+    Capability::variant("terminal::TermEvent::ClipboardWrite"),
+    Capability::variant("terminal::TermEvent::Bell"),
+    Capability::variant("terminal::TermEvent::Notification"),
+    Capability::variant("terminal::TermEvent::Cwd"),
+    Capability::variant("terminal::TermEvent::ScrollbackCleared"),
+    Capability::ty("terminal::TermView"),
+    Capability::ty("terminal::TermCell"),
+    Capability::ty("terminal::RowWrap"),
+    Capability::variant("terminal::RowWrap::Hard"),
+    Capability::variant("terminal::RowWrap::Soft"),
     Capability::function("ui::text::capitalize"),
     Capability::ty("widgets::list_detail::ListDetail"),
     Capability::ty("widgets::list_detail::ListRow"),
@@ -3720,6 +3736,8 @@ pub struct Allowed {
 
 const PREVIEW: &str =
     "demonstrated by the jackin demo app (apps/jackin) and its approved functional baselines";
+
+const HOST_FED: &str = "used by the host that feeds the terminal state (the jackin Capsule) and pinned by tests/terminal.rs; the terminalpane page keeps its approved baseline";
 
 pub static ALLOWLIST: &[Allowed] = &[
     Allowed {
@@ -3745,5 +3763,69 @@ pub static ALLOWLIST: &[Allowed] = &[
     Allowed {
         id: "widgets::list_detail::Event",
         reason: PREVIEW,
+    },
+    Allowed {
+        id: "terminal::TerminalState::with_scrollback",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TerminalState::scrolled_off",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TerminalState::view",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermEvent",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermEvent::Reply",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermEvent::Title",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermEvent::ClipboardWrite",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermEvent::Bell",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermEvent::Notification",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermEvent::Cwd",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermEvent::ScrollbackCleared",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermView",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TermCell",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::RowWrap",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::RowWrap::Hard",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::RowWrap::Soft",
+        reason: HOST_FED,
     },
 ];

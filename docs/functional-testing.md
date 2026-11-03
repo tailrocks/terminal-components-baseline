@@ -43,9 +43,11 @@ cargo nextest run --locked --test functional --no-tests fail \
 ```
 
 These tests are ordinary, non-ignored integration tests. They also run in the
-existing default Nextest gate. Do not add `#[ignore]`, a missing-baseline early
-return, or an environment flag that silently turns a requested case into
-success. No baseline approval is needed to run this target. Linux and macOS
+existing default Nextest gate. Do not add a missing-baseline early return or
+an environment flag that silently turns a requested case into success. The one
+allowed `#[ignore]` is a quarantine of a flaky test: its reason names the
+tracking entry in `docs/P9.3-red-green.md`, and the entry names the cause and
+the fix that removes the `#[ignore]`. No baseline approval is needed to run this target. Linux and macOS
 are the supported test hosts; Windows requires separate application/runtime
 qualification, not just a compatible test library.
 

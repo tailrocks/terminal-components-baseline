@@ -1,10 +1,9 @@
-use std::num::NonZeroU16;
-
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::{Position, Rect};
 use ratatui::style::{Color, Modifier, Style};
 use ratatui::widgets::Widget;
+use termpane::{DamageGrid, EraseDisplayPolicy, PassthroughEvent, ScrollOp};
 
 use crate::core::event::Key;
 
@@ -18,8 +17,42 @@ pub struct Modes {
     pub hide_cursor: bool,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TermEvent {
+    Reply(Vec<u8>),
+    Title(String),
+    ClipboardWrite(String),
+    Bell,
+    Notification(String),
+    Cwd(String),
+    ScrollbackCleared,
+}
+
+impl TermEvent {
+    fn from_passthrough(event: PassthroughEvent) -> Option<Self> {
+        match event {
+            PassthroughEvent::Reply(bytes) => Some(Self::Reply(bytes)),
+            PassthroughEvent::TitleChanged(title) => Some(Self::Title(title)),
+            PassthroughEvent::ClipboardWrite(payload) => Some(Self::ClipboardWrite(payload)),
+            PassthroughEvent::Bell => Some(Self::Bell),
+            PassthroughEvent::Notification(text) => Some(Self::Notification(text)),
+            PassthroughEvent::CwdChanged(uri) => Some(Self::Cwd(uri)),
+            PassthroughEvent::ScrollbackClear => Some(Self::ScrollbackCleared),
+            PassthroughEvent::IconNameChanged(_)
+            | PassthroughEvent::ApplicationCursorKeys(_)
+            | PassthroughEvent::FocusEvents(_)
+            | PassthroughEvent::BracketedPaste(_)
+            | PassthroughEvent::Hyperlink { .. }
+            | PassthroughEvent::UnhandledCsi(_)
+            | PassthroughEvent::DroppedCsi(_) => None,
+        }
+    }
+}
+
 pub struct TerminalState {
-    parser: vt100::Parser,
+    grid: DamageGrid,
+    limit: usize,
+    scrolled_off: u64,
 }
 
 impl std::fmt::Debug for TerminalState {
@@ -32,64 +65,159 @@ impl std::fmt::Debug for TerminalState {
     }
 }
 
-fn dimension(value: u16) -> NonZeroU16 {
-    NonZeroU16::new(value).unwrap_or(NonZeroU16::MIN)
-}
-
 impl TerminalState {
     pub fn new(rows: u16, cols: u16) -> Self {
+        Self::with_scrollback(rows, cols, SCROLLBACK_ROWS)
+    }
+
+    pub fn with_scrollback(rows: u16, cols: u16, limit: usize) -> Self {
+        let mut grid = DamageGrid::new(rows.max(1), cols.max(1), limit);
+        grid.set_erase_display_policy(EraseDisplayPolicy::Discard);
         Self {
-            parser: vt100::Parser::new(dimension(rows), dimension(cols), SCROLLBACK_ROWS),
+            grid,
+            limit,
+            scrolled_off: 0,
         }
     }
 
-    pub fn feed(&mut self, bytes: &[u8]) {
-        self.parser.process(bytes);
+    pub fn feed(&mut self, bytes: &[u8]) -> Vec<TermEvent> {
+        let before = self.grid.scrollback_len();
+        self.grid.process(bytes);
+        self.scrolled_off += self.pushed_since(before);
+        self.grid
+            .drain_passthrough()
+            .into_iter()
+            .filter_map(TermEvent::from_passthrough)
+            .collect()
+    }
+
+    fn pushed_since(&mut self, before: usize) -> u64 {
+        let ops = self.grid.drain_scroll_ops();
+        let len = self.grid.scrollback_len();
+        if self.limit == 0 {
+            0
+        } else if len < self.limit {
+            (len - before.min(len)) as u64
+        } else if self.grid.alternate_screen() {
+            0
+        } else {
+            ops.iter()
+                .map(|op| match op {
+                    ScrollOp::Up { top: 0, rows, .. } => u64::from(*rows),
+                    _ => 0,
+                })
+                .sum()
+        }
     }
 
     pub fn resize(&mut self, rows: u16, cols: u16) {
-        self.parser.set_size(dimension(rows), dimension(cols));
+        self.grid.set_size(rows, cols);
     }
 
     pub fn reset(&mut self) {
         let (rows, cols) = self.size();
-        *self = Self::new(rows, cols);
+        *self = Self::with_scrollback(rows, cols, self.limit);
     }
 
     pub fn size(&self) -> (u16, u16) {
-        let (rows, cols) = self.parser.screen().size();
-        (rows.get(), cols.get())
+        self.grid.size()
     }
 
     pub fn modes(&self) -> Modes {
-        let screen = self.parser.screen();
         Modes {
-            app_cursor: screen.application_cursor(),
-            bracketed_paste: screen.bracketed_paste(),
-            alt_screen: screen.alternate_screen(),
-            hide_cursor: screen.hide_cursor(),
+            app_cursor: self.grid.application_cursor(),
+            bracketed_paste: self.grid.bracketed_paste(),
+            alt_screen: self.grid.alternate_screen(),
+            hide_cursor: self.grid.hide_cursor(),
         }
     }
 
     pub fn scrollback_len(&self) -> usize {
-        self.parser.screen().scrollback_len()
+        self.grid.scrollback_len()
+    }
+
+    pub fn scrolled_off(&self) -> u64 {
+        self.scrolled_off
     }
 
     pub fn scrollback(&self) -> usize {
-        self.parser.screen().scrollback()
+        self.grid.scrollback()
     }
 
     pub fn set_scrollback(&mut self, rows: usize) {
-        self.parser.screen_mut().set_scrollback(rows);
+        self.grid.set_scrollback(rows);
+    }
+
+    pub fn view(&self, offset: usize) -> TermView<'_> {
+        let offset = if self.grid.alternate_screen() {
+            0
+        } else {
+            offset
+        };
+        let (rows, _) = self.grid.size();
+        TermView {
+            grid: self.grid.scrollback_view(offset, rows),
+        }
     }
 
     pub fn cursor(&self, area: Rect) -> Option<Position> {
-        let screen = self.parser.screen();
-        if screen.hide_cursor() || screen.scrollback() > 0 {
+        if self.grid.hide_cursor() || self.grid.scrollback() > 0 {
             return None;
         }
-        let (row, col) = screen.cursor_position();
+        let (row, col) = self.view(0).cursor();
         (row < area.height && col < area.width).then(|| Position::new(area.x + col, area.y + row))
+    }
+}
+
+#[derive(Debug)]
+pub struct TermView<'a> {
+    grid: termpane::GridView<'a>,
+}
+
+impl<'a> TermView<'a> {
+    pub fn rows(&self) -> u16 {
+        self.grid.rows
+    }
+
+    pub fn cols(&self) -> u16 {
+        self.grid.cols
+    }
+
+    pub fn cell(&self, row: u16, col: u16) -> Option<TermCell<'a>> {
+        self.grid.cell(row, col).map(|cell| TermCell { cell })
+    }
+
+    pub fn row_wrap(&self, row: u16) -> Option<RowWrap> {
+        self.grid.row_wrap(row).map(|wrap| match wrap {
+            termpane::RowWrap::Hard => RowWrap::Hard,
+            termpane::RowWrap::Soft => RowWrap::Soft,
+        })
+    }
+
+    pub fn cursor(&self) -> (u16, u16) {
+        let (row, col) = self.grid.cursor;
+        (row, col.min(self.grid.cols.saturating_sub(1)))
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RowWrap {
+    Hard,
+    Soft,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct TermCell<'a> {
+    cell: &'a termpane::Cell,
+}
+
+impl TermCell<'_> {
+    pub fn text(&self) -> &str {
+        self.cell.contents()
+    }
+
+    pub fn is_wide_continuation(&self) -> bool {
+        self.cell.is_wide_continuation
     }
 }
 
@@ -120,15 +248,15 @@ impl<'a> TerminalView<'a> {
     }
 }
 
-fn color(value: vt100::Color) -> Color {
+fn color(value: termpane::Color) -> Color {
     match value {
-        vt100::Color::Default => Color::Reset,
-        vt100::Color::Idx(index) => Color::Indexed(index),
-        vt100::Color::Rgb(r, g, b) => Color::Rgb(r, g, b),
+        termpane::Color::Default => Color::Reset,
+        termpane::Color::Idx(index) => Color::Indexed(index),
+        termpane::Color::Rgb(r, g, b) => Color::Rgb(r, g, b),
     }
 }
 
-fn style(cell: &vt100::Cell, with_color: bool) -> Style {
+fn style(cell: &termpane::Cell, with_color: bool) -> Style {
     let mut style = Style::default();
     if with_color {
         style = style.fg(color(cell.fgcolor())).bg(color(cell.bgcolor()));
@@ -149,20 +277,19 @@ fn style(cell: &vt100::Cell, with_color: bool) -> Style {
 
 impl Widget for TerminalView<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let screen = self.state.parser.screen();
-        let (rows, cols) = screen.size();
-        for row in 0..area.height.min(rows.get()) {
-            for col in 0..area.width.min(cols.get()) {
-                let Some(cell) = screen.cell(row, col) else {
+        let view = self.state.view(self.state.scrollback());
+        for row in 0..area.height.min(view.rows()) {
+            for col in 0..area.width.min(view.cols()) {
+                let Some(cell) = view.cell(row, col) else {
                     continue;
                 };
                 if cell.is_wide_continuation() {
                     continue;
                 }
                 let target = &mut buf[(area.x + col, area.y + row)];
-                let text = cell.contents();
+                let text = cell.text();
                 target.set_symbol(if text.is_empty() { " " } else { text });
-                target.set_style(style(cell, self.color));
+                target.set_style(style(cell.cell, self.color));
             }
         }
         if self.focused

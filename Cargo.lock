@@ -960,11 +960,11 @@ dependencies = [
  "libc",
  "ratatui",
  "serde_json",
+ "termpane",
  "tuiscotti",
  "tuiscotti-tui-test",
  "unicode-segmentation",
  "unicode-width",
- "vt100",
 ]
 
 [[package]]
@@ -2080,6 +2080,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "termpane"
+version = "0.1.1"
+source = "git+https://github.com/tailrocks/termpane?rev=0707acca3cbf3333d4c1b0e6d88b7b69169233dc#0707acca3cbf3333d4c1b0e6d88b7b69169233dc"
+dependencies = [
+ "compact_str 0.10.0",
+ "smallvec",
+ "unicode-width",
+ "vte",
+]
+
+[[package]]
 name = "termwiz"
 version = "0.23.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2395,17 +2406,6 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
-
-[[package]]
-name = "vt100"
-version = "0.18.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb05cdd19ae8707bf6a0a269972c07e6358103a7079faec749dec318a5b3dc23"
-dependencies = [
- "itoa",
- "unicode-width",
- "vte",
-]
 
 [[package]]
 name = "vte"

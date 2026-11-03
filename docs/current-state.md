@@ -22,7 +22,7 @@ does not exist in this tree yet.
 | `src/bin/showcase/` | Showcase: the executable component catalog (54 sidebar pages, plus the hidden pages `terminalpane` and `fixedcontrols`). Thin consumer: pages add wiring, demo data and option tables only. |
 | `src/bin/tablepro/` | TablePro: simulated database workbench (connections, explorer, query tabs, results, history). |
 | `src/bin/holla/` | Holla: simulated launcher/finder, files, disk cleanup, services. Backends are simulated; tests assert the next in-app consequence. |
-| `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TerminalView`, `encode_key`. It renders a vt100 session from a byte stream and does no I/O. |
+| `src/terminal.rs` | Terminal pane block (feature `terminal`): `TerminalState`, `TermView`, `TermEvent`, `TerminalView`, `encode_key`. It renders a `termpane` grid fed from a byte stream, returns the events the stream raised (replies, title, clipboard, bell, notification, cwd, scrollback cleared) and does no I/O. |
 | `apps/jackin/src/` | The `jackin-console` library (`jackin_console`): the jackin screens (manager, editor, accounts, usage, settings, cockpit, capsule, prelude, roles, doctor and the modals), the `domain` types, `rain` and the other jackin-only modules, over the plain-data `world::World` and the `backend::Backend` and `backend::OnePassword` interfaces. |
 | `apps/jackin/src/fixtures/`, `apps/jackin/src/sim/` | `fixtures::Scenario`, `Surfaces::demo` and `Vocabulary::demo` and the 15 fixture worlds (`fixtures::world_for`; `openshell-fixed` is the one with `Surfaces.fixed` and the OpenShell words), the start table `fixtures::entry_for` and the one demo constructor `fixtures::app_for`, which calls `app::assemble`; the simulated `Backend` (it owns the launch plan, `Backend::launch_plan`), `OnePassword` and launch content. All behind the `demo` feature so the jackin repository can render the same worlds. The library `App` takes a `World`, an `app::Entry` (first page, outro when framed) and `app::AppOptions` (motion, frame, theme, `ClipboardMode`); it has no `Scenario`. |
 | `apps/jackin/src/bin/jackin-preview/` | The jackin demo binary: the command line over `fixtures` and `sim`. Binary name is `jackin-preview` (`cargo run --bin jackin-preview --features demo`). |
@@ -36,7 +36,7 @@ does not exist in this tree yet.
 | Feature | Default | Adds |
 | --- | --- | --- |
 | `cli` | yes | `clap`, the `cli` module and `Motion` as a `clap::ValueEnum`. The four binaries require it; `jackin-console` enables it on its `junie-tui` dependency. |
-| `terminal` | no | `vt100` and the `terminal` module. |
+| `terminal` | yes | `termpane` and the `terminal` module. |
 
 `jackin-console` features (none is a default):
 
@@ -154,6 +154,14 @@ read it against, because each of its reasons names a Fixed control.
 
 ## Known limits
 
+- `TerminalState::scrolled_off` is exact while the history is below its
+  limit (it follows the growth of `scrollback_len`). At the limit it sums
+  the primary-screen scroll operations that start at row 0, so a delete-line
+  at row 0 over-counts. `ESC[2J` discards the visible rows
+  (`EraseDisplayPolicy::Discard`), so it changes neither value.
+- `termpane` is a git dependency pinned to commit `0707acca` (termpane
+  `main`, which holds `EraseDisplayPolicy`). It becomes `=0.1.1` once
+  0.1.1 is published on crates.io; see [dependencies](dependencies.md).
 - The crate is a monolith: library and four binaries in one package.
   Splitting it is the refactoring programme in
   [architecture](architecture.md); no part of that split has landed.
