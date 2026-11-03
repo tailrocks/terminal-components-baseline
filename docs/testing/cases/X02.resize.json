@@ -9,7 +9,7 @@
       "result": "PASS",
       "disposition_reason": "showcase --page pickers opens Pickers through parse_page and App::open_page in src/bin/showcase/main.rs. The screen is Overlays › Pickers with Open quickly at 120×40. That size is not below TooSmall::MIN_WIDTH or MIN_HEIGHT in src/widgets/too_small.rs, so render in src/shell/app.rs paints the page instead of Terminal too small. finish sends Ctrl+Q. QuitKeys::classify in src/ui/leave.rs returns LeaveKey::Quit for Ctrl+Q, and the process exits 0.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "0000000000000000000000000000000000000000",
+      "execution_commit": "22b2172a7c51543fddc6c98db5c5fc15a88f7da9",
       "evidence_paths": [],
       "baseline_paths": [],
       "route": "X02.resize",
@@ -24,7 +24,7 @@
       "result": "PASS",
       "disposition_reason": "TooSmall::applies in src/widgets/too_small.rs is true when width is below 72 or height is below 20. render paints Terminal too small and Need 72×20, have {w}×{h}. shell::render in src/shell/app.rs sets shell.too_small and paints that screen instead of the page. KeyRouter::paste and the too_small arm of once in src/shell/router.rs consume paste and non-quit keys, so each draft is entered before the shrink. No binary overrides the minimum: showcase too_small is TooSmall::new(BRAND) in src/bin/showcase/app.rs, tablepro is TooSmall::new(\"TablePro\") in src/bin/tablepro/app.rs, holla is TooSmall::new(BRAND_PADDED) in src/bin/holla/app.rs, and jackin is TooSmall::new(BRAND_PADDED) in src/bin/jackin/app.rs. 71×20 and 72×19 paint the too-small title and that size's Need line and hide the draft. 72×20 clears the title and shows the UI. Showcase Input::Resize in src/bin/showcase/app.rs returns Outcome::Changed and does not clear page or layer state. On forms, FormDraftX02 is absent while too small and present again at 72×20 and at the src/shell/reach.rs sizes above the minimum (80×24, 100×25, 106×29, 120×40, 160×50). 40×12 and 60×18 are too small. The Delete branch? dialog from src/bin/showcase/pages/dialogs.rs stays open at 72×20 with feat/rate-limit and cannot be undone. On taskrunner, 72×20 hides the log because the log slot is below the pipe in src/bin/showcase/pages/taskrunner.rs, and the visible proof is Pipeline · running. At 120×40 the log still shows Pipeline started. The checkpoint opens the quick picker, types schema, and keeps schema.rs, src/db/schema.rs, and All · Tab scope after growth. Cargo.toml stays filtered out. The 80×24 frame is captured before the return to 120×40, and the wide frame is that restored picker. Picker::on_other_key in src/widgets/picker.rs returns Consumed for Ctrl+Q, so Esc clears the query and a second Esc cancels before finish. Tablepro, holla --scenario first-use, and jackin --scenario first-use each paint Terminal too small at 71×20 and their own UI at 72×20 (Filter connections, Analyze disk usage, and Knock, knock, operator.) while the process is still running. Those three use kill_child. Launch::new leaves the clock off.",
       "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
-      "execution_commit": "0000000000000000000000000000000000000000",
+      "execution_commit": "22b2172a7c51543fddc6c98db5c5fc15a88f7da9",
       "evidence_paths": [],
       "baseline_paths": [
         "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_120x40.tui.json",
