@@ -1209,7 +1209,6 @@ impl ConfigTabs {
         let mounts = self.mounts_fixed(tab, w);
         let fixed = w.surfaces.fixed.is_some();
         match (tab, key) {
-            (Tab::Mounts, Some(RowKey::Mount(_))) if mounts => v.push(hint("o", "Open source")),
             (Tab::Mounts, _) if mounts => {}
             (Tab::Mounts, Some(RowKey::Mount(_))) => {
                 v.push(hint("Enter", "Edit…"));

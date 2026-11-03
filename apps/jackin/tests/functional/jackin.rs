@@ -1193,7 +1193,7 @@ fn jackin_fixed_project_row_keeps_its_paint_and_refuses_every_edit() {
     app.key("]");
     app.key("enter");
     let project = app.wait_screen("the Project list has focus", |s| {
-        text(s).contains("Destination") && footer(s).contains("Open source")
+        text(s).contains("Destination") && row_with(s, "~/src/payments-platform").contains('▎')
     });
     let row = row_with(&project, "~/src/payments-platform");
     for part in ["/sandbox/project", "rw", "clone", "host"] {
@@ -1203,12 +1203,12 @@ fn jackin_fixed_project_row_keeps_its_paint_and_refuses_every_edit() {
     assert!(text(&project).contains(&reason));
     assert!(!text(&project).contains("Read-only") && !footer(&project).contains("Isolation"));
     assert!(!footer(&project).contains("Remove") && !footer(&project).contains("Add mount"));
-    assert!(footer(&project).contains("Open source"));
-
+    assert!(!footer(&project).contains("Open source"));
     for cell in ["/sandbox/project", "rw", "~/src/payments-platform"] {
         let ratio = contrast(&project, find(&project, cell));
         assert!(ratio >= 4.5, "{cell} is legible, contrast {ratio:.2}");
     }
+
     let add = contrast(&project, find(&project, "+ Add mount"));
     assert!(add < 4.5, "the Add row is drawn fixed, contrast {add:.2}");
     app.visual("functional/jackin_fixed_editor_project");

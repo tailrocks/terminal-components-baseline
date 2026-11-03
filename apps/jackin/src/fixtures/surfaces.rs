@@ -210,6 +210,9 @@ pub fn fixed(w: &mut World) {
         .filter(|a| !a.default_for_provider)
         .map(|a| a.id.clone())
         .collect();
+    for a in &mut w.accounts.accounts {
+        a.enabled = true;
+    }
     for ws in &mut w.workspaces {
         ws.workdir = PROJECT.into();
         ws.mounts =
