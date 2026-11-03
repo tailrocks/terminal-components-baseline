@@ -81,3 +81,31 @@ fn a_short_reason_shows_whole_in_the_menu_border_up_to_its_room() {
         "{cut}"
     );
 }
+
+fn scrolling_menu(short: &str) -> ContextMenu {
+    let mut items = vec![MenuItem::new("Reconnect").shortcut("Enter").reason(short)];
+    items.extend((1..31).map(|n| MenuItem::new(format!("Item {n}")).disabled(true)));
+    ContextMenu::new(WidgetId::of("t.menu"), items)
+        .max_rows(5)
+        .anchor(Rect::new(2, 1, 1, 1), Placement::Below)
+}
+
+#[test]
+fn a_scrolling_menu_keeps_its_marker_clear_of_the_reason() {
+    let room = scrolling_menu("x").reason_room(true);
+    assert_eq!(room, scrolling_menu("x").reason_room(false) - 2);
+    let whole: String = ('a'..='z').take(room).collect();
+    let fits = border_row(&mut scrolling_menu(&whole));
+    assert!(
+        fits.contains(&format!(" {whole} ")) && fits.contains("─▾─╯"),
+        "{fits}"
+    );
+    let long: String = ('a'..='z').take(room + 1).collect();
+    let cut = border_row(&mut scrolling_menu(&long));
+    let kept: String = whole.chars().take(room - 1).collect();
+    assert!(
+        cut.contains(&format!(" {kept}… ")) && cut.contains("─▾─╯"),
+        "{cut}"
+    );
+    assert!(!cut.contains(&long), "{cut}");
+}

@@ -1,66 +1,24 @@
 mod common;
 
-use junie_tui::core::event::{Key, Outcome};
+use common::*;
+use junie_tui::core::event::Outcome;
 use junie_tui::core::focus::{Focus, FocusRing};
 use junie_tui::core::hit::HitRegistry;
 use junie_tui::core::id::WidgetId;
-use junie_tui::core::refusal::{Control, Reason, clear_refusal, take_refusal};
-use junie_tui::shell::{Cx, Request, StatusLine};
+use junie_tui::core::refusal::{Control, Reason, clear_refusal};
+use junie_tui::shell::StatusLine;
 use junie_tui::theme::{ColorLevel, Theme, Tone};
 use junie_tui::ui::ctx::{Interaction, RenderCtx};
 use junie_tui::widgets::button::Button;
 use junie_tui::widgets::choice::{Checkbox, RadioGroup};
+use junie_tui::widgets::dialog::{Dialog, DialogResult};
+use junie_tui::widgets::input::TextInput;
 use junie_tui::widgets::list::{ListBox, ListItem, SelectMode};
-use junie_tui::widgets::select::Select;
+use junie_tui::widgets::props::Prop;
+use junie_tui::widgets::select::{Select, SelectArrows};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
-use ratatui::layout::Rect;
-
-const WHY: &str = "Always off · the host decides";
-
-fn key(code: KeyCode) -> Key {
-    Key {
-        code,
-        mods: KeyModifiers::NONE,
-    }
-}
-
-fn reason() -> Reason {
-    Reason::new(WHY).short("managed")
-}
-
-fn taken() -> Option<String> {
-    take_refusal().map(|r| r.text)
-}
-
-fn draw(
-    focus: Option<WidgetId>,
-    paint: impl FnOnce(&mut Buffer, &mut RenderCtx),
-) -> (Buffer, FocusRing) {
-    let theme = Theme::for_level(ColorLevel::TrueColor);
-    let mut buf = Buffer::empty(Rect::new(0, 0, 60, 8));
-    let mut hits = HitRegistry::default();
-    let mut ring = FocusRing::default();
-    let interaction = Interaction {
-        focus,
-        ..Default::default()
-    };
-    {
-        let mut ctx = RenderCtx::new(&theme, interaction, &mut hits, &mut ring);
-        paint(&mut buf, &mut ctx);
-    }
-    (buf, ring)
-}
-
-fn row(buf: &Buffer, y: u16) -> String {
-    (0..buf.area.width)
-        .map(|x| buf[(x, y)].symbol().to_owned())
-        .collect::<String>()
-}
-
-fn fg_at(buf: &Buffer, x: u16, y: u16) -> ratatui::style::Color {
-    buf[(x, y)].fg
-}
+use ratatui::layout::{Position, Rect};
 
 #[test]
 fn a_fixed_checkbox_refuses_every_edit() {
@@ -147,9 +105,18 @@ fn a_fixed_select_refuses_open_arrows_typing_and_clicks() {
     );
     assert_eq!(taken().as_deref(), Some(WHY));
     assert!(!fixed.open && fixed.value() == "ask");
-    for k in [KeyCode::Tab, KeyCode::Esc, KeyCode::Right] {
+    for k in [KeyCode::Tab, KeyCode::Esc, KeyCode::Left, KeyCode::Right] {
         assert_eq!(fixed.on_key(&key(k)).0, Outcome::Ignored, "{k:?}");
         assert_eq!(taken(), None, "{k:?}");
+    }
+
+    let mut stepping = Select::new(id, "Dirty exit", &["ask", "stop", "keep"], 0)
+        .arrows(SelectArrows::Step)
+        .fixed(reason());
+    for k in [KeyCode::Left, KeyCode::Right] {
+        assert_eq!(stepping.on_key(&key(k)), (Outcome::Consumed, None), "{k:?}");
+        assert_eq!(taken().as_deref(), Some(WHY), "{k:?}");
+        assert_eq!(stepping.value(), "ask", "{k:?}");
     }
 
     let mut live = Select::new(id, "Dirty exit", &["ask", "stop", "keep"], 0);
@@ -274,37 +241,11 @@ fn taking_a_refusal_clears_the_slot() {
 }
 
 #[test]
-fn the_shell_clears_an_untaken_refusal_at_the_end_of_each_input() {
-    use common::*;
-    use jackin_console::fixtures::world_for;
-    use jackin_console::scenario::Scenario;
-    clear_refusal();
-    let mut app = app_with(world_for(Scenario::Returning));
-    Control::fixed(reason()).refuse();
-    press(&mut app, "down");
-    assert_eq!(taken(), None);
-}
-
-#[test]
 fn a_refusal_posts_the_reason_alone_in_a_neutral_tone() {
     clear_refusal();
-    Control::fixed(reason()).refuse();
-    let id = take_refusal().expect("a refusal");
-    let mut focus = Focus::default();
-    let ring = FocusRing::default();
-    let mut cx: Cx<'_, (), (), ()> = Cx::new(&mut focus, &ring);
-    cx.refused(id);
-    let mut requests = cx.take();
-    assert_eq!(requests.len(), 1);
-    let Some(Request::Status(text, tone)) = requests.pop() else {
-        panic!("expected one status request");
-    };
-    assert_eq!(text, WHY);
-    assert_ne!(tone, Tone::Error);
-    let mut line = StatusLine::<()>::new();
-    line.set(text, tone);
-    assert_eq!(line.text(), Some(WHY));
-    assert!(!line.is_error());
+    let mut host = Host::new(Act::Refuse(reason()));
+    host.press(KeyCode::Char('x'));
+    assert_eq!(host.status(), Some((WHY.to_owned(), Tone::Secondary)));
 }
 
 #[test]
@@ -370,4 +311,242 @@ fn a_fixed_row_shows_the_focus_through_the_shared_row_painter() {
     assert_eq!(fixed_bg, theme.ladders.highlight.rest);
     assert_ne!(off_bg, theme.ladders.highlight.rest);
     assert_eq!(fixed_ink, off_ink);
+}
+
+fn confirm_dialog(fixed: bool) -> Dialog {
+    let mut dialog = Dialog::confirm(
+        WidgetId::of("t.dialog"),
+        "Disable all",
+        "Every item stays on.",
+        "Disable",
+    )
+    .accelerators(Some(('y', 'n')));
+    if fixed {
+        dialog.actions[1] = dialog.actions[1].clone().fixed(reason());
+    }
+    dialog
+}
+
+fn route_keys(dialog: &mut Dialog, focused: Option<WidgetId>, k: KeyCode) -> Outcome {
+    let mut focus = Focus::default();
+    focus.set(focused);
+    dialog.on_key(&key(k), &mut focus, &FocusRing::default())
+}
+
+#[test]
+fn a_dialog_refuses_a_fixed_action_by_every_route() {
+    clear_refusal();
+    type Route = fn(&mut Dialog) -> Outcome;
+    let routes: [(&str, Route); 4] = [
+        ("mnemonic d", |d| route_keys(d, None, KeyCode::Char('d'))),
+        ("accelerator y", |d| route_keys(d, None, KeyCode::Char('y'))),
+        ("Enter on the focused button", |d| {
+            route_keys(d, Some(WidgetId::of("t.dialog").sub("ok")), KeyCode::Enter)
+        }),
+        ("click", |d| {
+            d.on_click(
+                WidgetId::of("t.dialog").sub("ok"),
+                Position::new(0, 0),
+                &mut Focus::default(),
+            )
+        }),
+    ];
+    for (name, route) in routes {
+        let mut live = confirm_dialog(false);
+        route(&mut live);
+        assert_eq!(live.result, Some(DialogResult::Action(1)), "live {name}");
+        assert_eq!(taken(), None, "live {name}");
+
+        let mut fixed = confirm_dialog(true);
+        let out = route(&mut fixed);
+        assert!(out.consumed(), "{name}");
+        assert_eq!(fixed.result, None, "{name}");
+        assert_eq!(taken().as_deref(), Some(WHY), "{name}");
+    }
+}
+
+#[test]
+fn a_prompt_refuses_a_fixed_primary_when_the_field_commits() {
+    clear_refusal();
+    let field = WidgetId::of("t.prompt").sub("name");
+    let build = |fixed: bool| {
+        let mut dialog = Dialog::prompt(
+            WidgetId::of("t.prompt"),
+            "Rename",
+            TextInput::new(field, "Name").value("abc"),
+            "Rename",
+        );
+        if fixed {
+            dialog.actions[1] = dialog.actions[1].clone().fixed(reason());
+        }
+        dialog
+    };
+    for (fixed, want) in [(false, Some(DialogResult::Action(1))), (true, None)] {
+        let mut dialog = build(fixed);
+        route_keys(&mut dialog, Some(field), KeyCode::Char('x'));
+        route_keys(&mut dialog, Some(field), KeyCode::Enter);
+        assert_eq!(dialog.result, want, "fixed {fixed}");
+        assert_eq!(taken().as_deref(), fixed.then_some(WHY), "fixed {fixed}");
+    }
+}
+
+#[test]
+fn a_typed_acknowledgement_refuses_a_fixed_gated_action() {
+    clear_refusal();
+    let id = WidgetId::of("t.facts");
+    let ack = id.sub("ack");
+    let build = |fixed: bool| {
+        let mut go = Button::danger(id.sub("go"), "Delete");
+        if fixed {
+            go = go.fixed(reason());
+        }
+        Dialog::facts(
+            id,
+            "Delete",
+            vec![Prop::new("Target", "box")],
+            vec![],
+            Some("DEL"),
+            go,
+        )
+    };
+    for (fixed, want) in [(false, Some(DialogResult::Action(1))), (true, None)] {
+        let mut dialog = build(fixed);
+        for c in ['D', 'E', 'L'] {
+            route_keys(&mut dialog, Some(ack), KeyCode::Char(c));
+        }
+        route_keys(&mut dialog, Some(ack), KeyCode::Enter);
+        assert_eq!(dialog.result, want, "fixed {fixed}");
+        assert_eq!(taken().as_deref(), fixed.then_some(WHY), "fixed {fixed}");
+    }
+}
+
+#[test]
+fn a_dialog_does_not_offer_a_fixed_action() {
+    let offers = |dialog: &Dialog| {
+        let ok = dialog.actions[1].id;
+        dialog
+            .hints(Some(ok))
+            .iter()
+            .filter(|h| h.action == "Disable")
+            .map(|h| h.key)
+            .collect::<Vec<_>>()
+    };
+    assert_eq!(offers(&confirm_dialog(false)), ["Enter", "y"]);
+    assert_eq!(offers(&confirm_dialog(true)), Vec::<&str>::new());
+}
+
+fn trio(middle: ListItem) -> ListBox {
+    ListBox::new(
+        WidgetId::of("t.trio"),
+        vec![ListItem::new("A"), middle, ListItem::new("C")],
+        SelectMode::Multi,
+    )
+}
+
+fn fixed_middle() -> ListItem {
+    ListItem::new("B").fixed(reason())
+}
+
+fn ticks(list: &ListBox) -> [bool; 3] {
+    [0, 1, 2].map(|i| list.is_checked(i))
+}
+
+fn shift(code: KeyCode) -> junie_tui::core::event::Key {
+    chord(code, KeyModifiers::SHIFT)
+}
+
+#[test]
+fn a_checked_fixed_row_keeps_its_tick_when_another_row_is_clicked() {
+    clear_refusal();
+    for target in [0, 2] {
+        let mut list = trio(fixed_middle());
+        list.set_checked(1, true);
+        list.on_click(target);
+        let mut want = [false, true, false];
+        want[target] = true;
+        assert_eq!(ticks(&list), want, "click {target}");
+    }
+    assert_eq!(taken(), None);
+}
+
+#[test]
+fn a_checked_fixed_row_keeps_its_tick_through_toggle_all() {
+    clear_refusal();
+    let mut list = trio(fixed_middle());
+    list.set_checked(1, true);
+    list.on_key(&key(KeyCode::Char('a')));
+    assert_eq!(ticks(&list), [true, true, true]);
+    list.on_key(&key(KeyCode::Char('a')));
+    assert_eq!(ticks(&list), [false, true, false]);
+    assert_eq!(taken(), None);
+}
+
+#[test]
+fn a_checked_fixed_row_keeps_its_tick_when_a_range_starts_on_it() {
+    clear_refusal();
+    let mut list = trio(fixed_middle());
+    list.on_key(&key(KeyCode::Down));
+    list.set_checked(1, true);
+    list.on_key(&shift(KeyCode::Down));
+    assert_eq!(ticks(&list), [false, true, true]);
+    assert_eq!(taken(), None);
+}
+
+#[test]
+fn an_unchecked_fixed_row_is_not_ticked_by_a_range() {
+    clear_refusal();
+    let mut list = trio(fixed_middle());
+    list.on_key(&shift(KeyCode::Down));
+    list.on_key(&shift(KeyCode::Down));
+    assert_eq!(ticks(&list), [true, false, true]);
+    list.on_key(&shift(KeyCode::Up));
+    assert_eq!(ticks(&list), [true, false, false]);
+    assert_eq!(taken(), None);
+}
+
+#[test]
+fn an_unchecked_fixed_row_is_not_ticked_by_select_all() {
+    clear_refusal();
+    for select_all in [
+        key(KeyCode::Char('a')),
+        chord(KeyCode::Char('a'), KeyModifiers::CONTROL),
+    ] {
+        let mut list = trio(fixed_middle());
+        list.on_key(&select_all);
+        assert_eq!(ticks(&list), [true, false, true], "{select_all:?}");
+    }
+    assert_eq!(taken(), None);
+}
+
+#[test]
+fn a_checked_disabled_row_keeps_its_tick_when_another_row_is_clicked() {
+    clear_refusal();
+    let mut list = trio(ListItem::new("B").disabled(true));
+    list.set_checked(1, true);
+    list.on_click(0);
+    assert_eq!(ticks(&list), [true, true, false]);
+}
+
+#[test]
+fn a_later_refusal_replaces_an_earlier_one_in_the_slot() {
+    clear_refusal();
+    Control::fixed(Reason::new("first")).refuse();
+    Control::fixed(Reason::new("second")).refuse();
+    assert_eq!(taken().as_deref(), Some("second"));
+    assert_eq!(taken(), None);
+}
+
+#[test]
+fn the_slot_belongs_to_its_thread() {
+    clear_refusal();
+    Control::fixed(reason()).refuse();
+    let elsewhere = std::thread::spawn(|| {
+        let seen = taken();
+        Control::fixed(Reason::new("elsewhere")).refuse();
+        seen
+    })
+    .join()
+    .expect("thread");
+    assert_eq!(elsewhere, None);
+    assert_eq!(taken().as_deref(), Some(WHY));
 }

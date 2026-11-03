@@ -6,11 +6,12 @@ use common::*;
 use jackin_console::app::{App, Route};
 use jackin_console::domain::instance::{DaemonSnapshot, InstanceStatus};
 use jackin_console::domain::vocabulary::Vocabulary;
+use jackin_console::domain::workspace::MountSource;
 use jackin_console::fixtures::world_for;
 use jackin_console::scenario::{Motion, Scenario};
 use jackin_console::screens::Go;
 use jackin_console::world::{DaemonHealth, Msg};
-use junie_tui::theme::{ColorLevel, Theme};
+use junie_tui::theme::{ColorLevel, Theme, Tone};
 
 fn squash(text: &str) -> String {
     text.split_whitespace().collect::<Vec<_>>().join(" ")
@@ -49,6 +50,8 @@ fn the_openshell_words_avoid_the_false_strings() {
             "container",
             "Docker",
             "pushed",
+            "discard",
+            "{state}",
         ] {
             assert!(!text.contains(banned), "{name} says {banned}: {text}");
         }
@@ -144,6 +147,8 @@ fn the_env_form_wording_follows_the_words() {
         demo.contains("Plain text  (masked)") && demo.contains("typed once · masked afterwards")
     );
     assert!(live.contains("(●) Plain text ") && live.contains("value is stored as plain text"));
+    assert!(demo.contains("typed once · masked afterwards"));
+    assert!(live.contains("type the value"));
     assert!(!live.contains("masked"));
 }
 
@@ -444,7 +449,7 @@ fn the_stop_dialog_follows_the_words() {
     assert!(demo.contains("The container stops and every session in it"));
     assert!(live.contains("The sandbox stops and every session in it"));
     assert!(live.contains("You can restore it later"));
-    assert!(!live.contains("container"));
+    assert!(!live.contains("container") && !squash(&live).contains("later ("));
 }
 
 #[test]
@@ -454,7 +459,46 @@ fn the_purge_dialog_follows_the_words() {
     assert!(demo.contains("1 container · 2 preserved sessions"));
     assert!(live.contains("delete the sandbox"));
     assert!(live.contains("2 preserved sessions · changed project copy"));
-    assert!(!live.contains("container") && !live.contains("worktree"));
+    assert!(live.contains("uncommitted or unexported work is lost"));
+    assert!(
+        !live.contains("container") && !live.contains("worktree") && !live.contains("1 sandbox")
+    );
+    let mut world = live_world(Scenario::Returning);
+    let instance = world.instance_mut("jk-7f3a").expect("instance");
+    let session = instance.sessions.as_ref().expect("sessions")[0].clone();
+    instance.sessions = Ok(vec![session; 10]);
+    let mut app = app_with(world);
+    press(&mut app, "down right down p");
+    assert!(squash(&screen(&mut app)).contains("10 preserved sessions · changed project copy"));
+}
+
+#[test]
+fn the_purge_dialog_names_a_clean_copy() {
+    let clean = |live: bool| {
+        let mut world = if live {
+            live_world(Scenario::Returning)
+        } else {
+            world_for(Scenario::Returning)
+        };
+        let instance = world.instance_mut("jk-7f3a").expect("instance");
+        instance.status = InstanceStatus::RestoreAvailable;
+        instance.uncommitted = 0;
+        instance.unpushed = 0;
+        let mut app = app_with(world);
+        press(&mut app, "down right down p");
+        squash(&screen(&mut app))
+    };
+    let (demo, live) = (clean(false), clean(true));
+    assert!(demo.contains("2 preserved sessions"), "{demo}");
+    assert!(
+        live.contains("Scope 2 preserved sessions · clean project copy"),
+        "{live}"
+    );
+    assert!(
+        live.contains("Risk the sandbox and its files are deleted"),
+        "{live}"
+    );
+    assert!(!live.contains("changed project copy") && !live.contains("unexported work"));
 }
 
 #[test]
@@ -587,4 +631,289 @@ fn the_unreachable_gateway_follows_the_words() {
     });
     assert!(demo.contains("Daemon unavailable — showing manifest sessions"));
     assert!(live.contains("Gateway unreachable — showing saved sessions"));
+}
+
+fn run(world: jackin_console::world::World, keys: &str) -> App {
+    let mut app = app_with(world);
+    press(&mut app, keys);
+    app
+}
+
+const GITHUB_OPEN: &str = "f10 right right down down down down enter";
+const GITHUB_COPY: &str = "tab enter";
+
+fn capsule_world(live: bool) -> jackin_console::world::World {
+    if live {
+        live_world(Scenario::CapsuleMulti)
+    } else {
+        world_for(Scenario::CapsuleMulti)
+    }
+}
+
+#[test]
+fn the_github_dialog_copies_the_pull_request_url() {
+    let keys = format!("{GITHUB_OPEN} {GITHUB_COPY}");
+    let live = run(capsule_world(true), &keys);
+    assert_eq!(
+        live.world.clipboard.as_deref(),
+        Some("https://github.com/chainargos/payments-platform/pull/482")
+    );
+    assert_eq!(live.shell.status.text(), Some("Copied the GitHub URL"));
+    let demo = run(capsule_world(false), &keys);
+    assert_eq!(demo.world.clipboard, None);
+}
+
+#[test]
+fn the_github_dialog_copies_the_branch_url_without_a_pull_request() {
+    let mut world = capsule_world(true);
+    for instance in &mut world.instances {
+        instance.pr = None;
+    }
+    let live = run(world, &format!("{GITHUB_OPEN} {GITHUB_COPY}"));
+    assert_eq!(
+        live.world.clipboard.as_deref(),
+        Some("https://github.com/chainargos/payments-platform/tree/feature/settlement-backoff")
+    );
+}
+
+#[test]
+fn the_github_dialog_copies_nothing_without_a_matching_repository() {
+    let mut world = capsule_world(true);
+    world.github.clear();
+    let live = run(world, &format!("{GITHUB_OPEN} {GITHUB_COPY}"));
+    assert_eq!(live.world.clipboard, None);
+    assert_eq!(live.shell.status.text(), Some("Copied the GitHub URL"));
+}
+
+const MOUNT_OPEN: &str = "down down down down e 2 down o";
+
+#[test]
+fn the_mount_open_error_has_the_error_tone() {
+    let live = run(live_world(Scenario::Returning), MOUNT_OPEN);
+    assert_eq!(
+        live.shell.status.get(),
+        Some(("no GitHub URL for this mount", Tone::Error))
+    );
+    let demo = run(world_for(Scenario::Returning), MOUNT_OPEN);
+    assert_eq!(
+        demo.shell.status.get(),
+        Some(("Opened ~/src/customer-portal on GitHub", Tone::Secondary))
+    );
+}
+
+#[test]
+fn the_git_mount_follows_the_words() {
+    let git = |mut world: jackin_console::world::World| {
+        let ws = world
+            .workspaces
+            .iter_mut()
+            .find(|w| w.name == "customer-portal")
+            .expect("workspace");
+        ws.mounts[0].source = MountSource::Git("github.com/chainargos/payments-platform".into());
+        world
+    };
+    let demo = run(git(world_for(Scenario::Returning)), MOUNT_OPEN);
+    assert_eq!(
+        demo.shell.status.text(),
+        Some("Opened https://github.com/chainargos/payments-platform in the browser")
+    );
+    let live = run(git(live_world(Scenario::Returning)), MOUNT_OPEN);
+    assert_eq!(
+        live.shell.status.text(),
+        Some("GitHub · https://github.com/chainargos/payments-platform")
+    );
+}
+
+fn lifecycle_row(live: bool, status: InstanceStatus) -> String {
+    let mut world = if live {
+        live_world(Scenario::Returning)
+    } else {
+        world_for(Scenario::Returning)
+    };
+    let instance = world.instance_mut("jk-7f3a").expect("instance");
+    instance.status = status;
+    instance.unpushed = 2;
+    let mut app = app_with(world);
+    press(&mut app, "down right down");
+    let screen = screen(&mut app);
+    let line = screen
+        .lines()
+        .find(|l| l.contains("Lifecycle  "))
+        .unwrap_or_else(|| panic!("no Lifecycle row for {status:?}\n{screen}"));
+    squash(&line[line.find("Lifecycle").expect("label")..])
+}
+
+#[test]
+fn the_lifecycle_rows_follow_the_words() {
+    let rows = [
+        (
+            InstanceStatus::CleanExited,
+            "Lifecycle exited · The final session ended cleanly; the container is stopped.",
+            "Lifecycle exited · The final session ended cleanly; nothing to attach to.",
+        ),
+        (
+            InstanceStatus::Crashed,
+            "Lifecycle crashed · The Capsule daemon stopped unexpectedly;",
+            "Lifecycle crashed · The agent exited with an error; the sandbox is kept for",
+        ),
+        (
+            InstanceStatus::PreservedDirty,
+            "Lifecycle preserved · dirty · Stopped with uncommitted changes in the",
+            "Lifecycle preserved · dirty · Has uncommitted changes in the sandbox; kept until you",
+        ),
+        (
+            InstanceStatus::PreservedUnpushed,
+            "Lifecycle preserved · unpushed · Stopped with commits that were never pushed;",
+            "Lifecycle preserved · unexported · Has commits that were never exported; kept until",
+        ),
+        (
+            InstanceStatus::RestoreAvailable,
+            "Lifecycle restore available · Stopped cleanly with a restorable Capsule layout.",
+            "Lifecycle restore available · Stopped cleanly; restore it to continue.",
+        ),
+        (
+            InstanceStatus::FailedSetup,
+            "Lifecycle failed setup · Launch failed before the Capsule was ready;",
+            "Lifecycle failed setup · Launch failed before the sandbox was ready; nothing to",
+        ),
+    ];
+    for (status, demo, live) in rows {
+        let (shown_demo, shown_live) = (lifecycle_row(false, status), lifecycle_row(true, status));
+        assert!(shown_demo.contains(demo), "{status:?} demo: {shown_demo}");
+        assert!(shown_live.contains(live), "{status:?} live: {shown_live}");
+    }
+}
+
+#[test]
+fn the_project_count_follows_the_words() {
+    let (demo, live) = summary_pair("down");
+    assert!(demo.contains("2 mounts"), "{demo}");
+    assert!(
+        live.contains("2 projects") && !live.contains("mounts"),
+        "{live}"
+    );
+    let (demo, live) = summary_pair("down down");
+    assert!(
+        demo.contains("1 mount") && !demo.contains("1 mounts"),
+        "{demo}"
+    );
+    assert!(
+        live.contains("1 project") && !live.contains("1 projects"),
+        "{live}"
+    );
+}
+
+#[test]
+fn the_trust_reveal_status_follows_the_words() {
+    let (demo, live) = pair(Scenario::Returning, "s 5 tab down down o");
+    assert!(demo.contains("Revealed ~/roles in Finder"), "{demo}");
+    assert!(
+        live.contains("Source · ~/roles") && !live.contains("Revealed"),
+        "{live}"
+    );
+}
+
+fn unexported_world(live: bool) -> jackin_console::world::World {
+    let mut world = if live {
+        live_world(Scenario::Returning)
+    } else {
+        world_for(Scenario::Returning)
+    };
+    let preserved = world.instance_mut("jk-7f3a").expect("instance");
+    preserved.status = InstanceStatus::PreservedUnpushed;
+    preserved.unpushed = 2;
+    let capsule = world.instance_mut("jk-9b02").expect("instance");
+    capsule.unpushed = 2;
+    capsule.uncommitted = 3;
+    world
+}
+
+fn unexported_captures(live: bool) -> Vec<(&'static str, String)> {
+    let at = |keys: &str, width: u16, height: u16| {
+        let mut app = app_with(unexported_world(live));
+        press(&mut app, keys);
+        screen_at(&mut app, width, height)
+    };
+    let capsule = |keys: &str| {
+        let mut app = app_with(unexported_world(live));
+        screen(&mut app);
+        app.go(Go::Attach {
+            instance: "jk-9b02".into(),
+            pane: None,
+        });
+        screen(&mut app);
+        press(&mut app, keys);
+        screen(&mut app)
+    };
+    vec![
+        ("roster card", at("", 140, 40)),
+        ("roster row", at("", 240, 60)),
+        ("summary status", at("down right down", 80, 24)),
+        ("summary working tree", at("down right down", 100, 30)),
+        ("inspect dialog", at("down right down i", 140, 40)),
+        ("detail", at("down right down", 140, 40)),
+        ("capsule status bar", capsule("")),
+        ("dirty quit line", capsule("ctrl+q")),
+    ]
+}
+
+#[test]
+fn the_unexported_word_replaces_unpushed() {
+    let demo = unexported_captures(false);
+    let live = unexported_captures(true);
+    let mut wrong = vec![];
+    for ((name, demo), (_, live)) in demo.iter().zip(&live) {
+        if !demo.contains("unpushed") || !live.contains("unexported") || live.contains("unpushed") {
+            wrong.push(*name);
+        }
+    }
+    assert!(wrong.is_empty(), "captures with the wrong word: {wrong:?}");
+}
+
+#[test]
+fn the_dirty_quit_dialog_follows_the_words() {
+    let steps = |live: bool| {
+        let mut app = app_with(unexported_world(live));
+        screen(&mut app);
+        app.go(Go::Attach {
+            instance: "jk-9b02".into(),
+            pane: None,
+        });
+        screen(&mut app);
+        press(&mut app, "ctrl+q");
+        let options = screen(&mut app);
+        press(&mut app, "down down down enter");
+        (options, screen(&mut app))
+    };
+    let ((demo_options, demo_confirm), (live_options, live_confirm)) = (steps(false), steps(true));
+    assert!(demo_options.contains("Quit & keep changes"));
+    assert!(demo_options.contains("Quit & discard changes"));
+    assert!(
+        live_options.contains("Quit & keep the sandbox"),
+        "{live_options}"
+    );
+    assert!(
+        live_options.contains("Quit & delete the sandbox"),
+        "{live_options}"
+    );
+    assert!(
+        demo_confirm.contains("Quit and discard changes?"),
+        "{demo_confirm}"
+    );
+    assert!(
+        demo_confirm.contains("Action      discard every uncommitted"),
+        "{demo_confirm}"
+    );
+    assert!(
+        live_confirm.contains("Delete the sandbox and quit?"),
+        "{live_confirm}"
+    );
+    assert!(
+        live_confirm.contains("delete the sandbox and all work in it"),
+        "{live_confirm}"
+    );
+    let buttons = live_confirm
+        .lines()
+        .find(|l| l.contains("Cancel") && l.contains("Delete"));
+    assert!(buttons.is_some(), "{live_confirm}");
 }

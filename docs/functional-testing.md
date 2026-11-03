@@ -96,16 +96,21 @@ moved, deleted or retargeted.
 `apps/jackin/tests/*.rs` (beside the `functional/` journeys) prove the
 data API that `jackin-console` offers another crate: `World::new`,
 `Snapshot`, the time source, external messages, `Vocabulary`, the
-account, launch-role and wizard data, and the library's fixed state
-(`fixed.rs`, `reason.rs`: widgets rendered into a test buffer and driven
-with keys and clicks). They build the real `App` and
+account, launch-role and wizard data. They build the real `App` and
 `World` from the `fixtures` feature, drive it with keys through the
 `Application` trait, render into a test buffer and assert text and
-state. They add no visual baseline and are not journeys: a user-visible
-flow still needs a functional journey. `cargo nextest run --all-targets`
-runs them, and so do the `Rust / junie-tui` and `Rust / jackin-console`
-CI jobs (`nextest run --profile ci --package <crate>`); the `functional`
-suite does not.
+state. The tests of the library's own types live in the library's root
+`tests/` directory instead: `fixed.rs` and `reason.rs` (the fixed
+control state and the reason widths, rendered into a test buffer and
+driven with keys and clicks), `shell.rs` (the refusal slot and the
+redraw rule, through a minimal `shell::App` in `tests/common/mod.rs`)
+and `status.rs` (the sticky status line). No test of a `junie-tui` type
+lives in `apps/jackin/tests`. These tests add no visual baseline and are
+not journeys: a user-visible flow still needs a functional journey.
+`cargo nextest run --all-targets` runs them, and so do the
+`Rust / junie-tui` and `Rust / jackin-console` CI jobs
+(`nextest run --profile ci --package <crate>`); the `functional` suite
+does not.
 
 Each test has a named break (a one-edit change to the library that must
 turn it red) recorded in [P9.3 red and green](P9.3-red-green.md).

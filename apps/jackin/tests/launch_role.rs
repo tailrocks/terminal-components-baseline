@@ -148,6 +148,11 @@ fn the_picker_disables_every_row_while_no_role_resolves() {
         screen.contains("payments-platform › no default role"),
         "{screen}"
     );
+    let narrow = screen_at(&mut app, 80, 24);
+    assert!(
+        narrow.contains("no default role · set it in Roles"),
+        "{narrow}"
+    );
     let rows = screen.matches(NO_DEFAULT_ROLE).count();
     assert!(rows >= 4, "{rows} rows\n{screen}");
     assert_eq!(screen.matches("unavailable").count(), rows);
