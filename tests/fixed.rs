@@ -384,7 +384,16 @@ fn a_prompt_refuses_a_fixed_primary_when_the_field_commits() {
     for (fixed, want) in [(false, Some(DialogResult::Action(1))), (true, None)] {
         let mut dialog = build(fixed);
         route_keys(&mut dialog, Some(field), KeyCode::Char('x'));
-        route_keys(&mut dialog, Some(field), KeyCode::Enter);
+        let out = route_keys(&mut dialog, Some(field), KeyCode::Enter);
+        assert_eq!(
+            out,
+            if fixed {
+                Outcome::Consumed
+            } else {
+                Outcome::Changed
+            },
+            "fixed {fixed}"
+        );
         assert_eq!(dialog.result, want, "fixed {fixed}");
         assert_eq!(taken().as_deref(), fixed.then_some(WHY), "fixed {fixed}");
     }
@@ -414,7 +423,16 @@ fn a_typed_acknowledgement_refuses_a_fixed_gated_action() {
         for c in ['D', 'E', 'L'] {
             route_keys(&mut dialog, Some(ack), KeyCode::Char(c));
         }
-        route_keys(&mut dialog, Some(ack), KeyCode::Enter);
+        let out = route_keys(&mut dialog, Some(ack), KeyCode::Enter);
+        assert_eq!(
+            out,
+            if fixed {
+                Outcome::Consumed
+            } else {
+                Outcome::Changed
+            },
+            "fixed {fixed}"
+        );
         assert_eq!(dialog.result, want, "fixed {fixed}");
         assert_eq!(taken().as_deref(), fixed.then_some(WHY), "fixed {fixed}");
     }
@@ -478,6 +496,17 @@ fn a_checked_fixed_row_keeps_its_tick_through_toggle_all() {
     assert_eq!(ticks(&list), [true, true, true]);
     list.on_key(&key(KeyCode::Char('a')));
     assert_eq!(ticks(&list), [false, true, false]);
+    assert_eq!(taken(), None);
+}
+
+#[test]
+fn an_unchecked_fixed_row_does_not_block_deselecting_all() {
+    clear_refusal();
+    let mut list = trio(fixed_middle());
+    list.on_key(&key(KeyCode::Char('a')));
+    assert_eq!(ticks(&list), [true, false, true]);
+    list.on_key(&key(KeyCode::Char('a')));
+    assert_eq!(ticks(&list), [false, false, false]);
     assert_eq!(taken(), None);
 }
 

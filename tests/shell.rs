@@ -62,3 +62,11 @@ fn the_same_text_in_another_tone_is_a_change() {
     assert_eq!(host.press(KeyCode::Char('x')), Outcome::Changed);
     assert_eq!(host.status(), Some(("saved".to_owned(), Tone::Warning)));
 }
+
+#[test]
+fn the_same_tone_with_other_text_is_a_change() {
+    let mut host = Host::new(Act::Status("second", Tone::Secondary));
+    host.set_status("first", Tone::Secondary);
+    assert_eq!(host.press(KeyCode::Char('x')), Outcome::Changed);
+    assert_eq!(host.status(), Some(("second".to_owned(), Tone::Secondary)));
+}
