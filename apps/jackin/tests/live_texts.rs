@@ -240,3 +240,16 @@ fn the_live_facts_config_path_reaches_the_scope_row() {
         "{confirm}"
     );
 }
+
+#[test]
+fn the_fixed_world_names_the_config_file() {
+    let (confirm, _) = editor_save_with(
+        world_for(Scenario::OpenshellFixed),
+        Scenario::OpenshellFixed,
+        "down e enter x ctrl+s",
+    );
+    assert!(
+        confirm.contains("workspace config · ~/.config/jackin/config.toml"),
+        "{confirm}"
+    );
+}
