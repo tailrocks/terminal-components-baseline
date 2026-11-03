@@ -1434,10 +1434,10 @@ fn jackin_fixed_settings_global_mounts_refuse_every_add() {
     let add = row_with(&mounts, "+ Add mount");
     assert!(add.contains('▎'), "{add}");
     assert!(text(&mounts).contains(&reason));
-    assert_eq!(
-        find_all(&mounts, "+ Add mount").len(),
-        1,
-        "the list holds only the Add row"
+    assert!(
+        !text(&mounts).contains("/home/agent"),
+        "the list holds only the Add row:\n{}",
+        text(&mounts)
     );
     assert!(!footer(&mounts).contains("Add mount"));
     let ratio = contrast(&mounts, find(&mounts, "+ Add mount"));
@@ -1703,12 +1703,12 @@ fn jackin_fixed_env_sources_refuse_the_radio_options_and_the_p_key() {
     assert!(row_with(&form, "Host environment variable").contains("( )"));
     assert!(text(&form).contains(&reason));
     assert!(text(&form).contains("value is stored as plain text"));
-    app.visual("functional/jackin_fixed_env_form");
 
     app.key("down");
     app.wait_screen("cursor on the 1Password option", |s| {
         row_with(s, "1Password item").contains('▎')
     });
+    app.visual("functional/jackin_fixed_env_form");
     for key in ["space", "enter"] {
         app.key(key);
         let keyed = refused_with(&app, &reason);
@@ -1844,7 +1844,7 @@ fn jackin_fixed_workspace_env_keeps_the_role_scope_live_and_refuses_the_sources(
     }
     app.key("enter");
     let env = app.wait_screen("the env list has focus", |s| {
-        text(s).contains("Role overrides") && footer(s).contains("Enter Edit")
+        text(s).contains("Role overrides") && footer(s).contains("m Show")
     });
     assert!(footer(&env).contains("Scope…"));
     assert!(!footer(&env).contains("1Password…"));
