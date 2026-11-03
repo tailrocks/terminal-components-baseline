@@ -175,13 +175,28 @@ fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) -> Result<()
     let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
     match outcome {
         CheckOutcome::Pass(_) => Ok(()),
-        CheckOutcome::Failure(failure) => Err(format!(
-            "{test_id} {} sha {} path {} cells {}",
-            failure.reason(),
-            failure.candidate_sha256(),
-            failure.candidate_path().display(),
-            failure.changed_cell_total()
-        )),
+        CheckOutcome::Failure(failure) => {
+            let fields = failure.changed_fields();
+            // A hidden cursor is not drawn. Its column and row are where the
+            // terminal parked it, and that park moves between otherwise equal frames.
+            let parked = failure.changed_cell_total() == 0
+                && !screen.cursor().visible()
+                && !fields.is_empty()
+                && fields
+                    .iter()
+                    .all(|field| field == "cursor.col" || field == "cursor.row");
+            if parked {
+                return Ok(());
+            }
+            Err(format!(
+                "{test_id} {} sha {} path {} cells {} fields {}",
+                failure.reason(),
+                failure.candidate_sha256(),
+                failure.candidate_path().display(),
+                failure.changed_cell_total(),
+                fields.join(",")
+            ))
+        }
     }
 }
 
