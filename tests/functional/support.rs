@@ -103,7 +103,16 @@ impl App {
         reason: &str,
         predicate: impl Fn(&TerminalSnapshot) -> bool,
     ) -> TerminalSnapshot {
-        let deadline = Instant::now() + TIMEOUT;
+        self.wait_screen_within(reason, TIMEOUT, predicate)
+    }
+
+    fn wait_screen_within(
+        &self,
+        reason: &str,
+        budget: Duration,
+        predicate: impl Fn(&TerminalSnapshot) -> bool,
+    ) -> TerminalSnapshot {
+        let deadline = Instant::now() + budget;
         loop {
             let screen = self.screen();
             self.assert_running(reason);
@@ -206,6 +215,14 @@ impl App {
         self.wait_screen(&format!("visible {needle}"), |screen| {
             text(screen).contains(needle)
         })
+    }
+
+    pub fn wait_text_after_animation(&self, needle: &str, animation: Duration) -> TerminalSnapshot {
+        self.wait_screen_within(
+            &format!("visible {needle}"),
+            TIMEOUT + animation,
+            |screen| text(screen).contains(needle),
+        )
     }
 
     pub fn wait_absent(&self, needle: &str) -> TerminalSnapshot {

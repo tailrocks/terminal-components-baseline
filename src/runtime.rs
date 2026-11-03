@@ -8,11 +8,12 @@ use ratatui::crossterm::event::{
     self, DisableBracketedPaste, DisableFocusChange, DisableMouseCapture, EnableBracketedPaste,
     EnableFocusChange, EnableMouseCapture, Event, MouseEventKind,
 };
-use ratatui::crossterm::execute;
 use ratatui::crossterm::style::Colored;
+use ratatui::crossterm::terminal::{BeginSynchronizedUpdate, EndSynchronizedUpdate};
 use ratatui::crossterm::terminal::{
     Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode,
 };
+use ratatui::crossterm::{execute, queue};
 use ratatui::style::Color;
 
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
@@ -341,6 +342,7 @@ pub mod job_control {
 fn restore_terminal() {
     let mut out = stdout();
 
+    let _ = execute!(out, EndSynchronizedUpdate);
     let _ = out.write_all(crate::core::shape::reset_sequence().as_bytes());
     if let Some(pop) = keyboard::session::leave() {
         let _ = out.write_all(pop.as_bytes());
@@ -475,7 +477,7 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
         }
         let terminal = &mut session.terminal;
         if dirty {
-            terminal.draw(|f| render_frame(app, f, suppress_colors))?;
+            draw_frame(terminal, app, suppress_colors)?;
             dirty = false;
             if let Some(delay) = first_poll_delay.take() {
                 std::thread::sleep(delay);
@@ -527,9 +529,9 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
                 return Ok(());
             }
             if changed {
-                terminal.draw(|f| render_frame(app, f, suppress_colors))?;
+                draw_frame(terminal, app, suppress_colors)?;
                 if pump.settle(app) {
-                    terminal.draw(|f| render_frame(app, f, suppress_colors))?;
+                    draw_frame(terminal, app, suppress_colors)?;
                 }
             }
         }
@@ -560,7 +562,7 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
             }
             if app.should_quit() {
                 if dirty {
-                    terminal.draw(|f| render_frame(app, f, suppress_colors))?;
+                    draw_frame(terminal, app, suppress_colors)?;
                 }
                 return Ok(());
             }
@@ -788,6 +790,20 @@ impl InputPump {
             None => false,
         }
     }
+}
+
+fn draw_frame(
+    terminal: &mut ratatui::DefaultTerminal,
+    app: &mut impl Application,
+    suppress_colors: bool,
+) -> std::io::Result<()> {
+    queue!(terminal.backend_mut(), BeginSynchronizedUpdate)?;
+    let drawn = terminal
+        .draw(|f| render_frame(app, f, suppress_colors))
+        .map(|_| ());
+    let ended = execute!(terminal.backend_mut(), EndSynchronizedUpdate);
+    drawn?;
+    ended
 }
 
 fn render_frame(app: &mut impl Application, frame: &mut Frame, suppress_colors: bool) {
