@@ -72,7 +72,7 @@ fn selected(screen: &TerminalSnapshot) -> String {
     panic!("no selected row\n{}", text(screen));
 }
 
-fn field(screen: &TerminalSnapshot, label: &str) -> String {
+fn field_value(screen: &TerminalSnapshot, label: &str) -> Option<String> {
     let mut found = None;
     for row in 0..screen.rows() {
         let line = row_text(screen, row);
@@ -92,7 +92,33 @@ fn field(screen: &TerminalSnapshot, label: &str) -> String {
             start = end;
         }
     }
-    found.unwrap_or_else(|| panic!("no {label} field\n{}", text(screen)))
+    found
+}
+
+fn field(screen: &TerminalSnapshot, label: &str) -> String {
+    field_value(screen, label).unwrap_or_else(|| panic!("no {label} field\n{}", text(screen)))
+}
+
+/// The list row and the `Runs` label paint before the preview value.
+fn preview_ready(
+    screen: &TerminalSnapshot,
+    title: &str,
+    kind: &str,
+    runs: &str,
+    directory: &str,
+    host: &str,
+) -> bool {
+    let Some(row) = (0..screen.rows())
+        .map(|row| row_text(screen, row))
+        .find(|line| line.trim_start().starts_with('›'))
+    else {
+        return false;
+    };
+    row.contains(title)
+        && row.contains(kind)
+        && field_value(screen, "Runs").is_some_and(|value| value.contains(runs))
+        && field_value(screen, "In").as_deref() == Some(directory)
+        && field_value(screen, "Host").as_deref() == Some(host)
 }
 
 fn matches_action(
@@ -207,6 +233,7 @@ fn h01_scope_scope() {
             && !visible.contains("Suggested here")
             && !visible.contains("nothing used here yet")
             && !visible.contains("System · mbp")
+            && preview_ready(screen, API_LOGS, "docker", "docker logs", PROJECT, HOST)
     });
     matches_action(&parent, API_LOGS, "docker", "docker logs", PROJECT, HOST);
     assert!(!field(&parent, "In").contains("frontend"));
@@ -230,12 +257,25 @@ fn h01_scope_scope() {
         screen.cols() == 120
             && screen.rows() == 40
             && text(screen).contains(PARENT_SET)
-            && text(screen).contains("Runs")
+            && preview_ready(screen, API_LOGS, "docker", "docker logs", PROJECT, HOST)
     });
     matches_action(&restored, API_LOGS, "docker", "docker logs", PROJECT, HOST);
 
     app.key("ctrl+up");
-    let system = app.wait_text("System · mbp · 44 entries");
+    let system = app.wait_screen("system scope", |screen| {
+        let visible = text(screen);
+        visible.contains("System · mbp · 44 entries")
+            && visible.contains("Clean Docker completely")
+            && !visible.contains(PARENT_SET)
+            && preview_ready(
+                screen,
+                "Clean Docker completely",
+                "plan",
+                "docker stop",
+                "mbp · host-wide",
+                HOST,
+            )
+    });
     see(
         &system,
         &[
@@ -257,13 +297,19 @@ fn h01_scope_scope() {
     app.wait_text(HERE);
 
     app.key("ctrl+up");
-    let again = app.wait_text(PARENT_SET);
+    let again = app.wait_screen("parent scope again", |screen| {
+        text(screen).contains(PARENT_SET)
+            && preview_ready(screen, API_LOGS, "docker", "docker logs", PROJECT, HOST)
+    });
     matches_action(&again, API_LOGS, "docker", "docker logs", PROJECT, HOST);
 
     app.key("alt+enter");
     app.wait_text("Pin here");
     choose(&app, "Pin here");
-    let pinned = app.wait_text("Pinned here · it stays near the top in this folder");
+    let pinned = app.wait_screen("pinned here", |screen| {
+        text(screen).contains("Pinned here · it stays near the top in this folder")
+            && preview_ready(screen, API_LOGS, "docker", "docker logs", PROJECT, HOST)
+    });
     see(
         &pinned,
         &[PARENT_SET, API_LOGS, DB_LOGS, REVIEW, "pinned here"],
@@ -274,7 +320,10 @@ fn h01_scope_scope() {
     app.key("alt+enter");
     app.wait_text("Hide here");
     choose(&app, "Hide here");
-    let hidden = app.wait_text("Hidden here · still reachable by search");
+    let hidden = app.wait_screen("hidden here", |screen| {
+        text(screen).contains("Hidden here · still reachable by search")
+            && preview_ready(screen, REVIEW, "git", "git -C", PROJECT, HOST)
+    });
     see(
         &hidden,
         &[PARENT_HIDDEN, DB_LOGS, REVIEW],
@@ -283,14 +332,20 @@ fn h01_scope_scope() {
     matches_action(&hidden, REVIEW, "git", "git -C", PROJECT, HOST);
 
     app.type_text("acme-api-1");
-    let found = app.wait_text("Results · 1");
+    let found = app.wait_screen("hidden row found", |screen| {
+        text(screen).contains("Results · 1")
+            && preview_ready(screen, API_LOGS, "docker", "docker logs", PROJECT, HOST)
+    });
     see(&found, &[API_LOGS, "hidden here"], &[PARENT_HIDDEN]);
     matches_action(&found, API_LOGS, "docker", "docker logs", PROJECT, HOST);
 
     app.key("alt+enter");
     app.wait_text("Restore here");
     choose(&app, "Restore here");
-    let restored_row = app.wait_text("Restored here");
+    let restored_row = app.wait_screen("restored here", |screen| {
+        text(screen).contains("Restored here")
+            && preview_ready(screen, API_LOGS, "docker", "docker logs", PROJECT, HOST)
+    });
     matches_action(
         &restored_row,
         API_LOGS,
@@ -311,7 +366,10 @@ fn h01_scope_scope() {
     app.key("alt+enter");
     app.wait_text("Reset ranking");
     choose(&app, "Reset ranking");
-    let reset = app.wait_text("Ranking reset for this row · pins and aliases kept");
+    let reset = app.wait_screen("ranking reset", |screen| {
+        text(screen).contains("Ranking reset for this row · pins and aliases kept")
+            && preview_ready(screen, API_LOGS, "docker", "docker logs", PROJECT, HOST)
+    });
     see(
         &reset,
         &[PARENT_SET, API_LOGS, DB_LOGS, REVIEW, "pinned here"],
