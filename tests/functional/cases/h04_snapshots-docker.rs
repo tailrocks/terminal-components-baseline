@@ -4,8 +4,8 @@
 //! `pre_refactor/h04_snapshots_docker/` and each checkpoint's dots become
 //! underscores. The checkpoint is the open `docker-unavailable` page. A
 //! same-size resize does not force a frame, so each shot nudges the width and
-//! comes back. The wait follows the reported size and the page anchor, not
-//! the status-bar size text.
+//! comes back. The PTY grid changes before Holla paints, so each wait also
+//! requires the status-bar size from that paint.
 //!
 //! `docker-cleanup` starts with the query `docker clean` selected
 //! (`App::start` in `src/bin/holla/app.rs`). Esc clears a selection before it
@@ -106,6 +106,11 @@ fn unavailable(screen: &TerminalSnapshot) -> bool {
     visible.contains("docker.sock") || visible.contains(INFO)
 }
 
+/// The status bar paints `· {cols}×{rows}` from the frame Holla just drew.
+fn painted(screen: &TerminalSnapshot, cols: u16, rows: u16) -> bool {
+    text(screen).contains(&format!("· {cols}×{rows}"))
+}
+
 fn containers_page(screen: &TerminalSnapshot) -> bool {
     let title = live_line(screen);
     title.contains("Containers")
@@ -129,11 +134,15 @@ fn nudge(app: &App) {
     app.wait_screen("nudged", |screen| {
         screen.cols() == u32::from(nudged)
             && screen.rows() == u32::from(rows)
+            && painted(screen, nudged, rows)
             && unavailable(screen)
     });
     app.resize(cols, rows);
     app.wait_screen("size restored", |screen| {
-        screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows) && unavailable(screen)
+        screen.cols() == u32::from(cols)
+            && screen.rows() == u32::from(rows)
+            && painted(screen, cols, rows)
+            && unavailable(screen)
     });
 }
 
@@ -304,19 +313,25 @@ fn h04_snapshots_docker_docker() {
     clear_query(&app);
     paste_row(&app, DOCKER);
     let wide = app.wait_screen("docker unavailable", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && unavailable(screen)
+        screen.cols() == 120
+            && screen.rows() == 40
+            && painted(screen, 120, 40)
+            && unavailable(screen)
     });
     assert_unavailable(&wide, 120, 40);
     shot(&app, WIDE);
     app.resize(80, 24);
     let narrow = app.wait_screen("unavailable at 80 columns", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && unavailable(screen)
+        screen.cols() == 80 && screen.rows() == 24 && painted(screen, 80, 24) && unavailable(screen)
     });
     assert_unavailable(&narrow, 80, 24);
     shot(&app, NARROW);
     app.resize(120, 40);
     let restored = app.wait_screen("unavailable back at 120 columns", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && unavailable(screen)
+        screen.cols() == 120
+            && screen.rows() == 40
+            && painted(screen, 120, 40)
+            && unavailable(screen)
     });
     assert_unavailable(&restored, 120, 40);
     back(&app);
