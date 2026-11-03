@@ -20,13 +20,15 @@ Install the repository's pinned tools, then run:
 
 ```sh
 mise install
-cargo nextest run --locked --test functional --no-tests fail
+cargo nextest run --locked --workspace --profile functional --no-tests fail
 ```
 
-The named profile is convenient for CI and retains a JUnit report:
+This is the command CI runs in `suite-functional`. The profile selects
+the `functional` target of both workspace crates and retains a JUnit
+report. To run the target without the profile:
 
 ```sh
-cargo nextest run --locked --workspace --profile functional --no-tests fail
+cargo nextest run --locked --test functional --no-tests fail
 ```
 
 Filter one journey during development, without hiding missing tests:
@@ -66,8 +68,10 @@ tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/
 
 The legacy Tuiscotti 0.2 live API (git rev `a1ea27f`), `libtest-mimic` and
 the old `sha2` oracle pin are removed: nothing in the repository references
-them. No test constructs widgets or application state in-process, and no
-test calls event handlers directly. The immutable `visual-baseline` git
+them. No functional test constructs widgets or application state
+in-process, and none calls event handlers directly. The only in-process
+tests are the data tests described under
+[Library data tests](#library-data-tests). The immutable `visual-baseline` git
 tag and its release are untouched; they remain a historical visual oracle,
 not a test gate.
 
@@ -86,6 +90,30 @@ by the `App::visual` frozen check at the end of every functional test,
 with one approved `.tui.json` baseline per test in
 `tests/functional/baselines/`. The frozen `visual-baseline` tag is not
 moved, deleted or retargeted.
+
+## Library data tests
+
+`apps/jackin/tests/*.rs` (beside the `functional/` journeys) prove the
+data API that `jackin-console` offers another crate: `World::new`,
+`Snapshot`, the time source, external messages, `Vocabulary`, the
+account, launch-role and wizard data. They build the real `App` and
+`World` from the `fixtures` feature, drive it with keys through the
+`Application` trait, render into a test buffer and assert text and
+state. The tests of the library's own types live in the library's root
+`tests/` directory instead: `fixed.rs` and `reason.rs` (the fixed
+control state and the reason widths, rendered into a test buffer and
+driven with keys and clicks), `shell.rs` (the refusal slot and the
+redraw rule, through a minimal `shell::App` in `tests/common/mod.rs`)
+and `status.rs` (the sticky status line). No test of a `junie-tui` type
+lives in `apps/jackin/tests`. These tests add no visual baseline and are
+not journeys: a user-visible flow still needs a functional journey.
+`cargo nextest run --all-targets` runs them, and so do the
+`Rust / junie-tui` and `Rust / jackin-console` CI jobs
+(`nextest run --profile ci --package <crate>`); the `functional` suite
+does not.
+
+Each test has a named break (a one-edit change to the library that must
+turn it red) recorded in [P9.3 red and green](P9.3-red-green.md).
 
 ## The test boundary
 
@@ -307,12 +335,11 @@ sizes and colors does not replace distinct domain journeys.
 ## CI and failure evidence
 
 The source configuration is [.velnor/config.toml](../.velnor/config.toml)
-(`compile_driver = "cargo"`: Velnor's mbx driver requires host-seeded
-tool caches that GitHub-hosted runners do not provide, so CI builds with
-cargo directly; local builds run through mr-boxington via the mise
-postinstall `mbx setup`). The dedicated functional suite runs on PRs and
-branch pushes and can be selected manually with `tier=functional`. Its
-generated command is:
+(`compile_driver = "mbx"`: CI and local builds both run cargo through
+mr-boxington; local setup is the mise postinstall `mbx setup`). The
+dedicated functional suite runs on PRs and branch pushes and can be
+selected manually with `tier=functional`. Its generated command, run
+through `mbx`, is:
 
 ```sh
 cargo nextest run --workspace --no-tests fail --profile functional
@@ -330,9 +357,9 @@ session and removes the child home after assertion failure. A cleanup kill
 does not count as a successful application exit.
 
 Velnor generates the workflows; change its configuration and run
-`velnor-actions generate`, never hand-edit generated YAML. Require the
-dedicated `suite-functional` check in branch protection so the functional
-gate is a separate merge gate, not only part of the aggregate job.
+`velnor-actions generate`, never hand-edit generated YAML. The suite sets
+`required = true`, so the aggregate `Required` check needs
+`suite-functional`. `Required` is the check to require in branch protection.
 
 On a failure, read the action trace and the last frame first. Classify the
 failure as an incorrect locator/precondition, input-mode/routing failure,
@@ -408,8 +435,8 @@ test-module removal).
 
 ## The standard for every functional test
 
-Every test in this target follows one standardized pattern, with no
-exceptions and no legacy-API tests:
+Every test in this target follows one standardized pattern, with the one
+exception below and no legacy-API tests:
 
 1. Launch the real executable through the shared `support::App` harness
    (`tui_test` / `tuiscotti-tui-test =0.2.1`, isolated environment, bounded
@@ -428,6 +455,17 @@ exceptions and no legacy-API tests:
    before freezing, and tests that end beside a status flash or a live
    relative-time readout wait for that element to fade or freeze the
    app clock (`--motion paused`) first.
+
+The one exception: a key test of a page that asserts refusals, reasons and
+status expiry may end with `app.finish()` and no baseline. P9.3 design v6
+section 5.2 (last paragraph) requires one such test per refusal in each B4
+step, "a PTY test that passes or fails without a baseline file". The
+fixed-controls tests `showcase_fixed_controls_*` are of this kind; the page
+itself has the baseline `showcase_page_fixedcontrols`, and the focused,
+refused state has `showcase_fixedcontrols_focused_refused`. Other tests
+already end without a baseline (for example
+`tablepro_connect_development_opens_workbench` and
+`jackin_roles_add_role`).
 
 The legacy Tuiscotti 0.2 dependency is removed entirely; nothing in the
 repository uses it.

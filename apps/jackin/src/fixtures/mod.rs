@@ -1,34 +1,35 @@
 use std::collections::BTreeMap;
 
-use crate::sim::SimBackend;
-use crate::sim::onepassword::SimOnePassword;
-use crate::sim::scripts::SimScripts;
-use jackin_console::arbiter::{Arbiter, DiscoveryError};
-use jackin_console::backend::OpSession;
-use jackin_console::domain::account::{
+use crate::arbiter::DiscoveryError;
+use crate::backend::OpSession;
+use crate::domain::account::{
     Account, AccountId, AccountIdentity, AccountRegistry, Confidence, CredentialSource,
     DetectedKind, IdentitySubject, IssueCode, Lifecycle, Recoverability, RecoverableIssue,
     ValidationLevel, ValidationState,
 };
-use jackin_console::domain::agent::{Agent, AuthMode, Provider};
-use jackin_console::domain::instance::{
+use crate::domain::agent::{Agent, AuthMode, Provider};
+use crate::domain::instance::{
     DaemonSnapshot, Instance, InstanceStatus, ManifestError, SessionRecord, SessionStatus,
 };
-use jackin_console::domain::onepassword::OpReference;
-use jackin_console::domain::surfaces::Surfaces;
-use jackin_console::domain::usage::{
+use crate::domain::onepassword::OpReference;
+use crate::domain::usage::{
     AccountUsage, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
 };
-use jackin_console::domain::workspace::{
+use crate::domain::workspace::{
     AllowedRoles, EnvVar, Isolation, Mount, MountScope, RoleEntry, RolePolicy, RoleSource,
     Workspace,
 };
-use jackin_console::panes::Daemon;
-use jackin_console::scenario::Scenario;
-use jackin_console::world::{
-    DaemonHealth, FsEntry, GithubRepo, GlobalConfig, TrustRow, World, refresh_snapshots,
+use crate::panes::Daemon;
+use crate::scenario::Scenario;
+use crate::sim::SimBackend;
+use crate::sim::onepassword::SimOnePassword;
+use crate::sim::scripts::SimScripts;
+use crate::world::{
+    DaemonHealth, FsEntry, GithubRepo, GlobalConfig, TrustRow, World, WorldParts, refresh_snapshots,
 };
 use junie_tui::ui::layout::SplitDir;
+
+pub mod surfaces;
 
 pub const HOME: &str = "/Users/alexey";
 
@@ -1079,37 +1080,24 @@ fn accounts_hard(now: i64) -> AccountRegistry {
 }
 
 fn base_world(scenario: Scenario) -> World {
-    let clock = jackin_console::scenario::CLOCK;
+    let clock = crate::scenario::CLOCK;
     let now = clock.now_secs();
-    let mut w = World {
-        scenario,
-        clock,
-        arbiter: Arbiter::new(0),
-        home: HOME.into(),
-        cwd: format!("{HOME}/src/payments-platform"),
-        workspaces: vec![],
+    World::new(WorldParts {
         next_workspace_id: 100,
         roles: roles(),
-        instances: vec![],
-        daemons: BTreeMap::new(),
         global: global(false),
-        accounts: AccountRegistry::default(),
-        op: Box::new(SimOnePassword::fixture(now)),
-        backend: SimBackend::shared(),
         fs: fs(),
         github: github(),
-        clipboard: None,
-        jobs: vec![],
-        daemon_health: DaemonHealth::Healthy,
         last_refresh_secs: now - 3,
-        refresh_fails: false,
-        takeover_at_ms: None,
-        session_accounts: BTreeMap::new(),
-        discovery_pending: false,
-        surfaces: Surfaces::default(),
-    };
-    w.sync_arbiter();
-    w
+        ..WorldParts::new(
+            scenario,
+            clock,
+            HOME.into(),
+            format!("{HOME}/src/payments-platform"),
+            Box::new(SimOnePassword::fixture(now)),
+            SimBackend::shared(),
+        )
+    })
 }
 
 fn populated(scenario: Scenario, rich: bool) -> World {
@@ -1426,24 +1414,24 @@ pub fn world_for(scenario: Scenario) -> World {
         }
         Scenario::DockerSetting | Scenario::DockerNoEngine => {
             let mut w = populated(scenario, false);
-            crate::surfaces::docker(&mut w, scenario == Scenario::DockerNoEngine);
+            surfaces::docker(&mut w, scenario == Scenario::DockerNoEngine);
             w
         }
         Scenario::RoleEditor => {
             let mut w = populated(scenario, false);
-            crate::surfaces::roles(&mut w, vec![Agent::Codex]);
-            crate::surfaces::docker(&mut w, false);
+            surfaces::roles(&mut w, vec![Agent::Codex]);
+            surfaces::docker(&mut w, false);
             w
         }
         Scenario::RoleBinding => {
             let mut w = populated(scenario, false);
-            crate::surfaces::roles(&mut w, vec![Agent::Codex, Agent::ClaudeCode]);
+            surfaces::roles(&mut w, vec![Agent::Codex, Agent::ClaudeCode]);
             w.backend = SimBackend::failing_first_bind();
             w
         }
         Scenario::Doctor => {
             let mut w = populated(scenario, false);
-            crate::surfaces::doctor(&mut w);
+            surfaces::doctor(&mut w);
             w
         }
         Scenario::LaunchOpenshell => {

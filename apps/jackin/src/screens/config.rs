@@ -32,6 +32,7 @@ use super::modals::{
 use super::{Cx, LayerTag, ModalResult};
 use crate::domain::agent::AuthMode;
 use crate::domain::onepassword::OpReference;
+use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{
     EnvValue, EnvVar, Isolation, Mount, MountKind, MountScope, MountSource, RoleName, Workspace,
     env_key_error, mask,
@@ -772,7 +773,7 @@ impl ConfigTabs {
             match l.mode {
                 Mode::Drawer => {
                     if has_card {
-                        self.render_inspector(tab, l.detail, buf, ctx);
+                        self.render_inspector(tab, l.detail, buf, ctx, w);
                     }
                     return None;
                 }
@@ -1026,7 +1027,7 @@ impl ConfigTabs {
             }
         }
         if let Some(card) = card_area {
-            self.render_inspector(tab, card, buf, ctx);
+            self.render_inspector(tab, card, buf, ctx, w);
         }
         if has_card {
             self.md.finish(ctx);
@@ -1077,7 +1078,14 @@ impl ConfigTabs {
         }
     }
 
-    fn render_inspector(&mut self, tab: Tab, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
+    fn render_inspector(
+        &mut self,
+        tab: Tab,
+        area: Rect,
+        buf: &mut Buffer,
+        ctx: &mut RenderCtx,
+        w: &World,
+    ) {
         let t = ctx.theme;
         let st = self.state_ref(tab);
         let Some(row) = st.rows.get(st.cursor) else {
@@ -1118,7 +1126,10 @@ impl ConfigTabs {
                 }
                 lines.push((
                     "Resolution".into(),
-                    "resolved at launch · never stored in the Construct image".into(),
+                    format!(
+                        "resolved at launch · never stored in {} image",
+                        w.surfaces.vocabulary.construct
+                    ),
                     Tone::Faint,
                 ));
                 (
@@ -1384,11 +1395,17 @@ impl ConfigTabs {
             (RowKey::Mount(d), KeyCode::Char('o')) => {
                 if let Some(m) = self.pending.mounts.iter().find(|m| &m.destination == d) {
                     match &m.source {
-                        MountSource::Git(u) => {
-                            cx.status(format!("Opened https://{u} in the browser"))
-                        }
+                        MountSource::Git(u) => cx.status(fill_in(
+                            &w.surfaces.vocabulary.github_git_mount,
+                            &[("url", u.as_str())],
+                        )),
                         MountSource::Host(p) if m.kind == MountKind::Repository => {
-                            cx.status(format!("Opened {} on GitHub", w.tilde(p)))
+                            match &w.surfaces.vocabulary.github_repo_mount {
+                                Some(text) => {
+                                    cx.status(fill_in(text, &[("url", w.tilde(p).as_str())]));
+                                }
+                                None => cx.error("no GitHub URL for this mount"),
+                            }
                         }
                         _ => cx.error("no GitHub URL for this mount"),
                     }
@@ -2001,14 +2018,17 @@ impl ConfigTabs {
                 TextInput::new(f.sub("dest"), "Destination")
                     .required(true)
                     .placeholder("/workspace/name")
-                    .help("Absolute path inside the Construct")
+                    .help(&format!(
+                        "Absolute path inside {}",
+                        w.surfaces.vocabulary.construct
+                    ))
                     .value(m.as_ref().map(|m| m.destination.as_str()).unwrap_or("")),
             ),
             FormField::check(
                 "ro",
                 Checkbox::new(
                     f.sub("ro"),
-                    "Mount read-only",
+                    &w.surfaces.vocabulary.read_only_label,
                     m.as_ref().is_some_and(|m| m.readonly),
                 ),
             ),
@@ -2103,7 +2123,7 @@ impl ConfigTabs {
                     f.sub("src"),
                     "Value source",
                     &[
-                        "Plain text  (masked)",
+                        w.surfaces.vocabulary.env_plain_label.as_str(),
                         "1Password item / field  (recommended for secrets)",
                         "Host environment variable",
                     ],
@@ -2121,7 +2141,14 @@ impl ConfigTabs {
                 )
                 .masked()
                 .reveal_tail(4)
-                .placeholder("typed once · masked afterwards")
+                .placeholder(&w.surfaces.vocabulary.env_plain_placeholder)
+                .help(
+                    w.surfaces
+                        .vocabulary
+                        .env_plain_help
+                        .as_deref()
+                        .unwrap_or(""),
+                )
                 .value(match e.as_ref().map(|e| &e.value) {
                     Some(EnvValue::Plain(v)) => v.as_str(),
                     _ => "",
@@ -2375,8 +2402,11 @@ impl ConfigTabs {
     fn save_mount(&mut self, values: FormValues, w: &World, cx: &mut Cx) -> Outcome {
         let dest = text(&values, "dest").trim().to_owned();
         if !dest.starts_with('/') {
-            cx.with_top::<FormDialog>(|f| {
-                f.error = Some("Destination must be an absolute path inside the Construct".into())
+            let construct = w.surfaces.vocabulary.construct.clone();
+            cx.with_top::<FormDialog>(move |f| {
+                f.error = Some(format!(
+                    "Destination must be an absolute path inside {construct}"
+                ))
             });
             return Outcome::Changed;
         }

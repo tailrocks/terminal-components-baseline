@@ -2,10 +2,14 @@ pub mod app;
 pub mod arbiter;
 pub mod backend;
 pub mod domain;
+#[cfg(feature = "fixtures")]
+pub mod fixtures;
 pub mod launch;
 pub mod pages;
 pub mod panes;
 pub mod rain;
 pub mod scenario;
 pub mod screens;
+#[cfg(feature = "fixtures")]
+pub mod sim;
 pub mod world;

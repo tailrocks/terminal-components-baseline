@@ -1,4 +1,4 @@
-use jackin_console::backend::{ChangeSet, ChangedFile, DiffLine, DiffStatus, Hunk};
+use crate::backend::{ChangeSet, ChangedFile, DiffLine, DiffStatus, Hunk};
 
 fn seed(instance_id: &str) -> u64 {
     instance_id.bytes().fold(0xcbf2_9ce4_8422_2325u64, |h, b| {

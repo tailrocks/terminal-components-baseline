@@ -1,13 +1,13 @@
 use super::onepassword::classify_plain;
-use jackin_console::backend::{
+use crate::backend::{
     CheckRow, FolderProbe, KeyOutcome, OnePassword, OpError, SecretClass, ValidationOutcome,
 };
-use jackin_console::domain::account::{
+use crate::domain::account::{
     Account, AccountIdentity, Confidence, CredentialSource, DetectedKind, IdentitySubject,
     IssueCode, Lifecycle, Recoverability, RecoverableIssue, ValidationLevel,
 };
-use jackin_console::domain::agent::Provider;
-use jackin_console::domain::usage::{
+use crate::domain::agent::Provider;
+use crate::domain::usage::{
     AccountUsage, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
 };
 
@@ -470,6 +470,7 @@ pub fn refresh_duration_ms(a: &Account) -> i64 {
         Provider::Zai => 1_050,
         Provider::Moonshot => 350,
         Provider::MiniMax => 1_600,
+        Provider::Cursor | Provider::Gemini | Provider::Openrouter => 700,
     };
     base + (a.id.len() as i64 % 5) * 40
 }

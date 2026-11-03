@@ -1,13 +1,16 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use crate::arbiter::Arbiter;
+use crate::arbiter::{Arbiter, DiscoveryError};
 use crate::backend::{Backend, Effect, OnePassword};
 use crate::domain::account::{AccountId, AccountRegistry};
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorReport, DoctorState};
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus};
-use crate::domain::role::{AccountOrder, RoleFinding, RoleRecord};
+use crate::domain::role::{
+    AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE, RoleFinding,
+    RoleRecord,
+};
 use crate::domain::surfaces::Surfaces;
 use crate::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
@@ -33,7 +36,7 @@ pub mod job {
     pub const DOCTOR: JobKey = JobKey::new("doctor");
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct GlobalConfig {
     pub coauthor_trailer: bool,
     pub dco_signoff: bool,
@@ -213,6 +216,7 @@ pub struct HealthView {
 pub struct World {
     pub scenario: Scenario,
     pub clock: SimClock,
+    pub time: TimeSource,
     pub arbiter: Arbiter,
     pub home: String,
     pub cwd: String,
@@ -243,7 +247,148 @@ pub struct World {
     pub surfaces: Surfaces,
 }
 
+pub trait WallSource: std::fmt::Debug + Send + Sync {
+    fn epoch_millis(&self) -> i64;
+
+    fn utc_offset_secs(&self) -> i64;
+}
+
+#[derive(Debug, Clone, Default)]
+pub enum TimeSource {
+    #[default]
+    Sim,
+    Wall(Arc<dyn WallSource>),
+}
+
+#[derive(Debug, Clone)]
+pub struct Snapshot {
+    pub workspaces: Vec<Workspace>,
+    pub roles: Vec<RoleEntry>,
+    pub instances: Vec<Instance>,
+    pub global: GlobalConfig,
+    pub accounts: AccountRegistry,
+    pub surfaces: Surfaces,
+    pub github: Vec<GithubRepo>,
+    pub index_error: Option<DiscoveryError>,
+}
+
+pub struct WorldParts {
+    pub scenario: Scenario,
+    pub clock: SimClock,
+    pub time: TimeSource,
+    pub arbiter: Arbiter,
+    pub home: String,
+    pub cwd: String,
+    pub workspaces: Vec<Workspace>,
+    pub next_workspace_id: WorkspaceId,
+    pub roles: Vec<RoleEntry>,
+    pub instances: Vec<Instance>,
+    pub global: GlobalConfig,
+    pub accounts: AccountRegistry,
+    pub op: Box<dyn OnePassword>,
+    pub backend: Arc<dyn Backend>,
+    pub fs: Vec<FsEntry>,
+    pub github: Vec<GithubRepo>,
+    pub last_refresh_secs: i64,
+    pub surfaces: Surfaces,
+}
+
+impl WorldParts {
+    pub fn new(
+        scenario: Scenario,
+        clock: SimClock,
+        home: String,
+        cwd: String,
+        op: Box<dyn OnePassword>,
+        backend: Arc<dyn Backend>,
+    ) -> Self {
+        Self {
+            scenario,
+            last_refresh_secs: clock.now_secs(),
+            clock,
+            time: TimeSource::Sim,
+            arbiter: Arbiter::new(0),
+            home,
+            cwd,
+            workspaces: vec![],
+            next_workspace_id: 1,
+            roles: vec![],
+            instances: vec![],
+            global: GlobalConfig::default(),
+            accounts: AccountRegistry::default(),
+            op,
+            backend,
+            fs: vec![],
+            github: vec![],
+            surfaces: Surfaces::default(),
+        }
+    }
+
+    pub fn wall(mut self, source: Arc<dyn WallSource>) -> Self {
+        let ms = source.epoch_millis();
+        self.clock.epoch_secs = ms.div_euclid(1000);
+        self.clock.now_ms = ms.rem_euclid(1000);
+        self.clock.utc_offset_secs = source.utc_offset_secs();
+        self.last_refresh_secs = self.clock.now_secs();
+        self.time = TimeSource::Wall(source);
+        self
+    }
+}
+
 impl World {
+    pub fn new(parts: WorldParts) -> Self {
+        let WorldParts {
+            scenario,
+            clock,
+            time,
+            arbiter,
+            home,
+            cwd,
+            workspaces,
+            next_workspace_id,
+            roles,
+            instances,
+            global,
+            accounts,
+            op,
+            backend,
+            fs,
+            github,
+            last_refresh_secs,
+            surfaces,
+        } = parts;
+        let mut world = Self {
+            scenario,
+            clock,
+            time,
+            arbiter,
+            home,
+            cwd,
+            workspaces,
+            next_workspace_id,
+            roles,
+            instances,
+            daemons: BTreeMap::new(),
+            global,
+            accounts,
+            op,
+            backend,
+            fs,
+            github,
+            clipboard: None,
+            jobs: vec![],
+            daemon_health: DaemonHealth::Healthy,
+            last_refresh_secs,
+            refresh_fails: false,
+            takeover_at_ms: None,
+            session_accounts: BTreeMap::new(),
+            discovery_pending: false,
+            surfaces,
+        };
+        world.sync_arbiter();
+        world
+    }
+
     pub fn now_secs(&self) -> i64 {
         self.clock.now_secs()
     }
@@ -284,17 +429,38 @@ impl World {
                 at_secs: report.at_secs,
             },
             None => HealthView {
-                noun: self
-                    .surfaces
-                    .doctor
-                    .as_ref()
-                    .map_or_else(|| "daemon".into(), |d| d.noun.clone()),
+                noun: self.surfaces.doctor.as_ref().map_or_else(
+                    || self.surfaces.vocabulary.health_noun.clone(),
+                    |d| d.noun.clone(),
+                ),
                 health: match self.daemon_health {
                     DaemonHealth::Healthy => Health::Healthy,
                     DaemonHealth::Stale => Health::Stale,
                 },
                 at_secs: self.last_refresh_secs,
             },
+        }
+    }
+
+    pub fn about_props(&self) -> Vec<junie_tui::widgets::props::Prop> {
+        use junie_tui::widgets::props::Prop;
+        match &self.surfaces.about {
+            Some(rows) => rows
+                .iter()
+                .map(|(label, value)| Prop::new(label, value.as_str()))
+                .collect(),
+            None => vec![
+                Prop::new("Product", "jackin-preview · deterministic redesign preview"),
+                Prop::new("Scenario", self.scenario.name()),
+                Prop::new(
+                    "Construct",
+                    "simulated · nothing here touches a real container",
+                ),
+                Prop::new(
+                    "Design system",
+                    "Junie-inspired Ratatui components (junie_tui)",
+                ),
+            ],
         }
     }
 
@@ -307,6 +473,33 @@ impl World {
         })
     }
 
+    pub fn apply(&mut self, snapshot: Snapshot) {
+        let Snapshot {
+            workspaces,
+            roles,
+            instances,
+            global,
+            accounts,
+            surfaces,
+            github,
+            index_error,
+        } = snapshot;
+        let next_free = workspaces.iter().map(|w| w.id + 1).max().unwrap_or(0);
+        self.next_workspace_id = self.next_workspace_id.max(next_free);
+        self.workspaces = workspaces;
+        self.roles = roles;
+        self.instances = instances;
+        self.global = global;
+        self.accounts = accounts;
+        self.surfaces = surfaces;
+        self.github = github;
+        refresh_snapshots(self);
+        self.arbiter.discovery = match index_error {
+            Some(error) => Err(error),
+            None => Ok(self.running_count()),
+        };
+    }
+
     pub fn absorb(&mut self, msg: &Msg) {
         if let (Msg::DoctorFinished(report), Some(d)) = (msg, self.surfaces.doctor.as_mut()) {
             d.state = DoctorState::Done(report.clone());
@@ -314,7 +507,14 @@ impl World {
     }
 
     pub fn tick(&mut self, interval_ms: i64) -> Vec<Msg> {
-        self.clock.advance(interval_ms);
+        match &self.time {
+            TimeSource::Sim => self.clock.advance(interval_ms),
+            TimeSource::Wall(source) if self.clock.running => {
+                self.clock.now_ms = source.epoch_millis() - self.clock.epoch_secs * 1000;
+                self.clock.utc_offset_secs = source.utc_offset_secs();
+            }
+            TimeSource::Wall(_) => {}
+        }
         if !self.clock.running {
             return vec![];
         }
@@ -442,7 +642,7 @@ impl World {
             provider,
             ws,
             role,
-            session,
+            session.map(|s| (s, self.surfaces.vocabulary.session_choice.as_str())),
             &self.accounts,
             order,
             binding,
@@ -503,6 +703,16 @@ impl World {
                 }
             }
         }
+        if let Some(limit) = &self.surfaces.agent_blocked
+            && agent != limit.launchable
+        {
+            return AgentOffer {
+                accounts: vec![],
+                preselected: None,
+                blocked: Some(limit.text.clone()),
+                configured: !ready.is_empty() || !blocked.is_empty(),
+            };
+        }
         if self.agent_mode(agent) == AuthMode::Ignore {
             return AgentOffer {
                 accounts: vec![],
@@ -526,6 +736,13 @@ impl World {
         }
         let block = if ready.is_empty() {
             blocked.first().map(|(id, why)| {
+                let launch_block = self
+                    .accounts
+                    .get(id)
+                    .and_then(|a| a.launch_blocked.as_deref());
+                if launch_block == Some(why.as_str()) {
+                    return why.clone();
+                }
                 let name = self
                     .accounts
                     .get(id)
@@ -544,6 +761,33 @@ impl World {
         }
     }
 
+    pub fn launch_role(&self, from: LaunchSource) -> LaunchRole {
+        match self.surfaces.launch_role {
+            LaunchRoleRule::Demo => LaunchRole::Role(match from {
+                LaunchSource::Row(ws) => ws
+                    .and_then(|x| x.roles.default.clone().or(x.roles.last.clone()))
+                    .unwrap_or_else(|| "the-architect".into()),
+                LaunchSource::CurrentDir(_) => "the-architect".into(),
+            }),
+            LaunchRoleRule::Configured => {
+                let (LaunchSource::Row(ws) | LaunchSource::CurrentDir(ws)) = from;
+                if let Some(default) = ws.and_then(|x| x.roles.default.clone()) {
+                    return LaunchRole::Role(default);
+                }
+                let mut allowed = self
+                    .roles
+                    .iter()
+                    .filter(|r| ws.is_none_or(|x| x.roles.allows(&r.name)))
+                    .map(|r| r.name.clone());
+                match (allowed.next(), allowed.next()) {
+                    (Some(only), None) => LaunchRole::Role(only),
+                    _ if ws.is_some() => LaunchRole::Unavailable(NO_DEFAULT_ROLE.into()),
+                    _ => LaunchRole::Unavailable(NO_SAVED_WORKSPACE.into()),
+                }
+            }
+        }
+    }
+
     pub fn offered_agents(
         &self,
         ws: Option<&Workspace>,
@@ -555,6 +799,12 @@ impl World {
             .filter(|(_, o)| o.configured)
             .collect()
     }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum LaunchSource<'a> {
+    Row(Option<&'a Workspace>),
+    CurrentDir(Option<&'a Workspace>),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

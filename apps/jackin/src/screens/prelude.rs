@@ -17,7 +17,7 @@ use ratatui::layout::Rect;
 
 use super::modals::{BrowserResult, ChoiceDialog};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::domain::workspace::{Mount, Workspace};
+use crate::domain::workspace::{Mount, WizardDefaults, Workspace};
 use crate::world::World;
 
 const BROWSER: WidgetId = WidgetId::of("prelude.browser");
@@ -42,14 +42,25 @@ enum Source {
 }
 
 impl Source {
-    fn default_destination(&self) -> String {
+    fn default_destination(&self, wizard: Option<&WizardDefaults>) -> String {
+        if let Some(defaults) = wizard {
+            return defaults.destination.clone();
+        }
         match self {
             Source::Host { path, .. } => path.clone(),
-            Source::Git { url } => format!(
-                "/work/{}",
-                basename(url.trim_end_matches('/').trim_end_matches(".git"))
-            ),
+            Source::Git { url } => format!("/work/{}", self.base_name(url)),
         }
+    }
+
+    fn default_name(&self) -> String {
+        match self {
+            Source::Host { path, .. } => basename(path).to_owned(),
+            Source::Git { url } => self.base_name(url).to_owned(),
+        }
+    }
+
+    fn base_name<'a>(&self, url: &'a str) -> &'a str {
+        basename(url.trim_end_matches('/').trim_end_matches(".git"))
     }
 }
 
@@ -151,7 +162,8 @@ impl PreludeScreen {
             }
             Step::Destination => {
                 let Some(src) = &self.source else { return };
-                let default = src.default_destination();
+                let wizard = w.surfaces.wizard.as_ref();
+                let default = src.default_destination(wizard);
                 let (source_line, same) = match src {
                     Source::Host { path, readonly } => (
                         format!(
@@ -166,11 +178,20 @@ impl PreludeScreen {
                         format!("Default   {default}"),
                     ),
                 };
+                let same = match wizard {
+                    Some(defaults) => format!("{} {default}", defaults.destination_label),
+                    None => same,
+                };
+                let options: &[&str] = if wizard.is_some() {
+                    &[&same]
+                } else {
+                    &[&same, "Edit destination…"]
+                };
                 let c = ChoiceDialog::new(
                     DEST,
                     Self::title(step),
-                    "Mount destination",
-                    &[&same, "Edit destination…"],
+                    &w.surfaces.vocabulary.destination_heading,
+                    options,
                     self.dest_choice,
                 )
                 .line(source_line, Tone::Secondary)
@@ -189,12 +210,19 @@ impl PreludeScreen {
                 let value = self
                     .dest_text
                     .clone()
-                    .or_else(|| self.source.as_ref().map(|s| s.default_destination()))
+                    .or_else(|| {
+                        self.source
+                            .as_ref()
+                            .map(|s| s.default_destination(w.surfaces.wizard.as_ref()))
+                    })
                     .unwrap_or_default();
                 let mut input = TextInput::new(EDIT.sub("input"), "Destination")
                     .required(true)
                     .placeholder("/work/project")
-                    .help("Absolute path inside the Construct")
+                    .help(&format!(
+                        "Absolute path inside {}",
+                        w.surfaces.vocabulary.construct
+                    ))
                     .value(&value);
                 input.field.error = error.map(Into::into);
                 input.begin_edit();
@@ -235,7 +263,10 @@ impl PreludeScreen {
                 let value = self
                     .name
                     .clone()
-                    .or_else(|| self.destination.as_deref().map(|d| basename(d).to_owned()))
+                    .or_else(|| match (&self.source, w.surfaces.wizard.is_some()) {
+                        (Some(source), true) => Some(source.default_name()),
+                        _ => self.destination.as_deref().map(|d| basename(d).to_owned()),
+                    })
                     .unwrap_or_default();
                 let mut input = TextInput::new(NAME.sub("input"), "Name")
                     .required(true)
@@ -262,6 +293,9 @@ impl PreludeScreen {
             return vec![];
         };
         let mut rows = vec![dest.clone()];
+        if w.surfaces.wizard.is_some() {
+            return rows;
+        }
         if let Some(Source::Host { path, .. }) = &self.source {
             let src = path.trim_end_matches('/');
             let mut subs: Vec<String> =
@@ -408,7 +442,10 @@ impl Page<Jackin> for PreludeScreen {
             ("prelude.dest", ModalResult::Choice(Some(choice))) => {
                 self.dest_choice = choice;
                 if choice == 0 {
-                    self.destination = self.source.as_ref().map(|s| s.default_destination());
+                    self.destination = self
+                        .source
+                        .as_ref()
+                        .map(|s| s.default_destination(w.surfaces.wizard.as_ref()));
                     self.edit_used = false;
                     self.open(Step::Workdir, w, cx, None);
                 } else {

@@ -11,7 +11,7 @@ use crate::core::id::WidgetId;
 use crate::core::keyboard::KeyboardProtocol;
 use crate::core::pointer::{PointerParts, PointerRouter};
 use crate::motion::Motion;
-use crate::runtime::{Application, Coalesce};
+use crate::runtime::{Application, Coalesce, ExternalReceiver};
 use crate::theme::Theme;
 use crate::ui::ctx::{Interaction, RenderCtx, fill};
 use crate::widgets::hintbar::HintKeys;
@@ -267,6 +267,10 @@ pub trait App {
     fn keyboard_protocol(&self) -> KeyboardProtocol {
         KeyboardProtocol::current()
     }
+
+    fn external(&self) -> Option<&ExternalReceiver> {
+        None
+    }
 }
 
 pub fn blur_fan_out<A: App + ?Sized>(app: &mut A) -> Outcome {
@@ -339,6 +343,14 @@ pub fn render<A: App + ?Sized>(app: &mut A, frame: &mut Frame) {
 }
 
 pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
+    crate::core::refusal::clear_refusal();
+    let shown = |app: &A| {
+        app.shell()
+            .status
+            .get()
+            .map(|(text, tone)| (text.to_owned(), tone))
+    };
+    let status_before = shown(app);
     let seen = app.shell_mut().status.on_input(&input);
     if let Input::Resize(w, h) = input {
         app.shell_mut().size = (w, h);
@@ -353,11 +365,13 @@ pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
         Some(out) => out,
         None => app.on_input(input),
     };
-    if seen {
+    if seen || shown(app) != status_before {
         out = out.or(Outcome::Changed);
     }
     out = out.or(blur_fan_out(app));
-    app.after_input(&logged, out)
+    let out = app.after_input(&logged, out);
+    crate::core::refusal::clear_refusal();
+    out
 }
 
 impl<A: App> Application for A {
@@ -388,5 +402,8 @@ impl<A: App> Application for A {
     }
     fn take_output(&mut self) -> Vec<String> {
         super::clipboard::take_output()
+    }
+    fn external(&self) -> Option<&ExternalReceiver> {
+        App::external(self)
     }
 }

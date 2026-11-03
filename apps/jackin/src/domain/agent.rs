@@ -81,6 +81,9 @@ pub enum Provider {
     Moonshot,
     Zai,
     MiniMax,
+    Cursor,
+    Gemini,
+    Openrouter,
 }
 
 impl Provider {
@@ -94,6 +97,9 @@ impl Provider {
             Provider::Moonshot => "Moonshot / Kimi",
             Provider::Zai => "Z.AI",
             Provider::MiniMax => "MiniMax",
+            Provider::Cursor => "Cursor",
+            Provider::Gemini => "Google Gemini",
+            Provider::Openrouter => "OpenRouter",
         }
     }
 
@@ -107,6 +113,9 @@ impl Provider {
             Provider::Moonshot => "Moonshot",
             Provider::Zai => "Z.AI",
             Provider::MiniMax => "MiniMax",
+            Provider::Cursor => "Cursor",
+            Provider::Gemini => "Gemini",
+            Provider::Openrouter => "OpenRouter",
         }
     }
 
@@ -120,6 +129,7 @@ impl Provider {
             Provider::Moonshot => UsageSurface::Kimi,
             Provider::Zai => UsageSurface::Zai,
             Provider::MiniMax => UsageSurface::Minimax,
+            Provider::Cursor | Provider::Gemini | Provider::Openrouter => UsageSurface::Unsupported,
         }
     }
 
@@ -131,7 +141,11 @@ impl Provider {
             Provider::XAi => Some(Agent::GrokBuild),
             Provider::OpenCode => Some(Agent::OpenCode),
             Provider::Moonshot => Some(Agent::KimiCode),
-            Provider::Zai | Provider::MiniMax => None,
+            Provider::Zai
+            | Provider::MiniMax
+            | Provider::Cursor
+            | Provider::Gemini
+            | Provider::Openrouter => None,
         }
     }
 
@@ -149,6 +163,9 @@ impl Provider {
             Provider::Moonshot => "Kimi Code API key",
             Provider::Zai => "Z.AI API key",
             Provider::MiniMax => "MiniMax API key",
+            Provider::Cursor => "Cursor API key",
+            Provider::Gemini => "Gemini API key",
+            Provider::Openrouter => "OpenRouter API key",
         }
     }
 
@@ -162,6 +179,9 @@ impl Provider {
             Provider::Moonshot => "Kimi profile folder",
             Provider::Zai => "Z.AI profile folder",
             Provider::MiniMax => "MiniMax profile folder",
+            Provider::Cursor => "Cursor profile folder",
+            Provider::Gemini => "Gemini profile folder",
+            Provider::Openrouter => "OpenRouter profile folder",
         }
     }
 }
@@ -242,4 +262,10 @@ pub enum AuthMode {
     OAuthToken,
 
     Ignore,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AgentBlocked {
+    pub launchable: Agent,
+    pub text: String,
 }

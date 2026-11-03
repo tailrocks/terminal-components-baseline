@@ -1,11 +1,8 @@
-mod fixtures;
-mod sim;
-mod surfaces;
-
 use clap::Parser;
 use junie_tui::cli::CommonArgs;
 
 use jackin_console::app::App;
+use jackin_console::fixtures;
 use jackin_console::scenario::Scenario;
 
 const NO_MOTION_ENV: &str = "JACKIN_NO_MOTION";

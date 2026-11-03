@@ -11,6 +11,22 @@ pub enum AccountOrder {
     Jackin,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum LaunchRoleRule {
+    #[default]
+    Demo,
+    Configured,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum LaunchRole {
+    Role(RoleName),
+    Unavailable(String),
+}
+
+pub const NO_DEFAULT_ROLE: &str = "no default role · set it in Roles";
+pub const NO_SAVED_WORKSPACE: &str = "no saved workspace · press n, then set a default role";
+
 #[derive(Debug, Clone)]
 pub struct RoleAdmin {
     pub agents: Vec<Agent>,

@@ -10,6 +10,7 @@ use crate::core::keymap::{
     Actions, KeyBinding, KeyMap, NavKeys, lookup, select_all_bindings, unassigned_chord,
 };
 use crate::core::list::{Cursor, KeyStep, Moved, Navigable, RowSource, TypeAheadPrecedence};
+use crate::core::refusal::{Control, Reason};
 use crate::core::response::Response;
 use crate::core::scroll::{ScrollPane, Scrollable};
 use crate::core::selection::{ClickPolicy, RowSelection, SelectGesture};
@@ -27,6 +28,7 @@ pub struct ListItem {
 
     pub meta_tone: Tone,
     pub disabled: bool,
+    pub control: Control,
 }
 
 impl ListItem {
@@ -36,8 +38,23 @@ impl ListItem {
             meta: None,
             meta_tone: Tone::Muted,
             disabled: false,
+            control: Control::Live,
         }
     }
+
+    pub fn control(mut self, control: Control) -> Self {
+        self.control = control;
+        self
+    }
+
+    pub fn fixed(self, reason: Reason) -> Self {
+        self.control(Control::fixed(reason))
+    }
+
+    fn settable(&self) -> bool {
+        !self.disabled && !self.control.is_fixed()
+    }
+
     pub fn meta(mut self, m: &str) -> Self {
         self.meta = Some(m.to_owned());
         self
@@ -185,7 +202,7 @@ impl ListBox {
         let order = self.order();
         let items = &self.items;
         self.core.selection.apply(g, to, &order, |i| {
-            items.get(i).is_some_and(|it| !it.disabled)
+            items.get(i).is_some_and(ListItem::settable)
         })
     }
 
@@ -331,7 +348,7 @@ impl ListBox {
     }
 
     pub fn activate(&mut self, i: usize) -> Outcome {
-        if i >= self.items.len() || self.items[i].disabled {
+        if i >= self.items.len() || self.items[i].disabled || self.items[i].control.refuse() {
             return Outcome::Consumed;
         }
         match self.mode {
@@ -367,7 +384,7 @@ impl ListBox {
                     let items = &self.items;
                     self.core
                         .selection
-                        .toggle_all(0..items.len(), |i| !items[i].disabled);
+                        .toggle_all(0..items.len(), |i| items[i].settable());
                     Outcome::Changed
                 }
                 ListCmd::SelectAll => {
@@ -440,6 +457,9 @@ impl ListBox {
                 };
 
                 if g == SelectGesture::Only && self.items[row].disabled {
+                    return Outcome::Changed;
+                }
+                if self.items[row].control.refuse() {
                     return Outcome::Changed;
                 }
                 self.select(g, row);
@@ -518,7 +538,8 @@ impl ListBox {
                 s.pressed |= ctx.interaction.pressed(mark);
             }
             s.focused = focused && li == self.core.cursor;
-            s.disabled = item.disabled;
+            s.fixed = item.control.is_fixed();
+            s.disabled = item.disabled || s.fixed;
             s.selected = match self.mode {
                 SelectMode::Single => self.chosen == Some(li),
                 SelectMode::Multi => self.core.selection.contains(li),
@@ -554,7 +575,7 @@ impl ListBox {
                     .right()
                     .min(row.right().saturating_sub(1))
                     .saturating_sub(meta_w as u16);
-                let ms = if item.disabled {
+                let ms = if s.disabled {
                     st
                 } else if item.meta_tone == Tone::Muted {
                     st.fg(t.text_muted)

@@ -7,6 +7,7 @@ use crate::core::event::{Key, Outcome};
 use crate::core::id::{ItemKey, Part, PartRef, WidgetId};
 use crate::core::keymap::{Nav, NavKeys};
 use crate::core::list::{Cursor, Navigable, RowSource};
+use crate::core::refusal::{Control, Reason};
 use crate::ui::ctx::RenderCtx;
 use crate::ui::row::{RowLook, RowUi};
 
@@ -36,6 +37,7 @@ pub struct Checkbox {
     pub label: String,
     pub checked: bool,
     pub disabled: bool,
+    pub control: Control,
 
     pub mixed: bool,
 
@@ -50,10 +52,20 @@ impl Checkbox {
             label: label.to_owned(),
             checked,
             disabled: false,
+            control: Control::Live,
             mixed: false,
             hit: CheckHit::Label,
             area: Rect::ZERO,
         }
+    }
+
+    pub fn control(mut self, control: Control) -> Self {
+        self.control = control;
+        self
+    }
+
+    pub fn fixed(self, reason: Reason) -> Self {
+        self.control(Control::fixed(reason))
     }
 
     pub fn hit(mut self, hit: CheckHit) -> Self {
@@ -76,6 +88,9 @@ impl Checkbox {
             return Outcome::Ignored;
         }
         if key.is_char(' ') || key.is(KeyCode::Enter) {
+            if self.control.refuse() {
+                return Outcome::Consumed;
+            }
             self.toggle();
             Outcome::Changed
         } else {
@@ -84,7 +99,7 @@ impl Checkbox {
     }
 
     pub fn on_click(&mut self) -> Outcome {
-        if self.disabled {
+        if self.disabled || self.control.refuse() {
             return Outcome::Consumed;
         }
         self.toggle();
@@ -104,9 +119,10 @@ impl Checkbox {
         }
         let t = ctx.theme;
         let mut s = ctx.state(self.id);
-        s.disabled = self.disabled;
+        s.fixed = self.control.is_fixed();
+        s.disabled = self.disabled || s.fixed;
         s.selected = false;
-        if self.disabled {
+        if s.disabled {
             s.hovered = false;
         }
         let st = RowUi::paint(ctx, buf, area, s, RowLook::Bar, bg).style();
@@ -119,7 +135,7 @@ impl Checkbox {
             (false, true, _) => g.check_on,
             (false, false, _) => g.check_off,
         };
-        let mark_style = if self.disabled {
+        let mark_style = if s.disabled {
             st
         } else if self.checked || self.mixed {
             st.fg(t.chosen_in(s))
@@ -149,6 +165,7 @@ pub struct RadioGroup {
     pub selected: usize,
     pub cursor: usize,
     pub disabled: bool,
+    pub controls: Vec<Control>,
     pub areas: Vec<Rect>,
 
     pub nav: NavKeys,
@@ -168,9 +185,29 @@ impl RadioGroup {
             selected,
             cursor: selected,
             disabled: false,
+            controls: vec![Control::Live; options.len()],
             areas: vec![],
             nav: NavKeys::default(),
         }
+    }
+
+    pub fn option_control(mut self, i: usize, control: Control) -> Self {
+        if let Some(slot) = self.controls.get_mut(i) {
+            *slot = control;
+        }
+        self
+    }
+
+    pub fn fixed_option(self, i: usize, reason: Reason) -> Self {
+        self.option_control(i, Control::fixed(reason))
+    }
+
+    fn fixed_at(&self, i: usize) -> bool {
+        self.controls.get(i).is_some_and(Control::is_fixed)
+    }
+
+    fn refuse_at(&self, i: usize) -> bool {
+        self.controls.get(i).is_some_and(Control::refuse)
     }
 
     pub fn height(&self) -> u16 {
@@ -189,11 +226,16 @@ impl RadioGroup {
         };
         if let Some(to) = to {
             self.cursor = to;
-            self.selected = self.cursor;
+            if !self.fixed_at(to) {
+                self.selected = to;
+            }
             return Outcome::Changed;
         }
         match key.code {
             KeyCode::Char(' ') | KeyCode::Enter if key.plain() => {
+                if self.refuse_at(self.cursor) {
+                    return Outcome::Consumed;
+                }
                 self.selected = self.cursor;
                 Outcome::Changed
             }
@@ -206,6 +248,9 @@ impl RadioGroup {
             return Outcome::Consumed;
         }
         self.cursor = index;
+        if self.refuse_at(index) {
+            return Outcome::Changed;
+        }
         self.selected = index;
         Outcome::Changed
     }
@@ -255,7 +300,8 @@ impl RadioGroup {
             self.areas.push(row);
             let mut s = ctx.child_state(self.id, self.option_id(i), i == self.cursor);
             s.focused = focused && i == self.cursor;
-            s.disabled = self.disabled;
+            s.fixed = self.fixed_at(i);
+            s.disabled = self.disabled || s.fixed;
             let st = RowUi::paint(ctx, buf, row, s, RowLook::Bar, bg).style();
             let on = i == self.selected;
             let g = &t.glyphs;
@@ -265,7 +311,7 @@ impl RadioGroup {
                 (false, true) => g.radio_on,
                 (false, false) => g.radio_off,
             };
-            let ms = if self.disabled {
+            let ms = if s.disabled {
                 st
             } else if on {
                 st.fg(ctx.chosen(focused))

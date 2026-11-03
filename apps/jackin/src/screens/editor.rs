@@ -62,7 +62,15 @@ pub const CANCEL: WidgetId = WidgetId::of("editor.cancel");
 pub const SAVE: WidgetId = WidgetId::of("editor.save");
 const BASE: WidgetId = WidgetId::of("editor.cfg");
 
-const TAB_NAMES: [&str; 5] = ["General", "Mounts", "Roles", "Environments", "Accounts"];
+fn tab_names(w: &World) -> [&str; 5] {
+    [
+        "General",
+        w.surfaces.vocabulary.project_tab.as_str(),
+        "Roles",
+        "Environments",
+        "Accounts",
+    ]
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum EdTab {
@@ -204,7 +212,7 @@ impl EditorScreen {
             original,
             pending,
             cfg,
-            tabs: Tabs::new(TABS, &TAB_NAMES),
+            tabs: Tabs::new(TABS, &tab_names(w)),
             tab: EdTab::General,
             role_rows: vec![],
             role_cursor: 0,
@@ -621,9 +629,12 @@ impl EditorScreen {
                     bg,
                 );
                 let hint = if self.pending.workdir != self.original.workdir {
-                    format!("Inside the Construct · was {}", self.original.workdir)
+                    format!(
+                        "Inside {} · was {}",
+                        w.surfaces.vocabulary.construct, self.original.workdir
+                    )
                 } else {
-                    "Inside the Construct".into()
+                    format!("Inside {}", w.surfaces.vocabulary.construct)
                 };
                 buf.set_string(
                     x,
@@ -1438,7 +1449,7 @@ impl EditorScreen {
                             self.start_role_load(name, w, cx);
                         } else {
                             self.pending_load = Some(name.clone());
-                            self.open_trust_dialog(&e, cx);
+                            self.open_trust_dialog(&e, w, cx);
                         }
                     } else if !self.pending.roles.allows(name) {
                         cx.error(format!(
@@ -1505,7 +1516,7 @@ impl EditorScreen {
         (items, targets)
     }
 
-    fn open_trust_dialog(&mut self, e: &RoleEntry, cx: &mut Cx) {
+    fn open_trust_dialog(&mut self, e: &RoleEntry, w: &World, cx: &mut Cx) {
         let repo = e.source.label();
         let facts = vec![
             Prop::new("Role", e.full_name()),
@@ -1518,7 +1529,7 @@ impl EditorScreen {
             vec![
                 "Trust this role source?".into(),
                 "Dockerfile can run during image builds.".into(),
-                "The role can access mounted workspace files.".into(),
+                w.surfaces.vocabulary.role_access.clone(),
             ],
             None,
             Button::primary(WidgetId::of("editor.trust.ok"), "Trust & load"),
@@ -2121,7 +2132,7 @@ impl Page<Jackin> for EditorScreen {
                 match entry {
                     Some(e) if !e.trusted => {
                         self.pending_load = Some(name);
-                        self.open_trust_dialog(&e, cx);
+                        self.open_trust_dialog(&e, w, cx);
                     }
                     Some(_) => self.start_role_load(&name, w, cx),
                     None => cx.error(format!("Role {name} not found")),
@@ -2181,7 +2192,7 @@ impl Page<Jackin> for EditorScreen {
         self.sync_pending();
         let items: Vec<TabItem> = EdTab::ALL
             .iter()
-            .zip(TAB_NAMES)
+            .zip(tab_names(w))
             .map(|(tab, name)| {
                 let mut it = TabItem::new(name);
                 it.dirty = match tab {

@@ -1,14 +1,14 @@
 use std::collections::BTreeSet;
 
-use crate::sim;
-use jackin_console::domain::agent::Agent;
-use jackin_console::domain::docker::{DockerRiskText, DockerSetting, EngineState};
-use jackin_console::domain::doctor::{DoctorState, DoctorSurface};
-use jackin_console::domain::role::{
+use crate::domain::agent::Agent;
+use crate::domain::docker::{DockerRiskText, DockerSetting, EngineState};
+use crate::domain::doctor::{DoctorState, DoctorSurface};
+use crate::domain::role::{
     AccountOrder, RoleAdmin, RoleCheckState, RoleEnvEntry, RoleManifestDoc, RoleRecord,
 };
-use jackin_console::domain::workspace::RoleSource;
-use jackin_console::world::World;
+use crate::domain::workspace::RoleSource;
+use crate::sim;
+use crate::world::World;
 
 pub const GATEWAY: &str = "jackin-local";
 const ENDPOINT: &str = "host.openshell.internal:18476";

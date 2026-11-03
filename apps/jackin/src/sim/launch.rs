@@ -1,8 +1,6 @@
 use std::sync::Arc;
 
-use jackin_console::launch::{
-    LaunchContent, LaunchFailure, LaunchWords, StageKind, StageList, StageSpec,
-};
+use crate::launch::{LaunchContent, LaunchFailure, LaunchWords, StageKind, StageList, StageSpec};
 
 pub const BUILD_LOG: [&str; 44] = [
     "#1 [internal] load build definition from Dockerfile.derived",

@@ -496,6 +496,10 @@ impl App {
                     self.shell.status.set_with_at(s, tone, None, now);
                 }
                 Request::StatusAs(s, kind) => self.set_status_as(kind, s),
+                Request::Sticky(s) => {
+                    let now = self.clock.now();
+                    self.shell.status.sticky_at(s, now);
+                }
                 Request::Progress(s, job) => {
                     let now = self.clock.now();
                     self.shell.status.progress_at(job, s, now);

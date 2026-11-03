@@ -3,6 +3,7 @@ use ratatui::layout::Rect;
 
 use crate::core::event::{Key, Outcome};
 use crate::core::id::WidgetId;
+use crate::core::refusal::{Control, Reason};
 use crate::theme::{ButtonKind, Kind};
 use crate::ui::ctx::RenderCtx;
 use crate::ui::text::width;
@@ -14,6 +15,7 @@ pub struct Button {
     pub label: String,
     pub kind: ButtonKind,
     pub disabled: bool,
+    pub control: Control,
 
     pub on: Option<bool>,
     pub busy: bool,
@@ -35,6 +37,7 @@ impl Button {
             label: label.to_owned(),
             kind,
             disabled: false,
+            control: Control::Live,
             on: None,
             busy: false,
             area: Rect::ZERO,
@@ -93,6 +96,15 @@ impl Button {
         self
     }
 
+    pub fn control(mut self, control: Control) -> Self {
+        self.control = control;
+        self
+    }
+
+    pub fn fixed(self, reason: Reason) -> Self {
+        self.control(Control::fixed(reason))
+    }
+
     pub fn width(&self) -> u16 {
         let marker = if self.on.is_some() || self.busy { 2 } else { 0 };
         (width(&self.label) + 2 + marker) as u16
@@ -107,29 +119,34 @@ impl Button {
     }
 
     pub fn can_activate(&self) -> bool {
-        !self.disabled && !self.busy
+        !self.disabled && !self.busy && !self.control.is_fixed()
+    }
+
+    pub fn refuse(&self) -> bool {
+        !self.disabled && !self.busy && self.control.refuse()
+    }
+
+    pub fn activate(&mut self) -> (Outcome, bool) {
+        if self.refuse() {
+            (Outcome::Consumed, false)
+        } else if self.can_activate() {
+            self.toggle_if_needed();
+            (Outcome::Changed, true)
+        } else {
+            (Outcome::Consumed, false)
+        }
     }
 
     pub fn on_key(&mut self, key: &Key) -> (Outcome, bool) {
         if key.is(KeyCode::Enter) || key.is_char(' ') {
-            if self.can_activate() {
-                self.toggle_if_needed();
-                (Outcome::Changed, true)
-            } else {
-                (Outcome::Consumed, false)
-            }
+            self.activate()
         } else {
             (Outcome::Ignored, false)
         }
     }
 
     pub fn on_click(&mut self) -> bool {
-        if self.can_activate() {
-            self.toggle_if_needed();
-            true
-        } else {
-            false
-        }
+        self.activate().1
     }
 
     fn toggle_if_needed(&mut self) {
@@ -154,10 +171,11 @@ impl Button {
         }
         let mut s = ctx.state(self.id);
         s.focused = ctx.interaction.focus_visible(self.id, self.focus_visible);
-        s.disabled = self.disabled;
+        s.fixed = self.control.is_fixed();
+        s.disabled = self.disabled || s.fixed;
         s.busy = self.busy;
         s.selected = self.on.unwrap_or(false);
-        if self.disabled {
+        if s.disabled {
             s.hovered = false;
             s.pressed = false;
         }
@@ -189,7 +207,7 @@ impl Button {
         buf.set_string(area.x + 1, area.y, &text, style);
 
         if let Some(on) = self.on
-            && !self.disabled
+            && !s.disabled
         {
             let ms = style.fg(if on { t.accent } else { t.text_muted });
             let ms = if s.pressed { style } else { ms };

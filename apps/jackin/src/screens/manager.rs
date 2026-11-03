@@ -37,9 +37,11 @@ use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::Effect;
 use crate::domain::agent::Agent;
 use crate::domain::instance::{DaemonSnapshot, InstanceStatus};
+use crate::domain::role::LaunchRole;
+use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::LaunchPlan;
-use crate::world::{DaemonHealth, Health, Msg, World, job};
+use crate::world::{DaemonHealth, Health, LaunchSource, Msg, World, job};
 use junie_tui::ui::context::ContextAnchor;
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::menu::MenuItem;
@@ -75,7 +77,11 @@ fn status_word_tone(s: InstanceStatus, otherwise: Tone) -> Tone {
     if s.is_live() { Tone::Active } else { otherwise }
 }
 
-fn instance_line(i: &crate::domain::instance::Instance, tone: Tone) -> Vec<Span> {
+fn instance_line(
+    i: &crate::domain::instance::Instance,
+    tone: Tone,
+    words: &crate::domain::vocabulary::Vocabulary,
+) -> Vec<Span> {
     let (g, gt) = instance_mark(i.status);
     vec![
         Span::new(format!("{g} "), gt),
@@ -88,7 +94,10 @@ fn instance_line(i: &crate::domain::instance::Instance, tone: Tone) -> Vec<Span>
             ),
             tone,
         ),
-        Span::new(i.status.label(), status_word_tone(i.status, tone)),
+        Span::new(
+            words.status_label(i.status),
+            status_word_tone(i.status, tone),
+        ),
     ]
 }
 
@@ -282,9 +291,10 @@ impl ManagerScreen {
                             InstanceStatus::PreservedDirty => {
                                 ("preserved · dirty".into(), Tone::Secondary)
                             }
-                            InstanceStatus::PreservedUnpushed => {
-                                ("preserved · unpushed".into(), Tone::Secondary)
-                            }
+                            InstanceStatus::PreservedUnpushed => (
+                                w.surfaces.vocabulary.status_label(i.status),
+                                Tone::Secondary,
+                            ),
                             InstanceStatus::RestoreAvailable => {
                                 ("restore available".into(), Tone::Secondary)
                             }
@@ -398,31 +408,52 @@ impl ManagerScreen {
     }
 
     fn open_launch_picker(&mut self, w: &World, cx: &mut Cx) {
-        let (ws, role) = match &self.selected {
-            RowKey::Workspace(id) => {
-                let ws = w.workspace(*id);
+        let (ws, launch_role) = match &self.selected {
+            RowKey::Workspace(id) => (
+                Some(*id),
+                w.launch_role(LaunchSource::Row(w.workspace(*id))),
+            ),
+            RowKey::CurrentDir => {
+                let saved = w.cwd_workspace();
                 (
-                    Some(*id),
-                    ws.and_then(|x| x.roles.default.clone().or(x.roles.last.clone()))
-                        .unwrap_or("the-architect".into()),
+                    saved.map(|x| x.id),
+                    w.launch_role(LaunchSource::CurrentDir(saved)),
                 )
             }
-            RowKey::CurrentDir => (w.cwd_workspace().map(|x| x.id), "the-architect".into()),
             _ => return,
         };
-        self.pending_launch = Some((ws, role.clone()));
+        let (role, unavailable) = match launch_role {
+            LaunchRole::Role(role) => (role, None),
+            LaunchRole::Unavailable(why) => (String::new(), Some(why)),
+        };
+        self.pending_launch = unavailable.is_none().then(|| (ws, role.clone()));
         let mut p = Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent");
         p.set_searchable(false);
         p.list.width = (84, 84);
+        let shown_role = if unavailable.is_some() {
+            "no default role"
+        } else {
+            role.as_str()
+        };
         let mut scope = match ws.and_then(|id| w.workspace(id)) {
-            Some(x) => format!("{} › {role}", x.name),
-            None => format!("{} › {role}", w.tilde(&w.cwd)),
+            Some(x) => format!("{} › {shown_role}", x.name),
+            None => format!("{} › {shown_role}", w.tilde(&w.cwd)),
         };
         if w.docker_on(ws, &role) {
             scope.push_str(" · Docker is on for this launch");
         }
         p.scope = Some(scope);
-        let (items, targets) = agent_rows(w, ws, Some(&role));
+        let (items, targets) = agent_rows(w, ws, unavailable.is_none().then_some(role.as_str()));
+        let items = match &unavailable {
+            Some(why) => items
+                .into_iter()
+                .map(|i| Item {
+                    tag: Some("unavailable".into()),
+                    ..i.detail(why.clone()).disabled(true)
+                })
+                .collect(),
+            None => items,
+        };
         p.set_items(items);
         self.picker_targets = targets;
         cx.open(p, LayerTag::new("launch"));
@@ -498,9 +529,9 @@ impl ManagerScreen {
                 w.daemons.insert(id.to_owned(), d);
                 crate::world::refresh_snapshots(w);
                 w.sync_arbiter();
-                cx.status(format!(
-                    "Restored {} · container restarted",
-                    id.trim_start_matches("jk-")
+                cx.status(fill_in(
+                    &w.surfaces.vocabulary.lifecycle.restored,
+                    &[("id", id.trim_start_matches("jk-"))],
                 ));
                 cx.go(Go::Attach {
                     instance: id.to_owned(),
@@ -515,8 +546,9 @@ impl ManagerScreen {
             }
             InstanceStatus::FailedSetup => {
                 cx.error(format!(
-                    "Cannot reconnect: {} never reached the Capsule · launch again",
-                    id.trim_start_matches("jk-")
+                    "Cannot reconnect: {} {} · launch again",
+                    id.trim_start_matches("jk-"),
+                    w.surfaces.vocabulary.never_reached
                 ));
             }
             InstanceStatus::CleanExited => {
@@ -535,7 +567,7 @@ impl ManagerScreen {
         let ws = i.workspace.and_then(|x| w.workspace(x));
         let account = w.account_for(i.agent.provider(), ws, Some(&i.role), None);
         let mut props = vec![
-            Prop::new("Container", i.container_id()).copyable(),
+            Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()).copyable(),
             Prop::new(
                 "Image",
                 format!(
@@ -565,23 +597,31 @@ impl ManagerScreen {
                 format!(
                     "{} · {}",
                     i.workdir,
-                    plural(ws.map(|x| x.mounts.len()).unwrap_or(1), "mount", "mounts")
+                    w.surfaces
+                        .vocabulary
+                        .count(ws.map(|x| x.mounts.len()).unwrap_or(1))
                 ),
             ),
             Prop::new("Run id", i.run_id.clone()).copyable(),
-            Prop::new("Lifecycle", i.status.label()).tone(if i.status.is_live() {
-                Tone::Normal
-            } else {
-                Tone::Secondary
-            }),
+            Prop::new("Lifecycle", w.surfaces.vocabulary.status_label(i.status)).tone(
+                if i.status.is_live() {
+                    Tone::Normal
+                } else {
+                    Tone::Secondary
+                },
+            ),
         ];
+        let words = &w.surfaces.vocabulary.daemon;
         match &i.daemon {
-            DaemonSnapshot::Unavailable => {
-                props.push(Prop::new("Daemon", "unavailable").tone(Tone::Warning))
+            DaemonSnapshot::Unavailable => props.push(
+                Prop::new(&words.inspect_label, words.inspect_unavailable.as_str())
+                    .tone(Tone::Warning),
+            ),
+            DaemonSnapshot::NoTabs => {
+                props.push(Prop::new(&words.inspect_label, "attached · no tabs"))
             }
-            DaemonSnapshot::NoTabs => props.push(Prop::new("Daemon", "attached · no tabs")),
             DaemonSnapshot::Tabs(t) => props.push(Prop::new(
-                "Daemon",
+                &words.inspect_label,
                 format!(
                     "attached · {} · {}",
                     plural(t.len(), "tab", "tabs"),
@@ -591,7 +631,11 @@ impl ManagerScreen {
         }
         let d = InfoDialog::new(
             WidgetId::of("manager.info"),
-            &format!("Container {}", id.trim_start_matches("jk-")),
+            &format!(
+                "{} {}",
+                w.surfaces.vocabulary.container_noun,
+                id.trim_start_matches("jk-")
+            ),
             props,
         )
         .meta("read-only");
@@ -611,13 +655,16 @@ impl ManagerScreen {
         let d = Dialog::destructive(
             WidgetId::of("manager.stop"),
             &format!("Stop instance {short}?"),
-            &format!(
-                "The container stops and every session in it ends. The instance record stays reconnectable ({}).",
-                if i.is_dirty() {
-                    "preserved with uncommitted work"
-                } else {
-                    "restore available"
-                }
+            &fill_in(
+                &w.surfaces.vocabulary.lifecycle.stop_body,
+                &[(
+                    "state",
+                    if i.is_dirty() {
+                        "preserved with uncommitted work"
+                    } else {
+                        "restore available"
+                    },
+                )],
             ),
             "Stop",
         )
@@ -634,31 +681,40 @@ impl ManagerScreen {
             .map(|x| x.name.clone())
             .unwrap_or("current directory".into());
         let sessions = i.sessions.as_ref().map(|s| s.len()).unwrap_or(0);
+        let words = &w.surfaces.vocabulary.lifecycle;
         let facts = vec![
-            Prop::new("Action", "purge the instance record and its container").tone(Tone::Error),
+            Prop::new("Action", words.purge_action.as_str()).tone(Tone::Error),
             Prop::new(
                 "Target",
                 format!("{short} · {ws} › {} · {}", i.role, i.agent.label()),
             ),
             Prop::new(
                 "Scope",
-                format!(
-                    "1 container · {} · {}",
-                    plural(sessions, "preserved session", "preserved sessions"),
-                    if i.is_dirty() {
-                        "worktree with changes"
-                    } else {
-                        "clean worktree"
-                    }
+                fill_in(
+                    &words.purge_scope,
+                    &[
+                        (
+                            "sessions",
+                            &plural(sessions, "preserved session", "preserved sessions"),
+                        ),
+                        (
+                            "copy",
+                            if i.is_dirty() {
+                                &words.copy_dirty
+                            } else {
+                                &words.copy_clean
+                            },
+                        ),
+                    ],
                 ),
             )
             .tone(Tone::Secondary),
             Prop::new(
                 "Risk",
                 if i.is_dirty() {
-                    "uncommitted changes in the worktree are lost"
+                    words.risk_dirty.as_str()
                 } else {
-                    "the container and its recovery state are removed"
+                    words.risk_clean.as_str()
                 },
             )
             .tone(Tone::Warning),
@@ -715,7 +771,10 @@ impl ManagerScreen {
         };
         let repo = w.github.iter().find(|r| r.full_name.ends_with(&ws.name));
         match repo {
-            Some(r) => cx.status(format!("Opened {} on the host", r.url)),
+            Some(r) => cx.status(fill_in(
+                &w.surfaces.vocabulary.github_workspace,
+                &[("url", r.url.as_str())],
+            )),
             None => cx.status(format!("No GitHub source for {}", ws.name)),
         }
     }
@@ -737,7 +796,7 @@ impl ManagerScreen {
                 } else {
                     let why = match i.status {
                         InstanceStatus::Crashed => "crashed (exit 137) · inspect or purge it",
-                        InstanceStatus::FailedSetup => "never reached the Capsule",
+                        InstanceStatus::FailedSetup => w.surfaces.vocabulary.never_reached.as_str(),
                         _ => "exited · launch the workspace again",
                     };
                     item("Reconnect", "Enter").reason(why)
@@ -774,7 +833,10 @@ impl ManagerScreen {
                     (item("Launch…", "Enter"), "launch"),
                     (item("Edit", "e"), "edit"),
                     (item("Prewarm", "w"), "prewarm"),
-                    (item("Open on GitHub", "o").separator(), "github"),
+                    (
+                        item(&w.surfaces.vocabulary.github_menu, "o").separator(),
+                        "github",
+                    ),
                     (item("Delete…", "d").danger(), "delete"),
                 ],
             ),
@@ -782,7 +844,7 @@ impl ManagerScreen {
                 let saved = w.cwd_workspace().is_some();
                 let not_saved = "not a saved workspace";
                 let edit = item("Edit", "e");
-                let github = item("Open on GitHub", "o");
+                let github = item(&w.surfaces.vocabulary.github_menu, "o");
                 (
                     "Current directory".into(),
                     vec![
@@ -877,14 +939,14 @@ impl ManagerScreen {
                     }
                 }
                 DaemonSnapshot::NoTabs => rows.push(DetailRow::Text(
-                    "Daemon reports no tabs".into(),
+                    w.surfaces.vocabulary.daemon.no_tabs.clone(),
                     Tone::Muted,
                 )),
                 DaemonSnapshot::Unavailable => rows.push(DetailRow::Text(
                     if i.status.is_live() {
-                        "Daemon unavailable — showing manifest sessions".into()
+                        w.surfaces.vocabulary.daemon.unavailable_running.clone()
                     } else {
-                        "No live daemon (instance not running)".into()
+                        w.surfaces.vocabulary.daemon.unavailable_stopped.clone()
                     },
                     Tone::Muted,
                 )),
@@ -1205,7 +1267,11 @@ impl ManagerScreen {
                             .map(|x| x.name.as_str())
                             .unwrap_or("current directory")
                     ),
-                    format!("instance · {}", i.map(|x| x.status.label()).unwrap_or("?")),
+                    format!(
+                        "instance · {}",
+                        i.map(|x| w.surfaces.vocabulary.status_label(x.status))
+                            .unwrap_or_else(|| "?".into())
+                    ),
                 )
             }
             RowKey::NewWorkspace => ("New workspace".into(), "create".into()),
@@ -1250,18 +1316,22 @@ impl ManagerScreen {
                         let mut facts = vec![
                             Prop::new("Working dir", ws.workdir.clone()),
                             Prop::new(
-                                "Mounts",
+                                w.surfaces.vocabulary.project_tab.as_str(),
                                 if ws.mounts.is_empty() {
                                     "none".into()
                                 } else {
                                     ws.mounts
                                         .iter()
                                         .map(|m| {
-                                            format!(
-                                                "{} · {} {}",
-                                                w.tilde(m.source_label()),
-                                                m.mode_label(),
-                                                m.isolation.label().to_lowercase()
+                                            let source = w.tilde(m.source_label());
+                                            let isolation = m.isolation.label().to_lowercase();
+                                            fill_in(
+                                                &w.surfaces.vocabulary.project_card,
+                                                &[
+                                                    ("source", source.as_str()),
+                                                    ("mode", m.mode_label()),
+                                                    ("isolation", isolation.as_str()),
+                                                ],
                                             )
                                         })
                                         .collect::<Vec<_>>()
@@ -1373,7 +1443,7 @@ impl ManagerScreen {
                                 } else {
                                     Tone::Secondary
                                 };
-                                let line = instance_line(i, tone);
+                                let line = instance_line(i, tone, &w.surfaces.vocabulary);
                                 let text = junie_tui::widgets::viewport::line_text(&line);
                                 put(buf, y, &text, t.secondary());
                                 if y < inner.bottom() {
@@ -1392,10 +1462,12 @@ impl ManagerScreen {
                         }
                     }
                     None => {
-                        let e = EmptyState::new("Create a workspace from this directory.").hint(&format!(
-                            "{} is mounted at its own path inside the Construct. Enter launches with defaults; n creates a saved workspace.",
-                            w.tilde(&w.cwd)
-                        ));
+                        let e = EmptyState::new("Create a workspace from this directory.").hint(
+                            &fill_in(
+                                &w.surfaces.vocabulary.first_use,
+                                &[("path", w.tilde(&w.cwd).as_str())],
+                            ),
+                        );
                         empty::render(
                             Rect::new(
                                 inner.x,
@@ -1450,7 +1522,7 @@ impl ManagerScreen {
                             acc.level.label()
                         ),
                     ),
-                    Prop::new("Container", i.container_id()),
+                    Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()),
                     Prop::new(
                         "Started",
                         format!(
@@ -1461,7 +1533,11 @@ impl ManagerScreen {
                     ),
                     Prop::new(
                         "Lifecycle",
-                        format!("{} · {}", i.status.label(), i.status.description()),
+                        format!(
+                            "{} · {}",
+                            w.surfaces.vocabulary.status_label(i.status),
+                            w.surfaces.vocabulary.status_description(i.status)
+                        ),
                     )
                     .tone(match i.status {
                         InstanceStatus::Crashed | InstanceStatus::FailedSetup => Tone::Error,
@@ -1469,11 +1545,13 @@ impl ManagerScreen {
                         _ => Tone::Secondary,
                     })
                     .wrap(),
-                    Prop::new("Working tree", i.dirty_summary()).tone(if i.is_dirty() {
-                        Tone::Warning
-                    } else {
-                        Tone::Secondary
-                    }),
+                    Prop::new("Working tree", w.surfaces.vocabulary.dirty_summary(i)).tone(
+                        if i.is_dirty() {
+                            Tone::Warning
+                        } else {
+                            Tone::Secondary
+                        },
+                    ),
                 ];
                 let mut facts = facts;
                 if let Some(b) = &i.branch {
@@ -1500,9 +1578,13 @@ impl ManagerScreen {
                     "Live topology",
                     t.secondary().add_modifier(Modifier::BOLD),
                 );
+                let words = &w.surfaces.vocabulary.daemon;
                 let src = match &i.daemon {
-                    DaemonSnapshot::Unavailable => "unavailable".to_owned(),
-                    _ => format!("daemon · {}", w.clock.ago(i.last_seen_secs)),
+                    DaemonSnapshot::Unavailable => words.topology_unavailable.clone(),
+                    _ => fill_in(
+                        &words.topology_source,
+                        &[("ago", &w.clock.ago(i.last_seen_secs))],
+                    ),
                 };
                 let sw = width(&src) as u16;
                 if y < inner.bottom() && inner.width > sw + 16 {
@@ -1668,14 +1750,17 @@ impl ManagerScreen {
                     plural(tabs.len(), "tab", "tabs"),
                     plural(tabs.iter().map(|t| t.panes.len()).sum(), "pane", "panes")
                 ),
-                _ => format!(
-                    "running {} · daemon unavailable",
-                    junie_tui::ui::text::duration(
-                        std::time::Duration::from_secs(
-                            (w.now_secs() - i.created_secs).max(0) as u64
+                _ => fill_in(
+                    &w.surfaces.vocabulary.daemon.card_unavailable,
+                    &[(
+                        "duration",
+                        &junie_tui::ui::text::duration(
+                            std::time::Duration::from_secs(
+                                (w.now_secs() - i.created_secs).max(0) as u64
+                            ),
+                            junie_tui::ui::text::DurationStyle::Spoken,
                         ),
-                        junie_tui::ui::text::DurationStyle::Spoken
-                    )
+                    )],
                 ),
             };
             buf.set_string(
@@ -1744,7 +1829,7 @@ impl ManagerScreen {
                             "◌ {}  {ws} · {} · {}",
                             i.id.trim_start_matches("jk-"),
                             i.role,
-                            i.status.label()
+                            w.surfaces.vocabulary.status_label(i.status)
                         ),
                     ),
                     t.secondary().bg(bg),
@@ -1927,9 +2012,9 @@ impl Page<Jackin> for ManagerScreen {
                 }
                 w.daemons.remove(instance);
                 w.sync_arbiter();
-                cx.status(format!(
-                    "Purged {} · container, sidecar, volume and recovery state removed",
-                    instance.trim_start_matches("jk-")
+                cx.status(fill_in(
+                    &w.surfaces.vocabulary.lifecycle.purged,
+                    &[("id", instance.trim_start_matches("jk-"))],
                 ));
             }
             Msg::Refreshed { ok: false } => {
@@ -2617,7 +2702,7 @@ impl ManagerScreen {
                         format!(
                             "{} · {} · {}",
                             ws.workdir,
-                            plural(ws.mounts.len(), "mount", "mounts"),
+                            w.surfaces.vocabulary.count(ws.mounts.len()),
                             plural(ws.env_count(), "var", "vars")
                         ),
                         Tone::Secondary,
@@ -2646,7 +2731,7 @@ impl ManagerScreen {
                     w.instances_of(Some(ws.id))
                         .iter()
                         .take(2)
-                        .map(|i| instance_line(i, Tone::Secondary)),
+                        .map(|i| instance_line(i, Tone::Secondary, &w.surfaces.vocabulary)),
                 )
                 .collect(),
                 None => vec![one(
@@ -2665,20 +2750,36 @@ impl ManagerScreen {
                             Tone::Secondary,
                         ),
                         Span::new(
-                            i.status.label(),
+                            w.surfaces.vocabulary.status_label(i.status),
                             status_word_tone(i.status, Tone::Secondary),
                         ),
-                        Span::new(format!(" · {}", i.dirty_summary()), Tone::Secondary),
+                        Span::new(
+                            format!(" · {}", w.surfaces.vocabulary.dirty_summary(i)),
+                            Tone::Secondary,
+                        ),
                     ],
                     one(
                         match &i.daemon {
-                            DaemonSnapshot::Tabs(tabs) => format!(
-                                "daemon · {} · {}",
-                                plural(tabs.len(), "tab", "tabs"),
-                                plural(tabs.iter().map(|t| t.panes.len()).sum(), "pane", "panes")
+                            DaemonSnapshot::Tabs(tabs) => fill_in(
+                                &w.surfaces.vocabulary.daemon.list_tabs,
+                                &[
+                                    ("tabs", &plural(tabs.len(), "tab", "tabs")),
+                                    (
+                                        "panes",
+                                        &plural(
+                                            tabs.iter().map(|t| t.panes.len()).sum(),
+                                            "pane",
+                                            "panes",
+                                        ),
+                                    ),
+                                ],
                             ),
-                            DaemonSnapshot::NoTabs => "daemon reports no tabs".into(),
-                            DaemonSnapshot::Unavailable => "daemon unavailable".into(),
+                            DaemonSnapshot::NoTabs => {
+                                w.surfaces.vocabulary.daemon.list_no_tabs.clone()
+                            }
+                            DaemonSnapshot::Unavailable => {
+                                w.surfaces.vocabulary.daemon.list_unavailable.clone()
+                            }
                         },
                         Tone::Muted,
                     ),

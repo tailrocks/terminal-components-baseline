@@ -8,13 +8,14 @@ pins in `mise.toml`), then work from the workspace root.
 | Task | Command |
 | --- | --- |
 | Run an app | `cargo run --bin showcase` (also `tablepro`, `holla`, `jackin`) |
-| Functional tests (required gate) | `cargo nextest run --locked --test functional --profile functional --no-tests fail` |
+| Functional tests (required gate) | `cargo nextest run --locked --workspace --profile functional --no-tests fail` |
 | Lint | `cargo clippy --locked --all-targets -- -D warnings` |
 | Format check | `cargo fmt --check` |
 
 The workspace default members are `junie-tui` and `jackin-console`
-(`apps/jackin`), so these commands cover both crates and `--test functional`
-runs the root journeys and the jackin journeys.
+(`apps/jackin`), so these commands cover both crates. The `functional`
+profile selects the `functional` target of each, the root journeys and
+the jackin journeys, and is the command CI runs.
 
 All test commands use `cargo nextest`, never `cargo test`. Run the
 functional suite, clippy and fmt before reporting work as done; see

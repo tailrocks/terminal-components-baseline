@@ -227,7 +227,7 @@ impl RowSelection {
 
     pub fn select_only(&mut self, src: usize, selectable: impl Fn(usize) -> bool) -> bool {
         let before = self.rows.clone();
-        self.rows.clear();
+        self.rows.retain(|&s| !selectable(s));
         if selectable(src) {
             self.rows.insert(src);
             self.set_anchor(Some(src));
@@ -274,6 +274,7 @@ impl RowSelection {
         };
         let mut next = self.base.clone();
         next.extend(order[lo..=hi].iter().copied().filter(|&s| selectable(s)));
+        next.extend(self.rows.iter().copied().filter(|&s| !selectable(s)));
         let changed = next != self.rows;
         self.rows = next;
         changed
@@ -297,7 +298,12 @@ impl RowSelection {
         selectable: impl Fn(usize) -> bool + Copy,
     ) -> bool {
         match self.tri_state(rows.clone(), selectable) {
-            TriState::All => self.clear(),
+            TriState::All => {
+                let before = self.rows.len();
+                self.rows.retain(|&s| !selectable(s));
+                self.set_anchor(None);
+                self.rows.len() != before
+            }
             _ => self.select_all(rows, selectable),
         }
     }

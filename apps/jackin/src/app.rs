@@ -1,5 +1,5 @@
 use junie_tui::clock::Clock;
-use junie_tui::core::event::{Input, Key, Outcome};
+use junie_tui::core::event::{External, Input, Key, Outcome};
 use junie_tui::core::focus::FocusChange;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
@@ -7,6 +7,7 @@ use junie_tui::core::pointer::{
     MouseTarget, PointerEvent, PointerHost, PointerParts, PointerRouter,
 };
 use junie_tui::core::response::Response;
+use junie_tui::runtime::ExternalReceiver;
 use junie_tui::shell::{self, Chrome, Menus, PageKey, Router, Shell};
 use junie_tui::theme::{Theme, Tone};
 use junie_tui::ui::ctx::{RenderCtx, fill};
@@ -37,7 +38,7 @@ use crate::screens::prelude::PreludeScreen;
 use crate::screens::role_editor::RoleEditorScreen;
 use crate::screens::settings::SettingsScreen;
 use crate::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
-use crate::world::{Health, Msg, World};
+use crate::world::{Health, Msg, Snapshot, World};
 use junie_tui::shell::Page as _;
 use junie_tui::ui::leave::{LeaveGuard, Stakes};
 use junie_tui::widgets::brand::Lockup;
@@ -88,6 +89,12 @@ impl Route {
 type Layers = ShellLayers<ModalResult, World, Route>;
 type Entry = LayerEntry<ModalResult, World, Route>;
 
+#[derive(Debug, Clone)]
+pub enum Remote {
+    Msg(Msg),
+    Reloaded(Box<Snapshot>),
+}
+
 pub struct App {
     pub theme: Theme,
     pub scenario: Scenario,
@@ -113,6 +120,7 @@ pub struct App {
     intro_guard: u8,
     pub clipboard_gen: u32,
     exit_after_status: Option<i64>,
+    external: Option<ExternalReceiver>,
 }
 
 impl App {
@@ -149,9 +157,30 @@ impl App {
             intro_guard: 3,
             clipboard_gen: 0,
             exit_after_status: None,
+            external: None,
         };
         app.start(frame);
         app
+    }
+
+    pub fn with_external(mut self, receiver: ExternalReceiver) -> Self {
+        self.external = Some(receiver);
+        self
+    }
+
+    pub fn deliver(&mut self, msg: &Msg) -> Outcome {
+        self.dispatch_msg(msg)
+    }
+
+    fn on_external(&mut self, external: &External) -> Outcome {
+        match external.downcast_ref::<Remote>() {
+            Some(Remote::Msg(msg)) => self.dispatch_msg(msg),
+            Some(Remote::Reloaded(snapshot)) => {
+                self.world.apply((**snapshot).clone());
+                Outcome::Changed
+            }
+            None => Outcome::Ignored,
+        }
     }
 
     fn start(&mut self, frame: u64) {
@@ -180,10 +209,11 @@ impl App {
             EntryDecision::JoinActive { .. } => self.enter_manager(),
             EntryDecision::Duplicate => {
                 self.enter_manager();
-                self.set_status(
-                    "Another client is entering the Construct · joined without replay",
-                    Tone::Secondary,
+                let text = format!(
+                    "Another client is entering {} · joined without replay",
+                    self.world.surfaces.vocabulary.construct
                 );
+                self.set_status(&text, Tone::Secondary);
             }
             EntryDecision::Unknown(e) => {
                 self.enter_manager();
@@ -330,6 +360,7 @@ impl App {
             Input::Resize(..) => Outcome::Changed,
             Input::Tick => self.on_tick(),
             Input::Mouse(m) => PointerRouter::route(self, m),
+            Input::External(external) => self.on_external(&external),
             other => shell::KeyRouter::input(self, other),
         }
     }
@@ -400,36 +431,36 @@ impl App {
         let route = self.route();
         out = out.or(self.on_route(route, Outcome::Ignored, |s, w, cx| s.on_tick(w, cx)));
 
-        for m in msgs {
+        for m in &msgs {
             out = out.or(self.dispatch_msg(m));
         }
         out
     }
 
-    fn dispatch_msg(&mut self, m: Msg) -> Outcome {
-        self.world.absorb(&m);
+    fn dispatch_msg(&mut self, m: &Msg) -> Outcome {
+        self.world.absorb(m);
         let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));
         let route = self.route();
         let (o, reqs) = self
             .shell
             .deliver(true, |cx| match self.router.screen_mut(route) {
-                Some(s) => s.on_msg(&m, &mut self.world, cx),
+                Some(s) => s.on_msg(m, &mut self.world, cx),
                 None => Outcome::Ignored,
             });
 
         let (o, behind) = self.shell.deliver(false, |cx| {
             let mut o = o;
             if !o.consumed() && route != Route::Manager {
-                o = self.router.manager_mut().on_msg(&m, &mut self.world, cx);
+                o = self.router.manager_mut().on_msg(m, &mut self.world, cx);
             }
             if !o.consumed() && route != Route::Accounts {
-                o = self.router.accounts_mut().on_msg(&m, &mut self.world, cx);
+                o = self.router.accounts_mut().on_msg(m, &mut self.world, cx);
             }
             if !o.consumed()
                 && route != Route::Roles
                 && let Some(roles) = self.router.roles_mut()
             {
-                o = roles.on_msg(&m, &mut self.world, cx);
+                o = roles.on_msg(m, &mut self.world, cx);
             }
             o
         });
@@ -745,21 +776,7 @@ impl App {
     }
 
     fn open_about(&mut self) {
-        let props = vec![
-            junie_tui::widgets::props::Prop::new(
-                "Product",
-                "jackin-preview · deterministic redesign preview",
-            ),
-            junie_tui::widgets::props::Prop::new("Scenario", self.world.scenario.name()),
-            junie_tui::widgets::props::Prop::new(
-                "Construct",
-                "simulated · nothing here touches a real container",
-            ),
-            junie_tui::widgets::props::Prop::new(
-                "Design system",
-                "Junie-inspired Ratatui components (junie_tui)",
-            ),
-        ];
+        let props = self.world.about_props();
         let d = crate::screens::modals::InfoDialog::new(WidgetId::of("host.about"), "About", props)
             .width(64);
         self.open_layer(Box::new(d), LayerTag::new("about"), self.route());
@@ -832,10 +849,14 @@ impl App {
             .screen(self.route())
             .map(|s| s.crumb(&self.world))
             .unwrap_or_default();
+        let capsule = self.world.surfaces.vocabulary.capsule.clone();
+        let info_hint = self.world.surfaces.vocabulary.info_label().to_lowercase();
+        let inspect_hint = format!("inspect {}", self.world.surfaces.vocabulary.noun_lower());
+        let project = self.world.surfaces.vocabulary.project_tab.clone();
         let sections: Vec<(&str, Vec<(&str, &str)>)> = match self.route() {
             Route::Capsule => vec![
                 (
-                    "Capsule",
+                    capsule.as_str(),
                     vec![
                         ("F10", "menu bar"),
                         ("right-click", "tab / pane menu"),
@@ -896,7 +917,7 @@ impl App {
                     "Launch",
                     vec![
                         ("b", "build log"),
-                        ("i", "container info"),
+                        ("i", &info_hint),
                         ("x", "cancel launch…"),
                         ("t", "toggle debug"),
                         ("Ctrl+Q", "quit · asks only about unsaved edits"),
@@ -1061,7 +1082,7 @@ impl App {
                     ],
                 ),
                 (
-                    "Mounts",
+                    project.as_str(),
                     vec![
                         ("Enter e", "edit…"),
                         ("r", "read-only"),
@@ -1171,7 +1192,7 @@ impl App {
                         ("Enter r", "reconnect / restore"),
                         ("a", "new session"),
                         ("x", "open shell"),
-                        ("i", "inspect container"),
+                        ("i", &inspect_hint),
                         ("t", "stop"),
                         ("p", "purge…"),
                     ],
@@ -1542,6 +1563,10 @@ impl App {
             match r {
                 Request::Status(s, tone) => self.set_status(&s, tone),
                 Request::StatusAs(s, kind) => self.set_status(&s, kind.tone()),
+                Request::Sticky(s) => {
+                    let now = self.world.clock.now();
+                    self.shell.status.sticky_at(s, now);
+                }
                 Request::Progress(s, job) => {
                     let now = self.world.clock.now();
                     self.shell.status.progress_at(job, s, now);
@@ -1721,8 +1746,9 @@ impl App {
                 let n = self.world.running_count();
                 self.set_status(
                     &format!(
-                        "Detached · {name} keeps running · {} in the Construct",
-                        junie_tui::ui::text::plural(n, "instance", "instances")
+                        "Detached · {name} keeps running · {} {}",
+                        junie_tui::ui::text::plural(n, "instance", "instances"),
+                        self.world.surfaces.vocabulary.instances_where
                     ),
                     Tone::Secondary,
                 );
@@ -1756,12 +1782,13 @@ impl App {
                     self.enter_route();
                     self.set_status(
                         &format!(
-                            "Launch failed · {} still running in the Construct",
+                            "Launch failed · {} still running {}",
                             junie_tui::ui::text::plural(
                                 self.world.running_count(),
                                 "instance",
                                 "instances"
-                            )
+                            ),
+                            self.world.surfaces.vocabulary.instances_where
                         ),
                         Tone::Error,
                     );
@@ -1806,7 +1833,8 @@ impl App {
                     })
                     .collect();
                 let text = format!(
-                    "Still inside the Construct · {}",
+                    "{} · {}",
+                    self.world.surfaces.vocabulary.still_inside,
                     junie_tui::ui::text::plural(remaining, "instance remains", "instances remain")
                 );
                 self.router.manager_mut().still_inside =
@@ -1816,10 +1844,11 @@ impl App {
             ExitDecision::AlreadyEnded => {
                 self.show_tab(TAB_MANAGER);
                 self.enter_route();
-                self.set_status(
-                    "Another client already ended the Construct · returning to the host",
-                    Tone::Secondary,
+                let text = format!(
+                    "Another client already ended {} · returning to the host",
+                    self.world.surfaces.vocabulary.construct
                 );
+                self.set_status(&text, Tone::Secondary);
                 self.exit_after_status = Some(self.world.now_ms() + 2_500);
             }
             ExitDecision::Unknown(e) => {
@@ -1855,7 +1884,13 @@ impl App {
                     .outro
                     .take()
                     .unwrap_or_else(|| OutroState::new(self.shell.motion, None, 0));
-                rain::render_outro(buf, area, &mut state, &t);
+                rain::render_outro(
+                    buf,
+                    area,
+                    &mut state,
+                    &self.world.surfaces.vocabulary.construct,
+                    &t,
+                );
                 self.outro = Some(state);
             }
             Route::Handoff => {
@@ -1916,20 +1951,22 @@ impl App {
         self.footer(false).render(footer, buf, ctx, &mut self.shell);
     }
 
-    fn construct_state(&self, route: Route) -> (&'static str, Tone) {
-        match route {
-            Route::Intro => ("entering the Construct", Tone::Secondary),
-            Route::Cockpit | Route::Handoff => ("entering the Construct", Tone::Normal),
-            Route::Capsule => ("inside the Construct", Tone::Normal),
-            Route::Outro => ("leaving the Construct", Tone::Secondary),
+    fn construct_state(&self, route: Route) -> (String, Tone) {
+        let construct = &self.world.surfaces.vocabulary.construct;
+        let (word, tone) = match route {
+            Route::Intro => ("entering", Tone::Secondary),
+            Route::Cockpit | Route::Handoff => ("entering", Tone::Normal),
+            Route::Capsule => ("inside", Tone::Normal),
+            Route::Outro => ("leaving", Tone::Secondary),
             _ => {
                 if self.world.arbiter.entered_at_ms.is_some() || self.world.running_count() > 0 {
-                    ("inside the Construct", Tone::Secondary)
+                    ("inside", Tone::Secondary)
                 } else {
-                    ("outside the Construct", Tone::Secondary)
+                    ("outside", Tone::Secondary)
                 }
             }
-        }
+        };
+        (format!("{word} {construct}"), tone)
     }
 
     fn draw_strip(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, route: Route) {
@@ -2115,6 +2152,9 @@ impl shell::App for App {
     }
     fn on_blur(&mut self, ch: FocusChange) -> Outcome {
         self.blur_all(ch)
+    }
+    fn external(&self) -> Option<&ExternalReceiver> {
+        self.external.as_ref()
     }
     fn layer_open(&self) -> bool {
         !self.layers.is_empty()

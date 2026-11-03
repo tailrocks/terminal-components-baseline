@@ -159,7 +159,7 @@ impl CapsuleScreen {
             pane_rects: vec![],
             seams: vec![],
             tabs: Tabs::with_items(STRIP, vec![]),
-            menubar: Self::build_menubar(),
+            menubar: Self::build_menubar(&w.surfaces.vocabulary.info_label()),
             tab_menu: None,
             context: ContextConfig::DEFAULT,
             body: Rect::ZERO,
@@ -243,7 +243,7 @@ impl CapsuleScreen {
         }
     }
 
-    fn build_menubar() -> MenuBar {
+    fn build_menubar(info_label: &str) -> MenuBar {
         let entries: Vec<(&str, Vec<MenuItem>)> = vec![
             (
                 "File",
@@ -273,7 +273,7 @@ impl CapsuleScreen {
                     MenuItem::new("Zoom pane").shortcut("Ctrl+B z"),
                     MenuItem::new("Redraw").shortcut("Ctrl+B r").separator(),
                     MenuItem::new("Usage").shortcut("Ctrl+B u"),
-                    MenuItem::new("Container info").shortcut("Ctrl+B i"),
+                    MenuItem::new(info_label).shortcut("Ctrl+B i"),
                     MenuItem::new("GitHub context"),
                     MenuItem::new("Inspect changes"),
                 ],
@@ -405,20 +405,9 @@ impl CapsuleScreen {
     }
 
     fn open_about(&mut self, w: &World, cx: &mut Cx) {
-        let props = vec![
-            Prop::new("Product", "jackin-preview · deterministic redesign preview"),
-            Prop::new("Scenario", w.scenario.name()),
-            Prop::new(
-                "Construct",
-                "simulated · nothing here touches a real container",
-            ),
-            Prop::new(
-                "Design system",
-                "Junie-inspired Ratatui components (junie_tui)",
-            ),
-        ];
         let d =
-            super::modals::InfoDialog::new(WidgetId::of("capsule.about"), "About", props).width(64);
+            super::modals::InfoDialog::new(WidgetId::of("capsule.about"), "About", w.about_props())
+                .width(64);
         cx.open(d, LayerTag::new("about"));
     }
 
@@ -503,7 +492,7 @@ impl CapsuleScreen {
                 cx.status("Redrawn");
             }
             "Usage" => self.open_usage(w, cx),
-            "Container info" => self.open_container_info(w, cx),
+            l if l == w.surfaces.vocabulary.info_label() => self.open_container_info(w, cx),
             "GitHub context" => self.open_github(w, cx),
             "Inspect changes" => self.open_inspect(w, cx, false),
             "Change title…" | "Change tab title…" => {
@@ -980,7 +969,7 @@ impl CapsuleScreen {
                 let open = cmd.ends_with("open");
                 self.export_kind = Some((reveal, open));
                 let input = TextInput::new(WidgetId::of("capsule.export.path"), "Path")
-                    .placeholder("workspace path or /jackin/run/…")
+                    .placeholder(&w.surfaces.vocabulary.export_placeholder)
                     .help("Copies to ~/Downloads/jackin/ on the host")
                     .plain_label();
                 let d = Dialog::prompt(WidgetId::of("capsule.export"), cmd, input, "Export");
@@ -1105,6 +1094,7 @@ impl CapsuleScreen {
                 .unwrap_or_default();
             let changed = inst.map(|i| i.uncommitted).unwrap_or(0) + touched.len();
             let unpushed = inst.map(|i| i.unpushed).unwrap_or(0);
+            let words = &w.surfaces.vocabulary;
             let ws = self
                 .daemon(w)
                 .map(|d| d.workspace.clone())
@@ -1116,13 +1106,16 @@ impl CapsuleScreen {
                 &[
                     "Start a new agent",
                     "Inspect changes",
-                    "Quit & keep changes",
-                    "Quit & discard changes",
+                    &words.quit_dirty_keep,
+                    &words.quit_dirty_discard,
                 ],
                 0,
             )
             .line(
-                format!("{ws}   • {changed} changed · {unpushed} unpushed"),
+                format!(
+                    "{ws}   • {changed} changed · {unpushed} {}",
+                    words.unexported_word
+                ),
                 Tone::Warning,
             )
             .buttons(
@@ -1138,7 +1131,7 @@ impl CapsuleScreen {
             let mut d = Dialog::destructive(
                 WidgetId::of("capsule.exit"),
                 "Quit jackin❯?",
-                "! Quitting force-stops the container immediately.\n! Work not saved outside the container will be lost.",
+                &w.surfaces.vocabulary.quit_lines.join("\n"),
                 "Quit",
             );
             d.width = 60;
@@ -1201,10 +1194,11 @@ impl CapsuleScreen {
             },
             None => "(none)".into(),
         };
+        let noun = &w.surfaces.vocabulary.container_noun;
         let props = vec![
-            Prop::new("Container", i.container_id()).copyable(),
+            Prop::new(noun, i.container_id()).copyable(),
             Prop::new(
-                "Container ID",
+                &format!("{noun} ID"),
                 format!("3f9c{}e21a", clip(&i.run_id.replace('-', ""), 8)),
             )
             .copyable(),
@@ -1212,7 +1206,10 @@ impl CapsuleScreen {
             Prop::new("Agent", agent),
             Prop::new("Workdir", i.workdir.clone()),
             Prop::new("Instance", i.id.trim_start_matches("jk-").to_owned()),
-            Prop::new("Capsule", "0.9.2"),
+            Prop::new(
+                w.surfaces.vocabulary.version_label.as_str(),
+                w.surfaces.version.as_str(),
+            ),
             Prop::new("Invocation ID", format!("{}-4f11", i.run_id)).copyable(),
             Prop::new(
                 "Host log",
@@ -1225,31 +1222,42 @@ impl CapsuleScreen {
         cx.open(d, LayerTag::new("info"));
     }
 
+    fn github_url(&self, w: &World) -> Option<String> {
+        let i = w.instance(&self.instance)?;
+        let repo = w.github.iter().find(|r| {
+            r.full_name
+                .ends_with(&i.workdir.trim_start_matches("/workspace/").to_owned())
+        })?;
+        Some(match &i.pr {
+            Some((n, _)) => format!("{}/pull/{n}", repo.url),
+            None => format!(
+                "{}/tree/{}",
+                repo.url,
+                i.branch.clone().unwrap_or(i.default_branch.clone())
+            ),
+        })
+    }
+
     fn open_github(&mut self, w: &World, cx: &mut Cx) {
         let Some(i) = w.instance(&self.instance) else {
             return;
         };
-        let repo = w.github.iter().find(|r| {
-            r.full_name
-                .ends_with(&i.workdir.trim_start_matches("/workspace/").to_owned())
-        });
+        let url = self.github_url(w);
         let branch = i.branch.clone().unwrap_or(i.default_branch.clone());
         let mut props = vec![Prop::new("Branch", branch.clone())];
         match &i.pr {
             Some((n, title)) => {
                 props.push(Prop::new("Pull Request", format!("#{n}")));
                 props.push(Prop::new("PR Title", title.clone()));
-                if let Some(r) = repo {
-                    props.push(Prop::new("GitHub URL", format!("{}/pull/{n}", r.url)).copyable());
+                if let Some(url) = url {
+                    props.push(Prop::new("GitHub URL", url).copyable());
                 }
                 props.push(Prop::new("CI Status", "✓ passing").tone(Tone::Success));
             }
             None => {
                 props.push(Prop::new("Pull Request", "(none)").tone(Tone::Muted));
-                if let Some(r) = repo {
-                    props.push(
-                        Prop::new("GitHub URL", format!("{}/tree/{branch}", r.url)).copyable(),
-                    );
+                if let Some(url) = url {
+                    props.push(Prop::new("GitHub URL", url).copyable());
                 }
                 props.push(Prop::new("CI Status", "(unknown)").tone(Tone::Muted));
             }
@@ -1257,9 +1265,9 @@ impl CapsuleScreen {
         let d = InfoDialog::new(WidgetId::of("capsule.github"), "GitHub context", props)
             .action(Button::secondary(
                 WidgetId::of("capsule.github").sub("open"),
-                "Open PR…",
+                &w.surfaces.vocabulary.github_open_label,
             ))
-            .meta("open uses a gated host action");
+            .meta(&w.surfaces.vocabulary.github_open_meta);
         cx.open(d, LayerTag::new("github"));
     }
 
@@ -1713,7 +1721,10 @@ impl CapsuleScreen {
                 parts.push(format!("• {changed} changed"));
             }
             if i.unpushed > 0 {
-                parts.push(format!("{} unpushed", i.unpushed));
+                parts.push(format!(
+                    "{} {}",
+                    i.unpushed, w.surfaces.vocabulary.unexported_word
+                ));
             }
             bar.left
                 .push(StatusItem::new(parts.join(" · "), Tone::Warning).priority(6));
@@ -2090,7 +2101,7 @@ impl Page<Jackin> for CapsuleScreen {
                     let empty = d.tabs.is_empty();
                     crate::world::refresh_snapshots(w);
                     if empty {
-                        cx.status("Last session ended · the Capsule shuts down");
+                        cx.status(w.surfaces.vocabulary.last_session_ended.clone());
                         self.end_instance(false, cx);
                     } else {
                         cx.status(if tab_closed {
@@ -2113,7 +2124,7 @@ impl Page<Jackin> for CapsuleScreen {
                     let empty = d.tabs.is_empty();
                     crate::world::refresh_snapshots(w);
                     if empty {
-                        cx.status("Last session ended · the Capsule shuts down");
+                        cx.status(w.surfaces.vocabulary.last_session_ended.clone());
                         self.end_instance(false, cx);
                     } else {
                         cx.status("Tab closed");
@@ -2138,16 +2149,13 @@ impl Page<Jackin> for CapsuleScreen {
                     self.end_instance(false, cx);
                 }
                 _ => {
+                    let words = &w.surfaces.vocabulary;
                     let ws = self
                         .daemon(w)
                         .map(|d| d.workspace.clone())
                         .unwrap_or_default();
                     let facts = vec![
-                        Prop::new(
-                            "Action",
-                            "discard every uncommitted change and unpushed commit",
-                        )
-                        .tone(Tone::Error),
+                        Prop::new("Action", words.quit_discard_action.as_str()).tone(Tone::Error),
                         Prop::new(
                             "Target",
                             format!(
@@ -2159,11 +2167,14 @@ impl Page<Jackin> for CapsuleScreen {
                     ];
                     let d = Dialog::facts(
                         WidgetId::of("capsule.discard"),
-                        "Quit and discard changes?",
+                        &words.quit_discard_title,
                         facts,
                         vec![],
                         Some(&ws),
-                        Button::danger(WidgetId::of("capsule.discard").sub("ok"), "Discard"),
+                        Button::danger(
+                            WidgetId::of("capsule.discard").sub("ok"),
+                            &words.quit_discard_button,
+                        ),
                     );
                     cx.open(d, LayerTag::new("discard"));
                 }
@@ -2221,7 +2232,16 @@ impl Page<Jackin> for CapsuleScreen {
                 cx.copy(v);
             }
             ("github", ModalResult::Info(InfoResult::Action(0))) => {
-                cx.status("Opened the pull request on the host (gated host action)");
+                let words = &w.surfaces.vocabulary;
+                match self.github_url(w) {
+                    Some(url) => {
+                        if words.github_copies_url {
+                            cx.copy(url);
+                        }
+                        cx.status(words.github_copied.clone());
+                    }
+                    None => cx.error(words.github_no_url.clone()),
+                }
             }
             ("usage", _) => {}
             (_, ModalResult::Cancelled)
@@ -2385,8 +2405,8 @@ impl Page<Jackin> for CapsuleScreen {
         let d = self.daemon(w);
         let ws = d.map(|d| d.workspace.as_str()).unwrap_or("instance");
         match d.and_then(|d| d.active_tab().map(|t| d.tab_label(t, &|_| None))) {
-            Some(tab) => format!("Capsule › {ws} › {tab}"),
-            None => format!("Capsule › {ws}"),
+            Some(tab) => format!("{} › {ws} › {tab}", w.surfaces.vocabulary.capsule),
+            None => format!("{} › {ws}", w.surfaces.vocabulary.capsule),
         }
     }
 

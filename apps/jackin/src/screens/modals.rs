@@ -122,8 +122,8 @@ pub fn file_browser(
         .back("Browse folders")
         .placeholder("github.com/org/repo")
         .help(&[
-            "Enter a GitHub repository URL. The repository is cloned into the",
-            "Construct at launch; the branch is chosen in the mount row.",
+            w.surfaces.vocabulary.git_url_help[0].as_str(),
+            w.surfaces.vocabulary.git_url_help[1].as_str(),
         ])
         .empty_error("Enter a repository URL")
         .validate(move |url| {
@@ -140,7 +140,7 @@ pub fn file_browser(
         .hidden_toggle(false)
         .url_entry(url);
     if with_readonly {
-        b.checkbox("Mount read-only", false)
+        b.checkbox(&w.surfaces.vocabulary.read_only_label, false)
     } else {
         b
     }

@@ -279,6 +279,7 @@ pub fn page_options(page: PageId) -> &'static [Opt] {
         PageId::Diff => DIFF,
         PageId::Terminal => TERMINAL,
         PageId::TerminalPane => TERMINAL_PANE,
+        PageId::FixedControls => FIXED_CONTROLS,
         PageId::QueryWorkbench => QUERY_WORKBENCH,
         PageId::Connections => CONNECTIONS,
         PageId::Finder => FINDER,
@@ -1725,6 +1726,11 @@ pub static TERMINAL: &[Opt] = &[
         "Rail keys",
         &["default", "vim", "no-page"],
     ),
+];
+
+pub static FIXED_CONTROLS: &[Opt] = &[
+    Opt::new("fixedcontrols.state", "Controls", &["fixed", "live"]),
+    Opt::new("fixedcontrols.status", "Reason status", &["5 s", "sticky"]),
 ];
 
 pub static TERMINAL_PANE: &[Opt] = &[
