@@ -279,6 +279,7 @@ pub fn page_options(page: PageId) -> &'static [Opt] {
         PageId::Diff => DIFF,
         PageId::Terminal => TERMINAL,
         PageId::TerminalPane => TERMINAL_PANE,
+        PageId::TerminalViewport => TERMINAL_VIEWPORT,
         PageId::FixedControls => FIXED_CONTROLS,
         PageId::QueryWorkbench => QUERY_WORKBENCH,
         PageId::Connections => CONNECTIONS,
@@ -1751,6 +1752,19 @@ pub static TERMINAL_PANE: &[Opt] = &[
             "inside an OSC sequence",
             "inside a UTF-8 character",
         ],
+    ),
+];
+
+pub static TERMINAL_VIEWPORT: &[Opt] = &[
+    Opt::new(
+        "terminalviewport.fixture",
+        "Fixture",
+        &["history", "fullscreen", "empty"],
+    ),
+    Opt::new(
+        "terminalviewport.pointer_select",
+        "Pointer selects",
+        &["default", "no-drag", "no-word", "no-line", "by-word", "off"],
     ),
 ];
 

@@ -1327,3 +1327,266 @@ fn showcase_fixedcontrols_focused_refused() {
     assert!(text(&refused).contains("[ ] Keep awake"));
     app.visual("functional/showcase_fixedcontrols_focused_refused");
 }
+
+fn terminal_viewport(name: &str, opts: &[&str]) -> App {
+    let mut args = vec!["--page", "terminalviewport", "--motion", "paused"];
+    for opt in opts {
+        args.extend(["--opt", opt]);
+    }
+    let app = App::new(name, SHOWCASE, &args, 120, 40, "truecolor");
+    app.wait_text("Terminal viewport");
+    app.settle();
+    app
+}
+
+page_test!(
+    showcase_page_terminalviewport,
+    "terminalviewport",
+    "Terminal viewport"
+);
+
+fn viewport_top(screen: &TerminalSnapshot) -> Point {
+    find(screen, "23 step 23 finished")
+}
+
+fn at(top: Point, col: u16, row: u16) -> Point {
+    Point {
+        x: top.x + col,
+        y: top.y + row,
+    }
+}
+
+fn status_row(screen: &TerminalSnapshot) -> String {
+    let rows = text(screen).lines().count() as u32;
+    row_text(screen, rows - 1)
+}
+
+#[test]
+fn showcase_terminal_viewport_focus_shows_the_program_cursor() {
+    let app = terminal_viewport("showcase-terminal-viewport-focus", &[]);
+    let screen = app.settle();
+    assert!(
+        !screen.cursor().visible(),
+        "an unfocused pane shows no cursor"
+    );
+    let top = viewport_top(&screen);
+    app.click(at(top, 3, 2));
+    let focused = app.wait_screen("the pane takes focus and shows its cursor", |s| {
+        s.cursor().visible()
+    });
+    let prompt = find(&focused, "dev@jackin:~/src$");
+    let cursor = focused.cursor();
+    assert_eq!(
+        (cursor.col(), cursor.row()),
+        (
+            u32::from(prompt.x) + "dev@jackin:~/src$ ".len() as u32,
+            u32::from(prompt.y)
+        ),
+        "the hardware cursor is the program's cursor"
+    );
+    app.wheel(at(top, 3, 2), false, 1);
+    let scrolled = app.wait_screen("scrolled back", |s| text(s).contains("20–31 of 34"));
+    assert!(
+        !scrolled.cursor().visible(),
+        "a scrolled-back pane has no cursor"
+    );
+    app.key("end");
+    let live = app.wait_screen("End returns to the live tail", |s| {
+        text(s).contains("live") && s.cursor().visible()
+    });
+    assert!(text(&live).contains("23 step 23 finished"));
+    app.settle();
+    app.visual("functional/showcase_terminal_viewport_focused");
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_wheel_scrolls_and_keeps_its_place() {
+    let app = terminal_viewport("showcase-terminal-viewport-wheel", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    assert!(text(&screen).contains("scroll      live tail"));
+    app.wheel(at(top, 3, 2), false, 1);
+    let scrolled = app.wait_screen("one notch moves three rows", |s| {
+        text(s).contains("20 step 20 finished") && text(s).contains("20–31 of 34")
+    });
+    assert!(!text(&scrolled).contains("dev@jackin:~/src$"));
+    assert!(text(&scrolled).contains("scroll      3 rows up"));
+
+    app.click_text("Feed line");
+    let fed = app.wait_screen("new output does not move what is read", |s| {
+        text(s).contains("20–31 of 35")
+    });
+    assert!(text(&fed).contains("20 step 20 finished"));
+    assert!(text(&fed).contains("scroll      4 rows up"));
+    assert!(
+        !text(&fed).contains("31 step 31 finished"),
+        "the new line is below the view"
+    );
+    app.wheel(at(top, 3, 2), true, 2);
+    let tail = app.wait_screen("the wheel returns to the live tail", |s| {
+        text(s).contains("scroll      live tail")
+    });
+    assert!(text(&tail).contains("31 step 31 finished"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_scrolled_back_shows_its_place() {
+    let app = terminal_viewport("showcase-terminal-viewport-scrolled", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    app.wheel(at(top, 3, 2), false, 1);
+    app.wait_text("20–31 of 34");
+    app.settle();
+    app.visual("functional/showcase_terminal_viewport_scrolled");
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_copy_joins_a_wrapped_path() {
+    let app = terminal_viewport("showcase-terminal-viewport-copy", &[]);
+    let screen = app.settle();
+    let path = find(&screen, "open /home/dev");
+    app.down(at(path, 5, 0));
+    app.drag_to(at(path, 20, 1));
+    app.drag_to(at(path, 4, 2));
+    app.up(at(path, 4, 2));
+    let copied = app.wait_screen("a drag release copies the selection", |s| {
+        status_row(s).contains("Copied 75 characters")
+    });
+    assert!(text(&copied).contains("copied      1 line · 75 characters"));
+    assert!(text(&copied).contains("selection   75 characters"));
+    app.settle();
+    app.visual("functional/showcase_terminal_viewport_selection");
+
+    app.key("esc");
+    let cleared = app.wait_screen("Esc clears the selection", |s| {
+        text(s).contains("selection   none")
+    });
+    assert!(text(&cleared).contains("copied      1 line · 75 characters"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_double_click_selects_a_word() {
+    let app = terminal_viewport("showcase-terminal-viewport-word", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    let word = at(top, 14, 0);
+    app.click(word);
+    app.click(word);
+    let selected = app.wait_screen("a double click selects the word", |s| {
+        text(s).contains("selection   8 characters")
+    });
+    assert!(status_row(&selected).contains("Copied 8 characters · finished"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_keys_page_and_clear() {
+    let app = terminal_viewport("showcase-terminal-viewport-keys", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    app.click(at(top, 3, 2));
+    app.key("pageup");
+    app.wait_text("11–22 of 34");
+    app.key("home");
+    app.wait_text("1–12 of 34");
+    app.key("pagedown");
+    app.wait_text("13–24 of 34");
+    app.key("end");
+    let live = app.wait_screen("End returns to the live tail", |s| {
+        text(s).contains("scroll      live tail")
+    });
+    assert!(text(&live).contains("23 step 23 finished"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_fullscreen_has_no_history_to_scroll() {
+    let app = terminal_viewport(
+        "showcase-terminal-viewport-fullscreen",
+        &["terminalviewport.fixture=fullscreen"],
+    );
+    let screen = app.settle();
+    assert!(text(&screen).contains("the alternate screen has no"));
+    assert!(text(&screen).contains("alt screen  on"));
+    let top = find(&screen, "the alternate screen has no");
+    app.wheel(at(top, 3, 1), false, 2);
+    app.settle();
+    let after = app.settle();
+    assert!(text(&after).contains("the alternate screen has no"));
+    assert!(text(&after).contains("scroll      live tail"));
+    assert!(!text(&after).contains("step 1"));
+    app.visual("functional/showcase_terminal_viewport_fullscreen");
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_states() {
+    let app = terminal_viewport("showcase-terminal-viewport-states", &[]);
+    app.click_text("States");
+    app.wait_text("overflow");
+    app.settle();
+    app.visual("functional/showcase_terminal_viewport_states");
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_follows_the_pane_size() {
+    let app = terminal_viewport("showcase-terminal-viewport-size", &[]);
+    let screen = app.settle();
+    assert!(text(&screen).contains("grid        38x12 + track"));
+    app.resize(120, 20);
+    let small = app.wait_screen("the grid takes the rows the pane has", |s| {
+        text(s).contains("grid        38x7 + track")
+    });
+    assert!(text(&small).contains("23 step 23 finished"));
+    app.resize(120, 40);
+    let again = app.wait_screen("and gives them back", |s| {
+        text(s).contains("grid        38x12 + track")
+    });
+    assert!(text(&again).contains("23 step 23 finished"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_reset_drops_scroll_and_selection() {
+    let app = terminal_viewport("showcase-terminal-viewport-reset", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    app.wheel(at(top, 3, 2), false, 2);
+    app.wait_text("scroll      6 rows up");
+    app.down(at(top, 0, 1));
+    app.drag_to(at(top, 6, 1));
+    app.up(at(top, 6, 1));
+    app.wait_text("selection   6 characters");
+    app.click_text("Reset");
+    let fresh = app.wait_screen("Reset starts the session over", |s| {
+        text(s).contains("scroll      live tail") && text(s).contains("selection   none")
+    });
+    assert!(text(&fresh).contains("history     22 rows"));
+    assert!(text(&fresh).contains("copied      nothing yet"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_pointer_policy_is_an_option() {
+    let app = terminal_viewport(
+        "showcase-terminal-viewport-policy",
+        &["terminalviewport.pointer_select=off"],
+    );
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    app.down(at(top, 0, 1));
+    app.drag_to(at(top, 6, 1));
+    app.up(at(top, 6, 1));
+    app.settle();
+    let after = app.settle();
+    assert!(
+        text(&after).contains("selection   none"),
+        "with pointer selection off a drag selects nothing"
+    );
+    app.finish();
+}

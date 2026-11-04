@@ -94,6 +94,7 @@ pub enum PageId {
     Scrolling,
     Terminal,
     TerminalPane,
+    TerminalViewport,
     FixedControls,
     Editor,
     Diff,
@@ -166,6 +167,11 @@ pub const HIDDEN_ENTRIES: &[NavEntry] = &[
         id: PageId::FixedControls,
         label: "Fixed controls",
         group: "Inputs & forms",
+    },
+    NavEntry {
+        id: PageId::TerminalViewport,
+        label: "Terminal viewport",
+        group: "Text & code",
     },
 ];
 
@@ -722,6 +728,9 @@ impl App {
                     PageId::Scrolling => Box::new(scrolling::ScrollingPage::new()),
                     PageId::Terminal => Box::new(terminal::TerminalPage::new()),
                     PageId::TerminalPane => Box::new(terminal_pane::TerminalPanePage::new()),
+                    PageId::TerminalViewport => {
+                        Box::new(terminal_viewport::TerminalViewportPage::new())
+                    }
                     PageId::FixedControls => fixed_controls::page(),
                     PageId::Editor => Box::new(editor::EditorPage::new()),
                     PageId::Diff => Box::new(diff::DiffPage::new()),
