@@ -21,7 +21,7 @@ use crate::domain::usage::Freshness;
 use crate::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
 };
-use crate::panes::{Daemon, PaneId};
+use crate::panes::{Daemon, PaneId, PanePolicy};
 use junie_tui::clock::SimClock;
 use junie_tui::shell::JobKey;
 
@@ -351,6 +351,10 @@ pub struct World {
     pub surfaces: Surfaces,
 
     pub tickets: Ticket,
+
+    /// What a program may do through a pane; every daemon the world creates
+    /// starts with it.
+    pub pane_policy: Arc<PanePolicy>,
 }
 
 pub trait WallSource: std::fmt::Debug + Send + Sync {
@@ -483,6 +487,7 @@ impl World {
             discovery_pending: false,
             surfaces,
             tickets: 0,
+            pane_policy: Arc::default(),
         };
         world.sync_arbiter();
         world
@@ -490,6 +495,12 @@ impl World {
 
     pub fn now_secs(&self) -> i64 {
         self.clock.now_secs()
+    }
+
+    pub fn new_daemon(&self, workspace: &str) -> Daemon {
+        let mut daemon = Daemon::new(workspace);
+        daemon.set_policy(&self.pane_policy);
+        daemon
     }
 
     /// A number no earlier request of this world carried.

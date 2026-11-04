@@ -547,7 +547,7 @@ impl ManagerScreen {
         let Some(i) = w.instance(id) else { return };
         let wsname = w.workspace_label(i);
         let now = w.now_ms();
-        let mut d = crate::panes::Daemon::new(&wsname);
+        let mut d = w.new_daemon(&wsname);
         for request in &w.backend.initial_panes(i) {
             d.new_tab(request, now, |spawn| w.backend.spawn_pane(request, spawn));
         }

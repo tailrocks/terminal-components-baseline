@@ -1523,3 +1523,36 @@ fn failed_editor_check_unlocks_the_editor() {
         .count();
     assert_eq!(checks, 2, "the editor takes a second check");
 }
+
+#[test]
+fn a_restored_instance_gets_the_host_pane_policy_when_it_is_created() {
+    use jackin_console::pages::Pages;
+    use jackin_console::panes::ClipboardWrite;
+
+    let (mut app, _) = backed(Scenario::Returning, restore);
+    let id = "jk-c41e";
+    let msg = Msg::Restored {
+        instance: id.into(),
+        result: Ok(Box::new(sim::snapshot(&app.world))),
+    };
+    let route = app.route();
+    let App {
+        shell,
+        router,
+        world,
+        ..
+    } = &mut app;
+    let (_, requests) = shell.deliver(true, |cx| match router.screen_mut(route) {
+        Some(screen) => screen.on_msg(&msg, world, cx),
+        None => junie_tui::core::event::Outcome::Ignored,
+    });
+    assert!(!requests.is_empty(), "the screen asks to attach");
+
+    let daemon = app.world.daemons.get(id).expect("the restored daemon");
+    assert_eq!(
+        daemon.policy.clipboard_write,
+        ClipboardWrite::Deny,
+        "the host policy is on the daemon before the attach request runs"
+    );
+    assert!(!daemon.panes.is_empty());
+}

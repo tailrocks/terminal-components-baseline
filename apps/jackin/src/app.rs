@@ -36,7 +36,7 @@ use crate::domain::launch::EmptyLanding;
 use crate::domain::vocabulary::fill_in;
 use crate::launch::LaunchTarget;
 use crate::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_ROLES, TAB_USAGE};
-use crate::panes::{Daemon, PaneId, PanePolicy};
+use crate::panes::{PaneId, PanePolicy};
 use crate::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
 use crate::screens::capsule::CapsuleScreen;
 use crate::screens::cockpit::CockpitScreen;
@@ -172,7 +172,7 @@ pub struct App {
     pub clipboard_gen: u32,
     exit_after_status: Option<i64>,
     external: Option<ExternalReceiver>,
-    pane_policy: Arc<PanePolicy>,
+    held: Vec<Msg>,
 }
 
 impl App {
@@ -185,9 +185,9 @@ impl App {
             panes,
         } = options;
         world.clock.running = motion != Motion::Paused;
-        let pane_policy = Arc::new(panes);
+        world.pane_policy = Arc::new(panes);
         for daemon in world.daemons.values_mut() {
-            daemon.set_policy(&pane_policy);
+            daemon.set_policy(&world.pane_policy);
         }
         let mut shell = Shell::new();
         shell.motion = motion;
@@ -217,7 +217,7 @@ impl App {
             clipboard_gen: 0,
             exit_after_status: None,
             external: None,
-            pane_policy,
+            held: Vec::new(),
         };
         app.start(entry, frame);
         app
@@ -434,7 +434,7 @@ impl App {
 
     fn tick_step(&mut self) -> Outcome {
         let interval = self.route().tick_ms(true) as i64;
-        let msgs = self.world.tick(interval);
+        self.held.extend(self.world.tick(interval));
         let mut out = if self.animating() {
             Outcome::Changed
         } else {
@@ -498,8 +498,8 @@ impl App {
         let route = self.route();
         out = out.or(self.on_route(route, Outcome::Ignored, |s, w, cx| s.on_tick(w, cx)));
 
-        for m in &msgs {
-            out = out.or(self.dispatch_msg(m));
+        for m in std::mem::take(&mut self.held) {
+            out = out.or(self.dispatch_msg(&m));
         }
         out
     }
@@ -1821,7 +1821,7 @@ impl App {
                 }
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
                     d.attached_by = Some("this terminal".into());
-                    d.set_policy(&self.pane_policy);
+                    d.set_policy(&self.world.pane_policy);
                 }
                 let page = Page::Capsule(Box::new(CapsuleScreen::new(
                     &instance,
@@ -1962,8 +1962,7 @@ impl App {
         };
         let backend = Arc::clone(&self.world.backend);
         let requests = backend.initial_panes(i);
-        let mut d = Daemon::new(&self.world.workspace_label(i));
-        d.set_policy(&self.pane_policy);
+        let mut d = self.world.new_daemon(&self.world.workspace_label(i));
         let now = self.world.now_ms();
         for request in requests {
             d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));

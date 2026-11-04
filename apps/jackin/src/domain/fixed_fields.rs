@@ -345,6 +345,7 @@ pub fn world_fixed(w: &World) -> FixedFields {
         discovery_pending: _,
         surfaces,
         tickets: _,
+        pane_policy: _,
     } = w;
     collect(workspaces, roles, instances, global, accounts, surfaces)
 }
