@@ -364,7 +364,7 @@ impl TerminalPane {
     fn term_event(&mut self, event: TermEvent, now_ms: i64) {
         match event {
             TermEvent::Reply(bytes) => {
-                if self.replay.is_open() {
+                if self.replay.is_open() || self.viewing() {
                     return;
                 }
                 if self.send(PaneCommand::Reply(bytes)) == Sent::Full {
