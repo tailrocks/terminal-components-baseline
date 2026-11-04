@@ -566,21 +566,23 @@ fn cancel_second(app: &App) -> TerminalSnapshot {
             started.elapsed() < Duration::from_secs(12) && app.child_running(),
             "cancel kept the capsule\n{visible}"
         );
-        if esc_at.is_none() {
+        if let Some(sent) = esc_at {
+            if !clicked && sent.elapsed() >= Duration::from_millis(400) {
+                let hits: Vec<_> = find_all(&screen, "Cancel")
+                    .into_iter()
+                    .filter(|hit| {
+                        let row = row_text(&screen, u32::from(hit.y));
+                        row.contains("Discard") && !row.contains("Esc")
+                    })
+                    .collect();
+                if hits.len() == 1 {
+                    app.click(hits[0]);
+                    clicked = true;
+                }
+            }
+        } else {
             app.key("esc");
             esc_at = Some(Instant::now());
-        } else if !clicked && esc_at.expect("esc").elapsed() >= Duration::from_millis(400) {
-            let hits: Vec<_> = find_all(&screen, "Cancel")
-                .into_iter()
-                .filter(|hit| {
-                    let row = row_text(&screen, u32::from(hit.y));
-                    row.contains("Discard") && !row.contains("Esc")
-                })
-                .collect();
-            if hits.len() == 1 {
-                app.click(hits[0]);
-                clicked = true;
-            }
         }
         std::thread::sleep(Duration::from_millis(25));
     }

@@ -318,12 +318,7 @@ fn cancel_export(app: &App) -> TerminalSnapshot {
                     row.contains("Export") && !row.contains("Esc")
                 })
                 .collect();
-            if hits.len() == 1 && used_esc {
-                let mut point = hits[0];
-                point.x = point.x.saturating_add(3);
-                app.click(point);
-                acted = Some(Instant::now());
-            } else if hits.len() == 1 && acted.is_none() {
+            if hits.len() == 1 && (used_esc || acted.is_none()) {
                 let mut point = hits[0];
                 point.x = point.x.saturating_add(3);
                 app.click(point);
