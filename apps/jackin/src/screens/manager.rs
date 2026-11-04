@@ -501,6 +501,26 @@ impl ManagerScreen {
         }
     }
 
+    fn attach_restored(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
+        let Some(i) = w.instance(id) else { return };
+        let wsname = w.workspace_label(i);
+        let agent = i.agent;
+        let now = w.now_ms();
+        let mut d = crate::panes::Daemon::new(&wsname, w.backend.session_script());
+        d.new_tab(Some(agent), None, now, false);
+        w.daemons.insert(id.to_owned(), d);
+        crate::world::refresh_snapshots(w);
+        w.sync_arbiter();
+        cx.status(fill_in(
+            &w.surfaces.vocabulary.lifecycle.restored,
+            &[("id", id.trim_start_matches("jk-"))],
+        ));
+        cx.go(Go::Attach {
+            instance: id.to_owned(),
+            pane: None,
+        });
+    }
+
     fn reconnect(&mut self, id: &str, w: &mut World, cx: &mut Cx) -> Outcome {
         let Some(i) = w.instance(id) else {
             return Outcome::Consumed;
@@ -515,26 +535,8 @@ impl ManagerScreen {
             InstanceStatus::RestoreAvailable
             | InstanceStatus::PreservedDirty
             | InstanceStatus::PreservedUnpushed => {
-                let wsname = w.workspace_label(i);
-                let agent = i.agent;
-                let now_secs = w.clock.now_secs();
-                if let Some(inst) = w.instance_mut(id) {
-                    inst.status = InstanceStatus::Running;
-                    inst.last_seen_secs = now_secs;
-                }
-                let now = w.now_ms();
-                let mut d = crate::panes::Daemon::new(&wsname, w.backend.session_script());
-                d.new_tab(Some(agent), None, now, false);
-                w.daemons.insert(id.to_owned(), d);
-                crate::world::refresh_snapshots(w);
-                w.sync_arbiter();
-                cx.status(fill_in(
-                    &w.surfaces.vocabulary.lifecycle.restored,
-                    &[("id", id.trim_start_matches("jk-"))],
-                ));
-                cx.go(Go::Attach {
+                w.perform(Effect::Restore {
                     instance: id.to_owned(),
-                    pane: None,
                 });
             }
             InstanceStatus::Crashed => {
@@ -2018,6 +2020,24 @@ impl Page<Jackin> for ManagerScreen {
                     &[("id", instance.trim_start_matches("jk-"))],
                 ));
             }
+            Msg::WorkspaceDeleted { id, result } => match result {
+                Ok(snapshot) => {
+                    let name = w.workspace(*id).map(|x| x.name.clone()).unwrap_or_default();
+                    w.apply((**snapshot).clone());
+                    self.selected = RowKey::CurrentDir;
+                    cx.status(format!(
+                        "Deleted workspace {name} · instances and files kept"
+                    ));
+                }
+                Err(error) => cx.error(error.clone()),
+            },
+            Msg::Restored { instance, result } => match result {
+                Ok(snapshot) => {
+                    w.apply((**snapshot).clone());
+                    self.attach_restored(instance, w, cx);
+                }
+                Err(error) => cx.error(error.clone()),
+            },
             Msg::Refreshed { ok: false } => {
                 cx.error("Refresh failed: instance index unreadable · showing last-good rows");
             }
@@ -2475,18 +2495,7 @@ impl Page<Jackin> for ManagerScreen {
                 },
             ) => {
                 let id = tag.n as WorkspaceId;
-                let name = w.workspace(id).map(|x| x.name.clone()).unwrap_or_default();
-                w.workspaces.retain(|x| x.id != id);
-                for i in w.instances.iter_mut() {
-                    if i.workspace == Some(id) {
-                        i.workspace = None;
-                    }
-                }
-                self.selected = RowKey::CurrentDir;
-                self.build_rows(w);
-                cx.status(format!(
-                    "Deleted workspace {name} · instances and files kept"
-                ));
+                w.perform(Effect::DeleteWorkspace { id });
                 Outcome::Changed
             }
             ("info", ModalResult::Info(InfoResult::Copy(v))) => {

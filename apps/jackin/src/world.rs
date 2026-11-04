@@ -127,6 +127,14 @@ pub enum Msg {
     AccountsSaved {
         result: Result<Box<Snapshot>, String>,
     },
+    WorkspaceDeleted {
+        id: WorkspaceId,
+        result: Result<Box<Snapshot>, String>,
+    },
+    Restored {
+        instance: InstanceId,
+        result: Result<Box<Snapshot>, String>,
+    },
 
     Refreshed {
         ok: bool,
@@ -194,6 +202,8 @@ impl Msg {
             Msg::RoleAdded { .. } => Some(job::ROLE_ADD),
             Msg::DoctorFinished(_) => Some(job::DOCTOR),
             Msg::AccountsSaved { .. }
+            | Msg::WorkspaceDeleted { .. }
+            | Msg::Restored { .. }
             | Msg::Refreshed { .. }
             | Msg::AccountRefreshed { .. }
             | Msg::Takeover { .. } => None,

@@ -5,12 +5,13 @@ mod common;
 use std::sync::{Arc, Mutex};
 
 use common::*;
-use jackin_console::app::App;
+use jackin_console::app::{App, Route};
 use jackin_console::backend::{
     Backend, ChangeSet, Completion, Effect, FileSource, FolderProbe, OnePassword, ValidationOutcome,
 };
 use jackin_console::domain::account::{AccountRegistry, CredentialSource};
 use jackin_console::domain::agent::Provider;
+use jackin_console::domain::instance::InstanceStatus;
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::workspace::RoleSource;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
@@ -434,4 +435,134 @@ fn failed_accounts_save_keeps_the_form() {
     assert!(shown.contains("disk full"), "{shown}");
     assert!(shown.contains("Spare"), "{shown}");
     assert_eq!(app.world.accounts, before);
+}
+
+/// Removes the workspace and, unlike the simulator, keeps the instances'
+/// link to it, so the roster can only have come from this snapshot.
+fn delete_workspace(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::DeleteWorkspace { id } = effect else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    snapshot.workspaces.retain(|w| w.id != *id);
+    Some(Msg::WorkspaceDeleted {
+        id: *id,
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn refuse_delete(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::DeleteWorkspace { id } = effect else {
+        return None;
+    };
+    Some(Msg::WorkspaceDeleted {
+        id: *id,
+        result: Err("the workspace is open in another session".into()),
+    })
+}
+
+#[test]
+fn delete_workspace_is_an_effect() {
+    let (mut app, backend) = backed(Scenario::Returning, delete_workspace);
+    let doomed = app.world.workspaces[0].clone();
+    let linked: Vec<_> = app
+        .world
+        .instances
+        .iter()
+        .filter(|i| i.workspace == Some(doomed.id))
+        .map(|i| i.id.clone())
+        .collect();
+    assert!(!linked.is_empty());
+    press(&mut app, "down d");
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert_eq!(backend.seen(), [Effect::DeleteWorkspace { id: doomed.id }]);
+    assert!(app.world.workspaces.iter().all(|w| w.id != doomed.id));
+    assert_eq!(
+        status(&app),
+        "Deleted workspace payments-platform · instances and files kept"
+    );
+    for id in linked {
+        assert_eq!(
+            app.world.instance(&id).map(|i| i.workspace),
+            Some(Some(doomed.id)),
+            "the instances are the reply snapshot's, not the screen's"
+        );
+    }
+}
+
+#[test]
+fn refused_delete_leaves_the_row() {
+    let (mut app, _) = backed(Scenario::Returning, refuse_delete);
+    let ids = |w: &World| w.workspaces.iter().map(|w| w.id).collect::<Vec<_>>();
+    let before = ids(&app.world);
+    press(&mut app, "down d");
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert_eq!(ids(&app.world), before);
+    assert_eq!(status(&app), "the workspace is open in another session");
+    assert!(screen(&mut app).contains("payments-platform"));
+}
+
+const RESTORED_AT: i64 = 12_345;
+
+fn restore(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::Restore { instance } = effect else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    for i in snapshot.instances.iter_mut().filter(|i| i.id == *instance) {
+        i.status = InstanceStatus::Running;
+        i.last_seen_secs = RESTORED_AT;
+    }
+    Some(Msg::Restored {
+        instance: instance.clone(),
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn refuse_restore(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::Restore { instance } = effect else {
+        return None;
+    };
+    Some(Msg::Restored {
+        instance: instance.clone(),
+        result: Err("the sandbox was removed".into()),
+    })
+}
+
+#[test]
+fn restore_is_an_effect() {
+    let (mut app, backend) = backed(Scenario::Returning, restore);
+    press(&mut app, "down right down down enter");
+
+    assert_eq!(
+        backend.seen(),
+        [Effect::Restore {
+            instance: "jk-c41e".into()
+        }]
+    );
+    let restored = app.world.instance("jk-c41e").expect("the instance");
+    assert_eq!(restored.status, InstanceStatus::Running);
+    assert_eq!(
+        restored.last_seen_secs, RESTORED_AT,
+        "the instance is the reply snapshot's, not the screen's"
+    );
+    assert_eq!(app.route(), Route::Capsule);
+    assert!(app.world.daemons.contains_key("jk-c41e"));
+}
+
+#[test]
+fn refused_restore_stays_on_the_row() {
+    let (mut app, _) = backed(Scenario::Returning, refuse_restore);
+    press(&mut app, "down right down down enter");
+    settle(&mut app);
+
+    let kept = app.world.instance("jk-c41e").expect("the instance");
+    assert_eq!(kept.status, InstanceStatus::PreservedDirty);
+    assert_eq!(app.route(), Route::Manager);
+    assert!(!app.world.daemons.contains_key("jk-c41e"));
+    assert_eq!(status(&app), "the sandbox was removed");
 }

@@ -278,6 +278,12 @@ pub enum Effect {
         base: Box<AccountRegistry>,
         registry: Box<AccountRegistry>,
     },
+    DeleteWorkspace {
+        id: WorkspaceId,
+    },
+    Restore {
+        instance: InstanceId,
+    },
     Prewarm {
         workspace: WorkspaceId,
     },

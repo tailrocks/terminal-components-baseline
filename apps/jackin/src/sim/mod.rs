@@ -6,6 +6,7 @@ use crate::backend::{
 };
 use crate::domain::account::{AccountOrigin, AccountRegistry, CredentialSource};
 use crate::domain::agent::Provider;
+use crate::domain::instance::InstanceStatus;
 use crate::domain::launch::LaunchContent;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{Workspace, WorkspaceId};
@@ -172,6 +173,9 @@ impl Backend for SimBackend {
             Effect::SaveWorkspace { .. } => return Some(Completion::settle(900)),
             Effect::SaveGlobal { .. } => return Some(Completion::settle(900)),
             Effect::SaveAccounts { .. } => return Some(Completion::settle(0)),
+            Effect::DeleteWorkspace { .. } | Effect::Restore { .. } => {
+                return Some(Completion::settle(0));
+            }
             Effect::Prewarm { workspace } => (
                 2_400,
                 Msg::Prewarmed {
@@ -285,6 +289,34 @@ impl Backend for SimBackend {
         match effect {
             Effect::SaveWorkspace { id, workspace, .. } => {
                 Some(self.settle_workspace_save(*id, workspace, world))
+            }
+            Effect::DeleteWorkspace { id } => {
+                let mut snapshot = snapshot(world);
+                snapshot.workspaces.retain(|w| w.id != *id);
+                for i in &mut snapshot.instances {
+                    if i.workspace == Some(*id) {
+                        i.workspace = None;
+                    }
+                }
+                Some(Msg::WorkspaceDeleted {
+                    id: *id,
+                    result: Ok(Box::new(snapshot)),
+                })
+            }
+            Effect::Restore { instance } => {
+                let mut snapshot = snapshot(world);
+                let result = match snapshot.instances.iter_mut().find(|i| i.id == *instance) {
+                    Some(i) => {
+                        i.status = InstanceStatus::Running;
+                        i.last_seen_secs = world.clock.now_secs();
+                        Ok(Box::new(snapshot))
+                    }
+                    None => Err(format!("{instance} is not in the roster")),
+                };
+                Some(Msg::Restored {
+                    instance: instance.clone(),
+                    result,
+                })
             }
             Effect::SaveGlobal { global, .. } => Some(self.settle_global_save(global, world)),
             Effect::SaveAccounts { base, registry } => {
