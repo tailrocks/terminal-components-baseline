@@ -7,10 +7,27 @@ pins in `mise.toml`), then work from the workspace root.
 
 | Task | Command |
 | --- | --- |
-| Run an app | `cargo run --bin showcase` (also `tablepro`, `holla`, `jackin`) |
-| Functional tests (required gate) | `cargo nextest run --locked --test functional --profile functional --no-tests fail` |
-| Lint | `cargo clippy --locked --all-targets -- -D warnings` |
-| Format check | `cargo fmt --check` |
+| Run an app | `cargo run --bin showcase` (also `tablepro`, `holla`) |
+| Run the jackin preview | `cargo run --bin jackin-preview --features demo` |
+| Demo and PTY tests | `cargo nextest run --locked --workspace --all-features --profile functional --no-tests fail` |
+| Product-shape tests | `cargo nextest run --locked -p jackin-console --no-default-features --features product --profile ci --no-tests fail` |
+| Lint | `cargo clippy --locked --all-targets --all-features -- -D warnings` |
+| Lint, product shape | `cargo clippy --locked -p jackin-console --all-targets --no-default-features --features product -- -D warnings` |
+| Format check | `cargo fmt --all --check` |
+
+The workspace default members are `junie-tui` and `jackin-console`
+(`apps/jackin`), so these commands cover both crates. The `functional`
+profile selects the `functional` target of each, the root journeys and
+the jackin journeys.
+
+`jackin-console` has the feature `demo`, off by default. Without it the
+`fixtures` and `sim` modules, the `jackin-preview` binary and the
+`functional` target of the crate are not built, so a command that does
+not pass `--all-features` skips the demo tests without a failure. CI
+runs `--all-features` in `Rust / <crate>` and the product shape in
+`Rust / <crate> (product)`; `suite-functional` runs the default features
+(see [CI](ci.md#the-demo-feature)). Check that a change did not drop a
+test with `cargo nextest list --locked --workspace --all-features`.
 
 All test commands use `cargo nextest`, never `cargo test`. Run the
 functional suite, clippy and fmt before reporting work as done; see

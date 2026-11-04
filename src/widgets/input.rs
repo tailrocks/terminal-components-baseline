@@ -228,6 +228,7 @@ impl TextInput {
     }
     pub fn masked(mut self) -> Self {
         self.masked = true;
+        self.field.secret = true;
         self
     }
 

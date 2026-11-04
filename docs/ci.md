@@ -9,15 +9,59 @@ change the config and run `velnor-actions generate`.
 
 - **Plan** — computes the job matrix (15-minute timeout; the full
   history checkout is large).
-- **Suite (functional)** — the required gate:
-  `cargo nextest run --locked --test functional --profile functional
-  --no-tests fail`. It must pass with 0 skipped before merge. See
+- **Suite (functional)** — a required check (`required = true`):
+  `cargo nextest run --workspace --profile functional --no-tests fail`
+  (the profile's default filter selects `binary(functional)`). It must
+  pass with 0 skipped before merge. It builds the default features, so
+  it covers the product-shape journeys only; see the
+  [demo feature](#the-demo-feature) below. See
   [functional testing](functional-testing.md) for the CI contract.
-- **Rust read / write** — clippy `-D warnings`, `cargo fmt --check`
-  and the repository checks on the changed surface.
+- **Rust / junie-tui** and **Rust / jackin-console** — one job per
+  default workspace member, built with `--all-features`. Each runs
+  `cargo nextest run --profile ci --package <crate> --no-tests fail
+  --all-features`, which selects every test target of the package (the
+  library, the binaries, `functional` and every other `tests/*.rs`
+  target), plus clippy `-D warnings` on `--all-targets`, `cargo fmt
+  --check` and `cargo doc`. A new test target needs no CI change. The
+  `ci` profile in `.config/nextest.toml` must keep no `default-filter`,
+  or targets drop out of this job.
+- **Rust / junie-tui (product)** and **Rust / jackin-console
+  (product)** — the same five tasks for the product shape. The second
+  configuration in `.velnor/config.toml` selects the feature `product`,
+  so `jackin-console` gets `--no-default-features --features product`
+  (no demo data, no `clap`, no `jackin-preview`). `junie-tui` does not
+  declare `product`, so its job repeats the default features.
+- **Required** — the verdict job. Its `needs` are Plan, the four Rust
+  jobs, `suite-functional` and jactionlint, as listed in the generated
+  `ci.yml`.
 - **DCO** — every commit must carry `Signed-off-by`
   (`git commit -s`, committer Alexey Zhokhov
   <alexey@zhokhov.com>).
+
+## The demo feature
+
+After B1b the feature `demo` is off by default. `Rust / <crate>` runs
+with `--all-features` and owns the demo journeys; `Rust / <crate>
+(product)` runs `--no-default-features --features product`;
+`suite-functional` runs the default features, so it covers the
+product-shape PTY journeys only. A demo journey that fails leaves no
+terminal-evidence artifact. Run the same commands locally with the
+flags above.
+
+The reason is a limit of the generator. `velnor-actions` 0.1.72 gives a
+suite no feature field, so `suite-functional` cannot take
+`--all-features`. The demo journeys (the `functional` target of
+`jackin-console`, which has `required-features = ["demo"]`) therefore
+run in `Rust / jackin-console`. The `ci` profile has no default filter,
+so that job selects them. The cost is that the failure evidence
+artifact and the JUnit report exist only for the suite job, and the
+demo journeys now count against the 15-minute crate timeout.
+
+Two configurations in `.velnor/config.toml` produce the jobs: `default`
+(`all_features = true`) keeps the existing task ids and check names,
+and `product` (`features = ["product"]`) adds the product jobs. The
+feature `product` enables nothing; it exists only so the generator can
+select the product shape, and no code may test it.
 
 Local equivalents are in [development](development.md). Tool pins
 live in `mise.toml`; install with `mise install`.

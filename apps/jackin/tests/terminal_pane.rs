@@ -1,0 +1,310 @@
+//! The terminal pane over a link it does not own: it starts when there is room,
+//! filters what reaches the program, and rebuilds its screen on every attach.
+//! No `demo` feature is needed.
+
+mod pane_support;
+
+use jackin_console::panes::{
+    LinkEvent, LinkFault, LinkStatus, PaneBody, PaneCommand, PaneKey, PanePolicy, PasteOutcome,
+};
+use junie_tui::core::hit::Axis;
+use pane_support::*;
+use ratatui::layout::Rect;
+
+fn numbered(n: u32) -> Vec<u8> {
+    (1..=n)
+        .flat_map(|i| format!("line {i:03}\r\n").into_bytes())
+        .collect()
+}
+
+#[test]
+fn pane_starts_at_the_first_valid_size() {
+    let bench = Bench::new();
+    let mut pane = pane(&bench);
+    assert_eq!(pane.status(), &LinkStatus::Pending);
+    assert_eq!(bench.opened(), 0, "a new pane holds no link");
+
+    pane.sync_size(inner(80, 24));
+    assert_eq!(bench.opened(), 1);
+    assert_eq!(
+        bench.sizes(0),
+        [size(24, 80)],
+        "the track column is not given to the program"
+    );
+    assert_eq!(pane.status(), &LinkStatus::Attaching);
+
+    pane.sync_size(inner(80, 24));
+    assert_eq!(bench.opened(), 1);
+    assert_eq!(bench.sizes(0), [size(24, 80)], "the same size adds nothing");
+
+    pane.sync_size(inner(90, 24));
+    assert_eq!(bench.sizes(0), [size(24, 80), size(24, 90)]);
+    assert_eq!(pane.grid().state().size(), (24, 90));
+}
+
+#[test]
+fn a_pane_below_the_floor_stays_pending() {
+    let bench = Bench::new();
+    let mut narrow = pane(&bench);
+    narrow.sync_size(Rect::new(0, 0, 20, 24));
+    assert_eq!(narrow.status(), &LinkStatus::Pending, "19 columns");
+    let mut short = pane(&bench);
+    short.sync_size(Rect::new(0, 0, 81, 3));
+    assert_eq!(short.status(), &LinkStatus::Pending, "3 rows");
+    assert_eq!(bench.opened(), 0);
+
+    let mut floor = pane(&bench);
+    floor.sync_size(inner(20, 4));
+    assert_eq!(bench.opened(), 1, "20 columns by 4 rows is enough");
+    assert_eq!(bench.sizes(0), [size(4, 20)]);
+}
+
+#[test]
+fn a_refused_open_is_a_failed_pane_and_enter_retries() {
+    let bench = Bench::new();
+    bench.refuse_next("the gateway is not reachable");
+    let mut pane = pane(&bench);
+    pane.sync_size(inner(80, 24));
+    assert_eq!(
+        pane.status(),
+        &LinkStatus::Failed(LinkFault::new("the gateway is not reachable"))
+    );
+    assert_eq!(bench.opened(), 0);
+
+    assert_eq!(pane.key(&key("a"), 10), PaneKey::Consumed);
+    assert_eq!(bench.opened(), 0, "only Enter retries");
+
+    assert_eq!(pane.key(&key("enter"), 20), PaneKey::Consumed);
+    assert_eq!(pane.status(), &LinkStatus::Attaching);
+    assert_eq!(bench.sizes(0), [size(24, 80)]);
+}
+
+#[test]
+fn keys_and_pastes_pass_the_forward_policy() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    assert_eq!(pane.key(&key("ctrl+d"), 1_000), PaneKey::Consumed);
+    assert_eq!(pane.key(&key("ctrl+q"), 1_000), PaneKey::Consumed);
+    assert_eq!(bench.commands(0), [], "0x04 and 0x11 reach no pane");
+
+    assert_eq!(pane.key(&key("ctrl+p"), 1_000), PaneKey::Forwarded);
+    assert_eq!(pane.key(&key("a"), 1_000), PaneKey::Forwarded);
+    assert_eq!(bench.commands(0), [input(&[0x10]), input(b"a")]);
+
+    assert_eq!(pane.paste("x\u{1}y\u{4}z", 1_000), PasteOutcome::Sent);
+    assert_eq!(bench.commands(0)[2], input(b"xyz"));
+
+    bench.output(0, b"\x1b[?2004h");
+    pane.tick(1_100);
+    assert_eq!(pane.paste("one\ntwo", 1_200), PasteOutcome::Sent);
+    assert_eq!(
+        bench.commands(0)[3],
+        input(b"\x1b[200~one\ntwo\x1b[201~"),
+        "wrapped only when the grid has the mode"
+    );
+
+    let big = "x".repeat(64 * 1024 + 1);
+    assert_eq!(pane.paste(&big, 1_300), PasteOutcome::TooLarge);
+    assert_eq!(
+        bench.commands(0).len(),
+        4,
+        "a paste over the limit sends nothing"
+    );
+}
+
+#[test]
+fn a_paste_without_protection_asks_and_a_confirmed_one_runs() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    assert_eq!(
+        pane.paste("a\nb\nc", 1_000),
+        PasteOutcome::NeedsConfirm { lines: 3 }
+    );
+    assert_eq!(bench.commands(0), [], "nothing is sent before the answer");
+    assert_eq!(pane.paste_confirmed("a\nb\nc", 1_100), PasteOutcome::Sent);
+    assert_eq!(bench.commands(0), [input(b"a\nb\nc")]);
+
+    let mut idle = pane_support::pane(&Bench::new());
+    assert_eq!(
+        idle.paste("hello", 0),
+        PasteOutcome::Dropped,
+        "a pane without a link takes nothing"
+    );
+}
+
+#[test]
+fn reattach_builds_a_fresh_grid() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, b"\x1b[3");
+    bench.push(
+        0,
+        LinkEvent::Ended(jackin_console::panes::EndKind::Detached),
+    );
+    pane.tick(900);
+    assert_eq!(
+        pane.status(),
+        &LinkStatus::Detached(jackin_console::panes::DetachCause::Operator)
+    );
+
+    assert_eq!(pane.key(&key("enter"), 1_000), PaneKey::Consumed);
+    assert_eq!(bench.opened(), 2);
+    assert!(bench.dropped(0), "the old link is dropped, not reused");
+    bench.push(1, LinkEvent::Attached);
+    bench.output(1, b"hello");
+    pane.tick(1_000);
+    pane.tick(1_800);
+    assert_eq!(
+        row(&pane, 0),
+        "hello",
+        "a sequence cut off in the old grid does not eat the new text"
+    );
+
+    bench.output(0, b"late");
+    pane.tick(1_900);
+    assert_eq!(
+        row(&pane, 0),
+        "hello",
+        "a late event of the old link is not shown"
+    );
+}
+
+#[test]
+fn reattach_resets_the_view_and_takes_the_size_the_pane_has_now() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, &numbered(100));
+    pane.tick(1_000);
+    pane.viewport_mut().wheel(Axis::Vertical, -3);
+    assert!(!pane.viewport().follow());
+    bench.push(
+        0,
+        LinkEvent::Ended(jackin_console::panes::EndKind::Detached),
+    );
+    pane.tick(1_100);
+    pane.sync_size(inner(99, 30));
+    assert_eq!(
+        bench.sizes(0),
+        [size(24, 80)],
+        "a detached link gets no size"
+    );
+
+    pane.key(&key("enter"), 1_200);
+    assert!(pane.viewport().follow(), "the offset is 0 again");
+    assert!(!pane.viewport().has_selection());
+    assert_eq!(bench.sizes(1), [size(30, 99)]);
+    assert_eq!(pane.grid().state().size(), (30, 99));
+    assert_eq!(pane.grid().state().scrollback_len(), 0);
+}
+
+#[test]
+fn scrollback_cleared_resets_the_viewport() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, &numbered(100));
+    pane.tick(1_000);
+    pane.viewport_mut().wheel(Axis::Vertical, -3);
+    assert!(!pane.viewport().follow());
+    bench.output(0, b"\x1b[3J");
+    pane.tick(1_100);
+    assert!(pane.viewport().follow());
+    assert!(!pane.viewport().has_selection());
+    assert_eq!(pane.grid().state().scrollback_len(), 0);
+}
+
+#[test]
+fn redraw_asks_the_program_and_clear_only_clears_locally() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, &numbered(100));
+    pane.tick(1_000);
+    let before = row(&pane, 23);
+
+    pane.redraw();
+    assert_eq!(bench.commands(0), [PaneCommand::Redraw]);
+
+    pane.viewport_mut().wheel(Axis::Vertical, -3);
+    pane.clear();
+    assert_eq!(
+        bench.commands(0),
+        [PaneCommand::Redraw],
+        "clear sends no byte"
+    );
+    assert_eq!(pane.grid().state().scrollback_len(), 0);
+    assert!(pane.viewport().follow());
+    assert_eq!(row(&pane, 23), before, "the screen itself is kept");
+}
+
+#[test]
+fn replies_go_back_to_the_program_and_a_full_queue_drops_them() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, b"\x1b[3;5H\x1b[6n");
+    pane.tick(1_000);
+    assert_eq!(
+        bench.commands(0),
+        [PaneCommand::Reply(b"\x1b[3;5R".to_vec())]
+    );
+    assert_eq!(pane.dropped_replies(), 0);
+
+    bench.fill(0, true);
+    bench.output(0, b"\x1b[6n");
+    pane.tick(1_100);
+    assert_eq!(
+        pane.dropped_replies(),
+        1,
+        "counted, and the pane did not block"
+    );
+    assert_eq!(bench.commands(0).len(), 1);
+
+    let tight = PanePolicy {
+        paste_max_bytes: 4,
+        ..PanePolicy::default()
+    };
+    let mut small = pane_for(codex(), &bench, tight);
+    small.sync_size(inner(80, 24));
+    assert_eq!(small.paste("12345", 0), PasteOutcome::TooLarge);
+}
+
+#[test]
+fn a_reattach_below_the_floor_waits_for_room() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.push(
+        0,
+        LinkEvent::Ended(jackin_console::panes::EndKind::Detached),
+    );
+    pane.tick(1_100);
+    pane.sync_size(inner(10, 2));
+
+    pane.key(&key("enter"), 1_200);
+    assert_eq!(bench.opened(), 1, "no link opens at the old 80x24");
+    assert_eq!(pane.status(), &LinkStatus::Pending);
+    assert_eq!(
+        pane.note(&words()).map(|n| n.text).as_deref(),
+        Some("Pane too small · zoom with Ctrl+B z")
+    );
+
+    pane.sync_size(inner(60, 20));
+    assert_eq!(bench.opened(), 2, "the next size that fits opens it");
+    assert_eq!(bench.sizes(1), [size(20, 60)]);
+    assert_eq!(pane.status(), &LinkStatus::Attaching);
+}
+
+#[test]
+fn a_paste_the_link_did_not_take_is_not_reported_sent() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.fill(0, true);
+    assert_eq!(pane.paste("hello", 1_000), PasteOutcome::Full);
+    assert_eq!(bench.commands(0), []);
+    assert_eq!(
+        pane.paste_confirmed("a\nb", 1_100),
+        PasteOutcome::Full,
+        "a confirmed paste says so too"
+    );
+
+    bench.fill(0, false);
+    assert_eq!(pane.paste("hello", 1_200), PasteOutcome::Sent);
+    assert_eq!(bench.commands(0), [input(b"hello")]);
+}

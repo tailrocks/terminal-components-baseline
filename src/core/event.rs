@@ -34,7 +34,35 @@ pub enum Input {
     Resize(u16, u16),
     Paste(String),
     Tick,
+    External(External),
 }
+
+#[derive(Clone)]
+pub struct External(std::sync::Arc<dyn std::any::Any + Send + Sync>);
+
+impl External {
+    pub fn new<T: std::any::Any + Send + Sync>(message: T) -> Self {
+        Self(std::sync::Arc::new(message))
+    }
+
+    pub fn downcast_ref<T: std::any::Any>(&self) -> Option<&T> {
+        self.0.downcast_ref()
+    }
+}
+
+impl std::fmt::Debug for External {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("External").finish_non_exhaustive()
+    }
+}
+
+impl PartialEq for External {
+    fn eq(&self, other: &Self) -> bool {
+        std::sync::Arc::ptr_eq(&self.0, &other.0)
+    }
+}
+
+impl Eq for External {}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Key {

@@ -11,9 +11,15 @@ desktop interfaces (macOS is the reference for interaction conventions) and
 to ship that behaviour as reusable widgets, components and blocks, not as
 one-off screen code.
 
-The crate is a component library first. The binaries (`showcase`,
-`tablepro`, `holla`, `jackin-preview`) are consumers that prove the
-components work; they are not where behaviour lives.
+The `junie-tui` crate is a component library first. It holds only
+reusable components, widgets, blocks and shells. The apps (`showcase`,
+`tablepro`, `holla`, `jackin`) are demos of how to build an app from those
+parts; they prove the components work and are not where behaviour lives.
+Code that only jackin needs lives outside the library, in the
+`jackin-console` crate at `apps/jackin` (library `jackin_console` plus the
+`jackin` binary). The jackin repository depends on that library for its
+console. Library code never names a jackin concept (accounts, roles,
+workspaces, Docker, OpenShell, Codex).
 
 ## Hard rules
 
@@ -113,7 +119,9 @@ components work; they are not where behaviour lives.
   demonstrated in the showcase before apps use them. An app never ships a
   pattern the showcase does not show.
   Exception: jackin's intro, outro and cockpit-to-capsule fade are
-  brand-specific and stay in jackin.
+  brand-specific. They live in the `jackin-console` crate (module
+  `jackin_console::rain`), outside the library, so they are neither in the
+  catalog nor in the coverage allowlist.
 - The showcase is a thin consumer too: its pages add wiring, demo data and
   option tables, never drawing, interaction or state logic of their own.
   See the showcase coverage track in

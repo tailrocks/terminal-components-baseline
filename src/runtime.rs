@@ -8,16 +8,17 @@ use ratatui::crossterm::event::{
     self, DisableBracketedPaste, DisableFocusChange, DisableMouseCapture, EnableBracketedPaste,
     EnableFocusChange, EnableMouseCapture, Event, MouseEventKind,
 };
-use ratatui::crossterm::execute;
 use ratatui::crossterm::style::Colored;
+use ratatui::crossterm::terminal::{BeginSynchronizedUpdate, EndSynchronizedUpdate};
 use ratatui::crossterm::terminal::{
     Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen, disable_raw_mode, enable_raw_mode,
 };
+use ratatui::crossterm::{execute, queue};
 use ratatui::style::Color;
 
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
-use crate::core::event::{Input, InputConfig, Key, Mouse, MouseKind, Outcome};
+use crate::core::event::{External, Input, InputConfig, Key, Mouse, MouseKind, Outcome};
 use crate::core::keyboard::{self, KeyboardProtocol};
 
 pub trait Application {
@@ -46,6 +47,49 @@ pub trait Application {
     fn take_output(&mut self) -> Vec<String> {
         Vec::new()
     }
+
+    fn external(&self) -> Option<&ExternalReceiver> {
+        None
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct ExternalSender(std::sync::mpsc::Sender<External>);
+
+impl ExternalSender {
+    pub fn send<T: std::any::Any + Send + Sync>(&self, message: T) -> bool {
+        self.0.send(External::new(message)).is_ok()
+    }
+}
+
+#[derive(Debug)]
+pub struct ExternalReceiver {
+    queue: std::sync::mpsc::Receiver<External>,
+    latency: Duration,
+}
+
+impl ExternalReceiver {
+    pub const DEFAULT_LATENCY: Duration = Duration::from_millis(10);
+
+    pub fn latency(mut self, latency: Duration) -> Self {
+        self.latency = latency;
+        self
+    }
+
+    pub fn drain(&self) -> Vec<External> {
+        self.queue.try_iter().collect()
+    }
+}
+
+pub fn external_channel() -> (ExternalSender, ExternalReceiver) {
+    let (tx, rx) = std::sync::mpsc::channel();
+    (
+        ExternalSender(tx),
+        ExternalReceiver {
+            queue: rx,
+            latency: ExternalReceiver::DEFAULT_LATENCY,
+        },
+    )
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -298,6 +342,7 @@ pub mod job_control {
 fn restore_terminal() {
     let mut out = stdout();
 
+    let _ = execute!(out, EndSynchronizedUpdate);
     let _ = out.write_all(crate::core::shape::reset_sequence().as_bytes());
     if let Some(pop) = keyboard::session::leave() {
         let _ = out.write_all(pop.as_bytes());
@@ -432,7 +477,7 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
         }
         let terminal = &mut session.terminal;
         if dirty {
-            terminal.draw(|f| render_frame(app, f, suppress_colors))?;
+            draw_frame(terminal, app, suppress_colors)?;
             dirty = false;
             if let Some(delay) = first_poll_delay.take() {
                 std::thread::sleep(delay);
@@ -466,6 +511,9 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
         if let Some((_, due)) = hover_due {
             wait = wait.min(due.saturating_duration_since(now));
         }
+        if let Some(external) = app.external() {
+            wait = wait.min(external.latency);
+        }
 
         if pump.has_pending() || poll_uninterrupted(wait)? {
             pump.set_policy(app.coalesce());
@@ -481,14 +529,24 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
                 return Ok(());
             }
             if changed {
-                terminal.draw(|f| render_frame(app, f, suppress_colors))?;
+                draw_frame(terminal, app, suppress_colors)?;
                 if pump.settle(app) {
-                    terminal.draw(|f| render_frame(app, f, suppress_colors))?;
+                    draw_frame(terminal, app, suppress_colors)?;
                 }
             }
         }
         if hover_due.is_some_and(|(_, due)| due <= now + wait) {
             dirty = true;
+        }
+
+        let external = app.external().map(ExternalReceiver::drain);
+        for message in external.into_iter().flatten() {
+            if app.handle(Input::External(message)) == Outcome::Changed {
+                dirty = true;
+            }
+        }
+        if app.should_quit() {
+            return Ok(());
         }
 
         if let Some(size) = terminal_size(terminal)
@@ -504,7 +562,7 @@ fn event_loop(session: &mut TerminalSession, app: &mut impl Application) -> std:
             }
             if app.should_quit() {
                 if dirty {
-                    terminal.draw(|f| render_frame(app, f, suppress_colors))?;
+                    draw_frame(terminal, app, suppress_colors)?;
                 }
                 return Ok(());
             }
@@ -732,6 +790,20 @@ impl InputPump {
             None => false,
         }
     }
+}
+
+fn draw_frame(
+    terminal: &mut ratatui::DefaultTerminal,
+    app: &mut impl Application,
+    suppress_colors: bool,
+) -> std::io::Result<()> {
+    queue!(terminal.backend_mut(), BeginSynchronizedUpdate)?;
+    let drawn = terminal
+        .draw(|f| render_frame(app, f, suppress_colors))
+        .map(|_| ());
+    let ended = execute!(terminal.backend_mut(), EndSynchronizedUpdate);
+    drawn?;
+    ended
 }
 
 fn render_frame(app: &mut impl Application, frame: &mut Frame, suppress_colors: bool) {

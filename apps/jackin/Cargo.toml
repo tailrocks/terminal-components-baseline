@@ -1,0 +1,37 @@
+[package]
+name = "jackin-console"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+description = "The jackin console screens, built from the junie-tui components"
+license = "MIT"
+
+[lib]
+name = "jackin_console"
+path = "src/lib.rs"
+doctest = false
+
+[[bin]]
+name = "jackin-preview"
+path = "src/bin/jackin-preview/main.rs"
+required-features = ["demo"]
+
+[[test]]
+name = "functional"
+path = "tests/functional/main.rs"
+required-features = ["demo"]
+
+[features]
+default = []
+demo = ["dep:clap", "junie-tui/cli"]
+product = []
+
+[dependencies]
+junie-tui = { path = "../..", default-features = false, features = ["terminal"] }
+clap = { workspace = true, optional = true }
+ratatui = { workspace = true }
+
+[dev-dependencies]
+tui-test = { workspace = true }
+tuiscotti-latest = { workspace = true }
+serde_json = { workspace = true }

@@ -1,6 +1,8 @@
+use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, TerminalSnapshot};
 
-use super::support::{App, Point, SHOWCASE, cell_bg, crop, find, find_all, row_text, text};
+use super::bins::SHOWCASE;
+use super::support::{App, Point, cell_bg, crop, find, find_all, row_text, text};
 
 fn inside(point: Point) -> Point {
     Point {
@@ -573,11 +575,8 @@ fn showcase_keyboard_activation_after_click_focus() {
     app.wait_text("Preview ✓");
     app.key("tab");
     app.key("enter");
-    let done = app.wait_screen("keyboard activation fires the focused control", |s| {
-        let t = text(s);
-        t.contains("Run task ✓") || t.contains("Preview ✓")
-    });
-    assert!(text(&done).contains("Preview ✓"));
+    let done = app.wait_text("Cancel ✓");
+    assert!(!text(&done).contains("Preview ✓"));
     app.visual("functional/showcase_keyboard_activation");
     app.finish();
 }
@@ -658,11 +657,20 @@ fn showcase_tree_expand_and_file_selection() {
         s.cell_at(u32::from(gutter.x), u32::from(gutter.y))
             .map(|c| c.text().to_string())
     };
-    let settled = |s: &TerminalSnapshot| {
-        gutter_text(s).as_deref() == Some("▎")
-            && cell_bg(s, label) != tui_test::SnapshotColor::Rgb(56, 56, 62)
-    };
+    let flash = tui_test::SnapshotColor::Rgb(56, 56, 62);
+    // A paused page draws the click flash of the src row until the first frame
+    // after its window; no tick ends it. That frame must come before the
+    // frames of the focus moves, or it is the last write and parks the hidden
+    // cursor on the row instead of the footer. The last expand was fenced, so
+    // the click was handled before this wait starts.
+    std::thread::sleep(
+        std::time::Duration::from_millis(junie_tui::core::pointer::PointerConfig::DEFAULT.flash_ms)
+            + std::time::Duration::from_millis(50),
+    );
     app.move_to(Point { x: 0, y: 0 });
+    app.wait_screen("the click flash on src has ended", |s| {
+        cell_bg(s, label) != flash
+    });
     app.key("tab");
     app.wait_screen("focus leaves the tree", |s| {
         gutter_text(s).as_deref() != Some("▎")
@@ -671,19 +679,6 @@ fn showcase_tree_expand_and_file_selection() {
     app.wait_screen("focus returns to the tree", |s| {
         gutter_text(s).as_deref() == Some("▎")
     });
-
-    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
-    loop {
-        if app.try_sustained(std::time::Duration::from_millis(600), |s| settled(s)) {
-            break;
-        }
-        assert!(
-            std::time::Instant::now() < deadline,
-            "tree row must settle without hover"
-        );
-        app.move_to(Point { x: 0, y: 0 });
-        std::thread::sleep(std::time::Duration::from_millis(100));
-    }
     app.visual("functional/showcase_trees");
     app.finish();
 }
@@ -853,6 +848,12 @@ page_test!(showcase_page_panetree, "panetree", "Pane tree");
 page_test!(showcase_page_codeeditor, "codeeditor", "Code editor");
 page_test!(showcase_page_diff, "diff", "Diff");
 page_test!(showcase_page_terminal, "terminal", "Terminal");
+page_test!(showcase_page_terminalpane, "terminalpane", "Terminal pane");
+page_test!(
+    showcase_page_fixedcontrols,
+    "fixedcontrols",
+    "Fixed controls"
+);
 page_test!(
     showcase_page_textutilities,
     "textutilities",
@@ -885,3 +886,703 @@ page_test!(
     "readonlyreport",
     "Read-only report"
 );
+
+fn terminal_pane(name: &str, opts: &[&str]) -> App {
+    let mut args = vec!["--page", "terminalpane", "--motion", "paused"];
+    for opt in opts {
+        args.extend(["--opt", opt]);
+    }
+    let app = App::new(name, SHOWCASE, &args, 120, 40, "truecolor");
+    app.wait_text("Terminal pane");
+    app.settle();
+    app
+}
+
+fn pane_row(screen: &TerminalSnapshot, title: &str, row: u16) -> (Point, String) {
+    let top = find(screen, title);
+    let y = top.y + 1 + row;
+    (Point { x: 0, y }, row_text(screen, u32::from(y)))
+}
+
+fn cell_at(
+    screen: &TerminalSnapshot,
+    row: (Point, String),
+    needle: &str,
+) -> tui_test::SnapshotCell {
+    let at = row
+        .1
+        .find(needle)
+        .unwrap_or_else(|| panic!("{needle:?} in {:?}", row.1));
+    let col = row.1[..at].chars().count();
+    screen
+        .cell_at(col as u32, u32::from(row.0.y))
+        .expect("pane cell")
+        .clone()
+}
+
+fn replay_row(replay: &str) -> (TerminalSnapshot, (Point, String)) {
+    let app = terminal_pane(
+        "showcase-terminal-replay-start",
+        &[
+            "terminalpane.fixture=midstream",
+            &format!("terminalpane.replay={replay}"),
+        ],
+    );
+    app.click_text("Replay");
+    let screen = app.wait_screen("replayed starting chunk", |s| {
+        text(s).contains("2 of 4 chunks")
+            || text(s).contains("3 of 4 chunks")
+            || text(s).contains("1 of 4 chunks")
+    });
+    let row = pane_row(&screen, "midstream", 0);
+    app.finish();
+    (screen, row)
+}
+
+#[test]
+fn showcase_terminal_replay_mid_sequence() {
+    let app = terminal_pane("showcase-terminal-pane", &[]);
+    let screen = app.settle();
+    assert!(text(&screen).contains("dev@jackin"));
+    for mode in ["app cursor", "bracketed paste", "alt screen", "hide cursor"] {
+        assert!(
+            row_text(&screen, u32::from(find(&screen, mode).y)).contains("off"),
+            "{mode} reads off"
+        );
+    }
+    let coloured = cell_at(&screen, pane_row(&screen, "session", 2), "rgb-green");
+    let bold = cell_at(&screen, pane_row(&screen, "session", 3), "bold");
+    assert!(bold.has(Attrs::BOLD));
+    app.finish();
+
+    let plain = terminal_pane("showcase-terminal-pane-plain", &["terminalpane.colour=off"]);
+    let screen = plain.settle();
+    let uncoloured = cell_at(&screen, pane_row(&screen, "session", 2), "rgb-green");
+    assert_ne!(
+        format!("{:?}", uncoloured.fg()),
+        format!("{:?}", coloured.fg()),
+        "colour off drops the foreground colour"
+    );
+    assert!(
+        cell_at(&screen, pane_row(&screen, "session", 3), "bold").has(Attrs::BOLD),
+        "bold survives without colour"
+    );
+    plain.finish();
+
+    let full = terminal_pane(
+        "showcase-terminal-fullscreen",
+        &["terminalpane.fixture=fullscreen"],
+    );
+    full.click_text("Play all");
+    let screen = full.settle();
+    for mode in ["app cursor", "bracketed paste", "alt screen", "hide cursor"] {
+        assert!(
+            row_text(&screen, u32::from(find(&screen, mode).y)).contains("on"),
+            "{mode} reads on"
+        );
+    }
+    let pane = find(&screen, "fullscreen");
+    full.click(Point {
+        x: pane.x + 4,
+        y: pane.y + 4,
+    });
+    full.key("enter");
+    full.wait_text("Ctrl+G Release");
+    full.key("up");
+    full.wait_text("ESC O A");
+    full.key("ctrl+g");
+    full.wait_absent("Ctrl+G Release");
+    full.click_text("Reset");
+    full.wait_text("0 of 4 chunks");
+    let pane = find(&full.settle(), "fullscreen");
+    full.click(Point {
+        x: pane.x + 4,
+        y: pane.y + 4,
+    });
+    full.key("enter");
+    full.key("up");
+    full.wait_text("ESC [ A");
+    full.key("ctrl+g");
+    full.finish();
+
+    for (replay, shown) in [
+        ("inside a CSI sequence", ";224;84mtail"),
+        ("inside an OSC sequence", "0;titleafter"),
+        ("inside a UTF-8 character", "x"),
+    ] {
+        let (_, row) = replay_row(replay);
+        assert!(row.1.contains(shown), "{replay}: {:?}", row.1);
+    }
+    let (screen, row) = replay_row("stream start");
+    let tail = cell_at(&screen, row, "tail");
+    assert!(format!("{:?}", tail.fg()).contains("72"), "{:?}", tail.fg());
+
+    let mid = terminal_pane(
+        "showcase-terminal-midstream",
+        &[
+            "terminalpane.fixture=midstream",
+            "terminalpane.replay=inside a CSI sequence",
+        ],
+    );
+    mid.click_text("Replay");
+    let literal = mid.wait_text(";224;84mtail");
+    let row = pane_row(&literal, "midstream", 0);
+    let cell = cell_at(&literal, row, ";224;84mtail");
+    assert_ne!(format!("{:?}", cell.fg()), format!("{:?}", tail.fg()));
+    for _ in 0..3 {
+        mid.click_text("Step");
+        mid.settle();
+    }
+    let ready = mid.wait_text("ready $");
+    assert!(!text(&ready).contains(";224;84mtail"));
+    mid.click_text("Replay");
+    mid.wait_text(";224;84mtail");
+    mid.settle();
+    mid.visual("functional/showcase_terminal_replay");
+    mid.finish();
+}
+
+fn mode_reads(screen: &TerminalSnapshot, mode: &str, value: &str) -> bool {
+    row_text(screen, u32::from(find(screen, mode).y)).contains(value)
+}
+
+#[test]
+fn showcase_terminal_play_all_counts_the_leave_chunk() {
+    let app = terminal_pane(
+        "showcase-terminal-leave-chunk",
+        &["terminalpane.fixture=fullscreen"],
+    );
+    app.click_text("Play all");
+    let played = app.wait_text("3 of 4 chunks");
+    assert!(mode_reads(&played, "alt screen", "on"));
+    app.click_text("Step");
+    let left = app.wait_text("4 of 4 chunks");
+    assert!(mode_reads(&left, "alt screen", "off"));
+    app.click_text("Step");
+    app.settle();
+    app.wait_text("4 of 4 chunks");
+    app.finish();
+}
+
+fn small_terminal_keeps_controls(cols: u16, rows: u16) {
+    let app = App::new(
+        &format!("showcase-terminal-pane-{cols}x{rows}"),
+        SHOWCASE,
+        &["--page", "terminalpane", "--motion", "paused"],
+        cols,
+        rows,
+        "truecolor",
+    );
+    let screen = app.wait_text("Replay");
+    assert!(
+        text(&screen).contains("Step") && text(&screen).contains("Play all"),
+        "the controls stay on screen at {cols}x{rows}:\n{}",
+        text(&screen)
+    );
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_pane_fits_80x24() {
+    small_terminal_keeps_controls(80, 24);
+}
+
+#[test]
+fn showcase_terminal_pane_fits_120x20() {
+    small_terminal_keeps_controls(120, 20);
+}
+
+const FIXED_KEEP_AWAKE: &str = "Always off · the host decides";
+const FIXED_DIRTY_EXIT: &str = "Always ask · the policy is managed";
+const FIXED_TYPED_KEY: &str = "Not available · managed by policy";
+const FIXED_DISABLE: &str = "Cannot disable · all stay on";
+const FIXED_MANAGED_ROW: &str = "Managed by policy · cannot be changed";
+
+fn fixed_page_in(name: &str, opts: &[&str], cols: u16, rows: u16, motion: &str) -> App {
+    let mut args = vec!["--page", "fixedcontrols", "--motion", motion];
+    for opt in opts {
+        args.extend(["--opt", opt]);
+    }
+    let app = App::new(name, SHOWCASE, &args, cols, rows, "truecolor");
+    app.wait_text("Keep awake");
+    app.settle();
+    app
+}
+
+fn fixed_page(name: &str, opts: &[&str], cols: u16, rows: u16) -> App {
+    fixed_page_in(name, opts, cols, rows, "reduced")
+}
+
+fn footer_row(screen: &TerminalSnapshot) -> String {
+    let rows = text(screen).lines().count() as u32;
+    row_text(screen, rows - 1)
+}
+
+fn refused_with(app: &App, reason: &str) -> TerminalSnapshot {
+    app.wait_screen(&format!("status reads {reason}"), |s| {
+        footer_row(s).contains(reason)
+    })
+}
+
+fn status_gone(app: &App, reason: &str) -> TerminalSnapshot {
+    app.wait_screen("status expired", |s| !footer_row(s).contains(reason))
+}
+
+fn status_cleared(app: &App, reason: &str) -> TerminalSnapshot {
+    app.key("f9");
+    app.wait_screen("status cleared", |s| !footer_row(s).contains(reason))
+}
+
+fn row_with(screen: &TerminalSnapshot, needle: &str) -> String {
+    row_text(screen, u32::from(find(screen, needle).y))
+}
+
+#[test]
+fn showcase_fixed_controls_refuse_with_a_reason_and_never_leak_it() {
+    let app = fixed_page_in(
+        "showcase-fixed",
+        &["fixedcontrols.status=sticky"],
+        120,
+        40,
+        "paused",
+    );
+    let initial = app.screen();
+    assert!(row_with(&initial, "Keep awake").contains(FIXED_KEEP_AWAKE));
+    assert!(text(&initial).contains(FIXED_DIRTY_EXIT));
+    assert!(!footer_row(&initial).contains(FIXED_KEEP_AWAKE));
+
+    app.key("tab");
+    app.key("tab");
+    app.key("space");
+    let keyed = refused_with(&app, FIXED_KEEP_AWAKE);
+    assert!(text(&keyed).contains("[ ] Keep awake"));
+    assert!(row_with(&keyed, "Keep awake").contains('▎'));
+    assert_eq!(footer_row(&keyed).matches(FIXED_KEEP_AWAKE).count(), 1);
+    status_cleared(&app, FIXED_KEEP_AWAKE);
+    app.click(inside(find(&app.screen(), "Keep awake")));
+    let clicked = refused_with(&app, FIXED_KEEP_AWAKE);
+    assert!(text(&clicked).contains("[ ] Keep awake"));
+    status_cleared(&app, FIXED_KEEP_AWAKE);
+
+    app.key("tab");
+    app.key("space");
+    app.wait_text("[ ] Notify on exit");
+    assert!(!footer_row(&app.screen()).contains(FIXED_KEEP_AWAKE));
+    app.click(inside(find(&app.screen(), "Notify on exit")));
+    app.wait_text("[✓] Notify on exit");
+    assert!(!footer_row(&app.screen()).contains(FIXED_KEEP_AWAKE));
+
+    app.key("tab");
+    app.key("enter");
+    let select = refused_with(&app, FIXED_DIRTY_EXIT);
+    assert!(!text(&select).contains("keep"));
+    status_cleared(&app, FIXED_DIRTY_EXIT);
+    let label = find(&app.screen(), "On dirty exit");
+    app.click(Point {
+        x: label.x + 2,
+        y: label.y + 1,
+    });
+    let select = refused_with(&app, FIXED_DIRTY_EXIT);
+    assert!(!text(&select).contains("keep"));
+    status_cleared(&app, FIXED_DIRTY_EXIT);
+
+    app.key("tab");
+    app.key("enter");
+    refused_with(&app, FIXED_DISABLE);
+    status_cleared(&app, FIXED_DISABLE);
+    app.click(inside(find(&app.screen(), "Disable")));
+    refused_with(&app, FIXED_DISABLE);
+    status_cleared(&app, FIXED_DISABLE);
+
+    app.key("tab");
+    app.key("down");
+    app.key("down");
+    let landed = app.wait_screen("cursor lands on the fixed option", |s| {
+        row_with(s, "Typed key").contains('▎')
+    });
+    assert!(text(&landed).contains("(●) Password manager"));
+    assert!(text(&landed).contains("( ) Typed key"));
+    assert!(!footer_row(&landed).contains(FIXED_TYPED_KEY));
+    app.key("space");
+    let radio = refused_with(&app, FIXED_TYPED_KEY);
+    assert!(text(&radio).contains("(●) Password manager"));
+    status_cleared(&app, FIXED_TYPED_KEY);
+    app.click(inside(find(&app.screen(), "Typed key")));
+    let radio = refused_with(&app, FIXED_TYPED_KEY);
+    assert!(text(&radio).contains("(●) Password manager"));
+    status_cleared(&app, FIXED_TYPED_KEY);
+
+    app.key("tab");
+    app.key("down");
+    app.wait_screen("cursor lands on the fixed row", |s| {
+        row_with(s, "Managed policy").contains('▎')
+    });
+    app.key("space");
+    let list = refused_with(&app, FIXED_MANAGED_ROW);
+    assert!(!row_with(&list, "Managed policy").contains('✓'));
+    status_cleared(&app, FIXED_MANAGED_ROW);
+    app.click(inside(find(&app.screen(), "Managed policy")));
+    let list = refused_with(&app, FIXED_MANAGED_ROW);
+    assert!(!row_with(&list, "Managed policy").contains('✓'));
+    status_cleared(&app, FIXED_MANAGED_ROW);
+    app.click(inside(find(&app.screen(), "Team policy")));
+    let live = app.wait_screen("a live row ticks", |s| {
+        row_with(s, "Team policy").contains('✓')
+    });
+    assert!(!footer_row(&live).contains(FIXED_MANAGED_ROW));
+    app.finish();
+}
+
+#[test]
+fn showcase_fixed_controls_reason_fades_after_five_seconds() {
+    let app = fixed_page("showcase-fixed-fade", &[], 120, 40);
+    app.key("tab");
+    app.key("tab");
+    app.key("space");
+    refused_with(&app, FIXED_KEEP_AWAKE);
+    let gone = status_gone(&app, FIXED_KEEP_AWAKE);
+    assert!(text(&gone).contains("[ ] Keep awake"));
+    app.finish();
+}
+
+#[test]
+fn showcase_fixed_controls_sticky_reason_stays_until_the_next_key() {
+    for (mode, stays) in [("5 s", true), ("sticky", false)] {
+        let value = format!("fixedcontrols.status={mode}");
+        let app = fixed_page_in(
+            &format!("showcase-fixed-{}", mode.replace(' ', "")),
+            &[&value],
+            120,
+            40,
+            "paused",
+        );
+        app.key("tab");
+        app.key("tab");
+        app.key("space");
+        refused_with(&app, FIXED_KEEP_AWAKE);
+        app.key("tab");
+        let next = app.wait_screen("focus moves to the live sibling", |s| {
+            row_with(s, "Notify on exit").contains('▎')
+        });
+        if stays {
+            assert!(footer_row(&next).contains(FIXED_KEEP_AWAKE), "{mode}");
+        } else {
+            let cleared = app.wait_screen("the next key clears a sticky reason", |s| {
+                !footer_row(s).contains(FIXED_KEEP_AWAKE)
+            });
+            assert!(!footer_row(&cleared).contains(FIXED_KEEP_AWAKE), "{mode}");
+        }
+        app.finish();
+    }
+}
+
+#[test]
+fn showcase_fixed_controls_are_live_when_the_option_says_so() {
+    let app = fixed_page(
+        "showcase-fixed-live",
+        &["fixedcontrols.state=live"],
+        120,
+        40,
+    );
+    let initial = app.screen();
+    assert!(!text(&initial).contains(FIXED_KEEP_AWAKE));
+    app.click(inside(find(&initial, "Keep awake")));
+    let on = app.wait_text("[✓] Keep awake");
+    assert!(!footer_row(&on).contains(FIXED_KEEP_AWAKE));
+    app.click(inside(find(&app.screen(), "Typed key")));
+    app.wait_text("(●) Typed key");
+    app.finish();
+}
+
+#[test]
+fn showcase_fixed_controls_show_the_full_reason_at_80x24() {
+    let app = fixed_page("showcase-fixed-small", &[], 80, 24);
+    app.click(inside(find(&app.screen(), "Keep awake")));
+    let s = refused_with(&app, FIXED_KEEP_AWAKE);
+    assert!(text(&s).contains("[ ] Keep awake"));
+    app.finish();
+}
+
+#[test]
+fn showcase_fixedcontrols_focused_refused() {
+    let app = App::new(
+        "showcase-fixed-refused",
+        SHOWCASE,
+        &["--page", "fixedcontrols", "--motion", "paused"],
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("Keep awake");
+    app.settle();
+    app.key("tab");
+    app.key("tab");
+    app.key("space");
+    let refused = refused_with(&app, FIXED_KEEP_AWAKE);
+    assert!(row_with(&refused, "Keep awake").contains('▎'));
+    assert!(text(&refused).contains("[ ] Keep awake"));
+    app.visual("functional/showcase_fixedcontrols_focused_refused");
+}
+
+fn terminal_viewport(name: &str, opts: &[&str]) -> App {
+    let mut args = vec!["--page", "terminalviewport", "--motion", "paused"];
+    for opt in opts {
+        args.extend(["--opt", opt]);
+    }
+    let app = App::new(name, SHOWCASE, &args, 120, 40, "truecolor");
+    app.wait_text("Terminal viewport");
+    app.settle();
+    app
+}
+
+page_test!(
+    showcase_page_terminalviewport,
+    "terminalviewport",
+    "Terminal viewport"
+);
+
+fn viewport_top(screen: &TerminalSnapshot) -> Point {
+    find(screen, "23 step 23 finished")
+}
+
+fn at(top: Point, col: u16, row: u16) -> Point {
+    Point {
+        x: top.x + col,
+        y: top.y + row,
+    }
+}
+
+fn status_row(screen: &TerminalSnapshot) -> String {
+    let rows = text(screen).lines().count() as u32;
+    row_text(screen, rows - 1)
+}
+
+#[test]
+fn showcase_terminal_viewport_focus_shows_the_program_cursor() {
+    let app = terminal_viewport("showcase-terminal-viewport-focus", &[]);
+    let screen = app.settle();
+    assert!(
+        !screen.cursor().visible(),
+        "an unfocused pane shows no cursor"
+    );
+    let top = viewport_top(&screen);
+    app.click(at(top, 3, 2));
+    let focused = app.wait_screen("the pane takes focus and shows its cursor", |s| {
+        s.cursor().visible()
+    });
+    let prompt = find(&focused, "dev@jackin:~/src$");
+    let cursor = focused.cursor();
+    assert_eq!(
+        (cursor.col(), cursor.row()),
+        (
+            u32::from(prompt.x) + "dev@jackin:~/src$ ".len() as u32,
+            u32::from(prompt.y)
+        ),
+        "the hardware cursor is the program's cursor"
+    );
+    app.wheel(at(top, 3, 2), false, 1);
+    let scrolled = app.wait_screen("scrolled back", |s| text(s).contains("20–31 of 34"));
+    assert!(
+        !scrolled.cursor().visible(),
+        "a scrolled-back pane has no cursor"
+    );
+    app.key("end");
+    let live = app.wait_screen("End returns to the live tail", |s| {
+        text(s).contains("live") && s.cursor().visible()
+    });
+    assert!(text(&live).contains("23 step 23 finished"));
+    app.settle();
+    app.visual("functional/showcase_terminal_viewport_focused");
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_wheel_scrolls_and_keeps_its_place() {
+    let app = terminal_viewport("showcase-terminal-viewport-wheel", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    assert!(text(&screen).contains("scroll      live tail"));
+    app.wheel(at(top, 3, 2), false, 1);
+    let scrolled = app.wait_screen("one notch moves three rows", |s| {
+        text(s).contains("20 step 20 finished") && text(s).contains("20–31 of 34")
+    });
+    assert!(!text(&scrolled).contains("dev@jackin:~/src$"));
+    assert!(text(&scrolled).contains("scroll      3 rows up"));
+
+    app.click_text("Feed line");
+    let fed = app.wait_screen("new output does not move what is read", |s| {
+        text(s).contains("20–31 of 35")
+    });
+    assert!(text(&fed).contains("20 step 20 finished"));
+    assert!(text(&fed).contains("scroll      4 rows up"));
+    assert!(
+        !text(&fed).contains("31 step 31 finished"),
+        "the new line is below the view"
+    );
+    app.wheel(at(top, 3, 2), true, 2);
+    let tail = app.wait_screen("the wheel returns to the live tail", |s| {
+        text(s).contains("scroll      live tail")
+    });
+    assert!(text(&tail).contains("31 step 31 finished"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_scrolled_back_shows_its_place() {
+    let app = terminal_viewport("showcase-terminal-viewport-scrolled", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    app.wheel(at(top, 3, 2), false, 1);
+    app.wait_text("20–31 of 34");
+    app.settle();
+    app.visual("functional/showcase_terminal_viewport_scrolled");
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_copy_joins_a_wrapped_path() {
+    let app = terminal_viewport("showcase-terminal-viewport-copy", &[]);
+    let screen = app.settle();
+    let path = find(&screen, "open /home/dev");
+    app.down(at(path, 5, 0));
+    app.drag_to(at(path, 20, 1));
+    app.drag_to(at(path, 4, 2));
+    app.up(at(path, 4, 2));
+    let copied = app.wait_screen("a drag release copies the selection", |s| {
+        status_row(s).contains("Copied 75 characters")
+    });
+    assert!(text(&copied).contains("copied      1 line · 75 characters"));
+    assert!(text(&copied).contains("selection   75 characters"));
+    app.settle();
+    app.visual("functional/showcase_terminal_viewport_selection");
+
+    app.key("esc");
+    let cleared = app.wait_screen("Esc clears the selection", |s| {
+        text(s).contains("selection   none")
+    });
+    assert!(text(&cleared).contains("copied      1 line · 75 characters"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_double_click_selects_a_word() {
+    let app = terminal_viewport("showcase-terminal-viewport-word", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    let word = at(top, 14, 0);
+    app.click(word);
+    app.click(word);
+    let selected = app.wait_screen("a double click selects the word", |s| {
+        text(s).contains("selection   8 characters")
+    });
+    assert!(status_row(&selected).contains("Copied 8 characters · finished"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_keys_page_and_clear() {
+    let app = terminal_viewport("showcase-terminal-viewport-keys", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    app.click(at(top, 3, 2));
+    app.key("pageup");
+    app.wait_text("11–22 of 34");
+    app.key("home");
+    app.wait_text("1–12 of 34");
+    app.key("pagedown");
+    app.wait_text("13–24 of 34");
+    app.key("end");
+    let live = app.wait_screen("End returns to the live tail", |s| {
+        text(s).contains("scroll      live tail")
+    });
+    assert!(text(&live).contains("23 step 23 finished"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_fullscreen_has_no_history_to_scroll() {
+    let app = terminal_viewport(
+        "showcase-terminal-viewport-fullscreen",
+        &["terminalviewport.fixture=fullscreen"],
+    );
+    let screen = app.settle();
+    assert!(text(&screen).contains("the alternate screen has no"));
+    assert!(text(&screen).contains("alt screen  on"));
+    let top = find(&screen, "the alternate screen has no");
+    app.wheel(at(top, 3, 1), false, 2);
+    app.settle();
+    let after = app.settle();
+    assert!(text(&after).contains("the alternate screen has no"));
+    assert!(text(&after).contains("scroll      live tail"));
+    assert!(!text(&after).contains("step 1"));
+    app.visual("functional/showcase_terminal_viewport_fullscreen");
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_states() {
+    let app = terminal_viewport("showcase-terminal-viewport-states", &[]);
+    app.click_text("States");
+    app.wait_text("overflow");
+    app.settle();
+    app.visual("functional/showcase_terminal_viewport_states");
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_follows_the_pane_size() {
+    let app = terminal_viewport("showcase-terminal-viewport-size", &[]);
+    let screen = app.settle();
+    assert!(text(&screen).contains("grid        38x12 + track"));
+    app.resize(120, 20);
+    let small = app.wait_screen("the grid takes the rows the pane has", |s| {
+        text(s).contains("grid        38x7 + track")
+    });
+    assert!(text(&small).contains("23 step 23 finished"));
+    app.resize(120, 40);
+    let again = app.wait_screen("and gives them back", |s| {
+        text(s).contains("grid        38x12 + track")
+    });
+    assert!(text(&again).contains("23 step 23 finished"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_reset_drops_scroll_and_selection() {
+    let app = terminal_viewport("showcase-terminal-viewport-reset", &[]);
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    app.wheel(at(top, 3, 2), false, 2);
+    app.wait_text("scroll      6 rows up");
+    app.down(at(top, 0, 1));
+    app.drag_to(at(top, 6, 1));
+    app.up(at(top, 6, 1));
+    app.wait_text("selection   6 characters");
+    app.click_text("Reset");
+    let fresh = app.wait_screen("Reset starts the session over", |s| {
+        text(s).contains("scroll      live tail") && text(s).contains("selection   none")
+    });
+    assert!(text(&fresh).contains("history     22 rows"));
+    assert!(text(&fresh).contains("copied      nothing yet"));
+    app.finish();
+}
+
+#[test]
+fn showcase_terminal_viewport_pointer_policy_is_an_option() {
+    let app = terminal_viewport(
+        "showcase-terminal-viewport-policy",
+        &["terminalviewport.pointer_select=off"],
+    );
+    let screen = app.settle();
+    let top = viewport_top(&screen);
+    app.down(at(top, 0, 1));
+    app.drag_to(at(top, 6, 1));
+    app.up(at(top, 6, 1));
+    app.settle();
+    let after = app.settle();
+    assert!(
+        text(&after).contains("selection   none"),
+        "with pointer selection off a drag selects nothing"
+    );
+    app.finish();
+}

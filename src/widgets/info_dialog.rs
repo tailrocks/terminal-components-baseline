@@ -113,7 +113,7 @@ impl InfoDialog {
             title: title.to_owned(),
             meta: None,
             intro: vec![],
-            props: PropsList::new(id.sub("props"), props),
+            props: PropsList::new(id.sub("props"), props).wrapping(),
             detail: vec![],
             detail_scroll: ScrollPane::default(),
             actions: vec![],
@@ -167,6 +167,24 @@ impl InfoDialog {
     pub fn error(mut self) -> Self {
         self.error_title = true;
         self
+    }
+
+    /// The intro as drawn in `width` columns: a line that does not fit wraps
+    /// onto more lines of its tone.
+    fn intro_lines(&self, width: usize) -> Vec<(String, Tone)> {
+        self.intro
+            .iter()
+            .flat_map(|(line, tone)| {
+                if crate::ui::text::width(line) <= width {
+                    vec![(line.clone(), *tone)]
+                } else {
+                    crate::ui::text::wrap(line, width)
+                        .into_iter()
+                        .map(|part| (part, *tone))
+                        .collect()
+                }
+            })
+            .collect()
     }
 
     pub fn initial_focus(&self) -> WidgetId {
@@ -337,8 +355,11 @@ impl InfoDialog {
         let s = ctx.theme.strings;
         let old = std::mem::replace(&mut self.strings, s);
         crate::theme::Strings::follow(&mut self.close.label, old.close, s.close);
-        let intro_h = self.intro.len() as u16 + u16::from(!self.intro.is_empty());
-        let props_h = self.props.props.len() as u16;
+        let probe = crate::ui::modal::Frame::new(self.width, 1);
+        let inner_w = probe.area(screen).inner(probe.margin).width;
+        let intro = self.intro_lines(inner_w as usize);
+        let intro_h = intro.len() as u16 + u16::from(!intro.is_empty());
+        let props_h = self.props.height_at(inner_w + 1);
         let detail_h = if self.detail.is_empty() {
             0
         } else {
@@ -367,7 +388,10 @@ impl InfoDialog {
             );
         }
         let mut y = inner.y;
-        for (l, tone) in &self.intro {
+        for (l, tone) in &intro {
+            if y >= inner.bottom() {
+                break;
+            }
             buf.set_string(
                 inner.x,
                 y,
@@ -376,7 +400,7 @@ impl InfoDialog {
             );
             y += 1;
         }
-        if !self.intro.is_empty() {
+        if !intro.is_empty() {
             y += 1;
         }
         let avail = inner.bottom().saturating_sub(y + 2);

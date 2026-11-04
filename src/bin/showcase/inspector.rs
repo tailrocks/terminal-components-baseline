@@ -4,7 +4,7 @@ use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 use ratatui::style::Color;
 
-use crate::app::{NAV_ENTRIES, PageId};
+use crate::app::PageId;
 use crate::options::{Group, OptSet, OptionsView, SHELL, page_options};
 use crate::pages::{Cx, Hint, PageEvent};
 use junie_tui::core::event::{Input, Outcome};
@@ -50,7 +50,7 @@ pub struct Inspector {
 }
 
 fn view(page: PageId) -> OptionsView {
-    let heading: &'static str = NAV_ENTRIES[page.index()].label;
+    let heading: &'static str = page.entry().label;
     OptionsView::new(
         ID.sub("options"),
         &[
@@ -117,6 +117,7 @@ impl Inspector {
             }
             Input::Resize(w, h) => format!("Resize {w}×{h}"),
             Input::Paste(text) => format!("Paste {} chars", text.chars().count()),
+            Input::External(_) => "External message".to_owned(),
         };
         self.inputs += 1;
         self.log.push_front((what, format!("{out:?}")));

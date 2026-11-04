@@ -1,4 +1,5 @@
-use super::support::{App, Point, TABLEPRO, crop, find, find_all, row_text, text};
+use super::bins::TABLEPRO;
+use super::support::{App, Point, crop, find, find_all, row_text, text};
 
 fn inside(point: Point) -> Point {
     Point {
@@ -96,6 +97,7 @@ fn tablepro_write_confirmation_cancels_retries_and_executes_only_when_armed() {
     app.click_text("Close anyway");
     app.wait_text("No open tabs");
 
+    app.advance_clock(5_000);
     app.wait_screen("status flash faded before freeze", |s| {
         let footer = row_text(s, 49);
         !footer.contains("Cancelled")
@@ -336,6 +338,7 @@ fn close_all_tabs(app: &App) {
 }
 
 fn freeze(app: &App, test_id: &str) {
+    app.advance_clock(5_000);
     app.wait_absent("\u{2713} Connected to");
     app.visual(test_id);
 }
@@ -482,6 +485,7 @@ fn tablepro_history_rerun_and_help_and_layout() {
         text(s).to_lowercase().contains("history")
     });
 
+    app.advance_clock(5_000);
     app.wait_screen("history entry settled", |s| {
         let t = text(s);
 

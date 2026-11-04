@@ -11,7 +11,7 @@ use crate::core::id::WidgetId;
 use crate::core::keyboard::KeyboardProtocol;
 use crate::core::pointer::{PointerParts, PointerRouter};
 use crate::motion::Motion;
-use crate::runtime::{Application, Coalesce};
+use crate::runtime::{Application, Coalesce, ExternalReceiver};
 use crate::theme::Theme;
 use crate::ui::ctx::{Interaction, RenderCtx, fill};
 use crate::widgets::hintbar::HintKeys;
@@ -19,7 +19,7 @@ use crate::widgets::keyhint::Hint;
 use crate::widgets::too_small::TooSmall;
 
 use super::{Clipboard, Copied, Cx, Request, StatusLine};
-use crate::clock::Moment;
+use crate::clock::{Moment, TestRequest};
 use crate::theme::Strings;
 use crate::ui::context::ContextConfig;
 use crate::ui::leave::{LeaveGuard, Stakes};
@@ -60,7 +60,7 @@ pub struct Shell<P = ()> {
 
     pub motion: Motion,
 
-    pub clock_steps: bool,
+    pub test_requests: bool,
 
     pub focus_fallback: FocusFallback,
 
@@ -100,7 +100,7 @@ impl<P> Shell<P> {
             too_small: false,
             quit: false,
             motion: Motion::Full,
-            clock_steps: crate::clock::ClockStep::opted_in(),
+            test_requests: crate::clock::TestRequest::opted_in(),
             focus_fallback: FocusFallback::Nearest,
             footer_keys: HintKeys::default(),
             context: ContextConfig::DEFAULT,
@@ -267,6 +267,10 @@ pub trait App {
     fn keyboard_protocol(&self) -> KeyboardProtocol {
         KeyboardProtocol::current()
     }
+
+    fn external(&self) -> Option<&ExternalReceiver> {
+        None
+    }
 }
 
 pub fn blur_fan_out<A: App + ?Sized>(app: &mut A) -> Outcome {
@@ -339,27 +343,43 @@ pub fn render<A: App + ?Sized>(app: &mut A, frame: &mut Frame) {
 }
 
 pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
+    let request = match &input {
+        Input::Paste(text) if app.shell().test_requests => TestRequest::parse(text),
+        _ => None,
+    };
+    if request == Some(TestRequest::Fence) {
+        super::clipboard::queue_output(TestRequest::FENCE_ACK.to_owned());
+        return Outcome::Ignored;
+    }
+    crate::core::refusal::clear_refusal();
+    let shown = |app: &A| {
+        app.shell()
+            .status
+            .get()
+            .map(|(text, tone)| (text.to_owned(), tone))
+    };
+    let status_before = shown(app);
     let seen = app.shell_mut().status.on_input(&input);
     if let Input::Resize(w, h) = input {
         app.shell_mut().size = (w, h);
     }
     let logged = input.clone();
 
-    let step = match &input {
-        Input::Paste(text) if app.shell().clock_steps && app.shell().motion == Motion::Paused => {
-            crate::clock::ClockStep::parse(text)
-        }
+    let step = match request {
+        Some(TestRequest::Advance(ms)) => Some(ms),
         _ => None,
     };
     let mut out = match step.and_then(|ms| app.advance_clock(ms)) {
         Some(out) => out,
         None => app.on_input(input),
     };
-    if seen {
+    if seen || shown(app) != status_before {
         out = out.or(Outcome::Changed);
     }
     out = out.or(blur_fan_out(app));
-    app.after_input(&logged, out)
+    let out = app.after_input(&logged, out);
+    crate::core::refusal::clear_refusal();
+    out
 }
 
 impl<A: App> Application for A {
@@ -390,5 +410,8 @@ impl<A: App> Application for A {
     }
     fn take_output(&mut self) -> Vec<String> {
         super::clipboard::take_output()
+    }
+    fn external(&self) -> Option<&ExternalReceiver> {
+        App::external(self)
     }
 }

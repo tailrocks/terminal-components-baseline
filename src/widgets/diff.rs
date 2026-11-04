@@ -169,6 +169,14 @@ impl DiffFile {
     }
 }
 
+/// A changed file the list names but whose content was not read, so it has
+/// no hunks.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct UnreadFile {
+    pub path: String,
+    pub status: DiffStatus,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum DiffMode {
     #[default]

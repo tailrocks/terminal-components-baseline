@@ -2,17 +2,21 @@ use std::cell::{Cell, RefCell};
 use std::path::PathBuf;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
+use junie_tui::clock::TestRequest;
 use tui_test::{
     CheckedMouseAction, KeyAction, LaunchEnvMode, LaunchOptions, MouseOptions, OpenOptions,
     Operation, OperationResult, RunOptions, Session, SnapshotCell, SnapshotScope, TerminalSnapshot,
     WaitQuietOptions,
 };
 
-pub const SHOWCASE: &str = env!("CARGO_BIN_EXE_showcase");
-pub const TABLEPRO: &str = env!("CARGO_BIN_EXE_tablepro");
-pub const HOLLA: &str = env!("CARGO_BIN_EXE_holla");
-pub const JACKIN: &str = env!("CARGO_BIN_EXE_jackin");
 const TIMEOUT: Duration = Duration::from_secs(10);
+
+fn evidence_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_TARGET_TMPDIR"))
+        .parent()
+        .expect("the target directory holds the tmp directory")
+        .join("functional")
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Point {
@@ -33,9 +37,7 @@ impl App {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        let directory = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("target/functional")
-            .join(format!("{name}-{}-{stamp}", std::process::id()));
+        let directory = evidence_root().join(format!("{name}-{}-{stamp}", std::process::id()));
         let home = directory.join("home");
         std::fs::create_dir_all(&home).expect("create isolated application home");
         let mut launch = LaunchOptions::new(bin)
@@ -92,6 +94,11 @@ impl App {
     }
 
     pub fn screen(&self) -> TerminalSnapshot {
+        self.fence();
+        self.capture()
+    }
+
+    fn capture(&self) -> TerminalSnapshot {
         self.session
             .capture_snapshot(SnapshotScope::ActiveScreen)
             .expect("capture live terminal")
@@ -102,7 +109,16 @@ impl App {
         reason: &str,
         predicate: impl Fn(&TerminalSnapshot) -> bool,
     ) -> TerminalSnapshot {
-        let deadline = Instant::now() + TIMEOUT;
+        self.wait_screen_within(reason, TIMEOUT, predicate)
+    }
+
+    fn wait_screen_within(
+        &self,
+        reason: &str,
+        budget: Duration,
+        predicate: impl Fn(&TerminalSnapshot) -> bool,
+    ) -> TerminalSnapshot {
+        let deadline = Instant::now() + budget;
         loop {
             let screen = self.screen();
             self.assert_running(reason);
@@ -161,7 +177,7 @@ impl App {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         let store = tuiscotti_latest::check::FrozenStore::new(
             &root.join("tests/functional/baselines"),
-            &root.join("target/functional/artifacts"),
+            &evidence_root().join("artifacts"),
         )
         .expect("open Tuiscotti frozen store");
         let outcome = store
@@ -207,6 +223,14 @@ impl App {
         })
     }
 
+    pub fn wait_text_after_animation(&self, needle: &str, animation: Duration) -> TerminalSnapshot {
+        self.wait_screen_within(
+            &format!("visible {needle}"),
+            TIMEOUT + animation,
+            |screen| text(screen).contains(needle),
+        )
+    }
+
     pub fn wait_absent(&self, needle: &str) -> TerminalSnapshot {
         self.wait_screen(&format!("absent {needle}"), |screen| {
             !text(screen).contains(needle)
@@ -214,6 +238,7 @@ impl App {
     }
 
     pub fn settle(&self) -> TerminalSnapshot {
+        self.fence();
         self.session
             .wait_quiet(&WaitQuietOptions::new(TIMEOUT, Duration::from_millis(150)).unwrap())
             .expect("terminal must settle after the semantic assertion");
@@ -251,7 +276,51 @@ impl App {
     }
 
     pub fn advance_clock(&self, milliseconds: u64) {
-        self.paste(&format!("junie-tui:advance-clock:{milliseconds}"));
+        self.paste(&TestRequest::advance(milliseconds));
+    }
+
+    fn accepts_paste(&self) -> bool {
+        let OperationResult::State(state) = self
+            .session
+            .execute(Operation::State)
+            .expect("process state")
+        else {
+            panic!("missing process state");
+        };
+        state.exited.is_none() && state.modes.get("bracketed_paste") == Some(&true)
+    }
+
+    fn bells(&self) -> u64 {
+        let OperationResult::BellCount(count) = self
+            .session
+            .execute(Operation::GetBellCount)
+            .expect("bell count")
+        else {
+            panic!("missing bell count");
+        };
+        count
+    }
+
+    fn fence(&self) {
+        if !self.accepts_paste() {
+            return;
+        }
+        let before = self.bells();
+        self.log("fence".to_string());
+        self.session
+            .paste(TestRequest::FENCE)
+            .expect("fence through bracketed paste");
+        let deadline = Instant::now() + TIMEOUT;
+        while self.bells() == before {
+            self.assert_running("waiting for the application to handle the input");
+            assert!(
+                Instant::now() < deadline,
+                "the application did not acknowledge the fence within {TIMEOUT:?} (bells {before} -> {})\n{}",
+                self.bells(),
+                text(&self.capture())
+            );
+            std::thread::sleep(Duration::from_millis(2));
+        }
     }
 
     pub fn move_to(&self, point: Point) {
@@ -359,7 +428,7 @@ impl App {
             state.exited.is_none(),
             "application exited while {reason}: {:?}\n{}",
             state.exited,
-            text(&self.screen())
+            text(&self.capture())
         );
     }
 

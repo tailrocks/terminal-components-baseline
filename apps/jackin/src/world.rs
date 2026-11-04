@@ -1,0 +1,1149 @@
+use std::collections::BTreeMap;
+use std::sync::Arc;
+
+use crate::arbiter::{Arbiter, DiscoveryError};
+use crate::backend::{
+    Backend, ChangeSet, Effect, FolderProbe, OnePassword, OpError, OpListing, Refresh, Reply,
+    Ticket, Validation, ValidationOutcome, apply_validation,
+};
+use crate::domain::account::{
+    AccountId, AccountRegistry, IssueCode, Recoverability, RecoverableIssue, ValidationState,
+};
+use crate::domain::agent::{Agent, AuthMode, Provider};
+use crate::domain::doctor::{DoctorFailure, DoctorReport};
+use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
+use crate::domain::reason::{IssueReason, UsageReason};
+use crate::domain::role::{
+    AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
+};
+use crate::domain::surfaces::Surfaces;
+use crate::domain::usage::Freshness;
+use crate::domain::workspace::{
+    EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
+};
+use crate::panes::{Daemon, PaneId, PanePolicy};
+use junie_tui::clock::SimClock;
+use junie_tui::shell::JobKey;
+
+pub mod job {
+    use junie_tui::shell::JobKey;
+    pub const WORKSPACE_SAVE: JobKey = JobKey::new("workspace.save");
+    pub const SETTINGS_SAVE: JobKey = JobKey::new("settings.save");
+    pub const ROLE_LOAD: JobKey = JobKey::new("role.load");
+    pub const PREWARM: JobKey = JobKey::new("prewarm");
+    pub const STOP: JobKey = JobKey::new("instance.stop");
+    pub const PURGE: JobKey = JobKey::new("instance.purge");
+    pub const ACCOUNT_VALIDATE: JobKey = JobKey::new("account.validate");
+    pub const ROLE_CHECK: JobKey = JobKey::new("role.check");
+    pub const ROLE_SAVE: JobKey = JobKey::new("role.save");
+    pub const ROLE_BIND: JobKey = JobKey::new("role.bind");
+    pub const ROLE_ADD: JobKey = JobKey::new("role.add");
+    pub const DOCTOR: JobKey = JobKey::new("doctor");
+    pub const SOURCE_CHECK: JobKey = JobKey::new("source.check");
+    pub const CHANGES_READ: JobKey = JobKey::new("changes.read");
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct GlobalConfig {
+    pub coauthor_trailer: bool,
+    pub dco_signoff: bool,
+    pub mounts: Vec<Mount>,
+    pub env: Vec<EnvVar>,
+    pub role_env: BTreeMap<RoleName, Vec<EnvVar>>,
+
+    pub agent_modes: BTreeMap<Agent, AuthMode>,
+    pub trust: Vec<TrustRow>,
+}
+
+impl GlobalConfig {
+    pub fn change_count(&self, other: &GlobalConfig) -> usize {
+        let mut n = 0;
+        n += usize::from(self.coauthor_trailer != other.coauthor_trailer);
+        n += usize::from(self.dco_signoff != other.dco_signoff);
+        n += keyed_diff(&self.mounts, &other.mounts, |m| m.destination.clone());
+        n += keyed_diff(&self.env, &other.env, |e| e.key.clone());
+        n += usize::from(self.role_env != other.role_env);
+        n += self
+            .agent_modes
+            .iter()
+            .filter(|(a, m)| other.agent_modes.get(a) != Some(m))
+            .count();
+        n += keyed_diff(&self.trust, &other.trust, |t| t.source.clone());
+        n
+    }
+}
+
+pub fn keyed_diff<T: PartialEq>(a: &[T], b: &[T], key: impl Fn(&T) -> String) -> usize {
+    let mut n = 0;
+    for x in a {
+        match b.iter().find(|y| key(y) == key(x)) {
+            None => n += 1,
+            Some(y) if y != x => n += 1,
+            _ => {}
+        }
+    }
+    n += b
+        .iter()
+        .filter(|y| !a.iter().any(|x| key(x) == key(y)))
+        .count();
+    n
+}
+
+/// Why a save did not happen: what went wrong, and what the operator can do
+/// about it. A backend that has no advice sends none, and the dialog shows no
+/// `Next` row.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SaveFailure {
+    pub error: String,
+    pub next: Option<String>,
+}
+
+/// Where the roles of a trust row come from.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TrustKind {
+    Git,
+    Path,
+}
+
+impl TrustKind {
+    pub fn label(self) -> &'static str {
+        match self {
+            TrustKind::Git => "git",
+            TrustKind::Path => "path",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TrustRow {
+    pub source: String,
+    pub kind: TrustKind,
+    pub trusted: bool,
+    pub roles: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FsEntry {
+    pub path: String,
+    pub dir: bool,
+    pub git: Option<String>,
+    pub meta: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct GithubRepo {
+    pub full_name: String,
+    pub default_branch: String,
+    pub branches: Vec<String>,
+    pub updated: String,
+    pub url: String,
+}
+
+impl From<&GithubRepo> for RepoRef {
+    fn from(r: &GithubRepo) -> Self {
+        Self {
+            full_name: r.full_name.clone(),
+            url: r.url.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Msg {
+    WorkspaceSaved {
+        id: Option<WorkspaceId>,
+        result: Result<Box<Snapshot>, SaveFailure>,
+    },
+    GlobalSaved {
+        result: Result<Box<Snapshot>, SaveFailure>,
+    },
+    AccountsSaved {
+        added: Option<AccountId>,
+        result: Result<Box<Snapshot>, String>,
+    },
+    WorkspaceDeleted {
+        id: WorkspaceId,
+        result: Result<Box<Snapshot>, String>,
+    },
+    Restored {
+        instance: InstanceId,
+        result: Result<Box<Snapshot>, String>,
+    },
+
+    Refreshed {
+        result: Result<Box<Snapshot>, String>,
+    },
+    Prewarmed {
+        workspace: WorkspaceId,
+        result: Result<(), String>,
+    },
+    Stopped {
+        instance: InstanceId,
+        result: Result<Box<Snapshot>, String>,
+    },
+    Purged {
+        instance: InstanceId,
+        result: Result<Box<Snapshot>, String>,
+    },
+    AccountRefreshed {
+        account: AccountId,
+        result: Result<Box<Refresh>, String>,
+    },
+    AccountValidated {
+        account: AccountId,
+        result: Result<Validation, String>,
+    },
+    RoleLoaded {
+        role: String,
+        result: Result<Box<Snapshot>, String>,
+    },
+    RoleTrusted {
+        role: RoleName,
+        result: Result<Box<Snapshot>, String>,
+    },
+
+    Takeover {
+        instance: InstanceId,
+        by: String,
+    },
+    /// The record of a cancelled launch, from a backend that had to wait for
+    /// the sandbox before it could say what the cancel left behind.
+    LaunchCancelled {
+        instance: Box<Instance>,
+    },
+    RoleChecked {
+        ticket: Ticket,
+        role: RoleName,
+        result: Result<Box<Snapshot>, String>,
+    },
+    RoleSaved {
+        role: RoleName,
+        result: Result<Box<Snapshot>, String>,
+    },
+    RoleBound {
+        role: RoleName,
+        agent: Agent,
+        result: Result<Box<Snapshot>, String>,
+    },
+    RoleAdded {
+        location: String,
+        result: Result<(RoleName, Box<Snapshot>), String>,
+    },
+    RoleRemoved {
+        role: RoleName,
+        result: Result<Box<Snapshot>, String>,
+    },
+    DoctorFinished(Result<DoctorReport, DoctorFailure>),
+    SourceChecked {
+        ticket: Ticket,
+        result: Result<Box<ValidationOutcome>, String>,
+    },
+    FolderProbed {
+        ticket: Ticket,
+        result: Result<FolderProbe, String>,
+    },
+    ChangesRead {
+        ticket: Ticket,
+        result: Result<ChangeSet, String>,
+    },
+    OpLoaded {
+        ticket: Ticket,
+        result: Result<OpListing, OpError>,
+    },
+    /// A link of `pane` has output, or an event, waiting. The world drains
+    /// that pane now instead of at the next tick. Wakes that find nothing new
+    /// ask for no redraw, so a burst of them costs one.
+    PaneWake {
+        instance: InstanceId,
+        pane: PaneId,
+    },
+}
+
+impl Msg {
+    pub fn job(&self) -> Option<JobKey> {
+        match self {
+            Msg::WorkspaceSaved { .. } => Some(job::WORKSPACE_SAVE),
+            Msg::GlobalSaved { .. } => Some(job::SETTINGS_SAVE),
+            Msg::RoleLoaded { .. } => Some(job::ROLE_LOAD),
+            Msg::Prewarmed { .. } => Some(job::PREWARM),
+            Msg::Stopped { .. } => Some(job::STOP),
+            Msg::Purged { .. } => Some(job::PURGE),
+            Msg::AccountValidated { .. } => Some(job::ACCOUNT_VALIDATE),
+            Msg::RoleChecked { .. } => Some(job::ROLE_CHECK),
+            Msg::RoleSaved { .. } => Some(job::ROLE_SAVE),
+            Msg::RoleBound { .. } => Some(job::ROLE_BIND),
+            Msg::RoleAdded { .. } => Some(job::ROLE_ADD),
+            Msg::DoctorFinished(_) => Some(job::DOCTOR),
+            Msg::SourceChecked { .. } => Some(job::SOURCE_CHECK),
+            Msg::ChangesRead { .. } => Some(job::CHANGES_READ),
+            Msg::AccountsSaved { .. }
+            | Msg::WorkspaceDeleted { .. }
+            | Msg::Restored { .. }
+            | Msg::RoleTrusted { .. }
+            | Msg::RoleRemoved { .. }
+            | Msg::Refreshed { .. }
+            | Msg::AccountRefreshed { .. }
+            | Msg::FolderProbed { .. }
+            | Msg::OpLoaded { .. }
+            | Msg::Takeover { .. }
+            | Msg::LaunchCancelled { .. }
+            | Msg::PaneWake { .. } => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Job {
+    pub due_ms: i64,
+    pub work: Work,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Work {
+    Msg(Msg),
+    Settle(Effect),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DaemonHealth {
+    Healthy,
+    Stale,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Health {
+    Healthy,
+    Stale,
+    Failing,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HealthView {
+    pub noun: String,
+    pub health: Health,
+    pub at_secs: i64,
+}
+
+pub struct World {
+    pub clock: SimClock,
+    pub time: TimeSource,
+    pub arbiter: Arbiter,
+    pub home: String,
+    pub cwd: String,
+    pub workspaces: Vec<Workspace>,
+    pub roles: Vec<RoleEntry>,
+    pub instances: Vec<Instance>,
+    pub daemons: BTreeMap<InstanceId, Daemon>,
+    pub global: GlobalConfig,
+    pub accounts: AccountRegistry,
+    pub op: Box<dyn OnePassword>,
+    pub backend: Arc<dyn Backend>,
+    pub fs: Vec<FsEntry>,
+    pub github: Vec<GithubRepo>,
+    pub clipboard: Option<String>,
+    pub jobs: Vec<Job>,
+    pub daemon_health: DaemonHealth,
+    pub last_refresh_secs: i64,
+
+    pub session_accounts: BTreeMap<(InstanceId, u64), AccountId>,
+
+    pub discovery_pending: bool,
+
+    pub surfaces: Surfaces,
+
+    pub tickets: Ticket,
+
+    pub snapshots_applied: u64,
+    pub refresh_from: Option<u64>,
+
+    /// What a program may do through a pane; every daemon the world creates
+    /// starts with it.
+    pub pane_policy: Arc<PanePolicy>,
+}
+
+pub trait WallSource: std::fmt::Debug + Send + Sync {
+    fn epoch_millis(&self) -> i64;
+
+    fn utc_offset_secs(&self) -> i64;
+}
+
+#[derive(Debug, Clone, Default)]
+pub enum TimeSource {
+    #[default]
+    Sim,
+    Wall(Arc<dyn WallSource>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Snapshot {
+    pub workspaces: Vec<Workspace>,
+    pub roles: Vec<RoleEntry>,
+    pub instances: Vec<Instance>,
+    pub global: GlobalConfig,
+    pub accounts: AccountRegistry,
+    pub surfaces: Surfaces,
+    pub github: Vec<GithubRepo>,
+    pub index_error: Option<DiscoveryError>,
+    /// How the gateways answered the listing this snapshot comes from.
+    pub daemon_health: DaemonHealth,
+}
+
+pub struct WorldParts {
+    pub clock: SimClock,
+    pub time: TimeSource,
+    pub arbiter: Arbiter,
+    pub home: String,
+    pub cwd: String,
+    pub workspaces: Vec<Workspace>,
+    pub roles: Vec<RoleEntry>,
+    pub instances: Vec<Instance>,
+    pub global: GlobalConfig,
+    pub accounts: AccountRegistry,
+    pub op: Box<dyn OnePassword>,
+    pub backend: Arc<dyn Backend>,
+    pub fs: Vec<FsEntry>,
+    pub github: Vec<GithubRepo>,
+    pub last_refresh_secs: i64,
+    pub surfaces: Surfaces,
+}
+
+impl WorldParts {
+    pub fn new(
+        clock: SimClock,
+        home: String,
+        cwd: String,
+        op: Box<dyn OnePassword>,
+        backend: Arc<dyn Backend>,
+        surfaces: Surfaces,
+    ) -> Self {
+        Self {
+            last_refresh_secs: clock.now_secs(),
+            clock,
+            time: TimeSource::Sim,
+            arbiter: Arbiter::new(0),
+            home,
+            cwd,
+            workspaces: vec![],
+            roles: vec![],
+            instances: vec![],
+            global: GlobalConfig::default(),
+            accounts: AccountRegistry::default(),
+            op,
+            backend,
+            fs: vec![],
+            github: vec![],
+            surfaces,
+        }
+    }
+
+    pub fn wall(mut self, source: Arc<dyn WallSource>) -> Self {
+        let ms = source.epoch_millis();
+        self.clock.epoch_secs = ms.div_euclid(1000);
+        self.clock.now_ms = ms.rem_euclid(1000);
+        self.clock.utc_offset_secs = source.utc_offset_secs();
+        self.last_refresh_secs = self.clock.now_secs();
+        self.time = TimeSource::Wall(source);
+        self
+    }
+}
+
+impl World {
+    pub fn new(parts: WorldParts) -> Self {
+        let WorldParts {
+            clock,
+            time,
+            arbiter,
+            home,
+            cwd,
+            workspaces,
+            roles,
+            instances,
+            global,
+            accounts,
+            op,
+            backend,
+            fs,
+            github,
+            last_refresh_secs,
+            surfaces,
+        } = parts;
+        let mut world = Self {
+            clock,
+            time,
+            arbiter,
+            home,
+            cwd,
+            workspaces,
+            roles,
+            instances,
+            daemons: BTreeMap::new(),
+            global,
+            accounts,
+            op,
+            backend,
+            fs,
+            github,
+            clipboard: None,
+            jobs: vec![],
+            daemon_health: DaemonHealth::Healthy,
+            last_refresh_secs,
+            session_accounts: BTreeMap::new(),
+            discovery_pending: false,
+            surfaces,
+            tickets: 0,
+            snapshots_applied: 0,
+            refresh_from: None,
+            pane_policy: Arc::default(),
+        };
+        world.sync_arbiter();
+        world
+    }
+
+    pub fn now_secs(&self) -> i64 {
+        self.clock.now_secs()
+    }
+
+    pub fn new_daemon(&self, workspace: &str) -> Daemon {
+        let mut daemon = Daemon::new(workspace);
+        daemon.set_policy(&self.pane_policy);
+        daemon
+    }
+
+    /// A number no earlier request of this world carried.
+    pub fn next_ticket(&mut self) -> Ticket {
+        self.tickets += 1;
+        self.tickets
+    }
+
+    pub fn refresh(&mut self) -> bool {
+        if self.refresh_from.is_some() {
+            return false;
+        }
+        self.refresh_from = Some(self.snapshots_applied);
+        self.perform(Effect::Refresh);
+        true
+    }
+
+    pub fn now_ms(&self) -> i64 {
+        self.clock.now_ms
+    }
+
+    pub fn perform(&mut self, effect: Effect) {
+        let backend = self.backend.clone();
+        if let Some(done) = backend.perform(&effect, self) {
+            match done.reply {
+                Reply::Ready(msg) => self.schedule(done.after_ms, msg),
+                Reply::Settle => self.enqueue(done.after_ms, Work::Settle(effect)),
+            }
+        }
+    }
+
+    pub fn schedule(&mut self, delay_ms: i64, msg: Msg) {
+        self.enqueue(delay_ms, Work::Msg(msg));
+    }
+
+    fn enqueue(&mut self, delay_ms: i64, work: Work) {
+        let due = self.clock.now_ms + delay_ms;
+        self.jobs.push(Job { due_ms: due, work });
+        self.jobs.sort_by_key(|j| j.due_ms);
+    }
+
+    /// The earliest reply that is due at the current time, without advancing
+    /// the clock. A reply with no delay is delivered this way, so it does not
+    /// wait for a tick (and arrives under a paused clock too). One reply is
+    /// settled per call, so a snapshot is always computed from the world that
+    /// already holds the reply before it.
+    pub fn take_due(&mut self) -> Option<Msg> {
+        let backend = self.backend.clone();
+        while self
+            .jobs
+            .first()
+            .is_some_and(|j| j.due_ms <= self.clock.now_ms)
+        {
+            let msg = match self.jobs.remove(0).work {
+                Work::Msg(msg) => Some(msg),
+                Work::Settle(effect) => backend.settle(&effect, self),
+            };
+            if msg.is_some() {
+                return msg;
+            }
+        }
+        None
+    }
+
+    pub fn health_view(&self) -> HealthView {
+        let doctor = self.surfaces.doctor.as_ref();
+        let listing = match self.daemon_health {
+            DaemonHealth::Healthy => Health::Healthy,
+            DaemonHealth::Stale => Health::Stale,
+        };
+        let (health, at_secs) = match doctor {
+            Some(d) if d.failure().is_some() => (
+                Health::Failing,
+                d.failure().map_or(self.last_refresh_secs, |(_, at)| at),
+            ),
+            Some(d) => match d.report() {
+                Some(r) if r.failing() > 0 || r.no_gateway() => (Health::Failing, r.at_secs),
+                Some(r) if r.stale(self.now_secs()) => (Health::Stale, r.at_secs),
+                Some(_) if listing == Health::Stale => (Health::Stale, self.last_refresh_secs),
+                Some(r) => (Health::Healthy, r.at_secs),
+                None => (listing, self.last_refresh_secs),
+            },
+            None => (listing, self.last_refresh_secs),
+        };
+        HealthView {
+            noun: doctor.map_or_else(
+                || self.surfaces.vocabulary.health_noun.clone(),
+                |d| d.noun.clone(),
+            ),
+            health,
+            at_secs,
+        }
+    }
+
+    /// Starts a doctor run unless one is out.
+    pub fn start_doctor(&mut self) -> bool {
+        let started = self.surfaces.doctor.as_mut().is_some_and(|d| d.start());
+        if started {
+            self.perform(Effect::RunDoctor);
+        }
+        started
+    }
+
+    pub fn about_props(&self) -> Vec<junie_tui::widgets::props::Prop> {
+        use junie_tui::widgets::props::Prop;
+        self.surfaces
+            .about
+            .iter()
+            .map(|(label, value)| Prop::new(label, value.as_str()))
+            .collect()
+    }
+
+    pub fn docker_on(&self, ws: Option<WorkspaceId>, role: &str) -> bool {
+        self.surfaces.docker.as_ref().is_some_and(|d| {
+            d.role_enabled.contains(role)
+                || ws
+                    .and_then(|id| self.workspace(id))
+                    .is_some_and(|w| w.docker)
+        })
+    }
+
+    pub fn apply(&mut self, snapshot: Snapshot) {
+        let Snapshot {
+            workspaces,
+            roles,
+            instances,
+            global,
+            accounts,
+            surfaces,
+            github,
+            index_error,
+            daemon_health,
+        } = snapshot;
+        self.snapshots_applied += 1;
+        self.workspaces = workspaces;
+        self.roles = roles;
+        self.instances = instances;
+        self.global = global;
+        self.accounts = accounts;
+        let doctor_state = self.surfaces.doctor.take().map(|d| d.state);
+        self.surfaces = surfaces;
+        if let (Some(doctor), Some(state)) = (self.surfaces.doctor.as_mut(), doctor_state) {
+            doctor.state = state;
+        }
+        self.github = github;
+        self.daemon_health = daemon_health;
+        refresh_snapshots(self);
+        self.arbiter.discovery = match index_error {
+            Some(error) => Err(error),
+            None => Ok(self.running_count()),
+        };
+    }
+
+    /// Takes in what a reply says about the world itself, before any screen
+    /// sees the message.
+    pub fn absorb(&mut self, msg: &Msg) {
+        match msg {
+            Msg::DoctorFinished(result) => {
+                let now = self.now_secs();
+                if let Some(d) = self.surfaces.doctor.as_mut() {
+                    d.finish(result, now);
+                }
+            }
+            Msg::RoleLoaded {
+                role,
+                result: Err(error),
+            } => {
+                if let Some(r) = self.roles.iter_mut().find(|r| r.name == *role) {
+                    r.load_error = Some(error.clone());
+                }
+            }
+            Msg::Refreshed { result } => {
+                let current = self
+                    .refresh_from
+                    .take()
+                    .is_none_or(|from| from == self.snapshots_applied);
+                match result {
+                    Ok(snapshot) if current => self.apply((**snapshot).clone()),
+                    Err(_) if current => self.daemon_health = DaemonHealth::Stale,
+                    Ok(_) | Err(_) => {}
+                }
+            }
+            Msg::LaunchCancelled { instance } => self.record((**instance).clone()),
+            Msg::AccountRefreshed { account, result } => {
+                let now = self.now_secs();
+                if let Some(a) = self.accounts.get_mut(account) {
+                    match result {
+                        Ok(refresh) => {
+                            a.usage = refresh.usage.clone();
+                            a.issue = refresh.issue.clone();
+                            a.last_refresh_secs = Some(refresh.last_refresh_secs);
+                        }
+                        Err(error) => {
+                            a.usage.freshness.phase = if a.usage.freshness.last_good_secs.is_some()
+                            {
+                                Freshness::Stale
+                            } else {
+                                Freshness::Failed
+                            };
+                            a.issue = Some(RecoverableIssue::new(
+                                IssueCode::ProviderUnavailable,
+                                IssueReason::Usage(UsageReason::Provider {
+                                    detail: error.clone(),
+                                }),
+                                Recoverability::Retryable,
+                            ));
+                            a.last_refresh_secs = Some(now);
+                        }
+                    }
+                }
+            }
+            Msg::AccountValidated { account, result } => {
+                let now = self.now_secs();
+                if let Some(a) = self.accounts.get_mut(account) {
+                    match result {
+                        Ok(validation) => match validation {
+                            Validation::Fingerprint { level } => {
+                                a.validation = ValidationState::Valid(*level);
+                                a.last_refresh_secs = Some(now);
+                            }
+                            Validation::Checked(outcome) => {
+                                let windows = a.usage.windows.clone();
+                                apply_validation(a, outcome, now);
+                                if a.usage.windows.is_empty() {
+                                    a.usage.windows = windows;
+                                }
+                            }
+                        },
+                        Err(error) => {
+                            a.validation = ValidationState::Invalid(RecoverableIssue::new(
+                                IssueCode::ProviderUnavailable,
+                                IssueReason::Usage(UsageReason::Provider {
+                                    detail: error.clone(),
+                                }),
+                                Recoverability::Retryable,
+                            ));
+                        }
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    pub fn tick(&mut self, interval_ms: i64) -> Vec<Msg> {
+        match &self.time {
+            TimeSource::Sim => self.clock.advance(interval_ms),
+            TimeSource::Wall(source) if self.clock.running => {
+                self.clock.now_ms = source.epoch_millis() - self.clock.epoch_secs * 1000;
+                self.clock.utc_offset_secs = source.utc_offset_secs();
+            }
+            TimeSource::Wall(_) => {}
+        }
+        if !self.clock.running {
+            return vec![];
+        }
+        let now = self.clock.now_ms;
+        if self
+            .surfaces
+            .doctor
+            .as_ref()
+            .is_some_and(|d| d.due(self.clock.now_secs()))
+        {
+            self.start_doctor();
+        }
+        for (id, d) in self.daemons.iter_mut() {
+            if self
+                .instances
+                .iter()
+                .any(|i| i.id == *id && i.status == InstanceStatus::Running)
+            {
+                d.tick(now);
+            }
+        }
+        let backend = self.backend.clone();
+        backend.due(self)
+    }
+
+    /// Drains the pane of a wake. Whether it has anything new to draw.
+    pub fn wake_pane(&mut self, instance: &str, pane: PaneId) -> bool {
+        let now = self.now_ms();
+        self.daemons
+            .get_mut(instance)
+            .and_then(|d| d.pane_mut(pane))
+            .is_some_and(|p| p.body.tick(now))
+    }
+
+    pub fn workspace(&self, id: WorkspaceId) -> Option<&Workspace> {
+        self.workspaces.iter().find(|w| w.id == id)
+    }
+
+    pub fn workspace_mut(&mut self, id: WorkspaceId) -> Option<&mut Workspace> {
+        self.workspaces.iter_mut().find(|w| w.id == id)
+    }
+
+    pub fn cwd_workspace(&self) -> Option<&Workspace> {
+        self.workspaces.iter().find(|w| {
+            w.mounts.iter().any(|m| {
+                m.source_label() == self.cwd || expand(&self.home, m.source_label()) == self.cwd
+            })
+        })
+    }
+
+    pub fn workspace_label(&self, i: &Instance) -> String {
+        i.workspace
+            .and_then(|id| self.workspace(id))
+            .map(|ws| ws.name.clone())
+            .unwrap_or_else(|| {
+                self.cwd
+                    .rsplit('/')
+                    .next()
+                    .unwrap_or("directory")
+                    .to_owned()
+            })
+    }
+
+    pub fn workspace_repo(&self, id: WorkspaceId) -> Option<&RepoRef> {
+        self.workspace(id)?.github.as_ref()
+    }
+
+    pub fn instance(&self, id: &str) -> Option<&Instance> {
+        self.instances.iter().find(|i| i.id == id)
+    }
+
+    pub fn instance_mut(&mut self, id: &str) -> Option<&mut Instance> {
+        self.instances.iter_mut().find(|i| i.id == id)
+    }
+
+    /// Adds an instance a backend recorded.
+    pub fn admit(&mut self, instance: Instance) {
+        self.instances.push(instance);
+        self.sync_arbiter();
+    }
+
+    /// Adds an instance a backend recorded, or replaces the row a refresh
+    /// already brought in for it.
+    fn record(&mut self, instance: Instance) {
+        match self.instances.iter_mut().find(|i| i.id == instance.id) {
+            Some(known) => *known = instance,
+            None => self.instances.push(instance),
+        }
+        self.sync_arbiter();
+    }
+
+    pub fn running_count(&self) -> usize {
+        self.instances
+            .iter()
+            .filter(|i| i.status == InstanceStatus::Running)
+            .count()
+    }
+
+    pub fn running(&self) -> Vec<&Instance> {
+        self.instances
+            .iter()
+            .filter(|i| i.status == InstanceStatus::Running)
+            .collect()
+    }
+
+    pub fn instances_of(&self, ws: Option<WorkspaceId>) -> Vec<&Instance> {
+        self.instances
+            .iter()
+            .filter(|i| i.workspace == ws && !i.status.hidden())
+            .collect()
+    }
+
+    pub fn sync_arbiter(&mut self) {
+        if self.arbiter.discovery.is_ok() {
+            let n = self.running_count();
+            self.arbiter.set_running(n);
+        }
+    }
+
+    pub fn mask_path(&self, path: &str) -> String {
+        mask_path(&self.home, path)
+    }
+
+    pub fn tilde(&self, path: &str) -> String {
+        if let Some(rest) = path.strip_prefix(&self.home) {
+            format!("~{rest}")
+        } else {
+            path.to_owned()
+        }
+    }
+
+    pub fn config_file(&self) -> String {
+        self.tilde(self.surfaces.config_path.as_deref().unwrap_or_default())
+    }
+
+    pub fn account_for(
+        &self,
+        provider: Provider,
+        ws: Option<&Workspace>,
+        role: Option<&str>,
+        session: Option<&AccountId>,
+    ) -> crate::domain::precedence::ResolvedAccount {
+        let (order, binding) = match &self.surfaces.roles {
+            Some(admin) => (
+                admin.order,
+                role.and_then(|r| admin.binding_for_provider(r, provider)),
+            ),
+            None => (AccountOrder::Demo, None),
+        };
+        crate::domain::precedence::resolve_account(
+            provider,
+            ws,
+            role,
+            session.map(|s| (s, self.surfaces.vocabulary.session_choice.as_str())),
+            &self.accounts,
+            order,
+            binding,
+        )
+    }
+
+    pub fn agent_mode(&self, agent: Agent) -> AuthMode {
+        self.global
+            .agent_modes
+            .get(&agent)
+            .copied()
+            .unwrap_or(AuthMode::Sync)
+    }
+
+    pub fn eligible_accounts(
+        &self,
+        agent: Agent,
+        ws: Option<&Workspace>,
+        role: Option<&str>,
+    ) -> Vec<AccountId> {
+        let offer = self.offer_for(agent, ws, role);
+        offer.accounts
+    }
+
+    pub fn offer_for(
+        &self,
+        agent: Agent,
+        ws: Option<&Workspace>,
+        role: Option<&str>,
+    ) -> AgentOffer {
+        let provider = agent.provider();
+        let mut ready: Vec<AccountId> = vec![];
+        let mut blocked: Vec<(AccountId, String)> = vec![];
+        match ws {
+            Some(w) => {
+                for e in w.effective_accounts(&self.accounts) {
+                    if e.provider != provider {
+                        continue;
+                    }
+                    match &e.usable {
+                        Usability::Ready => ready.push(e.id.clone()),
+                        u => blocked.push((
+                            e.id.clone(),
+                            u.label(self.surfaces.fixed.as_ref(), &self.surfaces.vocabulary),
+                        )),
+                    }
+                }
+            }
+            None => {
+                if let Some(a) = self.accounts.default_for(provider) {
+                    match crate::domain::workspace::usability_of(a) {
+                        Usability::Ready => ready.push(a.id.clone()),
+                        u => blocked.push((
+                            a.id.clone(),
+                            u.label(self.surfaces.fixed.as_ref(), &self.surfaces.vocabulary),
+                        )),
+                    }
+                }
+                if ready.is_empty()
+                    && let Some(a) = self.accounts.discovered_current(provider)
+                    && !ready.contains(&a.id)
+                {
+                    ready.push(a.id.clone());
+                }
+            }
+        }
+        if let Some(limit) = &self.surfaces.agent_blocked
+            && agent != limit.launchable
+        {
+            return AgentOffer {
+                accounts: vec![],
+                preselected: None,
+                blocked: Some(limit.text.clone()),
+                configured: !ready.is_empty() || !blocked.is_empty(),
+            };
+        }
+        if self.agent_mode(agent) == AuthMode::Ignore {
+            return AgentOffer {
+                accounts: vec![],
+                preselected: None,
+                blocked: Some("agent runtime mode is ignore · set in Settings › Agents".into()),
+                configured: !ready.is_empty() || !blocked.is_empty(),
+            };
+        }
+
+        if ws.is_none()
+            && ready.is_empty()
+            && self.accounts.default_for(provider).is_none()
+            && let Some(only) = self.accounts.only_ready(provider)
+        {
+            ready.push(only.id.clone());
+        }
+        let resolved = self.account_for(provider, ws, role, None);
+        let explicit = resolved.account.filter(|_| resolved.explicit);
+        let preselected = match &explicit {
+            Some(id) => ready.contains(id).then(|| id.clone()),
+            None => match ready.as_slice() {
+                [only] => Some(only.clone()),
+                _ => None,
+            },
+        };
+        if let Some(p) = &preselected
+            && let Some(i) = ready.iter().position(|x| x == p)
+            && i > 0
+        {
+            let x = ready.remove(i);
+            ready.insert(0, x);
+        }
+        let block = if preselected.is_none() && ready.len() <= 1 {
+            blocked
+                .iter()
+                .find(|(id, _)| explicit.as_ref() == Some(id))
+                .or(blocked.first())
+                .map(|(id, why)| {
+                    let launch_block = self.accounts.get(id).and_then(|a| a.launch_blocked);
+                    if launch_block.is_some_and(|b| b.text(self.surfaces.fixed.as_ref()) == *why) {
+                        return why.clone();
+                    }
+                    let name = self
+                        .accounts
+                        .get(id)
+                        .map(|a| a.title())
+                        .unwrap_or(id.clone());
+                    format!("{name} · {why}")
+                })
+        } else {
+            None
+        };
+        AgentOffer {
+            configured: !ready.is_empty() || !blocked.is_empty(),
+            accounts: ready,
+            preselected,
+            blocked: block,
+        }
+    }
+
+    pub fn launch_role(&self, from: LaunchSource) -> LaunchRole {
+        match self.surfaces.launch_role {
+            LaunchRoleRule::Demo => LaunchRole::Role(match from {
+                LaunchSource::Row(ws) => ws
+                    .and_then(|x| x.roles.default.clone().or(x.roles.last.clone()))
+                    .unwrap_or_else(|| "the-architect".into()),
+                LaunchSource::CurrentDir(_) => "the-architect".into(),
+            }),
+            LaunchRoleRule::Configured => {
+                let (LaunchSource::Row(ws) | LaunchSource::CurrentDir(ws)) = from;
+                if let Some(default) = ws.and_then(|x| x.roles.default.clone()) {
+                    return LaunchRole::Role(default);
+                }
+                let mut allowed = self
+                    .roles
+                    .iter()
+                    .filter(|r| ws.is_none_or(|x| x.roles.allows(&r.name)))
+                    .map(|r| r.name.clone());
+                match (allowed.next(), allowed.next()) {
+                    (Some(only), None) => LaunchRole::Role(only),
+                    _ if ws.is_some() => LaunchRole::Unavailable(NO_DEFAULT_ROLE.into()),
+                    _ => LaunchRole::Unavailable(NO_SAVED_WORKSPACE.into()),
+                }
+            }
+        }
+    }
+
+    pub fn offered_agents(
+        &self,
+        ws: Option<&Workspace>,
+        role: Option<&str>,
+    ) -> Vec<(Agent, AgentOffer)> {
+        Agent::ALL
+            .iter()
+            .map(|a| (*a, self.offer_for(*a, ws, role)))
+            .filter(|(_, o)| o.configured)
+            .collect()
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum LaunchSource<'a> {
+    Row(Option<&'a Workspace>),
+    CurrentDir(Option<&'a Workspace>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AgentOffer {
+    pub accounts: Vec<AccountId>,
+    pub preselected: Option<AccountId>,
+
+    pub blocked: Option<String>,
+
+    pub configured: bool,
+}
+
+pub fn expand(home: &str, path: &str) -> String {
+    if let Some(rest) = path.strip_prefix('~') {
+        format!("{home}{rest}")
+    } else {
+        path.to_owned()
+    }
+}
+
+pub fn mask_path(home: &str, path: &str) -> String {
+    let last = path.rsplit('/').next().unwrap_or(path);
+    if let Some(rest) = path.strip_prefix(home) {
+        let segs: Vec<&str> = rest.split('/').filter(|s| !s.is_empty()).collect();
+        match segs.len() {
+            0 => "~".into(),
+            1 => format!("~/{}", segs[0]),
+            _ => format!("~/…/{last}"),
+        }
+    } else if path.starts_with('/') {
+        format!("…/{last}")
+    } else {
+        path.to_owned()
+    }
+}
+
+pub fn refresh_snapshots(w: &mut World) {
+    let snaps: Vec<(String, DaemonSnapshot)> = w
+        .daemons
+        .iter()
+        .map(|(id, d)| (id.clone(), d.snapshot()))
+        .collect();
+    for (id, s) in snaps {
+        if let Some(i) = w.instance_mut(&id) {
+            i.daemon = s;
+        }
+    }
+    for i in w.instances.iter_mut() {
+        if i.status != InstanceStatus::Running {
+            i.daemon = DaemonSnapshot::Unavailable;
+        }
+    }
+}

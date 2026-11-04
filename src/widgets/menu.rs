@@ -313,6 +313,10 @@ impl ContextMenu {
             || self.row_of(id).is_some()
     }
 
+    pub fn reason_room(&self, more_below: bool) -> usize {
+        reason_room(self.size().0, more_below)
+    }
+
     pub fn size(&self) -> (u16, u16) {
         let label_w = self
             .items
@@ -558,6 +562,7 @@ impl ContextMenu {
             let mut s = ctx.child_state(self.id, rid, cursor == Some(i));
             s.focused = cursor == Some(i);
             s.disabled = item.item.disabled;
+            s.fixed = item.item.disabled && item.item.reason.is_some();
             s.error = item.danger;
             let row = Rect::new(rows.x, y, rows.width, 1);
 
@@ -570,6 +575,9 @@ impl ContextMenu {
             )
             .look;
             let mut st = it.style;
+            if s.fixed && s.focused {
+                st = st.fg(t.legible(t.text_muted, st.bg.unwrap_or(bg)));
+            }
             if item.danger && !it.on_fill && !item.item.disabled {
                 st = st.fg(t.legible(t.error_soft, st.bg.unwrap_or(bg)));
             }
@@ -628,10 +636,9 @@ impl ContextMenu {
 
         if let Some(reason) = self.list.status(&self.items) {
             let x = area.x + 2;
-            let end = area.right().saturating_sub(if more_below { 4 } else { 2 });
-            let avail = end.saturating_sub(x) as usize;
-            if avail >= 3 {
-                let text = format!(" {} ", truncate(reason, avail - 2));
+            let room = reason_room(area.width, more_below);
+            if room >= 1 {
+                let text = format!(" {} ", truncate(reason, room));
                 buf.set_string(
                     x,
                     area.bottom().saturating_sub(1),
@@ -641,6 +648,10 @@ impl ContextMenu {
             }
         }
     }
+}
+
+pub fn reason_room(menu_width: u16, more_below: bool) -> usize {
+    usize::from(menu_width).saturating_sub(if more_below { 8 } else { 6 })
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

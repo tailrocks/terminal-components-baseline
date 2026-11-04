@@ -1,4 +1,5 @@
-use super::support::{App, HOLLA, find, text};
+use super::bins::HOLLA;
+use super::support::{App, find, text};
 
 fn holla(name: &str, scenario: &str) -> App {
     App::new(
@@ -25,6 +26,7 @@ fn holla_finder_search_runs_selected_task_and_records_result() {
     app.paste("cargo check");
     app.wait_text("▎ cargo check");
     app.key("enter");
+    app.advance_clock(1_500);
     let done = app.wait_screen("successful task result", |s| {
         let t = text(s);
         t.contains("succeeded") && t.contains("exit 0") && t.contains("Finished `dev` profile")
@@ -137,6 +139,7 @@ fn holla_trust_cancel_then_run_uses_the_child_directory() {
     app.key("enter");
     app.wait_text("arguments");
     app.key("ctrl+s");
+    app.advance_clock(2_500);
     let launched = app.wait_screen("frontend test has its own activity and output", |screen| {
         let visible = text(screen);
         visible
@@ -256,9 +259,10 @@ fn holla_first_use_idle_and_no_results() {
     app.wait_text("Search actions and resources");
     app.type_text("zzzzqq");
     let none = app.wait_screen("no results for nonsense query", |s| {
-        !text(s).contains("cargo check")
+        text(s).contains("Nothing to preview") && !text(s).contains("cargo check")
     });
-    assert!(text(&none).contains("Search actions and resources"));
+    assert!(text(&none).contains("zzzzqq"));
+    assert!(!text(&none).contains("Search actions and resources"));
     app.key("escape");
     app.wait_text("Search actions and resources");
     app.visual("functional/holla_first_use_idle");
