@@ -539,9 +539,13 @@ fn sections_narrow_then_wide() {
     shot(&app, "sc.notices.states.80x24");
 
     app.resize(120, 40);
+    // The narrow specimen label paints before its hint is cut to "kee…".
     let wide_states = app.wait_screen("states wide", |screen| {
         let visible = text(screen);
-        visible.contains(WIDE) && visible.contains(CAP_STATES) && grid_label(screen, "narrow")
+        visible.contains(WIDE)
+            && visible.contains(CAP_STATES)
+            && grid_label(screen, "narrow")
+            && visible.contains("kee…")
     });
     assert!(grid_label(&wide_states, "rest"));
     assert!(grid_label(&wide_states, "error"));
