@@ -460,6 +460,39 @@ fn backspace(app: &App, typed: &str, gone: &[&str]) -> TerminalSnapshot {
     }
 }
 
+/// `y` is the whole permission token. Enter before that glyph paints submits
+/// an empty line and the `(y/n)` prompt never answers.
+fn submit_claude_yes(app: &App) {
+    let deadline = Instant::now() + Duration::from_secs(8);
+    let mut typed_at: Option<Instant> = None;
+    loop {
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "claude yes was not armed\n{}",
+            text(&app.screen())
+        );
+        let input = live_input(&app.screen(), Side::Claude);
+        if input == "y" {
+            app.key("enter");
+            let sent = Instant::now();
+            while sent.elapsed() < Duration::from_millis(400) {
+                if live_input(&app.screen(), Side::Claude).is_empty() {
+                    return;
+                }
+                std::thread::sleep(Duration::from_millis(25));
+            }
+            typed_at = None;
+            continue;
+        }
+        if input.is_empty() && typed_at.is_none_or(|at| at.elapsed() >= Duration::from_millis(400))
+        {
+            app.type_text("y");
+            typed_at = Some(Instant::now());
+        }
+        std::thread::sleep(Duration::from_millis(25));
+    }
+}
+
 fn aim(app: &App, want: Side) {
     let dirs: &[&str] = match want {
         Side::Codex => &["l", "k", "j", "h"],
@@ -653,8 +686,7 @@ fn j06_panes_input() {
     );
     boundaries(&cleared, None, &[], false, false);
 
-    app.type_text("y");
-    app.key("enter");
+    submit_claude_yes(&app);
     let replied = app.wait_screen("claude yes reply", |screen| {
         let Some(seams) = seams_of(screen) else {
             return false;

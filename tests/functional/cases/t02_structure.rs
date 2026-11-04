@@ -436,7 +436,11 @@ fn structure_tabs_follow_the_open_object_including_an_empty_trigger_list() {
 
     app.resize(80, 24);
     let narrow = app.wait_screen("narrow triggers", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && text(screen).contains(NO_TRIGGERS)
+        let visible = text(screen);
+        screen.cols() == 80
+            && screen.rows() == 24
+            && visible.contains(NO_TRIGGERS)
+            && visible.contains(CONNECTED)
     });
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     see(
@@ -445,11 +449,16 @@ fn structure_tabs_follow_the_open_object_including_an_empty_trigger_list() {
         &[ORG_TRIGGER, CUSTOMER_TRIGGER, "BEFORE UPDATE"],
     );
     flash_settle(&app);
-    let narrow_settled = app.screen();
-    assert_eq!((narrow_settled.cols(), narrow_settled.rows()), (80, 24));
+    let narrow_settled = app.wait_screen("narrow triggers settled", |screen| {
+        let visible = text(screen);
+        screen.cols() == 80
+            && screen.rows() == 24
+            && visible.contains(NO_TRIGGERS)
+            && visible.contains(CONNECTED)
+    });
     see(
         &narrow_settled,
-        &[NO_TRIGGERS],
+        &[NO_TRIGGERS, CONNECTED],
         &[ORG_TRIGGER, CUSTOMER_TRIGGER],
     );
     app.visual(NARROW_ID);

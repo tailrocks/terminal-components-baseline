@@ -150,13 +150,29 @@ fn confirm_keep(app: &App) {
     );
     app.key("down");
     app.key("down");
-    let chosen = app.screen();
-    assert!(
-        dirty_quit(&chosen),
-        "radio move left the unsaved dialog\n{}",
-        text(&chosen)
-    );
+    // Two downs can be read before the radio paint. Enter on that frame
+    // confirms whichever row is still selected.
+    let armed = Instant::now() + Duration::from_secs(8);
+    loop {
+        let screen = app.screen();
+        if keep_armed(&screen) {
+            break;
+        }
+        assert!(
+            Instant::now() < armed && app.child_running(),
+            "radio move left the unsaved dialog\n{}",
+            text(&screen)
+        );
+        std::thread::sleep(Duration::from_millis(25));
+    }
     app.key("enter");
+}
+
+fn keep_armed(screen: &TerminalSnapshot) -> bool {
+    dirty_quit(screen)
+        && text(screen)
+            .lines()
+            .any(|line| line.contains('▎') && line.contains(KEEP))
 }
 
 fn wait_exit(app: &App) {
@@ -183,8 +199,11 @@ fn await_outro(app: &App, cols: u32, rows: u32) -> TerminalSnapshot {
         if outro_at(&screen, cols, rows) {
             return screen;
         }
+        // Enter is one paint behind the armed radio under a loaded partition.
+        // The reduced-motion hold is 45 ticks of 33 ms, so this window still
+        // returns while the caption is up.
         assert!(
-            start.elapsed() < Duration::from_millis(900) && app.child_running(),
+            start.elapsed() < Duration::from_millis(2_500) && app.child_running(),
             "outro frame not seen\n{}",
             text(&screen)
         );

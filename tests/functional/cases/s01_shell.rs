@@ -1,16 +1,13 @@
 //! Shell options, Inspector sections, and sidebar expansion.
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tuiscotti_latest::check::{CheckOutcome, MismatchReason};
 
 use crate::support::{
-    App, Launch, Point, SHOWCASE, SessionMode, cell_bg, find, find_all, find_in, row_text, text,
-    try_launch,
+    App, Launch, Point, SHOWCASE, SessionMode, cell_bg, file_sha256, find, find_all, find_in,
+    reference_binary, reference_digest, row_text, text, try_launch,
 };
-
-const REFERENCE: &str = "/Users/donbeave/Projects/tailrocks/terminal-components-baseline-reference/target/reference-bins/showcase";
-const REFERENCE_SHA256: &str = "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b";
 /// Tuiscotti test ids are `[a-z0-9_-]` segments, so `S01.shell` cannot be one.
 /// The baseline root is the owned directory and the id is the slug inside it.
 fn baseline_root() -> PathBuf {
@@ -24,12 +21,13 @@ fn capturing() -> bool {
 
 fn launch(name: &str, args: &[&str], cols: u16, rows: u16) -> App {
     let mut launch = if capturing() {
+        let reference = reference_binary("showcase");
         assert_eq!(
-            crate::support::file_sha256(Path::new(REFERENCE)),
-            REFERENCE_SHA256,
+            file_sha256(&reference),
+            reference_digest("showcase"),
             "reference showcase hash"
         );
-        let mut launch = Launch::new(name, REFERENCE);
+        let mut launch = Launch::new(name, reference.to_str().expect("reference path"));
         launch.mode = SessionMode::Reference;
         launch
     } else {

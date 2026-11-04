@@ -293,8 +293,28 @@ fn type_path(app: &App, path: &str) {
 }
 
 fn cancel_export(app: &App) -> TerminalSnapshot {
-    app.key("tab");
-    let focused = app.wait_screen("cancel button", cancel_focused);
+    // The path field owns Tab. A resize drops the first Tab while the
+    // capsule under the dialog is still painting, and the gutter stays on
+    // the path. Tab again until Cancel is the focused control.
+    let deadline = Instant::now() + Duration::from_secs(8);
+    let mut sent: Option<Instant> = None;
+    loop {
+        let screen = app.screen();
+        if cancel_focused(&screen) {
+            break;
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "Cancel is not the focused control\n{}",
+            focused_line(&screen)
+        );
+        if sent.is_none_or(|at| at.elapsed() >= Duration::from_millis(250)) {
+            app.key("tab");
+            sent = Some(Instant::now());
+        }
+        std::thread::sleep(Duration::from_millis(25));
+    }
+    let focused = app.screen();
     assert!(
         cancel_focused(&focused),
         "Cancel is not the focused control\n{}",

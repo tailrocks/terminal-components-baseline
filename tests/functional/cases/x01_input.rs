@@ -97,7 +97,23 @@ fn refuse(screen: &TerminalSnapshot, needle: &str) {
 }
 
 fn field_has(screen: &TerminalSnapshot, needle: &str) -> bool {
-    value_row(screen).contains(needle)
+    text(screen).contains("Task name") && value_row(screen).contains(needle)
+}
+
+/// The Results line is covered until the dialog and the page have both
+/// painted. Returning on the field token alone records that covered frame.
+fn dialog_holds(screen: &TerminalSnapshot, token: &str) -> bool {
+    let visible = text(screen);
+    if !(visible.contains(TITLE)
+        && visible.contains(HELP)
+        && visible.contains(TASK)
+        && visible.contains(PAGE)
+        && !visible.contains(RENAMED)
+        && field_has(screen, token))
+    {
+        return false;
+    }
+    !task_row(screen).contains(token)
 }
 
 fn assert_dialog_holds(screen: &TerminalSnapshot, token: &str) {
@@ -159,7 +175,10 @@ fn assert_modified_key() {
     app.key("ctrl+w");
     let screen = app.wait_screen("ctrl+w cuts the selected name", |screen| {
         let value = value_row(screen);
-        !value.contains("Migrate") && !value.contains('w') && text(screen).contains(HELP)
+        !value.contains("Migrate")
+            && !value.contains('w')
+            && text(screen).contains(HELP)
+            && text(screen).contains(TASK)
     });
     assert!(app.child_running(), "ctrl+w stopped the process");
     require(&screen, TASK);
@@ -177,7 +196,9 @@ fn assert_multiline() {
     let app = open("x01-input-multiline", &[]);
     open_rename(&app);
     app.paste("alpha\nbeta");
-    let screen = app.wait_screen("multiline paste joined", |screen| field_has(screen, JOINED));
+    let screen = app.wait_screen("multiline paste joined", |screen| {
+        dialog_holds(screen, JOINED)
+    });
     assert_dialog_holds(&screen, JOINED);
     assert_eq!(
         text(&screen).matches("beta").count(),
@@ -192,7 +213,7 @@ fn assert_unicode() {
     let app = open("x01-input-unicode", &[]);
     open_rename(&app);
     app.paste("λ");
-    let screen = app.wait_screen("unicode paste", |screen| field_has(screen, "λ"));
+    let screen = app.wait_screen("unicode paste", |screen| dialog_holds(screen, "λ"));
     assert!(app.child_running(), "unicode paste stopped the process");
     assert_dialog_holds(&screen, "λ");
     close(&app);
@@ -203,13 +224,13 @@ fn assert_control_paste() {
     open_rename(&app);
     app.paste("q");
     let queued = app.wait_screen("pasted q", |screen| {
-        field_has(screen, "q") && !field_has(screen, "Migrate")
+        dialog_holds(screen, "q") && !field_has(screen, "Migrate")
     });
     assert!(app.child_running(), "pasted q stopped the process");
     assert_dialog_holds(&queued, "q");
     app.paste("Ctrl+Q");
     let screen = app.wait_screen("pasted shortcut text", |screen| {
-        field_has(screen, "qCtrl+Q")
+        dialog_holds(screen, "qCtrl+Q")
     });
     assert!(app.child_running(), "pasted Ctrl+Q stopped the process");
     assert_dialog_holds(&screen, "qCtrl+Q");
@@ -221,7 +242,7 @@ fn assert_protocol(name: &str, env: &[(&str, &str)]) {
     open_rename(&app);
     app.type_text("z");
     let screen = app.wait_screen("typed z", |screen| {
-        field_has(screen, "z") && !field_has(screen, "Migrate")
+        dialog_holds(screen, "z") && !field_has(screen, "Migrate")
     });
     assert!(app.child_running(), "{name} stopped the process");
     assert_dialog_holds(&screen, "z");
@@ -238,7 +259,7 @@ fn assert_checkpoints() {
     open_rename(&app);
     app.paste(TOKEN);
     let wide = app.wait_screen(WIDE_ID, |screen| {
-        text(screen).contains(TOKEN) && screen.cols() == 120 && screen.rows() == 40
+        screen.cols() == 120 && screen.rows() == 40 && dialog_holds(screen, TOKEN)
     });
     assert_dialog_holds(&wide, TOKEN);
     assert_eq!(wide.cols(), 120);
@@ -274,10 +295,7 @@ fn assert_checkpoints() {
 
     app.resize(120, 40);
     let restored = app.wait_screen("restored", |screen| {
-        text(screen).contains(TOKEN)
-            && text(screen).contains(HELP)
-            && screen.cols() == 120
-            && screen.rows() == 40
+        screen.cols() == 120 && screen.rows() == 40 && dialog_holds(screen, TOKEN)
     });
     assert_dialog_holds(&restored, TOKEN);
     assert!(app.child_running(), "resize stopped the process");

@@ -66,10 +66,13 @@ The profile filter is `not binary(functional)`.
 On run 41783685777 that filter selected 0 tests across 5 binaries, the functional binary was skipped, and nextest exited 4.
 `allow_empty_test_suite` turns that empty result into a warning.
 Format, clippy, and documentation in the same job passed.
-`g05_candidate_refuses_reference_binary` and `g05_reference_session_receipt_records_identity` fail on ubuntu-26.04 before launch.
-`docs/testing/reference-manifest.json` points at the macOS worktree `/Users/donbeave/Projects/tailrocks/terminal-components-baseline-reference`, and those files are absent on the runner.
-Shard 1 of run 41783685777 failed both in under 10ms.
-The committed baselines do not need those binaries at runtime.
+Reference executables are files in `tests/functional/reference-bins/`, not a path on the macOS worktree.
+`aarch64-apple-darwin` keeps the original fffe002 digests.
+`x86_64-unknown-linux-gnu` was cross-compiled once from that same commit and is what Ubuntu executes.
+The top-level `sha256` stays the macOS digest.
+Candidate mode refuses every recorded digest.
+Reference mode accepts any digest recorded for that file name.
+Ordinary baselines still do not need those binaries at runtime.
 The inventory script is not a required CI step.
 Branch protection on this branch returned HTTP 404.
 macOS and Windows are unclaimed.

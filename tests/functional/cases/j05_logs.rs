@@ -232,9 +232,17 @@ fn close_with_each_key(app: &App) {
 
 fn abort_to_manager(app: &App) {
     app.key("ctrl+c");
-    let manager = poll_for(app, Duration::from_secs(2), |screen| {
+    // The cockpit already names b5df "failed setup" while the image is still
+    // building. "Launch failed" is the manager line after Ctrl+C.
+    let manager = poll_for(app, Duration::from_secs(8), |screen| {
         let visible = text(screen);
-        visible.contains("failed setup") && visible.contains("b5df")
+        visible.contains("Launch failed")
+            && visible.contains("Current directory")
+            && visible.contains("failed setup")
+            && visible.contains("b5df")
+            && !visible.contains(DOCKER)
+            && !visible.contains(HARDLINE)
+            && !visible.contains(ABORT)
     })
     .unwrap_or_else(|| panic!("Ctrl+C did not leave the cockpit\n{}", text(&app.screen())));
     let visible = text(&manager);
@@ -313,8 +321,12 @@ fn quit_while_open() {
         text(&app.screen())
     );
     app.key("ctrl+q");
-    let dialog = poll_for(&app, Duration::from_millis(500), |screen| {
-        text(screen).contains(QUIT_TITLE)
+    let dialog = poll_for(&app, Duration::from_secs(2), |screen| {
+        let visible = text(screen);
+        visible.contains(QUIT_TITLE)
+            && visible.contains(QUIT_BODY)
+            && visible.contains("▎Cancel")
+            && !visible.contains("▎Quit")
     })
     .unwrap_or_else(|| panic!("Ctrl+Q did not open quit\n{}", text(&app.screen())));
     let visible = text(&dialog);

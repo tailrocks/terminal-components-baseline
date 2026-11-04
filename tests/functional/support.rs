@@ -28,7 +28,9 @@ pub struct Point {
 /// is one of the recorded reference binaries, so a candidate run cannot be
 /// swapped onto the frozen reference build. `Reference` is the capture path:
 /// the file name must be `showcase`, `tablepro`, `holla`, or `jackin`, and
-/// the sha256 must equal that manifest entry.
+/// the sha256 must equal one digest recorded for that name. The top-level
+/// digest stays the aarch64-apple-darwin file. `platforms` adds the other
+/// host files built from the same reference commit.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum SessionMode {
     Candidate,
@@ -820,12 +822,52 @@ fn required_str(value: &serde_json::Value, key: &str) -> String {
         .to_string()
 }
 
-fn read_manifest() -> Manifest {
+fn push_digest(binaries: &mut Vec<(String, String)>, name: &str, sha: &str) {
+    if binaries
+        .iter()
+        .any(|(entry, digest)| entry == name && digest == sha)
+    {
+        return;
+    }
+    binaries.push((name.to_string(), sha.to_string()));
+}
+
+pub fn host_target_triple() -> &'static str {
+    match (std::env::consts::OS, std::env::consts::ARCH) {
+        ("macos", "aarch64") => "aarch64-apple-darwin",
+        ("linux", "x86_64") => "x86_64-unknown-linux-gnu",
+        (os, arch) => panic!("no reference binary for {os} {arch}"),
+    }
+}
+
+pub fn reference_binary(name: &str) -> PathBuf {
+    let value = manifest_value();
+    let host = host_target_triple();
+    let path = value["binaries"][name]["platforms"][host]["path"]
+        .as_str()
+        .unwrap_or_else(|| panic!("reference path for {name} on {host}"));
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(path)
+}
+
+pub fn reference_digest(name: &str) -> String {
+    let value = manifest_value();
+    let host = host_target_triple();
+    value["binaries"][name]["platforms"][host]["sha256"]
+        .as_str()
+        .unwrap_or_else(|| panic!("reference sha256 for {name} on {host}"))
+        .to_string()
+}
+
+fn manifest_value() -> serde_json::Value {
     let path = manifest_path();
     let text = std::fs::read_to_string(&path)
         .unwrap_or_else(|error| panic!("read reference manifest {}: {error}", path.display()));
-    let value: serde_json::Value = serde_json::from_str(&text)
-        .unwrap_or_else(|error| panic!("parse reference manifest {}: {error}", path.display()));
+    serde_json::from_str(&text)
+        .unwrap_or_else(|error| panic!("parse reference manifest {}: {error}", path.display()))
+}
+
+fn read_manifest() -> Manifest {
+    let value = manifest_value();
     let session_file = required_str(&value["acceptance"], "session_file");
     assert_eq!(
         session_file, "session.json",
@@ -839,7 +881,20 @@ fn read_manifest() -> Manifest {
         let sha = entry["sha256"]
             .as_str()
             .unwrap_or_else(|| panic!("reference manifest sha256 for {name}"));
-        binaries.push((name.clone(), sha.to_string()));
+        push_digest(&mut binaries, name, sha);
+        let Some(platforms) = entry
+            .get("platforms")
+            .and_then(serde_json::Value::as_object)
+        else {
+            continue;
+        };
+        for (target, platform) in platforms {
+            let platform_sha = platform
+                .get("sha256")
+                .and_then(serde_json::Value::as_str)
+                .unwrap_or_else(|| panic!("reference manifest sha256 for {name} {target}"));
+            push_digest(&mut binaries, name, platform_sha);
+        }
     }
     Manifest {
         reference_sha: required_str(&value, "reference_sha"),
@@ -886,12 +941,13 @@ fn identity_refusal(
                 .file_name()
                 .and_then(|file| file.to_str())
                 .unwrap_or("");
-            let expected = manifest
-                .binaries
-                .iter()
-                .find(|(entry, _)| entry == name)
-                .map(|(_, digest)| digest.as_str());
-            if sha256.is_some_and(|actual| expected == Some(actual)) {
+            let matched = sha256.is_some_and(|actual| {
+                manifest
+                    .binaries
+                    .iter()
+                    .any(|(entry, digest)| entry == name && digest == actual)
+            });
+            if matched {
                 None
             } else {
                 Some(format!(

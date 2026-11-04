@@ -3,7 +3,10 @@ use std::process::Command;
 
 use serde_json::Value;
 
-use crate::support::{App, Launch, SHOWCASE, SessionMode, file_sha256, text, try_launch};
+use crate::support::{
+    App, Launch, SHOWCASE, SessionMode, file_sha256, reference_binary, reference_digest, text,
+    try_launch,
+};
 
 const REFERENCE_SHA: &str = "fffe002e936d3621f22f9132144066a1374d5d74";
 const SHOWCASE_REFERENCE_SHA256: &str =
@@ -16,20 +19,6 @@ fn manifest() -> Value {
     serde_json::from_slice(&std::fs::read(&path).expect("reference manifest")).expect("manifest")
 }
 
-fn reference_binary(name: &str) -> PathBuf {
-    let entry = &manifest()["binaries"][name];
-    let relative = PathBuf::from(entry["path"].as_str().expect("binary path"));
-    if relative.is_absolute() {
-        return relative;
-    }
-    let worktree = entry["worktree"].as_str().unwrap_or("");
-    if worktree.is_empty() {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(relative)
-    } else {
-        PathBuf::from(worktree).join(relative)
-    }
-}
-
 fn reference_showcase() -> PathBuf {
     let bin = reference_binary("showcase");
     assert!(
@@ -37,7 +26,7 @@ fn reference_showcase() -> PathBuf {
         "missing reference showcase {}",
         bin.display()
     );
-    assert_eq!(file_sha256(&bin), SHOWCASE_REFERENCE_SHA256);
+    assert_eq!(file_sha256(&bin), reference_digest("showcase"));
     bin
 }
 
@@ -313,9 +302,7 @@ fn assert_acceptance_receipts() {
     }
 }
 
-#[test]
-fn g05_candidate_refuses_reference_binary() {
-    let bin = reference_showcase();
+fn refuse_candidate(bin: &Path) {
     let mut launch = Launch::new(
         "g05-candidate-refuses",
         bin.to_str().expect("reference path"),
@@ -334,6 +321,38 @@ fn g05_candidate_refuses_reference_binary() {
     let saved = std::fs::read_to_string(error.evidence.join("spawn-error.txt")).expect("error");
     assert!(saved.contains("reference binary"), "{saved}");
     assert!(!error.evidence.join("session.json").exists());
+}
+
+#[test]
+fn g05_candidate_refuses_reference_binary() {
+    let bin = reference_showcase();
+    refuse_candidate(&bin);
+    let value = manifest();
+    let platforms = value["binaries"]["showcase"]["platforms"]
+        .as_object()
+        .expect("showcase platforms");
+    for (target, platform) in platforms {
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(
+            platform["path"]
+                .as_str()
+                .unwrap_or_else(|| panic!("path for {target}")),
+        );
+        assert!(
+            path.is_file(),
+            "missing {target} showcase {}",
+            path.display()
+        );
+        assert_eq!(
+            file_sha256(&path),
+            platform["sha256"]
+                .as_str()
+                .unwrap_or_else(|| panic!("sha256 for {target}"))
+        );
+        if path.canonicalize().expect("platform binary") == bin.canonicalize().expect("host") {
+            continue;
+        }
+        refuse_candidate(&path);
+    }
 }
 
 #[test]
@@ -431,7 +450,7 @@ fn g05_reference_session_receipt_records_identity() {
     assert_eq!(session["lockfile_sha256"], manifest["lockfile_sha256"]);
     assert_eq!(
         session["binary_sha256"].as_str(),
-        Some(SHOWCASE_REFERENCE_SHA256)
+        Some(reference_digest("showcase").as_str())
     );
     let recorded = PathBuf::from(session["binary_path"].as_str().expect("binary path"));
     assert_eq!(
@@ -477,6 +496,18 @@ fn g05_check_visual_does_not_write_baselines() {
     let manifest = manifest();
     for name in ["showcase", "tablepro", "holla", "jackin"] {
         assert_ne!(sha, manifest["binaries"][name]["sha256"].as_str().unwrap());
+        let platforms = manifest["binaries"][name]["platforms"]
+            .as_object()
+            .unwrap_or_else(|| panic!("platforms for {name}"));
+        for (target, platform) in platforms {
+            assert_ne!(
+                sha,
+                platform["sha256"]
+                    .as_str()
+                    .unwrap_or_else(|| panic!("{name} {target}")),
+                "{name} {target}"
+            );
+        }
     }
     assert!(!app.evidence_dir().starts_with(&root));
     let missing = root.join("functional/g05_read_only.tui.json");

@@ -485,7 +485,12 @@ fn compare_levels_scrolls_then_narrows_before_growing() {
 #[test]
 fn navigate_folder_backspace_and_breadcrumb() {
     let app = page("s01-navigate", &[], 120, 40);
-    let before = app.wait_text("the live widget");
+    // "the live widget" is the page caption. The detail pane paints Depth
+    // on a later frame, and the first caption frame is still blank there.
+    let before = app.wait_screen("explorer depth", |screen| {
+        let visible = text(screen);
+        visible.contains("the live widget") && visible.contains("Depth            3")
+    });
     assert_has(&before, "Disk › Users › alex");
     assert_has(&before, "Desktop");
     assert_lacks(&before, "design-system");

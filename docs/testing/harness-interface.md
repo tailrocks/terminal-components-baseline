@@ -6,10 +6,14 @@ and do not accept baselines.
 
 `SessionMode::Reference` is the capture path. It spawns only when the
 binary's file name is `showcase`, `tablepro`, `holla`, or `jackin` and its
-sha256 equals that entry in `docs/testing/reference-manifest.json`. Any
-other file fails with `reference identity`. Candidate mode fails with
-`reference binary` when the file's sha256 equals any recorded reference
-digest. A normal `CARGO_BIN_EXE` build does not match those digests.
+sha256 equals a digest recorded for that name in
+`docs/testing/reference-manifest.json`. The top-level digest is the
+aarch64-apple-darwin file. Each `platforms` entry is another host file
+built from the same reference commit. Any other file fails with
+`reference identity`. Candidate mode fails with `reference binary` when
+the file's sha256 equals any recorded reference digest. The files live
+under `tests/functional/reference-bins/` and do not use a machine-local
+worktree path. A normal `CARGO_BIN_EXE` build does not match those digests.
 
 A successful launch writes `session.json` in its evidence directory under
 `target/functional`. The file is not placed under

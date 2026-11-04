@@ -249,7 +249,7 @@ fn prove_failure(app: &App) {
     forbid_other_scenario(&first);
 
     app.key("f5");
-    let refreshing = poll_until(app, Duration::from_secs(2), |screen| {
+    let refreshing = poll_until(app, Duration::from_secs(8), |screen| {
         text(screen).contains(REFRESHING) && shows_running(screen)
     });
     let visible = text(&refreshing);
@@ -261,7 +261,7 @@ fn prove_failure(app: &App) {
     assert!(!visible.contains(EMPTY));
 
     app.key("down");
-    let pending = poll_until(app, Duration::from_millis(800), |screen| {
+    let pending = poll_until(app, Duration::from_secs(3), |screen| {
         let visible = text(screen);
         visible.contains(REFRESHING)
             && shows_dirty(screen)
