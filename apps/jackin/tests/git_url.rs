@@ -44,6 +44,7 @@ fn a_url_that_only_contains_a_known_repository_is_refused() {
         "ftp://github.com/chainargos/payments-platform",
         "-oProxyCommand=touch /tmp/x@github.com:chainargos/payments-platform",
         "-oProxyCommand=x@github.com:chainargos/payments-platform",
+        "-x@github.com:chainargos/payments-platform",
         "--upload-pack=x@github.com:chainargos/payments-platform",
         "https://github.com/chainargos/payments-platform extra",
         "https://github.com/chainargos/payments-platform\u{7}",

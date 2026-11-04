@@ -286,3 +286,19 @@ fn ctrl_x_in_a_masked_desktop_field_neither_copies_nor_cuts() {
     assert_eq!(sink.0.lock().expect("writes").clone(), Vec::<String>::new());
     assert_eq!(queued(), Vec::<String>::new(), "no OSC 52");
 }
+
+#[test]
+fn ctrl_x_in_an_unmasked_desktop_field_cuts_to_the_clipboard() {
+    let mut field = TextInput::new(WidgetId::of("t.plain"), "Name")
+        .value("alpha")
+        .field_keys(FieldKeys::Desktop);
+    let sink = Arc::new(Recording::default());
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(sink.clone());
+    shell.clipboard.install();
+    queued();
+    field.on_key(&ctrl('a'));
+    field.on_key(&ctrl('x'));
+    assert_eq!(field.text(), "");
+    assert_eq!(sink.0.lock().expect("writes").clone(), ["alpha"]);
+}
