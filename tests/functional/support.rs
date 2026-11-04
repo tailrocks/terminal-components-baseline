@@ -283,7 +283,7 @@ impl App {
         self.check_visual_with_precondition(baseline_root, test_id, "")
     }
 
-    fn cursor_only(outcome: &tuiscotti_latest::check::CheckOutcome) -> bool {
+    pub(crate) fn cursor_only(outcome: &tuiscotti_latest::check::CheckOutcome) -> bool {
         let tuiscotti_latest::check::CheckOutcome::Failure(failure) = outcome else {
             return false;
         };

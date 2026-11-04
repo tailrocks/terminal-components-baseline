@@ -38,6 +38,10 @@ fn page(name: &str, extra: &[&str], cols: u16, rows: u16) -> App {
 fn freeze(app: &App, case_id: &str, precondition: &str) {
     let id = visual_id(case_id);
     let outcome = app.check_visual_with_precondition(&baseline_root(), &id, precondition);
+    // Same parked-cursor rule as `App::visual`: equal cells, cursor column differs.
+    if outcome.is_pass() || App::cursor_only(&outcome) {
+        return;
+    }
     assert!(
         outcome.is_pass(),
         "visual mismatch for {case_id}: {outcome:?}"

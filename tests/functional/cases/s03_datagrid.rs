@@ -292,21 +292,44 @@ fn route_by_page_keyboard_and_pointer() {
     for _ in 0..16 {
         app.key("]");
     }
-    let entered = app.wait_text(BLURB);
+    // The destination blurb paints before the previous page's grid leaves.
+    let entered = app.wait_screen("datagrid from overview", |screen| {
+        let visible = text(screen);
+        visible.contains(TITLE)
+            && visible.contains(BLURB)
+            && visible.contains("Northwind Traders")
+            && visible.contains(CAP_PLAY)
+            && !visible.contains(OVERVIEW)
+            && !visible.contains("Page options")
+            && !visible.contains("Editable tables")
+    });
     see(
         &entered,
         &[TITLE, BLURB, "Northwind Traders", CAP_PLAY],
         &[OVERVIEW, "Page options", "Editable tables"],
     );
     app.key("[");
-    let left = app.wait_text("Editable tables");
+    let left = app.wait_screen("editable after datagrid", |screen| {
+        let visible = text(screen);
+        visible.contains("Editable tables")
+            && visible.contains("Navigation is reversed cell")
+            && !visible.contains(BLURB)
+            && !visible.contains("no pending changes")
+    });
     see(
         &left,
         &["Editable tables", "Navigation is reversed cell"],
         &[BLURB, "no pending changes"],
     );
     app.key("]");
-    let again = app.wait_text(BLURB);
+    let again = app.wait_screen("datagrid again", |screen| {
+        let visible = text(screen);
+        visible.contains(TITLE)
+            && visible.contains(BLURB)
+            && visible.contains("Northwind Traders")
+            && !visible.contains("Editable tables")
+            && !visible.contains(OVERVIEW)
+    });
     see(
         &again,
         &[TITLE, BLURB, "Northwind Traders"],
