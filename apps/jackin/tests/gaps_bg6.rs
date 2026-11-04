@@ -13,7 +13,7 @@ use jackin_console::app::App;
 use jackin_console::backend::{Backend, Completion, Effect, FileSource};
 use jackin_console::domain::account::{Account, AccountForm, CredentialSource, DetectedKind};
 use jackin_console::domain::agent::Provider;
-use jackin_console::domain::instance::Instance;
+use jackin_console::domain::instance::{DaemonSnapshot, Instance};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::reason::IssueReason;
 use jackin_console::domain::vocabulary::Vocabulary;
@@ -430,4 +430,34 @@ fn editing_a_host_variable_account_opens_on_its_source_and_name() {
         "{shown}"
     );
     assert!(shown.contains("ANTHROPIC_API_KEY"), "{shown}");
+}
+
+fn roster_card(vocabulary: Vocabulary, daemon: DaemonSnapshot) -> String {
+    let mut world = world_for(Scenario::Returning);
+    world.surfaces.vocabulary = vocabulary;
+    let id = world.running()[0].id.clone();
+    world.daemons.remove(&id);
+    world.instance_mut(&id).expect("instance").daemon = daemon;
+    let mut app = app_with(Scenario::Returning, world);
+    screen_at(&mut app, 170, 40)
+}
+
+#[test]
+fn a_running_sandbox_without_tabs_is_not_called_unreachable() {
+    let live = roster_card(Vocabulary::openshell(), DaemonSnapshot::NoTabs);
+    assert!(live.contains("· no Capsule tabs open"), "{live}");
+    assert!(!live.contains("· gateway unreachable"), "{live}");
+}
+
+#[test]
+fn an_unreachable_gateway_still_reads_unreachable_on_the_card() {
+    let live = roster_card(Vocabulary::openshell(), DaemonSnapshot::Unavailable);
+    assert!(live.contains("· gateway unreachable"), "{live}");
+    assert!(!live.contains("no Capsule tabs open"), "{live}");
+}
+
+#[test]
+fn the_demo_card_reads_as_it_did_for_a_terminal_without_tabs() {
+    let demo = roster_card(Vocabulary::demo(), DaemonSnapshot::NoTabs);
+    assert!(demo.contains("· daemon unavailable"), "{demo}");
 }

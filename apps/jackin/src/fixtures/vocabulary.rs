@@ -51,6 +51,7 @@ impl Vocabulary {
                 topology_source: "daemon · {ago}".into(),
                 topology_unavailable: "unavailable".into(),
                 card_unavailable: "running {duration} · daemon unavailable".into(),
+                card_no_tabs: "running {duration} · daemon unavailable".into(),
                 list_tabs: "daemon · {tabs} · {panes}".into(),
                 list_no_tabs: "daemon reports no tabs".into(),
                 list_unavailable: "daemon unavailable".into(),

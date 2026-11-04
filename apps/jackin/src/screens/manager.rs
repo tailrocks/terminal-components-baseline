@@ -1787,30 +1787,23 @@ impl ManagerScreen {
                 ),
                 st,
             );
+            let running_for = junie_tui::ui::text::duration(
+                std::time::Duration::from_secs((w.now_secs() - i.created_secs).max(0) as u64),
+                junie_tui::ui::text::DurationStyle::Spoken,
+            );
+            let words = &w.surfaces.vocabulary.daemon;
             let live = match &i.daemon {
                 DaemonSnapshot::Tabs(tabs) => format!(
-                    "running {} · {} · {}",
-                    junie_tui::ui::text::duration(
-                        std::time::Duration::from_secs(
-                            (w.now_secs() - i.created_secs).max(0) as u64
-                        ),
-                        junie_tui::ui::text::DurationStyle::Spoken
-                    ),
+                    "running {running_for} · {} · {}",
                     plural(tabs.len(), "tab", "tabs"),
                     plural(tabs.iter().map(|t| t.panes.len()).sum(), "pane", "panes")
                 ),
-                _ => fill_in(
-                    &w.surfaces.vocabulary.daemon.card_unavailable,
-                    &[(
-                        "duration",
-                        &junie_tui::ui::text::duration(
-                            std::time::Duration::from_secs(
-                                (w.now_secs() - i.created_secs).max(0) as u64
-                            ),
-                            junie_tui::ui::text::DurationStyle::Spoken,
-                        ),
-                    )],
-                ),
+                DaemonSnapshot::NoTabs => {
+                    fill_in(&words.card_no_tabs, &[("duration", &running_for)])
+                }
+                DaemonSnapshot::Unavailable => {
+                    fill_in(&words.card_unavailable, &[("duration", &running_for)])
+                }
             };
             buf.set_string(
                 inner.x + 3,
