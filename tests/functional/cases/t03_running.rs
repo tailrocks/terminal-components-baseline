@@ -121,8 +121,35 @@ fn connect_development(app: &App) {
     );
 }
 
-fn shot(app: &App, checkpoint: &str) {
-    app.visual(&visual_id(checkpoint));
+fn shot(app: &App, checkpoint: &str, cols: u32, rows: u32) {
+    app.visual_while(&visual_id(checkpoint), |screen| {
+        screen.cols() == cols
+            && screen.rows() == rows
+            && cancelled_body(screen)
+            && row_text(screen, screen.rows().saturating_sub(1)).contains(STATUS)
+    });
+}
+
+/// The simulated statement finishes after six 80ms ticks. Saving the frame
+/// before the next key lets those ticks complete, so Esc arrives too late.
+fn frame_now(
+    app: &App,
+    reason: &str,
+    predicate: impl Fn(&TerminalSnapshot) -> bool,
+) -> TerminalSnapshot {
+    let deadline = Instant::now() + Duration::from_secs(10);
+    loop {
+        let screen = app.screen();
+        if predicate(&screen) {
+            return screen;
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "timed out: {reason}\n{}",
+            text(&screen)
+        );
+        std::thread::sleep(Duration::from_millis(5));
+    }
 }
 
 fn running_frame(screen: &TerminalSnapshot) -> bool {
@@ -226,9 +253,9 @@ fn tablepro_running_cancel_refuses_a_duplicate_and_keeps_the_cancelled_result() 
     type_statement(&app);
 
     app.key("ctrl+r");
-    let running = app.wait_screen("query is running", running_frame);
+    let running = frame_now(&app, "query is running", running_frame);
     app.key("ctrl+r");
-    let refused = app.wait_screen("second run refused", |screen| {
+    let refused = frame_now(&app, "second run refused", |screen| {
         text(screen).contains(REFUSED) && running_frame(screen)
     });
     app.key("esc");
@@ -257,7 +284,7 @@ fn tablepro_running_cancel_refuses_a_duplicate_and_keeps_the_cancelled_result() 
 
     let wide = app.screen();
     assert!(cancelled_body(&wide));
-    shot(&app, "T03.running.cancel.120x40");
+    shot(&app, "T03.running.cancel.120x40", 120, 40);
     let after_wide = app.screen();
     assert_eq!((after_wide.cols(), after_wide.rows()), (120, 40));
     assert!(cancelled_body(&after_wide), "{}", text(&after_wide));
@@ -270,7 +297,7 @@ fn tablepro_running_cancel_refuses_a_duplicate_and_keeps_the_cancelled_result() 
     assert_eq!((narrowed.cols(), narrowed.rows()), (80, 24));
     let narrow = app.screen();
     assert!(cancelled_body(&narrow), "{}", text(&narrow));
-    shot(&app, "T03.running.cancel.narrow");
+    shot(&app, "T03.running.cancel.narrow", 80, 24);
     app.resize(120, 40);
     let restored = app.wait_screen("cancelled result back at 120x40", |screen| {
         screen.cols() == 120 && screen.rows() == 40 && cancelled_body(screen)

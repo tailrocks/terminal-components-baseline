@@ -84,6 +84,11 @@ fn confirm_body(screen: &TerminalSnapshot) -> bool {
     visible.contains(TITLE) && visible.contains("Type ") && visible.contains("Execute")
 }
 
+fn footer_cancelled(screen: &TerminalSnapshot) -> bool {
+    let last = screen.rows().saturating_sub(1);
+    row_text(screen, last).contains(CANCELLED)
+}
+
 fn settled_confirm(app: &App, label: &str, cols: u32, rows: u32) -> TerminalSnapshot {
     app.wait_screen(label, |screen| {
         screen.cols() == cols && screen.rows() == rows && confirm_body(screen)
@@ -115,8 +120,15 @@ fn flash_settle(app: &App) {
     }
 }
 
-fn shot(app: &App, checkpoint: &str) {
-    app.visual(&visual_id(checkpoint));
+fn shot(app: &App, checkpoint: &str, cols: u32, rows: u32) {
+    // visual() keeps the first quiet frame. The cancel toast clears during
+    // that wait, and the baseline still shows it.
+    app.visual_while(&visual_id(checkpoint), |screen| {
+        screen.cols() == cols
+            && screen.rows() == rows
+            && confirm_body(screen)
+            && footer_cancelled(screen)
+    });
 }
 
 fn connect_development(app: &App) {
@@ -497,46 +509,60 @@ fn tablepro_confirm_gates_accept_only_the_exact_phrase_once() {
             &format!("Type {token} to confirm"),
         ],
     );
-    assert_marker_absent(&app, EXACT_MARKER);
-    assert_marker_absent(&app, CANCEL_MARKER);
-
+    // The cancel toast lasts 5s. History searches outlive it, so the gate is
+    // captured before those searches.
     run_statement(&app);
     let again = app.wait_screen("typed confirm reopened", |screen| {
         let visible = text(screen);
-        visible.contains(TITLE)
+        screen.cols() == 120
+            && screen.rows() == 40
+            && confirm_body(screen)
+            && footer_cancelled(screen)
             && visible.contains(&format!("Type {token} to confirm"))
             && !visible.contains(MISMATCH)
     });
-    assert_eq!((again.cols(), again.rows()), (120, 40));
     assert_unarmed(&again, &token);
     flash_settle(&app);
-    // The size-restored frame can be the header and an empty body. The phrase
-    // is back before the shot.
-    let wide = settled_confirm(&app, "typed confirm settled at 120x40", 120, 40);
-    assert_unarmed(&wide, &token);
-    shot(&app, "T03.confirm.gates.120x40");
+    shot(&app, "T03.confirm.gates.120x40", 120, 40);
 
     app.resize(80, 24);
-    let narrow = app.wait_screen("typed confirm at 80x24", |screen| {
+    app.wait_screen("typed confirm at 80x24", |screen| {
         screen.cols() == 80 && screen.rows() == 24 && confirm_body(screen)
     });
-    assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     flash_settle(&app);
     let narrow = settled_confirm(&app, "typed confirm settled at 80x24", 80, 24);
     see(
         &narrow,
-        &["Type ", "Execute"],
+        &["Type ", "Execute", CANCELLED],
         &[RUNNING, AFFECTED, MISMATCH],
     );
-    shot(&app, "T03.confirm.gates.narrow");
+    shot(&app, "T03.confirm.gates.narrow", 80, 24);
 
     app.resize(120, 40);
     let restored = app.wait_screen("typed confirm back at 120x40", |screen| {
         screen.cols() == 120
             && screen.rows() == 40
+            && confirm_body(screen)
             && text(screen).contains(&format!("Type {token} to confirm"))
     });
     assert_unarmed(&restored, &token);
+
+    app.key("esc");
+    app.wait_screen("gate closed before history", |screen| {
+        let visible = text(screen);
+        visible.contains(CANCELLED) && !visible.contains(TITLE)
+    });
+    assert_marker_absent(&app, EXACT_MARKER);
+    assert_marker_absent(&app, CANCEL_MARKER);
+
+    run_statement(&app);
+    let typing = app.wait_screen("typed confirm ready to type", |screen| {
+        let visible = text(screen);
+        visible.contains(TITLE)
+            && visible.contains(&format!("Type {token} to confirm"))
+            && !visible.contains(MISMATCH)
+    });
+    assert_unarmed(&typing, &token);
 
     type_rejected(&app, "nope");
     let partial: String = token.chars().take(token.chars().count() - 1).collect();

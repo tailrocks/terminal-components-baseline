@@ -352,7 +352,9 @@ fn tablepro_close_dirty_cancel_keeps_sql_and_blocks_the_neighbour() {
     app.key("enter");
     let kept = app.wait_screen("cancel keeps the sql", |screen| {
         let visible = text(screen);
+        // The title leaves a frame before the "Close anyway" footer hint.
         !visible.contains(TITLE)
+            && !visible.contains(DISCARD)
             && visible.contains(KEEP)
             && tab_line(screen).is_some_and(|row| row.contains(QUERY_1) && row.contains(QUERY_2))
     });
@@ -388,6 +390,7 @@ fn tablepro_close_dirty_cancel_keeps_sql_and_blocks_the_neighbour() {
         let visible = text(screen);
         let tabs = tab_line(screen).unwrap_or_default();
         !visible.contains(TITLE)
+            && !visible.contains(DISCARD)
             && !visible.contains(DROP)
             && visible.contains(KEEP)
             && tabs.contains(QUERY_1)
