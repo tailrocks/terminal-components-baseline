@@ -206,6 +206,10 @@ impl TerminalPane {
             && matches!(self.status, LinkStatus::Attaching | LinkStatus::Attached(_))
     }
 
+    fn viewing(&self) -> bool {
+        self.lease == Lease::ReadOnly
+    }
+
     fn say(&mut self, say: Say) {
         if self.said.len() == PENDING_EFFECTS {
             self.said.pop_front();
@@ -555,7 +559,11 @@ impl PaneBody for TerminalPane {
         if !modes.alt_screen {
             return None;
         }
-        if axis != Axis::Vertical || self.view.state().mouse_reporting() || delta == 0 {
+        if axis != Axis::Vertical
+            || self.view.state().mouse_reporting()
+            || delta == 0
+            || self.viewing()
+        {
             return Some(Outcome::Consumed);
         }
         let code = if delta < 0 {
@@ -688,7 +696,7 @@ impl PaneBody for TerminalPane {
         if focused {
             self.attention = false;
         }
-        if self.live() && self.view.state().focus_events() {
+        if self.live() && !self.viewing() && self.view.state().focus_events() {
             let report = if focused { FOCUS_IN } else { FOCUS_OUT };
             self.send(PaneCommand::Input(report.to_vec()));
         }

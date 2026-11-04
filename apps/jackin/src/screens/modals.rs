@@ -241,6 +241,7 @@ pub struct OpFlow {
     want: Option<OpScope>,
     in_flight: Option<Ticket>,
     listing: Option<OpListing>,
+    ids: Vec<String>,
     pub last_error: Option<OpError>,
 
     pub concealed_only: bool,
@@ -260,6 +261,7 @@ impl OpFlow {
             want: None,
             in_flight: None,
             listing: None,
+            ids: vec![],
             last_error: None,
             concealed_only: true,
         };
@@ -364,6 +366,7 @@ impl OpFlow {
             ),
         });
         self.picker.set_items(vec![]);
+        self.ids.clear();
         self.listing = None;
         self.in_flight = None;
         self.want = Some(self.scope());
@@ -403,66 +406,72 @@ impl OpFlow {
         self.last_error = None;
         let q = self.picker.query().to_lowercase();
         let matches = |s: &str| q.is_empty() || s.to_lowercase().contains(&q);
-        let items: Vec<Item> = match &self.listing {
+        let rows: Vec<(String, Item)> = match &self.listing {
             Some(OpListing::Accounts(rows)) => rows
                 .iter()
                 .filter(|a| matches(&a.id) || matches(&a.email))
                 .map(|a| {
-                    Item::new(a.id.clone())
+                    let item = Item::new(a.id.clone())
                         .detail(a.email.clone())
                         .glyph("▪")
                         .tag(match a.state {
                             crate::backend::OpAccountState::Available => "signed in",
                             crate::backend::OpAccountState::Locked => "locked",
                             crate::backend::OpAccountState::AuthorizationRequired => "authorize",
-                        })
+                        });
+                    (a.id.clone(), item)
                 })
                 .collect(),
             Some(OpListing::Vaults(rows)) => rows
                 .iter()
                 .filter(|v| matches(&v.name))
                 .map(|v| {
-                    Item::new(v.name.clone())
+                    let item = Item::new(v.name.clone())
                         .detail(format!("{} items", v.items))
                         .glyph("▪")
                         .tag(match v.access {
                             None | Some(crate::backend::VaultAccess::ReadWrite) => "",
                             Some(crate::backend::VaultAccess::ReadOnly) => "read-only",
                             Some(crate::backend::VaultAccess::Denied) => "no access",
-                        })
+                        });
+                    (v.id.clone(), item)
                 })
                 .collect(),
             Some(OpListing::Items(rows)) => rows
                 .iter()
                 .filter(|i| matches(&i.title))
                 .map(|i| {
-                    Item::new(i.title.clone())
+                    let item = Item::new(i.title.clone())
                         .detail(match i.fields {
                             Some(n) => format!("{} · {n} fields", i.category),
                             None => i.category.clone(),
                         })
-                        .glyph(" ")
+                        .glyph(" ");
+                    (i.id.clone(), item)
                 })
                 .collect(),
             Some(OpListing::Fields(rows)) => rows
                 .iter()
                 .filter(|f| matches(&f.label))
                 .map(|f| {
-                    Item::new(f.label.clone())
+                    let item = Item::new(f.label.clone())
                         .detail(f.kind.label().to_owned())
                         .glyph(if f.kind == FieldKind::Concealed {
                             "•"
                         } else {
                             " "
                         })
-                        .disabled(self.concealed_only && f.kind != FieldKind::Concealed)
+                        .disabled(self.concealed_only && f.kind != FieldKind::Concealed);
+                    (f.id.clone(), item)
                 })
                 .collect(),
             None => return,
         };
-        if items.is_empty() {
+        if rows.is_empty() {
             self.picker.empty_text = "No matches".into();
         }
+        let (ids, items): (Vec<_>, Vec<_>) = rows.into_iter().unzip();
+        self.ids = ids;
         self.picker.set_items(items);
     }
 
@@ -494,18 +503,9 @@ impl OpFlow {
         Outcome::Changed
     }
 
-    fn id_of(&self, label: &str) -> String {
-        match &self.listing {
-            Some(OpListing::Vaults(rows)) => rows.iter().find(|v| v.name == label).map(|v| &v.id),
-            Some(OpListing::Items(rows)) => rows.iter().find(|i| i.title == label).map(|i| &i.id),
-            _ => None,
-        }
-        .cloned()
-        .unwrap_or_default()
-    }
-
     fn choose(&mut self, i: usize, op: &dyn OnePassword) -> Outcome {
-        let Some(row) = self.picker.items.get(i).cloned() else {
+        let (Some(row), Some(id)) = (self.picker.items.get(i).cloned(), self.ids.get(i).cloned())
+        else {
             return Outcome::Consumed;
         };
         match self.step {
@@ -514,11 +514,11 @@ impl OpFlow {
                 self.step = OpStep::Vault;
             }
             OpStep::Vault => {
-                self.vault = Some((self.id_of(&row.label), row.label));
+                self.vault = Some((id, row.label));
                 self.step = OpStep::Item;
             }
             OpStep::Item => {
-                self.item = Some((self.id_of(&row.label), row.label));
+                self.item = Some((id, row.label));
                 self.step = OpStep::Field;
             }
             OpStep::Field => {

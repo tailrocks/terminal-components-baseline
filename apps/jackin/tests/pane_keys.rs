@@ -3,7 +3,7 @@
 
 mod pane_support;
 
-use jackin_console::panes::{PaneBody, PaneKey};
+use jackin_console::panes::{Lease, LinkEvent, PaneBody, PaneKey};
 use junie_tui::core::event::Outcome;
 use junie_tui::core::hit::Axis;
 use pane_support::*;
@@ -56,6 +56,23 @@ fn a_key_while_scrolled_back_returns_to_the_tail_and_is_forwarded() {
 
 fn arrows(n: usize, bytes: &[u8]) -> Vec<jackin_console::panes::PaneCommand> {
     (0..n).map(|_| input(bytes)).collect()
+}
+
+#[test]
+fn a_viewing_pane_scrolls_nothing_into_the_program_but_a_key_still_types() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, b"\x1b[?1049h");
+    bench.push(0, LinkEvent::Lease(Lease::ReadOnly));
+    pane.tick(900);
+    assert_eq!(pane.wheel(Axis::Vertical, -3), Some(Outcome::Consumed));
+    assert_eq!(
+        bench.commands(0),
+        [],
+        "a wheel on a viewer is not a keystroke"
+    );
+    assert_eq!(pane.key(&key("x"), 1_000), PaneKey::Forwarded);
+    assert_eq!(bench.commands(0), [input(b"x")], "typing takes the lease");
 }
 
 #[test]

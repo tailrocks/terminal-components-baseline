@@ -4,7 +4,7 @@
 mod pane_support;
 
 use jackin_console::domain::instance::AgentState;
-use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneBody};
+use jackin_console::panes::{EndKind, Lease, LinkEvent, LinkFault, PaneBody};
 use pane_support::*;
 
 const FOCUS_OUT: &[u8] = b"\x1b[O";
@@ -37,6 +37,27 @@ fn focus_events_follow_pane_focus() {
     pane.tick(1_500);
     pane.focus_changed(true, 1_600);
     assert_eq!(bench.commands(0).len(), 2, "the program turned them off");
+}
+
+#[test]
+fn a_viewing_pane_reports_no_focus_and_an_owning_one_does_again() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, b"\x1b[?1004h");
+    bench.push(0, LinkEvent::Lease(Lease::ReadOnly));
+    pane.tick(1_000);
+    pane.focus_changed(true, 1_100);
+    pane.focus_changed(false, 1_200);
+    assert_eq!(
+        bench.commands(0),
+        [],
+        "switching tabs on a viewer must not type into the program"
+    );
+
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
+    pane.tick(1_300);
+    pane.focus_changed(true, 1_400);
+    assert_eq!(bench.commands(0), [input(FOCUS_IN)]);
 }
 
 #[test]
