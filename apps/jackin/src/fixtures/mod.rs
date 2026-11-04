@@ -20,9 +20,10 @@ use crate::domain::workspace::{
     AllowedRoles, EnvVar, Isolation, Mount, MountScope, RoleEntry, RolePolicy, RoleSource,
     Workspace,
 };
-use crate::panes::{Daemon, PaneBody, PaneRequest, PaneSpawn, ScriptPane};
+use crate::panes::{Daemon, PaneBody, PaneRequest, PaneSpawn};
 use crate::sim::SimBackend;
 use crate::sim::onepassword::SimOnePassword;
+use crate::sim::pane::ScriptPane;
 use crate::sim::scripts::SimScripts;
 use crate::world::{
     DaemonHealth, FsEntry, GithubRepo, GlobalConfig, Takeover, TrustRow, World, WorldParts,

@@ -1,6 +1,7 @@
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
+use self::pane::ScriptPane;
 use crate::backend::{
     Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, OpSession, ValidationOutcome,
 };
@@ -9,12 +10,13 @@ use crate::domain::agent::Provider;
 use crate::domain::instance::Instance;
 use crate::domain::launch::LaunchContent;
 use crate::launch::{LaunchPlan, LaunchTarget};
-use crate::panes::{PaneBody, PaneRequest, PaneSpawn, ScriptPane};
+use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
 use crate::world::{Msg, World};
 
 pub mod changes;
 pub mod launch;
 pub mod onepassword;
+pub mod pane;
 pub mod provider;
 pub mod scripts;
 pub mod surfaces;

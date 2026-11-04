@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
+use super::pane::{AgentProcess, SessionScript, Step};
 use crate::domain::agent::Agent;
 use crate::domain::instance::AgentState;
-use crate::panes::{AgentProcess, SessionScript, Step};
 use junie_tui::theme::Tone;
 use junie_tui::widgets::viewport::{Line, Span};
 

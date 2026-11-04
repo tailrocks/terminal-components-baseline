@@ -56,6 +56,7 @@ const RULES: &[Rule] = &[
     alias("fixtures"),
     code("Scenario"),
     code("AgentProcess"),
+    code("ScriptPane"),
     code("SessionScript"),
     code("LaunchPlan"),
     code("refresh_fails"),
@@ -130,8 +131,6 @@ const PENDING: &[Pending] = &[
         "B7a",
     ),
     ("LaunchPlan", "launch.rs", 10, "B7a"),
-    ("AgentProcess", "panes.rs", 5, "B8a"),
-    ("SessionScript", "panes.rs", 4, "B8a"),
 ];
 
 struct Source {
@@ -492,6 +491,23 @@ fn demo_tokens_only_under_demo_modules() {
             line: 1
         }]
     );
+}
+
+#[test]
+fn the_script_player_lives_only_in_sim() {
+    let player = "pub trait SessionScript {}\npub enum Step {}\npub struct AgentProcess;\npub struct ScriptPane;\nimpl PaneBody for ScriptPane {}";
+    assert_eq!(scan(&[src("sim/pane.rs", player)], &[]), Report::default());
+    for (token, text) in [
+        ("ScriptPane", "pub struct ScriptPane;"),
+        ("AgentProcess", "pub struct AgentProcess;"),
+        ("SessionScript", "pub trait SessionScript {}"),
+    ] {
+        for path in ["panes.rs", "backend.rs", "screens/capsule.rs", "world.rs"] {
+            let found = scan(&[src(path, text)], &[]).unexpected;
+            assert_eq!(found.len(), 1, "{path}: {found:?}");
+            assert_eq!(found[0].token, token, "{path}");
+        }
+    }
 }
 
 #[test]
