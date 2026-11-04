@@ -7,6 +7,10 @@ use termpane::{DamageGrid, EraseDisplayPolicy, PassthroughEvent, ScrollOp};
 
 use crate::core::event::Key;
 
+mod viewport;
+
+pub use viewport::TerminalViewport;
+
 pub const SCROLLBACK_ROWS: usize = 1_000;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -248,18 +252,31 @@ impl<'a> TerminalView<'a> {
     }
 }
 
-fn color(value: termpane::Color) -> Color {
+#[derive(Debug, Clone, Copy)]
+struct Defaults {
+    fg: Color,
+    bg: Color,
+}
+
+const TERMINAL_DEFAULTS: Defaults = Defaults {
+    fg: Color::Reset,
+    bg: Color::Reset,
+};
+
+fn color(value: termpane::Color, default: Color) -> Color {
     match value {
-        termpane::Color::Default => Color::Reset,
+        termpane::Color::Default => default,
         termpane::Color::Idx(index) => Color::Indexed(index),
         termpane::Color::Rgb(r, g, b) => Color::Rgb(r, g, b),
     }
 }
 
-fn style(cell: &termpane::Cell, with_color: bool) -> Style {
+fn style(cell: &termpane::Cell, with_color: bool, defaults: Defaults) -> Style {
     let mut style = Style::default();
     if with_color {
-        style = style.fg(color(cell.fgcolor())).bg(color(cell.bgcolor()));
+        style = style
+            .fg(color(cell.fgcolor(), defaults.fg))
+            .bg(color(cell.bgcolor(), defaults.bg));
     }
     for (on, modifier) in [
         (cell.bold(), Modifier::BOLD),
@@ -275,23 +292,33 @@ fn style(cell: &termpane::Cell, with_color: bool) -> Style {
     style
 }
 
+fn paint_view(
+    view: &TermView<'_>,
+    area: Rect,
+    buf: &mut Buffer,
+    with_color: bool,
+    defaults: Defaults,
+) {
+    for row in 0..area.height.min(view.rows()) {
+        for col in 0..area.width.min(view.cols()) {
+            let Some(cell) = view.cell(row, col) else {
+                continue;
+            };
+            if cell.is_wide_continuation() {
+                continue;
+            }
+            let target = &mut buf[(area.x + col, area.y + row)];
+            let text = cell.text();
+            target.set_symbol(if text.is_empty() { " " } else { text });
+            target.set_style(style(cell.cell, with_color, defaults));
+        }
+    }
+}
+
 impl Widget for TerminalView<'_> {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let view = self.state.view(self.state.scrollback());
-        for row in 0..area.height.min(view.rows()) {
-            for col in 0..area.width.min(view.cols()) {
-                let Some(cell) = view.cell(row, col) else {
-                    continue;
-                };
-                if cell.is_wide_continuation() {
-                    continue;
-                }
-                let target = &mut buf[(area.x + col, area.y + row)];
-                let text = cell.text();
-                target.set_symbol(if text.is_empty() { " " } else { text });
-                target.set_style(style(cell.cell, self.color));
-            }
-        }
+        paint_view(&view, area, buf, self.color, TERMINAL_DEFAULTS);
         if self.focused
             && let Some(at) = self.state.cursor(area)
         {

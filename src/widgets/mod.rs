@@ -50,7 +50,7 @@ pub mod steps;
 pub mod table;
 mod table_specimen;
 pub mod tabs;
-mod text_select;
+pub(crate) mod text_select;
 pub mod textarea;
 pub mod too_small;
 pub mod toolbar;
