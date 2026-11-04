@@ -1,6 +1,11 @@
 use std::sync::Arc;
 
-use junie_tui::shell::{Clipboard, Copied, NativeClipboard};
+use junie_tui::clock::Moment;
+use junie_tui::core::event::Key;
+use junie_tui::core::id::WidgetId;
+use junie_tui::shell::{Clipboard, Copied, NativeClipboard, Shell};
+use junie_tui::widgets::input::TextInput;
+use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
 #[derive(Debug)]
 struct Sink(bool);
@@ -112,4 +117,48 @@ fn osc52_is_queued_only_when_the_native_write_did_not_land() {
 
     Clipboard::new().copy(TEXT);
     assert_eq!(queued().len(), 1, "no native sink: OSC 52 only");
+}
+
+fn cmd(c: char) -> Key {
+    Key {
+        code: KeyCode::Char(c),
+        mods: KeyModifiers::SUPER,
+    }
+}
+
+fn copy_selection(sink: Arc<dyn NativeClipboard>) {
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(sink);
+    shell.clipboard.install();
+    let mut field = TextInput::new(WidgetId::of("t.field"), "Name").value("alpha");
+    field.on_key(&cmd('a'));
+    field.on_key(&cmd('c'));
+}
+
+#[test]
+fn a_field_copy_reaches_the_native_clipboard_once_and_queues_no_osc52() {
+    queued();
+    let native = Arc::new(Counting::default());
+    copy_selection(native.clone());
+    assert_eq!(native.0.load(std::sync::atomic::Ordering::SeqCst), 1);
+    assert_eq!(queued(), Vec::<String>::new());
+}
+
+#[test]
+fn a_field_copy_falls_back_to_one_osc52_when_the_native_write_fails() {
+    queued();
+    copy_selection(Arc::new(Sink(false)));
+    assert_eq!(queued().len(), 1);
+}
+
+#[test]
+fn a_shell_copy_with_the_hook_installed_writes_once() {
+    queued();
+    let native = Arc::new(Counting::default());
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(native.clone());
+    shell.clipboard.install();
+    shell.copy_at(TEXT, None, Moment::ZERO);
+    assert_eq!(native.0.load(std::sync::atomic::Ordering::SeqCst), 1);
+    assert_eq!(queued(), Vec::<String>::new());
 }

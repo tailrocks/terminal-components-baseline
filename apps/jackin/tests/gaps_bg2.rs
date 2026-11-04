@@ -10,7 +10,7 @@ use std::sync::{Arc, Mutex};
 use common::*;
 use jackin_console::app::App;
 use jackin_console::backend::{Backend, Completion, Effect, Reply};
-use jackin_console::domain::account::AccountRegistry;
+use jackin_console::domain::account::{AccountRegistry, Lifecycle};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::instance::{Instance, RepoRef};
@@ -447,6 +447,38 @@ fn two_ready_accounts_with_no_default_preselect_none() {
     let offer = only.offer_for(Agent::ClaudeCode, Some(ws), Some("the-architect"));
     assert_eq!(offer.accounts, ["acct-claude-work"]);
     assert_eq!(offer.preselected.as_deref(), Some("acct-claude-work"));
+}
+
+#[test]
+fn an_unusable_explicit_account_is_not_replaced_by_the_one_ready_account() {
+    let mut world = two_ready_claude_accounts();
+    world.workspaces[0].accounts.preferred.insert(
+        jackin_console::domain::agent::Provider::Anthropic,
+        "acct-claude-work".into(),
+    );
+    world
+        .accounts
+        .accounts
+        .iter_mut()
+        .find(|a| a.id == "acct-claude-work")
+        .expect("work")
+        .lifecycle = Lifecycle::NeedsLogin;
+    let ws = &world.workspaces[0];
+    let offer = world.offer_for(Agent::ClaudeCode, Some(ws), Some("the-architect"));
+
+    assert_eq!(
+        offer.preselected, None,
+        "the operator chose another account"
+    );
+    let why = offer
+        .blocked
+        .expect("the chosen account is shown as blocked");
+    let work = world
+        .accounts
+        .get("acct-claude-work")
+        .expect("work")
+        .title();
+    assert!(why.starts_with(&work), "{why}");
 }
 
 #[test]
