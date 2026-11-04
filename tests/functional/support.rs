@@ -94,6 +94,11 @@ impl App {
     }
 
     pub fn screen(&self) -> TerminalSnapshot {
+        self.fence();
+        self.capture()
+    }
+
+    fn capture(&self) -> TerminalSnapshot {
         self.session
             .capture_snapshot(SnapshotScope::ActiveScreen)
             .expect("capture live terminal")
@@ -233,6 +238,7 @@ impl App {
     }
 
     pub fn settle(&self) -> TerminalSnapshot {
+        self.fence();
         self.session
             .wait_quiet(&WaitQuietOptions::new(TIMEOUT, Duration::from_millis(150)).unwrap())
             .expect("terminal must settle after the semantic assertion");
@@ -246,11 +252,6 @@ impl App {
     }
 
     pub fn key(&self, key: &str) {
-        self.send_key(key);
-        self.fence();
-    }
-
-    fn send_key(&self, key: &str) {
         self.log(format!("key {key}"));
         self.session
             .execute(Operation::Key {
@@ -265,7 +266,6 @@ impl App {
         self.session
             .write_bytes(value.as_bytes())
             .expect("type through terminal input");
-        self.fence();
     }
 
     pub fn paste(&self, value: &str) {
@@ -273,7 +273,6 @@ impl App {
         self.session
             .paste(value)
             .expect("paste using negotiated terminal mode");
-        self.fence();
     }
 
     pub fn advance_clock(&self, milliseconds: u64) {
@@ -317,7 +316,7 @@ impl App {
             assert!(
                 Instant::now() < deadline,
                 "the application did not acknowledge the input within {TIMEOUT:?}\n{}",
-                text(&self.screen())
+                text(&self.capture())
             );
             std::thread::sleep(Duration::from_millis(2));
         }
@@ -359,7 +358,6 @@ impl App {
         self.session
             .mouse_checked(action)
             .expect("application must negotiate SGR mouse input for this action");
-        self.fence();
     }
 
     pub fn click(&self, point: Point) {
@@ -381,7 +379,6 @@ impl App {
                 .write_bytes(bytes.as_bytes())
                 .expect("wheel through application PTY");
         }
-        self.fence();
     }
 
     pub fn resize(&self, cols: u16, rows: u16) {
@@ -389,12 +386,11 @@ impl App {
         self.session
             .execute(Operation::Resize { cols, rows })
             .expect("resize PTY");
-        self.fence();
     }
 
     pub fn finish(&self) {
         self.assert_running("before Ctrl+Q");
-        self.send_key("ctrl+q");
+        self.key("ctrl+q");
         self.session
             .execute(Operation::WaitExit {
                 timeout_ms: Some(10_000),
@@ -431,7 +427,7 @@ impl App {
             state.exited.is_none(),
             "application exited while {reason}: {:?}\n{}",
             state.exited,
-            text(&self.screen())
+            text(&self.capture())
         );
     }
 
