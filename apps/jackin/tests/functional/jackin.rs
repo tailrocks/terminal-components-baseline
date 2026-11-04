@@ -2209,6 +2209,65 @@ fn jackin_fixed_account_form_refuses_a_typed_key_and_its_button() {
 }
 
 #[test]
+fn jackin_fixed_account_form_says_what_jackin_does_with_a_reference() {
+    let app = fixed_app("jackin-fixed-account-pending");
+    open_fixed_accounts(&app, 0, "Accounts › Overview");
+    app.key("a");
+    app.wait_text("New account");
+    for _ in 0..3 {
+        app.key("tab");
+    }
+    app.wait_screen("focus reaches the source radio", |s| {
+        row_has(s, "Local agent folder", "▎")
+    });
+    app.key("up");
+    app.wait_screen("1Password is chosen", |s| {
+        row_has(s, "1Password item / field", "(●)")
+    });
+    app.click_text("Choose…");
+    app.wait_text("loading accounts…");
+    app.advance_clock(300);
+    app.wait_text("chainargos.1password.com");
+    app.key("enter");
+    app.wait_text("loading vaults…");
+    app.advance_clock(300);
+    app.wait_text("Engineering");
+    app.key("enter");
+    app.wait_text("loading items from Engineering…");
+    app.advance_clock(300);
+    app.wait_text("Anthropic · Work");
+    app.type_text("Work");
+    app.wait_screen("the item list is narrowed", |s| {
+        !text(s).contains("OpenAI · Codex Primary")
+    });
+    app.key("enter");
+    app.wait_text("loading Anthropic · Work…");
+    app.advance_clock(300);
+    app.wait_text("Choose field");
+    app.key("enter");
+    let chosen = app.wait_text("Reference chosen");
+    let t = text(&chosen);
+    assert!(
+        t.contains("only the reference is saved · read here for usage only"),
+        "{t}"
+    );
+    assert!(!t.contains("resolved at launch"), "{t}");
+
+    app.click(button(&app, "Validate"));
+    let pending = app.wait_text("… material   checking");
+    let t = text(&pending);
+    assert!(t.contains("only the reference is saved"), "{t}");
+    assert!(t.contains("Validating the source…"), "{t}");
+    assert!(t.contains("New account"), "the form stays open:\n{t}");
+    app.visual("functional/jackin_fixed_account_form_pending");
+
+    app.key("esc");
+    app.wait_absent("New account");
+    leave_accounts(&app);
+    app.finish();
+}
+
+#[test]
 fn jackin_fixed_account_edit_refuses_a_host_variable_account() {
     let reason = "reads ZAI_API_KEY · remove it, then add an account";
     let app = fixed_app("jackin-fixed-account-edit");
@@ -2530,7 +2589,7 @@ fn jackin_fixed_launch_picker_disables_every_agent_jackin_cannot_launch() {
     for agent in ["Claude Code", "Amp", "Kimi Code", "OpenCode", "Grok Build"] {
         assert!(
             rows.iter().any(|row| row.contains(&format!(" {agent} "))
-                && row.contains("usage only · jackin launches Codex")
+                && row.contains("usage only · launches Codex only")
                 && row.contains("unavailable")),
             "{agent} is a disabled row with its reason:\n{}",
             text(&picker)
@@ -2612,6 +2671,17 @@ fn jackin_launch_asks_for_the_values_a_role_needs() {
     ] {
         assert!(text(&asked).contains(line), "{line:?}:\n{}", text(&asked));
     }
+    assert!(
+        text(&asked).contains("Codex · OpenAI") && text(&asked).contains("0/7 stages"),
+        "the questions sit over the Codex launch:\n{}",
+        text(&asked)
+    );
+    assert!(row_with(&asked, "Fail the preflight hook on purpose").contains("optional"));
+    let note = row_with(&asked, "Note for the run");
+    assert!(
+        note.contains('*') && !note.contains("optional"),
+        "an entry with no default is required: {note}"
+    );
     app.settle();
     app.visual("functional/jackin_launch_env_prompt");
 
@@ -2621,6 +2691,16 @@ fn jackin_launch_asks_for_the_values_a_role_needs() {
         text(&held).contains("Fail the preflight hook on purpose"),
         "the launch waits for the answers"
     );
+    app.click_text("Start launch");
+    let refused = app.wait_text("Enter a value for SENTINEL_NOTE.");
+    assert!(
+        text(&refused).contains("Values for this launch"),
+        "the form stays open:\n{}",
+        text(&refused)
+    );
+    app.click_text("Note for the run");
+    app.type_text("hello");
+    app.key("enter");
     app.click_text("Start launch");
     app.advance_clock(30_000);
     app.wait_screen("the launch hands off to the capsule", |s| {

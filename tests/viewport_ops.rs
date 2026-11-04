@@ -231,3 +231,25 @@ fn draw_shows_the_hardware_cursor_only_when_the_caret_is_allowed_and_live() {
         "off the live tail the caret is not where the program is typing"
     );
 }
+
+#[test]
+fn a_text_viewport_drag_after_the_area_collapsed_is_ignored() {
+    let mut v = viewport();
+    v.on_press_with(
+        Position::new(1, 0),
+        1,
+        ratatui::crossterm::event::KeyModifiers::NONE,
+    );
+    v.set_area(Rect::new(3, 2, 0, 0));
+    assert_eq!(
+        v.on_drag(Position::new(2, 2)),
+        junie_tui::core::event::Outcome::Ignored
+    );
+    v.set_area(AREA);
+    assert_eq!(
+        v.on_drag(Position::new(4, 2)),
+        junie_tui::core::event::Outcome::Ignored,
+        "the press ended with the area: a later drag selects nothing"
+    );
+    assert!(!v.has_selection());
+}

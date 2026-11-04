@@ -17,6 +17,7 @@ use jackin_console::domain::account::{
 use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::Instance;
 use jackin_console::domain::launch::LaunchContent;
+use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
@@ -305,6 +306,41 @@ fn editing_the_form_drops_the_pending_check() {
 }
 
 #[test]
+fn the_typed_key_never_reaches_a_debug_print() {
+    const KEY: &str = "sk-ant-valid-abcdef1234";
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, PLAIN_KEY);
+    click_text(&mut app, "Validate");
+    let ticket = backend.check_ticket();
+
+    let effects = backend.checks();
+    let [
+        Effect::CheckSource {
+            key: Some(sent), ..
+        },
+    ] = effects.as_slice()
+    else {
+        panic!("one check with the typed key expected, got {effects:?}");
+    };
+    assert_eq!(sent.expose(), KEY, "the backend gets the key itself");
+    for printed in [format!("{effects:?}"), format!("{effects:#?}")] {
+        assert!(
+            !printed.contains(KEY),
+            "the effect prints the key: {printed}"
+        );
+        assert!(!printed.contains("abcdef"), "{printed}");
+    }
+
+    let reply = checked(ticket, key_outcome(&app));
+    for printed in [format!("{reply:?}"), format!("{reply:#?}")] {
+        assert!(
+            !printed.contains(KEY),
+            "the reply prints the key: {printed}"
+        );
+    }
+}
+
+#[test]
 fn a_reply_to_an_earlier_check_is_not_the_forms() {
     let (mut app, backend) = held(Scenario::AccountsMixed);
     press(&mut app, PLAIN_KEY);
@@ -512,6 +548,169 @@ fn a_folder_probe_that_fails_keeps_the_form_open() {
     assert!(shown.contains("the disk is not answering"), "{shown}");
     assert!(shown.contains("New account"), "{shown}");
     assert_eq!(backend.saves(), 0);
+}
+
+#[test]
+fn a_probe_reply_for_a_path_the_user_has_since_edited_saves_nothing() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, FOLDER);
+    click_text(&mut app, "Save");
+    let ticket = backend.check_ticket();
+    let outcome = folder_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    let probe = backend.probe_ticket();
+
+    click_text(&mut app, "~/.claude-spare");
+    press(&mut app, "x y z");
+    assert!(screen(&mut app).contains("xyz"), "the field shows the edit");
+
+    app.deliver(&Msg::FolderProbed {
+        ticket: probe,
+        result: Ok(FolderProbe::Found(DetectedKind::CodexAuthJson)),
+    });
+    ticks(&mut app, 4);
+
+    assert_eq!(backend.saves(), 0, "the old path is not stored");
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains("New account"),
+        "the form stays open:\n{shown}"
+    );
+    assert!(shown.contains("xyz"), "the typed text is kept:\n{shown}");
+    assert!(!shown.contains("checking"), "{shown}");
+}
+
+#[test]
+fn a_check_reply_for_a_key_the_user_has_since_edited_is_not_shown() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, PLAIN_KEY);
+    click_text(&mut app, "Validate");
+    let ticket = backend.check_ticket();
+
+    click_text(&mut app, "1234");
+    press(&mut app, "x y z");
+
+    let outcome = key_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    let shown = screen(&mut app);
+    assert!(
+        !shown.contains(SPARE_CANARY),
+        "the rows describe the old key:\n{shown}"
+    );
+    assert!(!shown.contains("checking"), "{shown}");
+    assert!(shown.contains("New account"), "{shown}");
+}
+
+#[test]
+fn a_save_whose_check_reply_finds_the_form_edited_stores_nothing() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, FOLDER);
+    click_text(&mut app, "Save");
+    let ticket = backend.check_ticket();
+
+    click_text(&mut app, "~/.claude-spare");
+    press(&mut app, "x y z");
+    let outcome = folder_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    ticks(&mut app, 4);
+
+    assert!(
+        backend
+            .seen()
+            .iter()
+            .all(|e| !matches!(e, Effect::ProbeFolder { .. })),
+        "a reply for the old path starts no probe"
+    );
+    assert_eq!(backend.saves(), 0);
+    assert!(screen(&mut app).contains("xyz"));
+}
+
+#[test]
+fn browsing_for_a_folder_drops_the_pending_check() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, FOLDER);
+    click_text(&mut app, "Save");
+    let ticket = backend.check_ticket();
+
+    click_text(&mut app, "Browse…");
+    let outcome = folder_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    ticks(&mut app, 4);
+
+    assert!(
+        backend
+            .seen()
+            .iter()
+            .all(|e| !matches!(e, Effect::ProbeFolder { .. })),
+        "the chooser buttons drop the pending check"
+    );
+    assert_eq!(backend.saves(), 0);
+}
+
+fn choose_a_reference(app: &mut App) {
+    open_picker(app);
+    until_loaded(app);
+    press(app, "enter");
+    until_loaded(app);
+    press(app, "enter");
+    until_loaded(app);
+    press(app, "W o r k");
+    press(app, "enter");
+    until_loaded(app);
+    press(app, "enter");
+    assert!(screen(app).contains("Anthropic · Work"));
+}
+
+#[test]
+fn the_reference_note_follows_the_vocabulary() {
+    let mut demo = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    choose_a_reference(&mut demo);
+    assert!(
+        screen(&mut demo).contains("only the reference is saved · the value is resolved at launch")
+    );
+
+    let mut world = world_for(Scenario::AccountsMixed);
+    world.surfaces.vocabulary = Vocabulary::openshell();
+    let mut live = timed(Scenario::AccountsMixed, world);
+    choose_a_reference(&mut live);
+    let shown = screen(&mut live);
+    assert!(
+        shown.contains("only the reference is saved · read here for usage only"),
+        "{shown}"
+    );
+    assert!(!shown.contains("resolved at launch"), "{shown}");
+}
+
+#[test]
+fn choosing_a_reference_drops_the_pending_check() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    choose_a_reference(&mut app);
+    click_text(&mut app, "Validate");
+    assert!(screen(&mut app).contains("… material   checking"));
+
+    click_text(&mut app, "Choose…");
+    ticks(&mut app, 14);
+
+    let said = status(&app);
+    assert!(
+        !said.starts_with("Validat"),
+        "the reply to a dropped check says nothing: {said}"
+    );
+}
+
+#[test]
+fn entering_plain_text_drops_the_pending_check() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    choose_a_reference(&mut app);
+    click_text(&mut app, "Validate");
+    assert!(screen(&mut app).contains("… material   checking"));
+
+    click_text(&mut app, "Enter plain text instead");
+    let shown = screen(&mut app);
+    assert!(
+        !shown.contains("checking"),
+        "the pending rows are gone:\n{shown}"
+    );
 }
 
 fn view_changes(app: &mut App) {

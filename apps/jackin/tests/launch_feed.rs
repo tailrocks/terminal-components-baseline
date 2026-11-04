@@ -950,6 +950,52 @@ fn the_feeds_questions_open_a_form_and_the_answers_go_back() {
 }
 
 #[test]
+fn an_entry_without_a_default_cannot_start_empty() {
+    let mine = launched("jk-5b0y", "sbx-beta", InstanceStatus::Running);
+    let (mut app, calls) = scripted(vec![running(0), vec![asks()], vec![ready(mine)]], None);
+    tick_until(&mut app, "the questions", shows("Name the first thing"));
+    let shown = screen(&mut app);
+    let row = |needle: &str| {
+        shown
+            .lines()
+            .find(|l| l.contains(needle))
+            .unwrap_or_else(|| panic!("{needle:?} missing:\n{shown}"))
+            .to_owned()
+    };
+    assert!(row("Name the first thing").contains("optional"), "{shown}");
+    assert!(
+        row("Name the second thing").contains('*')
+            && !row("Name the second thing").contains("optional"),
+        "an entry with no default is marked required:\n{shown}"
+    );
+
+    click_text(&mut app, "Start launch");
+    let refused = screen(&mut app);
+    assert!(
+        refused.contains("Enter a value for SECOND_VALUE."),
+        "{refused}"
+    );
+    assert!(
+        refused.contains("Values for this launch"),
+        "the form stays open"
+    );
+    assert!(
+        calls.lock().expect("calls").answers.is_empty(),
+        "nothing is sent for an empty required value"
+    );
+
+    press(&mut app, "h i enter");
+    click_text(&mut app, "Start launch");
+    assert_eq!(
+        calls.lock().expect("calls").answers,
+        [[
+            answer("FIRST_VALUE", "kept-default"),
+            answer("SECOND_VALUE", "hi")
+        ]],
+    );
+}
+
+#[test]
 fn escape_on_the_questions_cancels_the_launch_and_creates_nothing() {
     let (mut app, calls) = scripted(vec![running(0), vec![asks()]], None);
     tick_until(&mut app, "the questions", shows("Name the first thing"));

@@ -81,6 +81,35 @@ fn the_sim_refuses_a_role_the_workspace_does_not_allow() {
     assert_eq!(app.world.instances, others);
 }
 
+/// The refusal and the questions sit over the cockpit of the launch jackin
+/// can make: Codex, the seven stages of the OpenShell plan.
+#[test]
+fn the_checks_sit_over_the_codex_cockpit_of_seven_stages() {
+    for (downs, scope, shown_when) in [
+        (
+            PORTAL as usize,
+            "customer-portal › writer",
+            "Role not allowed",
+        ),
+        (
+            INFRA as usize,
+            "infra-control-plane › sentinel",
+            "Fail the preflight hook on purpose",
+        ),
+    ] {
+        let mut app = started(world_for(Scenario::LaunchChecks));
+        launch(&mut app, downs, scope);
+        tick_until(&mut app, "the check", shows(shown_when));
+        let shown = screen(&mut app);
+        assert!(shown.contains("Codex · OpenAI"), "{scope}:\n{shown}");
+        assert!(shown.contains("0/7 stages"), "{scope}:\n{shown}");
+        assert!(
+            !shown.contains("Claude Code") && !shown.contains("/11 stages"),
+            "{scope}:\n{shown}"
+        );
+    }
+}
+
 #[test]
 fn the_sim_launches_a_role_the_workspace_allows_and_asks_nothing() {
     let mut app = started(world_for(Scenario::LaunchChecks));
@@ -108,6 +137,7 @@ fn the_sim_asks_what_the_role_manifest_asks() {
     }
     assert_eq!(app.route(), Route::Cockpit);
 
+    press(&mut app, "tab enter h i enter");
     click_text(&mut app, "Start launch");
     tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
 }

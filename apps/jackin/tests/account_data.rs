@@ -15,7 +15,7 @@ use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::World;
 
 const USAGE_ONLY: &str = "launch needs a local Codex login · this source is usage only";
-const OTHER_AGENT: &str = "usage only · jackin launches Codex only";
+const OTHER_AGENT: &str = "usage only · launches Codex only";
 
 fn returning() -> World {
     world_for(Scenario::Returning)
@@ -278,7 +278,7 @@ fn the_picker_lists_blocked_agents_as_unavailable_rows() {
         "{screen}"
     );
     assert!(row("Codex").contains("unavailable"));
-    assert!(row("Claude Code").contains("usage only · jackin launches Codex only"));
+    assert!(row("Claude Code").contains("usage only · launches Codex only"));
     assert!(row("Claude Code").contains("unavailable"));
     assert!(!screen.contains("ready"));
 }

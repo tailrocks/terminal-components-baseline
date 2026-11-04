@@ -551,6 +551,21 @@ fn scrolled_back_edges_fade_and_the_live_tail_does_not() {
 }
 
 #[test]
+fn a_drag_after_the_area_collapsed_is_ignored() {
+    let mut v = viewport(100);
+    v.on_press_with(Position::new(1, 0), 1, KeyModifiers::NONE);
+    v.set_area(Rect::new(3, 2, 0, 0));
+    assert_eq!(v.on_drag(Position::new(2, 2)), Outcome::Ignored);
+    v.set_area(AREA);
+    assert_eq!(
+        v.on_drag(Position::new(4, 2)),
+        Outcome::Ignored,
+        "the press ended with the area: a later drag selects nothing"
+    );
+    assert!(!v.has_selection());
+}
+
+#[test]
 fn no_selection_is_none() {
     let mut v = viewport(100);
     assert!(!v.has_selection());

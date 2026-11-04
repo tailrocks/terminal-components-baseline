@@ -159,6 +159,8 @@ pub struct Vocabulary {
     pub trust_hint: String,
     pub agent_no_credentials: String,
 
+    pub op_reference_note: String,
+
     pub about_label: String,
     pub paste_label: String,
     pub paste_empty: String,
@@ -293,6 +295,9 @@ impl Vocabulary {
             trust_hint: "Show source".into(),
             agent_no_credentials: "no credentials handed to the sandbox".into(),
 
+            op_reference_note:
+                "only the reference is saved · read here for usage only".into(),
+
             about_label: "About jackin".into(),
             paste_label: "Paste last copy".into(),
             paste_empty: "Nothing copied in this console yet".into(),
@@ -416,6 +421,7 @@ impl Vocabulary {
             ("env_op_label", &self.env_op_label),
             ("trust_hint", &self.trust_hint),
             ("agent_no_credentials", &self.agent_no_credentials),
+            ("op_reference_note", &self.op_reference_note),
             ("about_label", &self.about_label),
             ("paste_label", &self.paste_label),
             ("paste_empty", &self.paste_empty),

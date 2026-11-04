@@ -63,7 +63,7 @@ fn surfaces_openshell_sets_every_field() {
         agent_blocked,
         Some(AgentBlocked {
             launchable: Agent::Codex,
-            text: "usage only · jackin launches Codex only".into(),
+            text: "usage only · launches Codex only".into(),
         })
     );
     assert_eq!(

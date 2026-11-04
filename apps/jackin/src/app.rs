@@ -508,6 +508,7 @@ impl App {
                 Outcome::Ignored
             };
         }
+        self.tell_forms_of_reply(m);
         self.world.absorb(m);
         let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));
         let route = self.route();
@@ -1447,6 +1448,17 @@ impl App {
             p.set_items(items);
             if tag.kind == "palette" {
                 p.scope = Some(format!("{n} of 20"));
+            }
+        }
+    }
+
+    fn tell_forms_of_reply(&mut self, m: &Msg) {
+        for entry in self.layers.iter_mut() {
+            let (tag, owner) = (entry.tag.clone(), entry.owner);
+            if let Some(form) = entry.get_mut::<FormDialog>()
+                && let Some(s) = self.router.screen_mut(owner)
+            {
+                s.reply_arrives(&tag, form, m);
             }
         }
     }

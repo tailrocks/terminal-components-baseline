@@ -77,10 +77,12 @@ impl SimBackend {
 
     /// Checks a launch before it starts: a workspace that does not allow the
     /// role refuses it, and a role whose manifest prompts for env values asks
-    /// for them.
+    /// for them. The launch it guards is the OpenShell one, the only one
+    /// jackin makes.
     pub fn guarded() -> Arc<dyn Backend> {
         Arc::new(SimBackend {
             launch: LaunchRule::Guarded,
+            openshell: true,
             ..SimBackend::default()
         })
     }

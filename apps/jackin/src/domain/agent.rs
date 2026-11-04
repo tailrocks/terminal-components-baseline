@@ -297,7 +297,7 @@ impl AgentBlocked {
     pub fn openshell() -> Self {
         Self {
             launchable: Agent::Codex,
-            text: "usage only · jackin launches Codex only".into(),
+            text: "usage only · launches Codex only".into(),
         }
     }
 }

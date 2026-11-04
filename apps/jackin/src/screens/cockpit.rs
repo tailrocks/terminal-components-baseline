@@ -429,6 +429,8 @@ impl CockpitScreen {
                 FormField::input(
                     &q.name,
                     TextInput::new(id.sub(&q.name), &q.prompt)
+                        .required(q.default.is_none())
+                        .required_message(&format!("Enter a value for {}.", q.name))
                         .placeholder("no default")
                         .help(&format!("sets {}", q.name))
                         .value(q.default.as_deref().unwrap_or("")),
