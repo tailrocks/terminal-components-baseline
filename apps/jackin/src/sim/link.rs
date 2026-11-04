@@ -82,7 +82,8 @@ pub enum Play {
     /// Attaches, shows the stream, and is detached a second later; the next
     /// attach stays.
     Detaches(Stream),
-    /// Attaches, shows the stream, and exits with code 0 a second later.
+    /// Attaches, shows the stream, and exits with code 0 a second later; a
+    /// restart attaches and stays.
     Exits(Stream),
     /// The attach cannot start.
     Refuses(String),
@@ -163,6 +164,13 @@ impl LinkSource for SimSource {
             }
         };
         Ok(Box::new(SimLink::new(steps)))
+    }
+
+    fn restart(&self, request: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+        match &self.play {
+            Play::Exits(stream) => Ok(Box::new(SimLink::new(attach(*stream)))),
+            _ => self.open(request, size),
+        }
     }
 }
 

@@ -109,3 +109,24 @@ fn a_confirmed_paste_is_sent_as_it_is_without_brackets() {
     );
     assert_eq!(policy.confirmed("123456789"), Paste::TooLarge { bytes: 9 });
 }
+
+#[test]
+fn every_line_break_is_one_newline() {
+    let policy = ForwardPolicy::default();
+    assert_eq!(policy.paste("one\rtwo", true), bracketed(b"one\ntwo"));
+    assert_eq!(policy.paste("a\r\nb\rc\nd", true), bracketed(b"a\nb\nc\nd"));
+    assert_eq!(
+        policy.paste("one\rtwo\rthree", false),
+        Paste::NeedsConfirm { lines: 3 },
+        "lines that end in a bare carriage return are still lines"
+    );
+    assert_eq!(
+        policy.paste("a\r\n", false),
+        Paste::NeedsConfirm { lines: 1 },
+        "CR LF is one break, not two"
+    );
+    assert_eq!(
+        policy.confirmed("one\rtwo"),
+        Paste::Send(b"one\ntwo".to_vec())
+    );
+}

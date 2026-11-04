@@ -83,6 +83,8 @@ impl ForwardPolicy {
             return Err(Paste::TooLarge { bytes: text.len() });
         }
         Ok(text
+            .replace("\r\n", "\n")
+            .replace('\r', "\n")
             .chars()
             .filter(|c| !c.is_control() || matches!(c, '\t' | '\n'))
             .collect())

@@ -6,7 +6,8 @@ mod pane_support;
 use std::sync::Arc;
 
 use jackin_console::panes::{
-    ClipboardWrite, LinkEvent, PaneBody, PaneEffect, PanePolicy, TerminalPane, sanitize_title,
+    ClipboardWrite, EndKind, LinkEvent, LinkStatus, PaneBody, PaneEffect, PanePolicy, TerminalPane,
+    sanitize_title,
 };
 use junie_tui::theme::Tone;
 use pane_support::*;
@@ -269,4 +270,83 @@ fn title_is_sanitised_and_shown() {
     assert_eq!(rig.pane.title(), Some("build done"));
     rig.write(1_200, b"\x1b]0;second\x07");
     assert_eq!(rig.pane.title(), Some("second"));
+}
+
+/// A fresh Codex pane with the focus, attached at 0 ms, still in its replay
+/// window: the link is `Attaching`.
+fn replaying() -> Rig {
+    let bench = Bench::new();
+    let mut pane = pane_for(codex(), &bench, PanePolicy::default());
+    pane.sync_size(inner(80, 24));
+    pane.focus_changed(true, 0);
+    bench.push(0, LinkEvent::Attached);
+    pane.tick(0);
+    Rig { bench, pane }
+}
+
+#[test]
+fn a_clipboard_write_in_the_replay_is_not_copied_after_a_key() {
+    let mut rig = replaying();
+    rig.pane.key(&key("a"), 100);
+    assert_eq!(
+        rig.bench.commands(0),
+        [input(b"a")],
+        "the key reached the link while it was attaching"
+    );
+    assert_eq!(
+        rig.write(200, HELLO),
+        [],
+        "output replayed from before the key is not the program answering it"
+    );
+}
+
+/// A Codex pane typed into at 1,000 ms, detached, and reattached by Enter at
+/// 1,500 ms. The new link attached at 1,600 ms.
+fn reattached() -> Rig {
+    let mut rig = Rig::codex();
+    rig.bench.push(0, LinkEvent::Ended(EndKind::Detached));
+    rig.pane.tick(1_100);
+    rig.pane.take_effects(&words());
+    rig.pane.key(&key("enter"), 1_500);
+    assert_eq!(rig.bench.opened(), 2, "Enter reattaches");
+    rig.bench.push(1, LinkEvent::Attached);
+    rig.pane.tick(1_600);
+    rig
+}
+
+#[test]
+fn the_replay_of_a_reattach_is_not_copied() {
+    let mut rig = reattached();
+    rig.bench.output(1, HELLO);
+    rig.pane.tick(2_000);
+    assert_eq!(
+        rig.pane.take_effects(&words()),
+        [],
+        "the key at 1,000 ms is 1 s old, and the replay is not the program answering it"
+    );
+}
+
+#[test]
+fn a_reattach_forgets_the_key_before_it() {
+    let mut rig = reattached();
+    rig.pane.tick(2_400);
+    assert!(matches!(rig.pane.status(), LinkStatus::Attached(_)));
+    rig.bench.output(1, HELLO);
+    rig.pane.tick(2_500);
+    assert_eq!(
+        rig.pane.take_effects(&words()),
+        [blocked(
+            "Clipboard write from Codex blocked · select text to copy it"
+        )],
+        "the key at 1,000 ms was for the old link, not a gesture of the new one"
+    );
+
+    rig.pane.key(&key("b"), 3_000);
+    rig.bench.output(1, HELLO);
+    rig.pane.tick(3_100);
+    assert_eq!(
+        rig.pane.take_effects(&words()),
+        [copied("Hello", "from Codex · 5 characters")],
+        "a key on the new link opens the window again"
+    );
 }

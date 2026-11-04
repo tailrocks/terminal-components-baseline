@@ -203,21 +203,38 @@ fn jackin_terminal_detached_exited_and_failed_panes() {
 
     chord(&app, "6");
     app.advance_clock(2_500);
-    let exited = app.wait_text("Codex exited (code 0) · the sandbox keeps running");
+    let exited =
+        app.wait_text("Codex exited (code 0) · press Enter to restart · the sandbox keeps running");
     assert!(text(&exited).contains("gpt-5-codex"));
     app.visual("functional/jackin_pane_exited");
 
     chord(&app, "7");
     app.advance_clock(300);
-    let failed = app.wait_text("Could not attach to Codex");
+    let failed = app.wait_text("could not attach to Codex");
     for line in [
-        "the gateway is unreachable · run jackin doctor",
-        "press Enter to retry",
+        "Press Enter to retry · could not attach to Codex: the gateway is unreachable · run jackin doctor",
         "Codex is not attached",
     ] {
         assert!(text(&failed).contains(line), "{line:?}:\n{}", text(&failed));
     }
     app.visual("functional/jackin_pane_failed");
+
+    chord(&app, "6");
+    app.key("enter");
+    app.advance_clock(300);
+    let attaching = app.wait_text("Attaching to Codex…");
+    assert!(
+        !text(&attaching).contains("Codex exited"),
+        "Enter started Codex again:\n{}",
+        text(&attaching)
+    );
+    app.advance_clock(1_000);
+    let restarted = app.wait_absent("Attaching to Codex…");
+    assert!(
+        text(&restarted).contains("gpt-5-codex"),
+        "{}",
+        text(&restarted)
+    );
     detach(&app);
     app.finish();
 }

@@ -159,8 +159,9 @@ impl PaneWords {
     pub fn demo() -> Self {
         Self {
             viewing: "Read-only · another terminal controls this pane".into(),
-            connection_lost: "Connection to the daemon lost · press Enter to reattach".into(),
-            exited: "{agent} exited (code {code}) · the container keeps running".into(),
+            connection_lost: "Daemon connection lost · press Enter to reattach".into(),
+            exited: "{agent} exited (code {code}) · press Enter to restart · the container keeps running"
+                .into(),
             ..Self::openshell()
         }
     }

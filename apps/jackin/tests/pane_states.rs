@@ -161,7 +161,7 @@ fn detached_note_and_enter() {
     );
     assert_eq!(
         note(&gone).as_deref(),
-        Some("Connection to the gateway lost · press Enter to reattach")
+        Some("Gateway connection lost · press Enter to reattach")
     );
 }
 
@@ -176,7 +176,7 @@ fn a_stream_that_closes_before_the_attach_is_a_failure() {
     assert_eq!(
         note(&pane).as_deref(),
         Some(
-            "Could not attach to Codex: the connection closed before the pane attached · press Enter to retry"
+            "Press Enter to retry · could not attach to Codex: the connection closed before the pane attached"
         )
     );
 }
@@ -191,18 +191,13 @@ fn exited_note_and_close() {
     assert_eq!(pane.status(), &LinkStatus::Exited(Some(0)));
     assert_eq!(
         note(&pane).as_deref(),
-        Some("Codex exited (code 0) · the sandbox keeps running")
+        Some("Codex exited (code 0) · press Enter to restart · the sandbox keeps running")
     );
     assert_eq!(pane.state(), AgentState::Done);
     assert!(!pane.close_needs_confirm(), "Ctrl+B x closes it at once");
     assert_eq!(row(&pane, 0), "bye", "the last output stays");
-    assert_eq!(pane.key(&key("enter"), 1_100), PaneKey::Consumed);
     assert_eq!(pane.key(&key("a"), 1_100), PaneKey::Consumed);
-    assert_eq!(
-        bench.opened(),
-        1,
-        "an exited program is not restarted by a key"
-    );
+    assert_eq!(bench.opened(), 1, "a letter does not restart it");
 
     let failed = Bench::new();
     let mut crashed = live(&failed);
@@ -210,7 +205,7 @@ fn exited_note_and_close() {
     crashed.tick(1_000);
     assert_eq!(
         note(&crashed).as_deref(),
-        Some("Codex exited (code 3) · the sandbox keeps running")
+        Some("Codex exited (code 3) · press Enter to restart · the sandbox keeps running")
     );
     assert_eq!(crashed.state(), AgentState::Blocked);
 
@@ -220,8 +215,23 @@ fn exited_note_and_close() {
     lost.tick(1_000);
     assert_eq!(
         note(&lost).as_deref(),
-        Some("Codex exited (code unknown) · the sandbox keeps running")
+        Some("Codex exited (code unknown) · press Enter to restart · the sandbox keeps running")
     );
+}
+
+#[test]
+fn enter_restarts_an_exited_program() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, b"bye");
+    bench.push(0, LinkEvent::Exited(Some(0)));
+    pane.tick(1_000);
+    assert_eq!(pane.key(&key("enter"), 1_100), PaneKey::Consumed);
+    assert_eq!(bench.opened(), 2, "Enter starts the program again");
+    assert_eq!(bench.restarted(), [1], "the second link is a restart");
+    assert_eq!(pane.status(), &LinkStatus::Attaching);
+    assert_eq!(bench.commands(1), [], "Enter is not forwarded");
+    assert_eq!(row(&pane, 0), "", "the new attach has a fresh screen");
 }
 
 #[test]
@@ -233,7 +243,7 @@ fn failed_note_and_retry() {
     assert_eq!(
         pane.note(&words()),
         Some(PaneNote {
-            text: "Could not attach to Codex: the gateway is unreachable · run jackin doctor · press Enter to retry".into(),
+            text: "Press Enter to retry · could not attach to Codex: the gateway is unreachable · run jackin doctor".into(),
             tone: Tone::Error
         })
     );
@@ -285,6 +295,7 @@ fn enter_forwarding_rules() {
     failed.key(&key("enter"), 100);
     assert_eq!(bad.opened(), 1, "state 7 consumes it and tries again");
     assert_eq!(bad.commands(0), []);
+    assert_eq!(bad.restarted(), [], "a retry is not a restart");
 }
 
 #[test]

@@ -2108,7 +2108,10 @@ impl Page<Jackin> for CapsuleScreen {
                     .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
                     .is_some_and(|p| p.body.sends_prefix())
                 {
-                    hints.push(hint("Ctrl+B Ctrl+B", "Send Ctrl+B"));
+                    hints.push(Hint::new(
+                        "Ctrl+B Ctrl+B",
+                        w.surfaces.vocabulary.pane.send_prefix.clone(),
+                    ));
                 }
                 hints.extend([
                     hint("c", "New tab"),
@@ -2656,18 +2659,19 @@ impl CapsuleScreen {
 
     fn paste_last_copy(&mut self, text: &str, w: &mut World, cx: &mut Cx) {
         let now = w.now_ms();
+        let pasted = w.surfaces.vocabulary.pane.pasted.clone();
         let Some(pid) = self.focused_pane(w) else {
-            cx.status("Pasted into the focused pane");
+            cx.status(pasted);
             return;
         };
         let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid)) else {
-            cx.status("Pasted into the focused pane");
+            cx.status(pasted);
             return;
         };
         if pane.body.kind() == PaneKindTag::Script {
             let head: String = text.chars().take(200).collect();
             pane.body.paste(&head, now);
-            cx.status("Pasted into the focused pane");
+            cx.status(pasted);
             return;
         }
         let outcome = pane.body.paste(text, now);
@@ -2685,8 +2689,9 @@ impl CapsuleScreen {
     ) {
         let words = &w.surfaces.vocabulary.pane;
         match outcome {
-            PasteOutcome::Sent if menu => cx.status("Pasted into the focused pane"),
+            PasteOutcome::Sent if menu => cx.status(words.pasted.clone()),
             PasteOutcome::Sent | PasteOutcome::Dropped => {}
+            PasteOutcome::Full => cx.error(words.paste_full.clone()),
             PasteOutcome::TooLarge => cx.error(fill_in(
                 &words.paste_too_large,
                 &[("bytes", &text.len().to_string())],

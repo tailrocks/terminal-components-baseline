@@ -79,6 +79,10 @@ pub trait PaneLink: Send + std::fmt::Debug {
 /// failure to start is an `Err` with the reason the operator reads.
 pub trait LinkSource: Send + Sync + std::fmt::Debug {
     fn open(&self, request: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String>;
+
+    /// Starts the program again after it exited, as `jackin attach --restart`
+    /// does, and opens a link to the new run. Never blocks, like `open`.
+    fn restart(&self, request: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String>;
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

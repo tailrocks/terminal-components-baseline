@@ -131,3 +131,32 @@ fn exit_codes_set_done_or_blocked() {
         "a failed attach waits for the operator"
     );
 }
+
+#[test]
+fn a_bell_in_the_replay_marks_nothing() {
+    for event in [&b"old\x07"[..], b"old\x1b]9;done\x07"] {
+        let bench = Bench::new();
+        let mut pane = pane(&bench);
+        pane.sync_size(inner(80, 24));
+        bench.push(0, LinkEvent::Attached);
+        pane.tick(0);
+        pane.focus_changed(false, 50);
+        bench.output(0, event);
+        pane.tick(100);
+        assert_eq!(
+            pane.state(),
+            AgentState::Unknown,
+            "a bell from before the attach is not a new one"
+        );
+        pane.tick(800);
+        assert_eq!(pane.state(), AgentState::Unknown);
+
+        bench.output(0, event);
+        pane.tick(900);
+        assert_eq!(
+            pane.state(),
+            AgentState::Blocked,
+            "the same bell after the window is"
+        );
+    }
+}

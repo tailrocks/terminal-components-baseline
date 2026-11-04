@@ -77,10 +77,11 @@ impl PaneLink for TestLink {
 pub struct Bench {
     links: Mutex<Vec<Log>>,
     refusals: Mutex<VecDeque<String>>,
+    restarted: Mutex<Vec<usize>>,
 }
 
-impl LinkSource for Bench {
-    fn open(&self, _: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+impl Bench {
+    fn link(&self, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
         if let Some(reason) = self.refusals.lock().expect("refusals").pop_front() {
             return Err(reason);
         }
@@ -88,6 +89,23 @@ impl LinkSource for Bench {
         log.lock().expect("log").sizes.push(size);
         self.links.lock().expect("links").push(log.clone());
         Ok(Box::new(TestLink(log)))
+    }
+}
+
+impl LinkSource for Bench {
+    fn open(&self, _: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+        self.link(size)
+    }
+
+    fn restart(&self, _: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+        let link = self.link(size);
+        if link.is_ok() {
+            self.restarted
+                .lock()
+                .expect("restarted")
+                .push(self.opened() - 1);
+        }
+        link
     }
 }
 
@@ -101,6 +119,11 @@ impl Bench {
             .lock()
             .expect("refusals")
             .push_back(reason.to_owned());
+    }
+
+    /// The numbers of the links that were opened by a restart.
+    pub fn restarted(&self) -> Vec<usize> {
+        self.restarted.lock().expect("restarted").clone()
     }
 
     pub fn opened(&self) -> usize {

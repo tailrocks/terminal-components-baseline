@@ -215,6 +215,16 @@ fn a_paste_into_a_protected_pane_goes_straight_in() {
 }
 
 #[test]
+fn a_paste_the_link_did_not_take_says_so() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.bench.fill(0, true);
+    rig.paste("hello");
+    assert_eq!(rig.status(), "Paste not sent · the pane is busy, try again");
+    assert_eq!(rig.bench.commands(0), []);
+}
+
+#[test]
 fn a_paste_over_the_limit_is_refused_and_says_so() {
     let mut rig = Rig::new();
     rig.attach();

@@ -77,6 +77,8 @@ pub enum PasteOutcome {
         lines: usize,
     },
     TooLarge,
+    /// The link's queue is full: nothing was sent.
+    Full,
     /// The pane has no program to take it.
     Dropped,
 }

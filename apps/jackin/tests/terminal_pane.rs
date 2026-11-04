@@ -265,3 +265,46 @@ fn replies_go_back_to_the_program_and_a_full_queue_drops_them() {
     small.sync_size(inner(80, 24));
     assert_eq!(small.paste("12345", 0), PasteOutcome::TooLarge);
 }
+
+#[test]
+fn a_reattach_below_the_floor_waits_for_room() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.push(
+        0,
+        LinkEvent::Ended(jackin_console::panes::EndKind::Detached),
+    );
+    pane.tick(1_100);
+    pane.sync_size(inner(10, 2));
+
+    pane.key(&key("enter"), 1_200);
+    assert_eq!(bench.opened(), 1, "no link opens at the old 80x24");
+    assert_eq!(pane.status(), &LinkStatus::Pending);
+    assert_eq!(
+        pane.note(&words()).map(|n| n.text).as_deref(),
+        Some("Pane too small · zoom with Ctrl+B z")
+    );
+
+    pane.sync_size(inner(60, 20));
+    assert_eq!(bench.opened(), 2, "the next size that fits opens it");
+    assert_eq!(bench.sizes(1), [size(20, 60)]);
+    assert_eq!(pane.status(), &LinkStatus::Attaching);
+}
+
+#[test]
+fn a_paste_the_link_did_not_take_is_not_reported_sent() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.fill(0, true);
+    assert_eq!(pane.paste("hello", 1_000), PasteOutcome::Full);
+    assert_eq!(bench.commands(0), []);
+    assert_eq!(
+        pane.paste_confirmed("a\nb", 1_100),
+        PasteOutcome::Full,
+        "a confirmed paste says so too"
+    );
+
+    bench.fill(0, false);
+    assert_eq!(pane.paste("hello", 1_200), PasteOutcome::Sent);
+    assert_eq!(bench.commands(0), [input(b"hello")]);
+}

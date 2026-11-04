@@ -90,6 +90,15 @@ impl Replay {
     }
 }
 
+/// How a pane asks its source for a link: the same program again, or a new
+/// run of one that exited.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+enum Attempt {
+    #[default]
+    Again,
+    Restart,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum Say {
     Detached(DetachCause),
@@ -120,6 +129,7 @@ pub struct TerminalPane {
     last_gesture_ms: Option<i64>,
     last_refusal_ms: Option<i64>,
     replay: Replay,
+    attempt: Attempt,
     attached_once: bool,
     has_output: bool,
     dropped_replies: usize,
@@ -158,6 +168,7 @@ impl TerminalPane {
             last_gesture_ms: None,
             last_refusal_ms: None,
             replay: Replay::Idle,
+            attempt: Attempt::Again,
             attached_once: false,
             has_output: false,
             dropped_replies: 0,
@@ -209,15 +220,21 @@ impl TerminalPane {
         }
     }
 
-    fn send_input(&mut self, bytes: Vec<u8>, now_ms: i64) -> bool {
+    fn send_input(&mut self, bytes: Vec<u8>, now_ms: i64) -> Sent {
         if !self.live() {
-            return false;
+            return Sent::Closed;
         }
-        let sent = self.send(PaneCommand::Input(bytes)) == Sent::Queued;
-        if sent {
+        let sent = self.send(PaneCommand::Input(bytes));
+        if sent == Sent::Queued {
             self.last_gesture_ms = Some(now_ms);
         }
         sent
+    }
+
+    /// Whether the output now is the replay of the screen, not the program
+    /// speaking: what the operator did before the attach says nothing about it.
+    fn replaying(&self) -> bool {
+        self.replay.is_open() || self.status == LinkStatus::Attaching
     }
 
     fn fresh_grid(&mut self, size: PaneSize) {
@@ -229,14 +246,19 @@ impl TerminalPane {
         self.has_output = false;
     }
 
-    fn open_link(&mut self) {
+    fn open_link(&mut self, attempt: Attempt) {
         let Some(size) = self.wanted else { return };
         self.link = None;
         self.fresh_grid(size);
         self.attached_once = false;
         self.lease = Lease::Owner;
         self.replay = Replay::Idle;
-        match self.source.open(&self.request, size) {
+        self.last_gesture_ms = None;
+        let opened = match attempt {
+            Attempt::Again => self.source.open(&self.request, size),
+            Attempt::Restart => self.source.restart(&self.request, size),
+        };
+        match opened {
             Ok(link) => {
                 self.link = Some(link);
                 self.forwarded = Some(size);
@@ -251,10 +273,15 @@ impl TerminalPane {
     }
 
     /// Builds a new link and a new screen on this pane, at the size the pane
-    /// has now.
-    pub fn reattach(&mut self) {
-        if self.wanted.is_some() {
-            self.open_link();
+    /// has now. A pane below the floor waits for room and opens at the first
+    /// size that fits.
+    fn relink(&mut self, attempt: Attempt) {
+        if self.too_small {
+            self.link = None;
+            self.status = LinkStatus::Pending;
+            self.attempt = attempt;
+        } else {
+            self.open_link(attempt);
         }
     }
 
@@ -344,9 +371,13 @@ impl TerminalPane {
                 let title = sanitize_title(&raw);
                 self.title = (!title.is_empty()).then_some(title);
             }
-            TermEvent::ClipboardWrite(payload) => self.clipboard(&payload, now_ms),
+            TermEvent::ClipboardWrite(payload) => {
+                if !self.replaying() {
+                    self.clipboard(&payload, now_ms);
+                }
+            }
             TermEvent::Bell | TermEvent::Notification(_) => {
-                if !self.focused {
+                if !self.focused && !self.replaying() {
                     self.attention = true;
                 }
             }
@@ -491,12 +522,18 @@ impl PaneBody for TerminalPane {
 
     fn key(&mut self, key: &Key, now_ms: i64) -> PaneKey {
         self.now_ms = now_ms;
-        if matches!(self.status, LinkStatus::Detached(_) | LinkStatus::Failed(_))
-            && key.code == KeyCode::Enter
-            && key.mods.difference(KeyModifiers::SHIFT).is_empty()
-        {
-            self.reattach();
-            return PaneKey::Consumed;
+        if key.code == KeyCode::Enter && key.mods.difference(KeyModifiers::SHIFT).is_empty() {
+            match self.status {
+                LinkStatus::Detached(_) | LinkStatus::Failed(_) => {
+                    self.relink(Attempt::Again);
+                    return PaneKey::Consumed;
+                }
+                LinkStatus::Exited(_) => {
+                    self.relink(Attempt::Restart);
+                    return PaneKey::Consumed;
+                }
+                _ => {}
+            }
         }
         if !self.live() {
             return PaneKey::Consumed;
@@ -507,7 +544,7 @@ impl PaneBody for TerminalPane {
         let Some(bytes) = encode_key(key, &modes).and_then(|b| self.forward.key(b)) else {
             return PaneKey::Consumed;
         };
-        if self.send_input(bytes, now_ms) {
+        if self.send_input(bytes, now_ms) == Sent::Queued {
             PaneKey::Forwarded
         } else {
             PaneKey::Consumed
@@ -642,7 +679,10 @@ impl PaneBody for TerminalPane {
         let size = PaneSize { rows, cols };
         self.wanted = Some(size);
         match self.status {
-            LinkStatus::Pending => self.open_link(),
+            LinkStatus::Pending => {
+                let attempt = std::mem::take(&mut self.attempt);
+                self.open_link(attempt);
+            }
             LinkStatus::Attaching | LinkStatus::Attached(_) if self.forwarded != Some(size) => {
                 self.view.resize(rows, cols);
                 if let Some(link) = &self.link {
@@ -695,12 +735,12 @@ impl PaneBody for TerminalPane {
 impl TerminalPane {
     fn paste_with(&mut self, decided: Paste, now_ms: i64) -> PasteOutcome {
         match decided {
-            Paste::Send(bytes) => {
-                if !bytes.is_empty() {
-                    self.send_input(bytes, now_ms);
-                }
-                PasteOutcome::Sent
-            }
+            Paste::Send(bytes) if bytes.is_empty() => PasteOutcome::Sent,
+            Paste::Send(bytes) => match self.send_input(bytes, now_ms) {
+                Sent::Queued => PasteOutcome::Sent,
+                Sent::Full => PasteOutcome::Full,
+                Sent::Closed => PasteOutcome::Dropped,
+            },
             Paste::NeedsConfirm { lines } => PasteOutcome::NeedsConfirm { lines },
             Paste::TooLarge { .. } => PasteOutcome::TooLarge,
         }
