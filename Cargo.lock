@@ -2082,7 +2082,7 @@ dependencies = [
 [[package]]
 name = "termpane"
 version = "0.1.1"
-source = "git+https://github.com/tailrocks/termpane?rev=4ba7b630037d014faa3d9741a9fe85402b86e69a#4ba7b630037d014faa3d9741a9fe85402b86e69a"
+source = "git+https://github.com/tailrocks/termpane?rev=e0c5ee405b38bc62b55005a48f3a7b29196a8b30#e0c5ee405b38bc62b55005a48f3a7b29196a8b30"
 dependencies = [
  "compact_str 0.10.0",
  "smallvec",
