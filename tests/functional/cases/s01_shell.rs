@@ -844,7 +844,14 @@ fn s01_inspector_sections() {
     let app = launch("s01-inspector", &args, 120, 40);
     app.wait_text("Overview");
     app.key("i");
-    let state = app.wait_text("Inspector · on");
+    // "Inspector · on" paints before the Events heading under the state rows.
+    let state = app.wait_screen("inspector state section", |screen| {
+        let visible = text(screen);
+        visible.contains("Inspector · on")
+            && visible.contains("NAV")
+            && visible.contains("Events")
+            && visible.contains("mode")
+    });
     let state_text = text(&state);
     assert!(state_text.contains("NAV"), "{state_text}");
     assert!(state_text.contains("Events"), "{state_text}");
