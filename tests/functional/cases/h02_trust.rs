@@ -247,7 +247,11 @@ fn cancel_mise(app: &App) {
 
 fn confirm_mise_child_directory(app: &App) {
     app.key("enter");
-    let again = app.wait_text(MISE_TITLE);
+    // The title returns before the definition paints [tasks.test].
+    let again = app.wait_screen("mise trust dialog again", |screen| {
+        let visible = text(screen);
+        visible.contains(MISE_TITLE) && visible.contains("[tasks.test]")
+    });
     see(
         &again,
         &[MISE_FILE, "[tasks.test]"],
