@@ -11,9 +11,11 @@ use jackin_console::backend::{
     ValidationOutcome,
 };
 use jackin_console::domain::account::{AccountRegistry, CredentialSource};
+use jackin_console::domain::agent::Agent;
 use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::{Instance, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
+use jackin_console::domain::role::{FindingArea, RoleAdmin, RoleCheckState, RoleFinding};
 use jackin_console::domain::usage::{Freshness, FreshnessInfo};
 use jackin_console::domain::workspace::RoleSource;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
@@ -1117,4 +1119,423 @@ fn two_stops_due_in_one_tick_both_land() {
         );
         assert!(!app.world.daemons.contains_key(id.as_str()), "{id}");
     }
+}
+
+fn admin(w: &World) -> &RoleAdmin {
+    w.surfaces.roles.as_ref().expect("the roles admin")
+}
+
+const MARKER: &str = "acct-claude-work";
+
+/// Binds what was asked and, on its own, a second agent the screen never
+/// touches, so a screen that writes its pending copy is told from one that
+/// applies the snapshot.
+fn bind_role(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::BindRole {
+        role,
+        agent,
+        account,
+        ..
+    } = effect
+    else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    let rec = snapshot
+        .surfaces
+        .roles
+        .as_mut()
+        .and_then(|a| a.role_mut(role))?;
+    rec.bindings.insert(*agent, account.clone()?);
+    rec.bindings.insert(Agent::ClaudeCode, MARKER.into());
+    Some(Msg::RoleBound {
+        role: role.clone(),
+        agent: *agent,
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn refuse_bind(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::BindRole { role, agent, .. } = effect else {
+        return None;
+    };
+    Some(Msg::RoleBound {
+        role: role.clone(),
+        agent: *agent,
+        result: Err("config.toml is locked by another jackin".into()),
+    })
+}
+
+const PICK_EXPERIMENTS: &str = "tab enter down enter";
+
+#[test]
+fn role_bind_comes_from_the_snapshot() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, bind_role);
+    press(&mut app, PICK_EXPERIMENTS);
+    settle(&mut app);
+
+    assert_eq!(
+        backend.seen(),
+        [Effect::BindRole {
+            role: "sentinel".into(),
+            agent: Agent::Codex,
+            base: Some("acct-codex-primary".into()),
+            account: Some("acct-codex-experiments".into()),
+        }]
+    );
+    let bindings = &admin(&app.world)
+        .role("sentinel")
+        .expect("sentinel")
+        .bindings;
+    assert_eq!(
+        bindings.get(&Agent::Codex).map(String::as_str),
+        Some("acct-codex-experiments")
+    );
+    assert_eq!(
+        bindings.get(&Agent::ClaudeCode).map(String::as_str),
+        Some(MARKER),
+        "the role is the reply snapshot's, not the screen's"
+    );
+}
+
+#[test]
+fn failed_role_bind_keeps_the_binding() {
+    let (mut app, _) = backed(Scenario::RoleBinding, refuse_bind);
+    let before = app.world.surfaces.roles.clone();
+    press(&mut app, PICK_EXPERIMENTS);
+    settle(&mut app);
+
+    assert_eq!(app.world.surfaces.roles, before);
+    let shown = status(&app);
+    assert!(
+        shown.contains("config.toml is locked by another jackin")
+            && shown.contains("Nothing changed"),
+        "{shown}"
+    );
+}
+
+/// Names the role the way the backend does, not the way the location reads.
+fn add_role(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::AddRole { location } = effect else {
+        return None;
+    };
+    let record = sim::surfaces::add_role("~/roles/registered-by-backend", |_| false).ok()?;
+    let name = record.name.clone();
+    let mut snapshot = sim::snapshot(world);
+    snapshot.surfaces.roles.as_mut()?.roles.push(record);
+    Some(Msg::RoleAdded {
+        location: location.clone(),
+        result: Ok((name, Box::new(snapshot))),
+    })
+}
+
+fn refuse_add(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::AddRole { location } = effect else {
+        return None;
+    };
+    Some(Msg::RoleAdded {
+        location: location.clone(),
+        result: Err("the registry is read-only".into()),
+    })
+}
+
+const ADD_NEW_ROLE: &str = "a ~ / r o l e s / n e w - r o l e enter tab tab enter";
+
+#[test]
+fn role_add_comes_from_the_snapshot() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, add_role);
+    press(&mut app, ADD_NEW_ROLE);
+    settle(&mut app);
+
+    assert_eq!(
+        backend.seen(),
+        [Effect::AddRole {
+            location: "~/roles/new-role".into()
+        }]
+    );
+    let names: Vec<_> = admin(&app.world)
+        .roles
+        .iter()
+        .map(|r| r.name.as_str())
+        .collect();
+    assert!(names.contains(&"registered-by-backend"), "{names:?}");
+    assert!(!names.contains(&"new-role"), "{names:?}");
+    assert_eq!(status(&app), "Role registered-by-backend added");
+}
+
+#[test]
+fn failed_role_add_keeps_the_location() {
+    let (mut app, _) = backed(Scenario::RoleBinding, refuse_add);
+    let before = app.world.surfaces.roles.clone();
+    press(&mut app, ADD_NEW_ROLE);
+    settle(&mut app);
+
+    assert_eq!(app.world.surfaces.roles, before);
+    let shown = screen(&mut app);
+    assert!(shown.contains("Could not add role"), "{shown}");
+    assert!(shown.contains("the registry is read-only"), "{shown}");
+    press(&mut app, "esc");
+    let form = screen(&mut app);
+    assert!(form.contains("register a role"), "{form}");
+    assert!(form.contains("~/roles/new-role"), "{form}");
+}
+
+fn finding() -> RoleFinding {
+    RoleFinding {
+        area: FindingArea::Policy,
+        key: Some("role.policy".into()),
+        message: "found by the backend".into(),
+        fix: "nothing to fix".into(),
+    }
+}
+
+/// Reports a finding the simulator never raises for this manifest, and a
+/// binding the screen never writes.
+fn check_role(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::CheckRole { role, .. } = effect else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    let rec = snapshot.surfaces.roles.as_mut()?.role_mut(role)?;
+    rec.check = RoleCheckState::Done(vec![finding()]);
+    rec.bindings.insert(Agent::ClaudeCode, MARKER.into());
+    Some(Msg::RoleChecked {
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn fail_check(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::CheckRole { role, .. } = effect else {
+        return None;
+    };
+    Some(Msg::RoleChecked {
+        role: role.clone(),
+        result: Err("the checker did not start".into()),
+    })
+}
+
+#[test]
+fn role_check_comes_from_the_snapshot() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, check_role);
+    press(&mut app, "v");
+    settle(&mut app);
+
+    let seen = backend.seen();
+    let [Effect::CheckRole { role, .. }] = seen.as_slice() else {
+        panic!("one CheckRole expected, got {seen:?}");
+    };
+    assert_eq!(role, "sentinel");
+    assert_eq!(
+        admin(&app.world).role("sentinel").expect("sentinel").check,
+        RoleCheckState::Done(vec![finding()]),
+        "the check is the reply snapshot's"
+    );
+    assert_eq!(
+        admin(&app.world)
+            .binding("sentinel", Agent::ClaudeCode)
+            .map(String::as_str),
+        Some(MARKER),
+        "the role is the reply snapshot's, not the screen's"
+    );
+    assert_eq!(status(&app), "Role sentinel: 1 error");
+}
+
+#[test]
+fn failed_role_check_leaves_the_record() {
+    let (mut app, _) = backed(Scenario::RoleBinding, fail_check);
+    let before = app.world.surfaces.roles.clone();
+    press(&mut app, "v");
+    settle(&mut app);
+
+    assert_eq!(app.world.surfaces.roles, before);
+    assert_eq!(status(&app), "Role sentinel: the checker did not start");
+    let shown = screen(&mut app);
+    assert!(!shown.contains("checking…"), "{shown}");
+}
+
+/// Removes the role asked for and, on its own, a second one.
+fn remove_role(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::RemoveRole { role } = effect else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    snapshot
+        .surfaces
+        .roles
+        .as_mut()?
+        .roles
+        .retain(|r| r.name != *role && r.name != "data-eng");
+    Some(Msg::RoleRemoved {
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn refuse_remove(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::RemoveRole { role } = effect else {
+        return None;
+    };
+    Some(Msg::RoleRemoved {
+        role: role.clone(),
+        result: Err("config.toml is read-only".into()),
+    })
+}
+
+const REMOVE_WRITER: &str = "down down down down d right enter";
+
+#[test]
+fn role_remove_comes_from_the_snapshot() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, remove_role);
+    press(&mut app, REMOVE_WRITER);
+    settle(&mut app);
+
+    assert_eq!(
+        backend.seen(),
+        [Effect::RemoveRole {
+            role: "writer".into()
+        }]
+    );
+    let names: Vec<_> = admin(&app.world)
+        .roles
+        .iter()
+        .map(|r| r.name.as_str())
+        .collect();
+    assert_eq!(
+        names,
+        ["sentinel", "the-architect", "reviewer"],
+        "the roster is the reply snapshot's, not the screen's"
+    );
+    assert_eq!(status(&app), "Removed role writer");
+}
+
+#[test]
+fn failed_role_remove_keeps_the_role() {
+    let (mut app, _) = backed(Scenario::RoleBinding, refuse_remove);
+    let before = app.world.surfaces.roles.clone();
+    press(&mut app, REMOVE_WRITER);
+    settle(&mut app);
+
+    assert_eq!(app.world.surfaces.roles, before);
+    let shown = status(&app);
+    assert!(
+        shown.contains("config.toml is read-only") && shown.contains("Nothing changed"),
+        "{shown}"
+    );
+}
+
+const PINNED: &str = "backend-pinned";
+
+/// Stores the manifest and pins the model, which the editor did not set.
+fn save_role(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::SaveRole { role, doc, .. } = effect else {
+        return None;
+    };
+    let mut stored = (**doc).clone();
+    stored.codex_model = Some(PINNED.into());
+    let mut snapshot = sim::snapshot(world);
+    let rec = snapshot.surfaces.roles.as_mut()?.role_mut(role)?;
+    rec.manifest = Ok(stored);
+    Some(Msg::RoleSaved {
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn fail_role_save(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::SaveRole { role, .. } = effect else {
+        return None;
+    };
+    Some(Msg::RoleSaved {
+        role: role.clone(),
+        result: Err("jackin.role.toml is on a read-only disk".into()),
+    })
+}
+
+const EDIT_AND_SAVE: &str = "enter tab tab tab tab tab p i n enter ctrl+s";
+
+fn save_in_the_editor(app: &mut App) {
+    press(app, EDIT_AND_SAVE);
+    settle(app);
+    press(app, "right enter");
+    settle(app);
+}
+
+#[test]
+fn role_save_comes_from_the_snapshot() {
+    let (mut app, backend) = backed(Scenario::RoleEditor, save_role);
+    let original = admin(&app.world)
+        .role("sentinel")
+        .expect("sentinel")
+        .manifest
+        .clone();
+    save_in_the_editor(&mut app);
+
+    let seen = backend.seen();
+    let [
+        Effect::CheckRole { .. },
+        Effect::SaveRole { role, base, doc },
+    ] = seen.as_slice()
+    else {
+        panic!("a check and a SaveRole expected, got {seen:?}");
+    };
+    assert_eq!(role, "sentinel");
+    assert_eq!(
+        Ok(&**base),
+        original.as_ref(),
+        "the base is the opened manifest"
+    );
+    assert_eq!(doc.codex_model.as_deref(), Some("pin"));
+    let saved = admin(&app.world).role("sentinel").expect("sentinel");
+    assert_eq!(
+        saved.manifest.as_ref().map(|m| m.codex_model.as_deref()),
+        Ok(Some(PINNED)),
+        "the manifest is the reply snapshot's, not the screen's"
+    );
+    assert_eq!(app.route(), Route::Roles);
+    assert_eq!(status(&app), "Role sentinel saved");
+}
+
+#[test]
+fn failed_role_save_keeps_the_edits() {
+    let (mut app, _) = backed(Scenario::RoleEditor, fail_role_save);
+    let before = app.world.surfaces.roles.clone();
+    save_in_the_editor(&mut app);
+
+    assert_eq!(app.world.surfaces.roles, before);
+    assert_eq!(app.route(), Route::RoleEditor);
+    let shown = screen(&mut app);
+    assert!(shown.contains("Save failed"), "{shown}");
+    assert!(
+        shown.contains("jackin.role.toml is on a read-only disk"),
+        "{shown}"
+    );
+    press(&mut app, "esc");
+    let editor = screen(&mut app);
+    assert!(
+        editor.contains("pin") && editor.contains("1 change"),
+        "{editor}"
+    );
+}
+
+#[test]
+fn failed_editor_check_unlocks_the_editor() {
+    let (mut app, backend) = backed(Scenario::RoleEditor, fail_check);
+    press(&mut app, EDIT_AND_SAVE);
+    settle(&mut app);
+
+    assert_eq!(status(&app), "the checker did not start");
+    let shown = screen(&mut app);
+    assert!(
+        !shown.contains("checking") && !shown.contains("Save role"),
+        "{shown}"
+    );
+    press(&mut app, "ctrl+s");
+    settle(&mut app);
+    let checks = backend
+        .seen()
+        .iter()
+        .filter(|e| matches!(e, Effect::CheckRole { .. }))
+        .count();
+    assert_eq!(checks, 2, "the editor takes a second check");
 }

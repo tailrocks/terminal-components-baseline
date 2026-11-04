@@ -34,7 +34,7 @@ use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::Effect;
 use crate::domain::role::{RoleCheckState, RoleEnvEntry, RoleFinding, RoleManifestDoc, RoleRecord};
 use crate::domain::workspace::{RoleName, RoleSource, env_key_error};
-use crate::world::{Msg, World, job};
+use crate::world::{Msg, Snapshot, World, job};
 
 const TABS: WidgetId = WidgetId::of("roleeditor.tabs");
 const NAME: WidgetId = WidgetId::of("roleeditor.name");
@@ -643,45 +643,36 @@ impl RoleEditorScreen {
         self.save.busy = true;
         w.perform(Effect::SaveRole {
             role: self.role.clone(),
-            doc: self.pending.clone(),
+            base: Box::new(self.original.clone()),
+            doc: Box::new(self.pending.clone()),
         });
         cx.progress(job::ROLE_SAVE, format!("Saving {}…", self.role));
         cx.focus.focus(SAVE);
     }
 
-    fn finish_save(&mut self, ok: bool, error: Option<String>, w: &mut World, cx: &mut Cx) {
+    fn finish_save(&mut self, result: &Result<Box<Snapshot>, String>, w: &mut World, cx: &mut Cx) {
         self.saving = false;
         self.save.busy = false;
-        if !ok {
-            let d = InfoDialog::new(
-                WidgetId::of("roleeditor.savefail"),
-                &format!("Save failed · {}", self.role),
-                vec![
-                    Prop::new(
-                        "Error",
-                        error.unwrap_or_else(|| "jackin.role.toml could not be written".into()),
-                    )
-                    .wrap(),
-                    Prop::new("State", "your edits are intact · nothing was written"),
-                    Prop::new("Next", "fix the cause and Save again"),
-                ],
-            )
-            .error()
-            .width(76);
-            cx.open(d, LayerTag::new("savefail"));
-            return;
-        }
+        let snapshot = match result {
+            Ok(snapshot) => snapshot,
+            Err(error) => {
+                let d = InfoDialog::new(
+                    WidgetId::of("roleeditor.savefail"),
+                    &format!("Save failed · {}", self.role),
+                    vec![
+                        Prop::new("Error", error.as_str()).wrap(),
+                        Prop::new("State", "your edits are intact · nothing was written"),
+                        Prop::new("Next", "fix the cause and Save again"),
+                    ],
+                )
+                .error()
+                .width(76);
+                cx.open(d, LayerTag::new("savefail"));
+                return;
+            }
+        };
+        w.apply((**snapshot).clone());
         let name = self.pending.name.clone();
-        if let Some(rec) = w
-            .surfaces
-            .roles
-            .as_mut()
-            .and_then(|a| a.role_mut(&self.role))
-        {
-            rec.manifest = Ok(self.pending.clone());
-            rec.check = self.check.clone();
-            rec.name = name.clone();
-        }
         self.original = self.pending.clone();
         cx.status(format!("Role {name} saved"));
         cx.go(Go::Roles { select: Some(name) });
@@ -1239,11 +1230,31 @@ impl Page<Jackin> for RoleEditorScreen {
 
     fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
         match msg {
-            Msg::RoleSaved { role, ok, error } if self.saving && *role == self.role => {
-                self.finish_save(*ok, error.clone(), w, cx);
+            Msg::RoleSaved { role, result } if self.saving && *role == self.role => {
+                self.finish_save(result, w, cx);
                 Outcome::Changed
             }
-            Msg::RoleChecked { role, findings } if self.checking() && *role == self.role => {
+            Msg::RoleChecked { role, result } if self.checking() && *role == self.role => {
+                let found = match result {
+                    Ok(snapshot) => snapshot
+                        .surfaces
+                        .roles
+                        .as_ref()
+                        .and_then(|a| a.role(role))
+                        .map(|r| r.findings().to_vec())
+                        .ok_or_else(|| format!("The check of {role} came back empty")),
+                    Err(reason) => Err(reason.clone()),
+                };
+                let findings = match found {
+                    Ok(findings) => findings,
+                    Err(reason) => {
+                        self.check = RoleCheckState::Unchecked;
+                        self.checked = None;
+                        self.save_after_check = false;
+                        cx.error(reason);
+                        return Outcome::Changed;
+                    }
+                };
                 self.check = RoleCheckState::Done(findings.clone());
                 self.apply_findings();
                 cx.status(if findings.is_empty() {

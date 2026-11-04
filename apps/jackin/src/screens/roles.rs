@@ -32,7 +32,7 @@ use crate::domain::agent::Agent;
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::role::{RoleCheckState, RoleRecord};
 use crate::domain::workspace::{RoleName, RoleSource, usability_of};
-use crate::world::{Msg, World, job};
+use crate::world::{Msg, Snapshot, World, job};
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::list_detail::{Action, Event, Frame, Line, ListDetail, ListRow};
 
@@ -76,11 +76,19 @@ impl Default for RolesScreen {
     }
 }
 
-fn check_word(rec: &RoleRecord) -> &'static str {
+fn check_state(rec: &RoleRecord, running: bool) -> &RoleCheckState {
+    if running {
+        &RoleCheckState::Running
+    } else {
+        &rec.check
+    }
+}
+
+fn check_word(rec: &RoleRecord, running: bool) -> &'static str {
     if rec.manifest.is_err() {
         return "manifest error";
     }
-    match &rec.check {
+    match check_state(rec, running) {
         RoleCheckState::Unchecked => "not checked",
         RoleCheckState::Running => "checking…",
         RoleCheckState::Done(f) if f.is_empty() => "check passed",
@@ -88,11 +96,11 @@ fn check_word(rec: &RoleRecord) -> &'static str {
     }
 }
 
-fn check_mark(rec: &RoleRecord) -> StatusKind {
+fn check_mark(rec: &RoleRecord, running: bool) -> StatusKind {
     if rec.manifest.is_err() {
         return StatusKind::Fail;
     }
-    match &rec.check {
+    match check_state(rec, running) {
         RoleCheckState::Unchecked => StatusKind::Queued,
         RoleCheckState::Running => StatusKind::Running,
         RoleCheckState::Done(f) if f.is_empty() => StatusKind::Ok,
@@ -218,7 +226,7 @@ impl RolesScreen {
                     };
                     let summary = self.binding_summary(rec, w);
                     let row = ListRow::new(&rec.name)
-                        .mark(check_mark(rec))
+                        .mark(check_mark(rec, self.checking.contains(&rec.name)))
                         .detail(chip(rec));
                     if summary.is_empty() {
                         row.meta("no binding", Tone::Faint)
@@ -315,7 +323,10 @@ impl RolesScreen {
             RoleSource::Local { path } => path.clone(),
         };
         let kind = if rec.writable() { "local" } else { "git" };
-        let meta = format!("{kind} · {}", check_word(rec));
+        let meta = format!(
+            "{kind} · {}",
+            check_word(rec, self.checking.contains(&rec.name))
+        );
         let mut lines = vec![Line::Prop("Source".into(), source, Tone::Normal)];
         match &rec.manifest {
             Ok(doc) => {
@@ -372,7 +383,7 @@ impl RolesScreen {
                     },
                     Tone::Normal,
                 ));
-                let (check, tone) = match &rec.check {
+                let (check, tone) = match check_state(rec, self.checking.contains(&rec.name)) {
                     RoleCheckState::Unchecked => ("not checked".to_owned(), Tone::Muted),
                     RoleCheckState::Running => ("checking…".to_owned(), Tone::Active),
                     RoleCheckState::Done(f) if f.is_empty() => ("passed".to_owned(), Tone::Success),
@@ -415,7 +426,7 @@ impl RolesScreen {
             Action::new("clear", "Clear binding", ButtonKind::Secondary)
                 .disabled(busy || !has_binding),
             Action::new("check", "Check", ButtonKind::Secondary)
-                .disabled(matches!(rec.check, RoleCheckState::Running)),
+                .disabled(self.checking.contains(&rec.name)),
             Action::new("remove", "Remove…", ButtonKind::Danger),
         ];
         (format!("Role · {}", rec.name), meta, lines, actions)
@@ -499,12 +510,13 @@ impl RolesScreen {
             role: role.clone(),
             agent,
             account: account.clone(),
-            previous,
+            previous: previous.clone(),
             undo,
         });
         w.perform(Effect::BindRole {
             role: role.clone(),
             agent,
+            base: previous,
             account,
         });
         cx.progress(job::ROLE_BIND, format!("Binding {role}…"));
@@ -530,37 +542,25 @@ impl RolesScreen {
         }
     }
 
-    fn finish_bind(&mut self, ok: bool, error: Option<String>, w: &mut World, cx: &mut Cx) {
+    fn finish_bind(&mut self, result: &Result<Box<Snapshot>, String>, w: &mut World, cx: &mut Cx) {
         let Some(bind) = self.pending.take() else {
             return;
         };
-        if !ok {
-            let reason = error.unwrap_or_else(|| "write failed".into());
-            let hint = if reason.contains("permission denied") {
-                " Make ~/.config/jackin/config.toml writable."
-            } else {
-                ""
-            };
-            cx.error(format!(
-                "Could not save the binding: {reason}. Nothing changed. Try again.{hint}"
-            ));
-            return;
-        }
-        if let Some(rec) = w
-            .surfaces
-            .roles
-            .as_mut()
-            .and_then(|a| a.role_mut(&bind.role))
-        {
-            match &bind.account {
-                Some(id) => {
-                    rec.bindings.insert(bind.agent, id.clone());
-                }
-                None => {
-                    rec.bindings.remove(&bind.agent);
-                }
+        let snapshot = match result {
+            Ok(snapshot) => snapshot,
+            Err(reason) => {
+                let hint = if reason.contains("permission denied") {
+                    " Make ~/.config/jackin/config.toml writable."
+                } else {
+                    ""
+                };
+                cx.error(format!(
+                    "Could not save the binding: {reason}. Nothing changed. Try again.{hint}"
+                ));
+                return;
             }
-        }
+        };
+        w.apply((**snapshot).clone());
         if !bind.undo {
             self.undo = Some((bind.role.clone(), bind.agent, bind.previous.clone()));
         }
@@ -591,14 +591,13 @@ impl RolesScreen {
     }
 
     fn check_role(&mut self, name: &str, w: &mut World, cx: &mut Cx) {
-        let Some(rec) = w.surfaces.roles.as_mut().and_then(|a| a.role_mut(name)) else {
+        let Some(rec) = w.surfaces.roles.as_ref().and_then(|a| a.role(name)) else {
             return;
         };
         let Ok(doc) = rec.manifest.clone() else {
             cx.status(format!("{name}: jackin.role.toml still does not parse"));
             return;
         };
-        rec.check = RoleCheckState::Running;
         self.checking.insert(name.to_owned());
         w.perform(Effect::CheckRole {
             role: name.to_owned(),
@@ -720,17 +719,14 @@ impl RolesScreen {
     fn finish_add(
         &mut self,
         location: &str,
-        result: &Result<Box<RoleRecord>, String>,
+        result: &Result<(RoleName, Box<Snapshot>), String>,
         w: &mut World,
         cx: &mut Cx,
     ) {
         self.adding = None;
         match result {
-            Ok(rec) => {
-                let name = rec.name.clone();
-                if let Some(admin) = w.surfaces.roles.as_mut() {
-                    admin.roles.push((**rec).clone());
-                }
+            Ok((name, snapshot)) => {
+                w.apply((**snapshot).clone());
                 self.want = Some(name.clone());
                 self.filter = None;
                 self.build_rows(w);
@@ -783,14 +779,8 @@ impl Page<Jackin> for RolesScreen {
         Some(LIST)
     }
 
-    fn animating(&self, w: &World) -> bool {
-        self.pending.is_some()
-            || self.adding.is_some()
-            || w.surfaces.roles.as_ref().is_some_and(|a| {
-                a.roles
-                    .iter()
-                    .any(|r| matches!(r.check, RoleCheckState::Running))
-            })
+    fn animating(&self, _w: &World) -> bool {
+        self.pending.is_some() || self.adding.is_some() || !self.checking.is_empty()
     }
 
     fn on_tick(&mut self, w: &mut World, _cx: &mut Cx) -> Outcome {
@@ -806,29 +796,51 @@ impl Page<Jackin> for RolesScreen {
             Msg::RoleBound {
                 role,
                 agent,
-                ok,
-                error,
+                result,
             } if self
                 .pending
                 .as_ref()
                 .is_some_and(|p| &p.role == role && p.agent == *agent) =>
             {
-                self.finish_bind(*ok, error.clone(), w, cx);
+                self.finish_bind(result, w, cx);
                 Outcome::Changed
             }
             Msg::RoleAdded { location, result } if self.adding.as_deref() == Some(location) => {
                 self.finish_add(location, result, w, cx);
                 Outcome::Changed
             }
-            Msg::RoleChecked { role, findings } if self.checking.remove(role) => {
-                if let Some(rec) = w.surfaces.roles.as_mut().and_then(|a| a.role_mut(role)) {
-                    rec.check = RoleCheckState::Done(findings.clone());
+            Msg::RoleChecked { role, result } if self.checking.remove(role) => {
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        let found = w
+                            .surfaces
+                            .roles
+                            .as_ref()
+                            .and_then(|a| a.role(role))
+                            .map_or(0, |r| r.findings().len());
+                        cx.status(if found == 0 {
+                            format!("Role {role}: check passed")
+                        } else {
+                            format!("Role {role}: {}", plural(found, "error", "errors"))
+                        });
+                    }
+                    Err(reason) => cx.error(format!("Role {role}: {reason}")),
                 }
-                cx.status(if findings.is_empty() {
-                    format!("Role {role}: check passed")
-                } else {
-                    format!("Role {role}: {}", plural(findings.len(), "error", "errors"))
-                });
+                Outcome::Changed
+            }
+            Msg::RoleRemoved { role, result } if self.removing.as_ref() == Some(role) => {
+                self.removing = None;
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        cx.status(format!("Removed role {role}"));
+                        self.build_rows(w);
+                    }
+                    Err(reason) => cx.error(format!(
+                        "Could not remove role {role}: {reason}. Nothing changed."
+                    )),
+                }
                 Outcome::Changed
             }
             _ => Outcome::Ignored,
@@ -977,12 +989,8 @@ impl Page<Jackin> for RolesScreen {
                     action: Some(1), ..
                 },
             ) => {
-                if let Some(name) = self.removing.take() {
-                    if let Some(admin) = w.surfaces.roles.as_mut() {
-                        admin.roles.retain(|r| r.name != name);
-                    }
-                    cx.status(format!("Removed role {name}"));
-                    self.build_rows(w);
+                if let Some(role) = self.removing.clone() {
+                    w.perform(Effect::RemoveRole { role });
                 }
             }
             ("remove", _) => self.removing = None,
@@ -1017,7 +1025,7 @@ impl Page<Jackin> for RolesScreen {
         let failing = w.surfaces.roles.as_ref().map_or(0, |a| {
             a.roles
                 .iter()
-                .filter(|r| check_mark(r) == StatusKind::Fail)
+                .filter(|r| check_mark(r, false) == StatusKind::Fail)
                 .count()
         });
         let mut meta = plural(roles, "role", "roles");

@@ -10,8 +10,7 @@ use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorReport, DoctorState};
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
 use crate::domain::role::{
-    AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE, RoleFinding,
-    RoleRecord,
+    AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
 };
 use crate::domain::surfaces::Surfaces;
 use crate::domain::usage::Freshness;
@@ -177,22 +176,24 @@ pub enum Msg {
     },
     RoleChecked {
         role: RoleName,
-        findings: Vec<RoleFinding>,
+        result: Result<Box<Snapshot>, String>,
     },
     RoleSaved {
         role: RoleName,
-        ok: bool,
-        error: Option<String>,
+        result: Result<Box<Snapshot>, String>,
     },
     RoleBound {
         role: RoleName,
         agent: Agent,
-        ok: bool,
-        error: Option<String>,
+        result: Result<Box<Snapshot>, String>,
     },
     RoleAdded {
         location: String,
-        result: Result<Box<RoleRecord>, String>,
+        result: Result<(RoleName, Box<Snapshot>), String>,
+    },
+    RoleRemoved {
+        role: RoleName,
+        result: Result<Box<Snapshot>, String>,
     },
     DoctorFinished(DoctorReport),
 }
@@ -216,6 +217,7 @@ impl Msg {
             | Msg::WorkspaceDeleted { .. }
             | Msg::Restored { .. }
             | Msg::RoleTrusted { .. }
+            | Msg::RoleRemoved { .. }
             | Msg::Refreshed { .. }
             | Msg::AccountRefreshed { .. }
             | Msg::Takeover { .. } => None,

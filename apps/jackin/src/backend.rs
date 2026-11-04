@@ -331,15 +331,20 @@ pub enum Effect {
     },
     SaveRole {
         role: RoleName,
-        doc: RoleManifestDoc,
+        base: Box<RoleManifestDoc>,
+        doc: Box<RoleManifestDoc>,
     },
     BindRole {
         role: RoleName,
         agent: Agent,
+        base: Option<AccountId>,
         account: Option<AccountId>,
     },
     AddRole {
         location: String,
+    },
+    RemoveRole {
+        role: RoleName,
     },
     RunDoctor,
 }

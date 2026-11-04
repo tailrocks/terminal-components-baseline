@@ -12,6 +12,7 @@ use crate::domain::account::{
 use crate::domain::agent::Provider;
 use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::LaunchContent;
+use crate::domain::role::{RoleCheckState, RoleRecord};
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
@@ -244,49 +245,11 @@ impl Backend for SimBackend {
                 return Some(Completion::settle(base + stagger_ms));
             }
             Effect::ValidateAccount { .. } => return Some(Completion::settle(900)),
-            Effect::CheckRole { role, doc } => (
-                600,
-                Msg::RoleChecked {
-                    role: role.clone(),
-                    findings: surfaces::check_role(doc),
-                },
-            ),
-            Effect::SaveRole { role, .. } => (
-                900,
-                Msg::RoleSaved {
-                    role: role.clone(),
-                    ok: true,
-                    error: None,
-                },
-            ),
-            Effect::BindRole { role, agent, .. } => {
-                let ok = !self.bind_fails_once.swap(false, Ordering::SeqCst);
-                (
-                    900,
-                    Msg::RoleBound {
-                        role: role.clone(),
-                        agent: *agent,
-                        ok,
-                        error: (!ok).then(|| {
-                            "could not write config.toml: permission denied (EACCES)".into()
-                        }),
-                    },
-                )
-            }
-            Effect::AddRole { location } => (
-                700,
-                Msg::RoleAdded {
-                    location: location.clone(),
-                    result: surfaces::add_role(location, |name| {
-                        world
-                            .surfaces
-                            .roles
-                            .as_ref()
-                            .is_some_and(|a| a.role(name).is_some())
-                    })
-                    .map(Box::new),
-                },
-            ),
+            Effect::CheckRole { .. } => return Some(Completion::settle(600)),
+            Effect::SaveRole { .. } => return Some(Completion::settle(900)),
+            Effect::BindRole { .. } => return Some(Completion::settle(900)),
+            Effect::AddRole { .. } => return Some(Completion::settle(700)),
+            Effect::RemoveRole { .. } => return Some(Completion::settle(0)),
             Effect::RunDoctor => {
                 let run = self.doctor_runs.fetch_add(1, Ordering::SeqCst) + 2;
                 (
@@ -435,6 +398,84 @@ impl Backend for SimBackend {
                     result,
                 })
             }
+            Effect::CheckRole { role, doc } => Some(Msg::RoleChecked {
+                role: role.clone(),
+                result: with_role(world, role, |rec| {
+                    rec.check = RoleCheckState::Done(surfaces::check_role(doc));
+                }),
+            }),
+            Effect::SaveRole { role, doc, .. } => Some(Msg::RoleSaved {
+                role: role.clone(),
+                result: with_role(world, role, |rec| {
+                    rec.manifest = Ok((**doc).clone());
+                    rec.check = RoleCheckState::Done(surfaces::check_role(doc));
+                    rec.name = doc.name.clone();
+                }),
+            }),
+            Effect::BindRole {
+                role,
+                agent,
+                account,
+                ..
+            } => {
+                let result = if self.bind_fails_once.swap(false, Ordering::SeqCst) {
+                    Err("could not write config.toml: permission denied (EACCES)".into())
+                } else {
+                    with_role(world, role, |rec| match account {
+                        Some(id) => {
+                            rec.bindings.insert(*agent, id.clone());
+                        }
+                        None => {
+                            rec.bindings.remove(agent);
+                        }
+                    })
+                };
+                Some(Msg::RoleBound {
+                    role: role.clone(),
+                    agent: *agent,
+                    result,
+                })
+            }
+            Effect::AddRole { location } => {
+                let result = surfaces::add_role(location, |name| {
+                    world
+                        .surfaces
+                        .roles
+                        .as_ref()
+                        .is_some_and(|a| a.role(name).is_some())
+                })
+                .and_then(|rec| {
+                    let name = rec.name.clone();
+                    let mut snapshot = snapshot(world);
+                    let admin = snapshot
+                        .surfaces
+                        .roles
+                        .as_mut()
+                        .ok_or("roles are not available")?;
+                    admin.roles.push(rec);
+                    Ok((name, Box::new(snapshot)))
+                });
+                Some(Msg::RoleAdded {
+                    location: location.clone(),
+                    result,
+                })
+            }
+            Effect::RemoveRole { role } => {
+                let mut snapshot = snapshot(world);
+                let removed = snapshot.surfaces.roles.as_mut().is_some_and(|admin| {
+                    let before = admin.roles.len();
+                    admin.roles.retain(|r| r.name != *role);
+                    admin.roles.len() != before
+                });
+                Some(Msg::RoleRemoved {
+                    role: role.clone(),
+                    result: if removed {
+                        Ok(Box::new(snapshot))
+                    } else {
+                        Err(format!("{role} is not in the registry"))
+                    },
+                })
+            }
             Effect::DeleteWorkspace { id } => {
                 let mut snapshot = snapshot(world);
                 snapshot.workspaces.retain(|w| w.id != *id);
@@ -559,6 +600,22 @@ fn fingerprint_level(account: &Account) -> ValidationLevel {
     } else {
         ValidationLevel::MaterialDiscovered
     }
+}
+
+fn with_role(
+    world: &World,
+    role: &str,
+    edit: impl FnOnce(&mut RoleRecord),
+) -> Result<Box<Snapshot>, String> {
+    let mut snapshot = snapshot(world);
+    let record = snapshot
+        .surfaces
+        .roles
+        .as_mut()
+        .and_then(|admin| admin.role_mut(role))
+        .ok_or_else(|| format!("{role} is not in the registry"))?;
+    edit(record);
+    Ok(Box::new(snapshot))
 }
 
 pub fn snapshot(world: &World) -> Snapshot {
