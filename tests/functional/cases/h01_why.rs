@@ -266,7 +266,11 @@ fn holla_why_explains_the_selected_item() {
     });
     assert_eq!((narrowed.cols(), narrowed.rows()), (80, 24));
     nudge(&app);
-    let narrow = app.screen();
+    // The size-restored wait can return, and the next read can still be the
+    // cleared 80x24 grid. Wait until the modal is on that grid again.
+    let narrow = app.wait_screen("why still open at 80x24", |screen| {
+        screen.cols() == 80 && screen.rows() == 24 && why_open(screen)
+    });
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     assert!(
         why_open(&narrow),

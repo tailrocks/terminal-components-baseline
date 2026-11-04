@@ -5,7 +5,7 @@
 //! Scope is Ctrl+Up / Ctrl+Down. Pin, hide, restore, and ranking reset are
 //! alternatives-menu items (Alt+Enter), not keys of their own.
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 
@@ -209,18 +209,40 @@ fn h01_scope_route() {
     app.finish();
 }
 
-#[test]
-fn h01_scope_scope() {
-    let app = open("h01-scope-scope", "monorepo-child");
-    // The first paint lists Suggested here before Recent here is drawn.
-    let here = app.wait_screen("here scope list", |screen| {
-        let visible = text(screen);
-        visible.contains(HERE)
+fn wait_here_list(app: &App) -> TerminalSnapshot {
+    let started = Instant::now();
+    loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        if screen.cols() == 120
+            && screen.rows() == 40
+            && visible.contains(HERE)
             && visible.contains("Suggested here")
             && visible.contains("nothing used here yet")
             && visible.contains("acme › frontend")
             && !visible.contains(PARENT_SET)
-    });
+        {
+            return screen;
+        }
+        assert!(
+            app.child_running(),
+            "holla exited before the scope list\n{visible}"
+        );
+        assert!(
+            started.elapsed() < Duration::from_secs(25),
+            "timed out: here scope list\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(25));
+    }
+}
+
+#[test]
+fn h01_scope_scope() {
+    let app = open("h01-scope-scope", "monorepo-child");
+    // The first paint can stay blank longer than the shared 10s wait when
+    // several Holla processes start together. The list itself still has to
+    // show Suggested here before Recent here is drawn.
+    let here = wait_here_list(&app);
     see(
         &here,
         &[

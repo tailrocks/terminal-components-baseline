@@ -197,6 +197,8 @@ fn open_config(app: &App) -> TerminalSnapshot {
             && visible.contains(DUP_DIAG)
             && visible.contains(BAD_DIAG)
             && visible.contains(BAD_ID)
+            && visible.contains(DEPLOY)
+            && visible.contains("deploy.preview")
             && visible.contains("1 s ago")
             && !visible.contains(DISCOVERING)
             && !visible.contains(TRUST_REVIEW)
