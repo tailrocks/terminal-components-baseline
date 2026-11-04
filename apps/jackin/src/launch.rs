@@ -1,11 +1,12 @@
-use std::sync::Arc;
-
 use junie_tui::widgets::steps::StepState;
 
+use crate::backend::OnePassword;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
-use crate::domain::launch::{LaunchContent, LaunchFailure, StageKind};
+use crate::domain::instance::Instance;
+use crate::domain::launch::{LaunchContent, LaunchFailure};
 use crate::domain::workspace::WorkspaceId;
+use crate::world::World;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LaunchTarget {
@@ -15,15 +16,19 @@ pub struct LaunchTarget {
     pub account: Option<AccountId>,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum LaunchPlan {
-    Clean,
+/// The instance a launch made, as its backend recorded it, and the run that
+/// made it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ReadyInstance {
+    pub instance: Instance,
+    pub run_id: String,
+}
 
-    FailNetwork,
-
-    CredentialsLocked,
-
-    BlockedSidecar,
+/// Why a launch failed, and the `FailedSetup` record the backend kept of it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FailedLaunch {
+    pub failure: LaunchFailure,
+    pub instance: Instance,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -35,190 +40,62 @@ pub enum LaunchEvent {
     CredentialsResolved { origin: String, validation: String },
 
     CredentialError { message: String },
-    Failed(LaunchFailure),
-    Ready,
+    Failed(Box<FailedLaunch>),
+    Ready(Box<ReadyInstance>),
 }
 
-#[derive(Debug, Clone)]
-pub struct LaunchRun {
-    pub plan: LaunchPlan,
-    pub run_id: String,
-    pub container: String,
-    pub agent: Agent,
-    pub states: Vec<StepState>,
-    pub tick: u64,
-    pub stage_start: u64,
-    pub current: Option<usize>,
-    pub done: bool,
-    pub failure: Option<LaunchFailure>,
-    pub blocked_at: Option<usize>,
+/// What a backend gives the cockpit for one launch. The cockpit polls it on
+/// every step and draws what the events say; it records nothing in the world
+/// except the instances the events and `cancel` hand it.
+pub trait LaunchFeed: std::fmt::Debug + Send {
+    /// The id of the run, shown from the first frame.
+    fn run_id(&self) -> &str;
 
-    pub credential_hold: bool,
-    pub credential_retried: bool,
-    pub build_lines_emitted: usize,
-    pub cancelled: bool,
-    pub content: Arc<LaunchContent>,
+    /// The events that happened since the last poll, in order.
+    fn poll(&mut self, world: &World) -> Vec<LaunchEvent>;
+
+    /// The operator unlocked the credential source and asked to try again.
+    /// `op` is the session the console holds; a backend that unlocks
+    /// elsewhere leaves it alone.
+    fn retry_credentials(&mut self, op: &mut dyn OnePassword);
+
+    /// The operator chose to type the key instead of resolving it.
+    fn use_plain_text(&mut self);
+
+    /// The operator ended the launch. The record the backend kept of the
+    /// launch, if it kept one.
+    fn cancel(&mut self, world: &World) -> Option<Instance>;
 }
 
-impl LaunchRun {
-    pub fn new(
-        plan: LaunchPlan,
-        agent: Agent,
-        container: &str,
-        run_id: &str,
-        content: Arc<LaunchContent>,
-    ) -> Self {
-        let states = vec![StepState::Queued; content.stages.len()];
-        Self {
-            plan,
-            run_id: run_id.to_owned(),
-            container: container.to_owned(),
-            agent,
-            states,
-            tick: 0,
-            stage_start: 0,
-            current: None,
-            done: false,
-            failure: None,
-            blocked_at: None,
-            credential_hold: false,
-            credential_retried: false,
-            build_lines_emitted: 0,
-            cancelled: false,
-            content,
-        }
+/// The accounts a launch offers: the usable ones the workspace enables, with
+/// the requested one first when it is not among them, and for a content that
+/// takes only the agent's provider, only those.
+pub fn launch_accounts(
+    w: &World,
+    target: &LaunchTarget,
+    content: &LaunchContent,
+) -> Vec<AccountId> {
+    let workspace = target.workspace.and_then(|id| w.workspace(id));
+    let mut accounts: Vec<AccountId> = workspace
+        .map(|x| {
+            x.effective_accounts(&w.accounts)
+                .into_iter()
+                .filter(|e| e.usable.is_ready())
+                .map(|e| e.id)
+                .collect()
+        })
+        .unwrap_or_default();
+    if let Some(a) = &target.account
+        && !accounts.contains(a)
+    {
+        accounts.insert(0, a.clone());
     }
-
-    pub fn counts(&self) -> (usize, usize) {
-        (
-            self.states
-                .iter()
-                .filter(|s| **s == StepState::Done)
-                .count(),
-            self.states
-                .iter()
-                .filter(|s| **s == StepState::Skipped)
-                .count(),
-        )
+    if content.agent_provider_only {
+        accounts.retain(|id| {
+            w.accounts
+                .get(id)
+                .is_some_and(|a| a.provider == target.agent.provider())
+        });
     }
-
-    pub fn is_terminal(&self) -> bool {
-        self.done || self.failure.is_some() || self.blocked_at.is_some() || self.cancelled
-    }
-
-    pub fn retry_credentials(&mut self) {
-        self.credential_hold = false;
-        self.credential_retried = true;
-        self.stage_start = self.tick;
-    }
-
-    pub fn cancel(&mut self) {
-        self.cancelled = true;
-        if let Some(i) = self.current {
-            self.states[i] = StepState::Failed;
-        }
-    }
-
-    fn plan_stage(&self) -> Option<usize> {
-        let id = match self.plan {
-            LaunchPlan::FailNetwork => "network",
-            LaunchPlan::BlockedSidecar => "sidecar",
-            LaunchPlan::Clean | LaunchPlan::CredentialsLocked => return None,
-        };
-        self.content.stages.position(id)
-    }
-
-    pub fn advance(&mut self) -> Vec<LaunchEvent> {
-        let mut ev = vec![];
-        if self.is_terminal() || self.credential_hold {
-            return ev;
-        }
-        self.tick += 1;
-        let stages = &self.content.stages;
-        let Some(i) = self.current else {
-            self.current = Some(0);
-            self.stage_start = self.tick;
-            self.states[0] = StepState::Running;
-            ev.push(LaunchEvent::StageChanged(0, StepState::Running));
-            ev.push(LaunchEvent::Activity(
-                stages.get(0).activity_for(self.agent),
-            ));
-            return ev;
-        };
-        let spec = stages.get(i);
-        let elapsed = self.tick - self.stage_start;
-
-        if spec.kind == StageKind::BuildLog {
-            let log = &self.content.build_log;
-            let want = ((elapsed as usize) * log.len() / spec.ticks.max(1) as usize).min(log.len());
-            while self.build_lines_emitted < want {
-                ev.push(LaunchEvent::BuildLine(
-                    self.content.build_log[self.build_lines_emitted].clone(),
-                ));
-                self.build_lines_emitted += 1;
-            }
-        }
-        if spec.container_at == Some(elapsed) {
-            ev.push(LaunchEvent::ContainerReady(self.container.clone()));
-        }
-        if let StageKind::Credentials { hold_at } = spec.kind
-            && elapsed == hold_at
-            && self.plan == LaunchPlan::CredentialsLocked
-            && !self.credential_retried
-        {
-            self.credential_hold = true;
-            ev.push(LaunchEvent::CredentialError {
-                message: "1Password locked: unlock the app and retry".into(),
-            });
-            return ev;
-        }
-        if elapsed < spec.ticks {
-            return ev;
-        }
-
-        let planned = self.plan_stage() == Some(i);
-        let final_state = match (self.plan, planned) {
-            _ if spec.skipped => StepState::Skipped,
-            (LaunchPlan::FailNetwork, true) => StepState::Failed,
-            (LaunchPlan::BlockedSidecar, true) => StepState::Blocked,
-            _ => StepState::Done,
-        };
-        self.states[i] = final_state;
-        ev.push(LaunchEvent::StageChanged(i, final_state));
-        if matches!(spec.kind, StageKind::Credentials { .. }) {
-            ev.push(LaunchEvent::CredentialsResolved {
-                origin: String::new(),
-                validation: String::new(),
-            });
-        }
-        match final_state {
-            StepState::Failed => {
-                let f = self.content.network_failure.clone();
-                self.failure = Some(f.clone());
-                ev.push(LaunchEvent::Failed(f));
-                return ev;
-            }
-            StepState::Blocked => {
-                self.blocked_at = Some(i);
-                ev.push(LaunchEvent::Activity(
-                    "Blocked · this stage cannot continue".into(),
-                ));
-                return ev;
-            }
-            _ => {}
-        }
-        if i + 1 < stages.len() {
-            self.current = Some(i + 1);
-            self.stage_start = self.tick;
-            self.states[i + 1] = StepState::Running;
-            ev.push(LaunchEvent::StageChanged(i + 1, StepState::Running));
-            ev.push(LaunchEvent::Activity(
-                stages.get(i + 1).activity_for(self.agent),
-            ));
-        } else {
-            self.done = true;
-            ev.push(LaunchEvent::Ready);
-        }
-        ev
-    }
+    accounts
 }

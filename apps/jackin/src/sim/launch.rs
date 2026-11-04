@@ -1,8 +1,19 @@
 use std::sync::Arc;
 
+use junie_tui::widgets::steps::StepState;
+
+use crate::backend::{OnePassword, OpSession};
+use crate::domain::account::AccountId;
+use crate::domain::agent::Agent;
+use crate::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use crate::domain::launch::{
     LaunchContent, LaunchFailure, LaunchWords, StageKind, StageList, StageSpec,
 };
+use crate::domain::workspace::WorkspaceId;
+use crate::launch::{
+    FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance, launch_accounts,
+};
+use crate::world::World;
 
 pub const BUILD_LOG: [&str; 44] = [
     "#1 [internal] load build definition from Dockerfile.derived",
@@ -160,4 +171,260 @@ pub fn openshell_content() -> Arc<LaunchContent> {
         },
         ..base
     })
+}
+
+/// How a simulated launch goes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LaunchPlan {
+    Clean,
+
+    FailNetwork,
+
+    CredentialsLocked,
+
+    BlockedSidecar,
+}
+
+/// A launch that plays its stages on the cockpit's ticks and keeps the
+/// instance record the way the simulated backend would.
+#[derive(Debug)]
+pub struct SimLaunch {
+    plan: LaunchPlan,
+    run_id: String,
+    container: String,
+    instance_id: String,
+    workspace: Option<WorkspaceId>,
+    role: String,
+    agent: Agent,
+    accounts: Vec<AccountId>,
+    tick: u64,
+    stage_start: u64,
+    current: Option<usize>,
+    ended: bool,
+    credential_hold: bool,
+    credential_retried: bool,
+    build_lines_emitted: usize,
+    content: Arc<LaunchContent>,
+}
+
+fn next_instance_id(w: &World) -> String {
+    let n = w.instances.len() as u32 + 0x7f3a + 0x1234 * 3;
+    format!("jk-{:04x}", n & 0xffff)
+}
+
+fn workspace_name(w: &World, workspace: Option<WorkspaceId>) -> String {
+    workspace
+        .and_then(|id| w.workspace(id))
+        .map(|x| x.name.clone())
+        .unwrap_or_else(|| w.cwd.rsplit('/').next().unwrap_or("directory").to_owned())
+}
+
+impl SimLaunch {
+    pub fn start(
+        plan: LaunchPlan,
+        w: &World,
+        target: &LaunchTarget,
+        content: Arc<LaunchContent>,
+    ) -> Self {
+        let wsname = workspace_name(w, target.workspace);
+        let instance_id = next_instance_id(w);
+        let suffix = instance_id.trim_start_matches("jk-").to_owned();
+        let container = match content.name_slug {
+            Some(n) => {
+                let slug = junie_tui::ui::text::clip(&wsname, n);
+                format!("jackin-{}-{suffix}", slug.trim_end_matches('-'))
+            }
+            None => format!("jackin-{wsname}-{suffix}"),
+        };
+        let run_id = format!(
+            "run-{}-{suffix}",
+            junie_tui::ui::text::clip(
+                &w.clock
+                    .stamp(w.now_secs())
+                    .replace([' ', ':'], "-")
+                    .replace('-', ""),
+                12,
+            )
+        );
+        Self {
+            plan,
+            run_id,
+            container,
+            instance_id,
+            workspace: target.workspace,
+            role: target.role.clone(),
+            agent: target.agent,
+            accounts: launch_accounts(w, target, &content),
+            tick: 0,
+            stage_start: 0,
+            current: None,
+            ended: false,
+            credential_hold: false,
+            credential_retried: false,
+            build_lines_emitted: 0,
+            content,
+        }
+    }
+
+    fn record(&self, w: &World, status: InstanceStatus) -> Instance {
+        let now = w.now_secs();
+        let wsname = workspace_name(w, self.workspace);
+        let repo = w.github.iter().find(|r| r.full_name.ends_with(&wsname));
+        Instance {
+            id: self.instance_id.clone(),
+            container: format!("jackin-{wsname}"),
+            workspace: self.workspace,
+            workdir: format!("/workspace/{wsname}"),
+            role: self.role.clone(),
+            agent: self.agent,
+            status,
+            created_secs: now,
+            last_seen_secs: now,
+            run_id: self.run_id.clone(),
+            sessions: Ok(vec![]),
+            daemon: DaemonSnapshot::Unavailable,
+            branch: repo.and_then(|r| r.branches.get(1).cloned()),
+            pr: None,
+            accounts: self.accounts.clone(),
+            default_branch: "main".into(),
+            github: repo.map(Into::into),
+            uncommitted: 0,
+            unpushed: 0,
+        }
+    }
+
+    fn resume(&mut self) {
+        self.credential_hold = false;
+        self.credential_retried = true;
+        self.stage_start = self.tick;
+    }
+
+    fn plan_stage(&self) -> Option<usize> {
+        let id = match self.plan {
+            LaunchPlan::FailNetwork => "network",
+            LaunchPlan::BlockedSidecar => "sidecar",
+            LaunchPlan::Clean | LaunchPlan::CredentialsLocked => return None,
+        };
+        self.content.stages.position(id)
+    }
+
+    fn advance(&mut self, w: &World) -> Vec<LaunchEvent> {
+        let mut ev = vec![];
+        if self.ended || self.credential_hold {
+            return ev;
+        }
+        self.tick += 1;
+        let stages = &self.content.stages;
+        let Some(i) = self.current else {
+            self.current = Some(0);
+            self.stage_start = self.tick;
+            ev.push(LaunchEvent::StageChanged(0, StepState::Running));
+            ev.push(LaunchEvent::Activity(
+                stages.get(0).activity_for(self.agent),
+            ));
+            return ev;
+        };
+        let spec = stages.get(i);
+        let elapsed = self.tick - self.stage_start;
+
+        if spec.kind == StageKind::BuildLog {
+            let log = &self.content.build_log;
+            let want = ((elapsed as usize) * log.len() / spec.ticks.max(1) as usize).min(log.len());
+            while self.build_lines_emitted < want {
+                ev.push(LaunchEvent::BuildLine(
+                    self.content.build_log[self.build_lines_emitted].clone(),
+                ));
+                self.build_lines_emitted += 1;
+            }
+        }
+        if spec.container_at == Some(elapsed) {
+            ev.push(LaunchEvent::ContainerReady(self.container.clone()));
+        }
+        if let StageKind::Credentials { hold_at } = spec.kind
+            && elapsed == hold_at
+            && self.plan == LaunchPlan::CredentialsLocked
+            && !self.credential_retried
+        {
+            self.credential_hold = true;
+            ev.push(LaunchEvent::CredentialError {
+                message: "1Password locked: unlock the app and retry".into(),
+            });
+            return ev;
+        }
+        if elapsed < spec.ticks {
+            return ev;
+        }
+
+        let planned = self.plan_stage() == Some(i);
+        let final_state = match (self.plan, planned) {
+            _ if spec.skipped => StepState::Skipped,
+            (LaunchPlan::FailNetwork, true) => StepState::Failed,
+            (LaunchPlan::BlockedSidecar, true) => StepState::Blocked,
+            _ => StepState::Done,
+        };
+        ev.push(LaunchEvent::StageChanged(i, final_state));
+        if matches!(spec.kind, StageKind::Credentials { .. }) {
+            ev.push(LaunchEvent::CredentialsResolved {
+                origin: String::new(),
+                validation: String::new(),
+            });
+        }
+        match final_state {
+            StepState::Failed => {
+                self.ended = true;
+                ev.push(LaunchEvent::Failed(Box::new(FailedLaunch {
+                    failure: self.content.network_failure.clone(),
+                    instance: self.record(w, InstanceStatus::FailedSetup),
+                })));
+                return ev;
+            }
+            StepState::Blocked => {
+                self.ended = true;
+                ev.push(LaunchEvent::Activity(
+                    "Blocked · this stage cannot continue".into(),
+                ));
+                return ev;
+            }
+            _ => {}
+        }
+        if i + 1 < stages.len() {
+            self.current = Some(i + 1);
+            self.stage_start = self.tick;
+            ev.push(LaunchEvent::StageChanged(i + 1, StepState::Running));
+            ev.push(LaunchEvent::Activity(
+                stages.get(i + 1).activity_for(self.agent),
+            ));
+        } else {
+            self.ended = true;
+            ev.push(LaunchEvent::Ready(Box::new(ReadyInstance {
+                instance: self.record(w, InstanceStatus::Running),
+                run_id: self.run_id.clone(),
+            })));
+        }
+        ev
+    }
+}
+
+impl LaunchFeed for SimLaunch {
+    fn run_id(&self) -> &str {
+        &self.run_id
+    }
+
+    fn poll(&mut self, world: &World) -> Vec<LaunchEvent> {
+        self.advance(world)
+    }
+
+    fn retry_credentials(&mut self, op: &mut dyn OnePassword) {
+        op.set_session(OpSession::SignedIn);
+        self.resume();
+    }
+
+    fn use_plain_text(&mut self) {
+        self.resume();
+    }
+
+    fn cancel(&mut self, world: &World) -> Option<Instance> {
+        self.ended = true;
+        Some(self.record(world, InstanceStatus::FailedSetup))
+    }
 }

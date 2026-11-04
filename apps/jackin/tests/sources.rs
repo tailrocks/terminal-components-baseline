@@ -14,7 +14,7 @@ use jackin_console::domain::instance::{InstanceStatus, RepoRef};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, world_for};
-use jackin_console::launch::{LaunchPlan, LaunchTarget};
+use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::SessionScript;
 use jackin_console::sim::SimBackend;
 use jackin_console::world::World;
@@ -78,8 +78,8 @@ impl Backend for SourceBackend {
         self.0.launch_content()
     }
 
-    fn launch_plan(&self, world: &World, target: &LaunchTarget) -> LaunchPlan {
-        self.0.launch_plan(world, target)
+    fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed> {
+        self.0.launch(world, target)
     }
 
     fn session_script(&self) -> Arc<dyn SessionScript> {

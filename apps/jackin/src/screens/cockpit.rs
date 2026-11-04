@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::screens::Jackin;
 use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::id::WidgetId;
@@ -25,11 +27,12 @@ use super::modals::{InfoDialog, InfoResult};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
-use crate::domain::instance::{Instance, InstanceStatus};
-use crate::domain::launch::StageKind;
+use crate::domain::launch::{LaunchContent, LaunchFailure, StageKind};
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::workspace::WorkspaceId;
-use crate::launch::{LaunchEvent, LaunchRun, LaunchTarget};
+use crate::launch::{
+    FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance, launch_accounts,
+};
 use crate::world::World;
 use junie_tui::motion::Motion;
 
@@ -41,8 +44,42 @@ pub const CHIP_RUN: WidgetId = WidgetId::of("cockpit.chip.run");
 
 pub const CANCEL_BTN: WidgetId = WidgetId::of("cockpit.cancel_btn");
 
+/// What the feed's events have said so far.
+struct Progress {
+    states: Vec<StepState>,
+    failure: Option<LaunchFailure>,
+    done: bool,
+    cancelled: bool,
+}
+
+impl Progress {
+    fn new(stages: usize) -> Self {
+        Self {
+            states: vec![StepState::Queued; stages],
+            failure: None,
+            done: false,
+            cancelled: false,
+        }
+    }
+
+    fn counts(&self) -> (usize, usize) {
+        let count = |wanted| self.states.iter().filter(|s| **s == wanted).count();
+        (count(StepState::Done), count(StepState::Skipped))
+    }
+
+    fn blocked(&self) -> bool {
+        self.states.contains(&StepState::Blocked)
+    }
+
+    fn is_terminal(&self) -> bool {
+        self.done || self.failure.is_some() || self.blocked() || self.cancelled
+    }
+}
+
 pub struct CockpitScreen {
-    pub run: LaunchRun,
+    feed: Box<dyn LaunchFeed>,
+    content: Arc<LaunchContent>,
+    progress: Progress,
     pub workspace: Option<WorkspaceId>,
     pub role: String,
     pub agent: Agent,
@@ -58,7 +95,7 @@ pub struct CockpitScreen {
     pub tick: u64,
     pub motion: Motion,
     pub frozen_at: Option<u64>,
-    pub instance_id: String,
+    pub instance_id: Option<String>,
     pub handoff_requested: bool,
     pub failure_shown: bool,
     log_area: Rect,
@@ -70,75 +107,27 @@ pub struct CockpitScreen {
 
 impl CockpitScreen {
     pub fn new(w: &World, target: LaunchTarget, motion: Motion) -> Self {
-        let plan = w.backend.launch_plan(w, &target);
+        let feed = w.backend.launch(w, &target);
+        let content = w.backend.launch_content();
+        let accounts = launch_accounts(w, &target, &content);
         let LaunchTarget {
             workspace,
             role,
             agent,
             account,
         } = target;
-        let wsname = workspace
-            .and_then(|id| w.workspace(id))
-            .map(|x| x.name.clone())
-            .unwrap_or_else(|| w.cwd.rsplit('/').next().unwrap_or("directory").to_owned());
-        let instance_id = w.new_instance_id();
-        let suffix = instance_id.trim_start_matches("jk-").to_owned();
-        let content = w.backend.launch_content();
-        let container = match content.name_slug {
-            Some(n) => {
-                let slug = junie_tui::ui::text::clip(&wsname, n);
-                format!("jackin-{}-{suffix}", slug.trim_end_matches('-'))
-            }
-            None => format!("jackin-{wsname}-{suffix}"),
-        };
-        let run_id = format!(
-            "run-{}-{suffix}",
-            junie_tui::ui::text::clip(
-                &w.clock
-                    .stamp(w.now_secs())
-                    .replace([' ', ':'], "-")
-                    .replace('-', ""),
-                12,
-            )
-        );
-        let run = LaunchRun::new(plan, agent, &container, &run_id, content.clone());
-        let steps = run
-            .content
-            .stages
-            .iter()
-            .map(|s| Step::new(&s.label))
-            .collect();
+        let steps = content.stages.iter().map(|s| Step::new(&s.label)).collect();
         let mut log = TextViewport::new(LOG).wrap(true).max_lines(5_000);
         log.follow = true;
         let target_label = match workspace.and_then(|id| w.workspace(id)) {
             Some(x) => format!("into workspace {}", x.name),
             None => format!("in directory {}", w.tilde(&w.cwd)),
         };
-        let mut accounts: Vec<AccountId> = workspace
-            .and_then(|id| w.workspace(id))
-            .map(|x| {
-                x.effective_accounts(&w.accounts)
-                    .into_iter()
-                    .filter(|e| e.usable.is_ready())
-                    .map(|e| e.id)
-                    .collect()
-            })
-            .unwrap_or_default();
-        if let Some(a) = &account
-            && !accounts.contains(a)
-        {
-            accounts.insert(0, a.clone());
-        }
-        if content.agent_provider_only {
-            accounts.retain(|id| {
-                w.accounts
-                    .get(id)
-                    .is_some_and(|a| a.provider == agent.provider())
-            });
-        }
         let docker = w.docker_on(workspace, &role);
         Self {
-            run,
+            progress: Progress::new(content.stages.len()),
+            feed,
+            content,
             workspace,
             role,
             agent,
@@ -153,7 +142,7 @@ impl CockpitScreen {
             tick: 0,
             motion,
             frozen_at: None,
-            instance_id,
+            instance_id: None,
             handoff_requested: false,
             failure_shown: false,
             log_area: Rect::ZERO,
@@ -171,14 +160,11 @@ impl CockpitScreen {
     }
 
     fn build_stage(&self) -> Option<usize> {
-        self.run
-            .content
-            .stages
-            .first_of(|k| k == StageKind::BuildLog)
+        self.content.stages.first_of(|k| k == StageKind::BuildLog)
     }
 
     fn credentials_label(&self) -> &str {
-        let stages = &self.run.content.stages;
+        let stages = &self.content.stages;
         stages
             .first_of(|k| matches!(k, StageKind::Credentials { .. }))
             .map_or("Credentials", |i| stages.get(i).label.as_str())
@@ -200,7 +186,7 @@ impl CockpitScreen {
             .map(|a| format!("{} ({})", a.title(), a.source.origin_label()))
             .unwrap_or_else(|| origin.clone());
         if others.is_empty() {
-            let shown = if self.run.content.agent_provider_only {
+            let shown = if self.content.agent_provider_only {
                 primary
             } else {
                 origin
@@ -258,28 +244,31 @@ impl CockpitScreen {
     }
 
     fn step(&mut self, w: &mut World, cx: &mut Cx) -> bool {
-        if self.run.is_terminal() || self.handoff_requested {
+        if self.progress.is_terminal() || self.handoff_requested {
             return false;
         }
         self.tick += 1;
-        let events = self.run.advance();
+        let events = self.feed.poll(w);
         let mut changed = !events.is_empty();
         for ev in events {
             match ev {
                 LaunchEvent::StageChanged(stage, state) => {
+                    if let Some(slot) = self.progress.states.get_mut(stage) {
+                        *slot = state;
+                    }
                     self.rail.set_state(stage, state);
                     if state == StepState::Done {
                         self.rail.set_meta(
                             stage,
                             Some(format!(
                                 "{:.1} s",
-                                self.run.content.stages.get(stage).ticks as f64 * 0.033 * 3.0
+                                self.content.stages.get(stage).ticks as f64 * 0.033 * 3.0
                             )),
                         );
                     }
                     if state == StepState::Running
                         && matches!(
-                            self.run.content.stages.get(stage).kind,
+                            self.content.stages.get(stage).kind,
                             StageKind::Credentials { .. }
                         )
                     {
@@ -292,7 +281,7 @@ impl CockpitScreen {
                 LaunchEvent::ContainerReady(c) => self.container = Some(c),
                 LaunchEvent::CredentialsResolved { .. } => {
                     if let Some((_, v, tone)) = self.credentials.as_mut() {
-                        *v = format!("{} · {v}", self.run.content.words.credentials_resolved);
+                        *v = format!("{} · {v}", self.content.words.credentials_resolved);
                         *tone = Tone::Secondary;
                     }
                 }
@@ -324,40 +313,23 @@ impl CockpitScreen {
                     d.width = 70;
                     cx.open(d, LayerTag::new("cred"));
                 }
-                LaunchEvent::Failed(f) => {
+                LaunchEvent::Failed(failed) => {
+                    let FailedLaunch { failure, instance } = *failed;
                     self.frozen_at = Some(self.tick);
                     self.activity =
-                        format!("{} failed", self.run.content.stages.get(f.stage).label);
+                        format!("{} failed", self.content.stages.get(failure.stage).label);
                     self.log_open = false;
-                    let record = self.instance_record(w, InstanceStatus::FailedSetup);
-                    w.instances.push(record);
-                    w.sync_arbiter();
+                    self.progress.failure = Some(failure);
+                    self.instance_id = Some(instance.id.clone());
+                    w.admit(instance);
                     self.open_failure(w, cx);
                 }
-                LaunchEvent::Ready => {
-                    self.activity = self.run.content.words.ready_activity.clone();
-
-                    let record = self.instance_record(w, InstanceStatus::Running);
-                    let id = record.id.clone();
-                    w.instances.push(record);
-                    let now = w.now_ms();
-                    let wsname = self
-                        .target_label
-                        .rsplit(' ')
-                        .next()
-                        .unwrap_or("workspace")
-                        .trim_start_matches("~/")
-                        .to_owned();
-                    let wsname = self
-                        .workspace
-                        .and_then(|i| w.workspace(i))
-                        .map(|x| x.name.clone())
-                        .unwrap_or(wsname);
-                    let mut d = crate::panes::Daemon::new(&wsname, w.backend.session_script());
-                    d.new_tab(Some(self.agent), self.account.clone(), now, false);
-                    w.daemons.insert(id.clone(), d);
-                    crate::world::refresh_snapshots(w);
-                    w.sync_arbiter();
+                LaunchEvent::Ready(ready) => {
+                    let ReadyInstance { instance, .. } = *ready;
+                    self.progress.done = true;
+                    self.activity = self.content.words.ready_activity.clone();
+                    let id = instance.id.clone();
+                    w.admit(instance);
                     self.handoff_requested = true;
                     cx.go(Go::Attach {
                         instance: id,
@@ -370,54 +342,15 @@ impl CockpitScreen {
         changed
     }
 
-    fn instance_record(&self, w: &World, status: InstanceStatus) -> Instance {
-        let now = w.now_secs();
-        let wsname = self
-            .workspace
-            .and_then(|i| w.workspace(i))
-            .map(|x| x.name.clone())
-            .unwrap_or_else(|| w.cwd.rsplit('/').next().unwrap_or("directory").to_owned());
-        let mut i = Instance {
-            id: self.instance_id.clone(),
-            container: format!("jackin-{wsname}"),
-            workspace: self.workspace,
-            workdir: format!("/workspace/{wsname}"),
-            role: self.role.clone(),
-            agent: self.agent,
-            status,
-            created_secs: now,
-            last_seen_secs: now,
-            run_id: self.run.run_id.clone(),
-            sessions: Ok(vec![]),
-            daemon: crate::domain::instance::DaemonSnapshot::Unavailable,
-            branch: None,
-            pr: None,
-            accounts: self.accounts.clone(),
-            default_branch: "main".into(),
-            github: w
-                .github
-                .iter()
-                .find(|r| r.full_name.ends_with(&wsname))
-                .map(Into::into),
-            uncommitted: 0,
-            unpushed: 0,
-        };
-        if let Some(r) = w.github.iter().find(|r| r.full_name.ends_with(&wsname)) {
-            i.branch = r.branches.get(1).cloned();
-        }
-        i
-    }
-
     fn open_failure(&mut self, w: &World, cx: &mut Cx) {
-        let Some(f) = self.run.failure.clone() else {
+        let Some(f) = self.progress.failure.clone() else {
             return;
         };
         self.failure_shown = true;
-        let words = &self.run.content.words;
+        let words = &self.content.words;
         let props = vec![
-            Prop::new("Stage", self.run.content.stages.get(f.stage).label.clone())
-                .tone(Tone::Error),
-            Prop::new("Run id", self.run.run_id.clone()).copyable(),
+            Prop::new("Stage", self.content.stages.get(f.stage).label.clone()).tone(Tone::Error),
+            Prop::new("Run id", self.feed.run_id().to_owned()).copyable(),
             Prop::new("Next step", f.next_step.clone()).wrap(),
             Prop::new(
                 &words.unit,
@@ -426,7 +359,7 @@ impl CockpitScreen {
                     .unwrap_or_else(|| words.unit_missing.clone()),
             ),
         ];
-        let title = match self.run.content.stages.get(f.stage).kind {
+        let title = match self.content.stages.get(f.stage).kind {
             StageKind::BuildLog => words.build_failed.clone(),
             StageKind::Credentials { .. } => "Credential check failed".to_owned(),
             StageKind::Plain => "Launch failed".to_owned(),
@@ -463,7 +396,7 @@ impl CockpitScreen {
                         .unwrap_or("host profile".into())
                 ),
             ),
-            Prop::new("Run id", self.run.run_id.clone()).copyable(),
+            Prop::new("Run id", self.feed.run_id().to_owned()).copyable(),
             Prop::new(
                 "jackin",
                 w.surfaces
@@ -473,15 +406,15 @@ impl CockpitScreen {
             ),
         ];
         if let Some(c) = &self.container {
-            props.insert(
-                0,
-                Prop::new(&self.run.content.words.unit, c.clone()).copyable(),
-            );
+            props.insert(0, Prop::new(&self.content.words.unit, c.clone()).copyable());
         }
         if self.debug {
             props.push(Prop::new(
                 "Telemetry",
-                format!("run {} -> otlp://collector.internal:4317", self.run.run_id),
+                format!(
+                    "run {} -> otlp://collector.internal:4317",
+                    self.feed.run_id()
+                ),
             ));
         }
         let mut d =
@@ -511,24 +444,30 @@ impl CockpitScreen {
         cx.open(d, LayerTag::new("quit"));
     }
 
+    /// Ends the launch and keeps the record the backend made of it.
+    fn abandon(&mut self, w: &mut World) {
+        self.progress.cancelled = true;
+        if let Some(record) = self.feed.cancel(w) {
+            self.instance_id = Some(record.id.clone());
+            w.admit(record);
+        }
+    }
+
     fn cancel(&mut self, w: &mut World, cx: &mut Cx) {
-        if self.run.is_terminal() {
+        if self.progress.is_terminal() {
             return;
         }
-        self.run.cancel();
+        self.abandon(w);
         self.frozen_at = Some(self.tick);
         self.activity = "Launch cancelled".into();
-        let record = self.instance_record(w, InstanceStatus::FailedSetup);
-        w.instances.push(record);
-        w.sync_arbiter();
         cx.status("Launch cancelled · nothing was attached");
         cx.go(Go::LaunchFailedAck {
-            instance: Some(self.instance_id.clone()),
+            instance: self.instance_id.clone(),
         });
     }
 
     fn ask_cancel(&mut self, cx: &mut Cx) -> Outcome {
-        if self.run.is_terminal() {
+        if self.progress.is_terminal() {
             return Outcome::Consumed;
         }
         let d = Dialog::destructive(
@@ -543,16 +482,16 @@ impl CockpitScreen {
     }
 
     fn draw_log(&mut self, screen: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
-        let active = !self.run.is_terminal()
+        let active = !self.progress.is_terminal()
             && self
                 .rail
                 .frontier()
                 .zip(self.build_stage())
                 .is_some_and(|(i, build)| i <= build);
         let title = if active {
-            format!("{} · building…", self.run.content.words.log_title)
+            format!("{} · building…", self.content.words.log_title)
         } else {
-            self.run.content.words.log_title.clone()
+            self.content.words.log_title.clone()
         };
         let n = self.log.len();
         let meta = if self.log.follow {
@@ -582,7 +521,7 @@ impl CockpitScreen {
             buf.set_string(
                 body.x,
                 body.y,
-                &self.run.content.words.log_waiting,
+                &self.content.words.log_waiting,
                 t.muted().bg(bg),
             );
         } else {
@@ -642,7 +581,7 @@ impl Page<Jackin> for CockpitScreen {
     }
 
     fn animating(&self, _w: &World) -> bool {
-        !self.run.is_terminal() || self.frozen_at.is_none()
+        !self.progress.is_terminal() || self.frozen_at.is_none()
     }
 
     fn on_tick(&mut self, w: &mut World, cx: &mut Cx) -> Outcome {
@@ -671,12 +610,9 @@ impl Page<Jackin> for CockpitScreen {
     fn on_key(&mut self, key: &Key, w: &mut World, cx: &mut Cx) -> Outcome {
         if key.ctrl_char('c') && !(self.log_open && self.log.has_selection()) {
             cx.status("Aborted · terminal restored, cleanup deferred");
-            self.run.cancel();
-            let record = self.instance_record(w, InstanceStatus::FailedSetup);
-            w.instances.push(record);
-            w.sync_arbiter();
+            self.abandon(w);
             cx.go(Go::LaunchFailedAck {
-                instance: Some(self.instance_id.clone()),
+                instance: self.instance_id.clone(),
             });
             return Outcome::Changed;
         }
@@ -726,11 +662,11 @@ impl Page<Jackin> for CockpitScreen {
                 self.debug = !self.debug;
                 Outcome::Changed
             }
-            KeyCode::Esc if self.run.failure.is_some() && !self.failure_shown => {
+            KeyCode::Esc if self.progress.failure.is_some() && !self.failure_shown => {
                 self.open_failure(w, cx);
                 Outcome::Changed
             }
-            KeyCode::Esc | KeyCode::Enter if self.run.blocked_at.is_some() => {
+            KeyCode::Esc | KeyCode::Enter if self.progress.blocked() => {
                 cx.status("This stage is blocked · x cancels the launch, Ctrl+Q quits");
                 Outcome::Changed
             }
@@ -790,7 +726,7 @@ impl Page<Jackin> for CockpitScreen {
             }
             ("failure", _) => {
                 cx.go(Go::LaunchFailedAck {
-                    instance: Some(self.instance_id.clone()),
+                    instance: self.instance_id.clone(),
                 });
                 Outcome::Changed
             }
@@ -804,10 +740,7 @@ impl Page<Jackin> for CockpitScreen {
                     action: Some(1), ..
                 },
             ) => {
-                self.run.cancel();
-                let record = self.instance_record(w, InstanceStatus::FailedSetup);
-                w.instances.push(record);
-                w.sync_arbiter();
+                self.abandon(w);
                 cx.go(Go::Quit);
                 Outcome::Changed
             }
@@ -822,9 +755,8 @@ impl Page<Jackin> for CockpitScreen {
             }
             ("cred", ModalResult::Dialog { action, .. }) => match action {
                 Some(0) => {
-                    w.op.set_session(crate::backend::OpSession::SignedIn);
                     self.credential_hold = false;
-                    self.run.retry_credentials();
+                    self.feed.retry_credentials(w.op.as_mut());
                     if let Some((_, v, tone)) = self.credentials.as_mut() {
                         *v = "retrying after unlock…".into();
                         *tone = Tone::Secondary;
@@ -835,7 +767,7 @@ impl Page<Jackin> for CockpitScreen {
                 Some(1) => {
                     self.credential_hold = false;
                     self.account = None;
-                    self.run.retry_credentials();
+                    self.feed.use_plain_text();
                     if let Some((o, v, tone)) = self.credentials.as_mut() {
                         *o = format!(
                             "plain text · masked API key · {}",
@@ -860,7 +792,7 @@ impl Page<Jackin> for CockpitScreen {
         let t = ctx.theme;
         fill(buf, area, t.base());
 
-        let rail_h = (self.run.content.stages.len() as u16).min(area.height.saturating_sub(9));
+        let rail_h = (self.content.stages.len() as u16).min(area.height.saturating_sub(9));
         let rail_w = 44u16.min(area.width.saturating_sub(4));
         let rail_x = area.x + (area.width.saturating_sub(rail_w)) / 2;
         let ident_y = area.y + 1;
@@ -876,7 +808,7 @@ impl Page<Jackin> for CockpitScreen {
             ),
             Rect::new(area.x, area.bottom().saturating_sub(3), area.width, 3),
         ];
-        let running = !self.run.is_terminal() && self.frozen_at.is_none();
+        let running = !self.progress.is_terminal() && self.frozen_at.is_none();
         let t_local = match self.motion {
             Motion::Reduced => 60,
             _ => self.frozen_at.unwrap_or(self.tick),
@@ -939,7 +871,7 @@ impl Page<Jackin> for CockpitScreen {
             ),
             t.secondary(),
         );
-        let (done, skipped) = self.run.counts();
+        let (done, skipped) = self.progress.counts();
         let frontier = self
             .rail
             .frontier()
@@ -947,12 +879,12 @@ impl Page<Jackin> for CockpitScreen {
                 format!(
                     "stage {} of {} · {}",
                     i + 1,
-                    self.run.content.stages.len(),
-                    self.run.content.stages.get(i).label
+                    self.content.stages.len(),
+                    self.content.stages.get(i).label
                 )
             })
             .unwrap_or_else(|| {
-                if self.run.done {
+                if self.progress.done {
                     "all stages complete".into()
                 } else {
                     "stopped".into()
@@ -1019,13 +951,13 @@ impl Page<Jackin> for CockpitScreen {
         fill(buf, Rect::new(area.x, ay - 1, area.width, 3), t.base());
         let spinner = if running {
             format!("{} ", spinner_frame(self.tick))
-        } else if self.run.failure.is_some() {
+        } else if self.progress.failure.is_some() {
             "! ".into()
         } else {
             "".into()
         };
         let activity = format!("{spinner}{}", self.activity);
-        let act_style = if self.run.failure.is_some() {
+        let act_style = if self.progress.failure.is_some() {
             t.error_fg()
         } else {
             t.secondary()
@@ -1063,7 +995,7 @@ impl Page<Jackin> for CockpitScreen {
         }
         let mut rx = area.right().saturating_sub(1);
         if self.debug {
-            let chip = format!(" {} ", self.run.run_id);
+            let chip = format!(" {} ", self.feed.run_id());
             let cw = width(&chip) as u16;
             rx = rx.saturating_sub(cw);
 
@@ -1087,7 +1019,7 @@ impl Page<Jackin> for CockpitScreen {
             }
         }
 
-        if !self.run.is_terminal() {
+        if !self.progress.is_terminal() {
             let mut b = Button::secondary(CANCEL_BTN, "Cancel launch…");
             let bw = b.width();
             let bx = area.right().saturating_sub(bw + 1);
@@ -1114,11 +1046,8 @@ impl Page<Jackin> for CockpitScreen {
         if !self.log.is_empty() {
             v.push(hint("b", "Build log"));
         }
-        v.push(Hint::new(
-            "i",
-            format!("{} info", self.run.content.words.unit),
-        ));
-        if !self.run.is_terminal() {
+        v.push(Hint::new("i", format!("{} info", self.content.words.unit)));
+        if !self.progress.is_terminal() {
             v.push(hint("x", "Cancel launch…"));
         }
         v.push(hint("Ctrl+Q", "Quit"));
@@ -1142,10 +1071,10 @@ impl Page<Jackin> for CockpitScreen {
 
 impl Screen for CockpitScreen {
     fn strip_right(&self, _w: &World) -> Vec<Segment> {
-        let (done, _) = self.run.counts();
+        let (done, _) = self.progress.counts();
         vec![
             Segment::new(
-                format!("{done}/{} stages", self.run.content.stages.len()),
+                format!("{done}/{} stages", self.content.stages.len()),
                 Tone::Muted,
             )
             .priority(5),

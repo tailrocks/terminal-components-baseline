@@ -105,14 +105,6 @@ const RULES: &[Rule] = &[
 type Pending = (&'static str, &'static str, usize, &'static str);
 
 const PENDING: &[Pending] = &[
-    ("LaunchPlan", "backend.rs", 3, "B7a"),
-    (
-        "1Password locked: unlock the app and retry",
-        "launch.rs",
-        1,
-        "B7a",
-    ),
-    ("LaunchPlan", "launch.rs", 10, "B7a"),
     ("SessionScript", "backend.rs", 2, "B8a"),
     ("AgentProcess", "panes.rs", 5, "B8a"),
     ("SessionScript", "panes.rs", 6, "B8a"),

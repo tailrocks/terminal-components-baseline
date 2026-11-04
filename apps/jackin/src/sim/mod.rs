@@ -13,9 +13,11 @@ use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::LaunchContent;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
-use crate::launch::{LaunchPlan, LaunchTarget};
+use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::SessionScript;
 use crate::world::{GlobalConfig, Msg, Snapshot, World};
+
+use self::launch::{LaunchPlan, SimLaunch};
 
 pub mod changes;
 pub mod launch;
@@ -106,6 +108,26 @@ impl SimBackend {
             openshell: true,
             ..SimBackend::default()
         })
+    }
+
+    fn launch_plan(&self, world: &World, target: &LaunchTarget) -> LaunchPlan {
+        match self.launch {
+            LaunchRule::Clean => LaunchPlan::Clean,
+            LaunchRule::FailNetwork => LaunchPlan::FailNetwork,
+            LaunchRule::HardCases => {
+                if world.op.session() == OpSession::Locked
+                    && target.account.as_deref().is_some_and(|a| {
+                        a.contains("work") || a.contains("grok") || a.contains("codex-primary")
+                    })
+                {
+                    LaunchPlan::CredentialsLocked
+                } else if target.role == "sre" {
+                    LaunchPlan::BlockedSidecar
+                } else {
+                    LaunchPlan::Clean
+                }
+            }
+        }
     }
 
     fn save_ok(&self) -> bool {
@@ -465,24 +487,13 @@ impl Backend for SimBackend {
         }
     }
 
-    fn launch_plan(&self, world: &World, target: &LaunchTarget) -> LaunchPlan {
-        match self.launch {
-            LaunchRule::Clean => LaunchPlan::Clean,
-            LaunchRule::FailNetwork => LaunchPlan::FailNetwork,
-            LaunchRule::HardCases => {
-                if world.op.session() == OpSession::Locked
-                    && target.account.as_deref().is_some_and(|a| {
-                        a.contains("work") || a.contains("grok") || a.contains("codex-primary")
-                    })
-                {
-                    LaunchPlan::CredentialsLocked
-                } else if target.role == "sre" {
-                    LaunchPlan::BlockedSidecar
-                } else {
-                    LaunchPlan::Clean
-                }
-            }
-        }
+    fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed> {
+        Box::new(SimLaunch::start(
+            self.launch_plan(world, target),
+            world,
+            target,
+            self.launch_content(),
+        ))
     }
 
     fn session_script(&self) -> Arc<dyn SessionScript> {

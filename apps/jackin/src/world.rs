@@ -688,6 +688,12 @@ impl World {
         self.instances.iter_mut().find(|i| i.id == id)
     }
 
+    /// Adds an instance a backend recorded.
+    pub fn admit(&mut self, instance: Instance) {
+        self.instances.push(instance);
+        self.sync_arbiter();
+    }
+
     pub fn running_count(&self) -> usize {
         self.instances
             .iter()
@@ -730,11 +736,6 @@ impl World {
 
     pub fn config_file(&self) -> String {
         self.tilde(self.surfaces.config_path.as_deref().unwrap_or_default())
-    }
-
-    pub fn new_instance_id(&self) -> String {
-        let n = self.instances.len() as u32 + 0x7f3a + 0x1234 * 3;
-        format!("jk-{:04x}", n & 0xffff)
     }
 
     pub fn account_for(

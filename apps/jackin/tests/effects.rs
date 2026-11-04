@@ -17,7 +17,7 @@ use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::usage::{Freshness, FreshnessInfo};
 use jackin_console::domain::workspace::RoleSource;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
-use jackin_console::launch::{LaunchPlan, LaunchTarget};
+use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::SessionScript;
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
@@ -106,8 +106,8 @@ impl Backend for TestBackend {
         self.inner.launch_content()
     }
 
-    fn launch_plan(&self, world: &World, target: &LaunchTarget) -> LaunchPlan {
-        self.inner.launch_plan(world, target)
+    fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed> {
+        self.inner.launch(world, target)
     }
 
     fn session_script(&self) -> Arc<dyn SessionScript> {
