@@ -12,7 +12,7 @@ use crate::domain::onepassword::OpReference;
 use crate::domain::role::RoleManifestDoc;
 use crate::domain::usage::AccountUsage;
 use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
-use crate::launch::{LaunchPlan, LaunchTarget};
+use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
 use crate::world::{GlobalConfig, Msg, World};
 
@@ -412,9 +412,9 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
 
     fn launch_content(&self) -> Arc<LaunchContent>;
 
-    fn launch_plan(&self, _world: &World, _target: &LaunchTarget) -> LaunchPlan {
-        LaunchPlan::Clean
-    }
+    /// Starts a launch. The cockpit polls the feed it returns and draws what
+    /// its events say.
+    fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed>;
 
     fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody>;
 

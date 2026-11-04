@@ -105,16 +105,7 @@ const RULES: &[Rule] = &[
 /// the extra occurrences.
 type Pending = (&'static str, &'static str, usize, &'static str);
 
-const PENDING: &[Pending] = &[
-    ("LaunchPlan", "backend.rs", 3, "B7a"),
-    (
-        "1Password locked: unlock the app and retry",
-        "launch.rs",
-        1,
-        "B7a",
-    ),
-    ("LaunchPlan", "launch.rs", 10, "B7a"),
-];
+const PENDING: &[Pending] = &[];
 
 struct Source {
     path: String,

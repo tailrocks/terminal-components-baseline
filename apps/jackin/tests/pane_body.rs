@@ -17,6 +17,7 @@ use jackin_console::domain::instance::{
 };
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
+use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{
     Daemon, PaneBody, PaneId, PaneKey, PaneKind, PaneKindTag, PaneNote, PaneRequest, PaneSpawn,
     PasteOutcome,
@@ -190,6 +191,10 @@ impl Backend for Recorder {
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {
+        unreachable!("{NOT_USED}")
+    }
+
+    fn launch(&self, _: &World, _: &LaunchTarget) -> Box<dyn LaunchFeed> {
         unreachable!("{NOT_USED}")
     }
 

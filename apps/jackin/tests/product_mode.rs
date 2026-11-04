@@ -19,6 +19,7 @@ use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::domain::workspace::{
     AccountPolicy, AllowedRoles, DirtyExitPolicy, RolePolicy, Workspace,
 };
+use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::rain::INTRO_END;
 use jackin_console::world::{Snapshot, World, WorldParts};
@@ -59,6 +60,10 @@ impl Backend for TestBackendData {
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {
+        unreachable!("{NOT_USED}")
+    }
+
+    fn launch(&self, _: &World, _: &LaunchTarget) -> Box<dyn LaunchFeed> {
         unreachable!("{NOT_USED}")
     }
 

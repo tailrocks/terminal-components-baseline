@@ -28,12 +28,13 @@ use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::{Position, Rect};
 
 use crate::arbiter::{EntryDecision, ExitDecision};
+use crate::domain::account::AccountId;
 use crate::domain::instance::InstanceId;
 use crate::domain::instance::InstanceStatus;
 use crate::domain::vocabulary::fill_in;
 use crate::launch::LaunchTarget;
 use crate::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_ROLES, TAB_USAGE};
-use crate::panes::PaneId;
+use crate::panes::{Daemon, PaneId, PaneKind};
 use crate::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
 use crate::screens::capsule::CapsuleScreen;
 use crate::screens::cockpit::CockpitScreen;
@@ -1733,6 +1734,11 @@ impl App {
                     );
                     return;
                 }
+                if !self.world.daemons.contains_key(&instance)
+                    && let Some(account) = self.router.cockpit_mut().map(|c| c.account.clone())
+                {
+                    self.open_first_session(&instance, account);
+                }
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
                     d.attached_by = Some("this terminal".into());
                 }
@@ -1858,6 +1864,32 @@ impl App {
 
             Go::Quit => self.quit_now(),
         }
+    }
+
+    /// The first sessions of an instance a launch just made: the panes its
+    /// backend asks for. An agent pane without an account runs with the one
+    /// the launch chose, because `Instance` does not carry it.
+    fn open_first_session(&mut self, instance: &str, account: Option<AccountId>) {
+        let Some(i) = self.world.instance(instance) else {
+            return;
+        };
+        let backend = Arc::clone(&self.world.backend);
+        let requests = backend.initial_panes(i);
+        let mut d = Daemon::new(&self.world.workspace_label(i));
+        let now = self.world.now_ms();
+        for mut request in requests {
+            if let PaneKind::Agent {
+                account: chosen, ..
+            } = &mut request.kind
+                && chosen.is_none()
+            {
+                chosen.clone_from(&account);
+            }
+            d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
+        }
+        self.world.daemons.insert(instance.to_owned(), d);
+        crate::world::refresh_snapshots(&mut self.world);
+        self.world.sync_arbiter();
     }
 
     fn leave_construct(&mut self, instance: &str) {
