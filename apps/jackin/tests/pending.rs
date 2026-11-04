@@ -306,6 +306,41 @@ fn editing_the_form_drops_the_pending_check() {
 }
 
 #[test]
+fn the_typed_key_never_reaches_a_debug_print() {
+    const KEY: &str = "sk-ant-valid-abcdef1234";
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, PLAIN_KEY);
+    click_text(&mut app, "Validate");
+    let ticket = backend.check_ticket();
+
+    let effects = backend.checks();
+    let [
+        Effect::CheckSource {
+            key: Some(sent), ..
+        },
+    ] = effects.as_slice()
+    else {
+        panic!("one check with the typed key expected, got {effects:?}");
+    };
+    assert_eq!(sent.expose(), KEY, "the backend gets the key itself");
+    for printed in [format!("{effects:?}"), format!("{effects:#?}")] {
+        assert!(
+            !printed.contains(KEY),
+            "the effect prints the key: {printed}"
+        );
+        assert!(!printed.contains("abcdef"), "{printed}");
+    }
+
+    let reply = checked(ticket, key_outcome(&app));
+    for printed in [format!("{reply:?}"), format!("{reply:#?}")] {
+        assert!(
+            !printed.contains(KEY),
+            "the reply prints the key: {printed}"
+        );
+    }
+}
+
+#[test]
 fn a_reply_to_an_earlier_check_is_not_the_forms() {
     let (mut app, backend) = held(Scenario::AccountsMixed);
     press(&mut app, PLAIN_KEY);
