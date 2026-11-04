@@ -121,6 +121,27 @@ fn copy_selection_shows_no_y_for_a_terminal_pane() {
 }
 
 #[test]
+fn the_pane_menu_shows_no_y_for_a_terminal_pane() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.bench.output(0, b"line one");
+    rig.advance(80);
+    let at = pane_cell(&mut rig);
+    rig.mouse(MouseKind::Secondary, at);
+    let menu = rig.screen();
+    let row = menu
+        .lines()
+        .find(|l| l.contains("Copy selection"))
+        .expect("the pane menu is open");
+    let start = row.find("Copy selection").expect("the label");
+    let after: String = row[start + "Copy selection".len()..]
+        .chars()
+        .take(20)
+        .collect();
+    assert!(!after.contains('y'), "no shortcut after the label: {row}");
+}
+
+#[test]
 fn alt_screen_wheel_sends_arrows() {
     let mut rig = Rig::new();
     rig.attach();

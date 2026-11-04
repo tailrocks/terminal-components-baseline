@@ -350,7 +350,10 @@ impl CapsuleScreen {
             .daemon(w)
             .and_then(|d| d.active_tab())
             .is_some_and(|t| t.zoomed.is_some());
-        let mut copy = MenuItem::new("Copy selection").shortcut("y");
+        let mut copy = MenuItem::new("Copy selection");
+        if pane.is_none_or(|p| p.body.viewport().keyboard_copy()) {
+            copy = copy.shortcut("y");
+        }
         let mut clear = MenuItem::new("Clear selection").separator();
         if !selected {
             copy = copy.reason("Select text first");
