@@ -89,6 +89,12 @@ const START_TABLE: &[Start] = &[
     ),
     start(Scenario::OutroLast, 30, Route::Outro, &["Enter Skip"]),
     start(
+        Scenario::CapsuleTerminal,
+        0,
+        Route::Capsule,
+        &["jackin-payments-pl…form-7f3a", "Waiting for room"],
+    ),
+    start(
         Scenario::HardCases,
         0,
         Route::Manager,

@@ -19,6 +19,7 @@ use self::launch::{LaunchPlan, Opening, SimLaunch};
 
 pub mod changes;
 pub mod launch;
+pub mod link;
 pub mod onepassword;
 pub mod pane;
 pub mod provider;
