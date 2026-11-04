@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use crate::arbiter::{Arbiter, DiscoveryError};
-use crate::backend::{Backend, Effect, OnePassword};
+use crate::backend::{Backend, Effect, OnePassword, Reply};
 use crate::domain::account::{AccountId, AccountRegistry};
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorReport, DoctorState};
@@ -118,8 +118,8 @@ impl From<&GithubRepo> for RepoRef {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Msg {
     WorkspaceSaved {
-        id: WorkspaceId,
-        ok: bool,
+        id: Option<WorkspaceId>,
+        result: Result<Box<Snapshot>, String>,
     },
     GlobalSaved {
         ok: bool,
@@ -198,7 +198,13 @@ impl Msg {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Job {
     pub due_ms: i64,
-    pub msg: Msg,
+    pub work: Work,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Work {
+    Msg(Msg),
+    Settle(Effect),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -228,7 +234,6 @@ pub struct World {
     pub home: String,
     pub cwd: String,
     pub workspaces: Vec<Workspace>,
-    pub next_workspace_id: WorkspaceId,
     pub roles: Vec<RoleEntry>,
     pub instances: Vec<Instance>,
     pub daemons: BTreeMap<InstanceId, Daemon>,
@@ -292,7 +297,6 @@ pub struct WorldParts {
     pub home: String,
     pub cwd: String,
     pub workspaces: Vec<Workspace>,
-    pub next_workspace_id: WorkspaceId,
     pub roles: Vec<RoleEntry>,
     pub instances: Vec<Instance>,
     pub global: GlobalConfig,
@@ -322,7 +326,6 @@ impl WorldParts {
             home,
             cwd,
             workspaces: vec![],
-            next_workspace_id: 1,
             roles: vec![],
             instances: vec![],
             global: GlobalConfig::default(),
@@ -355,7 +358,6 @@ impl World {
             home,
             cwd,
             workspaces,
-            next_workspace_id,
             roles,
             instances,
             global,
@@ -374,7 +376,6 @@ impl World {
             home,
             cwd,
             workspaces,
-            next_workspace_id,
             roles,
             instances,
             daemons: BTreeMap::new(),
@@ -409,14 +410,44 @@ impl World {
     pub fn perform(&mut self, effect: Effect) {
         let backend = self.backend.clone();
         if let Some(done) = backend.perform(&effect, self) {
-            self.schedule(done.after_ms, done.msg);
+            match done.reply {
+                Reply::Ready(msg) => self.schedule(done.after_ms, msg),
+                Reply::Settle => self.enqueue(done.after_ms, Work::Settle(effect)),
+            }
         }
     }
 
     pub fn schedule(&mut self, delay_ms: i64, msg: Msg) {
+        self.enqueue(delay_ms, Work::Msg(msg));
+    }
+
+    fn enqueue(&mut self, delay_ms: i64, work: Work) {
         let due = self.clock.now_ms + delay_ms;
-        self.jobs.push(Job { due_ms: due, msg });
+        self.jobs.push(Job { due_ms: due, work });
         self.jobs.sort_by_key(|j| j.due_ms);
+    }
+
+    /// The replies that are due at the current time, without advancing the
+    /// clock. A reply with no delay is delivered this way, so it does not wait
+    /// for a tick (and arrives under a paused clock too).
+    pub fn take_due(&mut self) -> Vec<Msg> {
+        let now = self.clock.now_ms;
+        let mut due = vec![];
+        self.jobs.retain(|j| {
+            if j.due_ms <= now {
+                due.push(j.work.clone());
+                false
+            } else {
+                true
+            }
+        });
+        let backend = self.backend.clone();
+        due.into_iter()
+            .filter_map(|work| match work {
+                Work::Msg(msg) => Some(msg),
+                Work::Settle(effect) => backend.settle(&effect, self),
+            })
+            .collect()
     }
 
     pub fn health_view(&self) -> HealthView {
@@ -480,8 +511,6 @@ impl World {
             github,
             index_error,
         } = snapshot;
-        let next_free = workspaces.iter().map(|w| w.id + 1).max().unwrap_or(0);
-        self.next_workspace_id = self.next_workspace_id.max(next_free);
         self.workspaces = workspaces;
         self.roles = roles;
         self.instances = instances;
@@ -515,15 +544,7 @@ impl World {
             return vec![];
         }
         let now = self.clock.now_ms;
-        let mut due = vec![];
-        self.jobs.retain(|j| {
-            if j.due_ms <= now {
-                due.push(j.msg.clone());
-                false
-            } else {
-                true
-            }
-        });
+        let mut due = self.take_due();
         for (id, d) in self.daemons.iter_mut() {
             if self
                 .instances

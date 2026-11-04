@@ -1112,7 +1112,6 @@ fn base_world(scenario: Scenario) -> World {
     let clock = CLOCK;
     let now = clock.now_secs();
     World::new(WorldParts {
-        next_workspace_id: 100,
         roles: roles(),
         global: global(false),
         fs: fs(),

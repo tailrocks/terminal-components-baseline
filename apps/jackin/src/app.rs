@@ -376,16 +376,37 @@ impl App {
     }
 
     fn handle_input(&mut self, input: Input) -> Outcome {
-        match input {
+        let out = match input {
             Input::Resize(..) => Outcome::Changed,
-            Input::Tick => self.on_tick(),
+            Input::Tick => self.tick_step(),
             Input::Mouse(m) => PointerRouter::route(self, m),
             Input::External(external) => self.on_external(&external),
             other => shell::KeyRouter::input(self, other),
+        };
+        out.or(self.deliver_due())
+    }
+
+    /// Delivers the replies that are due now, and the ones they start, so an
+    /// effect that answers at once is finished before the next frame.
+    fn deliver_due(&mut self) -> Outcome {
+        let mut out = Outcome::Ignored;
+        loop {
+            let msgs = self.world.take_due();
+            if msgs.is_empty() {
+                return out;
+            }
+            for m in &msgs {
+                out = out.or(self.dispatch_msg(m));
+            }
         }
     }
 
     fn on_tick(&mut self) -> Outcome {
+        let out = self.tick_step();
+        out.or(self.deliver_due())
+    }
+
+    fn tick_step(&mut self) -> Outcome {
         let interval = self.route().tick_ms(true) as i64;
         let msgs = self.world.tick(interval);
         let mut out = if self.animating() {

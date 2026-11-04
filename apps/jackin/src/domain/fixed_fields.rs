@@ -326,7 +326,6 @@ pub fn world_fixed(w: &World) -> FixedFields {
         home: _,
         cwd: _,
         workspaces,
-        next_workspace_id: _,
         roles,
         instances,
         daemons: _,

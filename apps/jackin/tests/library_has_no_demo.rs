@@ -105,11 +105,9 @@ const RULES: &[Rule] = &[
 type Pending = (&'static str, &'static str, usize, &'static str);
 
 const PENDING: &[Pending] = &[
-    ("next_workspace_id", "domain/fixed_fields.rs", 1, "B6"),
     ("refresh_fails", "domain/fixed_fields.rs", 1, "B6"),
     ("takeover_at_ms", "domain/fixed_fields.rs", 1, "B6"),
     ("refresh_fails", "screens/accounts.rs", 1, "B6"),
-    ("next_workspace_id", "screens/editor.rs", 3, "B6"),
     ("roles-experimental", "screens/editor.rs", 1, "B6"),
     (
         "last_seen_secs = w . clock . now_secs",
@@ -118,8 +116,6 @@ const PENDING: &[Pending] = &[
         "B6",
     ),
     ("refresh_fails", "screens/manager.rs", 1, "B6"),
-    ("next_workspace_id", "screens/prelude.rs", 1, "B6"),
-    ("next_workspace_id", "world.rs", 7, "B6"),
     ("refresh_fails", "world.rs", 2, "B6"),
     ("takeover_at_ms", "world.rs", 4, "B6"),
     ("LaunchPlan", "backend.rs", 3, "B7a"),

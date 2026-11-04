@@ -383,7 +383,7 @@ impl PreludeScreen {
             return;
         };
         let workdir = self.workdir.clone().unwrap_or_else(|| dest.clone());
-        let mut ws = Workspace::new(w.next_workspace_id, name, &workdir);
+        let mut ws = Workspace::new(0, name, &workdir);
         ws.mounts = vec![match src {
             Source::Host { path, readonly } => {
                 Mount::host(&w.tilde(path), dest).readonly(*readonly)

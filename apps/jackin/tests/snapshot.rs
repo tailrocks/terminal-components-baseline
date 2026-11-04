@@ -1,9 +1,10 @@
 #![cfg(feature = "demo")]
 
 use jackin_console::arbiter::DiscoveryError;
+use jackin_console::backend::Effect;
 use jackin_console::domain::instance::DaemonSnapshot;
 use jackin_console::fixtures::{Scenario, world_for};
-use jackin_console::world::{Snapshot, World};
+use jackin_console::world::{Msg, Snapshot, World};
 
 fn snapshot_of(w: &World) -> Snapshot {
     Snapshot {
@@ -97,15 +98,25 @@ fn apply_reports_an_unreadable_index_and_recovers() {
 }
 
 #[test]
-fn apply_never_hands_out_a_workspace_id_in_use() {
-    let source = world_for(Scenario::Returning);
-    let highest = source.workspaces.iter().map(|w| w.id).max().expect("ids");
-    let mut low = world_for(Scenario::FirstUse);
-    low.next_workspace_id = 1;
-    low.apply(snapshot_of(&source));
-    assert!(low.next_workspace_id > highest);
-    let mut high = world_for(Scenario::FirstUse);
-    high.next_workspace_id = highest + 50;
-    high.apply(snapshot_of(&source));
-    assert_eq!(high.next_workspace_id, highest + 50);
+fn the_sim_never_hands_out_a_workspace_id_in_use() {
+    let mut world = world_for(Scenario::Returning);
+    let highest = 500;
+    world.workspaces[0].id = highest;
+    let fresh = world.workspaces[0].clone();
+    let mut ids = vec![];
+    for _ in 0..2 {
+        world.perform(Effect::SaveWorkspace {
+            id: None,
+            base: None,
+            workspace: Box::new(fresh.clone()),
+        });
+        world.clock.advance(5_000);
+        let msgs = world.take_due();
+        let [Msg::WorkspaceSaved { id, result }] = msgs.as_slice() else {
+            panic!("one reply expected, got {msgs:?}");
+        };
+        ids.push(id.expect("an assigned id"));
+        world.apply(*result.clone().expect("saved"));
+    }
+    assert_eq!(ids, vec![highest + 1, highest + 2]);
 }

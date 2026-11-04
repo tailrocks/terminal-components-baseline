@@ -43,7 +43,7 @@ use crate::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, Effective, RoleEntry, RoleName, RoleSource, Workspace,
     WorkspaceId,
 };
-use crate::world::{Msg, World, job};
+use crate::world::{Msg, Snapshot, World, job};
 use junie_tui::ui::text::plural;
 
 fn on_off(v: bool) -> &'static str {
@@ -511,8 +511,11 @@ impl EditorScreen {
         self.sync_pending();
         self.saving = true;
         self.save.busy = true;
-        let id = self.workspace.unwrap_or(w.next_workspace_id);
-        w.perform(Effect::SaveWorkspace { id });
+        w.perform(Effect::SaveWorkspace {
+            id: self.workspace,
+            base: (!self.is_create()).then(|| Box::new(self.original.clone())),
+            workspace: Box::new(self.pending.clone()),
+        });
         cx.progress(
             job::WORKSPACE_SAVE,
             format!("Saving {}…", self.pending.name),
@@ -520,47 +523,37 @@ impl EditorScreen {
         cx.focus.focus(SAVE);
     }
 
-    fn finish_save(&mut self, ok: bool, w: &mut World, cx: &mut Cx) {
+    fn finish_save(
+        &mut self,
+        id: Option<WorkspaceId>,
+        result: &Result<Box<Snapshot>, String>,
+        w: &mut World,
+        cx: &mut Cx,
+    ) {
         self.saving = false;
         self.save.busy = false;
-        if !ok {
-            let title = format!("Save failed · {}", self.pending.name);
-            let d = InfoDialog::new(
-                WidgetId::of("editor.savefail"),
-                &title,
-                vec![
-                    Prop::new(
-                        "Error",
-                        fill_in(
-                            &w.surfaces.vocabulary.save_error_workspace,
-                            &[("config", &w.config_file())],
-                        ),
-                    ),
-                    Prop::new("State", "your edits are intact · nothing was written"),
-                    Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
-                ],
-            )
-            .error()
-            .width(66);
-            cx.open(d, LayerTag::new("savefail"));
-            return;
-        }
+        let snapshot = match result {
+            Ok(snapshot) => snapshot,
+            Err(error) => {
+                let title = format!("Save failed · {}", self.pending.name);
+                let d = InfoDialog::new(
+                    WidgetId::of("editor.savefail"),
+                    &title,
+                    vec![
+                        Prop::new("Error", error.as_str()),
+                        Prop::new("State", "your edits are intact · nothing was written"),
+                        Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
+                    ],
+                )
+                .error()
+                .width(66);
+                cx.open(d, LayerTag::new("savefail"));
+                return;
+            }
+        };
         let name = self.pending.name.clone();
-        match self.workspace {
-            Some(id) => {
-                if let Some(ws) = w.workspace_mut(id) {
-                    *ws = self.pending.clone();
-                    ws.id = id;
-                }
-            }
-            None => {
-                let mut ws = self.pending.clone();
-                ws.id = w.next_workspace_id;
-                w.next_workspace_id += 1;
-                self.workspace = Some(ws.id);
-                w.workspaces.push(ws);
-            }
-        }
+        w.apply((**snapshot).clone());
+        self.workspace = id.or(self.workspace);
         self.original = self.pending.clone();
         cx.status(format!("Workspace {name} saved"));
         cx.go(Go::Manager);
@@ -1834,8 +1827,8 @@ impl Page<Jackin> for EditorScreen {
 
     fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
         match msg {
-            Msg::WorkspaceSaved { ok, .. } if self.saving => {
-                self.finish_save(*ok, w, cx);
+            Msg::WorkspaceSaved { id, result } if self.saving => {
+                self.finish_save(*id, result, w, cx);
                 Outcome::Changed
             }
             Msg::RoleLoaded { role, ok, error }

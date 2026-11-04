@@ -45,7 +45,6 @@ fn world_new_fills_what_the_parts_leave_out() {
     assert!(!world.refresh_fails && !world.discovery_pending);
     assert_eq!(world.takeover_at_ms, None);
     assert!(world.session_accounts.is_empty());
-    assert_eq!(world.next_workspace_id, 1);
     assert_eq!(world.last_refresh_secs, CLOCK.now_secs());
     assert_eq!(world.cwd, format!("{HOME}/src/demo"));
 }
@@ -55,12 +54,10 @@ fn world_new_keeps_the_parts_it_is_given() {
     let source = world_for(Scenario::Returning);
     let world = World::new(WorldParts {
         workspaces: source.workspaces.clone(),
-        next_workspace_id: 77,
         last_refresh_secs: 5,
         ..parts()
     });
     assert_eq!(world.workspaces, source.workspaces);
-    assert_eq!(world.next_workspace_id, 77);
     assert_eq!(world.last_refresh_secs, 5);
 }
 

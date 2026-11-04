@@ -11,7 +11,7 @@ use crate::domain::launch::LaunchContent;
 use crate::domain::onepassword::OpReference;
 use crate::domain::role::RoleManifestDoc;
 use crate::domain::usage::AccountUsage;
-use crate::domain::workspace::{RoleName, WorkspaceId};
+use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
 use crate::launch::{LaunchPlan, LaunchTarget};
 use crate::panes::SessionScript;
 use crate::world::{Msg, World};
@@ -266,7 +266,9 @@ impl Clone for Box<dyn OnePassword> {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Effect {
     SaveWorkspace {
-        id: WorkspaceId,
+        id: Option<WorkspaceId>,
+        base: Option<Box<Workspace>>,
+        workspace: Box<Workspace>,
     },
     SaveGlobal,
     Prewarm {
@@ -308,10 +310,36 @@ pub enum Effect {
     RunDoctor,
 }
 
+/// How a backend answers an effect that finishes later. `Ready` is a message
+/// the backend has already built. `Settle` asks the world to call
+/// `Backend::settle` when the reply falls due, so the reply is computed from
+/// the world as it is then and not as it was when the effect started.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Reply {
+    Ready(Msg),
+    Settle,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Completion {
     pub after_ms: i64,
-    pub msg: Msg,
+    pub reply: Reply,
+}
+
+impl Completion {
+    pub fn ready(after_ms: i64, msg: Msg) -> Self {
+        Self {
+            after_ms,
+            reply: Reply::Ready(msg),
+        }
+    }
+
+    pub fn settle(after_ms: i64) -> Self {
+        Self {
+            after_ms,
+            reply: Reply::Settle,
+        }
+    }
 }
 
 pub trait Backend: std::fmt::Debug + Send + Sync {
@@ -327,6 +355,12 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
     fn probe_folder(&self, path: &str) -> FolderProbe;
 
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion>;
+
+    /// The reply to an effect whose `perform` returned `Completion::settle`,
+    /// computed when it falls due. A backend that never settles keeps this.
+    fn settle(&self, _effect: &Effect, _world: &World) -> Option<Msg> {
+        None
+    }
 
     fn changes(
         &self,
