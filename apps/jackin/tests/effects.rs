@@ -710,3 +710,52 @@ fn refused_trust_leaves_the_role_untrusted() {
     assert!(!role(&app.world, "data-eng").trusted);
     assert_eq!(status(&app), "the trust store is read-only");
 }
+
+const MOUNT_FORM: &str = "down e ] enter a";
+
+#[test]
+fn mount_form_keeps_its_error() {
+    let mut app = app(Scenario::Returning);
+    press(&mut app, MOUNT_FORM);
+    press(&mut app, "tab tab r e l a t i v e enter");
+    click_text(&mut app, "Save   │");
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("New mount"), "the form closed:\n{shown}");
+    assert!(
+        shown.contains("Destination must be an absolute path"),
+        "{shown}"
+    );
+    assert!(shown.contains("relative"), "the input was lost:\n{shown}");
+    assert!(
+        !shown.contains("/workspace/relative"),
+        "nothing is added on an error:\n{shown}"
+    );
+}
+
+#[test]
+fn mount_form_saves_a_valid_mount_once() {
+    let mut app = app(Scenario::Returning);
+    press(&mut app, MOUNT_FORM);
+    press(
+        &mut app,
+        "down tab g i t h u b . c o m / o / r tab / w o r k s p a c e / o k",
+    );
+    click_text(&mut app, "Save   │");
+
+    let shown = screen(&mut app);
+    assert!(!shown.contains("New mount"), "{shown}");
+    let rows = shown
+        .lines()
+        .filter(|l| l.contains("/workspace/ok") && l.contains("github.com/o/r"))
+        .count();
+    assert_eq!(rows, 1, "{shown}");
+    assert!(
+        shown.contains("Mounts •") && shown.contains("1 change"),
+        "{shown}"
+    );
+    assert!(
+        shown.contains("Workspaces › payments-platform › edit"),
+        "{shown}"
+    );
+}

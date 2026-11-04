@@ -2158,7 +2158,8 @@ impl ConfigTabs {
                 "mount · edits"
             } else {
                 "mount · new"
-            });
+            })
+            .keep_open_on_save();
         form.set_visible("git", kind_idx == 1);
         form.set_visible("host", kind_idx == 0);
         self.editing = Some(Editing::Mount { original });
@@ -2360,7 +2361,10 @@ impl ConfigTabs {
             return None;
         }
         let out = match (tag.kind, result) {
-            ("cfg.mount", ModalResult::FormAction(name, _values)) => {
+            ("cfg.mount", ModalResult::FormAction(name, values)) => {
+                if name == "save" {
+                    return Some(self.save_mount(values, w, cx));
+                }
                 if name == "choose:host" {
                     let b = super::modals::file_browser(
                         self.ids.form.sub("browser"),
@@ -2398,7 +2402,6 @@ impl ConfigTabs {
                 });
                 Outcome::Changed
             }
-            ("cfg.mount", ModalResult::Form(Some(values))) => self.save_mount(values, w, cx),
             ("cfg.env", ModalResult::FormAction(name, values)) => match name.as_str() {
                 "choose:op" => {
                     let flow = OpFlow::new(self.ids.form.sub("op"), w.op.as_ref(), w.now_ms());
