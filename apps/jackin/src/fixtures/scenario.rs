@@ -39,10 +39,12 @@ pub enum Scenario {
     LaunchOpenshell,
 
     OpenshellFixed,
+
+    LaunchChecks,
 }
 
 impl Scenario {
-    pub const ALL: [Scenario; 15] = [
+    pub const ALL: [Scenario; 16] = [
         Scenario::FirstUse,
         Scenario::Returning,
         Scenario::AccountsMixed,
@@ -58,6 +60,7 @@ impl Scenario {
         Scenario::Doctor,
         Scenario::LaunchOpenshell,
         Scenario::OpenshellFixed,
+        Scenario::LaunchChecks,
     ];
 
     pub fn name(self) -> &'static str {
@@ -77,6 +80,7 @@ impl Scenario {
             Scenario::Doctor => "doctor",
             Scenario::LaunchOpenshell => "launch-openshell",
             Scenario::OpenshellFixed => "openshell-fixed",
+            Scenario::LaunchChecks => "launch-checks",
         }
     }
 
@@ -122,7 +126,8 @@ pub fn entry_for(scenario: Scenario) -> Entry {
         | Scenario::DockerSetting
         | Scenario::DockerNoEngine
         | Scenario::Doctor
-        | Scenario::OpenshellFixed => EntryPage::Manager,
+        | Scenario::OpenshellFixed
+        | Scenario::LaunchChecks => EntryPage::Manager,
     };
     Entry {
         page,

@@ -102,6 +102,9 @@ const RULES: &[Rule] = &[
     literal("typed once for this launch"),
     code("ticks as f64"),
     code("0 . 0 3 3"),
+    literal("Role not allowed"),
+    literal("does not allow role"),
+    literal("nothing was created"),
 ];
 
 /// A token that still sits in the library, the file it sits in, how many times,
@@ -646,6 +649,33 @@ fn the_cockpit_invents_no_telemetry_key_or_timing() {
             assert_eq!(found[0].token, token, "{path}");
         }
         for path in ["sim/launch.rs", "fixtures/mod.rs"] {
+            assert_eq!(scan(&[src(path, text)], &[]), Report::default(), "{path}");
+        }
+    }
+}
+
+#[test]
+fn the_cockpit_draws_no_refusal_of_its_own() {
+    for (token, text) in [
+        (
+            "Role not allowed",
+            "fn f() -> &'static str { \"Role not allowed\" }",
+        ),
+        (
+            "does not allow role",
+            "fn f(w: &str, r: &str) -> String { format!(\"Workspace {w} does not allow role {r}.\") }",
+        ),
+        (
+            "nothing was created",
+            "const STATE: &str = \"nothing was created\";",
+        ),
+    ] {
+        for path in ["screens/cockpit.rs", "launch.rs", "domain/launch.rs"] {
+            let found = scan(&[src(path, text)], &[]).unexpected;
+            assert_eq!(found.len(), 1, "{token} in {path}: {found:?}");
+            assert_eq!(found[0].token, token, "{path}");
+        }
+        for path in ["sim/launch.rs", "sim/mod.rs", "fixtures/surfaces.rs"] {
             assert_eq!(scan(&[src(path, text)], &[]), Report::default(), "{path}");
         }
     }

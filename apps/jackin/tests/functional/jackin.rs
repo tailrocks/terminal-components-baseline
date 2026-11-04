@@ -2518,3 +2518,130 @@ fn jackin_fixed_file_menu_shows_reveal_as_unavailable() {
     detach_capsule(&app);
     app.finish();
 }
+
+#[test]
+fn jackin_fixed_launch_picker_disables_every_agent_jackin_cannot_launch() {
+    let app = fixed_app("jackin-fixed-launch-picker");
+    app.wait_text("Current directory");
+    app.key("enter");
+    let picker = app.wait_text("Launch · choose Agent");
+    assert!(text(&picker).contains("payments-platform › the-architect"));
+    let rows: Vec<String> = (0..picker.rows()).map(|r| row_text(&picker, r)).collect();
+    for agent in ["Claude Code", "Amp", "Kimi Code", "OpenCode", "Grok Build"] {
+        assert!(
+            rows.iter().any(|row| row.contains(&format!(" {agent} "))
+                && row.contains("usage only · jackin launches Codex")
+                && row.contains("unavailable")),
+            "{agent} is a disabled row with its reason:\n{}",
+            text(&picker)
+        );
+    }
+    let codex = row_with(&picker, "▪ Codex");
+    assert!(
+        codex.contains("choose at start") && !codex.contains("unavailable"),
+        "Codex is the one agent that launches: {codex}"
+    );
+    app.visual("functional/jackin_fixed_launch_picker");
+
+    app.click(find(&picker, "▪ Claude Code"));
+    let after = app.settle();
+    assert!(
+        text(&after).contains("Launch · choose Agent") && !text(&after).contains("Loading"),
+        "a disabled row starts nothing:\n{}",
+        text(&after)
+    );
+    app.key("escape");
+    app.wait_absent("Launch · choose Agent");
+    app.finish();
+}
+
+fn launch_checks(name: &str) -> App {
+    scenario(name, "launch-checks", 120, 40)
+}
+
+fn launch_first_agent(app: &App, downs: usize, scope: &str) {
+    app.wait_text("Current directory");
+    for _ in 0..downs {
+        app.key("down");
+    }
+    app.key("enter");
+    app.wait_text(scope);
+    app.key("enter");
+    app.wait_text("Cancel launch…");
+}
+
+#[test]
+fn jackin_launch_refuses_a_role_the_workspace_does_not_allow() {
+    let app = launch_checks("jackin-role-not-allowed");
+    launch_first_agent(&app, 4, "customer-portal › writer");
+    app.advance_clock(1_000);
+    let refused = app.wait_text("Role not allowed");
+    for line in [
+        "Workspace customer-portal does not allow role writer.",
+        "nothing was created",
+        "Allow it in the workspace's Roles tab, or load another role.",
+    ] {
+        assert!(
+            text(&refused).contains(line),
+            "{line:?}:\n{}",
+            text(&refused)
+        );
+    }
+    app.settle();
+    app.visual("functional/jackin_role_not_allowed");
+
+    app.key("escape");
+    let manager = app.wait_text("Current directory");
+    assert!(
+        !text(&manager).contains("customer-portal-"),
+        "no instance of the refused launch exists"
+    );
+    app.finish();
+}
+
+#[test]
+fn jackin_launch_asks_for_the_values_a_role_needs() {
+    let app = launch_checks("jackin-launch-env-prompt");
+    launch_first_agent(&app, 2, "infra-control-plane › sentinel");
+    app.advance_clock(1_000);
+    let asked = app.wait_text("Fail the preflight hook on purpose");
+    for line in [
+        "Note for the run",
+        "SENTINEL_FAIL_PREFLIGHT",
+        "SENTINEL_NOTE",
+    ] {
+        assert!(text(&asked).contains(line), "{line:?}:\n{}", text(&asked));
+    }
+    app.settle();
+    app.visual("functional/jackin_launch_env_prompt");
+
+    app.advance_clock(30_000);
+    let held = app.settle();
+    assert!(
+        text(&held).contains("Fail the preflight hook on purpose"),
+        "the launch waits for the answers"
+    );
+    app.click_text("Start launch");
+    app.advance_clock(30_000);
+    app.wait_screen("the launch hands off to the capsule", |s| {
+        text(s).contains("Ctrl+B Pane commands")
+    });
+    app.key("ctrl+b");
+    app.wait_text("prefix…");
+    app.key("d");
+    app.wait_text("Detached");
+    app.finish();
+}
+
+#[test]
+fn jackin_launch_questions_end_the_launch_on_escape() {
+    let app = launch_checks("jackin-launch-env-escape");
+    launch_first_agent(&app, 2, "infra-control-plane › sentinel");
+    app.advance_clock(1_000);
+    app.wait_text("Fail the preflight hook on purpose");
+    app.key("escape");
+    let manager = app.wait_text("Current directory");
+    assert!(!text(&manager).contains("Fail the preflight hook on purpose"));
+    assert!(text(&manager).contains("2 running"), "nothing was started");
+    app.finish();
+}

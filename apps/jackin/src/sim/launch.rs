@@ -11,7 +11,8 @@ use crate::domain::launch::{
 };
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
-    FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance, TypedKey, launch_accounts,
+    EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
+    Refusal, TypedKey, launch_accounts,
 };
 use crate::world::World;
 
@@ -188,11 +189,61 @@ pub enum LaunchPlan {
     BlockedSidecar,
 }
 
+/// What stands between a launch and its first stage.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Opening {
+    Straight,
+    Refuse(Refusal),
+    Ask(Vec<EnvQuestion>),
+}
+
+/// The checks a guarded simulator makes before it starts: the workspace must
+/// allow the role, and a role whose manifest prompts for env values asks for
+/// them.
+pub fn opening(w: &World, target: &LaunchTarget) -> Opening {
+    if let Some(ws) = target.workspace.and_then(|id| w.workspace(id))
+        && !ws.roles.allows(&target.role)
+    {
+        return Opening::Refuse(Refusal {
+            title: "Role not allowed".into(),
+            found: format!("Workspace {} does not allow role {}.", ws.name, target.role),
+            state: "nothing was created".into(),
+            next_step: "Allow it in the workspace's Roles tab, or load another role.".into(),
+        });
+    }
+    let questions: Vec<EnvQuestion> = w
+        .surfaces
+        .roles
+        .as_ref()
+        .and_then(|admin| admin.role(&target.role))
+        .and_then(|role| role.manifest.as_ref().ok())
+        .map(|doc| {
+            doc.env
+                .iter()
+                .filter_map(|entry| {
+                    Some(EnvQuestion {
+                        name: entry.name.clone(),
+                        prompt: entry.prompt.clone()?,
+                        default: entry.default.clone(),
+                    })
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    if questions.is_empty() {
+        Opening::Straight
+    } else {
+        Opening::Ask(questions)
+    }
+}
+
 /// A launch that plays its stages on the cockpit's ticks and keeps the
 /// instance record the way the simulated backend would.
 #[derive(Debug)]
 pub struct SimLaunch {
     plan: LaunchPlan,
+    opening: Option<Opening>,
+    asking: bool,
     run_id: String,
     container: String,
     instance_id: String,
@@ -226,6 +277,7 @@ fn workspace_name(w: &World, workspace: Option<WorkspaceId>) -> String {
 impl SimLaunch {
     pub fn start(
         plan: LaunchPlan,
+        opening: Opening,
         w: &World,
         target: &LaunchTarget,
         content: Arc<LaunchContent>,
@@ -252,6 +304,8 @@ impl SimLaunch {
         );
         Self {
             plan,
+            opening: Some(opening),
+            asking: false,
             run_id,
             container,
             instance_id,
@@ -316,12 +370,26 @@ impl SimLaunch {
 
     fn advance(&mut self, w: &World) -> Vec<LaunchEvent> {
         let mut ev = vec![];
-        if self.ended || self.credential_hold {
+        if self.ended || self.credential_hold || self.asking {
             return ev;
         }
         self.tick += 1;
         let stages = &self.content.stages;
         let Some(i) = self.current else {
+            match self.opening.take() {
+                Some(Opening::Refuse(refusal)) => {
+                    self.ended = true;
+                    ev.push(LaunchEvent::Refused(Box::new(refusal)));
+                    return ev;
+                }
+                Some(Opening::Ask(questions)) => {
+                    self.asking = true;
+                    ev.push(LaunchEvent::Activity("Waiting for your answers…".into()));
+                    ev.push(LaunchEvent::NeedsInput(questions));
+                    return ev;
+                }
+                Some(Opening::Straight) | None => {}
+            }
             self.current = Some(0);
             self.stage_start = self.tick;
             ev.push(LaunchEvent::StageChanged(0, StepState::Running));
@@ -444,8 +512,15 @@ impl LaunchFeed for SimLaunch {
         })
     }
 
+    fn answer_env(&mut self, _answers: Vec<EnvAnswer>) {
+        self.asking = false;
+    }
+
     fn cancel(&mut self, world: &World) -> Option<Instance> {
         self.ended = true;
+        if self.asking {
+            return None;
+        }
         Some(self.record(world, InstanceStatus::FailedSetup))
     }
 }

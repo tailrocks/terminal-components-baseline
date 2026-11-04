@@ -31,6 +31,33 @@ pub struct FailedLaunch {
     pub instance: Instance,
 }
 
+/// Why a launch never started, in the backend's words. The cockpit draws the
+/// four texts and nothing else: the backend created nothing, so there is no
+/// stage, no run to copy and no record.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Refusal {
+    pub title: String,
+    pub found: String,
+    pub state: String,
+    pub next_step: String,
+}
+
+/// A value the launch asks the operator for before it starts: the variable,
+/// the question, and the answer the backend would use on its own.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EnvQuestion {
+    pub name: String,
+    pub prompt: String,
+    pub default: Option<String>,
+}
+
+/// What the operator answered to an `EnvQuestion`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EnvAnswer {
+    pub name: String,
+    pub value: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LaunchEvent {
     StageChanged(usize, StepState),
@@ -51,6 +78,11 @@ pub enum LaunchEvent {
     CredentialError {
         message: String,
     },
+    /// The launch cannot start. Nothing was created.
+    Refused(Box<Refusal>),
+    /// The launch waits for these answers; the feed sends nothing more until
+    /// `LaunchFeed::answer_env`, or `cancel`.
+    NeedsInput(Vec<EnvQuestion>),
     Failed(Box<FailedLaunch>),
     Ready(Box<ReadyInstance>),
 }
@@ -86,6 +118,10 @@ pub trait LaunchFeed: std::fmt::Debug + Send {
     /// The operator chose to type the key instead of resolving it. The
     /// credentials line the backend wants shown for it, if it wants one.
     fn use_plain_text(&mut self) -> Option<TypedKey>;
+
+    /// The operator answered the questions of `NeedsInput`, one answer for
+    /// each, in the order they were asked.
+    fn answer_env(&mut self, answers: Vec<EnvAnswer>);
 
     /// The operator ended the launch. The record the backend kept of the
     /// launch, if it kept one.

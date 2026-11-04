@@ -1501,6 +1501,13 @@ pub fn world_for(scenario: Scenario) -> World {
             w.backend = SimBackend::failing_launch();
             w
         }
+        Scenario::LaunchChecks => {
+            let mut w = populated(scenario, false);
+            surfaces::roles(&mut w, vec![Agent::Codex, Agent::ClaudeCode]);
+            surfaces::launch_checks(&mut w);
+            w.backend = SimBackend::guarded();
+            w
+        }
         Scenario::Returning
         | Scenario::AccountsMixed
         | Scenario::LaunchRunning

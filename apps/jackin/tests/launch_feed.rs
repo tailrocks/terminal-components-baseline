@@ -13,7 +13,8 @@ use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus}
 use jackin_console::domain::launch::{LaunchContent, LaunchFailure};
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{
-    FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance, TypedKey,
+    EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
+    Refusal, TypedKey,
 };
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::sim::SimBackend;
@@ -204,6 +205,7 @@ struct Calls {
     plain_text: usize,
     cancels: usize,
     initial_panes: Vec<String>,
+    answers: Vec<Vec<EnvAnswer>>,
 }
 
 #[derive(Debug)]
@@ -231,10 +233,18 @@ impl LaunchFeed for ScriptedFeed {
             return vec![];
         }
         let batch = self.batches.pop_front().unwrap_or_default();
-        self.held = batch
-            .iter()
-            .any(|e| matches!(e, LaunchEvent::CredentialError { .. }));
+        self.held = batch.iter().any(|e| {
+            matches!(
+                e,
+                LaunchEvent::CredentialError { .. } | LaunchEvent::NeedsInput(_)
+            )
+        });
         batch
+    }
+
+    fn answer_env(&mut self, answers: Vec<EnvAnswer>) {
+        self.calls.lock().expect("calls").answers.push(answers);
+        self.held = false;
     }
 
     fn retry_credentials(&mut self, _: &mut dyn OnePassword) {
@@ -817,4 +827,143 @@ fn the_key_line_of_the_feed_is_what_the_credentials_line_shows() {
     let shown = screen(&mut app);
     assert!(shown.contains("typed by the operator"), "{shown}");
     assert!(shown.contains("kept by the backend"), "{shown}");
+}
+
+fn refused() -> LaunchEvent {
+    LaunchEvent::Refused(Box::new(Refusal {
+        title: "Held back at the door".into(),
+        found: "The gate would not open for this role.".into(),
+        state: "no record was kept".into(),
+        next_step: "Try the other door, or ask the gate keeper.".into(),
+    }))
+}
+
+#[test]
+fn a_refusal_from_the_feed_is_drawn_in_the_feeds_words() {
+    let (mut app, calls) = scripted(vec![vec![refused()]], None);
+    let others = app.world.instances.clone();
+    tick_until(&mut app, "the refusal", shows("Held back at the door"));
+    let shown = screen(&mut app);
+    for text in [
+        "The gate would not open for this role.",
+        "no record was kept",
+        "Try the other door, or ask the gate keeper.",
+    ] {
+        assert!(shown.contains(text), "{text:?} missing:\n{shown}");
+    }
+    assert_eq!(app.world.instances, others, "a refusal creates nothing");
+    assert_eq!(calls.lock().expect("calls").cancels, 0);
+    assert!(
+        !shown.contains("Launch failed"),
+        "a refusal is not a failed stage:\n{shown}"
+    );
+
+    press(&mut app, "esc");
+    assert_eq!(app.route(), Route::Manager);
+    assert_eq!(app.world.instances, others);
+    assert_eq!(
+        calls.lock().expect("calls").cancels,
+        0,
+        "there is nothing to cancel after a refusal"
+    );
+}
+
+fn question(name: &str, prompt: &str, default: Option<&str>) -> EnvQuestion {
+    EnvQuestion {
+        name: name.into(),
+        prompt: prompt.into(),
+        default: default.map(Into::into),
+    }
+}
+
+fn asks() -> LaunchEvent {
+    LaunchEvent::NeedsInput(vec![
+        question("FIRST_VALUE", "Name the first thing", Some("kept-default")),
+        question("SECOND_VALUE", "Name the second thing", None),
+    ])
+}
+
+fn answer(name: &str, value: &str) -> EnvAnswer {
+    EnvAnswer {
+        name: name.into(),
+        value: value.into(),
+    }
+}
+
+#[test]
+fn the_feeds_questions_open_a_form_and_the_answers_go_back() {
+    let mine = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Running);
+    let (mut app, calls) = scripted(vec![running(0), vec![asks()], vec![ready(mine)]], None);
+    tick_until(&mut app, "the questions", shows("Name the first thing"));
+    let shown = screen(&mut app);
+    for text in [
+        "Name the second thing",
+        "kept-default",
+        "FIRST_VALUE",
+        "SECOND_VALUE",
+    ] {
+        assert!(shown.contains(text), "{text:?} missing:\n{shown}");
+    }
+    tick(&mut app, 5);
+    assert_eq!(app.route(), Route::Cockpit, "the launch waits for the form");
+    assert!(calls.lock().expect("calls").answers.is_empty());
+
+    press(&mut app, "tab enter");
+    for key in ["h", "e", "l", "l", "o"] {
+        press(&mut app, key);
+    }
+    press(&mut app, "enter");
+    click_text(&mut app, "Start launch");
+    assert_eq!(
+        calls.lock().expect("calls").answers,
+        [[
+            answer("FIRST_VALUE", "kept-default"),
+            answer("SECOND_VALUE", "hello")
+        ]],
+        "one answer for each question, in the feed's order"
+    );
+    tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
+    assert_eq!(calls.lock().expect("calls").cancels, 0);
+}
+
+#[test]
+fn escape_on_the_questions_cancels_the_launch_and_creates_nothing() {
+    let (mut app, calls) = scripted(vec![running(0), vec![asks()]], None);
+    tick_until(&mut app, "the questions", shows("Name the first thing"));
+    let others = app.world.instances.clone();
+    press(&mut app, "esc");
+
+    let calls = calls.lock().expect("calls");
+    assert!(calls.answers.is_empty(), "nothing is sent on Escape");
+    assert_eq!(calls.cancels, 1, "the backend is told the launch ended");
+    assert_eq!(app.world.instances, others);
+    assert_eq!(app.route(), Route::Manager);
+}
+
+#[test]
+fn a_blocked_stage_keeps_the_cancel_it_offers() {
+    let mine = launched("jk-b10c", "sbx-blocked", InstanceStatus::FailedSetup);
+    let (mut app, calls) = scripted(
+        vec![
+            running(1),
+            vec![LaunchEvent::StageChanged(1, StepState::Blocked)],
+        ],
+        Some(mine.clone()),
+    );
+    tick_until(&mut app, "the blocked stage", shows("blocked"));
+    let shown = screen(&mut app);
+    assert!(shown.contains("x Cancel launch…"), "no hint\n{shown}");
+
+    let others = app.world.instances.len();
+    press(&mut app, "x");
+    assert!(screen(&mut app).contains("Cancel the launch?"));
+    press(&mut app, "right enter");
+    assert_eq!(
+        calls.lock().expect("calls").cancels,
+        1,
+        "x reaches the feed's cancel while a stage is blocked"
+    );
+    assert_eq!(app.world.instances.len(), others + 1);
+    assert_eq!(app.world.instance("jk-b10c"), Some(&mine));
+    assert_eq!(app.route(), Route::Manager);
 }
