@@ -146,20 +146,31 @@ fn shot(app: &crate::support::App, case_id: &str, _precondition: &str, _args: &[
     app.visual(&visual_id(case_id));
 }
 
+/// The live collapse control is one row. A frame that still has both glyphs
+/// is mid-paint: the list can show `T Tasks` while the button is still `›`.
+fn collapse_glyph(screen: &TerminalSnapshot) -> Option<&'static str> {
+    let mut label = None;
+    for line in lines_of(screen) {
+        let trimmed = line.trim();
+        let next = if trimmed == "Collapse" || trimmed == "▎Collapse" {
+            "Collapse"
+        } else if trimmed == "›" || trimmed == "▎›" {
+            "›"
+        } else {
+            continue;
+        };
+        if label.is_some() {
+            return None;
+        }
+        label = Some(next);
+    }
+    label
+}
+
 fn button_label(screen: &TerminalSnapshot) -> String {
-    lines_of(screen)
-        .into_iter()
-        .find_map(|line| {
-            let trimmed = line.trim();
-            if trimmed == "Collapse" || trimmed == "▎Collapse" {
-                Some("Collapse".to_string())
-            } else if trimmed == "›" || trimmed == "▎›" {
-                Some("›".to_string())
-            } else {
-                None
-            }
-        })
+    collapse_glyph(screen)
         .unwrap_or_else(|| panic!("collapse button missing\n{}", text(screen)))
+        .to_string()
 }
 
 fn card_title_line(screen: &TerminalSnapshot) -> String {
@@ -294,9 +305,36 @@ fn clear_flash(app: &crate::support::App, cols: u16, rows: u16, token: &str) {
     });
 }
 
+fn row_has_word(row: &str, word: &str) -> bool {
+    row.split_whitespace().any(|token| token == word)
+}
+
+/// `Page options` paints before the column body. The first rows can sit
+/// above the previous tab's help text, so Badges and Rail label are absent.
+/// Each option row also holds the nav column, so the value is not the first token.
 fn option_page(app: &crate::support::App) -> TerminalSnapshot {
     click_tab(app, "Options");
-    app.wait_text("Page options")
+    app.wait_screen("sidebar options", |screen| {
+        let visible = text(screen);
+        if !visible.contains("Page options") || !visible.contains("Rail when hidden") {
+            return false;
+        }
+        let badges_ok = lines_of(screen).iter().any(|line| {
+            line.contains("Badges")
+                && (line.trim_end().ends_with("on") || line.trim_end().ends_with("off"))
+        });
+        let open_ok = value_line(screen, "Open width").is_some_and(|row| {
+            !row.contains('×')
+                && ["20", "24", "30"]
+                    .iter()
+                    .any(|width| row_has_word(&row, width))
+        });
+        let rail_ok = value_line(screen, "Rail label").is_some_and(|row| {
+            !row.contains('↑')
+                && (row_has_word(&row, "Navigation") || row_has_word(&row, "Explorer"))
+        });
+        badges_ok && open_ok && rail_ok
+    })
 }
 
 fn value_line(screen: &TerminalSnapshot, label: &str) -> Option<String> {
@@ -817,7 +855,19 @@ fn compare_levels_narrows_before_restore() {
         &["● Compare levels", "no color", "Page options"],
     );
     app.resize(120, 40);
-    let wide = app.wait_text(WIDE);
+    // The size chip is in the header before the States body paints.
+    let wide = app.wait_screen("compare wide again", |screen| {
+        screen.cols() == 120
+            && screen.rows() == 40
+            && text(screen).contains(CAP_STATES)
+            && text(screen).contains("○ Compare levels")
+            && text(screen).contains("rest")
+            && text(screen).contains(WIDE)
+            && !text(screen).contains("● Compare levels")
+            && !text(screen).contains("no color")
+            && !text(screen).contains("Page options")
+            && !text(screen).contains(CAP_PLAY)
+    });
     see(
         &wide,
         &[TITLE, CAP_STATES, "○ Compare levels", WIDE],
@@ -879,7 +929,12 @@ fn collapse_keeps_tasks_then_ctrl_b_hides_the_list() {
     );
 
     click_lowest(&app, "›");
-    let expanded = app.wait_text("T Tasks");
+    let expanded = app.wait_screen("sidebar expanded", |screen| {
+        collapse_glyph(screen) == Some("Collapse")
+            && text(screen).contains("T Tasks")
+            && text(screen).contains("Runs")
+            && !text(screen).contains(DOTS)
+    });
     see(
         &expanded,
         &["T Tasks", "3", "Runs", LAST_NONE, "Collapse"],
