@@ -104,7 +104,7 @@ impl Clipboard {
             };
         }
         if self.write {
-            OUT.with(|o| o.borrow_mut().push(osc52(text)));
+            queue_output(osc52(text));
         }
         Copied::Copied {
             chars: text.chars().count(),
@@ -149,6 +149,10 @@ impl Clipboard {
             ),
         }
     }
+}
+
+pub fn queue_output(sequence: String) {
+    OUT.with(|o| o.borrow_mut().push(sequence));
 }
 
 pub fn take_output() -> Vec<String> {
