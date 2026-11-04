@@ -236,6 +236,7 @@ fn instance() -> Instance {
         github: None,
         uncommitted: 0,
         unpushed: 0,
+        account: None,
         accounts: Vec::new(),
     }
 }

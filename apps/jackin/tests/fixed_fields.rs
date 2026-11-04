@@ -915,6 +915,7 @@ fn probe_instance() -> Instance {
         }),
         uncommitted: 3,
         unpushed: 5,
+        account: Some("probe-account".into()),
         accounts: vec!["probe-id".into()],
     }
 }

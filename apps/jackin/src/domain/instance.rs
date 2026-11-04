@@ -94,6 +94,7 @@ pub struct Instance {
     pub uncommitted: usize,
     pub unpushed: usize,
 
+    pub account: Option<super::account::AccountId>,
     pub accounts: Vec<super::account::AccountId>,
 }
 

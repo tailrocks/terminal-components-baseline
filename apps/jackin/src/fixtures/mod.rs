@@ -308,6 +308,7 @@ fn instance(
             .map(Into::into),
         uncommitted: 0,
         unpushed: 0,
+        account: None,
         accounts: vec![],
     }
 }
@@ -1152,6 +1153,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         now - 3,
     );
     i1.branch = Some("feature/settlement-backoff".into());
+    i1.account = Some("acct-claude-work".into());
     i1.pr = Some((482, "Settlement retry backoff".into()));
     i1.uncommitted = 2;
     i1.unpushed = 1;
@@ -1200,6 +1202,7 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         now - 2,
     );
     i3.branch = Some("sre/node-pools".into());
+    i3.account = Some("acct-codex-experiments".into());
     i3.sessions = Ok(vec![SessionRecord {
         id: "s-04".into(),
         agent: Some(Agent::Codex),

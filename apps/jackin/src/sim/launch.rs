@@ -196,6 +196,7 @@ pub struct SimLaunch {
     workspace: Option<WorkspaceId>,
     role: String,
     agent: Agent,
+    account: Option<AccountId>,
     accounts: Vec<AccountId>,
     tick: u64,
     stage_start: u64,
@@ -254,6 +255,7 @@ impl SimLaunch {
             workspace: target.workspace,
             role: target.role.clone(),
             agent: target.agent,
+            account: target.account.clone(),
             accounts: launch_accounts(w, target, &content),
             tick: 0,
             stage_start: 0,
@@ -285,6 +287,7 @@ impl SimLaunch {
             daemon: DaemonSnapshot::Unavailable,
             branch: repo.and_then(|r| r.branches.get(1).cloned()),
             pr: None,
+            account: self.account.clone(),
             accounts: self.accounts.clone(),
             default_branch: "main".into(),
             github: repo.map(Into::into),
@@ -420,6 +423,7 @@ impl LaunchFeed for SimLaunch {
     }
 
     fn use_plain_text(&mut self) {
+        self.account = None;
         self.resume();
     }
 

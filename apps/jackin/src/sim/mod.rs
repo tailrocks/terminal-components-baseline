@@ -548,7 +548,11 @@ impl Backend for SimBackend {
     }
 
     fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
-        vec![PaneRequest::new(&instance.id, Some(instance.agent), None)]
+        vec![PaneRequest::new(
+            &instance.id,
+            Some(instance.agent),
+            instance.account.clone(),
+        )]
     }
 }
 

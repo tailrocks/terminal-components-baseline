@@ -95,6 +95,7 @@ fn the_sim_launch_ends_as_it_did() {
     assert_eq!(record.role, "the-architect");
     assert_eq!(record.agent, Agent::ClaudeCode);
     assert_eq!(record.default_branch, "main");
+    assert_eq!(record.account.as_deref(), Some(WORK));
     assert_eq!(
         record.accounts,
         [
@@ -346,6 +347,7 @@ fn launched(id: &str, container: &str, status: InstanceStatus) -> Instance {
         github: None,
         uncommitted: 0,
         unpushed: 0,
+        account: Some(WORK.into()),
         accounts: vec![WORK.into()],
     }
 }
@@ -464,6 +466,40 @@ fn daemon_is_built_by_attach() {
         "the launch's account reaches the agent pane"
     );
     assert_eq!(shell.agent, None);
+}
+
+const PRIMARY: &str = "acct-codex-primary";
+
+fn agent_pane_account(record: Instance) -> Option<String> {
+    let (mut app, _) = scripted(vec![running(0), vec![ready(record)]], None);
+    tick_until(&mut app, "the capsule", |a| a.route() == Route::Capsule);
+    let daemon = app.world.daemons.get("jk-5b0x").expect("its daemon");
+    let [pane] = daemon.panes.as_slice() else {
+        panic!("one pane expected");
+    };
+    pane.account.clone()
+}
+
+#[test]
+fn the_agent_pane_runs_with_the_account_of_the_record() {
+    let mut mine = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Running);
+    mine.account = Some(PRIMARY.into());
+    assert_eq!(
+        agent_pane_account(mine).as_deref(),
+        Some(PRIMARY),
+        "the cockpit launched with {WORK}; the record says otherwise"
+    );
+}
+
+#[test]
+fn a_record_without_an_account_gets_a_pane_without_one() {
+    let mut mine = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Running);
+    mine.account = None;
+    assert_eq!(
+        agent_pane_account(mine),
+        None,
+        "the cockpit must not fill in the account of its own launch"
+    );
 }
 
 #[test]

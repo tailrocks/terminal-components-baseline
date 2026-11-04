@@ -212,13 +212,17 @@ fn the_demo_daemons_hold_script_bodies() {
 }
 
 #[test]
-fn the_sim_backend_proposes_the_instance_agent_as_the_first_pane() {
+fn the_sim_backend_proposes_the_instance_agent_and_account_as_the_first_pane() {
     let world = world_for(Scenario::CapsuleMulti);
     let instance: &Instance = world.instance("jk-7f3a").expect("the running instance");
     assert_eq!(instance.status, InstanceStatus::Running);
     assert!(matches!(instance.daemon, DaemonSnapshot::Tabs(_)));
     assert_eq!(
         SimBackend::shared().initial_panes(instance),
-        [PaneRequest::new("jk-7f3a", Some(instance.agent), None)]
+        [PaneRequest::new(
+            "jk-7f3a",
+            Some(instance.agent),
+            Some("acct-claude-work".into())
+        )]
     );
 }
