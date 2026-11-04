@@ -8,6 +8,7 @@ use termpane::{DamageGrid, EraseDisplayPolicy, PassthroughEvent, ScrollOp};
 use crate::core::event::Key;
 
 mod forward;
+mod guard;
 mod viewport;
 
 pub use forward::{ForwardPolicy, Paste};
@@ -59,6 +60,7 @@ pub struct TerminalState {
     grid: DamageGrid,
     limit: usize,
     scrolled_off: u64,
+    guard: guard::FeedGuard,
 }
 
 impl std::fmt::Debug for TerminalState {
@@ -83,12 +85,13 @@ impl TerminalState {
             grid,
             limit,
             scrolled_off: 0,
+            guard: guard::FeedGuard::new(),
         }
     }
 
     pub fn feed(&mut self, bytes: &[u8]) -> Vec<TermEvent> {
         let before = self.grid.scrollback_len();
-        self.grid.process(bytes);
+        self.grid.process(self.guard.filter(bytes));
         self.scrolled_off += self.pushed_since(before);
         self.grid
             .drain_passthrough()
