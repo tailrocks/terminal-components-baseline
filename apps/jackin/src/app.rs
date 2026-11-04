@@ -391,15 +391,10 @@ impl App {
     /// effect that answers at once is finished before the next frame.
     fn deliver_due(&mut self) -> Outcome {
         let mut out = Outcome::Ignored;
-        loop {
-            let msgs = self.world.take_due();
-            if msgs.is_empty() {
-                return out;
-            }
-            for m in &msgs {
-                out = out.or(self.dispatch_msg(m));
-            }
+        while let Some(m) = self.world.take_due() {
+            out = out.or(self.dispatch_msg(&m));
         }
+        out
     }
 
     fn on_tick(&mut self) -> Outcome {

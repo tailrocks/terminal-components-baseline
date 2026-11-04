@@ -111,9 +111,9 @@ fn the_sim_never_hands_out_a_workspace_id_in_use() {
             workspace: Box::new(fresh.clone()),
         });
         world.clock.advance(5_000);
-        let msgs = world.take_due();
-        let [Msg::WorkspaceSaved { id, result }] = msgs.as_slice() else {
-            panic!("one reply expected, got {msgs:?}");
+        let msg = world.take_due();
+        let Some(Msg::WorkspaceSaved { id, result }) = &msg else {
+            panic!("one reply expected, got {msg:?}");
         };
         ids.push(id.expect("an assigned id"));
         world.apply(*result.clone().expect("saved"));

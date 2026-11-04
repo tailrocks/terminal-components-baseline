@@ -443,27 +443,27 @@ impl World {
         self.jobs.sort_by_key(|j| j.due_ms);
     }
 
-    /// The replies that are due at the current time, without advancing the
-    /// clock. A reply with no delay is delivered this way, so it does not wait
-    /// for a tick (and arrives under a paused clock too).
-    pub fn take_due(&mut self) -> Vec<Msg> {
-        let now = self.clock.now_ms;
-        let mut due = vec![];
-        self.jobs.retain(|j| {
-            if j.due_ms <= now {
-                due.push(j.work.clone());
-                false
-            } else {
-                true
-            }
-        });
+    /// The earliest reply that is due at the current time, without advancing
+    /// the clock. A reply with no delay is delivered this way, so it does not
+    /// wait for a tick (and arrives under a paused clock too). One reply is
+    /// settled per call, so a snapshot is always computed from the world that
+    /// already holds the reply before it.
+    pub fn take_due(&mut self) -> Option<Msg> {
         let backend = self.backend.clone();
-        due.into_iter()
-            .filter_map(|work| match work {
+        while self
+            .jobs
+            .first()
+            .is_some_and(|j| j.due_ms <= self.clock.now_ms)
+        {
+            let msg = match self.jobs.remove(0).work {
                 Work::Msg(msg) => Some(msg),
                 Work::Settle(effect) => backend.settle(&effect, self),
-            })
-            .collect()
+            };
+            if msg.is_some() {
+                return msg;
+            }
+        }
+        None
     }
 
     pub fn health_view(&self) -> HealthView {
@@ -629,7 +629,7 @@ impl World {
             return vec![];
         }
         let now = self.clock.now_ms;
-        let mut due = self.take_due();
+        let mut due: Vec<Msg> = self.take_due().into_iter().collect();
         for (id, d) in self.daemons.iter_mut() {
             if self
                 .instances

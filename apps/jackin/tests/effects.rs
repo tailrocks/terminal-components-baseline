@@ -1089,3 +1089,32 @@ fn the_working_directory_picker_lists_what_the_demo_listed() {
     );
     assert!(!shown.contains("rust"), "only direct children: {shown}");
 }
+
+#[test]
+fn two_stops_due_in_one_tick_both_land() {
+    let mut app = failure_app();
+    let running: Vec<_> = ["jk-7f3a", "jk-9b02"]
+        .iter()
+        .map(|id| {
+            let i = app.world.instance(id).expect("the instance");
+            assert_eq!(i.status, InstanceStatus::Running, "{id}");
+            i.id.clone()
+        })
+        .collect();
+    for instance in &running {
+        app.world.perform(Effect::Stop {
+            instance: instance.clone(),
+        });
+    }
+    settle(&mut app);
+
+    for id in &running {
+        let stopped = app.world.instance(id).expect("the instance");
+        assert_ne!(
+            stopped.status,
+            InstanceStatus::Running,
+            "the second reply must not put {id} back"
+        );
+        assert!(!app.world.daemons.contains_key(id.as_str()), "{id}");
+    }
+}
