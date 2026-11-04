@@ -149,7 +149,7 @@ enum Rendered {
     Prop(String, String, Tone),
     Text(String, Tone),
     Heading(String, String),
-    Item(usize),
+    Item(usize, usize),
     Notice(usize, u16),
     Skip,
     Blank,
@@ -168,6 +168,7 @@ pub struct ListDetail {
     names: Vec<&'static str>,
     buttons: Vec<Button>,
     items: usize,
+    item_rows: Vec<usize>,
 }
 
 impl ListDetail {
@@ -192,6 +193,7 @@ impl ListDetail {
             names: vec![],
             buttons: vec![],
             items: 0,
+            item_rows: vec![],
         }
     }
 
@@ -219,6 +221,12 @@ impl ListDetail {
 
     pub fn on_detail(&self, focus: Option<WidgetId>) -> bool {
         focus.is_some_and(|f| self.md.in_detail(f))
+    }
+
+    fn reveal_item(&mut self) {
+        if let Some(&row) = self.item_rows.get(self.item_cursor) {
+            self.detail_scroll.ensure_visible(row);
+        }
     }
 
     fn move_cursor(&mut self, delta: isize, len: usize) {
@@ -274,6 +282,7 @@ impl ListDetail {
             if s.items > 0 {
                 let next = (s.item_cursor as isize + delta).clamp(0, s.items as isize - 1);
                 s.item_cursor = next as usize;
+                s.reveal_item();
             } else {
                 s.detail_scroll.scroll_by(delta);
             }
@@ -583,6 +592,7 @@ impl ListDetail {
         let vw = body.width.saturating_sub(label_w).max(8) as usize;
         let mut out = vec![];
         let mut items = 0;
+        self.item_rows.clear();
         for (n, line) in lines.iter().enumerate() {
             match line {
                 Line::Prop(k, v, tone) => {
@@ -598,7 +608,8 @@ impl ListDetail {
                 }
                 Line::Heading(h, m) => out.push(Rendered::Heading(h.clone(), m.clone())),
                 Line::Item { .. } => {
-                    out.push(Rendered::Item(n));
+                    self.item_rows.push(out.len());
+                    out.push(Rendered::Item(n, items));
                     items += 1;
                 }
                 Line::Notice(notice) => {
@@ -672,7 +683,6 @@ impl ListDetail {
         ctx.control(self.detail, body, false);
         ctx.scrollable(self.detail, body);
         let detail_focused = ctx.interaction.focused(self.detail);
-        let mut item_no = 0;
         for (k, i) in self.detail_scroll.visible_range().enumerate() {
             let y = body.y + k as u16;
             match &rendered[i] {
@@ -711,14 +721,14 @@ impl ListDetail {
                         buf.set_string(body.right() - mw, y, &meta, t.faint().bg(bg));
                     }
                 }
-                Rendered::Item(n) => {
+                Rendered::Item(n, item_no) => {
                     let Line::Item { mark, cols, tone } = &frame.lines[*n] else {
                         continue;
                     };
-                    let id = self.detail.child(item_no).sub("item");
+                    let id = self.detail.child(*item_no).sub("item");
                     let mut s = ctx.state(id);
-                    s.focused = detail_focused && self.item_cursor == item_no;
-                    s.selected = self.item_cursor == item_no;
+                    s.focused = detail_focused && self.item_cursor == *item_no;
+                    s.selected = self.item_cursor == *item_no;
                     let st = t.row(s, bg);
                     let rect = Rect::new(body.x - 1, y, body.width + 1, 1);
                     fill(buf, rect, st);
@@ -760,7 +770,6 @@ impl ListDetail {
                     buf.set_string(x2, y, truncate(&cols[2], room), st.fg(t.text_muted));
                     legible_on_fill(buf, rect, t, bg);
                     ctx.clickable(id, rect);
-                    item_no += 1;
                 }
                 Rendered::Notice(n, h) => {
                     if let Line::Notice(notice) = &frame.lines[*n] {

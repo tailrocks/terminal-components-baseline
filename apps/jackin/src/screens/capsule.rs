@@ -1520,6 +1520,13 @@ impl CapsuleScreen {
         }
     }
 
+    fn pane_of(&self, id: WidgetId) -> Option<PaneId> {
+        self.pane_rects
+            .iter()
+            .find(|(pid, _)| PANES.child(*pid as usize) == id)
+            .map(|(pid, _)| *pid)
+    }
+
     fn pane_at(&self, pos: Position) -> Option<PaneId> {
         self.pane_rects
             .iter()
@@ -3382,10 +3389,11 @@ impl CapsuleScreen {
             }
         }
 
-        if let Some(pid) = (0..64u64).find(|p| PANES.child(*p as usize) == pressed) {
+        let pressed_pane = self.pane_of(pressed);
+        if let Some(pid) = pressed_pane {
             self.prime(pid, w);
         }
-        if let Some(pid) = (0..64u64).find(|p| PANES.child(*p as usize) == pressed)
+        if let Some(pid) = pressed_pane
             && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid))
         {
             self.selecting = Some(pid);

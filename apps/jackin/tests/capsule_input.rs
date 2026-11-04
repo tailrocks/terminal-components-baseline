@@ -248,3 +248,47 @@ fn paste_last_copy_takes_the_same_path() {
     );
     assert_eq!(rig.status(), "Pasted into the focused pane");
 }
+
+#[test]
+fn a_drag_selects_in_a_pane_whose_id_is_past_sixty_four() {
+    use jackin_console::panes::{EndKind, LinkEvent};
+
+    let mut rig = Rig::new();
+    rig.attach();
+    for _ in 0..70 {
+        rig.press("ctrl+b %");
+        rig.typed("Shell");
+        rig.press("enter");
+        rig.advance(80);
+        let n = rig.bench.opened() - 1;
+        rig.bench.push(n, LinkEvent::Ended(EndKind::Detached));
+        rig.advance(80);
+        rig.press("ctrl+b x");
+        assert_eq!(rig.daemon().panes.len(), 1, "closed at once");
+    }
+
+    rig.press("ctrl+b %");
+    rig.typed("Shell");
+    rig.press("enter");
+    rig.advance(80);
+    let n = rig.bench.opened() - 1;
+    rig.bench.push(n, LinkEvent::Attached);
+    rig.advance(900);
+    let pid = rig
+        .daemon()
+        .focused_pane()
+        .expect("the new pane is focused");
+    assert!(pid > 64, "the pane id outgrew the old search range: {pid}");
+
+    rig.bench.output(n, b"line one\r\nline two");
+    rig.advance(80);
+    let from = pane_cell(&mut rig);
+    rig.mouse(MouseKind::Down, from);
+    rig.mouse(MouseKind::Drag, (from.0 + 5, from.1));
+    rig.mouse(MouseKind::Up, (from.0 + 5, from.1));
+    assert_eq!(
+        *rig.copied.0.lock().expect("sink"),
+        ["ne on"],
+        "release copies the dragged text"
+    );
+}
