@@ -618,7 +618,17 @@ fn sections_narrow_then_wide() {
     expect_options_rest(&rest);
 
     app.click_text("Playground");
-    let wide_play = app.wait_text(CAP_PLAY);
+    let wide_play = app.wait_screen("playground selects after the options page", |screen| {
+        let visible = text(screen);
+        screen.cols() == 120
+            && screen.rows() == 40
+            && visible.contains(CAP_PLAY)
+            && visible.contains("created_at")
+            && visible.contains("PostgreSQL")
+            && visible.contains(NOTHING)
+            && !visible.contains("List fit")
+            && !visible.contains("Sort shows mixed")
+    });
     expect_play(&wide_play, true);
     assert_size(&wide_play, 120, 40);
     see(
