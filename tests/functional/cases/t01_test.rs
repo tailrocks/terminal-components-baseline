@@ -387,7 +387,14 @@ fn saving_and_connecting_reduced() {
     open_form(&app, "Local PostgreSQL", "localhost:5432");
     rename(&app, "Locallink");
     click_action(&app, "Save & connect");
-    let workbench = app.wait_text(WORKBENCH);
+    // Query 1 paints while the footer still says "Connection saved".
+    let workbench = app.wait_screen("locallink connected", |screen| {
+        let visible = text(screen);
+        visible.contains(WORKBENCH)
+            && visible.contains("Connected to Locallink")
+            && !visible.contains(FORM)
+            && !visible.contains(TUNNEL)
+    });
     require(
         &workbench,
         &[WORKBENCH, "Locallink", "Connected to Locallink"],
