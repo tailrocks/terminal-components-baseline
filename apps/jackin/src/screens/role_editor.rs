@@ -391,6 +391,10 @@ impl RoleEditorScreen {
     }
 
     fn run_check(&mut self, w: &mut World, cx: &mut Cx) {
+        if self.checking() {
+            cx.status("A check is already running");
+            return;
+        }
         if self.fatal.is_some() {
             if let Some(r) = self.record(w)
                 && let Ok(doc) = &r.manifest
@@ -1261,6 +1265,13 @@ impl Page<Jackin> for RoleEditorScreen {
                         return Outcome::Changed;
                     }
                 };
+                self.sync();
+                if self.is_stale() {
+                    self.check = RoleCheckState::Unchecked;
+                    self.save_after_check = false;
+                    cx.status("The role changed during the check · press F5 to check again");
+                    return Outcome::Changed;
+                }
                 self.check = RoleCheckState::Done(findings.clone());
                 self.apply_findings();
                 cx.status(if findings.is_empty() {

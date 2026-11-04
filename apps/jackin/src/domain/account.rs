@@ -570,6 +570,7 @@ impl AccountRegistry {
         self.accounts.iter().find(|a| match probe {
             DuplicateProbe::Folder { provider, path } => {
                 a.provider == *provider
+                    && a.origin == AccountOrigin::Registered
                     && matches!(&a.source, CredentialSource::LocalFolder { path: p, .. } if p == path)
             }
             DuplicateProbe::OpReference { canonical, account } => {
