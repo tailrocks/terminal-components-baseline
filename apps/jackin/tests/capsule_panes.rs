@@ -211,6 +211,21 @@ fn leaving_and_entering_a_tab_tells_the_program() {
 }
 
 #[test]
+fn leaving_the_capsule_tells_the_program_it_lost_the_focus() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.bench.output(0, b"\x1b[?1004h");
+    rig.advance(80);
+    assert_eq!(rig.bench.commands(0), []);
+    rig.press("ctrl+b d");
+    assert_eq!(
+        rig.bench.commands(0),
+        [PaneCommand::Input(FOCUS_OUT.to_vec())],
+        "the manager is not the pane"
+    );
+}
+
+#[test]
 fn a_bell_in_a_background_tab_marks_the_tab() {
     let mut rig = Rig::new();
     rig.attach();
