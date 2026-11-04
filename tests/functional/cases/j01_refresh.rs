@@ -99,24 +99,6 @@ fn forbid_other_scenario(screen: &TerminalSnapshot) {
     }
 }
 
-/// Poll without writing a checkpoint. Recording a snapshot spends the short
-/// interval while `Refreshing…` is still painted.
-fn poll_until(
-    app: &App,
-    limit: Duration,
-    predicate: impl Fn(&TerminalSnapshot) -> bool,
-) -> TerminalSnapshot {
-    let start = Instant::now();
-    loop {
-        let screen = app.screen();
-        if predicate(&screen) {
-            return screen;
-        }
-        assert!(start.elapsed() < limit, "timed out\n{}", text(&screen));
-        std::thread::sleep(Duration::from_millis(5));
-    }
-}
-
 fn nudge(app: &App, quiet: impl Fn(&TerminalSnapshot) -> bool) {
     std::thread::sleep(Duration::from_millis(200));
     let screen = app.screen();
@@ -249,25 +231,39 @@ fn prove_failure(app: &App) {
     forbid_other_scenario(&first);
 
     app.key("f5");
-    let refreshing = poll_until(app, Duration::from_secs(8), |screen| {
-        text(screen).contains(REFRESHING) && shows_running(screen)
-    });
-    let visible = text(&refreshing);
-    assert!(visible.contains("Workspaces"));
-    assert!(
-        !visible.contains(FAILURE),
-        "failure replaced Refreshing too soon\n{visible}"
-    );
-    assert!(!visible.contains(EMPTY));
-
-    app.key("down");
-    let pending = poll_until(app, Duration::from_secs(3), |screen| {
-        let visible = text(screen);
-        visible.contains(REFRESHING)
-            && shows_dirty(screen)
+    // The failed refresh replaces `Refreshing…` on the tick after F5.
+    // Down has to leave on the first refreshing frame, before that tick.
+    let start = Instant::now();
+    let mut moved = false;
+    let pending = loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        let refreshing = visible.contains(REFRESHING);
+        if refreshing
+            && shows_dirty(&screen)
             && !visible.contains(EMPTY)
             && visible.contains("7f3a")
-    });
+        {
+            break screen;
+        }
+        if refreshing && shows_running(&screen) && !moved {
+            assert!(visible.contains("Workspaces"));
+            assert!(
+                !visible.contains(FAILURE),
+                "failure replaced Refreshing too soon\n{visible}"
+            );
+            assert!(!visible.contains(EMPTY));
+            app.key("down");
+            moved = true;
+            continue;
+        }
+        assert!(
+            start.elapsed() < Duration::from_secs(8),
+            "timed out\n{}",
+            text(&screen)
+        );
+        std::thread::sleep(Duration::from_millis(5));
+    };
     let visible = text(&pending);
     assert!(
         !visible.contains(FAILURE),

@@ -157,6 +157,14 @@ fn row_with(screen: &TerminalSnapshot, needle: &str) -> String {
         .unwrap_or_else(|| panic!("no row {needle:?}\n{}", text(screen)))
 }
 
+fn wait_states_off(app: &App, reason: &str) -> TerminalSnapshot {
+    // The tab title returns before the focus + hover specimen is painted.
+    app.wait_screen(reason, |screen| {
+        let visible = text(screen);
+        visible.contains("○ Compare levels") && visible.contains("focus + hover")
+    })
+}
+
 fn expect_states(screen: &TerminalSnapshot, wide: bool) {
     assert_one_gutter(screen);
     let raw = text(screen);
@@ -393,7 +401,7 @@ fn sections_narrow_then_wide() {
     );
 
     app.click_text("States");
-    let narrow_states = app.wait_text("○ Compare levels");
+    let narrow_states = wait_states_off(&app, "states off at 80 by 24");
     expect_states(&narrow_states, false);
     see(
         &app,
@@ -480,7 +488,7 @@ fn sections_narrow_then_wide() {
 fn compare_levels_then_restore() {
     let app = open_page("s01-focusnavigation-compare", 120, 40);
     app.click_text("States");
-    let off = app.wait_text("○ Compare levels");
+    let off = wait_states_off(&app, "states off before compare");
     expect_states(&off, true);
     expect(
         &off,
