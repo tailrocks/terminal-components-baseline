@@ -291,3 +291,115 @@ fn escape_heavy_output_gives_the_screen_of_the_bare_parser_however_it_is_split()
         assert_eq!(rows, bare_rows, "chunks of {size}");
     }
 }
+
+const MARKS: usize = 16;
+
+fn marks() -> String {
+    "\u{301}".repeat(MARKS)
+}
+
+fn cell_marks(state: &TerminalState, col: u16) -> usize {
+    cell_text(state, col).chars().count().saturating_sub(1)
+}
+
+#[test]
+fn marks_cannot_pile_onto_one_cell_by_moving_the_cursor_back() {
+    let cases: [(&str, &[u8], &[u8]); 7] = [
+        ("cub", b"", b"b\x1b[D"),
+        ("bs", b"", b"b\x08"),
+        ("cup", b"", b"b\x1b[1;2H"),
+        ("cr_cuf", b"", b"b\r\x1b[C"),
+        ("cha", b"", b"b\x1b[2G"),
+        ("restore", b"\x1b7", b"b\x1b8"),
+        ("bs_inside_sgr", b"", b"b\x1b[\x08m"),
+    ];
+    let mut broken = Vec::new();
+    for (name, save, back) in cases {
+        let mut state = TerminalState::new(4, 40);
+        state.feed(b"a");
+        state.feed(marks().as_bytes());
+        state.feed(save);
+        for _ in 0..50 {
+            state.feed(back);
+            state.feed(marks().as_bytes());
+        }
+        if cell_marks(&state, 0) != MARKS {
+            broken.push((name, cell_marks(&state, 0)));
+        }
+    }
+    assert_eq!(broken, vec![], "cell 0 must keep exactly {MARKS} marks");
+}
+
+#[test]
+fn marks_cannot_pile_onto_one_cell_through_a_wide_base_that_does_not_print() {
+    let mut state = TerminalState::new(2, 10);
+    state.feed(b"\x1b[?7l\x1b[1;10Ha");
+    state.feed(marks().as_bytes());
+    for _ in 0..50 {
+        state.feed("\u{4e2d}".as_bytes());
+        state.feed(marks().as_bytes());
+    }
+    assert_eq!(cell_marks(&state, 9), MARKS);
+}
+
+#[test]
+fn a_wide_base_starts_a_new_run_once_wrapping_is_back_on() {
+    let mut state = TerminalState::new(2, 10);
+    state.feed(b"\x1b[?7l\x1b[?7ha");
+    state.feed(marks().as_bytes());
+    state.feed("\u{4e2d}".as_bytes());
+    state.feed(marks().as_bytes());
+    assert_eq!(cell_marks(&state, 0), MARKS);
+    assert_eq!(cell_marks(&state, 1), MARKS);
+}
+
+#[test]
+fn characters_the_parser_swallows_do_not_count_as_a_base() {
+    let swallowed: [(&str, &[u8]); 2] = [
+        ("charset_designation", b"\x1b(B"),
+        ("c1_control", "\u{85}".as_bytes()),
+    ];
+    let mut broken = Vec::new();
+    for (name, bytes) in swallowed {
+        let mut state = TerminalState::new(4, 40);
+        state.feed(b"a");
+        state.feed(marks().as_bytes());
+        state.feed(bytes);
+        state.feed(marks().as_bytes());
+        if cell_marks(&state, 0) != MARKS {
+            broken.push((name, cell_marks(&state, 0)));
+        }
+    }
+    assert_eq!(broken, vec![], "cell 0 must keep exactly {MARKS} marks");
+}
+
+#[test]
+fn combining_text_after_a_cursor_move_still_renders() {
+    let mut state = TerminalState::new(4, 40);
+    state.feed(
+        "\x1b[2;5He\u{301}\x1b[1mx\x1b[0m\u{301}\x1b[3;1H\u{1F468}\u{200D}\u{1F469}".as_bytes(),
+    );
+    let view = state.view(0);
+    let text = |row, col| view.cell(row, col).map(|c| c.text().to_owned());
+    assert_eq!(text(1, 4), Some("e\u{301}".to_owned()));
+    assert_eq!(text(1, 5), Some("x\u{301}".to_owned()));
+    assert_eq!(text(2, 0), Some("\u{1F468}\u{200D}\u{1F469}".to_owned()));
+}
+
+#[test]
+fn a_cluster_keeps_its_marks_up_to_the_cap_on_every_line() {
+    let mut state = TerminalState::new(4, 40);
+    for line in 0..3 {
+        state.feed(format!("\x1b[{};1Hz", line + 1).as_bytes());
+        state.feed("\u{301}".repeat(MARKS + 5).as_bytes());
+    }
+    for line in 0..3u16 {
+        assert_eq!(
+            state
+                .view(0)
+                .cell(line, 0)
+                .map(|c| c.text().chars().count()),
+            Some(1 + MARKS)
+        );
+    }
+}
