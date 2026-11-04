@@ -809,8 +809,12 @@ fn classify_shows_the_safety_decision() {
     );
     app.key("/");
     // Paste writes the field without refreshing the list. Typing does.
+    // The empty-history line appears on a prefix, before the last letters paint.
     app.type_text("denied_marker_ro");
-    let missing = app.wait_text("No matching queries");
+    let missing = app.wait_screen("history filter shows the denied token", |screen| {
+        let visible = text(screen);
+        visible.contains("No matching queries") && visible.contains("denied_marker_ro")
+    });
     see(&missing, &["No matching queries", "denied_marker_ro"], &[]);
     app.key("escape");
     app.wait_absent("No matching queries");

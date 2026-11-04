@@ -371,11 +371,60 @@ fn drag_seam(app: &App, seam: Point, delta: (i16, i16), thin: char, heavy: char)
         "release kept the accent seam\n{}",
         text(&released)
     );
-    let park = find(&released, TWO);
-    app.move_to(park);
-    let rested = app.wait_screen("seam at rest", |screen| glyph(screen, at.x, at.y) == thin);
-    assert_ne!(glyph(&rested, at.x, at.y), heavy);
+    // on_up leaves hover on the last hit, and the statement can sit inside
+    // that pad after a short drag. The header is outside every seam.
+    app.move_to(Point { x: 2, y: 0 });
+    let vertical_line = delta.0 != 0;
+    let rested = app.wait_screen("seam at rest", |screen| {
+        statement(screen, TWO)
+            && both_tabs(screen)
+            && seam_resting(screen, at, thin, heavy, vertical_line)
+    });
+    assert!(
+        seam_resting(&rested, at, thin, heavy, vertical_line),
+        "seam stayed heavy near {at:?}\n{}",
+        text(&rested)
+    );
     assert!(statement(&rested, TWO) && both_tabs(&rested));
+}
+
+/// Drag quantizes to a percent, so the committed rule can sit one cell off
+/// the pointer. A resting rule is the thin glyph with no heavy thumb on it.
+fn seam_resting(
+    screen: &TerminalSnapshot,
+    at: Point,
+    thin: char,
+    heavy: char,
+    vertical_line: bool,
+) -> bool {
+    for delta in [0i16, -1, 1] {
+        let (x, y) = if vertical_line {
+            let Some(x) = at.x.checked_add_signed(delta) else {
+                continue;
+            };
+            (x, at.y)
+        } else {
+            let Some(y) = at.y.checked_add_signed(delta) else {
+                continue;
+            };
+            (at.x, y)
+        };
+        if x >= screen.cols() as u16 || y >= screen.rows() as u16 {
+            continue;
+        }
+        if glyph(screen, x, y) != thin {
+            continue;
+        }
+        let heavy_on_line = if vertical_line {
+            (0..screen.rows()).any(|row| glyph(screen, x, row as u16) == heavy)
+        } else {
+            row_has(screen, y, heavy)
+        };
+        if !heavy_on_line {
+            return true;
+        }
+    }
+    false
 }
 
 fn seam_neighbours(seam: Point, delta: (i16, i16)) -> ((u16, u16), (u16, u16)) {

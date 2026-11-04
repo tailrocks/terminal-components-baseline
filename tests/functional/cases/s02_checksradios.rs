@@ -241,6 +241,14 @@ fn assert_states(screen: &TerminalSnapshot, wide: bool) {
     }
 }
 
+/// The checkbox block paints before the radio group under it.
+fn playground_ready(screen: &TerminalSnapshot) -> bool {
+    let raw = text(screen);
+    raw.contains("Select all rows")
+        && raw.contains("(●) Read committed")
+        && raw.contains("──● Auto-save drafts on")
+}
+
 fn assert_defaults(screen: &TerminalSnapshot) {
     expect(
         screen,
@@ -310,7 +318,9 @@ fn route_by_page_keyboard_and_pointer() {
     for _ in 0..12 {
         keys.key("]");
     }
-    let entered = keys.wait_text("Select all rows");
+    let entered = keys.wait_screen("checks playground from the keyboard", |screen| {
+        screen.cols() == 120 && screen.rows() == 40 && playground_ready(screen)
+    });
     assert_size(&entered, 120, 40);
     assert_one_gutter(&entered);
     assert_defaults(&entered);
@@ -352,7 +362,9 @@ fn route_by_page_keyboard_and_pointer() {
         keys.wait_text("Buttons");
     }
     click_sidebar(&keys, TITLE);
-    let pointed = keys.wait_text("Select all rows");
+    let pointed = keys.wait_screen("checks playground from the sidebar", |screen| {
+        screen.cols() == 120 && screen.rows() == 40 && playground_ready(screen)
+    });
     assert_one_gutter(&pointed);
     assert_defaults(&pointed);
     expect(
@@ -368,7 +380,9 @@ fn route_by_page_keyboard_and_pointer() {
     keys.finish();
 
     let page = open_page("s02-checksradios-route-page", 120, 40);
-    let screen = page.wait_text("Select all rows");
+    let screen = page.wait_screen("checks playground from --page", |screen| {
+        screen.cols() == 120 && screen.rows() == 40 && playground_ready(screen)
+    });
     assert_size(&screen, 120, 40);
     assert_one_gutter(&screen);
     assert_defaults(&screen);

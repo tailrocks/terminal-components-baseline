@@ -79,6 +79,17 @@ fn rows_with(screen: &TerminalSnapshot, needle: &str) -> usize {
         .count()
 }
 
+fn confirm_body(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(TITLE) && visible.contains("Type ") && visible.contains("Execute")
+}
+
+fn settled_confirm(app: &App, label: &str, cols: u32, rows: u32) -> TerminalSnapshot {
+    app.wait_screen(label, |screen| {
+        screen.cols() == cols && screen.rows() == rows && confirm_body(screen)
+    })
+}
+
 /// The 140ms press flash stays painted while motion is reduced, so a shot
 /// nudges the width and comes back. Below about 100 columns the header omits
 /// the size chip.
@@ -499,19 +510,19 @@ fn tablepro_confirm_gates_accept_only_the_exact_phrase_once() {
     assert_eq!((again.cols(), again.rows()), (120, 40));
     assert_unarmed(&again, &token);
     flash_settle(&app);
-    let wide = app.screen();
-    assert_eq!((wide.cols(), wide.rows()), (120, 40));
+    // The size-restored frame can be the header and an empty body. The phrase
+    // is back before the shot.
+    let wide = settled_confirm(&app, "typed confirm settled at 120x40", 120, 40);
     assert_unarmed(&wide, &token);
     shot(&app, "T03.confirm.gates.120x40");
 
     app.resize(80, 24);
     let narrow = app.wait_screen("typed confirm at 80x24", |screen| {
-        screen.cols() == 80 && screen.rows() == 24 && text(screen).contains("Type ")
+        screen.cols() == 80 && screen.rows() == 24 && confirm_body(screen)
     });
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     flash_settle(&app);
-    let narrow = app.screen();
-    assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
+    let narrow = settled_confirm(&app, "typed confirm settled at 80x24", 80, 24);
     see(
         &narrow,
         &["Type ", "Execute"],

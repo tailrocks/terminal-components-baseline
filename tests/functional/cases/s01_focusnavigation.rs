@@ -714,7 +714,15 @@ fn option_nav_vim_boundary() {
         120,
         40,
     );
-    let screen = app.wait_text("Ada Lovelace");
+    // The name paints before the vim key rows.
+    let screen = app.wait_screen("vim key rows", |screen| {
+        let raw = text(screen);
+        screen.cols() == 120
+            && screen.rows() == 40
+            && raw.contains("Ada Lovelace")
+            && raw.contains("↑ k")
+            && raw.contains("↓ j")
+    });
     assert_size(&screen, 120, 40);
     expect(
         &screen,
@@ -727,7 +735,10 @@ fn option_nav_vim_boundary() {
     assert!(up.contains("↑ k"), "vim Up row does not show ↑ k: {up:?}");
     click_at(&app, "Inbox", |hit| hit.x > 24);
     app.key("j");
-    let moved = app.wait_text("last: Down");
+    let moved = app.wait_screen("j moved the mailbox", |screen| {
+        let raw = text(screen);
+        raw.contains("last: Down") && raw.contains("↑ k") && raw.contains("Drafts")
+    });
     assert_size(&moved, 120, 40);
     assert_eq!(focus_value(&moved), "Mailbox list");
     assert_one_gutter(&moved);
