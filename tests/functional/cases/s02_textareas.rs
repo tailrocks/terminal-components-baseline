@@ -136,25 +136,52 @@ fn label_shot(screen: &TerminalSnapshot) -> bool {
         .is_some_and(|cell| cell.bg() == SnapshotColor::Rgb(0x4a, 0x4a, 0x52))
 }
 
-/// The field-keys baseline paints the commit gutter and `Q` on `#3a3a40`
-/// bold. A quiet frame can keep those glyphs and drop the fill.
-fn commit_q_focused(screen: &TerminalSnapshot) -> bool {
+/// Baselines for a focused textarea paint the gutter and the edited glyphs
+/// on `#3a3a40` bold. A quiet frame can keep those glyphs and drop the fill.
+fn focus_filled(
+    screen: &TerminalSnapshot,
+    row_matches: impl Fn(&str) -> bool,
+    glyphs: &[&str],
+) -> bool {
     let fill = SnapshotColor::Rgb(0x3a, 0x3a, 0x40);
     (0..screen.rows()).any(|row| {
         let line = row_text(screen, row);
-        if !line.contains('▎') || !line.contains('Q') || line.contains(FIX) {
+        if !row_matches(&line) {
             return false;
         }
         let Some(cells) = screen.row(row) else {
             return false;
         };
-        let focused = |glyph: &str| {
+        glyphs.iter().all(|glyph| {
             cells
                 .iter()
-                .any(|cell| cell.text() == glyph && cell.has(Attrs::BOLD) && cell.bg() == fill)
-        };
-        focused("▎") && focused("Q")
+                .any(|cell| cell.text() == *glyph && cell.has(Attrs::BOLD) && cell.bg() == fill)
+        })
     })
+}
+
+fn commit_q_focused(screen: &TerminalSnapshot) -> bool {
+    focus_filled(
+        screen,
+        |line| line.contains('▎') && line.contains('Q') && !line.contains(FIX),
+        &["▎", "Q"],
+    )
+}
+
+fn task_z_focused(screen: &TerminalSnapshot) -> bool {
+    focus_filled(
+        screen,
+        |line| line.contains('▎') && line.contains("Z 1. Read"),
+        &["▎", "Z"],
+    )
+}
+
+fn notes_zz_focused(screen: &TerminalSnapshot) -> bool {
+    focus_filled(
+        screen,
+        |line| line.contains('▎') && line.contains("ZZ") && !line.contains("QQ"),
+        &["▎", "Z"],
+    )
 }
 
 fn click_filtered(session: &AppSession, needle: &str, pred: impl Fn(&Point) -> bool) {
@@ -687,6 +714,10 @@ fn esc_reverts_from_the_options_control() {
     session.app.type_text("QQ");
     let dirty = session.app.wait_text("ZZQQ");
     expect(&dirty, &["ZZQQ", EDITING], &[IDLE]);
+    // The reverted baseline keeps the press flash (`#3a3a40` bold). That
+    // flash is 140ms of wall time from the click, and a paused session does
+    // not paint it again. Click once more and Esc before it expires.
+    click_body(&session, "Notes");
     session.app.key("escape");
     let reverted = session.app.wait_text(IDLE);
     expect(
@@ -694,6 +725,9 @@ fn esc_reverts_from_the_options_control() {
         &["ZZ", IDLE, FIX, CRUMB],
         &["QQ", "ZZQQ", EDITING, PLACEHOLDER],
     );
+    session
+        .app
+        .wait_screen("notes focus fill", notes_zz_focused);
     see(
         &session,
         "opt.textareas.esc_reverts",
@@ -749,6 +783,10 @@ fn edit_entry_explicit() {
         &["Z 1. Read src/api/billing.rs", EDITING, FIX, "ln 1/28"],
         &[IDLE, TOP, "fix stuffZ", "Q1."],
     );
+    // Repaint while the press flash is on. The label click does not move
+    // the cursor. A paused session keeps that frame until the next input.
+    click_body(&session, "Task description");
+    session.app.wait_screen("task focus fill", task_z_focused);
     see(
         &session,
         "opt.textareas.edit_entry",
@@ -879,6 +917,20 @@ fn nav_no_page() {
     session.app.key("pageup");
     let held = session.app.settle();
     expect(&held, &[END, IDLE, CRUMB], &[MID, TOP, EDITING, "vim"]);
+    // The accepted Playground tab is the press color. A click's flash lasts
+    // 140ms and the Page Up paint can land after it. Holding the button keeps
+    // that color. The tab part is not a focus stop, so the list keeps its gutter.
+    let tabs: Vec<_> = find_all(&held, "Playground")
+        .into_iter()
+        .filter(|hit| hit.y <= 5 && hit.x > 24)
+        .collect();
+    assert_eq!(
+        tabs.len(),
+        1,
+        "expected one Playground tab, got {tabs:?}\n{}",
+        text(&held)
+    );
+    session.app.down(tabs[0]);
     see(
         &session,
         "opt.textareas.nav",
