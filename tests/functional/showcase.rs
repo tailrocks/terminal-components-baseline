@@ -613,7 +613,6 @@ fn showcase_list_selection_keyboard_and_multiselect() {
 }
 
 #[test]
-#[ignore = "flaky: docs/P9.3-red-green.md#pty-load-flakes tree cursor order under load"]
 fn showcase_tree_expand_and_file_selection() {
     let app = App::new(
         "showcase-trees",
@@ -658,11 +657,20 @@ fn showcase_tree_expand_and_file_selection() {
         s.cell_at(u32::from(gutter.x), u32::from(gutter.y))
             .map(|c| c.text().to_string())
     };
-    let settled = |s: &TerminalSnapshot| {
-        gutter_text(s).as_deref() == Some("▎")
-            && cell_bg(s, label) != tui_test::SnapshotColor::Rgb(56, 56, 62)
-    };
+    let flash = tui_test::SnapshotColor::Rgb(56, 56, 62);
+    // A paused page draws the click flash of the src row until the first frame
+    // after its window; no tick ends it. That frame must come before the
+    // frames of the focus moves, or it is the last write and parks the hidden
+    // cursor on the row instead of the footer. The last expand was fenced, so
+    // the click was handled before this wait starts.
+    std::thread::sleep(
+        std::time::Duration::from_millis(junie_tui::core::pointer::PointerConfig::DEFAULT.flash_ms)
+            + std::time::Duration::from_millis(50),
+    );
     app.move_to(Point { x: 0, y: 0 });
+    app.wait_screen("the click flash on src has ended", |s| {
+        cell_bg(s, label) != flash
+    });
     app.key("tab");
     app.wait_screen("focus leaves the tree", |s| {
         gutter_text(s).as_deref() != Some("▎")
@@ -671,19 +679,6 @@ fn showcase_tree_expand_and_file_selection() {
     app.wait_screen("focus returns to the tree", |s| {
         gutter_text(s).as_deref() == Some("▎")
     });
-
-    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
-    loop {
-        if app.try_sustained(std::time::Duration::from_millis(600), |s| settled(s)) {
-            break;
-        }
-        assert!(
-            std::time::Instant::now() < deadline,
-            "tree row must settle without hover"
-        );
-        app.move_to(Point { x: 0, y: 0 });
-        std::thread::sleep(std::time::Duration::from_millis(100));
-    }
     app.visual("functional/showcase_trees");
     app.finish();
 }
