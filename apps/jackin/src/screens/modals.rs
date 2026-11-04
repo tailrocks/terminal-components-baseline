@@ -130,6 +130,7 @@ pub fn file_browser(
 ) -> FileBrowser {
     let source = BackendSource(w.backend.file_source(w));
     let repos: Vec<String> = w.github.iter().map(|r| r.full_name.clone()).collect();
+    let git_url = w.surfaces.fixed.as_ref().map(|f| f.git_url.clone());
     let url = UrlEntry::new("Git URL…", "Git URL")
         .back("Browse folders")
         .placeholder("github.com/org/repo")
@@ -139,7 +140,9 @@ pub fn file_browser(
         ])
         .empty_error("Enter a repository URL")
         .validate(move |url| {
-            if repos.iter().any(|r| url.contains(r.as_str())) {
+            if let Some(error) = &git_url {
+                Err(error.clone())
+            } else if repos.iter().any(|r| url.contains(r.as_str())) {
                 Ok(())
             } else {
                 Err(format!("Could not resolve {url}: repository not found"))
@@ -151,11 +154,14 @@ pub fn file_browser(
         .show_hidden(true)
         .hidden_toggle(false)
         .url_entry(url);
-    if with_readonly {
-        b.checkbox(&w.surfaces.vocabulary.read_only_label, false)
-    } else {
-        b
+    if !with_readonly {
+        return b;
     }
+    let mut b = b.checkbox(&w.surfaces.vocabulary.read_only_label, false);
+    if let Some(fixed) = &w.surfaces.fixed {
+        b.checkbox = b.checkbox.take().map(|c| c.fixed(fixed.wizard_ro.clone()));
+    }
+    b
 }
 
 pub use junie_tui::widgets::choice_dialog::ChoiceDialog;

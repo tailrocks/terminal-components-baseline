@@ -161,7 +161,8 @@ impl HasHints for FormDialog {
             .chain([&self.cancel, &self.save])
             .find(|b| cx.focus == Some(b.id));
         match button {
-            Some(b) => v.push(b.hint()),
+            Some(b) if b.can_activate() => v.push(b.hint()),
+            Some(_) => {}
             None if self.save.can_activate() => v.push(self.save.hint()),
             None => {}
         }
