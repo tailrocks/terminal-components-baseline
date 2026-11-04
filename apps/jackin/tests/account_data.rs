@@ -3,11 +3,13 @@
 mod common;
 
 use common::*;
+use jackin_console::domain::account::CredentialSource;
 use jackin_console::domain::account::{
     Account, AccountForm, EditBlocked, LaunchBlock, ProviderChoice, SourceChoice, SourceKind,
 };
 use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider, UsageSurface};
 use jackin_console::domain::fixed::Fixed;
+use jackin_console::domain::openshell::env_edit_block;
 use jackin_console::domain::workspace::{Usability, usability_of};
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::World;
@@ -279,4 +281,42 @@ fn the_picker_lists_blocked_agents_as_unavailable_rows() {
     assert!(row("Claude Code").contains("usage only · jackin launches Codex only"));
     assert!(row("Claude Code").contains("unavailable"));
     assert!(!screen.contains("ready"));
+}
+
+#[test]
+fn only_a_host_variable_account_of_the_fixed_world_cannot_be_edited() {
+    let world = world_for(Scenario::OpenshellFixed);
+    let mut blocked = 0;
+    for account in &world.accounts.accounts {
+        match &account.source {
+            CredentialSource::HostEnv { var, .. } => {
+                blocked += 1;
+                assert_eq!(account.edit_blocked, Some(env_edit_block(var)), "{var}");
+                assert!(!account.edit_allowed());
+                assert!(account.mutations_allowed());
+            }
+            _ => {
+                assert_eq!(account.edit_blocked, None, "{}", account.display_name);
+                assert!(account.edit_allowed());
+            }
+        }
+    }
+    assert_eq!(blocked, 2);
+}
+
+#[test]
+fn the_edit_block_names_the_variable_and_cuts_a_long_name() {
+    let short = env_edit_block("ZAI_API_KEY");
+    assert_eq!(
+        short.text,
+        "reads ZAI_API_KEY · change it with jackin account add"
+    );
+    assert_eq!(short.short, "env account");
+    let long = env_edit_block("A_VERY_LONG_VARIABLE_NAME_INDEED");
+    assert_eq!(
+        long.text,
+        "reads A_VERY_LONG_VARI… · change it with jackin account add"
+    );
+    assert!(long.reason().within_limits(), "{}", long.text);
+    assert!(env_edit_block("MINIMAX_API_TOKEN").reason().within_limits());
 }

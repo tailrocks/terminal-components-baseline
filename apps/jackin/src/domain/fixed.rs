@@ -10,8 +10,14 @@ pub struct Fixed {
     pub mounts: Reason,
     pub workdir: Reason,
     pub enable_workspace: Reason,
+    pub enable_global: Reason,
+    pub typed_key: Reason,
+    pub wizard_ro: Reason,
+    pub destination: Reason,
+    pub reveal_open: Reason,
 
     pub last_role: String,
+    pub git_url: String,
 
     pub commits: Reason,
     pub trust: Reason,
@@ -35,7 +41,15 @@ impl Fixed {
             mounts: Reason::new("jackin uploads one project and mounts nothing"),
             workdir: Reason::new("Always /sandbox/project · jackin uploads the project there"),
             enable_workspace: Reason::new("All accounts are active here · press p to prefer one"),
+            enable_global: Reason::new("Every account stays enabled · remove it to stop using it")
+                .short("no disabled state"),
+            typed_key: Reason::new("jackin stores no typed keys · use a local login"),
+            wizard_ro: Reason::new("Always off · the sandbox edits its own copy"),
+            destination: Reason::new("Uploaded to /sandbox/project · you cannot change it"),
+            reveal_open: Reason::new("jackin prints the exported path · it opens nothing")
+                .short("prints path only"),
             last_role: "Keep one role allowed · allow another first".into(),
+            git_url: "Clone the repository first, then choose its folder".into(),
             commits: Reason::new("Both stay off · jackin does not edit commit messages"),
             trust: Reason::new("Sources you add are trusted · remove the role to revoke"),
             env_sources: Reason::new("Plain values only · use an account for credentials"),

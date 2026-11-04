@@ -3,6 +3,7 @@ mod common;
 use common::*;
 use junie_tui::core::event::Outcome;
 use junie_tui::core::focus::{Focus, FocusRing};
+use junie_tui::core::hints::{HasHints, HintCx};
 use junie_tui::core::hit::HitRegistry;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::refusal::{Control, Reason, clear_refusal};
@@ -11,7 +12,10 @@ use junie_tui::theme::{ColorLevel, Theme, Tone};
 use junie_tui::ui::ctx::{Interaction, RenderCtx};
 use junie_tui::widgets::button::Button;
 use junie_tui::widgets::choice::{Checkbox, RadioGroup};
+use junie_tui::widgets::choice_dialog::ChoiceDialog;
 use junie_tui::widgets::dialog::{Dialog, DialogResult};
+use junie_tui::widgets::file_browser::{FileBrowser, FileEntry, MemorySource};
+use junie_tui::widgets::form_dialog::{FormDialog, FormField};
 use junie_tui::widgets::input::TextInput;
 use junie_tui::widgets::list::{ListBox, ListItem, SelectMode};
 use junie_tui::widgets::props::Prop;
@@ -578,4 +582,127 @@ fn the_slot_belongs_to_its_thread() {
     .expect("thread");
     assert_eq!(elsewhere, None);
     assert_eq!(taken().as_deref(), Some(WHY));
+}
+
+fn browser(fixed: bool) -> FileBrowser {
+    let mut browser = FileBrowser::new(
+        WidgetId::of("t.browser"),
+        "Choose",
+        MemorySource::new(vec![FileEntry::dir("/src/app")]).home("/src"),
+        "/src",
+    )
+    .checkbox("Read-only", false);
+    if fixed {
+        browser.checkbox = browser.checkbox.take().map(|c| c.fixed(reason()));
+    }
+    browser
+}
+
+fn browser_rows(browser: &mut FileBrowser) -> Vec<String> {
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    let area = Rect::new(0, 0, 100, 30);
+    let mut buf = Buffer::empty(area);
+    let mut hits = HitRegistry::default();
+    let mut ring = FocusRing::default();
+    let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+    browser.render(area, &mut buf, &mut ctx);
+    (0..area.height).map(|y| row(&buf, y)).collect()
+}
+
+#[test]
+fn a_fixed_checkbox_in_the_file_browser_shows_its_reason_and_refuses() {
+    clear_refusal();
+    let line = |rows: &[String]| {
+        rows.iter()
+            .find(|r| r.contains("Read-only"))
+            .cloned()
+            .unwrap_or_default()
+    };
+    let live = line(&browser_rows(&mut browser(false)));
+    assert!(
+        live.contains("[ ] Read-only") && !live.contains(WHY),
+        "{live}"
+    );
+
+    let mut fixed = browser(true);
+    let shown = line(&browser_rows(&mut fixed));
+    assert!(
+        shown.contains("[ ] Read-only") && shown.contains(WHY),
+        "{shown}"
+    );
+
+    let id = fixed.checkbox.as_ref().expect("a checkbox").id;
+    let mut focus = Focus::default();
+    focus.set(Some(id));
+    for code in [KeyCode::Char(' '), KeyCode::Enter] {
+        let out = fixed.on_key(&key(code), &mut focus, &FocusRing::default());
+        assert!(out.consumed(), "{code:?}");
+        assert_eq!(taken().as_deref(), Some(WHY), "{code:?}");
+        assert!(!fixed.checkbox.as_ref().expect("a checkbox").checked);
+    }
+}
+
+fn choice(disabled: bool) -> ChoiceDialog {
+    let mut dialog = ChoiceDialog::new(
+        WidgetId::of("t.choice"),
+        "Destination",
+        "Where",
+        &["Project folder", "Edit destination…"],
+        0,
+    );
+    dialog.radio.disabled = disabled;
+    dialog
+}
+
+#[test]
+fn a_choice_dialog_with_a_disabled_radio_starts_on_its_primary_button() {
+    let live = choice(false);
+    assert_eq!(live.initial_focus(), live.radio.id);
+    let disabled = choice(true);
+    assert_eq!(disabled.initial_focus(), disabled.buttons[1].id);
+    assert_ne!(disabled.initial_focus(), disabled.buttons[0].id);
+}
+
+#[test]
+fn a_click_on_a_disabled_choice_radio_keeps_the_focus_where_it_is() {
+    let mut dialog = choice(true);
+    let next = dialog.buttons[1].id;
+    let mut focus = Focus::default();
+    focus.set(Some(next));
+    dialog.on_click(dialog.radio.option_id(1), &mut focus);
+    assert_eq!(focus.current(), Some(next));
+    assert_eq!(dialog.radio.selected, 0);
+    assert_eq!(dialog.result, None);
+}
+
+#[test]
+fn a_form_does_not_offer_a_fixed_action() {
+    let id = WidgetId::of("t.form");
+    let form = FormDialog::new(
+        id,
+        "Account",
+        vec![FormField::input(
+            "name",
+            TextInput::new(id.sub("name"), "Name"),
+        )],
+    )
+    .action(
+        "plain",
+        Button::subtle(id.sub("plain"), "Plain text").fixed(reason()),
+    )
+    .action("check", Button::subtle(id.sub("check"), "Check"));
+    let offers = |button: &str| {
+        form.hints(&HintCx::new(Some(id.sub(button))))
+            .iter()
+            .any(|h| {
+                h.action
+                    == if button == "plain" {
+                        "Plain text"
+                    } else {
+                        "Check"
+                    }
+            })
+    };
+    assert!(!offers("plain"));
+    assert!(offers("check"));
 }

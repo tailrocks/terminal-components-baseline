@@ -1,3 +1,5 @@
+use junie_tui::core::refusal::Reason;
+
 use super::agent::{Agent, Provider, UsageSurface};
 use super::fixed::Fixed;
 use super::onepassword::OpReference;
@@ -17,6 +19,10 @@ impl EditBlocked {
             text: text.to_owned(),
             short: short.to_owned(),
         }
+    }
+
+    pub fn reason(&self) -> Reason {
+        Reason::new(&self.text).short(&self.short)
     }
 }
 

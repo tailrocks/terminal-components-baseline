@@ -65,6 +65,11 @@ fn every_fixed_text_fits_the_surface_that_shows_it() {
         &f.role_env,
         &f.agent_launchable,
         &f.agent_other,
+        &f.enable_global,
+        &f.typed_key,
+        &f.wizard_ro,
+        &f.destination,
+        &f.reveal_open,
     ];
     for reason in reasons {
         assert!(reason.within_limits(), "{}", reason.text);
@@ -79,6 +84,7 @@ fn every_fixed_text_fits_the_surface_that_shows_it() {
     }
     assert!(width(&f.env_reference) <= 62, "{}", f.env_reference);
     assert!(width(&f.last_role) <= 60);
+    assert!(width(&f.git_url) <= 60);
     let words = Vocabulary::openshell();
     assert!(width(&words.trailer_sample) <= 60);
 }
