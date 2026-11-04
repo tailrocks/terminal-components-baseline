@@ -7,7 +7,9 @@ use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::hit::Axis;
 use junie_tui::core::id::WidgetId;
 use junie_tui::terminal::encode_key;
-use junie_tui::terminal::{ForwardPolicy, Paste, TermEvent, TerminalState, TerminalViewport};
+use junie_tui::terminal::{
+    ForwardPolicy, Paste, TermEvent, TerminalState, TerminalViewport, is_spoofing_format,
+};
 use junie_tui::theme::Tone;
 use junie_tui::ui::text::{clip, plural};
 use junie_tui::widgets::viewport_ops::ViewportOps;
@@ -31,19 +33,15 @@ const FOCUS_IN: &[u8] = b"\x1b[I";
 const FOCUS_OUT: &[u8] = b"\x1b[O";
 const TITLE_COLUMNS: usize = 64;
 const PENDING_EFFECTS: usize = 16;
-const BIDI: [char; 9] = [
-    '\u{202a}', '\u{202b}', '\u{202c}', '\u{202d}', '\u{202e}', '\u{2066}', '\u{2067}', '\u{2068}',
-    '\u{2069}',
-];
 
-/// The title a program set, made safe to show: controls and bidirectional
-/// controls are dropped, runs of white space become one space, and the result
-/// is cut at 64 columns.
+/// The title a program set, made safe to show: controls, bidirectional
+/// controls and tag characters are dropped, runs of white space become one
+/// space, and the result is cut at 64 columns.
 pub fn sanitize_title(raw: &str) -> String {
     let spaced: String = raw
         .chars()
         .map(|c| if c.is_whitespace() { ' ' } else { c })
-        .filter(|c| !c.is_control() && !BIDI.contains(c))
+        .filter(|c| !c.is_control() && !is_spoofing_format(*c))
         .collect();
     let collapsed = spaced.split_whitespace().collect::<Vec<_>>().join(" ");
     clip(&collapsed, TITLE_COLUMNS)
@@ -364,7 +362,7 @@ impl TerminalPane {
     fn term_event(&mut self, event: TermEvent, now_ms: i64) {
         match event {
             TermEvent::Reply(bytes) => {
-                if self.replay.is_open() || self.viewing() {
+                if !self.attached_once || self.replay.is_open() || self.viewing() {
                     return;
                 }
                 if self.send(PaneCommand::Reply(bytes)) == Sent::Full {

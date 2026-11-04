@@ -5,9 +5,12 @@
 //! or never stops sending marks costs the host memory or time without bound.
 //! The guard bounds both, in a streaming way: its state survives across
 //! `feed` calls, and a sequence split over several calls is judged as a whole.
-//! It also keeps two kinds of character out of every cell: DEL, which the
-//! renderer cannot draw, and the bidirectional controls, which reorder the
-//! text around them.
+//! It also keeps three kinds of character out of every cell: DEL, which the
+//! renderer cannot draw, the bidirectional controls, which reorder the text
+//! around them, and the tag characters, which are invisible. Bytes that are not
+//! valid UTF-8 never pass on as they are: each broken sequence becomes one
+//! U+FFFD, so a neighbour the guard drops cannot join the bytes around it into
+//! a character the guard never saw.
 //!
 //! A combining mark joins the cell left of the cursor, so the guard lets one
 //! through only while it is sure which cell that is: after a base character it
@@ -31,7 +34,19 @@ const CAN: u8 = 0x18;
 const SUB: u8 = 0x1a;
 const ST: u8 = 0x9c;
 const ZWJ: char = '\u{200d}';
+const REPLACEMENT: &[u8] = "\u{fffd}".as_bytes();
 const MAX_DECSET_PARAMS: u8 = 16;
+
+pub fn is_spoofing_format(c: char) -> bool {
+    matches!(
+        c,
+        '\u{061c}'
+            | '\u{200e}'..='\u{200f}'
+            | '\u{202a}'..='\u{202e}'
+            | '\u{2066}'..='\u{2069}'
+            | '\u{e0000}'..='\u{e007f}'
+    )
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum State {
@@ -373,8 +388,8 @@ impl FeedGuard {
         };
         let continues = (0x80..=0xbf).contains(&byte) && !self.partial.is_empty();
         if !self.partial.is_empty() && !continues {
-            self.detach();
-            self.out.append(&mut self.partial);
+            self.partial.clear();
+            self.replace();
             return self.ground(byte);
         }
         self.partial.push(byte);
@@ -387,15 +402,17 @@ impl FeedGuard {
             .and_then(|s| s.chars().next())
         {
             Some(c) => self.character(c, &bytes),
-            None => {
-                self.detach();
-                self.out.extend_from_slice(&bytes);
-            }
+            None => self.replace(),
         }
     }
 
+    fn replace(&mut self) {
+        self.detach();
+        self.out.extend_from_slice(REPLACEMENT);
+    }
+
     fn character(&mut self, c: char, bytes: &[u8]) {
-        if matches!(c, '\u{202a}'..='\u{202e}' | '\u{2066}'..='\u{2069}') {
+        if is_spoofing_format(c) {
             return;
         }
         if matches!(c, '\u{80}'..='\u{9f}') {

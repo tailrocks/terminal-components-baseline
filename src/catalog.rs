@@ -3745,6 +3745,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::variant("terminal::Paste::Send"),
     Capability::variant("terminal::Paste::NeedsConfirm"),
     Capability::variant("terminal::Paste::TooLarge"),
+    Capability::function("terminal::is_spoofing_format"),
     Capability::function("ui::text::capitalize"),
     Capability::ty("widgets::list_detail::ListDetail"),
     Capability::ty("widgets::list_detail::ListRow"),
@@ -3764,6 +3765,8 @@ const PREVIEW: &str =
     "demonstrated by the jackin demo app (apps/jackin) and its approved functional baselines";
 
 const HOST_FED: &str = "used by the host that feeds the terminal state (the jackin Capsule) and pinned by tests/terminal.rs, tests/terminal_viewport.rs and tests/forward_policy.rs; the terminalpane page keeps its approved baseline";
+
+const TEXT_FILTER: &str = "used by the feed guard that keeps these characters out of every cell and by the jackin console's title filter, and pinned by tests/terminal_guard.rs";
 
 pub static ALLOWLIST: &[Allowed] = &[
     Allowed {
@@ -3905,5 +3908,9 @@ pub static ALLOWLIST: &[Allowed] = &[
     Allowed {
         id: "terminal::Paste::TooLarge",
         reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::is_spoofing_format",
+        reason: TEXT_FILTER,
     },
 ];

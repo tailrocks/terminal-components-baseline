@@ -51,7 +51,7 @@ path = "tests/functional/main.rs"
 
 [dependencies]
 clap = { workspace = true, optional = true }
-termpane = { git = "https://github.com/tailrocks/termpane", rev = "e0c5ee405b38bc62b55005a48f3a7b29196a8b30", optional = true, default-features = false }
+termpane = { git = "https://github.com/tailrocks/termpane", rev = "b8c60fe324823ec5be24b9c4027b06e266288280", optional = true, default-features = false }
 ratatui = { workspace = true }
 unicode-width = "0.2"
 unicode-segmentation = "1"

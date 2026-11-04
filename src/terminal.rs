@@ -12,6 +12,7 @@ mod guard;
 mod viewport;
 
 pub use forward::{ForwardPolicy, Paste};
+pub use guard::is_spoofing_format;
 pub use viewport::TerminalViewport;
 
 pub const SCROLLBACK_ROWS: usize = 1_000;

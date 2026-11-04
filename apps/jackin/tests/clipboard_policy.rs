@@ -272,6 +272,16 @@ fn title_is_sanitised_and_shown() {
     assert_eq!(rig.pane.title(), Some("second"));
 }
 
+#[test]
+fn title_drops_marks_that_reorder_or_hide_text() {
+    let spoofed = "a\u{200e}b\u{200f}c\u{61c}d\u{e0041}\u{e0042}e\u{e007f}";
+    assert_eq!(sanitize_title(spoofed), "abcde");
+
+    let mut rig = Rig::codex();
+    rig.write(1_100, format!("\x1b]2;{spoofed}\x07").as_bytes());
+    assert_eq!(rig.pane.title(), Some("abcde"));
+}
+
 /// A fresh Codex pane with the focus, attached at 0 ms, still in its replay
 /// window: the link is `Attaching`.
 fn replaying() -> Rig {

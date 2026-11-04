@@ -178,7 +178,7 @@ variant of these enums stays a breaking change and is recorded here.
 | `shell::Copied` | Gained `Requested { chars }` (the native sink refused and OSC 52 was queued instead). `TooLarge { encoded, limit }` became `TooLarge { bytes, limit }`: `Clipboard::limit` (default `DEFAULT_LIMIT`, 100,000) counts decoded bytes, as the jackin pane policy does. With a native sink that took the text, no OSC 52 is queued. |
 | `core::event::Input` | Gained `External(External)`. `Application::external()` and `shell::App::external()` are new (default `None`). |
 | `clock::ClockStep`, `Shell::clock_steps` | `ClockStep` (`PREFIX`, `request(ms)`, `parse -> Option<u64>`) became the enum `clock::TestRequest { Advance(ms), Fence }` (`ADVANCE_PREFIX`, `FENCE`, `FENCE_ACK`, `advance(ms)`, `parse -> Option<TestRequest>`). `Shell::clock_steps` became `Shell::test_requests`. Both stay inert unless `JUNIE_TUI_TEST_CLOCK=1`. |
-| `terminal::TerminalState::feed` | Program output passes a guard first (`src/terminal/guard.rs`): a string sequence (OSC, DCS, APC, PM, SOS) over 144 KiB is dropped whole until its end, at most 16 characters join one cell (combining marks, variation selectors, joiners and what a joiner pulls in), and DEL and the bidi controls (U+202A to U+202E, U+2066 to U+2069) never reach a cell. A 100,000 byte OSC 52 write still fits. |
+| `terminal::TerminalState::feed` | Program output passes a guard first (`src/terminal/guard.rs`): a string sequence (OSC, DCS, APC, PM, SOS) over 144 KiB is dropped whole until its end, at most 16 characters join one cell (combining marks, variation selectors, joiners and what a joiner pulls in), and DEL, the bidi controls (U+061C, U+200E, U+200F, U+202A to U+202E, U+2066 to U+2069) and the tag characters (U+E0000 to U+E007F) never reach a cell. A byte that is not valid UTF-8, or a lead byte cut short by the next byte, becomes one U+FFFD and never passes on as it is. `terminal::is_spoofing_format` is that set, and the jackin console's title filter uses it. A 100,000 byte OSC 52 write still fits. |
 | `terminal::encode_key` | Ctrl and Shift on arrows, Home, End, Page, Insert, Delete and F1 to F12 now send the xterm parameter forms (`CSI 1;m X`, `CSI n;m ~`), Ctrl+Backspace sends `0x08`, and Ctrl with `@ \ ] ^ _ /` sends the C0 byte. Alt alone keeps the `ESC` prefix; Shift+Enter stays `\r`. |
 
 ## Known limits
@@ -188,9 +188,12 @@ variant of these enums stays a breaking change and is recorded here.
   the primary-screen scroll operations that start at row 0, so a delete-line
   at row 0 over-counts. `ESC[2J` discards the visible rows
   (`EraseDisplayPolicy::Discard`), so it changes neither value.
-- `termpane` is a git dependency pinned to commit `e0c5ee40` (termpane
-  `main` after PR #37: `EraseDisplayPolicy` and the cap on characters
-  per cell). It becomes `=0.1.1` or later once published on crates.io; see
+- `termpane` is a git dependency pinned to commit `b8c60fe3` (the tip of
+  termpane branch `fix/csi-counts`, on top of `main` after PR #37:
+  `EraseDisplayPolicy`, the cap on characters per cell, the clamp of the
+  `CSI L`, `M`, `S` and `T` counts and the shared OSC 8 hyperlink). It is
+  not on termpane `main` until that branch is merged, and it becomes
+  `=0.1.1` or later once published on crates.io; see
   [dependencies](dependencies.md).
 - The crate is a monolith: library and four binaries in one package.
   Splitting it is the refactoring programme in

@@ -71,3 +71,23 @@ fn a_pane_answers_again_once_it_owns_the_lease() {
     pane.tick(1_200);
     assert_eq!(replies(&bench).len(), 1, "{:?}", bench.commands(0));
 }
+
+#[test]
+fn a_query_before_the_attach_is_not_answered_even_if_the_pane_turns_out_to_view() {
+    for (name, query) in QUERIES {
+        let bench = Bench::new();
+        let mut pane = pane(&bench);
+        pane.sync_size(inner(80, 24));
+        bench.output(0, query);
+        pane.tick(0);
+        bench.push(0, LinkEvent::Attached);
+        bench.push(0, LinkEvent::Lease(Lease::ReadOnly));
+        pane.tick(1);
+        pane.tick(900);
+        assert_eq!(
+            bench.commands(0),
+            [],
+            "nothing answers {name} sent before the attach"
+        );
+    }
+}
