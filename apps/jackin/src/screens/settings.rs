@@ -30,7 +30,7 @@ use crate::backend::Effect;
 use crate::domain::agent::{Agent, AuthMode};
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::RoleName;
-use crate::world::{GlobalConfig, Msg, World, job};
+use crate::world::{GlobalConfig, Msg, Snapshot, World, job};
 use junie_tui::ui::text::plural;
 
 pub const TABS: WidgetId = WidgetId::of("settings.tabs");
@@ -337,48 +337,36 @@ impl SettingsScreen {
         self.sync_pending();
         self.saving = true;
         self.save.busy = true;
-        w.perform(Effect::SaveGlobal);
+        w.perform(Effect::SaveGlobal {
+            base: Box::new(self.original.clone()),
+            global: Box::new(self.pending.clone()),
+        });
         cx.progress(job::SETTINGS_SAVE, "Saving settings…");
         cx.focus.focus(SAVE);
     }
 
-    fn finish_save(&mut self, ok: bool, w: &mut World, cx: &mut Cx) {
+    fn finish_save(&mut self, result: &Result<Box<Snapshot>, String>, w: &mut World, cx: &mut Cx) {
         self.saving = false;
         self.save.busy = false;
-        if !ok {
-            let d = InfoDialog::new(
-                WidgetId::of("settings.savefail"),
-                "Settings error",
-                vec![
-                    Prop::new(
-                        "Error",
-                        fill_in(
-                            &w.surfaces.vocabulary.save_error_global,
-                            &[("config", &w.config_file())],
-                        ),
-                    ),
-                    Prop::new("State", "your edits are intact · nothing was written"),
-                    Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
-                ],
-            )
-            .error()
-            .width(66);
-            cx.open(d, LayerTag::new("savefail"));
-            return;
-        }
-        w.global = self.pending.clone();
-        for t in &self.pending.trust {
-            for r in w.roles.iter_mut() {
-                if r.source.label().starts_with(&t.source)
-                    || t.source.trim_start_matches("~/").is_empty()
-                {
-                    continue;
-                }
-                if r.source.label().contains(&t.source) {
-                    r.trusted = t.trusted;
-                }
+        let snapshot = match result {
+            Ok(snapshot) => snapshot,
+            Err(error) => {
+                let d = InfoDialog::new(
+                    WidgetId::of("settings.savefail"),
+                    "Settings error",
+                    vec![
+                        Prop::new("Error", error.as_str()),
+                        Prop::new("State", "your edits are intact · nothing was written"),
+                        Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
+                    ],
+                )
+                .error()
+                .width(66);
+                cx.open(d, LayerTag::new("savefail"));
+                return;
             }
-        }
+        };
+        w.apply((**snapshot).clone());
         self.original = self.pending.clone();
         cx.status("Settings saved");
         cx.go(Go::Manager);
@@ -877,10 +865,10 @@ impl Page<Jackin> for SettingsScreen {
     }
 
     fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
-        if let Msg::GlobalSaved { ok } = msg
+        if let Msg::GlobalSaved { result } = msg
             && self.saving
         {
-            self.finish_save(*ok, w, cx);
+            self.finish_save(result, w, cx);
             return Outcome::Changed;
         }
         Outcome::Ignored

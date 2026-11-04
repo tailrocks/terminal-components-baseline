@@ -122,7 +122,10 @@ pub enum Msg {
         result: Result<Box<Snapshot>, String>,
     },
     GlobalSaved {
-        ok: bool,
+        result: Result<Box<Snapshot>, String>,
+    },
+    AccountsSaved {
+        result: Result<Box<Snapshot>, String>,
     },
 
     Refreshed {
@@ -190,7 +193,10 @@ impl Msg {
             Msg::RoleBound { .. } => Some(job::ROLE_BIND),
             Msg::RoleAdded { .. } => Some(job::ROLE_ADD),
             Msg::DoctorFinished(_) => Some(job::DOCTOR),
-            Msg::Refreshed { .. } | Msg::AccountRefreshed { .. } | Msg::Takeover { .. } => None,
+            Msg::AccountsSaved { .. }
+            | Msg::Refreshed { .. }
+            | Msg::AccountRefreshed { .. }
+            | Msg::Takeover { .. } => None,
         }
     }
 }

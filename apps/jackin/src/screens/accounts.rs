@@ -36,8 +36,9 @@ use super::modals::{BrowserResult, FormDialog, FormField, FormValues, OpFlow};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::{CheckRow, Effect, FolderProbe, ValidationOutcome, apply_validation};
 use crate::domain::account::{
-    Account, AccountId, AccountOrigin, CredentialSource, DetectedKind, DuplicateProbe, IssueCode,
-    Lifecycle, SourceKind, ValidationState, fingerprint, masked, tail_of,
+    Account, AccountId, AccountOrigin, AccountRegistry, CredentialSource, DetectedKind,
+    DuplicateProbe, IssueCode, Lifecycle, SourceKind, ValidationState, fingerprint, masked,
+    tail_of,
 };
 use crate::domain::agent::{Provider, UsageSurface};
 use crate::domain::onepassword::OpReference;
@@ -84,6 +85,14 @@ struct FormCtx {
     validation: Option<ValidationOutcome>,
 }
 
+/// What the screen does when the backend has stored the registry it sent.
+struct Saving {
+    status: String,
+    select: Option<Sel>,
+    unfold: Option<UsageSurface>,
+    form: bool,
+}
+
 pub struct AccountsScreen {
     pub selected: Sel,
     folded: HashSet<UsageSurface>,
@@ -98,6 +107,7 @@ pub struct AccountsScreen {
     actions: Vec<Button>,
     form: Option<FormCtx>,
     pending_remove: Option<AccountId>,
+    saving: Option<Saving>,
 
     pub menu: RowMenu<Sel, &'static str>,
 }
@@ -145,6 +155,7 @@ impl AccountsScreen {
             actions: vec![],
             form: None,
             pending_remove: None,
+            saving: None,
             menu: RowMenu::new(MENU),
         }
     }
@@ -930,16 +941,14 @@ impl AccountsScreen {
             .count()
             == 0;
 
+        let mut twin = None;
         if let CredentialSource::LocalFolder { path, .. } = &source {
-            let twin = w
+            twin = w
                 .accounts
                 .accounts
                 .iter()
                 .find(|a| a.origin == AccountOrigin::Discovered && matches!(&a.source, CredentialSource::LocalFolder { path: p, .. } if p == path))
                 .map(|a| a.id.clone());
-            if let Some(t) = twin {
-                w.accounts.remove(&t);
-            }
         }
         let mut account = match editing.as_ref().and_then(|id| w.accounts.get(id).cloned()) {
             Some(mut a) => {
@@ -969,27 +978,61 @@ impl AccountsScreen {
             account.default_for_provider = true;
         }
         let title = account.title();
+        let mut registry = w.accounts.clone();
+        if let Some(t) = twin {
+            registry.remove(&t);
+        }
         if editing.is_some() {
-            if let Some(slot) = w.accounts.get_mut(&id) {
+            if let Some(slot) = registry.get_mut(&id) {
                 *slot = account;
             }
-            w.accounts.revision += 1;
+            registry.revision += 1;
         } else {
-            w.accounts.insert(account);
+            registry.insert(account);
         }
-        self.form = None;
-        cx.close();
-        self.selected = Sel::Account(id.clone());
-        self.folded.remove(&provider.usage_surface());
-        if name_taken {
-            cx.status(format!(
-                "Saved {title} · name already used for {}",
-                provider.short()
-            ));
+        let status = if name_taken {
+            format!("Saved {title} · name already used for {}", provider.short())
         } else {
-            cx.status(format!("Saved {title}"));
+            format!("Saved {title}")
+        };
+        self.save_registry(
+            registry,
+            Saving {
+                status,
+                select: Some(Sel::Account(id)),
+                unfold: Some(provider.usage_surface()),
+                form: true,
+            },
+            w,
+        );
+    }
+
+    fn save_registry(&mut self, registry: AccountRegistry, saving: Saving, w: &mut World) {
+        if self.saving.is_some() {
+            return;
         }
-        cx.focus.focus(TREE);
+        self.saving = Some(saving);
+        w.perform(Effect::SaveAccounts {
+            base: Box::new(w.accounts.clone()),
+            registry: Box::new(registry),
+        });
+    }
+
+    fn finish_saving(&mut self, saving: Saving, cx: &mut Cx) {
+        if saving.form {
+            self.form = None;
+            cx.close();
+        }
+        if let Some(sel) = saving.select {
+            self.selected = sel;
+        }
+        if let Some(surface) = saving.unfold {
+            self.folded.remove(&surface);
+        }
+        cx.status(saving.status);
+        if saving.form {
+            cx.focus.focus(TREE);
+        }
     }
 
     fn remove(&mut self, id: &str, w: &World, cx: &mut Cx) {
@@ -1027,7 +1070,8 @@ impl AccountsScreen {
     }
 
     fn toggle_enabled(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
-        let Some(a) = w.accounts.get_mut(id) else {
+        let mut registry = w.accounts.clone();
+        let Some(a) = registry.get_mut(id) else {
             return;
         };
         if !a.mutations_allowed() {
@@ -1036,24 +1080,42 @@ impl AccountsScreen {
         }
         a.enabled = !a.enabled;
         let (title, enabled, was_default) = (a.title(), a.enabled, a.default_for_provider);
-        if !enabled && was_default {
+        let status = if !enabled && was_default {
             a.default_for_provider = false;
-            cx.status(format!("Disabled {title} · provider default cleared"));
+            format!("Disabled {title} · provider default cleared")
         } else {
-            cx.status(format!(
-                "{} {title}",
-                if enabled { "Enabled" } else { "Disabled" }
-            ));
-        }
-        w.accounts.revision += 1;
+            format!("{} {title}", if enabled { "Enabled" } else { "Disabled" })
+        };
+        registry.revision += 1;
+        self.save_registry(
+            registry,
+            Saving {
+                status,
+                select: None,
+                unfold: None,
+                form: false,
+            },
+            w,
+        );
     }
 
     fn set_default(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
         let title = w.accounts.get(id).map(|a| a.title()).unwrap_or_default();
-        match w.accounts.set_default(id) {
+        let mut registry = w.accounts.clone();
+        match registry.set_default(id) {
             Ok(()) => {
-                let p = w.accounts.get(id).map(|a| a.provider.short()).unwrap_or("");
-                cx.status(format!("Default set: {p} → {title}"));
+                let p = registry.get(id).map(|a| a.provider.short()).unwrap_or("");
+                let status = format!("Default set: {p} → {title}");
+                self.save_registry(
+                    registry,
+                    Saving {
+                        status,
+                        select: None,
+                        unfold: None,
+                        form: false,
+                    },
+                    w,
+                );
             }
             Err(e) => cx.error(format!("Cannot set default: {e}")),
         }
@@ -2152,6 +2214,25 @@ impl Page<Jackin> for AccountsScreen {
 
     fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
         match msg {
+            Msg::AccountsSaved { result } => {
+                let saving = self.saving.take();
+                match (result, saving) {
+                    (Ok(snapshot), saving) => {
+                        w.apply((**snapshot).clone());
+                        if let Some(saving) = saving {
+                            self.finish_saving(saving, cx);
+                        }
+                    }
+                    (Err(error), Some(Saving { form: true, .. })) => {
+                        let error = error.clone();
+                        cx.with_top::<FormDialog>(move |f| f.error = Some(error));
+                    }
+                    (Err(error), Some(_)) => cx.error(error.clone()),
+                    (Err(_), None) => {}
+                }
+                self.build_rows(w);
+                Outcome::Changed
+            }
             Msg::AccountRefreshed { account } => {
                 self.apply_refresh(account, w, cx);
                 self.build_rows(w);
@@ -2593,15 +2674,18 @@ impl Page<Jackin> for AccountsScreen {
                     action: Some(1), ..
                 },
             ) => {
-                if let Some(a) = w.accounts.remove(&tag.key) {
-                    for ws in w.workspaces.iter_mut() {
-                        ws.accounts.enabled.remove(&a.id);
-                        ws.accounts.disabled_defaults.remove(&a.id);
-                        ws.accounts.preferred.retain(|_, v| *v != a.id);
-                        ws.accounts.role_preferred.retain(|_, v| *v != a.id);
-                    }
-                    self.selected = Sel::Provider(a.surface);
-                    cx.status(format!("Removed {}", a.title()));
+                let mut registry = w.accounts.clone();
+                if let Some(a) = registry.remove(&tag.key) {
+                    self.save_registry(
+                        registry,
+                        Saving {
+                            status: format!("Removed {}", a.title()),
+                            select: Some(Sel::Provider(a.surface)),
+                            unfold: None,
+                            form: false,
+                        },
+                        w,
+                    );
                 }
                 self.build_rows(w);
                 Outcome::Changed

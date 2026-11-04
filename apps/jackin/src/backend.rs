@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
-use crate::domain::account::AccountId;
 use crate::domain::account::{
     Account, AccountIdentity, Confidence, CredentialSource, DetectedKind, IssueCode, Lifecycle,
     RecoverableIssue, ValidationLevel,
 };
+use crate::domain::account::{AccountId, AccountRegistry};
 use crate::domain::agent::{Agent, Provider};
 use crate::domain::instance::InstanceId;
 use crate::domain::launch::LaunchContent;
@@ -14,7 +14,7 @@ use crate::domain::usage::AccountUsage;
 use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
 use crate::launch::{LaunchPlan, LaunchTarget};
 use crate::panes::SessionScript;
-use crate::world::{Msg, World};
+use crate::world::{GlobalConfig, Msg, World};
 
 pub use junie_tui::widgets::diff::{
     DiffFile as ChangedFile, DiffHunk as Hunk, DiffLine, DiffStatus,
@@ -270,7 +270,14 @@ pub enum Effect {
         base: Option<Box<Workspace>>,
         workspace: Box<Workspace>,
     },
-    SaveGlobal,
+    SaveGlobal {
+        base: Box<GlobalConfig>,
+        global: Box<GlobalConfig>,
+    },
+    SaveAccounts {
+        base: Box<AccountRegistry>,
+        registry: Box<AccountRegistry>,
+    },
     Prewarm {
         workspace: WorkspaceId,
     },

@@ -4,14 +4,14 @@ use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 use crate::backend::{
     Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, OpSession, ValidationOutcome,
 };
-use crate::domain::account::CredentialSource;
+use crate::domain::account::{AccountOrigin, AccountRegistry, CredentialSource};
 use crate::domain::agent::Provider;
 use crate::domain::launch::LaunchContent;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{Workspace, WorkspaceId};
 use crate::launch::{LaunchPlan, LaunchTarget};
 use crate::panes::SessionScript;
-use crate::world::{Msg, Snapshot, World};
+use crate::world::{GlobalConfig, Msg, Snapshot, World};
 
 pub mod changes;
 pub mod launch;
@@ -96,6 +96,22 @@ impl SimBackend {
         id
     }
 
+    fn settle_global_save(&self, global: &GlobalConfig, world: &World) -> Msg {
+        if !self.save_ok() {
+            return Msg::GlobalSaved {
+                result: Err(fill_in(
+                    &world.surfaces.vocabulary.save_error_global,
+                    &[("config", &world.config_file())],
+                )),
+            };
+        }
+        let mut snapshot = snapshot(world);
+        snapshot.global = global.clone();
+        Msg::GlobalSaved {
+            result: Ok(Box::new(snapshot)),
+        }
+    }
+
     fn settle_workspace_save(
         &self,
         id: Option<WorkspaceId>,
@@ -154,7 +170,8 @@ impl Backend for SimBackend {
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
         let (after_ms, msg) = match effect {
             Effect::SaveWorkspace { .. } => return Some(Completion::settle(900)),
-            Effect::SaveGlobal => (900, Msg::GlobalSaved { ok: self.save_ok() }),
+            Effect::SaveGlobal { .. } => return Some(Completion::settle(900)),
+            Effect::SaveAccounts { .. } => return Some(Completion::settle(0)),
             Effect::Prewarm { workspace } => (
                 2_400,
                 Msg::Prewarmed {
@@ -269,6 +286,10 @@ impl Backend for SimBackend {
             Effect::SaveWorkspace { id, workspace, .. } => {
                 Some(self.settle_workspace_save(*id, workspace, world))
             }
+            Effect::SaveGlobal { global, .. } => Some(self.settle_global_save(global, world)),
+            Effect::SaveAccounts { base, registry } => {
+                Some(settle_accounts_save(base, registry, world))
+            }
             _ => None,
         }
     }
@@ -313,6 +334,29 @@ impl Backend for SimBackend {
 
     fn session_script(&self) -> Arc<dyn SessionScript> {
         scripts::SimScripts::shared()
+    }
+}
+
+/// A removed account also leaves every workspace that named it. A discovered
+/// account that the registry drops (the twin of a folder that was registered)
+/// leaves them as they are.
+fn settle_accounts_save(base: &AccountRegistry, registry: &AccountRegistry, world: &World) -> Msg {
+    let mut snapshot = snapshot(world);
+    for gone in base
+        .accounts
+        .iter()
+        .filter(|a| a.origin == AccountOrigin::Registered && registry.get(&a.id).is_none())
+    {
+        for ws in &mut snapshot.workspaces {
+            ws.accounts.enabled.remove(&gone.id);
+            ws.accounts.disabled_defaults.remove(&gone.id);
+            ws.accounts.preferred.retain(|_, v| *v != gone.id);
+            ws.accounts.role_preferred.retain(|_, v| *v != gone.id);
+        }
+    }
+    snapshot.accounts = registry.clone();
+    Msg::AccountsSaved {
+        result: Ok(Box::new(snapshot)),
     }
 }
 
