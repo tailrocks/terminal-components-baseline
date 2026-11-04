@@ -26,7 +26,7 @@ pub fn account(a: &mut Account) {
 pub fn env_edit_block(var: &str) -> EditBlocked {
     let var = junie_tui::ui::text::truncate(var, 17);
     EditBlocked::new(
-        &format!("reads {var} · change it with jackin account add"),
+        &format!("reads {var} · remove it, then add an account"),
         "env account",
     )
 }

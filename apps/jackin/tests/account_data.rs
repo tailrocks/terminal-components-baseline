@@ -150,7 +150,7 @@ fn an_agent_block_replaces_the_settings_suffix() {
 
 #[test]
 fn a_blocked_edit_leaves_the_other_actions_open() {
-    let reason = "reads $OPENAI_API_KEY · change it with jackin account add";
+    let reason = "reads $OPENAI_API_KEY · remove it, then add an account";
     let mut blocked = world_for(Scenario::AccountsMixed);
     blocked.accounts.accounts[0].edit_blocked = Some(EditBlocked::new(reason, "env account"));
     let id = blocked.accounts.accounts[0].id.clone();
@@ -309,13 +309,13 @@ fn the_edit_block_names_the_variable_and_cuts_a_long_name() {
     let short = env_edit_block("ZAI_API_KEY");
     assert_eq!(
         short.text,
-        "reads ZAI_API_KEY · change it with jackin account add"
+        "reads ZAI_API_KEY · remove it, then add an account"
     );
     assert_eq!(short.short, "env account");
     let long = env_edit_block("A_VERY_LONG_VARIABLE_NAME_INDEED");
     assert_eq!(
         long.text,
-        "reads A_VERY_LONG_VARI… · change it with jackin account add"
+        "reads A_VERY_LONG_VARI… · remove it, then add an account"
     );
     assert!(long.reason().within_limits(), "{}", long.text);
     assert!(env_edit_block("MINIMAX_API_TOKEN").reason().within_limits());

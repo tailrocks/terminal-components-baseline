@@ -2153,7 +2153,7 @@ fn jackin_fixed_account_form_refuses_a_typed_key_and_its_button() {
 
 #[test]
 fn jackin_fixed_account_edit_refuses_a_host_variable_account() {
-    let reason = "reads ZAI_API_KEY · change it with jackin account add";
+    let reason = "reads ZAI_API_KEY · remove it, then add an account";
     let app = fixed_app("jackin-fixed-account-edit");
     let account = open_fixed_accounts(&app, 13, "Accounts › Z.AI › host login");
     assert!(text(&account).contains("Host env · $ZAI_API_KEY"));
