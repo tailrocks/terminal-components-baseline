@@ -217,6 +217,64 @@ impl App {
         self.log(format!("visual {test_id} pass"));
     }
 
+    /// Compare one frame that stays ready for 200ms.
+    ///
+    /// [`Self::visual`] waits until the screen stops changing. A status toast
+    /// that expires during that wait is the frame that gets stored. When the
+    /// toast clears after a ready frame, the last ready frame is compared.
+    pub fn visual_while(&self, test_id: &str, ready: impl Fn(&TerminalSnapshot) -> bool) {
+        let deadline = Instant::now() + Duration::from_secs(8);
+        let mut good: Option<TerminalSnapshot> = None;
+        let mut since: Option<Instant> = None;
+        loop {
+            let screen = self.screen();
+            if ready(&screen) {
+                let same = good.as_ref().is_some_and(|prev| prev == &screen);
+                if same && since.expect("hold start").elapsed() >= Duration::from_millis(200) {
+                    self.compare_frame(test_id, &screen);
+                    return;
+                }
+                if !same {
+                    good = Some(screen);
+                    since = Some(Instant::now());
+                }
+            } else if let Some(prev) = good.take() {
+                self.compare_frame(test_id, &prev);
+                return;
+            }
+            assert!(
+                Instant::now() < deadline && self.child_running(),
+                "{test_id} frame not seen\n{}",
+                text(&self.screen())
+            );
+            std::thread::sleep(Duration::from_millis(20));
+        }
+    }
+
+    fn compare_frame(&self, test_id: &str, screen: &TerminalSnapshot) {
+        let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+        let sample = tuiscotti_latest::sample::Sample::state(
+            test_id,
+            screen.clone(),
+            tuiscotti_latest::sample::Observation::empty(),
+        )
+        .expect("build Tuiscotti state sample");
+        let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+        let artifacts = self.directory.join("check-artifacts");
+        let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
+            .expect("open Tuiscotti frozen store");
+        let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
+        if Self::cursor_only(&outcome) {
+            self.log(format!("visual {test_id} cursor only"));
+            return;
+        }
+        assert!(
+            outcome.is_pass(),
+            "visual mismatch for {test_id}: {outcome:?}"
+        );
+        self.log(format!("visual {test_id} pass"));
+    }
+
     pub fn check_visual(
         &self,
         baseline_root: &Path,

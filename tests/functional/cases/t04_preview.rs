@@ -267,6 +267,11 @@ fn assert_object(screen: &TerminalSnapshot, name: &str, meta: &str) {
     assert!(row.contains(meta), "meta {meta:?} missing: {row}");
 }
 
+fn footer_toast(screen: &TerminalSnapshot) -> bool {
+    let last = screen.rows().saturating_sub(1);
+    row_text(screen, last).contains("✓ Connected to Development")
+}
+
 fn shows_object(screen: &TerminalSnapshot, name: &str, meta: &str) -> bool {
     object_row(screen)
         .is_some_and(|row| row.contains(&format!("{TITLE}{name}")) && row.contains(meta))
@@ -505,7 +510,18 @@ fn preview_reuses_the_unpinned_tab_only() {
         &[ORGANIZATIONS],
         1,
     );
-    app.visual(&visual_id("T04.preview.preview.120x40"));
+    // The connected toast lasts 5s. visual() would keep the cleared footer.
+    app.visual_while(&visual_id("T04.preview.preview.120x40"), |screen| {
+        screen.cols() == 120
+            && screen.rows() == 40
+            && shows_object(screen, CUSTOMERS, CUSTOMERS_PREVIEW)
+            && tab_line(screen).is_some_and(|tabs| {
+                token_count(&tabs, PRODUCTS) == 1
+                    && token_count(&tabs, QUERY_2) == 1
+                    && token_count(&tabs, ORGANIZATIONS) == 0
+            })
+            && footer_toast(screen)
+    });
 
     app.resize(80, 24);
     let narrow = app.wait_screen("preview at 80x24", |screen| {
@@ -515,7 +531,9 @@ fn preview_reuses_the_unpinned_tab_only() {
     flash_settle(&app);
     let narrow = app.screen();
     assert_size(&narrow, 80, 24);
-    app.visual(&visual_id("T04.preview.preview.narrow"));
+    app.visual_while(&visual_id("T04.preview.preview.narrow"), |screen| {
+        screen.cols() == 80 && screen.rows() == 24 && footer_toast(screen)
+    });
     app.resize(120, 40);
     let restored = app.wait_screen("preview back at 120x40", |screen| {
         screen.cols() == 120

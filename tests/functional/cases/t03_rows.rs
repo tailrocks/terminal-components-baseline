@@ -226,6 +226,11 @@ fn flash_settle(app: &App) {
     }
 }
 
+fn footer_toast(screen: &TerminalSnapshot) -> bool {
+    let last = screen.rows().saturating_sub(1);
+    row_text(screen, last).contains("✓ Connected to Development")
+}
+
 fn assert_known_pair(screen: &TerminalSnapshot) {
     let tess = line_with(screen, TESS_SLUG).1;
     let north = line_with(screen, NORTH_SLUG).1;
@@ -383,7 +388,16 @@ fn rows_show_counts_sort_and_refuse_editing() {
     let wide = app.screen();
     assert_eq!((wide.cols(), wide.rows()), (120, 40));
     assert_known_pair(&wide);
-    app.visual(&visual_id("T03.rows.rows.120x40"));
+    // The connected toast lasts 5s. visual() would keep the cleared footer.
+    app.visual_while(&visual_id("T03.rows.rows.120x40"), |screen| {
+        screen.cols() == 120
+            && screen.rows() == 40
+            && text(screen).contains(KNOWN_COUNT)
+            && text(screen).contains(TESS_SLUG)
+            && text(screen).contains(NORTH_SLUG)
+            && !text(screen).contains(RUNNING)
+            && footer_toast(screen)
+    });
 
     app.resize(80, 24);
     let narrow = app.wait_screen("known rows at 80x24", |screen| {
@@ -422,7 +436,16 @@ fn rows_show_counts_sort_and_refuse_editing() {
         &[KNOWN_COUNT, NORTH, NORTH_SLUG],
         &[EMPTY_MARK, RUNNING],
     );
-    app.visual(&visual_id("T03.rows.rows.narrow"));
+    app.visual_while(&visual_id("T03.rows.rows.narrow"), |screen| {
+        screen.cols() == 80
+            && screen.rows() == 24
+            && text(screen).contains(KNOWN_COUNT)
+            && text(screen).contains(NORTH)
+            && text(screen).contains(NORTH_SLUG)
+            && !text(screen).contains(RUNNING)
+            && !text(screen).contains(EMPTY_MARK)
+            && footer_toast(screen)
+    });
     app.resize(120, 40);
     let restored = app.wait_screen("known rows back at 120x40", |screen| {
         screen.cols() == 120

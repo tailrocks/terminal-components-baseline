@@ -195,6 +195,11 @@ fn flash_settle(app: &App) {
     }
 }
 
+fn footer_toast(screen: &TerminalSnapshot) -> bool {
+    let last = screen.rows().saturating_sub(1);
+    row_text(screen, last).contains("✓ Connected to Development")
+}
+
 fn dialog_open(screen: &TerminalSnapshot) -> bool {
     let Some(tabs) = tab_line(screen) else {
         return false;
@@ -323,7 +328,10 @@ fn tablepro_close_dirty_cancel_keeps_sql_and_blocks_the_neighbour() {
     let wide = app.screen();
     assert_eq!((wide.cols(), wide.rows()), (120, 40));
     assert_open_dialog(&wide);
-    app.visual(&visual_id(WIDE));
+    // The connected toast lasts 5s. visual() would keep the cleared footer.
+    app.visual_while(&visual_id(WIDE), |screen| {
+        screen.cols() == 120 && screen.rows() == 40 && dialog_open(screen) && footer_toast(screen)
+    });
 
     app.resize(80, 24);
     let narrow = app.wait_screen("dirty close dialog at 80x24", |screen| {
@@ -331,7 +339,9 @@ fn tablepro_close_dirty_cancel_keeps_sql_and_blocks_the_neighbour() {
     });
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     assert_open_dialog(&narrow);
-    app.visual(&visual_id(NARROW));
+    app.visual_while(&visual_id(NARROW), |screen| {
+        screen.cols() == 80 && screen.rows() == 24 && dialog_open(screen) && footer_toast(screen)
+    });
     app.resize(120, 40);
 
     let restored = app.wait_screen("dirty close dialog back at 120x40", |screen| {
