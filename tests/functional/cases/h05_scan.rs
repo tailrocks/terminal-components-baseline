@@ -161,6 +161,113 @@ fn frozen_two(screen: &TerminalSnapshot) -> bool {
         && !visible.contains(COMPLETE)
 }
 
+fn count_before(line: &str, marker: &str) -> Option<u32> {
+    let at = line.find(marker)?;
+    let head = line[..at].trim_end();
+    let start = head
+        .rfind(|c: char| !c.is_ascii_digit())
+        .map_or(0, |index| index + 1);
+    head[start..].parse().ok()
+}
+
+fn scanning_revealed(visible: &str) -> Option<u32> {
+    let line = visible.lines().find(|line| line.contains("scanning · "))?;
+    let rest = line.split_once("scanning · ")?.1;
+    let digits: String = rest.chars().take_while(|c| c.is_ascii_digit()).collect();
+    digits.parse().ok()
+}
+
+/// `Some((percent, entries))` from `scan cancelled at P% · N entries`.
+fn cancelled_progress(visible: &str) -> Option<(u32, u32)> {
+    let line = visible
+        .lines()
+        .find(|line| line.contains("scan cancelled at"))?;
+    Some((count_before(line, "%")?, count_before(line, " entries")?))
+}
+
+fn restart_scan(app: &App) {
+    let mut before = screen_text(app);
+    app.key("r");
+    let restarted = Instant::now();
+    loop {
+        let visible = screen_text(app);
+        let revealed = scanning_revealed(&visible);
+        // `r` redraws the new scan at zero revealed before the next tick.
+        let fresh = visible != before
+            && visible.contains(RESCAN)
+            && !visible.contains(PARTIAL)
+            && !visible.contains(COMPLETE);
+        assert!(
+            restarted.elapsed() < Duration::from_secs(3),
+            "scan did not restart\n{visible}"
+        );
+        if fresh && matches!(revealed, Some(0) | Some(2)) {
+            return;
+        }
+        if fresh && matches!(revealed, Some(n) if n > 2) {
+            before = visible;
+            app.key("r");
+        }
+        std::thread::sleep(Duration::from_millis(5));
+    }
+}
+
+/// `scanning · 2 of` is one sim tick. The next tick reveals four entries, and
+/// cancel records whichever count is current. A late `x` stays late, so the
+/// scan starts over and the key is sent again on the two-entry banner.
+fn cancel_two(app: &App) -> TerminalSnapshot {
+    let started = Instant::now();
+    loop {
+        assert!(
+            started.elapsed() < Duration::from_secs(20),
+            "scan cancel did not freeze two entries\n{}",
+            screen_text(app)
+        );
+        let screen = app.screen();
+        let visible = text(&screen);
+        if visible.contains(QUIT) {
+            panic!("quit guard during scan cancel\n{visible}");
+        }
+        let revealed = scanning_revealed(&visible);
+        if revealed == Some(2) && !visible.contains(PARTIAL) && !visible.contains(COMPLETE) {
+            see(
+                &screen,
+                &[CRUMB, TITLE, "scanning"],
+                &[COMPLETE, QUIT, BACKUP],
+            );
+            app.key("x");
+            loop {
+                let screen = app.screen();
+                if screen.cols() == 120 && screen.rows() == 40 && frozen_two(&screen) {
+                    return screen;
+                }
+                let visible = text(&screen);
+                let late = visible.contains(COMPLETE)
+                    || matches!(cancelled_progress(&visible), Some((percent, entries)) if (percent, entries) != (3, 2))
+                    || matches!(scanning_revealed(&visible), Some(n) if n > 2);
+                if late {
+                    restart_scan(app);
+                    break;
+                }
+                assert!(
+                    started.elapsed() < Duration::from_secs(20),
+                    "scan cancel did not freeze two entries\n{visible}"
+                );
+                std::thread::sleep(Duration::from_millis(5));
+            }
+            continue;
+        }
+        let missed = visible.contains(COMPLETE)
+            || matches!(cancelled_progress(&visible), Some((percent, entries)) if (percent, entries) != (3, 2))
+            || matches!(revealed, Some(n) if n > 2);
+        if missed {
+            restart_scan(app);
+        } else {
+            std::thread::sleep(Duration::from_millis(5));
+        }
+    }
+}
+
 /// Busy rows paint `spinner_frame(now_ms / 80)`. Cancel freezes the revealed
 /// count, and the next resize paints whichever frame the clock has reached.
 /// Idle ticks advance that clock without redrawing, so sample resizes until
@@ -423,36 +530,7 @@ fn h05_scan_route_returns_to_the_finder() {
 fn h05_scan_scan_cancels_completes_and_changes_root() {
     let app = launch_parity("h05-scan-scan");
     open_catalog(&app, LABEL);
-    // The first `scanning` paint can still be `0 of`. The reference banner is
-    // the next tick, `scanning · 2 of`, which cancel records as 3% and 2
-    // entries. Poll the live screen: `wait_screen` records before it returns,
-    // and that write can cross into the following tick.
-    let started = Instant::now();
-    let progress = loop {
-        let screen = app.screen();
-        let visible = text(&screen);
-        if visible.contains(CRUMB)
-            && visible.contains("scanning · 2 of")
-            && !visible.contains(COMPLETE)
-        {
-            break screen;
-        }
-        assert!(
-            started.elapsed() < Duration::from_secs(3) && !visible.contains(COMPLETE),
-            "scan did not show 2 revealed entries\n{visible}"
-        );
-        std::thread::sleep(Duration::from_millis(5));
-    };
-    see(
-        &progress,
-        &[CRUMB, TITLE, "scanning"],
-        &[COMPLETE, QUIT, BACKUP],
-    );
-    app.key("x");
-
-    let quiet = app.wait_screen("cancelled tree", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && frozen_two(screen)
-    });
+    let quiet = cancel_two(&app);
     see(
         &quiet,
         &[PARTIAL, CANCELLED, TITLE, METER, "3%", "2 entries"],
