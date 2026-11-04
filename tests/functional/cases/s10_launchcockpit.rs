@@ -70,6 +70,12 @@ fn page(name: &str, opts: &[&str], cols: u16, rows: u16, motion: Option<&str>) -
     open(name, cols, rows, &args, motion)
 }
 
+/// The dialog title paints before the Retry button.
+fn credentials_dialog(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(CRED_TITLE) && visible.contains(CRED_LOG) && visible.contains("Retry")
+}
+
 fn flat(screen: &TerminalSnapshot) -> String {
     text(screen)
         .split_whitespace()
@@ -888,7 +894,7 @@ fn launch_failure_dialogs() {
     );
     app.wait_text(READY_HEAD);
     click_launch(&app);
-    let dialog = app.wait_text(CRED_TITLE);
+    let dialog = app.wait_screen("credentials dialog", credentials_dialog);
     see(
         &dialog,
         &[
@@ -1048,7 +1054,7 @@ fn option_outcome_credentials() {
     app.wait_text(READY_HEAD);
     flash_settle(&app);
     click_launch(&app);
-    let dialog = app.wait_text(CRED_TITLE);
+    let dialog = app.wait_screen("credentials outcome", credentials_dialog);
     see(
         &dialog,
         &[CRED_TITLE, CRED_LOG, "Retry"],

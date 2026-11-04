@@ -4,7 +4,7 @@
 //! `pre_refactor/t02_filters/` and the dotted checkpoint ids use underscores.
 
 use std::path::PathBuf;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 
@@ -268,6 +268,59 @@ fn assert_kept(screen: &TerminalSnapshot, allow: &[&str], show: &[&str]) {
             rows.contains(name),
             "missing {name} from {rows:?}\n{visible}"
         );
+    }
+}
+
+fn same_rows(screen: &TerminalSnapshot, baseline: &[&str]) -> bool {
+    let rows = org_rows(screen);
+    !rows.is_empty() && rows.len() <= baseline.len() && &baseline[..rows.len()] == rows.as_slice()
+}
+
+fn rows_ready(screen: &TerminalSnapshot, rows: Rows, baseline: &[&str]) -> bool {
+    let got = org_rows(screen);
+    let visible = text(screen);
+    match rows {
+        Rows::Empty => {
+            got.is_empty()
+                && visible.contains(EMPTY_ROWS)
+                && !visible.contains(NORTHWIND)
+                && !visible.contains(TESSELLATE)
+        }
+        Rows::Same => same_rows(screen, baseline),
+        Rows::Kept { allow, show } => {
+            !got.is_empty()
+                && got.iter().all(|name| allow.contains(name))
+                && show.iter().all(|name| got.contains(name))
+        }
+    }
+}
+
+/// The chip paints before the grid finishes the operator. The last rows of
+/// `name is not NULL` were still the previous order on that first frame.
+fn wait_op(app: &App, op: &Op, baseline: &[&str], before_same: &str) -> TerminalSnapshot {
+    let deadline = Instant::now() + Duration::from_secs(8);
+    loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        let chip_up = visible.contains(op.chip)
+            && !visible.contains("WHERE ")
+            && !visible.contains(NO_VALUE)
+            && (op.chip != CHIP_NULL || !visible.contains("is not NULL"));
+        let focused = text(&screen)
+            .lines()
+            .filter(|line| line.contains('▎') && uuid_row(line))
+            .filter_map(org_on)
+            .collect::<Vec<_>>();
+        let focus_ok = !matches!(op.rows, Rows::Same) || focused.first() == Some(&before_same);
+        if chip_up && focus_ok && focused.len() <= 1 && rows_ready(&screen, op.rows, baseline) {
+            return screen;
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "filter {} did not settle\n{visible}",
+            op.chip
+        );
+        std::thread::sleep(Duration::from_millis(20));
     }
 }
 
@@ -668,8 +721,7 @@ fn tablepro_filters_change_the_visible_organizations() {
 
     clear_filters(&app);
     let restored = app.wait_screen("reset names", |screen| {
-        let rows = org_rows(screen);
-        !rows.is_empty() && rows[0] == TESSELLATE && text(screen).contains(NORTHWIND)
+        same_rows(screen, &baseline) && text(screen).contains(NORTHWIND)
     });
     assert_same(&restored, &baseline);
 
@@ -727,7 +779,8 @@ fn tablepro_filters_change_the_visible_organizations() {
     focus_grid(&app);
     let before_same = focused_org(&app.screen());
     for op in OPS {
-        let screen = apply_filter(&app, op);
+        apply_filter(&app, op);
+        let screen = wait_op(&app, op, &baseline, before_same);
         assert!(
             text(&screen).contains(op.chip),
             "chip {}\n{}",
@@ -755,8 +808,9 @@ fn tablepro_filters_change_the_visible_organizations() {
     }
 
     let reset = app.wait_screen("operators reset", |screen| {
-        let rows = org_rows(screen);
-        !rows.is_empty() && rows[0] == baseline[0] && text(screen).contains(NORTHWIND)
+        same_rows(screen, &baseline)
+            && text(screen).contains(NORTHWIND)
+            && !text(screen).contains(MATCH_ALL)
     });
     assert_same(&reset, &baseline);
     assert!(

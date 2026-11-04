@@ -65,6 +65,39 @@ fn page(name: &str, opt: Option<&str>, cols: u16, rows: u16) -> App {
     open(name, cols, rows, &args)
 }
 
+/// The crumb updates before the playground replaces the previous page.
+/// The toolbar row is one paint, and a read can return it before Wrap.
+fn toolbars_ready(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    let on_toolbars = (0..screen.rows())
+        .map(|row| row_text(screen, row))
+        .any(|line| {
+            line.contains('▎') && line.contains("› Toolbars") && !line.contains("Inputs & forms")
+        });
+    on_toolbars
+        && visible.contains(TITLE)
+        && visible.contains(BLURB)
+        && visible.contains(QUERY)
+        && visible.contains(NARROW_ROW)
+        && visible.contains(BEHIND)
+        && visible.contains(FORMAT_ROW)
+        && visible.contains(IDLE)
+        && visible.contains(NONE)
+        && !visible.contains("Send notifications")
+        && !visible.contains("Read committed")
+        && !visible.contains(OVERVIEW)
+}
+
+fn checks_ready(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains("Checks & radios")
+        && visible.contains(CHECKS)
+        && visible.contains("Read committed")
+        && !visible.contains(BLURB)
+        && !visible.contains("Query toolbar")
+        && !visible.contains("behind »:")
+}
+
 fn see(screen: &TerminalSnapshot, present: &[&str], absent: &[&str]) {
     let visible = text(screen);
     for item in present {
@@ -211,7 +244,7 @@ fn defaults_besides(screen: &TerminalSnapshot, changed: &str) {
 fn route_by_page_keyboard_and_pointer() {
     let args = ["--page", "toolbars"];
     let app = page("s02-toolbars-route-page", None, 120, 40);
-    let screen = app.wait_text("Query toolbar");
+    let screen = app.wait_screen("toolbars playground", toolbars_ready);
     see(
         &screen,
         &[
@@ -260,7 +293,7 @@ fn route_by_page_keyboard_and_pointer() {
     for _ in 0..13 {
         keys.key("]");
     }
-    let arrived = keys.wait_text(BLURB);
+    let arrived = keys.wait_screen("toolbars by keyboard", toolbars_ready);
     see(
         &arrived,
         &[TITLE, BLURB, "Query toolbar", QUERY, PLAY],
@@ -272,14 +305,14 @@ fn route_by_page_keyboard_and_pointer() {
         ],
     );
     keys.key("[");
-    let left = keys.wait_absent(BLURB);
+    let left = keys.wait_screen("checks page", checks_ready);
     see(
         &left,
         &["Checks & radios", CHECKS],
         &[BLURB, "Query toolbar", "behind »:"],
     );
     keys.key("]");
-    let again = keys.wait_text(BLURB);
+    let again = keys.wait_screen("toolbars again", toolbars_ready);
     see(
         &again,
         &[TITLE, "Query toolbar", BLURB],
@@ -290,7 +323,7 @@ fn route_by_page_keyboard_and_pointer() {
     see(&overview, &[OVERVIEW], &[BLURB, "Query toolbar"]);
     click_side(&keys, "Inputs & forms");
     click_side(&keys, "Toolbars");
-    let pointed = keys.wait_text("Query toolbar");
+    let pointed = keys.wait_screen("toolbars by pointer", toolbars_ready);
     see(
         &pointed,
         &[TITLE, BLURB, QUERY, IDLE, NARROW_ROW],

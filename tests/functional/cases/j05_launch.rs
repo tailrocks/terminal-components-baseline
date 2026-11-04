@@ -7,7 +7,7 @@
 //! jackin.
 
 use std::path::PathBuf;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
@@ -114,23 +114,29 @@ fn network_ack(screen: &TerminalSnapshot) -> bool {
 
 fn shot(app: &App, checkpoint: &str, accept: impl Fn(&TerminalSnapshot) -> bool) {
     let test_id = visual_id(checkpoint);
-    let start = std::time::Instant::now();
+    // Resize can paint the failure copy before the cells match the reference.
+    // Keep the first matching paint only when the frozen check agrees.
+    let deadline = Instant::now() + Duration::from_secs(8);
+    let mut missed = String::new();
     loop {
         let screen = app.screen();
         if accept(&screen) {
-            check_frame(app, &screen, &test_id);
-            return;
+            if let Some(why) = frame_mismatch(app, &screen, &test_id) {
+                missed = why;
+            } else {
+                return;
+            }
         }
         assert!(
-            start.elapsed() < Duration::from_secs(4) && app.child_running(),
-            "{test_id} frame not seen\n{}",
-            text(&screen)
+            Instant::now() < deadline && app.child_running(),
+            "{test_id} reference frame not seen: {missed}\n{}",
+            text(&app.screen())
         );
-        std::thread::sleep(Duration::from_millis(15));
+        std::thread::sleep(Duration::from_millis(20));
     }
 }
 
-fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
+fn frame_mismatch(app: &App, screen: &TerminalSnapshot, test_id: &str) -> Option<String> {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
@@ -143,14 +149,14 @@ fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
     let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
         .expect("open Tuiscotti frozen store");
     let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
-    if let CheckOutcome::Failure(failure) = outcome {
-        panic!(
-            "{test_id} {} sha {} path {} cells {}",
+    match outcome {
+        CheckOutcome::Pass(_) => None,
+        CheckOutcome::Failure(failure) => Some(format!(
+            "{} sha {} cells {}",
             failure.reason(),
             failure.candidate_sha256(),
-            failure.candidate_path().display(),
             failure.changed_cell_total()
-        );
+        )),
     }
 }
 
