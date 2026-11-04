@@ -23,6 +23,8 @@ fn a_known_repository_url_in_any_spelling_is_accepted() {
         "https://GitHub.com/chainargos/payments-platform.git",
         "git@github.com:chainargos/payments-platform.git",
         "ssh://git@github.com/chainargos/payments-platform/",
+        "git://github.com/chainargos/payments-platform",
+        "https://github.com/ChainArgos/Payments-Platform",
     ] {
         let shown = entered(url);
         assert!(shown.contains("step 2 of 5"), "{url}:\n{shown}");
@@ -37,6 +39,18 @@ fn a_url_that_only_contains_a_known_repository_is_refused() {
         "https://github.com/chainargos/payments-platform-extra",
         "https://github.com.evil.invalid/chainargos/payments-platform",
         "https://github.com@evil.invalid/chainargos/payments-platform",
+        "ext::sh -c touch/tmp/x://github.com/chainargos/payments-platform",
+        "file://github.com/chainargos/payments-platform",
+        "ftp://github.com/chainargos/payments-platform",
+        "-oProxyCommand=touch /tmp/x@github.com:chainargos/payments-platform",
+        "-oProxyCommand=x@github.com:chainargos/payments-platform",
+        "--upload-pack=x@github.com:chainargos/payments-platform",
+        "https://github.com/chainargos/payments-platform extra",
+        "https://github.com/chainargos/payments-platform\u{7}",
+        "a=b@github.com:chainargos/payments-platform",
+        "user:pass@github.com:chainargos/payments-platform",
+        "https://u:p@github.com/chainargos/payments-platform",
+        "ext::github.com/chainargos/payments-platform",
     ] {
         let shown = entered(url);
         assert!(shown.contains("Could not resolve"), "{url}:\n{shown}");

@@ -314,12 +314,16 @@ fn check_rows_are_worded_by_the_vocabulary() {
 }
 
 fn refresh_still_limited(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::RefreshAccount { account, .. } = effect else {
+    let Effect::RefreshAccount {
+        account, source, ..
+    } = effect
+    else {
         return None;
     };
     let now = world.now_secs();
     Some(Msg::AccountRefreshed {
         account: account.clone(),
+        source: Box::new(source.clone()),
         result: Ok(Box::new(Refresh {
             usage: world.accounts.get(account)?.usage.clone(),
             issue: None,

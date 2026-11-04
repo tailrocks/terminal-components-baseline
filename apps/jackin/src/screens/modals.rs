@@ -170,19 +170,51 @@ impl FileSource for BackendSource {
     }
 }
 
+fn plain_token(text: &str) -> bool {
+    !text.is_empty()
+        && text
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'))
+}
+
 fn repo_identity(text: &str) -> Option<(String, String)> {
-    let text = text.trim();
+    if text.starts_with('-') || text.chars().any(|c| c.is_whitespace() || c.is_control()) {
+        return None;
+    }
     let (authority, path) = match text.split_once("://") {
-        Some((_, rest)) => rest.split_once('/')?,
+        Some((scheme, rest)) => {
+            if !["https", "ssh", "git"]
+                .iter()
+                .any(|s| scheme.eq_ignore_ascii_case(s))
+            {
+                return None;
+            }
+            rest.split_once('/')?
+        }
         None => match text.split_once(':') {
             Some((head, path)) if head.contains('@') => (head, path),
             _ => text.split_once('/')?,
         },
     };
-    let host = authority.rsplit('@').next()?.to_ascii_lowercase();
+    let host = match authority.split_once('@') {
+        Some((user, host)) => plain_token(user).then_some(host)?,
+        None => authority,
+    };
+    if !plain_token(host) {
+        return None;
+    }
+    let host = host.to_ascii_lowercase();
     let path = path.trim_matches('/');
     let path = path.strip_suffix(".git").unwrap_or(path);
-    (!host.is_empty() && !path.is_empty()).then(|| (host, path.to_owned()))
+    if path.is_empty() {
+        return None;
+    }
+    let path = if host == "github.com" {
+        path.to_ascii_lowercase()
+    } else {
+        path.to_owned()
+    };
+    Some((host, path))
 }
 
 pub fn file_browser(

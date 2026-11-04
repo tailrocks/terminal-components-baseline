@@ -216,8 +216,10 @@ impl UsageScreen {
                 && a.usage.freshness.phase != Freshness::Refreshing
             {
                 a.usage.freshness.phase = Freshness::Refreshing;
+                let source = a.source.clone();
                 w.perform(Effect::RefreshAccount {
                     account: id.clone(),
+                    source,
                     stagger_ms: i as i64 * 120,
                 });
                 n += 1;

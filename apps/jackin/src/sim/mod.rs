@@ -238,6 +238,7 @@ impl Backend for SimBackend {
             Effect::RefreshAccount {
                 account,
                 stagger_ms,
+                ..
             } => {
                 let base = world
                     .accounts
@@ -346,7 +347,9 @@ impl Backend for SimBackend {
                     InstanceStatus::Purged
                 }))),
             }),
-            Effect::RefreshAccount { account, .. } => {
+            Effect::RefreshAccount {
+                account, source, ..
+            } => {
                 let refreshed = world.accounts.get(account).map(|a| {
                     provider::refresh(
                         a,
@@ -357,6 +360,7 @@ impl Backend for SimBackend {
                 });
                 Some(Msg::AccountRefreshed {
                     account: account.clone(),
+                    source: Box::new(source.clone()),
                     result: refreshed
                         .map(Box::new)
                         .ok_or_else(|| format!("{account} is not in the registry")),

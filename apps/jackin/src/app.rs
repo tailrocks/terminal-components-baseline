@@ -257,15 +257,17 @@ impl App {
         for instance in orphans {
             if open.as_ref() == Some(&instance) {
                 self.go(Go::InstanceEnded {
-                    instance,
+                    instance: instance.clone(),
                     purge: false,
                 });
+                self.set_status(
+                    &format!("Instance {instance} was removed elsewhere"),
+                    Tone::Secondary,
+                );
             } else {
                 self.world.daemons.remove(&instance);
             }
         }
-        crate::world::refresh_snapshots(&mut self.world);
-        self.world.sync_arbiter();
     }
 
     fn start(&mut self, entry: Entry, frame: u64) {
@@ -549,6 +551,15 @@ impl App {
                 Outcome::Ignored
             };
         }
+        let applied = self.world.snapshots_applied;
+        let out = self.dispatch_reply(m);
+        if self.world.snapshots_applied != applied {
+            self.drop_orphaned_daemons();
+        }
+        out
+    }
+
+    fn dispatch_reply(&mut self, m: &Msg) -> Outcome {
         self.tell_forms_of_reply(m);
         self.world.absorb(m);
         let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));

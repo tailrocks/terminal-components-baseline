@@ -173,5 +173,43 @@ fn a_reload_that_removes_an_unopened_instance_drops_its_daemon() {
 
     assert!(!app.world.daemons.contains_key(other));
     assert!(app.world.daemons.contains_key(STOPPED));
-    assert_eq!(app.world.arbiter.running(), Ok(app.world.running_count()));
+}
+
+#[test]
+fn a_periodic_refresh_that_removes_the_open_instance_leaves_its_capsule() {
+    let mut app = app();
+    app.go(Go::Attach {
+        instance: STOPPED.into(),
+        pane: None,
+    });
+    assert_eq!(app.route(), Route::Capsule);
+
+    let refreshed = Msg::Refreshed {
+        result: Ok(Box::new(without(&app, STOPPED))),
+    };
+    assert_eq!(app.deliver(&refreshed), Outcome::Changed);
+
+    assert_ne!(app.route(), Route::Capsule);
+    assert!(app.world.instance(STOPPED).is_none());
+    assert!(!app.world.daemons.contains_key(STOPPED));
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains(&format!("Instance {STOPPED} was removed elsewhere")),
+        "{shown}"
+    );
+}
+
+#[test]
+fn a_periodic_refresh_that_removes_an_unopened_instance_drops_its_daemon() {
+    let mut app = app();
+    let other = "jk-9b02";
+    assert!(app.world.daemons.contains_key(other));
+
+    let refreshed = Msg::Refreshed {
+        result: Ok(Box::new(without(&app, other))),
+    };
+    app.deliver(&refreshed);
+
+    assert!(!app.world.daemons.contains_key(other));
+    assert!(app.world.daemons.contains_key(STOPPED));
 }

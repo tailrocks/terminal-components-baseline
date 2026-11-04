@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use junie_tui::clock::Moment;
+use junie_tui::core::edit::FieldKeys;
 use junie_tui::core::event::Key;
 use junie_tui::core::id::WidgetId;
 use junie_tui::shell::{Clipboard, Copied, NativeClipboard, Shell};
@@ -257,6 +258,31 @@ fn ctrl_w_over_a_selection_in_a_masked_field_deletes_it_and_copies_nothing() {
     field.on_key(&cmd('a'));
     field.on_key(&ctrl_w());
     assert_eq!(field.text(), "");
+    assert_eq!(sink.0.lock().expect("writes").clone(), Vec::<String>::new());
+    assert_eq!(queued(), Vec::<String>::new(), "no OSC 52");
+}
+
+fn ctrl(c: char) -> Key {
+    Key {
+        code: KeyCode::Char(c),
+        mods: KeyModifiers::CONTROL,
+    }
+}
+
+#[test]
+fn ctrl_x_in_a_masked_desktop_field_neither_copies_nor_cuts() {
+    let mut field = TextInput::new(WidgetId::of("t.secret"), "Key")
+        .value("sk-secret")
+        .masked()
+        .field_keys(FieldKeys::Desktop);
+    let sink = Arc::new(Recording::default());
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(sink.clone());
+    shell.clipboard.install();
+    queued();
+    field.on_key(&ctrl('a'));
+    field.on_key(&ctrl('x'));
+    assert_eq!(field.text(), "sk-secret");
     assert_eq!(sink.0.lock().expect("writes").clone(), Vec::<String>::new());
     assert_eq!(queued(), Vec::<String>::new(), "no OSC 52");
 }

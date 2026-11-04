@@ -188,6 +188,7 @@ pub enum Msg {
     },
     AccountRefreshed {
         account: AccountId,
+        source: Box<CredentialSource>,
         result: Result<Box<Refresh>, String>,
     },
     AccountValidated {
@@ -692,9 +693,17 @@ impl World {
                 }
             }
             Msg::LaunchCancelled { instance } => self.record((**instance).clone()),
-            Msg::AccountRefreshed { account, result } => {
+            Msg::AccountRefreshed {
+                account,
+                source,
+                result,
+            } => {
                 let now = self.now_secs();
-                if let Some(a) = self.accounts.get_mut(account) {
+                if let Some(a) = self
+                    .accounts
+                    .get_mut(account)
+                    .filter(|a| a.source == **source)
+                {
                     match result {
                         Ok(refresh) => {
                             a.usage = refresh.usage.clone();

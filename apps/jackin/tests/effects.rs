@@ -790,7 +790,10 @@ fn first_window_pct(w: &World, id: &str) -> Option<u8> {
 /// Refreshes the account the way a backend that read the provider would:
 /// the first window reads 40% used, whatever it read before.
 fn refresh_account(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::RefreshAccount { account, .. } = effect else {
+    let Effect::RefreshAccount {
+        account, source, ..
+    } = effect
+    else {
         return None;
     };
     let now = world.now_secs();
@@ -799,6 +802,7 @@ fn refresh_account(effect: &Effect, world: &World) -> Option<Msg> {
     usage.windows[0].used_pct = Some(40);
     Some(Msg::AccountRefreshed {
         account: account.clone(),
+        source: Box::new(source.clone()),
         result: Ok(Box::new(Refresh {
             usage,
             issue: None,
@@ -885,6 +889,49 @@ fn a_validation_reply_for_a_replaced_source_does_not_touch_the_edited_account() 
     assert_eq!(*kept, edited);
     let shown = status(&app);
     assert!(!shown.contains(&kept.title()), "{shown}");
+    assert_eq!(shown, "Validation discarded · the account changed");
+}
+
+#[test]
+fn a_refresh_reply_for_a_replaced_source_does_not_touch_the_edited_account() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    let old = app
+        .world
+        .accounts
+        .get(PERSONAL)
+        .expect("account")
+        .source
+        .clone();
+    press(&mut app, "c down down r");
+    assert_eq!(
+        app.world
+            .accounts
+            .get(PERSONAL)
+            .expect("account")
+            .usage
+            .freshness
+            .phase,
+        Freshness::Refreshing
+    );
+
+    let mut snapshot = sim::snapshot(&app.world);
+    let edited = snapshot.accounts.get_mut(PERSONAL).expect("account");
+    edited.source = CredentialSource::HostEnv {
+        var: "REPLACEMENT_KEY".into(),
+        detected: DetectedKind::ClaudeApiKeyEnv,
+    };
+    let edited = edited.clone();
+    Application::handle(
+        &mut app,
+        Input::External(External::new(Remote::Reloaded(Box::new(snapshot)))),
+    );
+    settle(&mut app);
+
+    let kept = app.world.accounts.get(PERSONAL).expect("account");
+    assert_ne!(kept.source, old);
+    assert_eq!(*kept, edited);
+    let shown = status(&app);
+    assert!(!shown.starts_with("Refreshed"), "{shown}");
 }
 
 fn failure_app() -> App {
@@ -1376,11 +1423,9 @@ fn role_check_comes_from_the_snapshot() {
         "the check is the reply snapshot's"
     );
     assert_eq!(
-        admin(&app.world)
-            .binding("sentinel", Agent::ClaudeCode)
-            .map(String::as_str),
-        Some(MARKER),
-        "the role is the reply snapshot's, not the screen's"
+        admin(&app.world).binding("sentinel", Agent::ClaudeCode),
+        None,
+        "a check reply changes the check only, never the bindings"
     );
     assert_eq!(status(&app), "Role sentinel: 1 error");
 }

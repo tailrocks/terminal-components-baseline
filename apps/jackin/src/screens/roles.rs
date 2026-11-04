@@ -826,7 +826,7 @@ impl Page<Jackin> for RolesScreen {
                     Ok(record) => {
                         let found = record.findings().len();
                         if let Some(r) = w.surfaces.roles.as_mut().and_then(|a| a.role_mut(role)) {
-                            *r = record;
+                            r.check = record.check;
                         }
                         cx.status(if found == 0 {
                             format!("Role {role}: check passed")

@@ -485,8 +485,10 @@ impl AccountsScreen {
                 continue;
             }
             a.usage.freshness.phase = Freshness::Refreshing;
+            let source = a.source.clone();
             w.perform(Effect::RefreshAccount {
                 account: id.clone(),
+                source,
                 stagger_ms: i as i64 * 160,
             });
             started += 1;
@@ -2417,8 +2419,12 @@ impl Page<Jackin> for AccountsScreen {
                 self.build_rows(w);
                 Outcome::Changed
             }
-            Msg::AccountRefreshed { account, result } => {
-                if let Some(a) = w.accounts.get(account) {
+            Msg::AccountRefreshed {
+                account,
+                source,
+                result,
+            } => {
+                if let Some(a) = w.accounts.get(account).filter(|a| a.source == **source) {
                     match result {
                         Ok(refresh) => {
                             let n = a.usage.windows.iter().filter(|w| w.has_meter()).count();
@@ -2445,6 +2451,8 @@ impl Page<Jackin> for AccountsScreen {
                     .is_some_and(|a| a.source == **source)
                 {
                     self.show_validation(account, result, w, cx);
+                } else {
+                    cx.status("Validation discarded · the account changed");
                 }
                 self.build_rows(w);
                 Outcome::Changed
