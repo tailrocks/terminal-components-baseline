@@ -478,9 +478,10 @@ exception below and no legacy-API tests:
 3. End with `app.visual("<test-id>")`: the live screen is frozen as a
    Tuiscotti state sample and compared with `FrozenStore` from latest
    Tuiscotti (`tuiscotti-latest`, main `d8d5415`). The test asserts
-   `outcome.is_pass()`; a missing or changed baseline fails. Baselines for
-   all 93 tests live in `tests/functional/baselines/` and were approved
-   once with the Tuiscotti CLI `accept` command — tests never approve.
+   `outcome.is_pass()`; a missing or changed baseline fails. A baseline
+   for every test that ends in `visual` lives in `tests/functional/baselines/`;
+   each was approved once with the Tuiscotti CLI `accept` command — tests
+   never approve.
    Checkpoints sit on deterministic screens (after `settle()`, not on
    cycling status words or mid-flash frames). `App::visual` additionally
    requires two identical consecutive cell fingerprints (cells + cursor)

@@ -110,7 +110,7 @@ same `FixedFields` view of a world and of a projection.
 | `Instance` (18) | `workdir` (`/sandbox/project`) | the other 17 |
 | `AccountRegistry` (2) | `accounts`, each as an `Account` | `revision` |
 | `Surfaces` (13) | `vocabulary`, `fixed`, `account_form`, `agent_blocked`, `wizard`, `launch_role` | `roles`, `docker`, `doctor`, `version`, `cockpit_version`, `config_path`, `about` |
-| `World` (22) | `workspaces`, `roles`, `instances`, `global`, `accounts`, `surfaces` (through the extractors above) | `github`; Console: `clock`, `time`, `arbiter`, `home`, `cwd`, `daemons`, `op`, `backend`, `fs`, `clipboard`, `jobs`, `daemon_health`, `last_refresh_secs`, `session_accounts`, `discovery_pending` |
+| `World` (24) | `workspaces`, `roles`, `instances`, `global`, `accounts`, `surfaces` (through the extractors above) | `github`; Console: `clock`, `time`, `arbiter`, `home`, `cwd`, `daemons`, `op`, `backend`, `fs`, `clipboard`, `jobs`, `daemon_health`, `last_refresh_secs`, `session_accounts`, `discovery_pending`, `tickets`, `pane_policy` |
 | `Snapshot` (9) | `workspaces`, `roles`, `instances`, `global`, `accounts`, `surfaces` | `github`, `index_error`, `daemon_health` |
 
 The normalizers of `domain::openshell` (`account`, `workspace`, `global`,
@@ -149,8 +149,9 @@ read it against, because each of its reasons names a Fixed control.
 
 ## Testing today
 
-- `cargo nextest run --locked --test functional --profile functional`
-  — 93 tests, 0 skipped: every app end-to-end (launch → operate →
+- `cargo nextest run --locked -p junie-tui --test functional --profile functional`
+  — 108 tests, 0 skipped (the demo journeys of `jackin-console` add 51 with
+  `--all-features`): every app end-to-end (launch → operate →
   verify consequence → reopen → clean exit), component families in
   Showcase and in a real consumer, colour matrix
   (truecolor/256/16/mono/`NO_COLOR`), normal and small sizes.
@@ -160,6 +161,25 @@ read it against, because each of its reasons names a Fixed control.
   Baselines are approved only via the Tuiscotti CLI `accept` command.
 - Full account of the deleted legacy estate and its replacement
   mapping: [functional testing](functional-testing.md).
+
+## API changes for consumers
+
+Changes to the public API of `junie-tui` since `origin/main`. A consumer pins a
+rev of this repository, so each break lands at its next bump. No
+`#[non_exhaustive]` is added to `Input` or `Copied`: no rule in
+[AGENTS.md](../AGENTS.md) or [requirements](requirements.md) asks for it, the
+other public event enums (`Outcome`, `MouseKind`) carry none, and adding it
+now would be a second break for every exhaustive consumer match. A new
+variant of these enums stays a breaking change and is recorded here.
+
+| Item | Change |
+| --- | --- |
+| `shell::Clipboard` | Lost `Copy`, `PartialEq` and `Eq` (it holds `native: Option<Arc<dyn NativeClipboard>>`). `install(self)` became `install(&self)`. New `native(..)` builder and `NativeClipboard` trait. |
+| `shell::Copied` | Gained `Requested { chars }` (the native sink refused and OSC 52 was queued instead). `TooLarge { encoded, limit }` became `TooLarge { bytes, limit }`: `Clipboard::limit` (default `DEFAULT_LIMIT`, 100,000) counts decoded bytes, as the jackin pane policy does. With a native sink that took the text, no OSC 52 is queued. |
+| `core::event::Input` | Gained `External(External)`. `Application::external()` and `shell::App::external()` are new (default `None`). |
+| `clock::ClockStep`, `Shell::clock_steps` | `ClockStep` (`PREFIX`, `request(ms)`, `parse -> Option<u64>`) became the enum `clock::TestRequest { Advance(ms), Fence }` (`ADVANCE_PREFIX`, `FENCE`, `FENCE_ACK`, `advance(ms)`, `parse -> Option<TestRequest>`). `Shell::clock_steps` became `Shell::test_requests`. Both stay inert unless `JUNIE_TUI_TEST_CLOCK=1`. |
+| `terminal::TerminalState::feed` | Program output passes a guard first (`src/terminal/guard.rs`): a string sequence (OSC, DCS, APC, PM, SOS) over 144 KiB is dropped whole until its end, at most 16 characters join one cell (combining marks, variation selectors, joiners and what a joiner pulls in), and DEL and the bidi controls (U+202A to U+202E, U+2066 to U+2069) never reach a cell. A 100,000 byte OSC 52 write still fits. |
+| `terminal::encode_key` | Ctrl and Shift on arrows, Home, End, Page, Insert, Delete and F1 to F12 now send the xterm parameter forms (`CSI 1;m X`, `CSI n;m ~`), Ctrl+Backspace sends `0x08`, and Ctrl with `@ \ ] ^ _ /` sends the C0 byte. Alt alone keeps the `ESC` prefix; Shift+Enter stays `\r`. |
 
 ## Known limits
 
