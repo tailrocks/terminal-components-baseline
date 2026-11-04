@@ -8,12 +8,13 @@ use crate::domain::agent::Agent;
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use crate::domain::instance::{ID_PREFIX, instance_id};
 use crate::domain::launch::{
-    LaunchContent, LaunchFailure, LaunchWords, StageKind, StageList, StageSpec,
+    EmptyLanding, LaunchContent, LaunchFailure, LaunchWords, NextStep, RefusalReason, RefusalWords,
+    StageKind, StageList, StageSpec,
 };
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
     EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
-    Refusal, TypedKey, launch_accounts,
+    TypedKey, launch_accounts,
 };
 use crate::world::World;
 
@@ -113,6 +114,22 @@ fn words() -> LaunchWords {
         build_failed: "Docker build failed".into(),
         ready_activity: "Hardline open · handing off to the Capsule".into(),
         credentials_resolved: "resolved in memory · discarded after injection".into(),
+        refused_state: "nothing was created".into(),
+        role_not_allowed: RefusalWords {
+            title: "Role not allowed".into(),
+            found: "Workspace {workspace} does not allow role {role}.".into(),
+            next_step: "Allow it in the workspace's Roles tab, or load another role.".into(),
+        },
+        agent_not_launchable: RefusalWords {
+            title: "Agent not launchable".into(),
+            found: "{agent} cannot be launched here: only {launchable} is.".into(),
+            next_step: "Launch with {launchable} instead.".into(),
+        },
+        next_retry: "container {sandbox} remains; launch again with id {launch}".into(),
+        next_doctor:
+            "Check that Docker's jackin-net bridge exists (docker network ls), then launch again."
+                .into(),
+        next_credential: "Unlock the credential source and retry, or enter the key by hand.".into(),
     }
 }
 
@@ -125,23 +142,24 @@ pub fn content() -> Arc<LaunchContent> {
         build_log: BUILD_LOG.iter().map(|l| (*l).to_owned()).collect(),
         agent_provider_only: false,
         name_slug: None,
+        when_empty: EmptyLanding::Outro,
         network_failure: LaunchFailure {
-                    stage: network,
-                    summary: "The Construct network could not be attached".into(),
-                    next_step: "Check that Docker's jackin-net bridge exists (docker network ls), then launch again.".into(),
-                    detail: vec![
-                        "network: attach jackin-net to jackin-payments-platform-7f3a".into(),
-                        "docker: Error response from daemon: network jackin-net not found".into(),
-                        "retry 1/3 after 400 ms: network jackin-net not found".into(),
-                        "retry 2/3 after 800 ms: network jackin-net not found".into(),
-                        "retry 3/3 after 1600 ms: network jackin-net not found".into(),
-                        "sidecar: not started (network stage failed)".into(),
-                        "capsule: not started".into(),
-                        "cleanup: container jackin-payments-platform-7f3a kept for inspection".into(),
-                        "credentials: material was resolved in memory and discarded".into(),
-                        "run: 9c41e2f0 · backend docker 27.1 · host darwin 25.5".into(),
-                    ],
-                },
+            stage: network,
+            summary: "The Construct network could not be attached".into(),
+            next_step: NextStep::RunDoctor,
+            detail: vec![
+                "network: attach jackin-net to jackin-payments-platform-7f3a".into(),
+                "docker: Error response from daemon: network jackin-net not found".into(),
+                "retry 1/3 after 400 ms: network jackin-net not found".into(),
+                "retry 2/3 after 800 ms: network jackin-net not found".into(),
+                "retry 3/3 after 1600 ms: network jackin-net not found".into(),
+                "sidecar: not started (network stage failed)".into(),
+                "capsule: not started".into(),
+                "cleanup: container jackin-payments-platform-7f3a kept for inspection".into(),
+                "credentials: material was resolved in memory and discarded".into(),
+                "run: 9c41e2f0 · backend docker 27.1 · host darwin 25.5".into(),
+            ],
+        },
     })
 }
 
@@ -194,7 +212,7 @@ pub enum LaunchPlan {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Opening {
     Straight,
-    Refuse(Refusal),
+    Refuse(RefusalReason),
     Ask(Vec<EnvQuestion>),
 }
 
@@ -205,11 +223,9 @@ pub fn opening(w: &World, target: &LaunchTarget) -> Opening {
     if let Some(ws) = target.workspace.and_then(|id| w.workspace(id))
         && !ws.roles.allows(&target.role)
     {
-        return Opening::Refuse(Refusal {
-            title: "Role not allowed".into(),
-            found: format!("Workspace {} does not allow role {}.", ws.name, target.role),
-            state: "nothing was created".into(),
-            next_step: "Allow it in the workspace's Roles tab, or load another role.".into(),
+        return Opening::Refuse(RefusalReason::RoleNotAllowed {
+            workspace: ws.name.clone(),
+            role: target.role.clone(),
         });
     }
     let questions: Vec<EnvQuestion> = w
@@ -378,9 +394,9 @@ impl SimLaunch {
         let stages = &self.content.stages;
         let Some(i) = self.current else {
             match self.opening.take() {
-                Some(Opening::Refuse(refusal)) => {
+                Some(Opening::Refuse(reason)) => {
                     self.ended = true;
-                    ev.push(LaunchEvent::Refused(Box::new(refusal)));
+                    ev.push(LaunchEvent::Refused(reason));
                     return ev;
                 }
                 Some(Opening::Ask(questions)) => {

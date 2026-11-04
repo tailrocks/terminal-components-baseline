@@ -10,11 +10,11 @@ use jackin_console::app::{App, Route};
 use jackin_console::backend::{Backend, Completion, Effect, FileSource, OnePassword, OpSession};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
-use jackin_console::domain::launch::{LaunchContent, LaunchFailure};
+use jackin_console::domain::launch::{LaunchContent, LaunchFailure, NextStep, RefusalReason};
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{
     EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
-    Refusal, TypedKey,
+    TypedKey,
 };
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::sim::SimBackend;
@@ -358,7 +358,7 @@ fn failed_with(instance: Option<Instance>) -> LaunchEvent {
         failure: LaunchFailure {
             stage: 3,
             summary: "The sandbox could not be created".into(),
-            next_step: "Check the gateway, then launch again.".into(),
+            next_step: NextStep::RunDoctor,
             detail: vec!["gateway: jackin-local".into()],
         },
         instance,
@@ -853,24 +853,22 @@ fn the_key_line_of_the_feed_is_what_the_credentials_line_shows() {
 }
 
 fn refused() -> LaunchEvent {
-    LaunchEvent::Refused(Box::new(Refusal {
-        title: "Held back at the door".into(),
-        found: "The gate would not open for this role.".into(),
-        state: "no record was kept".into(),
-        next_step: "Try the other door, or ask the gate keeper.".into(),
-    }))
+    LaunchEvent::Refused(RefusalReason::RoleNotAllowed {
+        workspace: "payments-platform".into(),
+        role: "the-architect".into(),
+    })
 }
 
 #[test]
-fn a_refusal_from_the_feed_is_drawn_in_the_feeds_words() {
+fn a_refusal_from_the_feed_is_drawn_in_the_launch_words() {
     let (mut app, calls) = scripted(vec![vec![refused()]], None);
     let others = app.world.instances.clone();
-    tick_until(&mut app, "the refusal", shows("Held back at the door"));
+    tick_until(&mut app, "the refusal", shows("Role not allowed"));
     let shown = screen(&mut app);
     for text in [
-        "The gate would not open for this role.",
-        "no record was kept",
-        "Try the other door, or ask the gate keeper.",
+        "Workspace payments-platform does not allow role the-architect.",
+        "nothing was created",
+        "Allow it in the workspace's Roles tab, or load another role.",
     ] {
         assert!(shown.contains(text), "{text:?} missing:\n{shown}");
     }

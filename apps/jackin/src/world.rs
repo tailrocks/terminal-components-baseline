@@ -205,6 +205,11 @@ pub enum Msg {
         instance: InstanceId,
         by: String,
     },
+    /// The record of a cancelled launch, from a backend that had to wait for
+    /// the sandbox before it could say what the cancel left behind.
+    LaunchCancelled {
+        instance: Box<Instance>,
+    },
     RoleChecked {
         role: RoleName,
         result: Result<Box<Snapshot>, String>,
@@ -271,7 +276,8 @@ impl Msg {
             | Msg::AccountRefreshed { .. }
             | Msg::FolderProbed { .. }
             | Msg::OpLoaded { .. }
-            | Msg::Takeover { .. } => None,
+            | Msg::Takeover { .. }
+            | Msg::LaunchCancelled { .. } => None,
         }
     }
 }
@@ -637,6 +643,7 @@ impl World {
                 }
             }
             Msg::Refreshed { result: Err(_) } => self.daemon_health = DaemonHealth::Stale,
+            Msg::LaunchCancelled { instance } => self.record((**instance).clone()),
             Msg::AccountRefreshed { account, result } => {
                 let now = self.now_secs();
                 if let Some(a) = self.accounts.get_mut(account) {
@@ -772,6 +779,16 @@ impl World {
     /// Adds an instance a backend recorded.
     pub fn admit(&mut self, instance: Instance) {
         self.instances.push(instance);
+        self.sync_arbiter();
+    }
+
+    /// Adds an instance a backend recorded, or replaces the row a refresh
+    /// already brought in for it.
+    fn record(&mut self, instance: Instance) {
+        match self.instances.iter_mut().find(|i| i.id == instance.id) {
+            Some(known) => *known = instance,
+            None => self.instances.push(instance),
+        }
         self.sync_arbiter();
     }
 
@@ -917,6 +934,13 @@ impl World {
             };
         }
 
+        if ws.is_none()
+            && ready.is_empty()
+            && self.accounts.default_for(provider).is_none()
+            && let Some(only) = self.accounts.only_ready(provider)
+        {
+            ready.push(only.id.clone());
+        }
         let resolved = self.account_for(provider, ws, role, None);
         let preselected = resolved
             .account

@@ -49,6 +49,16 @@ const fn alias(text: &'static str) -> Rule {
     }
 }
 
+/// A refusal sentence. The cockpit and the feed types draw none of their own;
+/// the words of a refusal sit in `LaunchWords`.
+const fn refusal(text: &'static str) -> Rule {
+    Rule {
+        text,
+        kind: Kind::Literal,
+        scope: Scope::OnlyIn(&["screens/cockpit.rs", "launch.rs"]),
+    }
+}
+
 const RULES: &[Rule] = &[
     code("sim ::"),
     code("fixtures ::"),
@@ -102,9 +112,9 @@ const RULES: &[Rule] = &[
     literal("typed once for this launch"),
     code("ticks as f64"),
     code("0 . 0 3 3"),
-    literal("Role not allowed"),
-    literal("does not allow role"),
-    literal("nothing was created"),
+    refusal("Role not allowed"),
+    refusal("does not allow role"),
+    refusal("nothing was created"),
 ];
 
 /// A token that still sits in the library, the file it sits in, how many times,
@@ -670,12 +680,17 @@ fn the_cockpit_draws_no_refusal_of_its_own() {
             "const STATE: &str = \"nothing was created\";",
         ),
     ] {
-        for path in ["screens/cockpit.rs", "launch.rs", "domain/launch.rs"] {
+        for path in ["screens/cockpit.rs", "launch.rs"] {
             let found = scan(&[src(path, text)], &[]).unexpected;
             assert_eq!(found.len(), 1, "{token} in {path}: {found:?}");
             assert_eq!(found[0].token, token, "{path}");
         }
-        for path in ["sim/launch.rs", "sim/mod.rs", "fixtures/surfaces.rs"] {
+        for path in [
+            "domain/launch.rs",
+            "sim/launch.rs",
+            "sim/mod.rs",
+            "fixtures/surfaces.rs",
+        ] {
             assert_eq!(scan(&[src(path, text)], &[]), Report::default(), "{path}");
         }
     }

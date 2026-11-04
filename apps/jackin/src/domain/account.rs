@@ -4,6 +4,7 @@ use super::agent::{Agent, Provider, UsageSurface};
 use super::fixed::Fixed;
 use super::onepassword::OpReference;
 use super::usage::{AccountUsage, Freshness};
+use super::workspace::{Usability, usability_of};
 
 pub type AccountId = String;
 
@@ -547,6 +548,16 @@ impl AccountRegistry {
                 && a.enabled
                 && a.lifecycle == Lifecycle::Available
         })
+    }
+
+    /// The account of the provider that is ready, when exactly one is: D26's
+    /// last rule, "the only account".
+    pub fn only_ready(&self, p: Provider) -> Option<&Account> {
+        let mut ready = self
+            .by_provider(p)
+            .filter(|a| usability_of(a) == Usability::Ready);
+        let only = ready.next()?;
+        ready.next().is_none().then_some(only)
     }
 
     pub fn find_duplicate(&self, probe: &DuplicateProbe) -> Option<&Account> {

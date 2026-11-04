@@ -2085,6 +2085,7 @@ impl Page<Jackin> for ManagerScreen {
                 }
                 Err(error) => cx.error(error.clone()),
             },
+            Msg::LaunchCancelled { .. } => {}
             Msg::Refreshed { result } => match result {
                 Ok(snapshot) => w.apply((**snapshot).clone()),
                 Err(error) => cx.error(format!("Refresh failed: {error} · showing last-good rows")),

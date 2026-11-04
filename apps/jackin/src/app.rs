@@ -32,6 +32,7 @@ use crate::backend::Effect;
 use crate::domain::instance::ID_PREFIX;
 use crate::domain::instance::InstanceId;
 use crate::domain::instance::InstanceStatus;
+use crate::domain::launch::EmptyLanding;
 use crate::domain::vocabulary::fill_in;
 use crate::launch::LaunchTarget;
 use crate::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_ROLES, TAB_USAGE};
@@ -1914,6 +1915,11 @@ impl App {
                         ),
                         Tone::Error,
                     );
+                } else if self.world.backend.launch_content().when_empty == EmptyLanding::Manager {
+                    if let Some(i) = instance {
+                        self.router.manager_mut().select_instance(&i, &self.world);
+                    }
+                    self.enter_route();
                 } else {
                     self.leave_construct(instance.as_deref().unwrap_or(""));
                 }

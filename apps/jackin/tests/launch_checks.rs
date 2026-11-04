@@ -5,8 +5,9 @@ mod common;
 use common::*;
 use jackin_console::app::{App, Route};
 use jackin_console::domain::agent::Agent;
+use jackin_console::domain::launch::RefusalReason;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
-use jackin_console::launch::{EnvAnswer, EnvQuestion, LaunchEvent, LaunchTarget, Refusal};
+use jackin_console::launch::{EnvAnswer, EnvQuestion, LaunchEvent, LaunchTarget};
 use jackin_console::sim::SimBackend;
 use jackin_console::world::World;
 use junie_tui::core::event::Input;
@@ -190,12 +191,10 @@ fn the_guarded_sim_sends_the_refusal_before_any_stage() {
     let first = feed.poll(&world);
     assert_eq!(
         first,
-        [LaunchEvent::Refused(Box::new(Refusal {
-            title: "Role not allowed".into(),
-            found: "Workspace customer-portal does not allow role writer.".into(),
-            state: "nothing was created".into(),
-            next_step: "Allow it in the workspace's Roles tab, or load another role.".into(),
-        }))]
+        [LaunchEvent::Refused(RefusalReason::RoleNotAllowed {
+            workspace: "customer-portal".into(),
+            role: "writer".into(),
+        })]
     );
     assert_eq!(feed.poll(&world), [], "a refused launch says nothing more");
 }

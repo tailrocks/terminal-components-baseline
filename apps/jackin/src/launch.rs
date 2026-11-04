@@ -3,8 +3,9 @@ use junie_tui::widgets::steps::StepState;
 use crate::backend::OnePassword;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
+use crate::domain::docker::DockerCapability;
 use crate::domain::instance::Instance;
-use crate::domain::launch::{LaunchContent, LaunchFailure};
+use crate::domain::launch::{LaunchContent, LaunchFailure, RefusalReason};
 use crate::domain::workspace::WorkspaceId;
 use crate::world::World;
 
@@ -30,17 +31,6 @@ pub struct ReadyInstance {
 pub struct FailedLaunch {
     pub failure: LaunchFailure,
     pub instance: Option<Instance>,
-}
-
-/// Why a launch never started, in the backend's words. The cockpit draws the
-/// four texts and nothing else: the backend created nothing, so there is no
-/// stage, no run to copy and no record.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Refusal {
-    pub title: String,
-    pub found: String,
-    pub state: String,
-    pub next_step: String,
 }
 
 /// A value the launch asks the operator for before it starts: the variable,
@@ -79,8 +69,14 @@ pub enum LaunchEvent {
     CredentialError {
         message: String,
     },
-    /// The launch cannot start. Nothing was created.
-    Refused(Box<Refusal>),
+    /// The launch cannot start. Nothing was created. The cockpit words the
+    /// reason from `LaunchWords` and draws that and nothing else: there is no
+    /// stage, no run to copy and no record.
+    Refused(RefusalReason),
+    /// The launch gives the agent a Docker engine. The cockpit draws the
+    /// banner and lists the risks from this; without it, from
+    /// `Surfaces.docker`.
+    Warning(DockerCapability),
     /// The launch waits for these answers; the feed sends nothing more until
     /// `LaunchFeed::answer_env`, or `cancel`.
     NeedsInput(Vec<EnvQuestion>),
@@ -125,7 +121,8 @@ pub trait LaunchFeed: std::fmt::Debug + Send {
     fn answer_env(&mut self, answers: Vec<EnvAnswer>);
 
     /// The operator ended the launch. The record the backend kept of the
-    /// launch, if it kept one.
+    /// launch, if it kept one. A backend that must wait for the sandbox
+    /// returns `None` and sends the record later as `Msg::LaunchCancelled`.
     fn cancel(&mut self, world: &World) -> Option<Instance>;
 }
 

@@ -1,4 +1,5 @@
 use crate::domain::agent::Agent;
+use crate::domain::vocabulary::fill_in;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum StageKind {
@@ -95,13 +96,82 @@ pub struct LaunchWords {
     pub build_failed: String,
     pub ready_activity: String,
     pub credentials_resolved: String,
+    /// The `State` row of a refused launch.
+    pub refused_state: String,
+    /// Templates take `{workspace}` and `{role}`.
+    pub role_not_allowed: RefusalWords,
+    /// Templates take `{agent}` and `{launchable}`.
+    pub agent_not_launchable: RefusalWords,
+    /// Takes `{sandbox}` and `{launch}`.
+    pub next_retry: String,
+    pub next_doctor: String,
+    pub next_credential: String,
+}
+
+/// What the cockpit says about one kind of refused launch.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RefusalWords {
+    pub title: String,
+    pub found: String,
+    pub next_step: String,
+}
+
+/// Why a launch never started. The backend names the case and its facts, and
+/// `LaunchWords::refusal` words it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RefusalReason {
+    RoleNotAllowed {
+        workspace: String,
+        role: String,
+    },
+    /// The agent is not one the backend launches. `launchable` is the one it
+    /// does.
+    AgentNotLaunchable {
+        agent: Agent,
+        launchable: Agent,
+    },
+}
+
+/// The texts of a refused launch, as the cockpit draws them.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RefusalText {
+    pub title: String,
+    pub found: String,
+    pub state: String,
+    pub next_step: String,
+}
+
+/// What is left to do after a launch failed, as a fact.
+/// `LaunchWords::next_step` words it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum NextStep {
+    /// Nothing is left to do, and the failure shows no `Next step` row.
+    None,
+    /// The sandbox of the launch remains; launching again with the same
+    /// launch id picks it up.
+    Retry {
+        sandbox: String,
+        launch: String,
+    },
+    RunDoctor,
+    FixCredential,
+}
+
+/// Where the console goes when a launch ends without an instance and nothing
+/// is running.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EmptyLanding {
+    /// The outro: nothing runs, so the operator leaves.
+    Outro,
+    /// The manager, which lists what the launch left.
+    Manager,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LaunchFailure {
     pub stage: usize,
     pub summary: String,
-    pub next_step: String,
+    pub next_step: NextStep,
     pub detail: Vec<String>,
 }
 
@@ -113,6 +183,7 @@ pub struct LaunchContent {
     pub network_failure: LaunchFailure,
     pub agent_provider_only: bool,
     pub name_slug: Option<usize>,
+    pub when_empty: EmptyLanding,
 }
 
 impl StageList {
@@ -153,6 +224,54 @@ impl LaunchWords {
             build_failed: "Image build failed".into(),
             ready_activity: "Codex is running · opening the session".into(),
             credentials_resolved: "resolved in memory · discarded".into(),
+            refused_state: "nothing was created".into(),
+            role_not_allowed: RefusalWords {
+                title: "Role not allowed".into(),
+                found: "Workspace {workspace} does not allow role {role}.".into(),
+                next_step: "Allow it in the workspace's Roles tab, or load another role.".into(),
+            },
+            agent_not_launchable: RefusalWords {
+                title: "Agent not launchable".into(),
+                found:
+                    "{agent} cannot be launched: {launchable} is the only agent jackin launches."
+                        .into(),
+                next_step: "Launch with {launchable}; {agent} stays usage only.".into(),
+            },
+            next_retry: "sandbox {sandbox} remains; retry with: jackin load --launch-id {launch}"
+                .into(),
+            next_doctor: "Run jackin doctor, fix the failing check, then launch again.".into(),
+            next_credential: "Fix the account's credential in Accounts, then launch again.".into(),
+        }
+    }
+
+    pub fn refusal(&self, reason: &RefusalReason) -> RefusalText {
+        let (words, pairs) = match reason {
+            RefusalReason::RoleNotAllowed { workspace, role } => (
+                &self.role_not_allowed,
+                vec![("workspace", workspace.as_str()), ("role", role.as_str())],
+            ),
+            RefusalReason::AgentNotLaunchable { agent, launchable } => (
+                &self.agent_not_launchable,
+                vec![("agent", agent.label()), ("launchable", launchable.label())],
+            ),
+        };
+        RefusalText {
+            title: fill_in(&words.title, &pairs),
+            found: fill_in(&words.found, &pairs),
+            state: self.refused_state.clone(),
+            next_step: fill_in(&words.next_step, &pairs),
+        }
+    }
+
+    pub fn next_step(&self, step: &NextStep) -> Option<String> {
+        match step {
+            NextStep::None => None,
+            NextStep::Retry { sandbox, launch } => Some(fill_in(
+                &self.next_retry,
+                &[("sandbox", sandbox), ("launch", launch)],
+            )),
+            NextStep::RunDoctor => Some(self.next_doctor.clone()),
+            NextStep::FixCredential => Some(self.next_credential.clone()),
         }
     }
 }
@@ -170,11 +289,12 @@ impl LaunchContent {
             network_failure: LaunchFailure {
                 stage: sandbox,
                 summary: "The sandbox could not be created".into(),
-                next_step: "Run jackin doctor, fix the failing check, then launch again.".into(),
+                next_step: NextStep::RunDoctor,
                 detail: Vec::new(),
             },
             agent_provider_only: true,
             name_slug: Some(7),
+            when_empty: EmptyLanding::Manager,
         }
     }
 }

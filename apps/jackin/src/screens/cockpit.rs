@@ -29,12 +29,13 @@ use super::modals::{InfoDialog, InfoResult};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
-use crate::domain::launch::{LaunchContent, LaunchFailure, StageKind};
+use crate::domain::docker::DockerCapability;
+use crate::domain::launch::{LaunchContent, LaunchFailure, RefusalReason, StageKind};
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
     EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
-    Refusal, launch_accounts,
+    launch_accounts,
 };
 use crate::world::World;
 use junie_tui::motion::Motion;
@@ -51,7 +52,7 @@ pub const CANCEL_BTN: WidgetId = WidgetId::of("cockpit.cancel_btn");
 struct Progress {
     states: Vec<StepState>,
     failure: Option<LaunchFailure>,
-    refusal: Option<Refusal>,
+    refusal: Option<RefusalReason>,
     done: bool,
     cancelled: bool,
 }
@@ -120,6 +121,7 @@ pub struct CockpitScreen {
     pub credential_hold: bool,
     pub target_label: String,
     docker: bool,
+    docker_warning: Option<DockerCapability>,
 }
 
 impl CockpitScreen {
@@ -168,6 +170,7 @@ impl CockpitScreen {
             credential_hold: false,
             target_label,
             docker,
+            docker_warning: None,
         }
     }
 
@@ -326,13 +329,14 @@ impl CockpitScreen {
                     d.width = 70;
                     cx.open(d, LayerTag::new("cred"));
                 }
-                LaunchEvent::Refused(refusal) => {
+                LaunchEvent::Refused(reason) => {
                     self.frozen_at = Some(self.tick);
-                    self.activity = refusal.title.clone();
+                    self.activity = self.content.words.refusal(&reason).title;
                     self.log_open = false;
-                    self.progress.refusal = Some(*refusal);
+                    self.progress.refusal = Some(reason);
                     self.open_refusal(cx);
                 }
+                LaunchEvent::Warning(capability) => self.docker_warning = Some(capability),
                 LaunchEvent::NeedsInput(questions) => self.open_questions(questions, cx),
                 LaunchEvent::Failed(failed) => {
                     let FailedLaunch { failure, instance } = *failed;
@@ -371,17 +375,19 @@ impl CockpitScreen {
         };
         self.failure_shown = true;
         let words = &self.content.words;
-        let props = vec![
+        let mut props = vec![
             Prop::new("Stage", self.content.stages.get(f.stage).label.clone()).tone(Tone::Error),
             Prop::new("Run id", self.feed.run_id().to_owned()).copyable(),
-            Prop::new("Next step", f.next_step.clone()).wrap(),
-            Prop::new(
-                &words.unit,
-                self.container
-                    .clone()
-                    .unwrap_or_else(|| words.unit_missing.clone()),
-            ),
         ];
+        if let Some(next) = words.next_step(&f.next_step) {
+            props.push(Prop::new("Next step", next).wrap());
+        }
+        props.push(Prop::new(
+            &words.unit,
+            self.container
+                .clone()
+                .unwrap_or_else(|| words.unit_missing.clone()),
+        ));
         let title = match self.content.stages.get(f.stage).kind {
             StageKind::BuildLog => words.build_failed.clone(),
             StageKind::Credentials { .. } => "Credential check failed".to_owned(),
@@ -404,9 +410,10 @@ impl CockpitScreen {
     }
 
     fn open_refusal(&mut self, cx: &mut Cx) {
-        let Some(r) = self.progress.refusal.clone() else {
+        let Some(reason) = self.progress.refusal.clone() else {
             return;
         };
+        let r = self.content.words.refusal(&reason);
         let d = InfoDialog::new(
             WidgetId::of("cockpit.refusal"),
             &r.title,
@@ -462,6 +469,19 @@ impl CockpitScreen {
             .collect()
     }
 
+    /// The Docker risks the launch carries: those of the feed's warning, or
+    /// else those of the engine setting the role and workspace turn on.
+    fn docker_risks<'a>(
+        &'a self,
+        w: &'a World,
+    ) -> Option<&'a [crate::domain::docker::DockerRiskText]> {
+        match &self.docker_warning {
+            Some(capability) => Some(&capability.risks),
+            None if self.docker => w.surfaces.docker.as_ref().map(|d| d.risks.as_slice()),
+            None => None,
+        }
+    }
+
     fn open_info(&mut self, w: &World, cx: &mut Cx) {
         let mut props = vec![
             Prop::new("Target", format!("{} {}", self.role, self.target_label)),
@@ -500,9 +520,7 @@ impl CockpitScreen {
         }
         let mut d =
             InfoDialog::new(WidgetId::of("cockpit.info"), "Debug info", props).meta("read-only");
-        if self.docker
-            && let Some(risks) = w.surfaces.docker.as_ref().map(|d| &d.risks)
-        {
+        if let Some(risks) = self.docker_risks(w) {
             d = d
                 .detail(
                     risks
@@ -1025,15 +1043,13 @@ impl Page<Jackin> for CockpitScreen {
             );
             y += 3;
         }
-        if self.docker
-            && let Some(d) = w.surfaces.docker.as_ref()
-        {
+        if let Some(risks) = self.docker_risks(w) {
             let ny = rail.bottom() + 4;
             let x = rail.x.saturating_sub(4);
             let width = area.right().saturating_sub(x + 2);
             let notice = Notice::warning(format!(
                 "Docker is on · the agent can read the engine key and containers bypass the sandbox network policy · i shows all {}",
-                plural(d.risks.len(), "risk", "risks")
+                plural(risks.len(), "risk", "risks")
             ));
             let h = notice.height(width);
             if ny + h < area.bottom().saturating_sub(3) {
