@@ -354,17 +354,42 @@ fn attach_clean(app: &App) -> TerminalSnapshot {
 
 fn shot(app: &App, checkpoint: &str, accept: impl Fn(&TerminalSnapshot) -> bool) {
     let test_id = visual_id(checkpoint);
-    let screen = wait_settled(
-        app,
-        &test_id,
-        Duration::from_millis(200),
-        Duration::from_secs(8),
-        accept,
-    );
-    check_frame(app, &screen, &test_id);
+    // The hint bar can hold one bold pattern, then another, for longer than
+    // the 200ms settle. The reference frame is one of those paints.
+    let deadline = Instant::now() + Duration::from_secs(8);
+    let mut last: Option<TerminalSnapshot> = None;
+    let mut since: Option<Instant> = None;
+    let mut missed = String::new();
+    loop {
+        let screen = app.screen();
+        if accept(&screen) {
+            let same = last.as_ref().is_some_and(|prev| prev == &screen);
+            if same && since.expect("stability start").elapsed() >= Duration::from_millis(200) {
+                if let Some(why) = frame_mismatch(app, &screen, &test_id) {
+                    missed = why;
+                    last = None;
+                    since = None;
+                } else {
+                    return;
+                }
+            } else if !same {
+                last = Some(screen);
+                since = Some(Instant::now());
+            }
+        } else {
+            last = None;
+            since = None;
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "{test_id} reference frame not seen: {missed}\n{}",
+            text(&app.screen())
+        );
+        std::thread::sleep(Duration::from_millis(20));
+    }
 }
 
-fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
+fn frame_mismatch(app: &App, screen: &TerminalSnapshot, test_id: &str) -> Option<String> {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
@@ -377,14 +402,13 @@ fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
     let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
         .expect("open Tuiscotti frozen store");
     let outcome = store.check(&bytes).expect("run Tuiscotti frozen check");
-    if let CheckOutcome::Failure(failure) = outcome {
-        panic!(
-            "{test_id} {} sha {} path {} cells {}",
+    match outcome {
+        CheckOutcome::Pass(_) => None,
+        CheckOutcome::Failure(failure) => Some(format!(
+            "{} cells {}",
             failure.reason(),
-            failure.candidate_sha256(),
-            failure.candidate_path().display(),
             failure.changed_cell_total()
-        );
+        )),
     }
 }
 

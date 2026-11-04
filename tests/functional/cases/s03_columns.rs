@@ -1374,33 +1374,41 @@ fn option_min_width() {
     );
     assert!(option_value(&chosen, "Header menu labels").contains("default"));
     click_tab(&app, "Playground");
-    let mut before = None;
-    let started = Instant::now();
-    while started.elapsed() < Duration::from_millis(800) {
-        let screen = app.screen();
-        if text(&screen).contains(DRAG_META) && text(&screen).contains("#1040") {
-            before = Some(screen);
-            break;
-        }
-        std::thread::sleep(Duration::from_millis(5));
-    }
-    let play = before.unwrap_or_else(|| {
-        panic!(
-            "playground before the min-width drag\n{}",
-            text(&app.screen())
-        )
+    let play = app.wait_screen("playground before the min-width drag", |screen| {
+        text(screen).contains(DRAG_META) && text(screen).contains("#1040") && header_present(screen)
     });
     let (id_x, task_x, _, y) = column_header(&play);
     assert_eq!(task_x, id_x + 7, "min width changed ID before a drag");
-    let seam = Point { x: task_x - 2, y };
-    let dest = Point {
-        x: seam.x.saturating_sub(20),
-        y: seam.y,
+    // The 140ms tab flash dies while the grid finishes painting. Press the
+    // selected tab again and drag inside the new flash. A missed flash leaves
+    // the clamped columns in place, so the next attempt drags the live seam.
+    let mut clamped = None;
+    let mut dest = Point {
+        x: task_x.saturating_sub(2),
+        y,
     };
-    // Drag in the same turn as the tab click so the press flash is still up.
-    app.down(seam);
-    app.drag_to(dest);
-    let clamped = sample_held(&app, |screen| min_width_frame(screen, id_x)).unwrap_or_else(|| {
+    for _ in 0..6 {
+        let current = app.screen();
+        let (_, task, _, seam_y) = column_header(&current);
+        let seam = Point {
+            x: task.saturating_sub(2),
+            y: seam_y,
+        };
+        dest = Point {
+            x: seam.x.saturating_sub(20),
+            y: seam.y,
+        };
+        click_tab(&app, "Playground");
+        app.move_to(seam);
+        app.down(seam);
+        app.drag_to(dest);
+        if let Some(screen) = sample_held(&app, |screen| min_width_frame(screen, id_x)) {
+            clamped = Some(screen);
+            break;
+        }
+        app.up(dest);
+    }
+    let clamped = clamped.unwrap_or_else(|| {
         let screen = app.screen();
         let cursor = screen.cursor();
         panic!(
