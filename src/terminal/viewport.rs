@@ -501,6 +501,10 @@ impl ViewportOps for TerminalViewport {
         if self.select.press.is_none() {
             return Outcome::Ignored;
         }
+        if self.area.is_empty() {
+            self.select.press = None;
+            return Outcome::Ignored;
+        }
         let top = self.area.y;
         let bottom = self.area.bottom();
         if pos.y < top {

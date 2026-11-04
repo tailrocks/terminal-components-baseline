@@ -1369,6 +1369,10 @@ impl TextViewport {
             return Outcome::Ignored;
         }
         let text = self.text_rect();
+        if text.is_empty() {
+            self.select.press = None;
+            return Outcome::Ignored;
+        }
 
         if pos.y < text.y {
             self.scroll.scroll_by(-((text.y - pos.y) as isize));
