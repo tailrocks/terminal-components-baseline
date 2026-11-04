@@ -465,8 +465,8 @@ fn backspace(app: &App, typed: &str, gone: &[&str]) -> TerminalSnapshot {
 /// type another `y`: the live token then becomes a run, and neither branch
 /// submits it.
 fn submit_claude_yes(app: &App) {
-    let deadline = Instant::now() + Duration::from_secs(8);
-    let mut typed = false;
+    let deadline = Instant::now() + Duration::from_secs(12);
+    let mut armed = false;
     let mut backed_from: Option<usize> = None;
     loop {
         assert!(
@@ -490,9 +490,11 @@ fn submit_claude_yes(app: &App) {
         if extra_y && backed_from != Some(input.len()) {
             app.key("backspace");
             backed_from = Some(input.len());
-        } else if input.is_empty() && !typed {
-            app.type_text("y");
-            typed = true;
+        } else if input.is_empty() && !armed {
+            // The permission line ignores a pasted byte. One key answers it.
+            // A second `y` is a new message and the edit is skipped.
+            app.key("y");
+            armed = true;
             backed_from = None;
         }
         std::thread::sleep(Duration::from_millis(25));

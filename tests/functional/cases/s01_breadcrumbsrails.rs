@@ -420,7 +420,11 @@ fn compare_levels_scrolls_then_narrows_before_growing() {
     let before = row_containing(&states, "Compare levels");
     assert!(before.contains('○'), "compare starts off: {before}");
     click_first(&app, "Compare levels");
-    let on = app.wait_text("● Compare levels");
+    // The toggle paints on before the 256-color band. Both are the on state.
+    let on = app.wait_screen("compare levels on", |screen| {
+        let visible = text(screen);
+        visible.contains("● Compare levels") && visible.contains("256 colors")
+    });
     assert_has(&on, "256 colors");
     assert_has(&on, "every state, drawn by the widget");
     assert_lacks(&on, "16 colors");
