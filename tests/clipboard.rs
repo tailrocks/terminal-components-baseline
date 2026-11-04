@@ -214,3 +214,49 @@ fn an_unmasked_field_still_copies_and_cuts() {
     assert_eq!(cmd_on(&mut cut, &['a', 'x']), ["alpha"]);
     assert_eq!(cut.text(), "");
 }
+
+fn ctrl_w() -> Key {
+    Key {
+        code: KeyCode::Char('w'),
+        mods: KeyModifiers::CONTROL,
+    }
+}
+
+#[test]
+fn ctrl_w_in_a_masked_field_deletes_the_word_before_the_cursor_and_copies_nothing() {
+    let mut field = TextInput::new(WidgetId::of("t.secret"), "Key").masked();
+    for c in "sk-one two".chars() {
+        field.on_key(&Key {
+            code: KeyCode::Char(c),
+            mods: KeyModifiers::NONE,
+        });
+    }
+    let sink = Arc::new(Recording::default());
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(sink.clone());
+    shell.clipboard.install();
+    queued();
+    field.on_key(&ctrl_w());
+    assert_eq!(field.text(), "sk-one ");
+    field.on_key(&ctrl_w());
+    assert_eq!(field.text(), "sk-");
+    assert_eq!(sink.0.lock().expect("writes").clone(), Vec::<String>::new());
+    assert_eq!(queued(), Vec::<String>::new(), "no OSC 52");
+}
+
+#[test]
+fn ctrl_w_over_a_selection_in_a_masked_field_deletes_it_and_copies_nothing() {
+    let mut field = TextInput::new(WidgetId::of("t.secret"), "Key")
+        .value("sk-secret")
+        .masked();
+    let sink = Arc::new(Recording::default());
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(sink.clone());
+    shell.clipboard.install();
+    queued();
+    field.on_key(&cmd('a'));
+    field.on_key(&ctrl_w());
+    assert_eq!(field.text(), "");
+    assert_eq!(sink.0.lock().expect("writes").clone(), Vec::<String>::new());
+    assert_eq!(queued(), Vec::<String>::new(), "no OSC 52");
+}

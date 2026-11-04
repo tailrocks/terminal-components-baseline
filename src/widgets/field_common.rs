@@ -326,7 +326,10 @@ pub fn apply_edit(
             undo.seal();
             return Some(Applied::Moved);
         }
-        EditAction::Copy | EditAction::Cut if secret => return Some(Applied::Moved),
+        EditAction::Copy if secret => return Some(Applied::Moved),
+        EditAction::Cut if secret && key_code != KeyCode::Char('w') => {
+            return Some(Applied::Moved);
+        }
         EditAction::Copy => {
             if let Some(t) = buf.selected_text() {
                 clipboard::copy(t);
@@ -335,7 +338,9 @@ pub fn apply_edit(
         }
         EditAction::Cut => match buf.selected_text().map(str::to_owned) {
             Some(t) => {
-                clipboard::copy(&t);
+                if !secret {
+                    clipboard::copy(&t);
+                }
                 if !read_only {
                     buf.backspace();
                 }
