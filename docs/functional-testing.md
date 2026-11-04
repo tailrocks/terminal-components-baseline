@@ -166,9 +166,23 @@ the helper always sets: wall time then never moves the simulated clock (so a
 relative label such as "live · 3 s ago" cannot drift under load), and the
 helper's `advance_clock(ms)` sends its documented bracketed-paste clock
 request to step it. A Holla journey that waits for a task or activity to
-progress calls `advance_clock` first. Do not assume every application
+progress calls `advance_clock` first. TablePro steps only its status line
+(the 5 s lifetime of a message) this way; its pointer timers and every
+showcase timer stay on wall time. Do not assume every application
 implements that clock. Never send clock input as a substitute for a domain
 interaction.
+
+Every read of the screen by the helper (`screen`, the `wait_*` predicates,
+`settle`, `stable_screen`) begins with a fence: the helper pastes
+`junie-tui:fence`, and under the same opt-in the shell answers it with a BEL
+after the frame of every input written before it. The helper returns when the
+terminal's bell count rises, so a snapshot shows every action sent so far as
+handled. The writes stay as asynchronous as before (a key and the next mouse
+move may share one frame, as in a real terminal). Without the fence a wait that
+one frame of a multi-input gesture already satisfies, or a `settle()` that
+reads 150 ms of quiet before the application has read its input, passes or
+fails by machine load. Write a wait for the state the action produces, not for
+a state the frame before it also has.
 
 ## Write one journey around observable contracts
 
