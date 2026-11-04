@@ -1,7 +1,11 @@
 #![cfg(feature = "terminal")]
 
-use junie_tui::terminal::{RowWrap, TermEvent, TermView, TerminalState, TerminalView};
+use junie_tui::core::event::Key;
+use junie_tui::terminal::{
+    Modes, RowWrap, TermEvent, TermView, TerminalState, TerminalView, encode_key,
+};
 use ratatui::buffer::Buffer;
+use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::Rect;
 use ratatui::style::{Color, Modifier};
 use ratatui::widgets::Widget;
@@ -366,4 +370,83 @@ fn clear_scrollback_drops_the_history_and_keeps_the_screen() {
     );
     assert_eq!(state.feed(b"\r\nL31"), vec![]);
     assert_eq!(state.scrollback_len(), 1, "history starts again");
+}
+
+fn encoded(code: KeyCode, mods: KeyModifiers, app_cursor: bool) -> Option<Vec<u8>> {
+    let modes = Modes {
+        app_cursor,
+        ..Modes::default()
+    };
+    encode_key(&Key { code, mods }, &modes)
+}
+
+#[test]
+fn encode_key_writes_the_xterm_modifier_forms() {
+    const NONE: KeyModifiers = KeyModifiers::NONE;
+    const SHIFT: KeyModifiers = KeyModifiers::SHIFT;
+    const ALT: KeyModifiers = KeyModifiers::ALT;
+    const CTRL: KeyModifiers = KeyModifiers::CONTROL;
+    let both = SHIFT.union(CTRL);
+    let all = SHIFT.union(ALT).union(CTRL);
+    let table: &[(KeyCode, KeyModifiers, &str)] = &[
+        (KeyCode::Up, NONE, "\x1b[A"),
+        (KeyCode::Left, SHIFT, "\x1b[1;2D"),
+        (KeyCode::Left, CTRL, "\x1b[1;5D"),
+        (KeyCode::Right, CTRL, "\x1b[1;5C"),
+        (KeyCode::Up, both, "\x1b[1;6A"),
+        (KeyCode::Down, all, "\x1b[1;8B"),
+        (KeyCode::Home, CTRL, "\x1b[1;5H"),
+        (KeyCode::End, SHIFT, "\x1b[1;2F"),
+        (KeyCode::Up, ALT, "\x1b\x1b[A"),
+        (KeyCode::PageUp, NONE, "\x1b[5~"),
+        (KeyCode::PageUp, SHIFT, "\x1b[5;2~"),
+        (KeyCode::PageDown, CTRL, "\x1b[6;5~"),
+        (KeyCode::Delete, CTRL, "\x1b[3;5~"),
+        (KeyCode::Delete, both, "\x1b[3;6~"),
+        (KeyCode::Insert, SHIFT, "\x1b[2;2~"),
+        (KeyCode::F(1), NONE, "\x1bOP"),
+        (KeyCode::F(1), SHIFT, "\x1b[1;2P"),
+        (KeyCode::F(4), CTRL, "\x1b[1;5S"),
+        (KeyCode::F(5), NONE, "\x1b[15~"),
+        (KeyCode::F(5), CTRL, "\x1b[15;5~"),
+        (KeyCode::F(12), all, "\x1b[24;8~"),
+        (KeyCode::Backspace, NONE, "\x7f"),
+        (KeyCode::Backspace, CTRL, "\x08"),
+        (KeyCode::Backspace, ALT, "\x1b\x7f"),
+        (KeyCode::Enter, SHIFT, "\r"),
+        (KeyCode::Char('c'), CTRL, "\x03"),
+        (KeyCode::Char('\\'), CTRL, "\x1c"),
+        (KeyCode::Char(']'), CTRL, "\x1d"),
+        (KeyCode::Char('^'), CTRL, "\x1e"),
+        (KeyCode::Char('_'), CTRL, "\x1f"),
+        (KeyCode::Char('/'), CTRL, "\x1f"),
+        (KeyCode::Char('@'), CTRL, "\x00"),
+        (KeyCode::Char(' '), CTRL, "\x00"),
+        (KeyCode::Char('\\'), NONE, "\\"),
+        (KeyCode::Char('x'), ALT, "\x1bx"),
+    ];
+    for (code, mods, want) in table {
+        assert_eq!(
+            encoded(*code, *mods, false).as_deref(),
+            Some(want.as_bytes()),
+            "{code:?} with {mods:?}"
+        );
+    }
+}
+
+#[test]
+fn encode_key_follows_application_cursor_mode_only_without_modifiers() {
+    assert_eq!(
+        encoded(KeyCode::Up, KeyModifiers::NONE, true).as_deref(),
+        Some(&b"\x1bOA"[..])
+    );
+    assert_eq!(
+        encoded(KeyCode::End, KeyModifiers::NONE, true).as_deref(),
+        Some(&b"\x1bOF"[..])
+    );
+    assert_eq!(
+        encoded(KeyCode::Left, KeyModifiers::CONTROL, true).as_deref(),
+        Some(&b"\x1b[1;5D"[..]),
+        "xterm sends the parameter form in application mode too"
+    );
 }

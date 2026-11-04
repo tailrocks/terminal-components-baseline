@@ -349,23 +349,56 @@ impl Widget for TerminalView<'_> {
     }
 }
 
+/// The bytes a terminal program expects for `key`.
+///
+/// Navigation, function, Insert, Delete and Page keys with Ctrl or Shift use
+/// the xterm modifier parameter (`CSI 1 ; m X`, `CSI n ; m ~`, m = 1 + Shift +
+/// 2 Alt + 4 Ctrl). Alt alone keeps the older `ESC` prefix. Shift+Enter stays
+/// `\r`: legacy terminals have no distinct code for it.
 pub fn encode_key(key: &Key, modes: &Modes) -> Option<Vec<u8>> {
     let ctrl = key.mods.contains(KeyModifiers::CONTROL);
     let alt = key.mods.contains(KeyModifiers::ALT);
-    let cursor = |letter: u8| {
-        if modes.app_cursor {
-            vec![0x1b, b'O', letter]
-        } else {
-            vec![0x1b, b'[', letter]
-        }
+    let shift = key.mods.contains(KeyModifiers::SHIFT);
+    let param =
+        (ctrl || shift).then(|| 1 + u8::from(shift) + 2 * u8::from(alt) + 4 * u8::from(ctrl));
+    let cursor = |letter: u8| match param {
+        Some(m) => format!("\x1b[1;{m}{}", letter as char).into_bytes(),
+        None if modes.app_cursor => vec![0x1b, b'O', letter],
+        None => vec![0x1b, b'[', letter],
     };
+    let tilde = |n: u8| match param {
+        Some(m) => format!("\x1b[{n};{m}~").into_bytes(),
+        None => format!("\x1b[{n}~").into_bytes(),
+    };
+    let function = |n: u8| match param {
+        Some(m) => format!("\x1b[1;{m}{}", (b'P' + n - 1) as char).into_bytes(),
+        None => vec![0x1b, b'O', b'P' + n - 1],
+    };
+    let modified_nav = param.is_some()
+        && matches!(
+            key.code,
+            KeyCode::Up
+                | KeyCode::Down
+                | KeyCode::Right
+                | KeyCode::Left
+                | KeyCode::Home
+                | KeyCode::End
+                | KeyCode::PageUp
+                | KeyCode::PageDown
+                | KeyCode::Delete
+                | KeyCode::Insert
+                | KeyCode::F(1..=12)
+        );
     let mut bytes = match key.code {
         KeyCode::Char(c) if ctrl && c.is_ascii_alphabetic() => {
             vec![c.to_ascii_lowercase() as u8 - b'a' + 1]
         }
         KeyCode::Char(' ') if ctrl => vec![0],
+        KeyCode::Char(c @ ('@'..='_')) if ctrl => vec![c as u8 & 0x1f],
+        KeyCode::Char('/') if ctrl => vec![0x1f],
         KeyCode::Char(c) => c.to_string().into_bytes(),
         KeyCode::Enter => vec![b'\r'],
+        KeyCode::Backspace if ctrl => vec![0x08],
         KeyCode::Backspace => vec![0x7f],
         KeyCode::Tab => vec![b'\t'],
         KeyCode::BackTab => b"\x1b[Z".to_vec(),
@@ -376,18 +409,18 @@ pub fn encode_key(key: &Key, modes: &Modes) -> Option<Vec<u8>> {
         KeyCode::Left => cursor(b'D'),
         KeyCode::Home => cursor(b'H'),
         KeyCode::End => cursor(b'F'),
-        KeyCode::PageUp => b"\x1b[5~".to_vec(),
-        KeyCode::PageDown => b"\x1b[6~".to_vec(),
-        KeyCode::Delete => b"\x1b[3~".to_vec(),
-        KeyCode::Insert => b"\x1b[2~".to_vec(),
-        KeyCode::F(n @ 1..=4) => vec![0x1b, b'O', b'P' + (n - 1)],
+        KeyCode::PageUp => tilde(5),
+        KeyCode::PageDown => tilde(6),
+        KeyCode::Delete => tilde(3),
+        KeyCode::Insert => tilde(2),
+        KeyCode::F(n @ 1..=4) => function(n),
         KeyCode::F(n @ 5..=12) => {
             const CODES: [u8; 8] = [15, 17, 18, 19, 20, 21, 23, 24];
-            format!("\x1b[{}~", CODES[usize::from(n - 5)]).into_bytes()
+            tilde(CODES[usize::from(n - 5)])
         }
         _ => return None,
     };
-    if alt {
+    if alt && !modified_nav {
         bytes.insert(0, 0x1b);
     }
     Some(bytes)
