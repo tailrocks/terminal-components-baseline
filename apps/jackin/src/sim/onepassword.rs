@@ -481,8 +481,8 @@ impl OnePassword for SimOnePassword {
         self.session = session;
     }
 
-    fn accounts(&self) -> &[OpAccount] {
-        &self.accounts
+    fn accounts(&self) -> Vec<OpAccount> {
+        self.accounts.clone()
     }
 
     fn latency_ms(&self) -> i64 {

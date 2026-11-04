@@ -1288,8 +1288,8 @@ impl EditorScreen {
                         }
                         None => "available".to_owned(),
                     };
-                    let status =
-                        crate::domain::workspace::usability_of(a).label(w.surfaces.fixed.as_ref());
+                    let status = crate::domain::workspace::usability_of(a)
+                        .label(w.surfaces.fixed.as_ref(), &w.surfaces.vocabulary);
                     let status_tone = if a.enabled && status == "ready" {
                         t.text_muted
                     } else {

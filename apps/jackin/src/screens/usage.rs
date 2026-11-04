@@ -290,7 +290,7 @@ impl UsageScreen {
                 a.lifecycle.label(),
                 a.issue
                     .as_ref()
-                    .map(|i| i.message.clone())
+                    .map(|i| w.surfaces.vocabulary.reason(&i.reason))
                     .unwrap_or("refresh failed".into())
             ),
         };
@@ -445,7 +445,9 @@ impl UsageScreen {
                             a.issue
                                 .as_ref()
                                 .map(|i| {
-                                    i.message
+                                    w.surfaces
+                                        .vocabulary
+                                        .reason(&i.reason)
                                         .split(':')
                                         .next()
                                         .unwrap_or("error")

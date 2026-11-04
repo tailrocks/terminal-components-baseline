@@ -582,6 +582,10 @@ impl CapsuleScreen {
             changes,
             junie_tui::widgets::inspect_changes::InspectMode::Compact,
         )
+        .words(junie_tui::widgets::inspect_changes::ChangeWords {
+            omitted: w.surfaces.vocabulary.changes_omitted.clone(),
+            unread: w.surfaces.vocabulary.changes_unread.clone(),
+        })
         .returns_to_exit(from_exit);
         cx.open(d, LayerTag::new("inspect"));
         Outcome::Changed
@@ -3085,7 +3089,7 @@ impl Layer<ModalResult, World> for UsageDialog {
                         "! error: {}",
                         a.issue
                             .as_ref()
-                            .map(|i| i.message.clone())
+                            .map(|i| w.surfaces.vocabulary.reason(&i.reason))
                             .unwrap_or("refresh failed".into())
                     ),
                     Freshness::Refreshing => "refreshing…".into(),

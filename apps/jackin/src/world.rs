@@ -12,6 +12,7 @@ use crate::domain::account::{
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorFailure, DoctorReport};
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
+use crate::domain::reason::{IssueReason, UsageReason};
 use crate::domain::role::{
     AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
 };
@@ -662,7 +663,9 @@ impl World {
                             };
                             a.issue = Some(RecoverableIssue::new(
                                 IssueCode::ProviderUnavailable,
-                                error.clone(),
+                                IssueReason::Usage(UsageReason::Provider {
+                                    detail: error.clone(),
+                                }),
                                 Recoverability::Retryable,
                             ));
                             a.last_refresh_secs = Some(now);
@@ -690,7 +693,9 @@ impl World {
                         Err(error) => {
                             a.validation = ValidationState::Invalid(RecoverableIssue::new(
                                 IssueCode::ProviderUnavailable,
-                                error.clone(),
+                                IssueReason::Usage(UsageReason::Provider {
+                                    detail: error.clone(),
+                                }),
                                 Recoverability::Retryable,
                             ));
                         }
@@ -896,7 +901,10 @@ impl World {
                     }
                     match &e.usable {
                         Usability::Ready => ready.push(e.id.clone()),
-                        u => blocked.push((e.id.clone(), u.label(self.surfaces.fixed.as_ref()))),
+                        u => blocked.push((
+                            e.id.clone(),
+                            u.label(self.surfaces.fixed.as_ref(), &self.surfaces.vocabulary),
+                        )),
                     }
                 }
             }
@@ -904,7 +912,10 @@ impl World {
                 if let Some(a) = self.accounts.default_for(provider) {
                     match crate::domain::workspace::usability_of(a) {
                         Usability::Ready => ready.push(a.id.clone()),
-                        u => blocked.push((a.id.clone(), u.label(self.surfaces.fixed.as_ref()))),
+                        u => blocked.push((
+                            a.id.clone(),
+                            u.label(self.surfaces.fixed.as_ref(), &self.surfaces.vocabulary),
+                        )),
                     }
                 }
                 if ready.is_empty()

@@ -11,6 +11,7 @@ use jackin_console::domain::account::AccountRegistry;
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{Instance, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
+use jackin_console::domain::reason::{IssueReason, RefreshOutcome};
 use jackin_console::domain::role::{FindingArea, RoleAdmin, RoleCheckState, RoleFinding};
 use jackin_console::domain::usage::{Freshness, FreshnessInfo};
 use jackin_console::domain::workspace::RoleSource;
@@ -795,7 +796,7 @@ fn refresh_account(effect: &Effect, world: &World) -> Option<Msg> {
             usage,
             issue: None,
             last_refresh_secs: now,
-            outcome: "read from the provider".into(),
+            outcome: RefreshOutcome::NeedsAttention,
         })),
     })
 }
@@ -819,7 +820,7 @@ fn refresh_result_comes_from_the_backend() {
     assert_eq!(first_window_pct(&app.world, PERSONAL), Some(40));
     let status = status(&app);
     assert!(
-        status.starts_with("Refreshed Claude · Personal · read from the provider · "),
+        status.starts_with("Refreshed Claude · Personal · needs attention · "),
         "{status}"
     );
 }
@@ -905,8 +906,8 @@ fn the_sim_keeps_the_last_good_values_when_the_broker_is_down() {
     let a = app.world.accounts.get(PERSONAL).expect("the account");
     assert_eq!(a.usage.freshness.phase, Freshness::Stale);
     assert_eq!(
-        a.issue.as_ref().map(|i| i.message.as_str()),
-        Some("Usage broker unreachable: last good values kept")
+        a.issue.as_ref().map(|i| &i.reason),
+        Some(&IssueReason::BrokerDown)
     );
 }
 

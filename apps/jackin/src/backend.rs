@@ -9,20 +9,23 @@ use crate::domain::agent::{Agent, Provider};
 use crate::domain::instance::{Instance, InstanceId};
 use crate::domain::launch::LaunchContent;
 use crate::domain::onepassword::OpReference;
+use crate::domain::reason::{Found, IssueReason, RefreshOutcome};
 use crate::domain::role::RoleManifestDoc;
 use crate::domain::usage::AccountUsage;
+use crate::domain::vocabulary::ReasonWords;
 use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneKind, PaneRequest, PaneSpawn, PaneTiming};
 use crate::world::{GlobalConfig, Msg, World};
 
 use junie_tui::core::refusal::Reason;
+pub use junie_tui::widgets::diff::UnreadFile;
 pub use junie_tui::widgets::diff::{
     DiffFile as ChangedFile, DiffHunk as Hunk, DiffLine, DiffStatus,
 };
 pub use junie_tui::widgets::file_browser::FileSource;
 use junie_tui::widgets::file_browser::{FileEntry, MemorySource};
-pub use junie_tui::widgets::inspect_changes::ChangeSet;
+pub use junie_tui::widgets::inspect_changes::{ChangeSet, ChangeWords};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ValidationOutcome {
@@ -45,7 +48,7 @@ pub struct Refresh {
     pub usage: AccountUsage,
     pub issue: Option<RecoverableIssue>,
     pub last_refresh_secs: i64,
-    pub outcome: String,
+    pub outcome: RefreshOutcome,
 }
 
 /// What validating one account found. A key that is held as a fingerprint is
@@ -58,9 +61,9 @@ pub enum Validation {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CheckRow {
-    Ok(String),
-    Failed(String),
-    Skipped(String),
+    Ok(Found),
+    Failed(IssueReason),
+    Skipped(IssueReason),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -248,7 +251,7 @@ pub struct OpVaultRow {
     pub id: String,
     pub name: String,
     pub items: usize,
-    pub access: VaultAccess,
+    pub access: Option<VaultAccess>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -256,7 +259,7 @@ pub struct OpItemRow {
     pub id: String,
     pub title: String,
     pub category: String,
-    pub fields: usize,
+    pub fields: Option<usize>,
 }
 
 /// A field as the picker shows it: never the value.
@@ -291,33 +294,10 @@ pub enum OpError {
 }
 
 impl OpError {
+    /// The words of `ReasonWords::openshell()`, for the places that hold no
+    /// `Vocabulary` (the picker of a 1Password reference).
     pub fn message(&self) -> String {
-        match self {
-            OpError::Locked => "1Password locked: unlock the app and retry".into(),
-            OpError::NotAvailable => {
-                "1Password not available: the 1Password CLI could not be run".into()
-            }
-            OpError::AuthorizationRequired { account } => {
-                format!("1Password authorization required: sign in to {account}")
-            }
-            OpError::PermissionDenied { vault } => {
-                format!("1Password access denied: no permission for vault {vault}")
-            }
-            OpError::MissingAccount { account } => {
-                format!("1Password account not found: {account}")
-            }
-            OpError::MissingVault { vault } => format!("1Password vault not found: {vault}"),
-            OpError::MissingItem { item, vault } => {
-                format!("1Password item not found: {item} in {vault}")
-            }
-            OpError::MissingField { field, item } => {
-                format!("1Password field not found: {field} in {item}")
-            }
-            OpError::EmptyMaterial { field } => format!("API key required: field {field} is empty"),
-            OpError::WrongFieldShape { field } => {
-                format!("Field {field} is not a credential: choose a concealed field")
-            }
-        }
+        ReasonWords::openshell().op_error(self)
     }
 
     pub fn retryable(&self) -> bool {
@@ -335,7 +315,7 @@ pub trait OnePassword: std::fmt::Debug {
 
     fn set_session(&mut self, session: OpSession);
 
-    fn accounts(&self) -> &[OpAccount];
+    fn accounts(&self) -> Vec<OpAccount>;
 
     fn latency_ms(&self) -> i64;
 

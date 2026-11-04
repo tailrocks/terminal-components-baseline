@@ -18,8 +18,8 @@ impl OnePassword for SignedInOnly {
 
     fn set_session(&mut self, _: OpSession) {}
 
-    fn accounts(&self) -> &[OpAccount] {
-        &[]
+    fn accounts(&self) -> Vec<OpAccount> {
+        Vec::new()
     }
 
     fn latency_ms(&self) -> i64 {

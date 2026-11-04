@@ -265,13 +265,8 @@ impl OpFlow {
         };
         f.picker.list.width = (64, 64);
 
-        let avail: Vec<&crate::backend::OpAccount> = op
-            .accounts()
-            .iter()
-            .filter(|a| a.state == crate::backend::OpAccountState::Available)
-            .collect();
-        if op.accounts().len() == 1 || (avail.len() == 1 && op.accounts().len() == 1) {
-            f.account = Some(op.accounts()[0].id.clone());
+        if let [only] = op.accounts().as_slice() {
+            f.account = Some(only.id.clone());
             f.step = OpStep::Vault;
         }
         f.begin_load();
@@ -431,9 +426,9 @@ impl OpFlow {
                         .detail(format!("{} items", v.items))
                         .glyph("▪")
                         .tag(match v.access {
-                            crate::backend::VaultAccess::ReadWrite => "",
-                            crate::backend::VaultAccess::ReadOnly => "read-only",
-                            crate::backend::VaultAccess::Denied => "no access",
+                            None | Some(crate::backend::VaultAccess::ReadWrite) => "",
+                            Some(crate::backend::VaultAccess::ReadOnly) => "read-only",
+                            Some(crate::backend::VaultAccess::Denied) => "no access",
                         })
                 })
                 .collect(),
@@ -442,7 +437,10 @@ impl OpFlow {
                 .filter(|i| matches(&i.title))
                 .map(|i| {
                     Item::new(i.title.clone())
-                        .detail(format!("{} · {} fields", i.category, i.fields))
+                        .detail(match i.fields {
+                            Some(n) => format!("{} · {n} fields", i.category),
+                            None => i.category.clone(),
+                        })
                         .glyph(" ")
                 })
                 .collect(),

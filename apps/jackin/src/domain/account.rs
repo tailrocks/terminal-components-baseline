@@ -3,7 +3,9 @@ use junie_tui::core::refusal::Reason;
 use super::agent::{Agent, Provider, UsageSurface};
 use super::fixed::Fixed;
 use super::onepassword::OpReference;
+use super::reason::IssueReason;
 use super::usage::{AccountUsage, Freshness};
+use super::vocabulary::Vocabulary;
 use super::workspace::{Usability, usability_of};
 
 pub type AccountId = String;
@@ -269,12 +271,12 @@ pub enum ValidationState {
 }
 
 impl ValidationState {
-    pub fn label(&self) -> String {
+    pub fn label(&self, vocabulary: &Vocabulary) -> String {
         match self {
             ValidationState::NeverValidated => "never validated".into(),
             ValidationState::Validating { .. } => "validating…".into(),
             ValidationState::Valid(l) => l.label().to_owned(),
-            ValidationState::Invalid(i) => i.message.clone(),
+            ValidationState::Invalid(i) => vocabulary.reason(&i.reason),
         }
     }
 
@@ -329,17 +331,17 @@ impl Recoverability {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RecoverableIssue {
     pub code: IssueCode,
-    pub message: String,
+    pub reason: IssueReason,
     pub detail: Option<String>,
     pub recoverability: Recoverability,
     pub retry_secs: Option<i64>,
 }
 
 impl RecoverableIssue {
-    pub fn new(code: IssueCode, message: impl Into<String>, rec: Recoverability) -> Self {
+    pub fn new(code: IssueCode, reason: IssueReason, rec: Recoverability) -> Self {
         Self {
             code,
-            message: message.into(),
+            reason,
             detail: None,
             recoverability: rec,
             retry_secs: None,
@@ -668,17 +670,17 @@ pub struct AccountForm {
     pub op_note: Option<String>,
 }
 
-fn provider_choices() -> Vec<ProviderChoice> {
-    let provider = |provider, label: &str| ProviderChoice {
-        provider,
-        label: label.into(),
-    };
-    vec![
-        provider(Provider::Anthropic, "Claude Code · Anthropic / Claude"),
-        provider(Provider::OpenAi, "Codex · OpenAI"),
-        provider(Provider::XAi, "Grok Build · xAI / Grok"),
-        provider(Provider::OpenCode, "OpenCode · OpenCode"),
-    ]
+fn provider_choices(providers: &[Provider]) -> Vec<ProviderChoice> {
+    providers
+        .iter()
+        .map(|&provider| ProviderChoice {
+            provider,
+            label: match provider.agent() {
+                Some(agent) => format!("{} · {}", agent.label(), provider.label()),
+                None => provider.label().to_owned(),
+            },
+        })
+        .collect()
 }
 
 fn source_choices(labels: [&str; 3]) -> Vec<SourceChoice> {
@@ -696,10 +698,16 @@ fn source_choices(labels: [&str; 3]) -> Vec<SourceChoice> {
     .collect()
 }
 
+/// The form of the demo: four providers.
 impl Default for AccountForm {
     fn default() -> Self {
         Self {
-            providers: provider_choices(),
+            providers: provider_choices(&[
+                Provider::Anthropic,
+                Provider::OpenAi,
+                Provider::XAi,
+                Provider::OpenCode,
+            ]),
             sources: source_choices([
                 "1Password item / field  (recommended)",
                 "Local agent folder",
@@ -716,7 +724,7 @@ impl AccountForm {
     /// recommended source and the preselected one.
     pub fn openshell() -> Self {
         Self {
-            providers: provider_choices(),
+            providers: provider_choices(&Provider::ALL),
             sources: source_choices([
                 "1Password item / field  (usage only)",
                 "Local agent folder  (recommended)",

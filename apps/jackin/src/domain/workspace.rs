@@ -4,6 +4,8 @@ use super::account::{AccountId, AccountRegistry, LaunchBlock, Lifecycle};
 use super::agent::Provider;
 use super::fixed::Fixed;
 use super::instance::RepoRef;
+use super::reason::IssueReason;
+use super::vocabulary::Vocabulary;
 
 pub type WorkspaceId = u32;
 pub type RoleName = String;
@@ -89,16 +91,18 @@ pub enum Usability {
     NeedsLogin,
     Blocked(LaunchBlock),
     Invalid(String),
+    Failed(IssueReason),
 }
 
 impl Usability {
-    pub fn label(&self, fixed: Option<&Fixed>) -> String {
+    pub fn label(&self, fixed: Option<&Fixed>, vocabulary: &Vocabulary) -> String {
         match self {
             Usability::Ready => "ready".into(),
             Usability::Disabled(r) => r.clone(),
             Usability::NeedsLogin => "needs login".into(),
             Usability::Blocked(b) => b.text(fixed),
             Usability::Invalid(r) => r.clone(),
+            Usability::Failed(reason) => vocabulary.reason(reason),
         }
     }
 
@@ -130,12 +134,10 @@ pub fn usability_of(a: &super::account::Account) -> Usability {
         Lifecycle::AgentUninitialized => Usability::Invalid("agent uninitialized".into()),
         Lifecycle::Unsupported => Usability::Invalid("unsupported".into()),
         Lifecycle::Unavailable => Usability::Invalid("unavailable".into()),
-        Lifecycle::Error => Usability::Invalid(
-            a.issue
-                .as_ref()
-                .map(|i| i.message.clone())
-                .unwrap_or("error".into()),
-        ),
+        Lifecycle::Error => match &a.issue {
+            Some(issue) => Usability::Failed(issue.reason.clone()),
+            None => Usability::Invalid("error".into()),
+        },
     }
 }
 

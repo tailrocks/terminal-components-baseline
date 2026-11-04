@@ -1,3 +1,4 @@
+use crate::domain::vocabulary::Vocabulary;
 use crate::screens::Jackin;
 use junie_tui::shell::Page;
 use std::collections::HashSet;
@@ -836,7 +837,7 @@ impl AccountsScreen {
         };
         match check.then {
             Then::Show => {
-                let note = Self::validation_note(&outcome);
+                let note = Self::validation_note(&outcome, &w.surfaces.vocabulary);
                 let ok = outcome.level.is_some();
                 if let Some(ctx) = self.form.as_mut() {
                     ctx.validation = Some(outcome);
@@ -884,11 +885,11 @@ impl AccountsScreen {
         Outcome::Changed
     }
 
-    fn validation_note(v: &ValidationOutcome) -> Vec<(String, Tone)> {
+    fn validation_note(v: &ValidationOutcome, words: &Vocabulary) -> Vec<(String, Tone)> {
         let row = |label: &str, r: &CheckRow| match r {
-            CheckRow::Ok(t) => (format!("✓ {label}   {t}"), Tone::Secondary),
-            CheckRow::Failed(t) => (format!("! {label}   {t}"), Tone::Error),
-            CheckRow::Skipped(t) => (format!("— {label}   {t}"), Tone::Muted),
+            CheckRow::Ok(t) => (format!("✓ {label}   {}", words.found(t)), Tone::Secondary),
+            CheckRow::Failed(t) => (format!("! {label}   {}", words.check(t)), Tone::Error),
+            CheckRow::Skipped(t) => (format!("— {label}   {}", words.check(t)), Tone::Muted),
         };
         let mut lines = vec![
             row("material", &v.material),
@@ -899,7 +900,7 @@ impl AccountsScreen {
             && !i.is_informational()
         {
             lines.push((
-                i.message.clone(),
+                words.reason(&i.reason),
                 if i.code == IssueCode::QuotaUnsupported {
                     Tone::Warning
                 } else {
@@ -936,9 +937,9 @@ impl AccountsScreen {
             let msg = outcome
                 .issue
                 .as_ref()
-                .map(|i| i.message.clone())
+                .map(|i| w.surfaces.vocabulary.reason(&i.reason))
                 .unwrap_or("Validation failed".into());
-            let note = Self::validation_note(&outcome);
+            let note = Self::validation_note(&outcome, &w.surfaces.vocabulary);
             cx.with_top::<FormDialog>(move |f| {
                 end_pending(f);
                 f.error = Some(msg);
@@ -1288,7 +1289,7 @@ impl AccountsScreen {
                         None => outcome
                             .issue
                             .as_ref()
-                            .map(|i| i.message.clone())
+                            .map(|i| w.surfaces.vocabulary.reason(&i.reason))
                             .unwrap_or("Validation failed".into()),
                     };
                     if outcome.level.is_some() {
@@ -1719,7 +1720,7 @@ impl AccountsScreen {
                         any = true;
                         lines.push(Line::Status(StatusKind::Fail, vec![
                             Span::new(format!("{}   ", a.title()), Tone::Normal),
-                            Span::new(i.message.clone(), Tone::Error),
+                            Span::new(w.surfaces.vocabulary.reason(&i.reason), Tone::Error),
                         ]));
                     } else if a.usage.freshness.phase == Freshness::Stale {
                         any = true;
@@ -1852,10 +1853,10 @@ impl AccountsScreen {
                 }
                 lines.push(Line::Blank);
                 let (m, i, q) = validation_marks(a);
-                lines.push(Line::Prop("Validation".into(), format!("{m} material   {i} identity   {q} quota access · {}", a.validation.label()), Tone::Normal));
+                lines.push(Line::Prop("Validation".into(), format!("{m} material   {i} identity   {q} quota access · {}", a.validation.label(&w.surfaces.vocabulary)), Tone::Normal));
                 if let Some(issue) = &a.issue {
                     let tone = if issue.is_informational() || issue.code == IssueCode::QuotaUnsupported { Tone::Warning } else { Tone::Error };
-                    let mut text = issue.message.clone();
+                    let mut text = w.surfaces.vocabulary.reason(&issue.reason);
                     if let Some(d) = &issue.detail {
                         text.push_str(&format!(" · {d}"));
                     }
@@ -2372,7 +2373,7 @@ impl Page<Jackin> for AccountsScreen {
                             cx.status(format!(
                                 "Refreshed {} · {} · {}",
                                 a.title(),
-                                refresh.outcome,
+                                w.surfaces.vocabulary.refresh_outcome(refresh.outcome),
                                 plural(n, "window", "windows")
                             ));
                         }

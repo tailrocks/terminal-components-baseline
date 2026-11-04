@@ -17,6 +17,7 @@ use jackin_console::domain::instance::{
     DaemonSnapshot, Instance, InstanceStatus, ManifestError, RepoRef,
 };
 use jackin_console::domain::openshell;
+use jackin_console::domain::reason::{IssueReason, UsageReason};
 use jackin_console::domain::role::{AccountOrder, LaunchRoleRule, RoleAdmin};
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::domain::usage::{AccountUsage, FreshnessInfo, QuotaWindow, WindowCategory};
@@ -873,7 +874,9 @@ fn probe_account() -> Account {
         last_refresh_secs: Some(1234),
         issue: Some(RecoverableIssue::new(
             IssueCode::RateLimited,
-            "probe issue",
+            IssueReason::Usage(UsageReason::RateLimited {
+                retry_in_secs: None,
+            }),
             Recoverability::Retryable,
         )),
         endpoint: Some(Endpoint {

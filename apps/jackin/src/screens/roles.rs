@@ -289,7 +289,10 @@ impl RolesScreen {
             if !usable.is_ready() {
                 mark = Some(StatusKind::Warn);
                 tone = Tone::Warning;
-                cols[2] = format!("role binding · {}", usable.label(w.surfaces.fixed.as_ref()));
+                cols[2] = format!(
+                    "role binding · {}",
+                    usable.label(w.surfaces.fixed.as_ref(), &w.surfaces.vocabulary)
+                );
             }
         }
         if pending {
@@ -466,7 +469,7 @@ impl RolesScreen {
             let detail = if usable.is_ready() && a.default_for_provider {
                 format!("★ default for {}", provider.label())
             } else {
-                usable.label(w.surfaces.fixed.as_ref())
+                usable.label(w.surfaces.fixed.as_ref(), &w.surfaces.vocabulary)
             };
             items.push(Item::new(a.title()).detail(detail));
             targets.push(a.id.clone());

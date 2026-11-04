@@ -17,6 +17,7 @@ use jackin_console::domain::account::{
 use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::Instance;
 use jackin_console::domain::launch::LaunchContent;
+use jackin_console::domain::reason::{Found, IssueReason};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
@@ -181,7 +182,7 @@ fn status(app: &App) -> String {
 /// takes as valid. The cursor ends on the key field's tail.
 const PLAIN_KEY: &str = "c a enter S p a r e tab tab tab down down tab enter s k - a n t - v a l i d - a b c d e f 1 2 3 4 tab";
 
-const SPARE_CANARY: &str = "reply from the backend";
+const SPARE_CANARY: &str = "reply-from-the-backend";
 
 /// What the simulator would answer for the typed key, with one row changed so
 /// that a form showing it can only have taken it from the reply.
@@ -196,7 +197,9 @@ fn key_outcome(app: &App) -> ValidationOutcome {
         app.world.op.as_ref(),
         app.world.now_secs(),
     );
-    outcome.material = CheckRow::Ok(SPARE_CANARY.into());
+    outcome.material = CheckRow::Ok(Found::EnvSet {
+        name: SPARE_CANARY.into(),
+    });
     outcome
 }
 
@@ -252,7 +255,7 @@ fn validate_leaves_the_form_pending_until_the_backend_answers() {
     app.deliver(&checked(ticket, outcome));
     let done = screen(&mut app);
     assert!(
-        done.contains(&format!("✓ material   {SPARE_CANARY}")),
+        done.contains(&format!("✓ material   {SPARE_CANARY} is set")),
         "{done}"
     );
     assert!(!done.contains("checking"), "{done}");
@@ -433,10 +436,10 @@ fn a_rejected_check_keeps_the_form_open_and_stores_nothing() {
     rejected.level = None;
     rejected.issue = Some(RecoverableIssue::new(
         IssueCode::ApiKeyEmpty,
-        "API key required: the field is empty",
+        IssueReason::KeyEmpty,
         Recoverability::ActionRequired,
     ));
-    rejected.material = CheckRow::Failed("Field is empty".into());
+    rejected.material = CheckRow::Failed(IssueReason::KeyEmpty);
     app.deliver(&checked(ticket, rejected));
     ticks(&mut app, 4);
 
@@ -731,6 +734,8 @@ fn canary_changes() -> ChangeSet {
             }],
         }],
         unpushed: 0,
+        omitted: 0,
+        unread: vec![],
     }
 }
 
@@ -779,6 +784,8 @@ fn an_empty_changes_reply_says_nothing_changed() {
         result: Ok(ChangeSet {
             files: vec![],
             unpushed: 0,
+            omitted: 0,
+            unread: vec![],
         }),
     });
     assert_eq!(status(&app), "Nothing changed in this instance");

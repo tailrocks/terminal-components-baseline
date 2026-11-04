@@ -9,6 +9,7 @@ pub mod launch;
 pub mod onepassword;
 pub mod openshell;
 pub mod precedence;
+pub mod reason;
 pub mod role;
 pub mod surfaces;
 pub mod usage;

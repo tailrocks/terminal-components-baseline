@@ -8,6 +8,7 @@ use crate::domain::account::{
     IssueCode, Lifecycle, Recoverability, RecoverableIssue, ValidationLevel,
 };
 use crate::domain::agent::Provider;
+use crate::domain::reason::{Found, IssueReason, RefreshOutcome, UsageReason};
 use crate::domain::usage::{
     AccountUsage, Freshness, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
 };
@@ -44,7 +45,7 @@ pub fn list_op(op: &dyn OnePassword, scope: &OpScope) -> Result<OpListing, OpErr
                     id: v.id.clone(),
                     name: v.name.clone(),
                     items: v.items.len(),
-                    access: v.access,
+                    access: Some(v.access),
                 })
                 .collect(),
         ),
@@ -55,7 +56,7 @@ pub fn list_op(op: &dyn OnePassword, scope: &OpScope) -> Result<OpListing, OpErr
                     id: i.id.clone(),
                     title: i.title.clone(),
                     category: i.category.to_owned(),
-                    fields: i.fields.len(),
+                    fields: Some(i.fields.len()),
                 })
                 .collect(),
         ),
@@ -100,8 +101,12 @@ pub fn probe_folder(path: &str) -> FolderProbe {
     }
 }
 
-fn issue(code: IssueCode, msg: impl Into<String>, rec: Recoverability) -> RecoverableIssue {
-    RecoverableIssue::new(code, msg, rec)
+fn issue(code: IssueCode, reason: IssueReason, rec: Recoverability) -> RecoverableIssue {
+    RecoverableIssue::new(code, reason, rec)
+}
+
+fn not_attempted() -> CheckRow {
+    CheckRow::Skipped(IssueReason::Skipped)
 }
 
 fn identity_for(provider: Provider, tag: &str) -> (AccountIdentity, Confidence) {
@@ -211,21 +216,21 @@ pub fn validate(
     op: &dyn OnePassword,
     now: i64,
 ) -> ValidationOutcome {
-    let key_class: Result<(SecretClass, &'static str), OpError> = match source {
+    let key_class: Result<(SecretClass, Found), OpError> = match source {
         CredentialSource::OnePassword(r) => match op.classify(r) {
-            Ok(c) => Ok((c, "1Password reference resolved")),
+            Ok(c) => Ok((c, Found::ReferenceResolved)),
             Err(e) => Err(e),
         },
         CredentialSource::PlainApiKey { .. } => Ok((
             classify_plain(provider, plain_value.unwrap_or("")),
-            "Key material present",
+            Found::KeyPresent,
         )),
         CredentialSource::LocalFolder { path, .. }
         | CredentialSource::HostEnv { var: path, .. } => {
             return validate_folder(provider, path, now);
         }
     };
-    let (class, material_msg) = match key_class {
+    let (class, material_found) = match key_class {
         Ok(v) => v,
         Err(e) => {
             let code = match &e {
@@ -251,11 +256,11 @@ pub fn validate(
                 identity: AccountIdentity::default(),
                 confidence: Confidence::None,
                 lifecycle: Lifecycle::NeedsSecret,
-                issue: Some(issue(code, e.message(), rec)),
+                issue: Some(issue(code, IssueReason::OnePassword(e.clone()), rec)),
                 usage: None,
-                material: CheckRow::Failed(e.message()),
-                identity_row: CheckRow::Skipped("not attempted".into()),
-                quota_row: CheckRow::Skipped("not attempted".into()),
+                material: CheckRow::Failed(IssueReason::OnePassword(e)),
+                identity_row: not_attempted(),
+                quota_row: not_attempted(),
             };
         }
     };
@@ -267,13 +272,13 @@ pub fn validate(
             lifecycle: Lifecycle::NeedsSecret,
             issue: Some(issue(
                 IssueCode::ApiKeyEmpty,
-                "API key required: the field is empty",
+                IssueReason::KeyEmpty,
                 Recoverability::ActionRequired,
             )),
             usage: None,
-            material: CheckRow::Failed("Field is empty".into()),
-            identity_row: CheckRow::Skipped("not attempted".into()),
-            quota_row: CheckRow::Skipped("not attempted".into()),
+            material: CheckRow::Failed(IssueReason::KeyEmpty),
+            identity_row: not_attempted(),
+            quota_row: not_attempted(),
         },
         SecretClass::Unrecognised => ValidationOutcome {
             level: Some(ValidationLevel::MaterialDiscovered),
@@ -282,13 +287,13 @@ pub fn validate(
             lifecycle: Lifecycle::Error,
             issue: Some(issue(
                 IssueCode::ApiKeyInvalid,
-                "Key rejected: the provider returned 401",
+                IssueReason::KeyRejected,
                 Recoverability::ActionRequired,
             )),
             usage: None,
-            material: CheckRow::Ok(material_msg.into()),
-            identity_row: CheckRow::Failed("Not authenticated (401)".into()),
-            quota_row: CheckRow::Skipped("not attempted".into()),
+            material: CheckRow::Ok(material_found),
+            identity_row: CheckRow::Failed(IssueReason::KeyRejected),
+            quota_row: not_attempted(),
         },
         SecretClass::Key {
             provider: found,
@@ -302,17 +307,19 @@ pub fn validate(
                     lifecycle: Lifecycle::Error,
                     issue: Some(issue(
                         IssueCode::OpProviderMismatch,
-                        format!(
-                            "Provider mismatch: the key belongs to {}, expected {}",
-                            found.short(),
-                            provider.short()
-                        ),
+                        IssueReason::KeyWrongProvider {
+                            found,
+                            expected: provider,
+                        },
                         Recoverability::ActionRequired,
                     )),
                     usage: None,
-                    material: CheckRow::Ok(material_msg.into()),
-                    identity_row: CheckRow::Failed(format!("Key class is {}", found.short())),
-                    quota_row: CheckRow::Skipped("not attempted".into()),
+                    material: CheckRow::Ok(material_found),
+                    identity_row: CheckRow::Failed(IssueReason::KeyWrongProvider {
+                        found,
+                        expected: provider,
+                    }),
+                    quota_row: not_attempted(),
                 };
             }
             let key_backed = true;
@@ -337,10 +344,7 @@ pub fn validate(
                         issue: unsupported.then(|| {
                             issue(
                                 IssueCode::QuotaUnsupported,
-                                format!(
-                                    "Quota not visible: {} does not expose usage for API keys",
-                                    provider.short()
-                                ),
+                                IssueReason::QuotaHidden { provider },
                                 Recoverability::Unsupported,
                             )
                         }),
@@ -348,16 +352,15 @@ pub fn validate(
                             freshness: FreshnessInfo::current(now),
                             windows: windows.clone(),
                         }),
-                        material: CheckRow::Ok(material_msg.into()),
-                        identity_row: CheckRow::Ok(format!(
-                            "Authenticated as {} · {}",
-                            identity.label(),
-                            identity.plan.clone().unwrap_or_default()
-                        )),
+                        material: CheckRow::Ok(material_found),
+                        identity_row: CheckRow::Ok(Found::Authenticated {
+                            who: identity.label(),
+                            plan: Some(identity.plan.clone().unwrap_or_default()),
+                        }),
                         quota_row: if unsupported {
-                            CheckRow::Skipped("Quota not visible for API keys".into())
+                            CheckRow::Skipped(IssueReason::QuotaHidden { provider })
                         } else {
-                            CheckRow::Ok(format!("{} windows readable", windows.len()))
+                            CheckRow::Ok(Found::WindowsReadable(windows.len()))
                         },
                     }
                 }
@@ -368,15 +371,13 @@ pub fn validate(
                     lifecycle: Lifecycle::NeedsLogin,
                     issue: Some(issue(
                         IssueCode::ApiKeyInvalid,
-                        "Key rejected: the provider returned 401",
+                        IssueReason::KeyRevoked,
                         Recoverability::ActionRequired,
                     )),
                     usage: None,
-                    material: CheckRow::Ok(material_msg.into()),
-                    identity_row: CheckRow::Failed(
-                        "Not authenticated (401) · key rotated or revoked".into(),
-                    ),
-                    quota_row: CheckRow::Skipped("not attempted".into()),
+                    material: CheckRow::Ok(material_found),
+                    identity_row: CheckRow::Failed(IssueReason::KeyRevoked),
+                    quota_row: not_attempted(),
                 },
                 KeyOutcome::RateLimited => ValidationOutcome {
                     level: Some(ValidationLevel::IdentityAuthenticated),
@@ -386,7 +387,9 @@ pub fn validate(
                     issue: Some(
                         issue(
                             IssueCode::RateLimited,
-                            "Rate limited: retry after 25 min",
+                            IssueReason::Usage(UsageReason::RateLimited {
+                                retry_in_secs: Some(25 * 60),
+                            }),
                             Recoverability::Retryable,
                         )
                         .retry(now + 25 * 60),
@@ -395,9 +398,14 @@ pub fn validate(
                         freshness: FreshnessInfo::failed(None, Some(now + 25 * 60)),
                         windows: vec![],
                     }),
-                    material: CheckRow::Ok(material_msg.into()),
-                    identity_row: CheckRow::Ok(format!("Authenticated as {}", identity.label())),
-                    quota_row: CheckRow::Failed("Rate limited (429) · retry after 25 min".into()),
+                    material: CheckRow::Ok(material_found),
+                    identity_row: CheckRow::Ok(Found::Authenticated {
+                        who: identity.label(),
+                        plan: None,
+                    }),
+                    quota_row: CheckRow::Failed(IssueReason::Usage(UsageReason::RateLimited {
+                        retry_in_secs: Some(25 * 60),
+                    })),
                 },
                 KeyOutcome::Unavailable => ValidationOutcome {
                     level: Some(ValidationLevel::MaterialDiscovered),
@@ -406,21 +414,41 @@ pub fn validate(
                     lifecycle: Lifecycle::Unavailable,
                     issue: Some(issue(
                         IssueCode::ProviderUnavailable,
-                        format!("Provider unavailable: {} did not respond", provider.short()),
+                        IssueReason::ProviderDown {
+                            provider,
+                            detail: "Timed out after 8 s".into(),
+                        },
                         Recoverability::Retryable,
                     )),
                     usage: None,
-                    material: CheckRow::Ok(material_msg.into()),
-                    identity_row: CheckRow::Failed("Timed out after 8 s".into()),
-                    quota_row: CheckRow::Skipped("not attempted".into()),
+                    material: CheckRow::Ok(material_found),
+                    identity_row: CheckRow::Failed(IssueReason::ProviderDown {
+                        provider,
+                        detail: "Timed out after 8 s".into(),
+                    }),
+                    quota_row: not_attempted(),
                 },
             }
         }
     }
 }
 
+fn unreadable(path: &str) -> IssueReason {
+    IssueReason::FolderUnreadable {
+        path: path.into(),
+        detail: "mode 000 · owner root".into(),
+    }
+}
+
+fn no_login(path: &str) -> IssueReason {
+    IssueReason::LoginMissing {
+        path: path.into(),
+        file: "auth.json".into(),
+    }
+}
+
 fn validate_folder(provider: Provider, path: &str, now: i64) -> ValidationOutcome {
-    let fail = |code, msg: String, lifecycle, material: CheckRow| ValidationOutcome {
+    let fail = |code, reason: IssueReason, lifecycle, material: CheckRow| ValidationOutcome {
         level: if matches!(material, CheckRow::Ok(_)) {
             Some(ValidationLevel::MaterialDiscovered)
         } else {
@@ -429,48 +457,52 @@ fn validate_folder(provider: Provider, path: &str, now: i64) -> ValidationOutcom
         identity: AccountIdentity::default(),
         confidence: Confidence::None,
         lifecycle,
-        issue: Some(issue(code, msg, Recoverability::ActionRequired)),
+        issue: Some(issue(code, reason, Recoverability::ActionRequired)),
         usage: None,
         material,
-        identity_row: CheckRow::Skipped("not attempted".into()),
-        quota_row: CheckRow::Skipped("not attempted".into()),
+        identity_row: not_attempted(),
+        quota_row: not_attempted(),
     };
     match probe_folder(path) {
         FolderProbe::Missing => fail(
             IssueCode::FolderMissing,
-            format!("Folder not found: {path}"),
+            IssueReason::FolderMissing { path: path.into() },
             Lifecycle::Error,
-            CheckRow::Failed("Nothing exists at the path".into()),
+            CheckRow::Failed(IssueReason::FolderMissing { path: path.into() }),
         ),
         FolderProbe::Unreadable => fail(
             IssueCode::FolderUnreadable,
-            format!("Folder not readable: permission denied for {path}"),
+            unreadable(path),
             Lifecycle::Error,
-            CheckRow::Failed("mode 000 · owner root".into()),
+            CheckRow::Failed(unreadable(path)),
         ),
         FolderProbe::NoCredential => fail(
             IssueCode::CredentialFileMissing,
-            format!("No credential found: {path} has no auth.json"),
+            no_login(path),
             Lifecycle::NeedsLogin,
-            CheckRow::Failed("Run the agent login first".into()),
+            CheckRow::Failed(no_login(path)),
         ),
         FolderProbe::Malformed => fail(
             IssueCode::CredentialMalformed,
-            "Credential unreadable: auth.json is not valid JSON".into(),
+            IssueReason::LoginInvalid {
+                file: "auth.json".into(),
+            },
             Lifecycle::Error,
-            CheckRow::Ok("auth.json found · parse failed at line 1".into()),
+            CheckRow::Ok(Found::Unparsable {
+                file: "auth.json".into(),
+                line: 1,
+            }),
         ),
         FolderProbe::Found(kind) => {
             if kind.provider() != Some(provider) {
-                let found = kind.provider().map(|p| p.short()).unwrap_or("unknown");
                 return fail(
                     IssueCode::FolderWrongProvider,
-                    format!(
-                        "Folder belongs to another provider: found a {found} profile, expected {}",
-                        provider.short()
-                    ),
+                    IssueReason::WrongProvider {
+                        found: kind.provider(),
+                        expected: provider,
+                    },
                     Lifecycle::Error,
-                    CheckRow::Ok(format!("Detected {}", kind.label())),
+                    CheckRow::Ok(Found::Detected(kind)),
                 );
             }
             let presence_only = matches!(
@@ -486,13 +518,13 @@ fn validate_folder(provider: Provider, path: &str, now: i64) -> ValidationOutcom
                     lifecycle: Lifecycle::Available,
                     issue: Some(issue(
                         IssueCode::IdentityUnresolved,
-                        "Identity unresolved · showing usage without a public handle",
+                        IssueReason::IdentityUnresolved,
                         Recoverability::Unsupported,
                     )),
                     usage: None,
-                    material: CheckRow::Ok(format!("Detected {}", kind.label())),
-                    identity_row: CheckRow::Skipped("No stable public identity".into()),
-                    quota_row: CheckRow::Skipped("Confidence: presence only".into()),
+                    material: CheckRow::Ok(Found::Detected(kind)),
+                    identity_row: CheckRow::Skipped(IssueReason::IdentityUnresolved),
+                    quota_row: CheckRow::Skipped(IssueReason::PresenceOnly),
                 };
             }
             let (identity, _) = identity_for(provider, path);
@@ -514,13 +546,12 @@ fn validate_folder(provider: Provider, path: &str, now: i64) -> ValidationOutcom
                     freshness: FreshnessInfo::current(now),
                     windows: windows.clone(),
                 }),
-                material: CheckRow::Ok(format!("Detected {}", kind.label())),
-                identity_row: CheckRow::Ok(format!(
-                    "Authenticated as {} · {}",
-                    identity.label(),
-                    identity.plan.clone().unwrap_or_default()
-                )),
-                quota_row: CheckRow::Ok(format!("{} windows readable", windows.len())),
+                material: CheckRow::Ok(Found::Detected(kind)),
+                identity_row: CheckRow::Ok(Found::Authenticated {
+                    who: identity.label(),
+                    plan: Some(identity.plan.clone().unwrap_or_default()),
+                }),
+                quota_row: CheckRow::Ok(Found::WindowsReadable(windows.len())),
             }
         }
     }
@@ -551,7 +582,7 @@ pub fn refresh_duration_ms(a: &Account) -> i64 {
 /// retry time, and a healthy account reads one point higher on its first meter.
 pub fn refresh(account: &Account, now: i64, op_locked: bool, broker_down: bool) -> Refresh {
     let mut a = account.clone();
-    let outcome: &str;
+    let outcome: RefreshOutcome;
     match (&a.source, a.issue.as_ref().map(|i| i.code)) {
         _ if broker_down => {
             a.usage.freshness.phase = if a.usage.freshness.last_good_secs.is_some() {
@@ -561,40 +592,40 @@ pub fn refresh(account: &Account, now: i64, op_locked: bool, broker_down: bool) 
             };
             a.issue = Some(issue(
                 IssueCode::ProviderUnavailable,
-                "Usage broker unreachable: last good values kept",
+                IssueReason::BrokerDown,
                 Recoverability::Retryable,
             ));
-            outcome = "broker unreachable · last good kept";
+            outcome = RefreshOutcome::BrokerUnreachable;
         }
         (CredentialSource::OnePassword(_), _) if op_locked => {
             a.usage.freshness.phase = Freshness::Failed;
             a.issue = Some(issue(
                 IssueCode::OpLocked,
-                OpError::Locked.message(),
+                IssueReason::OnePassword(OpError::Locked),
                 Recoverability::Retryable,
             ));
-            outcome = "failed · 1Password locked";
+            outcome = RefreshOutcome::OpLocked;
         }
         (_, Some(IssueCode::RateLimited)) => {
             let retry = a.issue.as_ref().and_then(|i| i.retry_secs).unwrap_or(now);
             if now >= retry {
                 a.usage.freshness = FreshnessInfo::current(now);
                 a.issue = None;
-                outcome = "current";
+                outcome = RefreshOutcome::Current;
             } else {
                 a.usage.freshness.phase = Freshness::Failed;
-                outcome = "still rate limited";
+                outcome = RefreshOutcome::StillRateLimited;
             }
         }
         (_, Some(IssueCode::ProviderUnavailable)) => {
             a.usage.freshness.phase = Freshness::Failed;
-            outcome = "provider unavailable";
+            outcome = RefreshOutcome::ProviderUnavailable;
         }
         (_, Some(IssueCode::CredentialFileMissing))
         | (_, Some(IssueCode::Unauthorized))
         | (_, Some(IssueCode::ApiKeyInvalid)) => {
             a.usage.freshness.phase = Freshness::Failed;
-            outcome = "needs attention";
+            outcome = RefreshOutcome::NeedsAttention;
         }
         _ => {
             a.usage.freshness = FreshnessInfo::current(now);
@@ -613,13 +644,13 @@ pub fn refresh(account: &Account, now: i64, op_locked: bool, broker_down: bool) 
                 win.used_pct = Some(p);
                 win.status = QuotaStatus::from_pct(p);
             }
-            outcome = "current";
+            outcome = RefreshOutcome::Current;
         }
     }
     Refresh {
         usage: a.usage,
         issue: a.issue,
         last_refresh_secs: now,
-        outcome: outcome.to_owned(),
+        outcome,
     }
 }

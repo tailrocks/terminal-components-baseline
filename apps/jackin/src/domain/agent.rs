@@ -90,6 +90,23 @@ pub enum Provider {
 }
 
 impl Provider {
+    pub const ALL: [Provider; 14] = [
+        Provider::Anthropic,
+        Provider::OpenAi,
+        Provider::Amp,
+        Provider::XAi,
+        Provider::OpenCode,
+        Provider::Moonshot,
+        Provider::Zai,
+        Provider::MiniMax,
+        Provider::Cursor,
+        Provider::Gemini,
+        Provider::Openrouter,
+        Provider::Antigravity,
+        Provider::Hermes,
+        Provider::Muse,
+    ];
+
     pub fn label(self) -> &'static str {
         match self {
             Provider::Anthropic => "Anthropic / Claude",

@@ -1,4 +1,6 @@
-use crate::domain::vocabulary::{DaemonWords, LifecycleWords, PaneWords, StatusWords, Vocabulary};
+use crate::domain::vocabulary::{
+    DaemonWords, LifecycleWords, PaneWords, ReasonWords, StatusWords, Vocabulary,
+};
 
 impl Vocabulary {
     pub fn demo() -> Self {
@@ -150,7 +152,10 @@ impl Vocabulary {
             not_in_roster: "{id} is not in the roster".into(),
             unknown_role: "{role} is not in the registry".into(),
             role_not_loaded: "the role manifest has not loaded yet".into(),
+            changes_omitted: "{count} more not listed".into(),
+            changes_unread: "not read".into(),
             pane: PaneWords::demo(),
+            reason: ReasonWords::openshell(),
         }
     }
 }

@@ -255,5 +255,10 @@ pub fn changes_for(
         }
         e += 1;
     }
-    ChangeSet { files, unpushed }
+    ChangeSet {
+        files,
+        unpushed,
+        omitted: 0,
+        unread: vec![],
+    }
 }

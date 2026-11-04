@@ -23,13 +23,37 @@ use crate::core::scroll::Scrollable;
 use crate::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
 use crate::ui::modal::modal_frame;
 use crate::ui::popup::Dismiss;
-use crate::widgets::diff::{DiffFile as ChangedFile, DiffStatus};
+use crate::widgets::diff::{DiffFile as ChangedFile, DiffStatus, UnreadFile};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ChangeSet {
     pub files: Vec<ChangedFile>,
 
     pub unpushed: usize,
+
+    /// Changed files the source named but did not list: it reports a bounded
+    /// number of files.
+    pub omitted: usize,
+
+    /// Files that are listed with no diff because their content was not read.
+    pub unread: Vec<UnreadFile>,
+}
+
+/// What the list says about the two limits of a [`ChangeSet`]. `omitted`
+/// takes `{count}`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ChangeWords {
+    pub omitted: String,
+    pub unread: String,
+}
+
+impl Default for ChangeWords {
+    fn default() -> Self {
+        Self {
+            omitted: "{count} more not listed".into(),
+            unread: "not read".into(),
+        }
+    }
 }
 
 impl ChangeSet {
@@ -40,7 +64,7 @@ impl ChangeSet {
         self.files.iter().map(|f| f.deletions()).sum()
     }
     pub fn is_empty(&self) -> bool {
-        self.files.is_empty() && self.unpushed == 0
+        self.files.is_empty() && self.unread.is_empty() && self.omitted == 0 && self.unpushed == 0
     }
 
     pub fn summary(&self) -> String {
@@ -92,6 +116,8 @@ pub struct InspectChanges {
     pub title: String,
     pub changes: ChangeSet,
     pub mode: InspectMode,
+    words: ChangeWords,
+    listed: Vec<ChangedFile>,
 
     cursor: usize,
 
@@ -121,7 +147,9 @@ const MIN_H: u16 = 20;
 
 impl InspectChanges {
     pub fn new(id: WidgetId, title: &str, changes: ChangeSet, mode: InspectMode) -> Self {
-        let (nodes, leaves) = build_tree(&changes.files);
+        let words = ChangeWords::default();
+        let listed = listed_files(&changes);
+        let (nodes, leaves) = build_tree(&listed, changes.files.len(), &words.unread);
         let mut tree = TreeView::new(id.sub("tree"), nodes);
         tree.expand_all();
         let mut s = Self {
@@ -129,6 +157,8 @@ impl InspectChanges {
             title: title.to_owned(),
             changes,
             mode,
+            words,
+            listed,
             cursor: 0,
             open: false,
             list_scroll: ScrollState::default(),
@@ -156,8 +186,31 @@ impl InspectChanges {
         self
     }
 
+    pub fn words(mut self, words: ChangeWords) -> Self {
+        self.words = words;
+        let (nodes, leaves) =
+            build_tree(&self.listed, self.changes.files.len(), &self.words.unread);
+        self.tree = TreeView::new(self.id.sub("tree"), nodes);
+        self.tree.expand_all();
+        self.leaves = leaves;
+        self.select_file(self.cursor);
+        self
+    }
+
+    fn summary_line(&self) -> String {
+        let summary = self.changes.summary();
+        if self.changes.omitted == 0 {
+            return summary;
+        }
+        let omitted = self
+            .words
+            .omitted
+            .replace("{count}", &self.changes.omitted.to_string());
+        format!("{summary} · {omitted}")
+    }
+
     fn select_file(&mut self, i: usize) {
-        let f = self.changes.files.get(i).cloned();
+        let f = self.listed.get(i).cloned();
         self.diff.set_file(f);
         if let Some((path, _)) = self.leaves.iter().find(|(_, fi)| *fi == i) {
             self.tree.selected = Some(path.clone());
@@ -166,7 +219,7 @@ impl InspectChanges {
                 self.tree.scroll.ensure_visible(row);
             }
         }
-        if i < self.changes.files.len() {
+        if i < self.listed.len() {
             self.cursor = i;
         }
     }
@@ -176,7 +229,7 @@ impl InspectChanges {
     }
 
     fn compact_rows(&self) -> usize {
-        self.changes.files.len() + usize::from(self.changes.unpushed > 0)
+        self.listed.len() + usize::from(self.changes.unpushed > 0)
     }
 
     fn set_mode(&mut self, mode: InspectMode, focus: &mut Focus) {
@@ -384,7 +437,7 @@ impl InspectChanges {
             self.diff.render(body, buf, ctx, bg);
             return;
         }
-        let summary = self.changes.summary();
+        let summary = self.summary_line();
         buf.set_string(inner.x, inner.y, &summary, t.secondary().bg(bg));
         let mode = format!("{} · {}", self.mode.label(), self.diff.mode.label());
         let mw = width(&mode) as u16;
@@ -429,15 +482,19 @@ impl InspectChanges {
                 t.gutter_symbol(s),
                 t.gutter(s, st.bg.unwrap_or(bg), false),
             );
-            if i < self.changes.files.len() {
-                let f = &self.changes.files[i];
+            if i < self.listed.len() {
+                let f = &self.listed[i];
                 buf.set_string(
                     rect.x + 2,
                     y,
                     f.status.marker(),
                     st.fg(t.tone(f.status.tone())).add_modifier(Modifier::BOLD),
                 );
-                let counts = format!("+{} −{}", f.additions(), f.deletions());
+                let counts = if i < self.changes.files.len() {
+                    format!("+{} −{}", f.additions(), f.deletions())
+                } else {
+                    self.words.unread.clone()
+                };
                 let cw = width(&counts) as u16;
                 let pw = rect.width.saturating_sub(6 + cw + 2) as usize;
                 let path = match &f.status {
@@ -494,7 +551,7 @@ impl InspectChanges {
         bg: ratatui::style::Color,
     ) {
         let t = ctx.theme;
-        let summary = self.changes.summary();
+        let summary = self.summary_line();
         buf.set_string(inner.x, inner.y, &summary, t.secondary().bg(bg));
         let mode = format!(
             "{} · {} · d switches · m compact",
@@ -567,7 +624,24 @@ fn row_index(tree: &TreeView, i: usize, leaves: &[(Vec<usize>, usize)]) -> Optio
     tree.rows().iter().position(|r| &r.path == path)
 }
 
-fn build_tree(files: &[ChangedFile]) -> (Vec<TreeNode>, Vec<(Vec<usize>, usize)>) {
+fn listed_files(changes: &ChangeSet) -> Vec<ChangedFile> {
+    changes
+        .files
+        .iter()
+        .cloned()
+        .chain(changes.unread.iter().map(|u| ChangedFile {
+            path: u.path.clone(),
+            status: u.status.clone(),
+            hunks: vec![],
+        }))
+        .collect()
+}
+
+fn build_tree(
+    files: &[ChangedFile],
+    read: usize,
+    unread_word: &str,
+) -> (Vec<TreeNode>, Vec<(Vec<usize>, usize)>) {
     #[derive(Default)]
     struct Dir {
         dirs: std::collections::BTreeMap<String, Dir>,
@@ -589,13 +663,15 @@ fn build_tree(files: &[ChangedFile]) -> (Vec<TreeNode>, Vec<(Vec<usize>, usize)>
     fn emit(
         d: &Dir,
         files: &[ChangedFile],
+        read: usize,
+        unread_word: &str,
         path: &mut Vec<usize>,
         leaves: &mut Vec<(Vec<usize>, usize)>,
     ) -> Vec<TreeNode> {
         let mut out = vec![];
         for (name, sub) in &d.dirs {
             path.push(out.len());
-            let children = emit(sub, files, path, leaves);
+            let children = emit(sub, files, read, unread_word, path, leaves);
             path.pop();
             let n = count(sub);
             out.push(TreeNode::dir(name, children).meta(&format!("{n} changed")));
@@ -605,15 +681,17 @@ fn build_tree(files: &[ChangedFile]) -> (Vec<TreeNode>, Vec<(Vec<usize>, usize)>
             leaves.push((path.clone(), *i));
             path.pop();
             let f = &files[*i];
-            out.push(
-                TreeNode::leaf_meta(name, &format!("+{} −{}", f.additions(), f.deletions()))
-                    .glyph(f.status.marker()),
-            );
+            let meta = if *i < read {
+                format!("+{} −{}", f.additions(), f.deletions())
+            } else {
+                unread_word.to_owned()
+            };
+            out.push(TreeNode::leaf_meta(name, &meta).glyph(f.status.marker()));
         }
         out
     }
     let mut leaves = vec![];
-    let nodes = emit(&root, files, &mut vec![], &mut leaves);
+    let nodes = emit(&root, files, read, unread_word, &mut vec![], &mut leaves);
     (nodes, leaves)
 }
 

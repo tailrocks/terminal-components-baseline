@@ -74,7 +74,10 @@ fn the_openshell_vocabulary_renames_the_demo_words() {
         live.iter().map(|f| f.0).collect::<Vec<_>>(),
     );
     for ((name, was), (_, now)) in demo.iter().zip(&live) {
-        if SAME.contains(name) || (name.starts_with("pane.") && !PANE_RENAMED.contains(name)) {
+        if SAME.contains(name)
+            || name.starts_with("reason.")
+            || (name.starts_with("pane.") && !PANE_RENAMED.contains(name))
+        {
             assert_eq!(was, now, "{name}");
         } else {
             assert_ne!(was, now, "{name}");

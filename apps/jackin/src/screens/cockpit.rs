@@ -252,7 +252,10 @@ impl CockpitScreen {
                 );
                 let (val, tone) = match a.validation.level() {
                     Some(l) => (format!("{} · {why}", l.label()), Tone::Secondary),
-                    None => (format!("{} · {why}", a.validation.label()), Tone::Warning),
+                    None => (
+                        format!("{} · {why}", a.validation.label(&w.surfaces.vocabulary)),
+                        Tone::Warning,
+                    ),
                 };
                 (origin, val, tone)
             }

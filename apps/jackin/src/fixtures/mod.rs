@@ -12,6 +12,7 @@ use crate::domain::instance::{
     DaemonSnapshot, Instance, InstanceStatus, ManifestError, SessionRecord, SessionStatus,
 };
 use crate::domain::onepassword::OpReference;
+use crate::domain::reason::{IssueReason, UsageReason};
 use crate::domain::surfaces::Surfaces;
 use crate::domain::usage::{
     AccountUsage, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
@@ -596,7 +597,7 @@ fn accounts_mixed(now: i64) -> AccountRegistry {
     a.issue = Some(
         RecoverableIssue::new(
             IssueCode::Stale,
-            "Usage stale · last good 47 min ago",
+            IssueReason::Stale { age_secs: 47 * 60 },
             Recoverability::Retryable,
         )
         .retry(now + 13 * 60),
@@ -689,7 +690,9 @@ fn accounts_mixed(now: i64) -> AccountRegistry {
     a.last_refresh_secs = Some(now - 20 * 60);
     a.issue = Some(RecoverableIssue::new(
         IssueCode::QuotaUnsupported,
-        "Quota not visible: OpenAI does not expose usage for API keys",
+        IssueReason::QuotaHidden {
+            provider: Provider::OpenAi,
+        },
         Recoverability::Unsupported,
     ));
     a.usage = AccountUsage {
@@ -790,7 +793,9 @@ fn accounts_mixed(now: i64) -> AccountRegistry {
     a.issue = Some(
         RecoverableIssue::new(
             IssueCode::RateLimited,
-            "Rate limited: retry after 25 min",
+            IssueReason::Usage(UsageReason::RateLimited {
+                retry_in_secs: Some(25 * 60),
+            }),
             Recoverability::Retryable,
         )
         .detail("Last-good data kept from 3 h ago")
@@ -825,7 +830,7 @@ fn accounts_mixed(now: i64) -> AccountRegistry {
     a.last_refresh_secs = Some(now - 30 * d);
     a.issue = Some(RecoverableIssue::new(
         IssueCode::IdentityUnresolved,
-        "Identity unresolved · showing usage without a public handle",
+        IssueReason::IdentityUnresolved,
         Recoverability::Unsupported,
     ));
     a.usage = AccountUsage {
@@ -893,7 +898,9 @@ fn accounts_mixed(now: i64) -> AccountRegistry {
     a.last_refresh_secs = Some(now - 2 * h - 15 * 60);
     a.issue = Some(RecoverableIssue::new(
         IssueCode::Stale,
-        "Usage stale · last good 2 h ago",
+        IssueReason::Stale {
+            age_secs: 2 * h + 15 * 60,
+        },
         Recoverability::Retryable,
     ));
     a.usage = AccountUsage {
@@ -947,7 +954,10 @@ fn accounts_mixed(now: i64) -> AccountRegistry {
     a.validation = ValidationState::Valid(ValidationLevel::MaterialDiscovered);
     a.issue = Some(RecoverableIssue::new(
         IssueCode::CredentialFileMissing,
-        "No credential found: ~/.kimi has no api key",
+        IssueReason::LoginMissing {
+            path: "~/.kimi".into(),
+            file: "api key".into(),
+        },
         Recoverability::ActionRequired,
     ));
     a.usage = AccountUsage {
@@ -981,7 +991,10 @@ fn accounts_mixed(now: i64) -> AccountRegistry {
     a.issue = Some(
         RecoverableIssue::new(
             IssueCode::ProviderUnavailable,
-            "Provider unavailable: MiniMax did not respond",
+            IssueReason::ProviderDown {
+                provider: Provider::MiniMax,
+                detail: "Timed out after 8 s".into(),
+            },
             Recoverability::Retryable,
         )
         .detail("Timed out after 8 s"),
@@ -1033,7 +1046,10 @@ fn accounts_mixed(now: i64) -> AccountRegistry {
     a.last_refresh_secs = Some(now - 5 * 60);
     a.issue = Some(RecoverableIssue::new(
         IssueCode::QuotaUnsupported,
-        "Quota not visible: OpenCode returned 403",
+        IssueReason::QuotaDenied {
+            provider: Provider::OpenCode,
+            status: 403,
+        },
         Recoverability::Unsupported,
     ));
     a.usage = AccountUsage {
@@ -1065,13 +1081,17 @@ fn accounts_hard(now: i64) -> AccountRegistry {
     a.lifecycle = Lifecycle::NeedsLogin;
     a.validation = ValidationState::Invalid(RecoverableIssue::new(
         IssueCode::Unauthorized,
-        "Not authorized: xAI rejected the credential",
+        IssueReason::Rejected {
+            provider: Provider::XAi,
+        },
         Recoverability::ActionRequired,
     ));
     a.issue = Some(
         RecoverableIssue::new(
             IssueCode::Unauthorized,
-            "Not authorized: xAI rejected the credential",
+            IssueReason::Rejected {
+                provider: Provider::XAi,
+            },
             Recoverability::ActionRequired,
         )
         .detail("HTTP 401 · re-login required"),

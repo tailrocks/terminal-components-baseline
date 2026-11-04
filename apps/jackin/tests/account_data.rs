@@ -10,6 +10,7 @@ use jackin_console::domain::account::{
 use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider, UsageSurface};
 use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::openshell::env_edit_block;
+use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::{Usability, usability_of};
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::world::World;
@@ -75,7 +76,7 @@ fn a_launch_block_makes_the_account_unusable() {
         Usability::Blocked(LaunchBlock::UsageOnlySource)
     );
     assert_eq!(
-        usability_of(&account).label(Some(&Fixed::openshell())),
+        usability_of(&account).label(Some(&Fixed::openshell()), &Vocabulary::openshell()),
         USAGE_ONLY
     );
     account.enabled = false;
