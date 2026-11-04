@@ -326,14 +326,25 @@ fn h03_output_scenario_activities_multi() {
         &[VITE_LINE],
     );
     app.key("alt+1");
-    let front = app.wait_text("frontend dev · running");
+    // The activity title switches before its log replaces the previous body.
+    let front = app.wait_screen("frontend dev output", |screen| {
+        let visible = text(screen);
+        visible.contains("frontend dev · running")
+            && visible.contains(VITE_LINE)
+            && visible.contains("pid 7731")
+            && !visible.contains(TESTS_LINE)
+            && !visible.contains("128 tests run: 128 passed")
+    });
     see(
         &front,
         &[VITE_LINE, "pid 7731"],
         &[TESTS_LINE, "128 tests run: 128 passed"],
     );
     app.key("alt+3");
-    let back = app.wait_text(TESTS_LINE);
+    let back = app.wait_screen("api tests output again", |screen| {
+        let visible = text(screen);
+        api_tests_body(screen) && visible.contains("exit 0") && !visible.contains("pid 7731")
+    });
     see(&back, &[TESTS_HEAD, "exit 0"], &[VITE_LINE, "pid 7731"]);
 
     app.key("/");

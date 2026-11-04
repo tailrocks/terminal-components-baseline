@@ -767,7 +767,20 @@ fn compare_levels_narrows_before_restore() {
         &args,
     );
     app.resize(80, 24);
-    let narrow = app.wait_text(TITLE);
+    // The title is in the header on the first narrow frame. The compare
+    // bands paint after it.
+    let narrow = app.wait_screen("narrow compare", |screen| {
+        let visible = text(screen);
+        let band = visible.contains("truecolor")
+            || visible.contains("256 colors")
+            || visible.contains("16 colors")
+            || visible.contains("no color");
+        screen.cols() == 80
+            && screen.rows() == 24
+            && visible.contains(TITLE)
+            && !visible.contains(WIDE)
+            && band
+    });
     let visible = text(&narrow);
     let band = visible.contains("truecolor")
         || visible.contains("256 colors")
