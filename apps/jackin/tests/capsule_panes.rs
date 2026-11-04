@@ -376,3 +376,34 @@ fn a_clipboard_write_by_the_program_follows_the_policy() {
     assert_eq!(rig.status(), "Copied from Codex · 5 characters");
     assert_eq!(*rig.copied.0.lock().expect("sink"), ["Hello"]);
 }
+
+#[test]
+fn a_split_whose_focused_pane_vanished_starts_nothing() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.press("ctrl+b %");
+    let gone = rig.daemon().next_id + 100;
+    rig.app
+        .world
+        .daemons
+        .get_mut(INSTANCE)
+        .expect("the daemon")
+        .tabs[0]
+        .focused = gone;
+    rig.typed("Shell");
+    rig.press("enter");
+
+    let status = rig.status();
+    assert!(status.contains("focused pane not found"), "{status}");
+    assert!(!status.contains("Started"), "{status}");
+    assert_eq!(rig.daemon().panes.len(), 1, "no pane was left behind");
+    assert_eq!(rig.daemon().tabs[0].leaves().len(), 1);
+    let sessions = rig
+        .app
+        .world
+        .instance(INSTANCE)
+        .expect("instance")
+        .sessions
+        .clone();
+    assert_eq!(sessions, Ok(Vec::new()), "no session was recorded");
+}

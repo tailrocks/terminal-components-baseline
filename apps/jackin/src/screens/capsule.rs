@@ -787,6 +787,7 @@ impl CapsuleScreen {
                 .is_none()
                 {
                     cx.error("Cannot split: focused pane not found");
+                    return;
                 }
             }
         }
