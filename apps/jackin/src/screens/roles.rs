@@ -599,7 +599,9 @@ impl RolesScreen {
             return;
         };
         self.checking.insert(name.to_owned());
+        let ticket = w.next_ticket();
         w.perform(Effect::CheckRole {
+            ticket,
             role: name.to_owned(),
             doc,
         });
@@ -809,7 +811,7 @@ impl Page<Jackin> for RolesScreen {
                 self.finish_add(location, result, w, cx);
                 Outcome::Changed
             }
-            Msg::RoleChecked { role, result } if self.checking.remove(role) => {
+            Msg::RoleChecked { role, result, .. } if self.checking.remove(role) => {
                 match result {
                     Ok(snapshot) => {
                         w.apply((**snapshot).clone());

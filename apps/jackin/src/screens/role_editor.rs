@@ -31,7 +31,7 @@ use ratatui::style::Modifier;
 
 use super::modals::{FormDialog, unsaved_dialog};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::backend::Effect;
+use crate::backend::{Effect, Ticket};
 use crate::domain::role::{RoleCheckState, RoleEnvEntry, RoleFinding, RoleManifestDoc, RoleRecord};
 use crate::domain::workspace::{RoleName, RoleSource, env_key_error};
 use crate::world::{Msg, Snapshot, World, job};
@@ -155,6 +155,7 @@ pub struct RoleEditorScreen {
     saving: bool,
     check: RoleCheckState,
     checked: Option<RoleManifestDoc>,
+    check_ticket: Option<Ticket>,
     save_after_check: bool,
     pick: Option<Pick>,
     pick_targets: Vec<String>,
@@ -246,6 +247,7 @@ impl RoleEditorScreen {
             checked: rec
                 .filter(|r| matches!(r.check, RoleCheckState::Done(_)))
                 .map(|_| doc.clone()),
+            check_ticket: None,
             save_after_check: false,
             pick: None,
             pick_targets: vec![],
@@ -421,7 +423,10 @@ impl RoleEditorScreen {
     fn start_check(&mut self, w: &mut World, cx: &mut Cx) {
         self.check = RoleCheckState::Running;
         self.checked = Some(self.pending.clone());
+        let ticket = w.next_ticket();
+        self.check_ticket = Some(ticket);
         w.perform(Effect::CheckRole {
+            ticket,
             role: self.role.clone(),
             doc: self.pending.clone(),
         });
@@ -1244,7 +1249,12 @@ impl Page<Jackin> for RoleEditorScreen {
                 self.finish_save(result, w, cx);
                 Outcome::Changed
             }
-            Msg::RoleChecked { role, result } if self.checking() && *role == self.role => {
+            Msg::RoleChecked {
+                ticket,
+                role,
+                result,
+            } if self.checking() && self.check_ticket == Some(*ticket) && *role == self.role => {
+                self.check_ticket = None;
                 let found = match result {
                     Ok(snapshot) => snapshot
                         .surfaces

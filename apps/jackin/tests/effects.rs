@@ -1282,7 +1282,7 @@ fn finding() -> RoleFinding {
 /// Reports a finding the simulator never raises for this manifest, and a
 /// binding the screen never writes.
 fn check_role(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::CheckRole { role, .. } = effect else {
+    let Effect::CheckRole { ticket, role, .. } = effect else {
         return None;
     };
     let mut snapshot = sim::snapshot(world);
@@ -1290,16 +1290,18 @@ fn check_role(effect: &Effect, world: &World) -> Option<Msg> {
     rec.check = RoleCheckState::Done(vec![finding()]);
     rec.bindings.insert(Agent::ClaudeCode, MARKER.into());
     Some(Msg::RoleChecked {
+        ticket: *ticket,
         role: role.clone(),
         result: Ok(Box::new(snapshot)),
     })
 }
 
 fn fail_check(effect: &Effect, _: &World) -> Option<Msg> {
-    let Effect::CheckRole { role, .. } = effect else {
+    let Effect::CheckRole { ticket, role, .. } = effect else {
         return None;
     };
     Some(Msg::RoleChecked {
+        ticket: *ticket,
         role: role.clone(),
         result: Err("the checker did not start".into()),
     })

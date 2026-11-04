@@ -450,7 +450,8 @@ impl Backend for SimBackend {
                     result,
                 })
             }
-            Effect::CheckRole { role, doc } => Some(Msg::RoleChecked {
+            Effect::CheckRole { ticket, role, doc } => Some(Msg::RoleChecked {
+                ticket: *ticket,
                 role: role.clone(),
                 result: with_role(world, role, |rec| {
                     rec.check = RoleCheckState::Done(surfaces::check_role(doc));

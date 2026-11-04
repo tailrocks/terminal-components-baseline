@@ -590,13 +590,14 @@ fn with_a_fix(effect: &Effect, world: &World) -> Option<Msg> {
 }
 
 fn found(effect: &Effect, world: &World, findings: Vec<RoleFinding>) -> Option<Msg> {
-    let Effect::CheckRole { role, .. } = effect else {
+    let Effect::CheckRole { ticket, role, .. } = effect else {
         return None;
     };
     let mut snapshot = sim::snapshot(world);
     let rec = snapshot.surfaces.roles.as_mut()?.role_mut(role)?;
     rec.check = RoleCheckState::Done(findings);
     Some(Msg::RoleChecked {
+        ticket: *ticket,
         role: role.clone(),
         result: Ok(Box::new(snapshot)),
     })

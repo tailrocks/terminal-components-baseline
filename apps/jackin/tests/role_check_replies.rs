@@ -58,7 +58,7 @@ impl SlowChecker {
 impl Backend for SlowChecker {
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
         self.seen.lock().expect("seen").push(effect.clone());
-        let Effect::CheckRole { role, doc } = effect else {
+        let Effect::CheckRole { ticket, role, doc } = effect else {
             return self.inner.perform(effect, world);
         };
         let mut snapshot = sim::snapshot(world);
@@ -78,6 +78,7 @@ impl Backend for SlowChecker {
         Some(Completion::ready(
             CHECK_TAKES_MS,
             Msg::RoleChecked {
+                ticket: *ticket,
                 role: role.clone(),
                 result: Ok(Box::new(snapshot)),
             },
@@ -184,4 +185,22 @@ fn a_second_check_waits_for_the_running_one() {
         shown.contains("problem in the document with model pinx"),
         "{shown}"
     );
+}
+
+#[test]
+fn a_check_of_a_closed_editor_does_not_answer_the_reopened_one() {
+    let (mut app, backend) = slow_editor();
+    press(&mut app, "enter tab tab tab tab tab p i n x enter");
+    press(&mut app, "ctrl+s");
+    press(&mut app, "esc esc right enter");
+    press(&mut app, "e");
+    check_key(&mut app);
+    assert_eq!(backend.checks(), vec!["pinx".to_owned(), String::new()]);
+
+    let shown = wait_for_the_reply(&mut app);
+    assert!(
+        !shown.contains("problem in the document with model pinx"),
+        "the old editor's findings answered the new check:\n{shown}"
+    );
+    assert!(shown.contains("Check passed"), "{shown}");
 }

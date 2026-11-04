@@ -212,6 +212,7 @@ pub enum Msg {
         instance: Box<Instance>,
     },
     RoleChecked {
+        ticket: Ticket,
         role: RoleName,
         result: Result<Box<Snapshot>, String>,
     },
@@ -514,8 +515,6 @@ impl World {
         self.tickets
     }
 
-    /// Asks the backend for a fresh snapshot unless an earlier ask is still
-    /// unanswered, so replies cannot arrive out of order.
     pub fn refresh(&mut self) -> bool {
         if self.refresh_from.is_some() {
             return false;

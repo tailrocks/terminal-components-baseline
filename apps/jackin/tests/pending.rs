@@ -1094,8 +1094,6 @@ fn a_change_made_while_the_registry_is_saving_is_refused_out_loud() {
     );
 }
 
-/// "Spare", provider Claude, the local folder source and the folder that
-/// discovery already found.
 const DISCOVERED_FOLDER: &str = "~/.claude-spare";
 
 #[test]

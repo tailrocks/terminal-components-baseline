@@ -395,6 +395,7 @@ pub enum Effect {
         role: String,
     },
     CheckRole {
+        ticket: Ticket,
         role: RoleName,
         doc: RoleManifestDoc,
     },
