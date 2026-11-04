@@ -191,6 +191,18 @@ pub fn roles(w: &mut World, agents: Vec<Agent>) {
     });
 }
 
+/// `infra-control-plane` launches the role whose manifest asks for values,
+/// and `customer-portal` no longer allows the role it last used.
+pub fn launch_checks(w: &mut World) {
+    if let Some(ws) = w.workspace_mut(2) {
+        ws.roles.default = Some("sentinel".into());
+        ws.roles.last = Some("sentinel".into());
+    }
+    if let Some(ws) = w.workspace_mut(4) {
+        ws.roles.allowed = AllowedRoles::Custom(vec!["backend".into()]);
+    }
+}
+
 pub fn doctor(w: &mut World) {
     let at = w.now_secs() - 4;
     w.surfaces.doctor = Some(DoctorSurface {

@@ -11,6 +11,8 @@ use junie_tui::ui::ctx::{RenderCtx, fill};
 use junie_tui::ui::text::{plural, width};
 use junie_tui::widgets::button::Button;
 use junie_tui::widgets::dialog::Dialog;
+use junie_tui::widgets::form_dialog::{FieldValue, FormDialog, FormField};
+use junie_tui::widgets::input::TextInput;
 use junie_tui::widgets::keyhint::{Hint, hint};
 use junie_tui::widgets::notice::Notice;
 use junie_tui::widgets::progress::spinner_frame;
@@ -31,7 +33,8 @@ use crate::domain::launch::{LaunchContent, LaunchFailure, StageKind};
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
-    FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance, launch_accounts,
+    EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
+    Refusal, launch_accounts,
 };
 use crate::world::World;
 use junie_tui::motion::Motion;
@@ -48,6 +51,7 @@ pub const CANCEL_BTN: WidgetId = WidgetId::of("cockpit.cancel_btn");
 struct Progress {
     states: Vec<StepState>,
     failure: Option<LaunchFailure>,
+    refusal: Option<Refusal>,
     done: bool,
     cancelled: bool,
 }
@@ -57,6 +61,7 @@ impl Progress {
         Self {
             states: vec![StepState::Queued; stages],
             failure: None,
+            refusal: None,
             done: false,
             cancelled: false,
         }
@@ -71,8 +76,19 @@ impl Progress {
         self.states.contains(&StepState::Blocked)
     }
 
-    fn is_terminal(&self) -> bool {
-        self.done || self.failure.is_some() || self.blocked() || self.cancelled
+    /// The launch is over; there is nothing left to cancel.
+    fn ended(&self) -> bool {
+        self.done || self.failure.is_some() || self.refusal.is_some() || self.cancelled
+    }
+
+    /// The feed will send nothing more: the launch ended or a stage is blocked.
+    /// A blocked launch can still be cancelled.
+    fn halted(&self) -> bool {
+        self.ended() || self.blocked()
+    }
+
+    fn faulted(&self) -> bool {
+        self.failure.is_some() || self.refusal.is_some()
     }
 }
 
@@ -86,6 +102,7 @@ pub struct CockpitScreen {
     pub account: Option<AccountId>,
 
     pub accounts: Vec<AccountId>,
+    questions: Vec<EnvQuestion>,
     pub rail: StepRail,
     pub activity: String,
     pub log: TextViewport,
@@ -133,6 +150,7 @@ impl CockpitScreen {
             agent,
             account,
             accounts,
+            questions: Vec::new(),
             rail: StepRail::new(RAIL, steps).selectable(false),
             activity: "Preparing launch…".into(),
             log,
@@ -244,7 +262,7 @@ impl CockpitScreen {
     }
 
     fn step(&mut self, w: &mut World, cx: &mut Cx) -> bool {
-        if self.progress.is_terminal() || self.handoff_requested {
+        if self.progress.halted() || self.handoff_requested {
             return false;
         }
         self.tick += 1;
@@ -308,6 +326,14 @@ impl CockpitScreen {
                     d.width = 70;
                     cx.open(d, LayerTag::new("cred"));
                 }
+                LaunchEvent::Refused(refusal) => {
+                    self.frozen_at = Some(self.tick);
+                    self.activity = refusal.title.clone();
+                    self.log_open = false;
+                    self.progress.refusal = Some(*refusal);
+                    self.open_refusal(cx);
+                }
+                LaunchEvent::NeedsInput(questions) => self.open_questions(questions, cx),
                 LaunchEvent::Failed(failed) => {
                     let FailedLaunch { failure, instance } = *failed;
                     self.frozen_at = Some(self.tick);
@@ -373,6 +399,63 @@ impl CockpitScreen {
             .width(70);
         let _ = w;
         cx.open(d, LayerTag::new("failure"));
+    }
+
+    fn open_refusal(&mut self, cx: &mut Cx) {
+        let Some(r) = self.progress.refusal.clone() else {
+            return;
+        };
+        let d = InfoDialog::new(
+            WidgetId::of("cockpit.refusal"),
+            &r.title,
+            vec![
+                Prop::new("State", r.state).tone(Tone::Secondary),
+                Prop::new("Next step", r.next_step).wrap(),
+            ],
+        )
+        .error()
+        .intro(vec![(r.found, Tone::Normal)])
+        .width(80);
+        cx.open(d, LayerTag::new("refusal"));
+    }
+
+    fn open_questions(&mut self, questions: Vec<EnvQuestion>, cx: &mut Cx) {
+        let id = WidgetId::of("cockpit.env");
+        let fields = questions
+            .iter()
+            .map(|q| {
+                FormField::input(
+                    &q.name,
+                    TextInput::new(id.sub(&q.name), &q.prompt)
+                        .placeholder("no default")
+                        .help(&format!("sets {}", q.name))
+                        .value(q.default.as_deref().unwrap_or("")),
+                )
+            })
+            .collect();
+        let mut form = FormDialog::new(id, "Values for this launch", fields)
+            .width(70)
+            .meta(&self.role);
+        form.save = Button::primary(form.save.id, "Start launch");
+        form.cancel = Button::subtle(form.cancel.id, "Cancel launch");
+        self.questions = questions;
+        cx.open(form, LayerTag::new("env"));
+    }
+
+    fn answers(&self, values: &[(String, FieldValue)]) -> Vec<EnvAnswer> {
+        self.questions
+            .iter()
+            .map(|q| EnvAnswer {
+                name: q.name.clone(),
+                value: values
+                    .iter()
+                    .find_map(|(name, value)| match value {
+                        FieldValue::Text(text) if *name == q.name => Some(text.clone()),
+                        _ => None,
+                    })
+                    .unwrap_or_default(),
+            })
+            .collect()
     }
 
     fn open_info(&mut self, w: &World, cx: &mut Cx) {
@@ -448,7 +531,7 @@ impl CockpitScreen {
     }
 
     fn cancel(&mut self, w: &mut World, cx: &mut Cx) {
-        if self.progress.is_terminal() {
+        if self.progress.ended() {
             return;
         }
         self.abandon(w);
@@ -461,7 +544,7 @@ impl CockpitScreen {
     }
 
     fn ask_cancel(&mut self, cx: &mut Cx) -> Outcome {
-        if self.progress.is_terminal() {
+        if self.progress.ended() {
             return Outcome::Consumed;
         }
         let d = Dialog::destructive(
@@ -476,7 +559,7 @@ impl CockpitScreen {
     }
 
     fn draw_log(&mut self, screen: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
-        let active = !self.progress.is_terminal()
+        let active = !self.progress.halted()
             && self
                 .rail
                 .frontier()
@@ -575,7 +658,7 @@ impl Page<Jackin> for CockpitScreen {
     }
 
     fn animating(&self, _w: &World) -> bool {
-        !self.progress.is_terminal() || self.frozen_at.is_none()
+        !self.progress.halted() || self.frozen_at.is_none()
     }
 
     fn on_tick(&mut self, w: &mut World, cx: &mut Cx) -> Outcome {
@@ -724,6 +807,21 @@ impl Page<Jackin> for CockpitScreen {
                 });
                 Outcome::Changed
             }
+            ("refusal", _) => {
+                cx.go(Go::LaunchFailedAck { instance: None });
+                Outcome::Changed
+            }
+            ("env", ModalResult::Form(Some(values))) => {
+                let answers = self.answers(&values);
+                self.questions.clear();
+                self.feed.answer_env(answers);
+                Outcome::Changed
+            }
+            ("env", ModalResult::Form(None)) => {
+                self.questions.clear();
+                self.cancel(w, cx);
+                Outcome::Changed
+            }
             ("info", ModalResult::Info(InfoResult::Copy(v))) => {
                 cx.copy(v);
                 Outcome::Changed
@@ -800,7 +898,7 @@ impl Page<Jackin> for CockpitScreen {
             ),
             Rect::new(area.x, area.bottom().saturating_sub(3), area.width, 3),
         ];
-        let running = !self.progress.is_terminal() && self.frozen_at.is_none();
+        let running = !self.progress.halted() && self.frozen_at.is_none();
         let t_local = match self.motion {
             Motion::Reduced => 60,
             _ => self.frozen_at.unwrap_or(self.tick),
@@ -816,7 +914,9 @@ impl Page<Jackin> for CockpitScreen {
         );
 
         let ws_name = self.target_label.clone();
-        let head = if self.rail.frontier().is_none() && self.tick == 0 {
+        let head = if self.progress.refusal.is_some() {
+            format!("Not loading {} {ws_name}", self.role)
+        } else if self.rail.frontier().is_none() && self.tick == 0 {
             "Preparing launch…".to_owned()
         } else {
             format!("Loading {} {ws_name}", self.role)
@@ -882,12 +982,12 @@ impl Page<Jackin> for CockpitScreen {
                     "stopped".into()
                 }
             });
-        center(
-            buf,
-            ident_y + 3,
-            &format!("{frontier} · {done} done · {skipped} skipped"),
-            t.muted(),
-        );
+        let progress = if self.progress.refusal.is_some() {
+            "not started".to_owned()
+        } else {
+            format!("{frontier} · {done} done · {skipped} skipped")
+        };
+        center(buf, ident_y + 3, &progress, t.muted());
 
         fill(
             buf,
@@ -943,13 +1043,13 @@ impl Page<Jackin> for CockpitScreen {
         fill(buf, Rect::new(area.x, ay - 1, area.width, 3), t.base());
         let spinner = if running {
             format!("{} ", spinner_frame(self.tick))
-        } else if self.progress.failure.is_some() {
+        } else if self.progress.faulted() {
             "! ".into()
         } else {
             "".into()
         };
         let activity = format!("{spinner}{}", self.activity);
-        let act_style = if self.progress.failure.is_some() {
+        let act_style = if self.progress.faulted() {
             t.error_fg()
         } else {
             t.secondary()
@@ -1011,7 +1111,7 @@ impl Page<Jackin> for CockpitScreen {
             }
         }
 
-        if !self.progress.is_terminal() {
+        if !self.progress.ended() {
             let mut b = Button::secondary(CANCEL_BTN, "Cancel launch…");
             let bw = b.width();
             let bx = area.right().saturating_sub(bw + 1);
@@ -1039,7 +1139,7 @@ impl Page<Jackin> for CockpitScreen {
             v.push(hint("b", "Build log"));
         }
         v.push(Hint::new("i", format!("{} info", self.content.words.unit)));
-        if !self.progress.is_terminal() {
+        if !self.progress.ended() {
             v.push(hint("x", "Cancel launch…"));
         }
         v.push(hint("Ctrl+Q", "Quit"));

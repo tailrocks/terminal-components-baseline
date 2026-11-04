@@ -108,6 +108,7 @@ const START_TABLE: &[Start] = &[
     start(Scenario::DockerSetting, 0, Route::Manager, &["Workspaces"]),
     start(Scenario::DockerNoEngine, 0, Route::Manager, &["Workspaces"]),
     start(Scenario::Doctor, 0, Route::Manager, &["Workspaces"]),
+    start(Scenario::LaunchChecks, 0, Route::Manager, &["Workspaces"]),
     start(
         Scenario::OpenshellFixed,
         0,

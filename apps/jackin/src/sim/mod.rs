@@ -19,7 +19,7 @@ use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
 use crate::world::{GlobalConfig, Msg, Snapshot, World};
 
-use self::launch::{LaunchPlan, SimLaunch};
+use self::launch::{LaunchPlan, Opening, SimLaunch};
 
 pub mod changes;
 pub mod launch;
@@ -35,6 +35,7 @@ enum LaunchRule {
     Clean,
     FailNetwork,
     HardCases,
+    Guarded,
 }
 
 #[derive(Debug)]
@@ -78,6 +79,16 @@ impl SimBackend {
         Arc::new(SimBackend::default())
     }
 
+    /// Checks a launch before it starts: a workspace that does not allow the
+    /// role refuses it, and a role whose manifest prompts for env values asks
+    /// for them.
+    pub fn guarded() -> Arc<dyn Backend> {
+        Arc::new(SimBackend {
+            launch: LaunchRule::Guarded,
+            ..SimBackend::default()
+        })
+    }
+
     pub fn failing_launch() -> Arc<dyn Backend> {
         Arc::new(SimBackend {
             launch: LaunchRule::FailNetwork,
@@ -115,7 +126,7 @@ impl SimBackend {
 
     fn launch_plan(&self, world: &World, target: &LaunchTarget) -> LaunchPlan {
         match self.launch {
-            LaunchRule::Clean => LaunchPlan::Clean,
+            LaunchRule::Clean | LaunchRule::Guarded => LaunchPlan::Clean,
             LaunchRule::FailNetwork => LaunchPlan::FailNetwork,
             LaunchRule::HardCases => {
                 if world.op.session() == OpSession::Locked
@@ -531,8 +542,15 @@ impl Backend for SimBackend {
     }
 
     fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed> {
+        let opening = match self.launch {
+            LaunchRule::Guarded => launch::opening(world, target),
+            LaunchRule::Clean | LaunchRule::FailNetwork | LaunchRule::HardCases => {
+                Opening::Straight
+            }
+        };
         Box::new(SimLaunch::start(
             self.launch_plan(world, target),
+            opening,
             world,
             target,
             self.launch_content(),
