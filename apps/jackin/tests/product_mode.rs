@@ -8,11 +8,8 @@ use std::sync::Arc;
 use product_support::{NOT_USED, SignedInOnly};
 
 use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, Remote, assemble};
-use jackin_console::backend::{
-    Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, ValidationOutcome,
-};
-use jackin_console::domain::account::{AccountRegistry, CredentialSource};
-use jackin_console::domain::agent::Provider;
+use jackin_console::backend::{Backend, Completion, Effect};
+use jackin_console::domain::account::AccountRegistry;
 use jackin_console::domain::instance::Instance;
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
@@ -36,27 +33,8 @@ use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 struct TestBackendData;
 
 impl Backend for TestBackendData {
-    fn validate(
-        &self,
-        _: Provider,
-        _: &CredentialSource,
-        _: Option<&str>,
-        _: &dyn OnePassword,
-        _: i64,
-    ) -> ValidationOutcome {
-        unreachable!("{NOT_USED}")
-    }
-
-    fn probe_folder(&self, _: &str) -> FolderProbe {
-        FolderProbe::Missing
-    }
-
     fn perform(&self, _: &Effect, _: &World) -> Option<Completion> {
         None
-    }
-
-    fn changes(&self, _: &str, _: &[String], _: usize, _: usize) -> ChangeSet {
-        unreachable!("{NOT_USED}")
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {

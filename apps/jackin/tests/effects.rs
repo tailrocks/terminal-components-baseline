@@ -6,13 +6,9 @@ use std::sync::{Arc, Mutex};
 
 use common::*;
 use jackin_console::app::{App, Route};
-use jackin_console::backend::{
-    Backend, ChangeSet, Completion, Effect, FileSource, FolderProbe, OnePassword, Refresh,
-    ValidationOutcome,
-};
-use jackin_console::domain::account::{AccountRegistry, CredentialSource};
+use jackin_console::backend::{Backend, Completion, Effect, FileSource, Refresh};
+use jackin_console::domain::account::AccountRegistry;
 use jackin_console::domain::agent::Agent;
-use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::{Instance, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::role::{FindingArea, RoleAdmin, RoleCheckState, RoleFinding};
@@ -67,21 +63,6 @@ impl TestBackend {
 }
 
 impl Backend for TestBackend {
-    fn validate(
-        &self,
-        provider: Provider,
-        source: &CredentialSource,
-        plain_value: Option<&str>,
-        op: &dyn OnePassword,
-        now: i64,
-    ) -> ValidationOutcome {
-        self.inner.validate(provider, source, plain_value, op, now)
-    }
-
-    fn probe_folder(&self, path: &str) -> FolderProbe {
-        self.inner.probe_folder(path)
-    }
-
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
         self.seen.lock().expect("seen").push(effect.clone());
         match (self.answer)(effect, world) {
@@ -92,16 +73,6 @@ impl Backend for TestBackend {
 
     fn settle(&self, effect: &Effect, world: &World) -> Option<Msg> {
         self.inner.settle(effect, world)
-    }
-
-    fn changes(
-        &self,
-        id: &str,
-        touched: &[String],
-        uncommitted: usize,
-        unpushed: usize,
-    ) -> ChangeSet {
-        self.inner.changes(id, touched, uncommitted, unpushed)
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {
@@ -430,8 +401,12 @@ fn save_accounts_stores_the_payload() {
     settle(&mut app);
 
     let seen = backend.seen();
-    let [Effect::SaveAccounts { base, registry }] = seen.as_slice() else {
-        panic!("one SaveAccounts expected, got {seen:?}");
+    let [
+        Effect::CheckSource { .. },
+        Effect::SaveAccounts { base, registry },
+    ] = seen.as_slice()
+    else {
+        panic!("one CheckSource, then one SaveAccounts expected, got {seen:?}");
     };
     let named = |r: &AccountRegistry| r.accounts.iter().any(|a| a.display_name == "Spare");
     assert!(named(registry) && !named(base));

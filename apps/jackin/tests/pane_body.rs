@@ -7,11 +7,8 @@ mod product_support;
 use std::sync::{Arc, Mutex};
 
 use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, assemble};
-use jackin_console::backend::{
-    Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, ValidationOutcome,
-};
-use jackin_console::domain::account::CredentialSource;
-use jackin_console::domain::agent::{Agent, Provider};
+use jackin_console::backend::{Backend, Completion, Effect};
+use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{
     AgentState, DaemonSnapshot, Instance, InstanceStatus, PaneSnapshot, TabSnapshot,
 };
@@ -167,27 +164,8 @@ struct Recorder {
 }
 
 impl Backend for Recorder {
-    fn validate(
-        &self,
-        _: Provider,
-        _: &CredentialSource,
-        _: Option<&str>,
-        _: &dyn OnePassword,
-        _: i64,
-    ) -> ValidationOutcome {
-        unreachable!("{NOT_USED}")
-    }
-
-    fn probe_folder(&self, _: &str) -> FolderProbe {
-        FolderProbe::Missing
-    }
-
     fn perform(&self, _: &Effect, _: &World) -> Option<Completion> {
         None
-    }
-
-    fn changes(&self, _: &str, _: &[String], _: usize, _: usize) -> ChangeSet {
-        unreachable!("{NOT_USED}")
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {

@@ -40,6 +40,7 @@ use ratatui::style::Style;
 
 use super::modals::{ChoiceDialog, InfoDialog, InfoResult};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
+use crate::backend::{ChangeSet, Effect, Ticket};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::fixed::Fixed;
@@ -50,7 +51,7 @@ use crate::panes::{
     Daemon, Direction, MAX_LABEL, MIN_PANE_COLS, MIN_PANE_ROWS, PaneId, PaneKey, PaneNode,
     PaneRequest, Seam, nearest,
 };
-use crate::world::{Msg, World};
+use crate::world::{Msg, World, job};
 use junie_tui::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
 use junie_tui::ui::modal::modal_frame;
 use junie_tui::ui::text::plural;
@@ -115,6 +116,14 @@ pub struct CapsuleScreen {
     export_kind: Option<(bool, bool)>,
     pub redraw_flash: u8,
     pending_spawn: Option<PendingSpawn>,
+    reading: Option<Reading>,
+}
+
+/// The changes the screen has asked the backend for, and where the dialog
+/// that shows them returns to.
+struct Reading {
+    ticket: Ticket,
+    from_exit: bool,
 }
 
 type PendingSpawn = (Intent, Option<Agent>, Option<AccountId>, String, i64);
@@ -175,6 +184,7 @@ impl CapsuleScreen {
             export_kind: None,
             redraw_flash: 0,
             pending_spawn: None,
+            reading: None,
         }
     }
 
@@ -522,21 +532,51 @@ impl CapsuleScreen {
         }
     }
 
-    fn open_inspect(&mut self, w: &World, cx: &mut Cx, from_exit: bool) {
+    fn open_inspect(&mut self, w: &mut World, cx: &mut Cx, from_exit: bool) {
+        if self.reading.is_some() {
+            return;
+        }
         let touched = self
             .daemon(w)
             .map(|d| d.touched_files())
             .unwrap_or_default();
         let inst = w.instance(&self.instance);
-        let changes = w.backend.changes(
-            &self.instance,
-            &touched,
+        let (uncommitted, unpushed) = (
             inst.map(|i| i.uncommitted).unwrap_or(0),
             inst.map(|i| i.unpushed).unwrap_or(0),
         );
+        let ticket = w.next_ticket();
+        self.reading = Some(Reading { ticket, from_exit });
+        w.perform(Effect::ReadChanges {
+            ticket,
+            instance: self.instance.clone(),
+            touched,
+            uncommitted,
+            unpushed,
+        });
+        cx.progress(job::CHANGES_READ, "Reading changes…");
+    }
+
+    fn changes_read(
+        &mut self,
+        ticket: Ticket,
+        result: &Result<ChangeSet, String>,
+        w: &World,
+        cx: &mut Cx,
+    ) -> Outcome {
+        let Some(Reading { from_exit, .. }) = self.reading.take_if(|r| r.ticket == ticket) else {
+            return Outcome::Ignored;
+        };
+        let changes = match result {
+            Ok(changes) => changes.clone(),
+            Err(error) => {
+                cx.error(error.clone());
+                return Outcome::Changed;
+            }
+        };
         if changes.is_empty() {
             cx.status("Nothing changed in this instance");
-            return;
+            return Outcome::Changed;
         }
         let ws = self
             .daemon(w)
@@ -550,6 +590,7 @@ impl CapsuleScreen {
         )
         .returns_to_exit(from_exit);
         cx.open(d, LayerTag::new("inspect"));
+        Outcome::Changed
     }
 
     fn enter_prefix(&mut self, w: &World) {
@@ -1901,7 +1942,10 @@ impl Page<Jackin> for CapsuleScreen {
         Outcome::Changed
     }
 
-    fn on_msg(&mut self, msg: &Msg, _w: &mut World, cx: &mut Cx) -> Outcome {
+    fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
+        if let Msg::ChangesRead { ticket, result } = msg {
+            return self.changes_read(*ticket, result, w, cx);
+        }
         if let Msg::Takeover { instance, by } = msg
             && *instance == self.instance
         {

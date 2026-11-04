@@ -1,7 +1,7 @@
 use super::onepassword::classify_plain;
 use crate::backend::{
-    CheckRow, FolderProbe, KeyOutcome, OnePassword, OpError, Refresh, SecretClass,
-    ValidationOutcome,
+    CheckRow, FolderProbe, KeyOutcome, OnePassword, OpAccountRow, OpError, OpFieldRow, OpItemRow,
+    OpListing, OpScope, OpVaultRow, Refresh, SecretClass, ValidationOutcome,
 };
 use crate::domain::account::{
     Account, AccountIdentity, Confidence, CredentialSource, DetectedKind, IdentitySubject,
@@ -11,6 +11,70 @@ use crate::domain::agent::Provider;
 use crate::domain::usage::{
     AccountUsage, Freshness, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
 };
+
+/// How long the simulated provider takes to check a source. A folder and a
+/// typed key are checked on the spot, as the form always did; a 1Password
+/// reference goes through `op` and then to the provider.
+pub fn check_duration_ms(source: &CredentialSource) -> i64 {
+    match source {
+        CredentialSource::OnePassword(_) => 900,
+        CredentialSource::LocalFolder { .. }
+        | CredentialSource::HostEnv { .. }
+        | CredentialSource::PlainApiKey { .. } => 0,
+    }
+}
+
+/// What the simulated 1Password lists for one step of the picker.
+pub fn list_op(op: &dyn OnePassword, scope: &OpScope) -> Result<OpListing, OpError> {
+    Ok(match scope {
+        OpScope::Accounts => OpListing::Accounts(
+            op.list_accounts()?
+                .into_iter()
+                .map(|a| OpAccountRow {
+                    id: a.id.clone(),
+                    email: a.email.clone(),
+                    state: a.state,
+                })
+                .collect(),
+        ),
+        OpScope::Vaults { account } => OpListing::Vaults(
+            op.list_vaults(account)?
+                .into_iter()
+                .map(|v| OpVaultRow {
+                    id: v.id.clone(),
+                    name: v.name.clone(),
+                    items: v.items.len(),
+                    access: v.access,
+                })
+                .collect(),
+        ),
+        OpScope::Items { account, vault } => OpListing::Items(
+            op.list_items(account, vault)?
+                .into_iter()
+                .map(|i| OpItemRow {
+                    id: i.id.clone(),
+                    title: i.title.clone(),
+                    category: i.category.to_owned(),
+                    fields: i.fields.len(),
+                })
+                .collect(),
+        ),
+        OpScope::Fields {
+            account,
+            vault,
+            item,
+        } => OpListing::Fields(
+            op.list_fields(account, vault, item)?
+                .into_iter()
+                .map(|f| OpFieldRow {
+                    id: f.id.clone(),
+                    label: f.label.clone(),
+                    kind: f.kind,
+                })
+                .collect(),
+        ),
+    })
+}
 
 pub fn probe_folder(path: &str) -> FolderProbe {
     let p = path.trim_end_matches('/');

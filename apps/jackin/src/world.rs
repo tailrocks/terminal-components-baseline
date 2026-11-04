@@ -2,7 +2,10 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use crate::arbiter::{Arbiter, DiscoveryError};
-use crate::backend::{Backend, Effect, OnePassword, Refresh, Reply, Validation, apply_validation};
+use crate::backend::{
+    Backend, ChangeSet, Effect, FolderProbe, OnePassword, OpError, OpListing, Refresh, Reply,
+    Ticket, Validation, ValidationOutcome, apply_validation,
+};
 use crate::domain::account::{
     AccountId, AccountRegistry, IssueCode, Recoverability, RecoverableIssue, ValidationState,
 };
@@ -35,6 +38,8 @@ pub mod job {
     pub const ROLE_BIND: JobKey = JobKey::new("role.bind");
     pub const ROLE_ADD: JobKey = JobKey::new("role.add");
     pub const DOCTOR: JobKey = JobKey::new("doctor");
+    pub const SOURCE_CHECK: JobKey = JobKey::new("source.check");
+    pub const CHANGES_READ: JobKey = JobKey::new("changes.read");
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -196,6 +201,22 @@ pub enum Msg {
         result: Result<Box<Snapshot>, String>,
     },
     DoctorFinished(DoctorReport),
+    SourceChecked {
+        ticket: Ticket,
+        result: Result<Box<ValidationOutcome>, String>,
+    },
+    FolderProbed {
+        ticket: Ticket,
+        result: Result<FolderProbe, String>,
+    },
+    ChangesRead {
+        ticket: Ticket,
+        result: Result<ChangeSet, String>,
+    },
+    OpLoaded {
+        ticket: Ticket,
+        result: Result<OpListing, OpError>,
+    },
 }
 
 impl Msg {
@@ -213,6 +234,8 @@ impl Msg {
             Msg::RoleBound { .. } => Some(job::ROLE_BIND),
             Msg::RoleAdded { .. } => Some(job::ROLE_ADD),
             Msg::DoctorFinished(_) => Some(job::DOCTOR),
+            Msg::SourceChecked { .. } => Some(job::SOURCE_CHECK),
+            Msg::ChangesRead { .. } => Some(job::CHANGES_READ),
             Msg::AccountsSaved { .. }
             | Msg::WorkspaceDeleted { .. }
             | Msg::Restored { .. }
@@ -220,6 +243,8 @@ impl Msg {
             | Msg::RoleRemoved { .. }
             | Msg::Refreshed { .. }
             | Msg::AccountRefreshed { .. }
+            | Msg::FolderProbed { .. }
+            | Msg::OpLoaded { .. }
             | Msg::Takeover { .. } => None,
         }
     }
@@ -283,6 +308,8 @@ pub struct World {
     pub discovery_pending: bool,
 
     pub surfaces: Surfaces,
+
+    pub tickets: Ticket,
 }
 
 pub trait WallSource: std::fmt::Debug + Send + Sync {
@@ -412,6 +439,7 @@ impl World {
             session_accounts: BTreeMap::new(),
             discovery_pending: false,
             surfaces,
+            tickets: 0,
         };
         world.sync_arbiter();
         world
@@ -419,6 +447,12 @@ impl World {
 
     pub fn now_secs(&self) -> i64 {
         self.clock.now_secs()
+    }
+
+    /// A number no earlier request of this world carried.
+    pub fn next_ticket(&mut self) -> Ticket {
+        self.tickets += 1;
+        self.tickets
     }
 
     pub fn now_ms(&self) -> i64 {

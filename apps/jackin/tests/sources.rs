@@ -5,11 +5,7 @@ mod common;
 use std::sync::Arc;
 
 use common::*;
-use jackin_console::backend::{
-    Backend, ChangeSet, Completion, Effect, FileSource, FolderProbe, OnePassword, ValidationOutcome,
-};
-use jackin_console::domain::account::CredentialSource;
-use jackin_console::domain::agent::Provider;
+use jackin_console::backend::{Backend, Completion, Effect, FileSource};
 use jackin_console::domain::instance::{Instance, InstanceStatus, RepoRef};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::vocabulary::Vocabulary;
@@ -45,33 +41,8 @@ impl FileSource for ListedSource {
 struct SourceBackend(Arc<dyn Backend>);
 
 impl Backend for SourceBackend {
-    fn validate(
-        &self,
-        provider: Provider,
-        source: &CredentialSource,
-        plain_value: Option<&str>,
-        op: &dyn OnePassword,
-        now: i64,
-    ) -> ValidationOutcome {
-        self.0.validate(provider, source, plain_value, op, now)
-    }
-
-    fn probe_folder(&self, path: &str) -> FolderProbe {
-        self.0.probe_folder(path)
-    }
-
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
         self.0.perform(effect, world)
-    }
-
-    fn changes(
-        &self,
-        id: &str,
-        touched: &[String],
-        uncommitted: usize,
-        unpushed: usize,
-    ) -> ChangeSet {
-        self.0.changes(id, touched, uncommitted, unpushed)
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {

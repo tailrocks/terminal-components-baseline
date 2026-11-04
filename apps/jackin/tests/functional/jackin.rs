@@ -333,6 +333,63 @@ fn jackin_account_required_masked_save_cancel_and_remove() {
 }
 
 #[test]
+fn jackin_account_form_shows_a_pending_check_until_the_provider_answers() {
+    let mut args = vec!["--scenario", "accounts-mixed"];
+    args.extend_from_slice(PAUSED);
+    let app = App::new(
+        "jackin-account-pending",
+        JACKIN,
+        &args,
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("Overview");
+    app.key("a");
+    app.wait_text("New account");
+    app.click_text("Choose…");
+    app.wait_text("loading accounts…");
+    app.advance_clock(300);
+    app.wait_text("chainargos.1password.com");
+    app.key("enter");
+    app.wait_text("loading vaults…");
+    app.advance_clock(300);
+    app.wait_text("Engineering");
+    app.key("enter");
+    app.wait_text("loading items from Engineering…");
+    app.advance_clock(300);
+    app.wait_text("Anthropic · Work");
+    app.type_text("Work");
+    app.wait_screen("the item list is narrowed", |s| {
+        !text(s).contains("OpenAI · Codex Primary")
+    });
+    app.key("enter");
+    app.wait_text("loading Anthropic · Work…");
+    app.advance_clock(300);
+    app.wait_text("Choose field");
+    app.key("enter");
+    app.wait_text("Reference chosen");
+
+    app.click(button(&app, "Validate"));
+    let pending = app.wait_text("… material   checking");
+    let t = text(&pending);
+    assert!(t.contains("… identity   checking"), "{t}");
+    assert!(t.contains("… quota      checking"), "{t}");
+    assert!(t.contains("Validating the source…"), "{t}");
+    assert!(t.contains("New account"), "the form stays open:\n{t}");
+    assert!(!t.contains("✓ material"), "{t}");
+    app.visual("functional/jackin_account_form_pending");
+
+    app.advance_clock(1000);
+    let done = app.wait_text("✓ material   1Password reference resolved");
+    assert!(!text(&done).contains("checking"), "{}", text(&done));
+    assert!(text(&done).contains("Validated · Save stores the reference, never the secret"));
+    app.key("escape");
+    app.wait_absent("New account");
+    app.finish();
+}
+
+#[test]
 fn jackin_first_use_empty_manager_and_intro() {
     let app = App::new(
         "jackin-first-use",

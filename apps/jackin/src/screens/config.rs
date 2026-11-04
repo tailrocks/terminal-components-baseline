@@ -1505,7 +1505,7 @@ impl ConfigTabs {
                     role: r.clone(),
                     original: Some(k.clone()),
                 });
-                let flow = OpFlow::new(self.ids.form.sub("op"), w.op.as_ref(), w.now_ms());
+                let flow = OpFlow::new(self.ids.form.sub("op"), w.op.as_ref());
                 cx.open(flow, LayerTag::new("cfg.env.op"));
             }
             (RowKey::Env(r, k), KeyCode::Char('s')) => {
@@ -2404,7 +2404,7 @@ impl ConfigTabs {
             }
             ("cfg.env", ModalResult::FormAction(name, values)) => match name.as_str() {
                 "choose:op" => {
-                    let flow = OpFlow::new(self.ids.form.sub("op"), w.op.as_ref(), w.now_ms());
+                    let flow = OpFlow::new(self.ids.form.sub("op"), w.op.as_ref());
                     cx.open(flow, LayerTag::new("cfg.env.opform"));
                     Outcome::Changed
                 }
