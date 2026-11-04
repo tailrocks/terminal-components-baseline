@@ -12,14 +12,11 @@ use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus}
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
-use jackin_console::panes::{
-    Daemon, PaneBody, PaneKind, PanePolicy, PaneRequest, PaneSpawn, TerminalPane,
-};
+use jackin_console::panes::{Daemon, PaneBody, PanePolicy, PaneRequest, PaneSpawn, TerminalPane};
 use jackin_console::rain::INTRO_END;
 use jackin_console::world::{World, WorldParts};
 use junie_tui::clock::SimClock;
 use junie_tui::core::event::{Input, Mouse, MouseKind};
-use junie_tui::core::refusal::Reason;
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::shell::NativeClipboard;
@@ -37,7 +34,14 @@ pub const WORKSPACE: &str = "sandbox-project";
 pub struct TermBackend {
     pub bench: Arc<Bench>,
     pub requests: Mutex<Vec<PaneRequest>>,
-    pub refuse: Mutex<Option<String>>,
+    pub left: Mutex<Vec<String>>,
+}
+
+impl TermBackend {
+    /// The instances the Capsule told the backend it had left, in order.
+    pub fn left(&self) -> Vec<String> {
+        self.left.lock().expect("left").clone()
+    }
 }
 
 impl Backend for TermBackend {
@@ -71,11 +75,8 @@ impl Backend for TermBackend {
         vec![PaneRequest::new(&instance.id, Some(Agent::Codex), None)]
     }
 
-    fn spawnable(&self, _: &World, _: &Instance, kind: &PaneKind) -> Result<(), Reason> {
-        match (kind, self.refuse.lock().expect("refuse").clone()) {
-            (PaneKind::Agent { .. }, Some(why)) => Err(Reason::new(&why)),
-            _ => Ok(()),
-        }
+    fn capsule_left(&self, _: &World, instance: &str) {
+        self.left.lock().expect("left").push(instance.to_owned());
     }
 }
 
@@ -132,7 +133,7 @@ impl Rig {
         let backend = Arc::new(TermBackend {
             bench: bench.clone(),
             requests: Mutex::new(Vec::new()),
-            refuse: Mutex::new(None),
+            left: Mutex::new(Vec::new()),
         });
         let mut parts = WorldParts::new(
             SimClock::new(1_788_401_640, 0),

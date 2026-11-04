@@ -18,8 +18,8 @@ mod policy;
 mod terminal;
 
 pub use link::{
-    DetachCause, EndKind, Lease, LinkEvent, LinkSource, LinkStatus, PaneCommand, PaneLink,
-    PaneSize, Sent,
+    DetachCause, EndKind, FailNext, Lease, LinkEvent, LinkFault, LinkSource, LinkStatus,
+    PaneCommand, PaneLink, PaneSize, Sent,
 };
 pub use policy::{ClipboardWrite, PanePolicy, PaneTiming};
 pub use terminal::{TerminalPane, sanitize_title};
@@ -158,6 +158,15 @@ pub struct PaneSpawn {
     pub id: PaneId,
     pub workspace: String,
     pub now_ms: i64,
+}
+
+/// Why a pane of some kind may not start in an instance now. The new-tab
+/// picker words it with `PaneWords::refusal`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PaneRefusal {
+    /// The instance's main process has its one pane already (one pane for
+    /// each main process).
+    MainProcessOpen { agent: Agent },
 }
 
 /// The inside of a pane. The capsule draws, sizes, scrolls and types into a

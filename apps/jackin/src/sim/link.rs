@@ -7,7 +7,8 @@ use std::sync::Mutex;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use crate::panes::{
-    EndKind, Lease, LinkEvent, LinkSource, PaneCommand, PaneLink, PaneRequest, PaneSize, Sent,
+    EndKind, Lease, LinkEvent, LinkFault, LinkSource, PaneCommand, PaneLink, PaneRequest, PaneSize,
+    Sent,
 };
 
 /// Link events, each due this many milliseconds after the first time the pane
@@ -86,7 +87,7 @@ pub enum Play {
     /// restart attaches and stays.
     Exits(Stream),
     /// The attach cannot start.
-    Refuses(String),
+    Refuses(LinkFault),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -135,10 +136,10 @@ fn attach(stream: Stream) -> Vec<Timed> {
 }
 
 impl LinkSource for SimSource {
-    fn open(&self, _: &PaneRequest, _: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+    fn open(&self, _: &PaneRequest, _: PaneSize) -> Result<Box<dyn PaneLink>, LinkFault> {
         let again = self.opens.fetch_add(1, Ordering::Relaxed) > 0;
         let steps = match &self.play {
-            Play::Refuses(reason) => return Err(reason.clone()),
+            Play::Refuses(fault) => return Err(fault.clone()),
             Play::Hangs => vec![],
             Play::Stays(stream) => attach(*stream),
             Play::Watches(stream) => vec![
@@ -166,7 +167,11 @@ impl LinkSource for SimSource {
         Ok(Box::new(SimLink::new(steps)))
     }
 
-    fn restart(&self, request: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+    fn restart(
+        &self,
+        request: &PaneRequest,
+        size: PaneSize,
+    ) -> Result<Box<dyn PaneLink>, LinkFault> {
         match &self.play {
             Play::Exits(stream) => Ok(Box::new(SimLink::new(attach(*stream)))),
             _ => self.open(request, size),

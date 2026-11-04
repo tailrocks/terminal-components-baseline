@@ -619,7 +619,12 @@ impl CapsuleScreen {
 
         let record = w.instance(&self.instance);
         let refused = |kind: PaneKind| {
-            record.and_then(|i| w.backend.spawnable(w, i, &kind).err().map(|r| r.text))
+            record.and_then(|i| {
+                w.backend
+                    .spawnable(w, i, &kind)
+                    .err()
+                    .map(|r| w.surfaces.vocabulary.pane.refusal(&r))
+            })
         };
         for (a, mut offer) in w.offered_agents(ws, role.as_deref()) {
             if offer.blocked.is_none() {

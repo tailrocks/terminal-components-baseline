@@ -8,7 +8,7 @@ mod product_support;
 
 use capsule_support::*;
 use jackin_console::domain::agent::Agent;
-use jackin_console::panes::{EndKind, LinkEvent, PaneCommand, PaneRequest};
+use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneCommand, PaneRequest};
 use pane_support::*;
 
 const FOCUS_OUT: &[u8] = b"\x1b[O";
@@ -284,7 +284,7 @@ fn a_pane_that_is_not_live_closes_without_a_dialog() {
     for end in [
         LinkEvent::Ended(EndKind::Detached),
         LinkEvent::Exited(Some(0)),
-        LinkEvent::Ended(EndKind::Refused("no".into())),
+        LinkEvent::Ended(EndKind::Refused(LinkFault::new("no"))),
     ] {
         let mut rig = Rig::new();
         rig.attach();

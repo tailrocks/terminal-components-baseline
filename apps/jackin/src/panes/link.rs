@@ -36,6 +36,37 @@ pub enum Lease {
     ReadOnly,
 }
 
+/// What the operator can do about a failed attach besides retrying with
+/// Enter. The words come from `PaneWords`.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum FailNext {
+    #[default]
+    None,
+    RunDoctor,
+}
+
+/// Why an attach failed: the host's own text, and the step that may help.
+/// An empty `reason` means the stream closed before the attach completed.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LinkFault {
+    pub reason: String,
+    pub next: FailNext,
+}
+
+impl LinkFault {
+    pub fn new(reason: impl Into<String>) -> Self {
+        Self {
+            reason: reason.into(),
+            next: FailNext::None,
+        }
+    }
+
+    pub fn then(mut self, next: FailNext) -> Self {
+        self.next = next;
+        self
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EndKind {
     /// The pane was detached, by the operator or by the other side.
@@ -43,8 +74,8 @@ pub enum EndKind {
     /// The stream closed without a word.
     StreamClosed,
     /// The other side refused the attach.
-    Refused(String),
-    Failed(String),
+    Refused(LinkFault),
+    Failed(LinkFault),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -78,11 +109,15 @@ pub trait PaneLink: Send + std::fmt::Debug {
 /// Opens links lazily, at the first size a pane can use. It never blocks: a
 /// failure to start is an `Err` with the reason the operator reads.
 pub trait LinkSource: Send + Sync + std::fmt::Debug {
-    fn open(&self, request: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String>;
+    fn open(&self, request: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, LinkFault>;
 
     /// Starts the program again after it exited, as `jackin attach --restart`
     /// does, and opens a link to the new run. Never blocks, like `open`.
-    fn restart(&self, request: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String>;
+    fn restart(
+        &self,
+        request: &PaneRequest,
+        size: PaneSize,
+    ) -> Result<Box<dyn PaneLink>, LinkFault>;
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -100,7 +135,6 @@ pub enum LinkStatus {
     Attached(Lease),
     Detached(DetachCause),
     Exited(Option<i32>),
-    /// The attach failed. An empty reason means the stream closed before the
-    /// attach completed.
-    Failed(String),
+    /// The attach failed.
+    Failed(LinkFault),
 }

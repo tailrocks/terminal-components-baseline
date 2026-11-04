@@ -6,7 +6,10 @@ use std::sync::Arc;
 use junie_tui::ui::layout::SplitDir;
 
 use crate::domain::agent::Agent;
-use crate::panes::{Daemon, PaneBody, PaneNode, PaneRequest, PaneSpawn, PaneTiming, TerminalPane};
+use crate::panes::{
+    Daemon, FailNext, LinkFault, PaneBody, PaneNode, PaneRequest, PaneSpawn, PaneTiming,
+    TerminalPane,
+};
 use crate::sim::link::{Play, SimSource, Stream};
 use crate::world::{World, refresh_snapshots};
 
@@ -122,7 +125,7 @@ pub fn capsule_terminal(w: &mut World) {
         now,
         opened(
             &codex,
-            Play::Refuses("the gateway is unreachable · run jackin doctor".into()),
+            Play::Refuses(LinkFault::new("the gateway is unreachable").then(FailNext::RunDoctor)),
             timing,
         ),
     );

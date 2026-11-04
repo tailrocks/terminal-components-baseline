@@ -21,7 +21,7 @@ use crate::domain::usage::Freshness;
 use crate::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
 };
-use crate::panes::Daemon;
+use crate::panes::{Daemon, PaneId};
 use junie_tui::clock::SimClock;
 use junie_tui::shell::JobKey;
 
@@ -249,6 +249,13 @@ pub enum Msg {
         ticket: Ticket,
         result: Result<OpListing, OpError>,
     },
+    /// A link of `pane` has output, or an event, waiting. The world drains
+    /// that pane now instead of at the next tick. Wakes that find nothing new
+    /// ask for no redraw, so a burst of them costs one.
+    PaneWake {
+        instance: InstanceId,
+        pane: PaneId,
+    },
 }
 
 impl Msg {
@@ -278,7 +285,8 @@ impl Msg {
             | Msg::FolderProbed { .. }
             | Msg::OpLoaded { .. }
             | Msg::Takeover { .. }
-            | Msg::LaunchCancelled { .. } => None,
+            | Msg::LaunchCancelled { .. }
+            | Msg::PaneWake { .. } => None,
         }
     }
 }
@@ -738,6 +746,15 @@ impl World {
         }
         let backend = self.backend.clone();
         backend.due(self)
+    }
+
+    /// Drains the pane of a wake. Whether it has anything new to draw.
+    pub fn wake_pane(&mut self, instance: &str, pane: PaneId) -> bool {
+        let now = self.now_ms();
+        self.daemons
+            .get_mut(instance)
+            .and_then(|d| d.pane_mut(pane))
+            .is_some_and(|p| p.body.tick(now))
     }
 
     pub fn workspace(&self, id: WorkspaceId) -> Option<&Workspace> {

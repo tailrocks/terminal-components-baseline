@@ -6,8 +6,8 @@ mod pane_support;
 
 use jackin_console::domain::instance::AgentState;
 use jackin_console::panes::{
-    DetachCause, EndKind, Lease, LinkEvent, LinkStatus, PaneBody, PaneEffect, PaneFace, PaneKey,
-    PaneNote,
+    DetachCause, EndKind, FailNext, Lease, LinkEvent, LinkFault, LinkStatus, PaneBody, PaneEffect,
+    PaneFace, PaneKey, PaneNote,
 };
 use junie_tui::theme::Tone;
 use pane_support::*;
@@ -172,7 +172,7 @@ fn a_stream_that_closes_before_the_attach_is_a_failure() {
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Ended(EndKind::StreamClosed));
     pane.tick(100);
-    assert_eq!(pane.status(), &LinkStatus::Failed(String::new()));
+    assert_eq!(pane.status(), &LinkStatus::Failed(LinkFault::new("")));
     assert_eq!(
         note(&pane).as_deref(),
         Some(
@@ -237,7 +237,7 @@ fn enter_restarts_an_exited_program() {
 #[test]
 fn failed_note_and_retry() {
     let bench = Bench::new();
-    bench.refuse_next("the gateway is unreachable · run jackin doctor");
+    bench.refuse_with(LinkFault::new("the gateway is unreachable").then(FailNext::RunDoctor));
     let mut pane = pane(&bench);
     pane.sync_size(inner(80, 24));
     assert_eq!(
@@ -266,10 +266,13 @@ fn failed_note_and_retry() {
     bench.output(0, b"half");
     bench.push(
         0,
-        LinkEvent::Ended(EndKind::Refused("not the owner".into())),
+        LinkEvent::Ended(EndKind::Refused(LinkFault::new("not the owner"))),
     );
     pane.tick(200);
-    assert_eq!(pane.status(), &LinkStatus::Failed("not the owner".into()));
+    assert_eq!(
+        pane.status(),
+        &LinkStatus::Failed(LinkFault::new("not the owner"))
+    );
     assert_eq!(pane.face(&words()), PaneFace::Grid, "the last grid is kept");
 }
 

@@ -5,7 +5,7 @@
 mod pane_support;
 
 use jackin_console::panes::{
-    LinkEvent, LinkStatus, PaneBody, PaneCommand, PaneKey, PanePolicy, PasteOutcome,
+    LinkEvent, LinkFault, LinkStatus, PaneBody, PaneCommand, PaneKey, PanePolicy, PasteOutcome,
 };
 use junie_tui::core::hit::Axis;
 use pane_support::*;
@@ -67,7 +67,7 @@ fn a_refused_open_is_a_failed_pane_and_enter_retries() {
     pane.sync_size(inner(80, 24));
     assert_eq!(
         pane.status(),
-        &LinkStatus::Failed("the gateway is not reachable".into())
+        &LinkStatus::Failed(LinkFault::new("the gateway is not reachable"))
     );
     assert_eq!(bench.opened(), 0);
 

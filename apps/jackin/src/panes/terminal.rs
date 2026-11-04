@@ -16,8 +16,8 @@ use ratatui::layout::Rect;
 
 use super::clipboard::{ClipContext, ClipDecision, ClipRefusal, decide};
 use super::link::{
-    DetachCause, EndKind, Lease, LinkEvent, LinkSource, LinkStatus, PaneCommand, PaneLink,
-    PaneSize, Sent,
+    DetachCause, EndKind, Lease, LinkEvent, LinkFault, LinkSource, LinkStatus, PaneCommand,
+    PaneLink, PaneSize, Sent,
 };
 use super::policy::{PanePolicy, PaneTiming};
 use super::{
@@ -102,7 +102,7 @@ enum Attempt {
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum Say {
     Detached(DetachCause),
-    Failed(String),
+    Failed(LinkFault),
     Notice(String),
     Blocked(ClipRefusal),
     Copied { text: String },
@@ -264,10 +264,10 @@ impl TerminalPane {
                 self.forwarded = Some(size);
                 self.status = LinkStatus::Attaching;
             }
-            Err(reason) => {
+            Err(fault) => {
                 self.forwarded = None;
-                self.status = LinkStatus::Failed(reason.clone());
-                self.say(Say::Failed(reason));
+                self.status = LinkStatus::Failed(fault.clone());
+                self.say(Say::Failed(fault));
             }
         }
     }
@@ -344,14 +344,14 @@ impl TerminalPane {
             EndKind::StreamClosed | EndKind::Failed(_) if self.attached_once => {
                 LinkStatus::Detached(DetachCause::GatewayLost)
             }
-            EndKind::StreamClosed => LinkStatus::Failed(String::new()),
-            EndKind::Failed(reason) | EndKind::Refused(reason) => LinkStatus::Failed(reason),
+            EndKind::StreamClosed => LinkStatus::Failed(LinkFault::new("")),
+            EndKind::Failed(fault) | EndKind::Refused(fault) => LinkStatus::Failed(fault),
         };
         match &self.status {
             LinkStatus::Detached(cause) => self.say(Say::Detached(*cause)),
-            LinkStatus::Failed(reason) => {
-                let reason = reason.clone();
-                self.say(Say::Failed(reason));
+            LinkStatus::Failed(fault) => {
+                let fault = fault.clone();
+                self.say(Say::Failed(fault));
             }
             _ => {}
         }
@@ -411,16 +411,8 @@ impl TerminalPane {
     fn note_text(&self, words: &PaneWords) -> Option<(String, Tone)> {
         let agent = self.label(words);
         match &self.status {
-            LinkStatus::Failed(reason) => {
-                let reason = if reason.is_empty() {
-                    &words.stream_closed
-                } else {
-                    reason
-                };
-                return Some((
-                    fill_in(&words.failed, &[("agent", &agent), ("reason", reason)]),
-                    Tone::Error,
-                ));
+            LinkStatus::Failed(fault) => {
+                return Some((words.failure(&agent, fault), Tone::Error));
             }
             LinkStatus::Exited(code) => {
                 let tone = if *code == Some(0) {
@@ -625,17 +617,10 @@ impl PaneBody for TerminalPane {
                     text: words.connection_lost.clone(),
                     tone: Tone::Warning,
                 },
-                Say::Failed(reason) => {
-                    let reason = if reason.is_empty() {
-                        words.stream_closed.clone()
-                    } else {
-                        reason
-                    };
-                    PaneEffect::Status {
-                        text: fill_in(&words.failed, &[("agent", &agent), ("reason", &reason)]),
-                        tone: Tone::Error,
-                    }
-                }
+                Say::Failed(fault) => PaneEffect::Status {
+                    text: words.failure(&agent, &fault),
+                    tone: Tone::Error,
+                },
                 Say::Notice(text) => PaneEffect::Status {
                     text,
                     tone: Tone::Secondary,

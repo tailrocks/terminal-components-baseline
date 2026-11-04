@@ -505,6 +505,13 @@ impl App {
     }
 
     fn dispatch_msg(&mut self, m: &Msg) -> Outcome {
+        if let Msg::PaneWake { instance, pane } = m {
+            return if self.world.wake_pane(instance, *pane) {
+                Outcome::Changed
+            } else {
+                Outcome::Ignored
+            };
+        }
         if let Msg::OpLoaded { ticket, result } = m {
             let taken = self
                 .layers
@@ -1706,7 +1713,25 @@ impl App {
         out
     }
 
+    /// The instance whose Capsule is on screen.
+    fn open_capsule(&self) -> Option<InstanceId> {
+        (self.route() == Route::Capsule)
+            .then(|| self.router.capsule().map(|c| c.instance.clone()))
+            .flatten()
+    }
+
     pub fn go(&mut self, g: Go) {
+        let from = self.open_capsule();
+        self.navigate(g);
+        if let Some(instance) = from
+            && self.open_capsule().as_ref() != Some(&instance)
+        {
+            let backend = Arc::clone(&self.world.backend);
+            backend.capsule_left(&self.world, &instance);
+        }
+    }
+
+    fn navigate(&mut self, g: Go) {
         if self.quit_guard.pending().is_some() && matches!(g, Go::Manager) {
             self.quit_guard.resolve(DialogResult::Action(1));
             self.quit_now();

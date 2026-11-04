@@ -7,16 +7,16 @@ use std::sync::Arc;
 
 use common::*;
 use jackin_console::backend::{Backend, Completion, Effect};
+use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::Instance;
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
-use jackin_console::panes::{PaneBody, PaneKind, PaneRequest, PaneSpawn};
+use jackin_console::panes::{PaneBody, PaneKind, PaneRefusal, PaneRequest, PaneSpawn};
 use jackin_console::sim::SimBackend;
 use jackin_console::world::{Msg, World};
-use junie_tui::core::refusal::Reason;
 
-const WHY: &str = "one Codex pane per sandbox";
+const WHY: &str = "One Codex pane per sandbox";
 
 /// The simulator, except that it refuses to start an agent pane.
 #[derive(Debug)]
@@ -51,9 +51,9 @@ impl Backend for OneAgent {
         self.0.initial_panes(instance)
     }
 
-    fn spawnable(&self, _: &World, _: &Instance, kind: &PaneKind) -> Result<(), Reason> {
+    fn spawnable(&self, _: &World, _: &Instance, kind: &PaneKind) -> Result<(), PaneRefusal> {
         match kind {
-            PaneKind::Agent { .. } => Err(Reason::new(WHY)),
+            PaneKind::Agent { agent, .. } => Err(PaneRefusal::MainProcessOpen { agent: *agent }),
             PaneKind::Shell => Ok(()),
         }
     }
@@ -97,4 +97,29 @@ fn the_default_backend_refuses_nothing() {
     let picker = screen(&mut app);
     assert!(!picker.contains(WHY));
     assert!(!row_with(&picker, "▪ Codex").contains("unavailable"));
+}
+
+#[test]
+fn the_refusal_is_worded_by_the_pane_words() {
+    let mut world = world_for(Scenario::CapsuleMulti);
+    world.backend = Arc::new(OneAgent(SimBackend::shared()));
+    world.surfaces.vocabulary.pane.main_open = "CANARY {agent}".into();
+    let mut app = app_with(Scenario::CapsuleMulti, world);
+
+    press(&mut app, "ctrl+b c");
+    let picker = screen(&mut app);
+    assert!(row_with(&picker, "▪ Codex").contains("CANARY Codex"));
+    assert!(!picker.contains(WHY));
+}
+
+#[test]
+fn the_refusal_names_the_agent_it_is_for() {
+    let vocabulary = jackin_console::domain::vocabulary::Vocabulary::openshell();
+    let words = &vocabulary.pane;
+    assert_eq!(
+        words.refusal(&PaneRefusal::MainProcessOpen {
+            agent: Agent::ClaudeCode
+        }),
+        "One Claude Code pane per sandbox"
+    );
 }

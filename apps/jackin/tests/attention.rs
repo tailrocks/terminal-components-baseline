@@ -4,7 +4,7 @@
 mod pane_support;
 
 use jackin_console::domain::instance::AgentState;
-use jackin_console::panes::{EndKind, LinkEvent, PaneBody};
+use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneBody};
 use pane_support::*;
 
 const FOCUS_OUT: &[u8] = b"\x1b[O";
@@ -126,7 +126,7 @@ fn exit_codes_set_done_or_blocked() {
     assert_eq!(after(LinkEvent::Exited(Some(3))), AgentState::Blocked);
     assert_eq!(after(LinkEvent::Exited(None)), AgentState::Unknown);
     assert_eq!(
-        after(LinkEvent::Ended(EndKind::Refused("no".into()))),
+        after(LinkEvent::Ended(EndKind::Refused(LinkFault::new("no")))),
         AgentState::Blocked,
         "a failed attach waits for the operator"
     );

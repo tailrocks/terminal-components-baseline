@@ -10,8 +10,8 @@ use std::sync::{Arc, Mutex};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::vocabulary::{PaneWords, Vocabulary};
 use jackin_console::panes::{
-    LinkEvent, LinkSource, PaneBody, PaneCommand, PaneLink, PanePolicy, PaneRequest, PaneSize,
-    PaneTiming, Sent, TerminalPane,
+    LinkEvent, LinkFault, LinkSource, PaneBody, PaneCommand, PaneLink, PanePolicy, PaneRequest,
+    PaneSize, PaneTiming, Sent, TerminalPane,
 };
 use junie_tui::core::event::Key;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
@@ -76,12 +76,12 @@ impl PaneLink for TestLink {
 #[derive(Debug, Default)]
 pub struct Bench {
     links: Mutex<Vec<Log>>,
-    refusals: Mutex<VecDeque<String>>,
+    refusals: Mutex<VecDeque<LinkFault>>,
     restarted: Mutex<Vec<usize>>,
 }
 
 impl Bench {
-    fn link(&self, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+    fn link(&self, size: PaneSize) -> Result<Box<dyn PaneLink>, LinkFault> {
         if let Some(reason) = self.refusals.lock().expect("refusals").pop_front() {
             return Err(reason);
         }
@@ -93,11 +93,11 @@ impl Bench {
 }
 
 impl LinkSource for Bench {
-    fn open(&self, _: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+    fn open(&self, _: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, LinkFault> {
         self.link(size)
     }
 
-    fn restart(&self, _: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, String> {
+    fn restart(&self, _: &PaneRequest, size: PaneSize) -> Result<Box<dyn PaneLink>, LinkFault> {
         let link = self.link(size);
         if link.is_ok() {
             self.restarted
@@ -115,10 +115,11 @@ impl Bench {
     }
 
     pub fn refuse_next(&self, reason: &str) {
-        self.refusals
-            .lock()
-            .expect("refusals")
-            .push_back(reason.to_owned());
+        self.refuse_with(LinkFault::new(reason));
+    }
+
+    pub fn refuse_with(&self, fault: LinkFault) {
+        self.refusals.lock().expect("refusals").push_back(fault);
     }
 
     /// The numbers of the links that were opened by a restart.

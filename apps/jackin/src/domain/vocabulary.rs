@@ -5,6 +5,7 @@ use super::instance::InstanceStatus;
 use super::reason::{Found, IssueReason, RefreshOutcome, UsageReason};
 use crate::arbiter::DiscoveryError;
 use crate::backend::OpError;
+use crate::panes::{FailNext, LinkFault, PaneRefusal};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StatusWords {
@@ -184,7 +185,9 @@ pub enum Rejection {
 
 /// What a terminal pane says about itself. Templates take `{agent}` (the
 /// agent's label, or `shell_label`), `{code}`, `{reason}`, `{lines}`,
-/// `{bytes}`, `{source}` and `{chars}`.
+/// `{bytes}`, `{source}` and `{chars}`. `failed_next` joins the failed note
+/// (`{failed}`) to the typed next step (`{next}`); `main_open` is the new-tab
+/// picker's reason for a refused agent (`{agent}`).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PaneWords {
     pub waiting_title: String,
@@ -200,6 +203,8 @@ pub struct PaneWords {
     pub exited: String,
     pub exited_unknown_code: String,
     pub failed: String,
+    pub failed_next: String,
+    pub next_doctor: String,
     pub stream_closed: String,
     pub shell_label: String,
     pub paste_confirm_title: String,
@@ -214,6 +219,7 @@ pub struct PaneWords {
     pub clip_write_blocked: String,
     pub clip_read_blocked: String,
     pub clip_too_large: String,
+    pub main_open: String,
 }
 
 impl PaneWords {
@@ -234,6 +240,8 @@ impl PaneWords {
                     .into(),
             exited_unknown_code: "unknown".into(),
             failed: "Press Enter to retry · could not attach to {agent}: {reason}".into(),
+            failed_next: "{failed} · {next}".into(),
+            next_doctor: "run jackin doctor".into(),
             stream_closed: "the connection closed before the pane attached".into(),
             shell_label: "Shell".into(),
             paste_confirm_title: "Paste {lines}?".into(),
@@ -250,6 +258,33 @@ impl PaneWords {
                 .into(),
             clip_read_blocked: "Clipboard read from {source} blocked".into(),
             clip_too_large: "Clipboard write from {source} blocked · too large".into(),
+            main_open: "One {agent} pane per sandbox".into(),
+        }
+    }
+
+    /// The failed note: the key first, then the host's reason, then the next
+    /// step when the fault names one.
+    pub fn failure(&self, agent: &str, fault: &LinkFault) -> String {
+        let reason = if fault.reason.is_empty() {
+            &self.stream_closed
+        } else {
+            &fault.reason
+        };
+        let failed = fill_in(&self.failed, &[("agent", agent), ("reason", reason)]);
+        match fault.next {
+            FailNext::None => failed,
+            FailNext::RunDoctor => fill_in(
+                &self.failed_next,
+                &[("failed", &failed), ("next", &self.next_doctor)],
+            ),
+        }
+    }
+
+    pub fn refusal(&self, refusal: &PaneRefusal) -> String {
+        match refusal {
+            PaneRefusal::MainProcessOpen { agent } => {
+                fill_in(&self.main_open, &[("agent", agent.label())])
+            }
         }
     }
 
@@ -268,6 +303,8 @@ impl PaneWords {
             ("pane.exited", &self.exited),
             ("pane.exited_unknown_code", &self.exited_unknown_code),
             ("pane.failed", &self.failed),
+            ("pane.failed_next", &self.failed_next),
+            ("pane.next_doctor", &self.next_doctor),
             ("pane.stream_closed", &self.stream_closed),
             ("pane.shell_label", &self.shell_label),
             ("pane.paste_confirm_title", &self.paste_confirm_title),
@@ -282,6 +319,7 @@ impl PaneWords {
             ("pane.clip_write_blocked", &self.clip_write_blocked),
             ("pane.clip_read_blocked", &self.clip_read_blocked),
             ("pane.clip_too_large", &self.clip_too_large),
+            ("pane.main_open", &self.main_open),
         ]
     }
 }
