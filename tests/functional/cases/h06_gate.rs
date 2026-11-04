@@ -215,7 +215,15 @@ fn h06_gate_route_returns_to_the_finder() {
     absent_foreign(&page);
 
     app.key("d");
-    let gate = app.wait_screen("route gate", |screen| text(screen).contains(GATE1));
+    // The review header includes the gate title before the dialog buttons paint.
+    let gate = app.wait_screen("route gate", |screen| {
+        let visible = text(screen);
+        visible.contains(GATE1)
+            && visible.contains(PREREQ)
+            && visible.contains("Review · trash 4 items")
+            && visible.contains("▎Cancel")
+            && visible.contains(CONTINUE)
+    });
     see(
         &gate,
         &[GATE1, PREREQ, "Review · trash 4 items", "▎Cancel", CONTINUE],
@@ -592,7 +600,9 @@ fn h06_gate_scenario_parity_idea() {
     absent_foreign(&page);
 
     app.key("d");
-    let gate = app.wait_screen("idea gate", |screen| text(screen).contains(GATE1));
+    let gate = app.wait_screen("idea gate", |screen| {
+        text(screen).contains(GATE1) && focused_line(screen).contains("▎Cancel")
+    });
     see(&gate, &[GATE1, "Cancel"], &[STARTED, STOP_FAILED]);
     app.key("escape");
     let cancelled = app.wait_screen("idea cancelled", |screen| {
