@@ -148,6 +148,7 @@ fn begin_pending(form: &mut FormDialog) {
     set_busy(form, true);
     form.error = None;
     form.set_note("validation", pending_note());
+    form.reveal("validation");
 }
 
 fn end_pending(form: &mut FormDialog) {
@@ -873,6 +874,7 @@ impl AccountsScreen {
                 cx.with_top::<FormDialog>(move |f| {
                     set_busy(f, false);
                     f.set_note("validation", note);
+                    f.reveal("validation");
                     f.error = None;
                 });
                 cx.status(if ok {
@@ -972,6 +974,7 @@ impl AccountsScreen {
                 end_pending(f);
                 f.error = Some(msg);
                 f.set_note("validation", note);
+                f.reveal("validation");
             });
             return;
         }

@@ -287,7 +287,7 @@ fn check_rows_screen(vocabulary: Vocabulary) -> String {
 fn check_rows_are_worded_by_the_vocabulary() {
     let shown = check_rows_screen(words());
     assert!(
-        shown.contains("! material   CI_TOKEN is not set"),
+        shown.contains("! material   Not set in this environment"),
         "a failed row:\n{shown}"
     );
     assert!(
@@ -296,7 +296,7 @@ fn check_rows_are_worded_by_the_vocabulary() {
     );
     assert!(shown.contains("— quota      Not supported"), "{shown}");
     assert!(
-        shown.contains("Environment variable CI_TOKEN is not set"),
+        shown.contains("That variable is not set in this environment"),
         "the issue line:\n{shown}"
     );
 
@@ -633,8 +633,8 @@ fn the_words_of_the_other_reasons_name_their_facts() {
         IssueReason::EnvMissing {
             name: "CI_TOKEN".into(),
         },
-        "Environment variable CI_TOKEN is not set",
-        "CI_TOKEN is not set",
+        "That variable is not set in this environment",
+        "Not set in this environment",
     );
     named(
         IssueReason::FileMissing {

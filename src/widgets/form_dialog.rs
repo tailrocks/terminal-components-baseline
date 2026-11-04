@@ -202,6 +202,7 @@ pub struct FormDialog {
     pub scroll: ScrollPane,
 
     kept: Option<WidgetId>,
+    reveal: Option<String>,
     pub area: Rect,
     pub events: Vec<FormAction>,
     pub dirty: bool,
@@ -241,6 +242,7 @@ impl FormDialog {
             error: None,
             scroll: ScrollPane::default(),
             kept: None,
+            reveal: None,
             area: Rect::ZERO,
             events: vec![],
             dirty: false,
@@ -332,6 +334,14 @@ impl FormDialog {
         {
             *l = lines;
         }
+    }
+
+    /// Scroll the named field into view on the next frame. Focus scrolls the
+    /// body to the focused field; this is for an answer that arrives while
+    /// focus stays on a pinned button, such as the note a check fills in. A
+    /// form whose body fits does not move.
+    pub fn reveal(&mut self, name: &str) {
+        self.reveal = Some(name.to_owned());
     }
 
     pub fn values(&self) -> FormValues {
@@ -771,6 +781,22 @@ impl FormDialog {
                 }
             }
             y_off += f.height() + 1;
+        }
+        if let Some(name) = self.reveal.take() {
+            let mut top = 0usize;
+            for f in self.fields.iter().filter(|f| f.visible) {
+                let bottom = top + f.height() as usize + 1;
+                if f.name == name {
+                    if top < self.scroll.offset {
+                        self.scroll.scroll_to(top);
+                    } else if bottom > self.scroll.offset + body_h as usize {
+                        self.scroll
+                            .scroll_to(bottom.saturating_sub(body_h as usize).min(top));
+                    }
+                    break;
+                }
+                top = bottom;
+            }
         }
         let body = Rect::new(inner.x, inner.y, inner.width, body_h);
         let mut y: i32 = body.y as i32 - self.scroll.offset as i32;

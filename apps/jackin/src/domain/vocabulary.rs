@@ -417,14 +417,14 @@ impl ReasonWords {
             unknown_provider: "unknown".into(),
             skipped: phrase("not attempted", "not attempted"),
             env_invalid: phrase(
-                "Not a valid variable name · letters, digits and _ only",
+                "Not a valid variable name · enter the name, not its value",
                 "Not a valid variable name",
             ),
             env_missing: phrase(
-                "Environment variable {name} is not set",
-                "{name} is not set",
+                "That variable is not set in this environment",
+                "Not set in this environment",
             ),
-            env_empty: phrase("Environment variable {name} is empty", "{name} is empty"),
+            env_empty: phrase("That variable is set but empty", "Set but empty"),
             bad_reference: phrase(
                 "{reference} is not a 1Password field reference",
                 "Not a field reference",
@@ -520,7 +520,7 @@ impl ReasonWords {
             found_authenticated: "Authenticated as {who} · {plan}".into(),
             found_authenticated_bare: "Authenticated as {who}".into(),
             found_windows: "{count} windows readable".into(),
-            found_env: "{name} is set".into(),
+            found_env: "Set in this environment".into(),
             found_file: "File found at {path}".into(),
             found_folder: "Folder found at {path}".into(),
             found_login: "ChatGPT login for {account}".into(),

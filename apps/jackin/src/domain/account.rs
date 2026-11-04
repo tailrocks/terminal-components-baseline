@@ -740,7 +740,10 @@ impl AccountForm {
                 ),
                 (SourceKind::LocalFolder, "Local agent folder  (recommended)"),
                 (SourceKind::PlainApiKey, "Plain-text API key"),
-                (SourceKind::HostEnv, &SourceWords::openshell().env_label),
+                (
+                    SourceKind::HostEnv,
+                    &format!("{}  (usage only)", SourceWords::openshell().env_label),
+                ),
             ]),
             default_source: Some(1),
             op_note: Some("Usage only · launching Codex needs a local login".into()),

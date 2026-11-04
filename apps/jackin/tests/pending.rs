@@ -197,8 +197,8 @@ fn key_outcome(app: &App) -> ValidationOutcome {
         app.world.op.as_ref(),
         app.world.now_secs(),
     );
-    outcome.material = CheckRow::Ok(Found::EnvSet {
-        name: SPARE_CANARY.into(),
+    outcome.material = CheckRow::Ok(Found::FileFound {
+        path: SPARE_CANARY.into(),
     });
     outcome
 }
@@ -255,7 +255,7 @@ fn validate_leaves_the_form_pending_until_the_backend_answers() {
     app.deliver(&checked(ticket, outcome));
     let done = screen(&mut app);
     assert!(
-        done.contains(&format!("✓ material   {SPARE_CANARY} is set")),
+        done.contains(&format!("✓ material   File found at {SPARE_CANARY}")),
         "{done}"
     );
     assert!(!done.contains("checking"), "{done}");

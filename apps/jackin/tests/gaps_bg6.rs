@@ -10,17 +10,22 @@ use std::sync::{Arc, Mutex};
 
 use common::*;
 use jackin_console::app::App;
-use jackin_console::backend::{Backend, Completion, Effect, FileSource};
-use jackin_console::domain::account::{Account, AccountForm, CredentialSource, DetectedKind};
+use jackin_console::backend::{
+    Backend, CheckRow, Completion, Effect, FileSource, ValidationOutcome,
+};
+use jackin_console::domain::account::{
+    Account, AccountForm, CredentialSource, DetectedKind, IssueCode, Recoverability,
+    RecoverableIssue,
+};
 use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::{DaemonSnapshot, Instance};
 use jackin_console::domain::launch::LaunchContent;
-use jackin_console::domain::reason::IssueReason;
+use jackin_console::domain::reason::{Found, IssueReason};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
-use jackin_console::sim::SimBackend;
+use jackin_console::sim::provider;
 use jackin_console::world::{Msg, World};
 use junie_tui::core::event::Input;
 use junie_tui::motion::Motion;
@@ -32,9 +37,21 @@ use junie_tui::theme::{ColorLevel, Theme};
 struct Recording {
     inner: Arc<dyn Backend>,
     seen: Mutex<Vec<Effect>>,
+    /// A check gets no answer until the test delivers one.
+    hold: bool,
 }
 
 impl Recording {
+    fn check_ticket(&self) -> u64 {
+        self.checks()
+            .iter()
+            .find_map(|e| match e {
+                Effect::CheckSource { ticket, .. } => Some(*ticket),
+                _ => None,
+            })
+            .unwrap_or_else(|| panic!("no check was sent: {:?}", self.seen()))
+    }
+
     fn seen(&self) -> Vec<Effect> {
         let mut all = self.seen.lock().expect("seen").clone();
         all.retain(|e| *e != Effect::Refresh);
@@ -63,6 +80,9 @@ impl Recording {
 impl Backend for Recording {
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
         self.seen.lock().expect("seen").push(effect.clone());
+        if self.hold && matches!(effect, Effect::CheckSource { .. }) {
+            return None;
+        }
         self.inner.perform(effect, world)
     }
 
@@ -98,14 +118,19 @@ fn live_world() -> World {
     world
 }
 
-fn recorded(mut world: World) -> (App, Arc<Recording>) {
+fn recorded(world: World) -> (App, Arc<Recording>) {
+    recorded_with(Scenario::AccountsMixed, world, false)
+}
+
+fn recorded_with(scenario: Scenario, mut world: World, hold: bool) -> (App, Arc<Recording>) {
     let backend = Arc::new(Recording {
-        inner: SimBackend::shared(),
+        inner: world.backend.clone(),
         seen: Mutex::new(vec![]),
+        hold,
     });
     world.backend = backend.clone();
     let app = app_with_world(
-        Scenario::AccountsMixed,
+        scenario,
         world,
         Motion::Reduced,
         10_000,
@@ -292,19 +317,16 @@ fn checked_row(name: &str) -> String {
 fn the_check_words_a_set_missing_empty_and_invalid_variable() {
     let set = checked_row("ZAI_API_KEY");
     assert!(
-        set.contains("✓ material   ZAI_API_KEY is set"),
+        set.contains("✓ material   Set in this environment"),
         "a set variable passes:\n{set}"
     );
     let missing = checked_row("NOT_SET_ANYWHERE");
     assert!(
-        missing.contains("! material   NOT_SET_ANYWHERE is not set"),
+        missing.contains("! material   Not set in this environment"),
         "{missing}"
     );
     let empty = checked_row("JACKIN_EMPTY_KEY");
-    assert!(
-        empty.contains("! material   JACKIN_EMPTY_KEY is empty"),
-        "{empty}"
-    );
+    assert!(empty.contains("! material   Set but empty"), "{empty}");
 }
 
 const TYPED: &str = "sk-ant-secret-1234";
@@ -325,7 +347,7 @@ fn an_invalid_name_is_worded_without_the_name() {
     );
     assert_eq!(
         words.reason(&reason),
-        "Not a valid variable name · letters, digits and _ only"
+        "Not a valid variable name · enter the name, not its value"
     );
 }
 
@@ -460,4 +482,186 @@ fn an_unreachable_gateway_still_reads_unreachable_on_the_card() {
 fn the_demo_card_reads_as_it_did_for_a_terminal_without_tabs() {
     let demo = roster_card(Vocabulary::demo(), DaemonSnapshot::NoTabs);
     assert!(demo.contains("· daemon unavailable"), "{demo}");
+}
+
+#[test]
+fn the_environment_variable_source_says_it_is_usage_only() {
+    let mut app = app_with_world(
+        Scenario::AccountsMixed,
+        live_world(),
+        Motion::Paused,
+        10_000,
+        Theme::for_level(ColorLevel::TrueColor),
+    );
+    press(&mut app, "c a");
+    let shown = screen(&mut app);
+    assert!(
+        row_of(&shown, "Environment variable").contains("( ) Environment variable  (usage only)"),
+        "the radio row is a usage account like the 1Password row:\n{shown}"
+    );
+    click_text(&mut app, "Environment variable");
+    let chosen = screen(&mut app);
+    assert!(
+        chosen.contains("Environment variable *"),
+        "the field label stays plain:\n{chosen}"
+    );
+    assert!(
+        !chosen.contains("Environment variable *  (usage only)"),
+        "{chosen}"
+    );
+}
+
+const SECRET: &str = "sk_ant_secret_1234";
+
+/// What the simulator answers for a set variable, with the one row and the
+/// issue of the case under test swapped in.
+fn env_outcome(app: &App, case: &str) -> ValidationOutcome {
+    let mut outcome = provider::validate(
+        Provider::Anthropic,
+        &CredentialSource::HostEnv {
+            var: "ZAI_API_KEY".into(),
+            detected: DetectedKind::Unknown,
+        },
+        None,
+        app.world.op.as_ref(),
+        app.world.now_secs(),
+    );
+    let name = SECRET.to_owned();
+    let failed = match case {
+        "missing" => Some(IssueReason::EnvMissing { name }),
+        "empty" => Some(IssueReason::EnvEmpty { name }),
+        _ => {
+            outcome.material = CheckRow::Ok(Found::EnvSet { name });
+            None
+        }
+    };
+    if let Some(reason) = failed {
+        outcome.level = None;
+        outcome.issue = Some(RecoverableIssue::new(
+            IssueCode::ApiKeyEmpty,
+            reason.clone(),
+            Recoverability::ActionRequired,
+        ));
+        outcome.material = CheckRow::Failed(reason);
+    }
+    outcome
+}
+
+#[test]
+fn a_name_shaped_secret_is_never_printed_by_the_check() {
+    for case in ["missing", "empty", "set"] {
+        let (mut app, backend) = recorded_with(Scenario::AccountsMixed, live_world(), true);
+        env_form(&mut app);
+        type_name(&mut app, SECRET);
+        click_text(&mut app, "Validate");
+        app.deliver(&Msg::SourceChecked {
+            ticket: backend.check_ticket(),
+            result: Ok(Box::new(env_outcome(&app, case))),
+        });
+        let shown = screen(&mut app);
+        assert!(
+            shown.contains("material"),
+            "{case}: the reply shows:\n{shown}"
+        );
+        assert!(!shown.contains("checking"), "{case}:\n{shown}");
+        assert_eq!(
+            shown.matches(SECRET).count(),
+            1,
+            "{case}: only the field the operator typed in shows it:\n{shown}"
+        );
+    }
+    let words = Vocabulary::openshell();
+    for reason in [
+        IssueReason::EnvMissing {
+            name: SECRET.into(),
+        },
+        IssueReason::EnvEmpty {
+            name: SECRET.into(),
+        },
+    ] {
+        assert!(!words.reason(&reason).contains(SECRET));
+        assert!(!words.check(&reason).contains(SECRET));
+    }
+    assert!(
+        !words
+            .found(&Found::EnvSet {
+                name: SECRET.into()
+            })
+            .contains(SECRET)
+    );
+}
+
+/// The 1Password source with a reference chosen in the picker: the form with
+/// the most rows, a note about the chosen reference included.
+fn reference_form(app: &mut App) {
+    press(app, "c a");
+    click_text(app, "1Password item");
+    click_text(app, "Choose");
+    for _ in 0..4 {
+        ticks(app, 12);
+        press(app, "enter");
+    }
+    ticks(app, 12);
+}
+
+#[test]
+fn a_pending_check_brings_its_rows_into_view() {
+    let (mut app, backend) = recorded_with(
+        Scenario::OpenshellFixed,
+        world_for(Scenario::OpenshellFixed),
+        true,
+    );
+    reference_form(&mut app);
+    let before = screen_at(&mut app, 120, 40);
+    assert!(
+        !before.contains("Validating") && before.contains("Validate"),
+        "{before}"
+    );
+    click_text(&mut app, "Validate");
+    let pending = screen_at(&mut app, 120, 40);
+    for label in ["material", "identity", "quota"] {
+        assert!(
+            pending.contains(&format!("… {label}")),
+            "the {label} row is below the fold:\n{pending}"
+        );
+    }
+
+    let outcome = env_outcome(&app, "missing");
+    app.deliver(&Msg::SourceChecked {
+        ticket: backend.check_ticket(),
+        result: Ok(Box::new(outcome)),
+    });
+    let done = screen_at(&mut app, 120, 40);
+    assert!(!done.contains("checking"), "{done}");
+    for label in ["material", "identity", "quota"] {
+        assert!(
+            done.lines()
+                .any(|l| l.contains(label)
+                    && (l.contains('✓') || l.contains('!') || l.contains('—'))),
+            "the {label} row is below the fold after the reply:\n{done}"
+        );
+    }
+    assert!(
+        done.contains(&word("reason.env_missing.issue")),
+        "the issue line under the rows is below the fold:\n{done}"
+    );
+}
+
+/// The card sits in the roster column, which the manager draws from 152
+/// columns on; at 120 columns the detail panel lists the instance without its
+/// live line, so there is no card to cut. At 152 the line is cut after
+/// `no Capsule tabs`, so the point of the card is still there.
+#[test]
+fn the_no_tabs_card_keeps_its_point_at_the_narrowest_width_that_draws_it() {
+    let mut world = world_for(Scenario::Returning);
+    world.surfaces.vocabulary = Vocabulary::openshell();
+    let id = world.running()[0].id.clone();
+    world.daemons.remove(&id);
+    world.instance_mut(&id).expect("instance").daemon = DaemonSnapshot::NoTabs;
+    let mut app = app_with(Scenario::Returning, world);
+    let narrow = screen_at(&mut app, 152, 40);
+    assert!(narrow.contains("· no Capsule tabs"), "{narrow}");
+    assert!(!narrow.contains("gateway unreachable"), "{narrow}");
+    let at_120 = screen_at(&mut app, 120, 40);
+    assert!(!at_120.contains("gateway unreachable"), "{at_120}");
 }
