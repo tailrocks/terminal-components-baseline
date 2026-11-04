@@ -197,6 +197,36 @@ fn reveal(app: &crate::support::App, needle: &str) {
     app.wait_text(needle);
 }
 
+/// The icon-button title can sit on the last content row. The close plate
+/// is the next row, so keep scrolling until that row is in the viewport.
+fn icon_row(app: &crate::support::App) -> TerminalSnapshot {
+    let started = Instant::now();
+    let point = Point { x: 60, y: 18 };
+    loop {
+        let spun = Instant::now();
+        loop {
+            let screen = app.screen();
+            let visible = text(&screen);
+            if visible.contains("Close ×") && visible.contains("Title · 5-cell plate") {
+                return screen;
+            }
+            assert!(
+                app.child_running(),
+                "showcase exited before the close plate\n{visible}"
+            );
+            assert!(
+                started.elapsed() < Duration::from_secs(15),
+                "timed out: close plate\n{visible}"
+            );
+            if spun.elapsed() >= Duration::from_millis(400) {
+                break;
+            }
+            std::thread::sleep(Duration::from_millis(25));
+        }
+        app.wheel(point, true, 1);
+    }
+}
+
 fn ink(screen: &TerminalSnapshot, point: Point) -> tui_test::SnapshotColor {
     screen
         .cell_at(u32::from(point.x), u32::from(point.y))
@@ -1126,7 +1156,7 @@ fn option_icon_pad_zero() {
     let args = ["--page", "buttons", "--opt", "buttons.icon_pad=0"];
     let app = open("s02-pad", 120, 40, &args);
     reveal(&app, "Icon buttons");
-    let play = app.wait_text("Close ×");
+    let play = icon_row(&app);
     let row = row_with(&play, "Close");
     assert!(
         row.contains("Close ×") && !row.contains("Close  ×"),
