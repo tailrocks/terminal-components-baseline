@@ -1,9 +1,10 @@
 #![cfg(feature = "demo")]
 
-use jackin_console::app::{App, Remote};
+use jackin_console::app::{App, Remote, Route};
 use jackin_console::domain::instance::InstanceStatus;
 use jackin_console::domain::workspace::Workspace;
 use jackin_console::fixtures::{Scenario, app_for};
+use jackin_console::screens::Go;
 use jackin_console::sim;
 use jackin_console::world::{Msg, Snapshot};
 use junie_tui::core::event::{External, Input, Outcome};
@@ -135,4 +136,42 @@ fn a_reloaded_snapshot_shows_on_the_next_frame() {
     assert_eq!(pump(&mut app), vec![Outcome::Changed]);
     assert!(app.world.workspaces.iter().any(|w| w.name == name));
     assert!(screen(&mut app).contains(name));
+}
+
+fn without(app: &App, id: &str) -> Snapshot {
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.instances.retain(|i| i.id != id);
+    snapshot
+}
+
+#[test]
+fn a_reload_that_removes_the_open_instance_leaves_its_capsule() {
+    let (mut app, tx) = linked();
+    app.go(Go::Attach {
+        instance: STOPPED.into(),
+        pane: None,
+    });
+    assert_eq!(app.route(), Route::Capsule);
+    assert!(app.world.daemons.contains_key(STOPPED));
+
+    assert!(tx.send(Remote::Reloaded(Box::new(without(&app, STOPPED)))));
+    assert_eq!(pump(&mut app), vec![Outcome::Changed]);
+
+    assert_ne!(app.route(), Route::Capsule);
+    assert!(app.world.instance(STOPPED).is_none());
+    assert!(!app.world.daemons.contains_key(STOPPED));
+}
+
+#[test]
+fn a_reload_that_removes_an_unopened_instance_drops_its_daemon() {
+    let (mut app, tx) = linked();
+    let other = "jk-9b02";
+    assert!(app.world.daemons.contains_key(other));
+
+    assert!(tx.send(Remote::Reloaded(Box::new(without(&app, other)))));
+    pump(&mut app);
+
+    assert!(!app.world.daemons.contains_key(other));
+    assert!(app.world.daemons.contains_key(STOPPED));
+    assert_eq!(app.world.arbiter.running(), Ok(app.world.running_count()));
 }

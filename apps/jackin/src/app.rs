@@ -238,10 +238,34 @@ impl App {
             Some(Remote::Msg(msg)) => self.dispatch_msg(msg),
             Some(Remote::Reloaded(snapshot)) => {
                 self.world.apply((**snapshot).clone());
+                self.drop_orphaned_daemons();
                 Outcome::Changed
             }
             None => Outcome::Ignored,
         }
+    }
+
+    fn drop_orphaned_daemons(&mut self) {
+        let orphans: Vec<InstanceId> = self
+            .world
+            .daemons
+            .keys()
+            .filter(|id| self.world.instance(id).is_none())
+            .cloned()
+            .collect();
+        let open = self.open_capsule();
+        for instance in orphans {
+            if open.as_ref() == Some(&instance) {
+                self.go(Go::InstanceEnded {
+                    instance,
+                    purge: false,
+                });
+            } else {
+                self.world.daemons.remove(&instance);
+            }
+        }
+        crate::world::refresh_snapshots(&mut self.world);
+        self.world.sync_arbiter();
     }
 
     fn start(&mut self, entry: Entry, frame: u64) {
