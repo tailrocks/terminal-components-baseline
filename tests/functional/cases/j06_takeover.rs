@@ -125,25 +125,38 @@ fn wide_overlay(screen: &TerminalSnapshot) -> bool {
     overlay_screen(screen, 120, 40)
 }
 
-/// Watch the overlay on the narrow grid, then grow once and return the wide
-/// frame. The budget covers both, so a late narrow paint cannot add a second
-/// full wait on top of the profile kill.
+/// Below `TooSmall`'s 72×20 minimum the shell paints that notice instead of
+/// the capsule. Ticks still run, and that frame is only a few cells, so sim
+/// time reaches the 45 s deadline. The overlay is read after growing back.
+const CHEAP_COLS: u16 = 40;
+const CHEAP_ROWS: u16 = 12;
+const CHEAP_HOLD: Duration = Duration::from_secs(50);
+
+/// Watch the overlay, then return the wide frame. The budget covers the
+/// cheap wait and both grows, so a late paint cannot add a second full wait
+/// on top of the profile kill.
 fn wait_takeover_wide(app: &App, budget: Duration) -> TerminalSnapshot {
     let deadline = Instant::now() + budget;
+    let lift_at = Instant::now() + CHEAP_HOLD;
+    app.resize(CHEAP_COLS, CHEAP_ROWS);
+    let mut lifted = false;
     let mut grew = false;
     loop {
         let screen = app.screen();
         if wide_overlay(&screen) {
             return screen;
         }
+        let visible = text(&screen);
         if !grew && narrow_overlay(&screen) {
             app.resize(120, 40);
             grew = true;
+        } else if !lifted && Instant::now() >= lift_at {
+            app.resize(80, 24);
+            lifted = true;
         }
         assert!(
             Instant::now() < deadline && app.child_running(),
-            "takeover overlay not seen\n{}",
-            text(&screen)
+            "takeover overlay not seen\n{visible}"
         );
         std::thread::sleep(Duration::from_millis(20));
     }
@@ -366,10 +379,8 @@ fn j06_takeover_route() {
         _clock.elapsed() < Duration::from_secs(15),
         "payments attach was too late to catch the takeover"
     );
-    // A 120×40 capsule redraw takes longer than the 80 ms tick, so sim time
-    // stalls and the 45 s deadline never lands inside this budget. The narrow
-    // grid keeps the tick. 84 s still finishes inside the 90 s profile kill.
-    app.resize(80, 24);
+    // 84 s still finishes inside the 90 s profile kill. The waiter holds a
+    // 40×12 grid for 50 s, then restores the shot sizes.
     let overlay = wait_takeover_wide(&app, Duration::from_secs(84));
     require(&overlay, TAKEN);
     require(&overlay, AGO);
@@ -416,10 +427,9 @@ fn j06_takeover_takeover() {
         "infra attach was too late to watch the takeover deadline"
     );
 
-    // Both capsules stay on the 80-column grid. A 120×40 redraw costs more
-    // than the 80 ms tick, so the 45 s deadline never lands inside the
-    // profile kill. The narrow menubar clips the identity line; the pane
-    // still names the workspace.
+    // The stale capsule stays at 80×24. Its menubar clips the identity line
+    // there, and the pane still names the workspace. The overlay client is
+    // resized to the cheap grid after it attaches.
     let mut polls = 0u32;
     stale.resize(80, 24);
 
@@ -444,10 +454,13 @@ fn j06_takeover_takeover() {
         },
     );
 
-    // Same tick stall as the route. The overlay waits narrow, then the wide
-    // shot grows again. Sample the stale capsule on this same cadence so the
-    // held-infra count covers the wait.
-    overlay.resize(80, 24);
+    // Same tick stall as the route. The overlay stays below the minimum size
+    // until sim time has passed the deadline, then the narrow shot is 80×24.
+    // The stale client stays at 80×24 so its pane still names the workspace.
+    // Sample it on this same cadence so the held-infra count covers the wait.
+    overlay.resize(CHEAP_COLS, CHEAP_ROWS);
+    let lift_at = Instant::now() + CHEAP_HOLD;
+    let mut lifted = false;
     let mut overlay_seen: Option<Instant> = None;
     // A loaded partition paints this overlay with the attach status still up
     // as an 80 s budget expires. The status lasts 5 s, and the shot needs
@@ -457,12 +470,16 @@ fn j06_takeover_takeover() {
     loop {
         guard_stale(&stale, &mut polls);
         let screen = overlay.screen();
+        let visible = text(&screen);
+        if !lifted && Instant::now() >= lift_at {
+            overlay.resize(80, 24);
+            lifted = true;
+        }
         if narrow_overlay(&screen) {
             if overlay_seen.is_none() {
                 overlay_seen = Some(Instant::now());
             }
         } else {
-            let visible = text(&screen);
             // The dialog is one paint, and a read can return the title before
             // the body. That frame already says the attach was taken over, so
             // it is not the payments session. Keep polling until the full copy
@@ -471,7 +488,9 @@ fn j06_takeover_takeover() {
                 // The opening title leaves the menubar once the PR status is
                 // drawn. The shell prompt keeps the workspace name. The first
                 // narrow paint can be blank, and that frame is not a route change.
-                if screen.cols() == 80 && visible.contains(PAYMENTS) {
+                if (screen.cols() == 80 || screen.cols() == u32::from(CHEAP_COLS))
+                    && visible.contains(PAYMENTS)
+                {
                     assert!(
                         !visible.contains(INFRA)
                             && !visible.contains(PAGE)

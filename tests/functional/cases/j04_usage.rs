@@ -202,15 +202,88 @@ fn focused_line_text(visible: &str) -> String {
         .to_string()
 }
 
-/// The account row under a provider header. Refresh replaces the row's issue
-/// text with a spinner, so the detail string is not on screen until the row
-/// stays selected and that refresh finishes.
-fn focused_under(visible: &str, header: &str) -> bool {
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum RowPlace {
+    On,
+    Above,
+    Below,
+    Missing,
+}
+
+/// Tree labels sit in the left column. The detail pane shares the terminal
+/// row, so a provider name further right is not the header.
+fn tree_side(line: &str) -> String {
+    line.chars().take(40).collect()
+}
+
+fn row_place(visible: &str, header: &str) -> RowPlace {
     let lines: Vec<&str> = visible.lines().collect();
-    let Some(index) = lines.iter().position(|line| line.contains('▎')) else {
-        return false;
+    let Some(focus) = lines.iter().position(|line| line.contains('▎')) else {
+        return RowPlace::Missing;
     };
-    index > 0 && lines[index - 1].contains(header) && lines[index].contains("discovered")
+    let Some(header_at) = lines
+        .iter()
+        .position(|line| !line.contains('▎') && tree_side(line).contains(header))
+    else {
+        return RowPlace::Missing;
+    };
+    if focus == header_at + 1 {
+        RowPlace::On
+    } else if focus <= header_at {
+        RowPlace::Above
+    } else {
+        RowPlace::Below
+    }
+}
+
+fn wait_selection_change(app: &App, before: &str) {
+    let deadline = Instant::now() + Duration::from_millis(800);
+    loop {
+        if selection(&text(&app.screen())) != before || Instant::now() >= deadline {
+            break;
+        }
+        std::thread::sleep(Duration::from_millis(20));
+    }
+}
+
+/// Stay on the row under `header` until `ready`. Refresh can move the cursor
+/// while that row's issue text is a spinner, so a one-shot focus check loses
+/// the detail. Keys move back. A key is not sent while the row is already held.
+fn hold_under(
+    app: &App,
+    header: &str,
+    label: &str,
+    ready: impl Fn(&str) -> bool,
+) -> TerminalSnapshot {
+    let deadline = Instant::now() + Duration::from_secs(15);
+    loop {
+        let screen = app.screen();
+        let visible = text(&screen);
+        let place = row_place(&visible, header);
+        if matches!(place, RowPlace::On) && ready(&visible) {
+            no_secrets(&screen);
+            return screen;
+        }
+        match place {
+            RowPlace::On => {}
+            RowPlace::Below => {
+                let before = selection(&visible);
+                app.key("up");
+                wait_selection_change(app, &before);
+            }
+            RowPlace::Above | RowPlace::Missing => {
+                let before = selection(&visible);
+                app.key("down");
+                wait_selection_change(app, &before);
+            }
+        }
+        assert!(
+            Instant::now() < deadline && app.child_running(),
+            "{label}\n{}",
+            text(&app.screen())
+        );
+        std::thread::sleep(Duration::from_millis(20));
+    }
 }
 
 #[test]
@@ -327,19 +400,16 @@ fn j04_usage_route() {
         "stale work stayed stale after refresh\n{}",
         text(&current)
     );
-    down_until(&app, "kimi row", |visible| focused_under(visible, "Kimi"));
-    let missing = app.wait_screen("kimi missing", |screen| {
-        let visible = text(screen);
-        focused_under(&visible, "Kimi") && visible.contains(MISSING)
+    let missing = hold_under(&app, "Kimi", "kimi missing", |visible| {
+        visible.contains(MISSING)
     });
-    no_secrets(&missing);
-    down_until(&app, "minimax row", |visible| {
-        focused_under(visible, "MiniMax")
-    });
-    let minimax = app.wait_screen("minimax last good", |screen| {
-        let visible = text(screen);
-        focused_under(&visible, "MiniMax")
-            && visible.contains("MiniMax · discovered")
+    assert!(
+        row_place(&text(&missing), "Kimi") == RowPlace::On && text(&missing).contains(MISSING),
+        "kimi detail\n{}",
+        text(&missing)
+    );
+    let minimax = hold_under(&app, "MiniMax", "minimax last good", |visible| {
+        visible.contains("MiniMax · discovered")
             && visible.contains(PROVIDER_DOWN)
             && visible.contains("8%")
             && visible.contains("47%")
