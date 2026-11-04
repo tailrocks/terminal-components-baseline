@@ -13,6 +13,7 @@ use jackin_console::domain::role::{FindingArea, RoleCheckState, RoleFinding};
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
+use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
 use jackin_console::world::{Msg, World};
 use junie_tui::core::event::{Input, Key};
@@ -203,4 +204,87 @@ fn a_check_of_a_closed_editor_does_not_answer_the_reopened_one() {
         "the old editor's findings answered the new check:\n{shown}"
     );
     assert!(shown.contains("Check passed"), "{shown}");
+}
+
+#[derive(Debug)]
+struct FlagEveryRole {
+    inner: Arc<dyn Backend>,
+}
+
+impl Backend for FlagEveryRole {
+    fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
+        let Effect::CheckRole { ticket, role, .. } = effect else {
+            return self.inner.perform(effect, world);
+        };
+        let mut snapshot = sim::snapshot(world);
+        snapshot.surfaces.roles.as_mut()?.role_mut(role)?.check =
+            RoleCheckState::Done(vec![RoleFinding {
+                area: FindingArea::Policy,
+                key: None,
+                message: format!("{role} is flagged"),
+                fix: None,
+            }]);
+        Some(Completion::ready(
+            CHECK_TAKES_MS,
+            Msg::RoleChecked {
+                ticket: *ticket,
+                role: role.clone(),
+                result: Ok(Box::new(snapshot)),
+            },
+        ))
+    }
+
+    fn settle(&self, effect: &Effect, world: &World) -> Option<Msg> {
+        self.inner.settle(effect, world)
+    }
+
+    fn launch_content(&self) -> Arc<LaunchContent> {
+        self.inner.launch_content()
+    }
+
+    fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed> {
+        self.inner.launch(world, target)
+    }
+
+    fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody> {
+        self.inner.spawn_pane(request, spawn)
+    }
+
+    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
+        self.inner.initial_panes(instance)
+    }
+
+    fn file_source(&self, world: &World) -> Box<dyn FileSource> {
+        self.inner.file_source(world)
+    }
+}
+
+#[test]
+fn check_all_keeps_the_result_of_every_role() {
+    let mut world = world_for(Scenario::RoleEditor);
+    world.backend = Arc::new(FlagEveryRole {
+        inner: SimBackend::shared(),
+    });
+    let mut app = app_with_world(
+        Scenario::RoleEditor,
+        world,
+        Motion::Reduced,
+        10_000,
+        Theme::for_level(ColorLevel::TrueColor),
+    );
+    app.go(Go::Roles { select: None });
+    check_key(&mut app);
+    wait_for_the_reply(&mut app);
+
+    let roles = &app.world.surfaces.roles.as_ref().expect("roles").roles;
+    let flagged: Vec<&str> = roles
+        .iter()
+        .filter(|r| !r.findings().is_empty())
+        .map(|r| r.name.as_str())
+        .collect();
+    assert_eq!(
+        flagged,
+        ["sentinel", "the-architect", "reviewer", "data-eng"],
+        "{roles:#?}"
+    );
 }

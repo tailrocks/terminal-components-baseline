@@ -812,15 +812,22 @@ impl Page<Jackin> for RolesScreen {
                 Outcome::Changed
             }
             Msg::RoleChecked { role, result, .. } if self.checking.remove(role) => {
-                match result {
-                    Ok(snapshot) => {
-                        w.apply((**snapshot).clone());
-                        let found = w
-                            .surfaces
-                            .roles
-                            .as_ref()
-                            .and_then(|a| a.role(role))
-                            .map_or(0, |r| r.findings().len());
+                let checked = match result {
+                    Ok(snapshot) => snapshot
+                        .surfaces
+                        .roles
+                        .as_ref()
+                        .and_then(|a| a.role(role))
+                        .cloned()
+                        .ok_or_else(|| format!("the check of {role} came back empty")),
+                    Err(reason) => Err(reason.clone()),
+                };
+                match checked {
+                    Ok(record) => {
+                        let found = record.findings().len();
+                        if let Some(r) = w.surfaces.roles.as_mut().and_then(|a| a.role_mut(role)) {
+                            *r = record;
+                        }
                         cx.status(if found == 0 {
                             format!("Role {role}: check passed")
                         } else {
