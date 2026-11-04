@@ -25,8 +25,7 @@ use crate::sim::SimBackend;
 use crate::sim::onepassword::SimOnePassword;
 use crate::sim::scripts::SimScripts;
 use crate::world::{
-    DaemonHealth, FsEntry, GithubRepo, GlobalConfig, Takeover, TrustRow, World, WorldParts,
-    refresh_snapshots,
+    DaemonHealth, FsEntry, GithubRepo, GlobalConfig, TrustRow, World, WorldParts, refresh_snapshots,
 };
 use junie_tui::ui::layout::SplitDir;
 
@@ -1499,7 +1498,6 @@ pub fn world_for(scenario: Scenario) -> World {
             let mut w = populated(scenario, true);
             w.op.set_session(OpSession::Locked);
             w.daemon_health = DaemonHealth::Stale;
-            w.refresh_fails = true;
             w.backend = SimBackend::hard_cases();
 
             if let Some(r) = w.roles.iter_mut().find(|r| r.name == "writer") {
@@ -1509,10 +1507,6 @@ pub fn world_for(scenario: Scenario) -> World {
             }
             w.arbiter.discovery = Err(DiscoveryError::IndexUnreadable);
             w.arbiter.entered_at_ms = None;
-            w.takeover_at_ms = Some(Takeover {
-                at_ms: 45_000,
-                by: "tty004 · MacBook".into(),
-            });
             w
         }
     }

@@ -140,7 +140,7 @@ pub enum Msg {
     },
 
     Refreshed {
-        ok: bool,
+        result: Result<Box<Snapshot>, String>,
     },
     Prewarmed {
         workspace: WorkspaceId,
@@ -276,21 +276,11 @@ pub struct World {
     pub daemon_health: DaemonHealth,
     pub last_refresh_secs: i64,
 
-    pub refresh_fails: bool,
-
-    pub takeover_at_ms: Option<Takeover>,
-
     pub session_accounts: BTreeMap<(InstanceId, u64), AccountId>,
 
     pub discovery_pending: bool,
 
     pub surfaces: Surfaces,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Takeover {
-    pub at_ms: i64,
-    pub by: String,
 }
 
 pub trait WallSource: std::fmt::Debug + Send + Sync {
@@ -417,8 +407,6 @@ impl World {
             jobs: vec![],
             daemon_health: DaemonHealth::Healthy,
             last_refresh_secs,
-            refresh_fails: false,
-            takeover_at_ms: None,
             session_accounts: BTreeMap::new(),
             discovery_pending: false,
             surfaces,
@@ -570,6 +558,7 @@ impl World {
                     r.load_error = Some(error.clone());
                 }
             }
+            Msg::Refreshed { result: Err(_) } => self.daemon_health = DaemonHealth::Stale,
             Msg::AccountRefreshed { account, result } => {
                 let now = self.now_secs();
                 if let Some(a) = self.accounts.get_mut(account) {
@@ -650,18 +639,8 @@ impl World {
                 d.tick(now);
             }
         }
-        if self.takeover_at_ms.as_ref().is_some_and(|t| now >= t.at_ms)
-            && let Some(Takeover { by, .. }) = self.takeover_at_ms.take()
-            && let Some(i) = self
-                .instances
-                .iter()
-                .find(|i| i.status == InstanceStatus::Running)
-        {
-            due.push(Msg::Takeover {
-                instance: i.id.clone(),
-                by,
-            });
-        }
+        let backend = self.backend.clone();
+        due.extend(backend.due(self));
         due
     }
 

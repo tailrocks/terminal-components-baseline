@@ -40,7 +40,7 @@ use crate::domain::instance::{DaemonSnapshot, InstanceStatus};
 use crate::domain::role::LaunchRole;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::WorkspaceId;
-use crate::world::{DaemonHealth, Health, LaunchSource, Msg, World, job};
+use crate::world::{Health, LaunchSource, Msg, World, job};
 use junie_tui::ui::context::ContextAnchor;
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::menu::MenuItem;
@@ -139,7 +139,6 @@ pub struct ManagerScreen {
     pending_launch: Option<(Option<WorkspaceId>, String)>,
     pending_session: Option<String>,
     picker_targets: Vec<(Agent, Option<String>)>,
-    last_refresh_error: bool,
     wide: bool,
 
     pub menu: RowMenu<RowKey, &'static str>,
@@ -174,7 +173,6 @@ impl ManagerScreen {
             pending_launch: None,
             pending_session: None,
             picker_targets: vec![],
-            last_refresh_error: false,
             wide: false,
             menu: RowMenu::new(MENU),
         }
@@ -1957,18 +1955,7 @@ impl Page<Jackin> for ManagerScreen {
 
         if w.now_secs() - w.last_refresh_secs >= 5 {
             w.last_refresh_secs = w.now_secs();
-            if w.refresh_fails && !self.last_refresh_error {
-                self.last_refresh_error = true;
-                w.daemon_health = DaemonHealth::Stale;
-                w.perform(Effect::Refresh);
-            } else {
-                crate::world::refresh_snapshots(w);
-                for i in w.instances.iter_mut() {
-                    if i.status.is_live() {
-                        i.last_seen_secs = w.clock.now_secs();
-                    }
-                }
-            }
+            w.perform(Effect::Refresh);
             out = Outcome::Changed;
         }
         self.build_rows(w);
@@ -2042,9 +2029,10 @@ impl Page<Jackin> for ManagerScreen {
                 }
                 Err(error) => cx.error(error.clone()),
             },
-            Msg::Refreshed { ok: false } => {
-                cx.error("Refresh failed: instance index unreadable · showing last-good rows");
-            }
+            Msg::Refreshed { result } => match result {
+                Ok(snapshot) => w.apply((**snapshot).clone()),
+                Err(error) => cx.error(format!("Refresh failed: {error} · showing last-good rows")),
+            },
             _ => return Outcome::Ignored,
         }
         self.build_rows(w);

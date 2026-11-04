@@ -42,8 +42,7 @@ fn world_new_fills_what_the_parts_leave_out() {
     assert!(world.daemons.is_empty() && world.jobs.is_empty() && world.fs.is_empty());
     assert_eq!(world.clipboard, None);
     assert_eq!(world.daemon_health, DaemonHealth::Healthy);
-    assert!(!world.refresh_fails && !world.discovery_pending);
-    assert_eq!(world.takeover_at_ms, None);
+    assert!(!world.discovery_pending);
     assert!(world.session_accounts.is_empty());
     assert_eq!(world.last_refresh_secs, CLOCK.now_secs());
     assert_eq!(world.cwd, format!("{HOME}/src/demo"));

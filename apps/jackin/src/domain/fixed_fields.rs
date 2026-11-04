@@ -339,8 +339,6 @@ pub fn world_fixed(w: &World) -> FixedFields {
         jobs: _,
         daemon_health: _,
         last_refresh_secs: _,
-        refresh_fails: _,
-        takeover_at_ms: _,
         session_accounts: _,
         discovery_pending: _,
         surfaces,

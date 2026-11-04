@@ -1,5 +1,5 @@
-use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
+use std::sync::{Arc, Mutex};
 
 use crate::backend::{
     Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, OpSession, Validation,
@@ -40,6 +40,16 @@ pub struct SimBackend {
     doctor_runs: AtomicUsize,
     openshell: bool,
     next_workspace_id: AtomicU32,
+    refresh_fails: bool,
+    index_fails_once: AtomicBool,
+    takeover: Mutex<Option<Takeover>>,
+}
+
+/// A second client that attaches at `at_ms` of world time.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Takeover {
+    pub at_ms: i64,
+    pub by: String,
 }
 
 impl Default for SimBackend {
@@ -51,6 +61,9 @@ impl Default for SimBackend {
             doctor_runs: AtomicUsize::default(),
             openshell: false,
             next_workspace_id: AtomicU32::new(100),
+            refresh_fails: false,
+            index_fails_once: AtomicBool::default(),
+            takeover: Mutex::new(None),
         }
     }
 }
@@ -71,6 +84,12 @@ impl SimBackend {
         Arc::new(SimBackend {
             save_fails_once: AtomicBool::new(true),
             launch: LaunchRule::HardCases,
+            refresh_fails: true,
+            index_fails_once: AtomicBool::new(true),
+            takeover: Mutex::new(Some(Takeover {
+                at_ms: 45_000,
+                by: "tty004 · MacBook".into(),
+            })),
             ..SimBackend::default()
         })
     }
@@ -189,7 +208,7 @@ impl Backend for SimBackend {
             ),
             Effect::Stop { .. } => return Some(Completion::settle(1_800)),
             Effect::Purge { .. } => return Some(Completion::settle(2_200)),
-            Effect::Refresh => (0, Msg::Refreshed { ok: false }),
+            Effect::Refresh => return Some(Completion::settle(0)),
             Effect::RefreshAccount {
                 account,
                 stagger_ms,
@@ -256,10 +275,43 @@ impl Backend for SimBackend {
         Some(Completion::ready(after_ms, msg))
     }
 
+    fn due(&self, world: &World) -> Vec<Msg> {
+        let mut slot = self.takeover.lock().expect("takeover");
+        if !slot.as_ref().is_some_and(|t| world.clock.now_ms >= t.at_ms) {
+            return vec![];
+        }
+        let Some(Takeover { by, .. }) = slot.take() else {
+            return vec![];
+        };
+        world
+            .instances
+            .iter()
+            .find(|i| i.status == InstanceStatus::Running)
+            .map(|i| Msg::Takeover {
+                instance: i.id.clone(),
+                by,
+            })
+            .into_iter()
+            .collect()
+    }
+
     fn settle(&self, effect: &Effect, world: &World) -> Option<Msg> {
         match effect {
             Effect::SaveWorkspace { id, workspace, .. } => {
                 Some(self.settle_workspace_save(*id, workspace, world))
+            }
+            Effect::Refresh => {
+                let result = if self.index_fails_once.swap(false, Ordering::SeqCst) {
+                    Err("instance index unreadable".to_owned())
+                } else {
+                    let mut snapshot = snapshot(world);
+                    let now = world.clock.now_secs();
+                    for i in snapshot.instances.iter_mut().filter(|i| i.status.is_live()) {
+                        i.last_seen_secs = now;
+                    }
+                    Ok(Box::new(snapshot))
+                };
+                Some(Msg::Refreshed { result })
             }
             Effect::Stop { instance } => Some(Msg::Stopped {
                 instance: instance.clone(),
@@ -283,7 +335,7 @@ impl Backend for SimBackend {
                         a,
                         world.now_secs(),
                         world.op.session() != OpSession::SignedIn,
-                        world.refresh_fails,
+                        self.refresh_fails,
                     )
                 });
                 Some(Msg::AccountRefreshed {

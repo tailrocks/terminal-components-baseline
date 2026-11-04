@@ -19,12 +19,14 @@ use jackin_console::domain::workspace::RoleSource;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchPlan, LaunchTarget};
 use jackin_console::panes::SessionScript;
+use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
 use jackin_console::world::{GlobalConfig, Msg, World};
 use junie_tui::core::event::Input;
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
+use junie_tui::widgets::file_browser::FileEntry;
 
 type Answer = fn(&Effect, &World) -> Option<Msg>;
 
@@ -36,6 +38,7 @@ struct TestBackend {
     inner: Arc<dyn Backend>,
     seen: Mutex<Vec<Effect>>,
     answer: Answer,
+    files: Option<fn() -> Box<dyn FileSource>>,
 }
 
 impl TestBackend {
@@ -44,11 +47,20 @@ impl TestBackend {
             inner: SimBackend::shared(),
             seen: Mutex::new(vec![]),
             answer,
+            files: None,
         })
     }
 
+    /// Every effect received except the manager's periodic refresh.
     fn seen(&self) -> Vec<Effect> {
-        self.seen.lock().expect("seen").clone()
+        let mut all = self.seen.lock().expect("seen").clone();
+        all.retain(|e| *e != Effect::Refresh);
+        all
+    }
+
+    fn refreshes(&self) -> usize {
+        let all = self.seen.lock().expect("seen");
+        all.iter().filter(|e| **e == Effect::Refresh).count()
     }
 }
 
@@ -76,6 +88,10 @@ impl Backend for TestBackend {
         }
     }
 
+    fn settle(&self, effect: &Effect, world: &World) -> Option<Msg> {
+        self.inner.settle(effect, world)
+    }
+
     fn changes(
         &self,
         id: &str,
@@ -99,7 +115,10 @@ impl Backend for TestBackend {
     }
 
     fn file_source(&self, world: &World) -> Box<dyn FileSource> {
-        self.inner.file_source(world)
+        match self.files {
+            Some(files) => files(),
+            None => self.inner.file_source(world),
+        }
     }
 }
 
@@ -900,4 +919,169 @@ fn the_sim_keeps_the_last_good_values_when_the_broker_is_down() {
         a.issue.as_ref().map(|i| i.message.as_str()),
         Some("Usage broker unreachable: last good values kept")
     );
+}
+
+/// Answers a refresh with the roster it already has: a backend that keeps
+/// no heartbeat of its own and never fails the index.
+fn unchanged_roster(effect: &Effect, world: &World) -> Option<Msg> {
+    matches!(effect, Effect::Refresh).then(|| Msg::Refreshed {
+        result: Ok(Box::new(sim::snapshot(world))),
+    })
+}
+
+/// Ticks the app for `ms` of world time and returns the status line after
+/// each tick.
+fn run_for(app: &mut App, ms: i64) -> Vec<String> {
+    let end = app.world.now_ms() + ms;
+    let mut seen = vec![];
+    while app.world.now_ms() < end {
+        Application::handle(app, Input::Tick);
+        seen.push(status(app));
+    }
+    seen
+}
+
+fn last_seen(w: &World) -> Vec<(String, i64)> {
+    w.instances
+        .iter()
+        .map(|i| (i.id.clone(), i.last_seen_secs))
+        .collect()
+}
+
+#[test]
+fn a_backend_owns_last_seen() {
+    let (mut app, backend) = backed(Scenario::HardCases, unchanged_roster);
+    let before = last_seen(&app.world);
+    run_for(&mut app, 60_000);
+
+    assert!(
+        backend.refreshes() >= 10,
+        "the manager asks the backend for the roster"
+    );
+    assert_eq!(
+        last_seen(&app.world),
+        before,
+        "the screen kept no heartbeat"
+    );
+}
+
+#[test]
+fn the_sim_fails_the_first_refresh_then_bumps_last_seen() {
+    let mut app = timed(Scenario::HardCases, world_for(Scenario::HardCases));
+    let before = last_seen(&app.world);
+    let start = app.world.now_secs();
+    let live = |w: &World| {
+        w.instances
+            .iter()
+            .filter(|i| i.status.is_live())
+            .map(|i| (i.id.clone(), i.last_seen_secs))
+            .collect::<Vec<_>>()
+    };
+
+    run_for(&mut app, 4_000);
+    assert_eq!(
+        last_seen(&app.world),
+        before,
+        "the first refresh fails and bumps nothing"
+    );
+
+    run_for(&mut app, 8_000);
+    let bumped = live(&app.world);
+    assert!(!bumped.is_empty());
+    for (id, seen) in bumped {
+        assert!(seen >= start + 4, "{id} last seen {seen}, started {start}");
+    }
+}
+
+const TAKEOVER: &str = "tty004 · MacBook attached to this instance";
+
+fn attached_for(app: &mut App, ms: i64) -> Vec<String> {
+    app.go(Go::Attach {
+        instance: "jk-7f3a".into(),
+        pane: None,
+    });
+    run_for(app, ms)
+}
+
+#[test]
+fn a_backend_opens_no_takeover() {
+    let (mut app, _) = backed(Scenario::HardCases, unchanged_roster);
+    let seen = attached_for(&mut app, 60_000);
+    assert!(
+        seen.iter()
+            .all(|s| !s.contains("attached to this instance")),
+        "{seen:?}"
+    );
+}
+
+#[test]
+fn the_sim_opens_the_second_client_at_45_seconds() {
+    let mut app = timed(Scenario::HardCases, world_for(Scenario::HardCases));
+    let seen = attached_for(&mut app, 60_000);
+    assert!(seen.iter().any(|s| s == TAKEOVER), "{seen:?}");
+    let first = seen.iter().position(|s| s == TAKEOVER).expect("a takeover");
+    assert!(first > 30, "not before its time: tick {first}");
+}
+
+struct ListedSource;
+
+impl FileSource for ListedSource {
+    fn list(&self, dir: &str) -> Result<Vec<FileEntry>, String> {
+        match dir {
+            "/Users/alexey/src/shared-libs" => Ok(vec![
+                FileEntry::dir("/Users/alexey/src/shared-libs/zeta").meta("zeta meta"),
+                FileEntry::dir("/Users/alexey/src/shared-libs/alpha").meta("alpha meta"),
+                FileEntry::file("/Users/alexey/src/shared-libs/notes.md"),
+            ]),
+            _ => Ok(vec![]),
+        }
+    }
+
+    fn is_dir(&self, _: &str) -> bool {
+        true
+    }
+}
+
+fn workdir_picker(world: World, files: Option<fn() -> Box<dyn FileSource>>) -> String {
+    let backend = Arc::new(TestBackend {
+        inner: SimBackend::shared(),
+        seen: Mutex::new(vec![]),
+        answer: |_, _| None,
+        files,
+    });
+    let mut world = world;
+    world.backend = backend;
+    let mut app = timed(Scenario::Returning, world);
+    press(&mut app, "down e");
+    click_text(&mut app, "Choose…");
+    screen(&mut app)
+}
+
+#[test]
+fn the_working_directory_picker_lists_the_source() {
+    let mut world = world_for(Scenario::Returning);
+    world.fs.clear();
+    let shown = workdir_picker(world, Some(|| Box::new(ListedSource)));
+    let line = |dest: &str, meta: &str| shown.lines().any(|l| l.contains(dest) && l.contains(meta));
+    assert!(line("/workspace/libs/zeta", "zeta meta"), "{shown}");
+    assert!(line("/workspace/libs/alpha", "alpha meta"), "{shown}");
+    assert!(
+        !shown.contains("notes.md"),
+        "a file is not a directory: {shown}"
+    );
+}
+
+#[test]
+fn the_working_directory_picker_lists_what_the_demo_listed() {
+    let shown = workdir_picker(world_for(Scenario::Returning), None);
+    let at = |meta: &str| {
+        shown
+            .find(meta)
+            .unwrap_or_else(|| panic!("{meta}\n{shown}"))
+    };
+    assert!(
+        at("6 items") < at("adr") && at("adr") < at("3 items"),
+        "crates, docs and scripts in the order of the demo files: {shown}"
+    );
+    assert!(!shown.contains("rust"), "only direct children: {shown}");
 }

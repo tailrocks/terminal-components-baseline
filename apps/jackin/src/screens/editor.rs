@@ -1675,13 +1675,9 @@ impl EditorScreen {
             targets.push(m.destination.clone());
             if let crate::domain::workspace::MountSource::Host(src) = &m.source {
                 let src = crate::world::expand(&w.home, src);
-                for f in w.fs.iter().filter(|f| {
-                    f.dir
-                        && f.path.starts_with(&format!("{src}/"))
-                        && !f.path[src.len() + 1..].contains('/')
-                }) {
-                    let rel = &f.path[src.len()..];
-                    let dest = format!("{}{rel}", m.destination);
+                let listed = w.backend.file_source(w).list(&src).unwrap_or_default();
+                for f in listed.iter().filter(|f| f.dir) {
+                    let dest = format!("{}/{}", m.destination, f.name());
                     items.push(Item {
                         tag: (if dest == self.pending.workdir {
                             Some("current")

@@ -390,6 +390,12 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
 
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion>;
 
+    /// Messages the backend raises on its own at the current time, such as a
+    /// second client attaching. The world asks on every tick.
+    fn due(&self, _world: &World) -> Vec<Msg> {
+        vec![]
+    }
+
     /// The reply to an effect whose `perform` returned `Completion::settle`,
     /// computed when it falls due. A backend that never settles keeps this.
     fn settle(&self, _effect: &Effect, _world: &World) -> Option<Msg> {
