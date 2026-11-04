@@ -105,9 +105,24 @@ fn edit(app: &App) {
     see(&form, &["Basic", "Advanced", "Password"], &[SECRET]);
 }
 
+fn advanced_ready(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains("SSH host")
+        && visible.contains("SSH user")
+        && visible.contains("Startup commands")
+        && visible.contains("Local only")
+        && !visible.contains("Password")
+}
+
+fn basic_ready(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains("Password") && visible.contains("Username") && !visible.contains("SSH host")
+}
+
 fn advanced(app: &App) {
     click_label(app, "Advanced");
-    let tab = app.wait_text("SSH tunnel");
+    // The tab rule paints before the advanced column replaces the basic fields.
+    let tab = app.wait_screen("advanced fields", advanced_ready);
     see(
         &tab,
         &[
@@ -117,13 +132,13 @@ fn advanced(app: &App) {
             "Startup commands",
             "Local only",
         ],
-        &[],
+        &["Password"],
     );
 }
 
 fn basic(app: &App) {
     click_label(app, "Basic");
-    app.wait_text("Password");
+    app.wait_screen("basic fields", basic_ready);
 }
 
 fn replace_field(app: &App, label: &str, value: &str) {
