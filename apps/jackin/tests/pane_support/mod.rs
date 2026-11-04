@@ -177,6 +177,10 @@ pub fn key(spec: &str) -> Key {
         "enter" => KeyCode::Enter,
         "esc" => KeyCode::Esc,
         "up" => KeyCode::Up,
+        "f10" => KeyCode::F(10),
+        "right" => KeyCode::Right,
+        "down" => KeyCode::Down,
+        "tab" => KeyCode::Tab,
         c if c.chars().count() == 1 => KeyCode::Char(c.chars().next().expect("a char")),
         other => panic!("unknown key {other}"),
     };

@@ -481,6 +481,10 @@ impl PaneBody for TerminalPane {
         &self.view
     }
 
+    fn accepts_input(&self) -> bool {
+        self.live()
+    }
+
     fn viewport_mut(&mut self) -> &mut dyn ViewportOps {
         &mut self.view
     }

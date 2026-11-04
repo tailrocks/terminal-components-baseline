@@ -8,6 +8,7 @@ use common::*;
 use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, Route, assemble};
 use jackin_console::backend::OpSession;
 use jackin_console::fixtures::{Scenario, app_for, app_with_world, entry_for, world_for};
+use jackin_console::panes::PanePolicy;
 use jackin_console::rain::INTRO_END;
 use junie_tui::core::event::{Input, Mouse, MouseKind};
 use junie_tui::motion::Motion;
@@ -130,6 +131,7 @@ fn options(frame: u64, clipboard: ClipboardMode) -> AppOptions {
         frame,
         theme: theme(),
         clipboard,
+        panes: PanePolicy::default(),
     }
 }
 

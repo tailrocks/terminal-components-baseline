@@ -6,6 +6,7 @@ use super::world_for;
 use crate::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, assemble};
 use crate::domain::agent::Agent;
 use crate::launch::LaunchTarget;
+use crate::panes::{ClipboardWrite, PanePolicy};
 use crate::world::World;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -154,6 +155,10 @@ pub fn app_with_world(
             frame,
             theme,
             clipboard: ClipboardMode::Preview,
+            panes: PanePolicy {
+                clipboard_write: ClipboardWrite::Deny,
+                ..PanePolicy::default()
+            },
         },
     )
 }

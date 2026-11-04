@@ -179,6 +179,11 @@ pub trait PaneBody: std::fmt::Debug {
     }
     fn viewport(&self) -> &dyn ViewportOps;
     fn viewport_mut(&mut self) -> &mut dyn ViewportOps;
+    /// Whether a program is on the other end to take what is typed. The
+    /// hardware cursor belongs to such a pane only.
+    fn accepts_input(&self) -> bool {
+        true
+    }
     fn key(&mut self, key: &Key, now_ms: i64) -> PaneKey;
     /// The operator clicked in the pane.
     fn gesture(&mut self, _now_ms: i64) {}
@@ -239,6 +244,13 @@ impl Daemon {
             next_id: 1,
             attached_by: None,
             policy: Arc::new(PanePolicy::default()),
+        }
+    }
+
+    /// Tells every pane the operator is no longer looking at it.
+    pub fn blur(&mut self, now_ms: i64) {
+        for pane in &mut self.panes {
+            pane.body.focus_changed(false, now_ms);
         }
     }
 

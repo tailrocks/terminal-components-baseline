@@ -288,6 +288,28 @@ fn enter_forwarding_rules() {
 }
 
 #[test]
+fn only_a_pane_with_a_program_takes_the_cursor() {
+    let bench = Bench::new();
+    let mut pane = pane(&bench);
+    assert!(!pane.accepts_input(), "pending");
+    pane.sync_size(inner(80, 24));
+    assert!(pane.accepts_input(), "attaching: the link is up");
+    bench.push(0, LinkEvent::Attached);
+    pane.tick(0);
+    pane.tick(800);
+    assert!(pane.accepts_input());
+    bench.push(0, LinkEvent::Ended(EndKind::Detached));
+    pane.tick(900);
+    assert!(!pane.accepts_input(), "detached");
+
+    let gone = Bench::new();
+    let mut exited = live(&gone);
+    gone.push(0, LinkEvent::Exited(Some(0)));
+    exited.tick(1_000);
+    assert!(!exited.accepts_input(), "exited");
+}
+
+#[test]
 fn a_live_pane_asks_before_it_closes() {
     let bench = Bench::new();
     let pane = live(&bench);

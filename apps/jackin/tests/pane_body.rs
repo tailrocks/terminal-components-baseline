@@ -17,8 +17,8 @@ use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::domain::vocabulary::PaneWords;
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{
-    Daemon, PaneBody, PaneId, PaneKey, PaneKind, PaneKindTag, PaneNote, PaneRequest, PaneSpawn,
-    PasteOutcome,
+    Daemon, PaneBody, PaneId, PaneKey, PaneKind, PaneKindTag, PaneNote, PanePolicy, PaneRequest,
+    PaneSpawn, PasteOutcome,
 };
 use jackin_console::rain::INTRO_END;
 use jackin_console::world::{World, WorldParts};
@@ -83,7 +83,7 @@ impl FakeBody {
 
 impl PaneBody for FakeBody {
     fn kind(&self) -> PaneKindTag {
-        PaneKindTag::Agent
+        PaneKindTag::Script
     }
 
     fn state(&self) -> AgentState {
@@ -277,6 +277,7 @@ fn rig(first: Vec<Line>, touched: &[&str]) -> Rig {
             frame: INTRO_END,
             theme: Theme::for_level(ColorLevel::TrueColor),
             clipboard: ClipboardMode::Host(copied.clone()),
+            panes: PanePolicy::default(),
         },
     );
     let mut rig = Rig {
