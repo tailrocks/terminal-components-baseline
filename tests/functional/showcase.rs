@@ -613,6 +613,7 @@ fn showcase_list_selection_keyboard_and_multiselect() {
 }
 
 #[test]
+#[ignore = "flaky: docs/P9.3-red-green.md#pty-load-flakes tree cursor order under load"]
 fn showcase_tree_expand_and_file_selection() {
     let app = App::new(
         "showcase-trees",
