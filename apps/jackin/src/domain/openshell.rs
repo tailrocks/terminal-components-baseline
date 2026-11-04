@@ -31,6 +31,14 @@ pub fn env_edit_block(var: &str) -> EditBlocked {
     )
 }
 
+/// The policy switches the workspace editor shows as fixed. A workspace the
+/// wizard creates starts with them, so the editor's boxes match its record.
+pub fn policies(ws: &mut Workspace) {
+    ws.keep_awake = false;
+    ws.git_pull = false;
+    ws.dirty_policy = DirtyExitPolicy::Ask;
+}
+
 /// `host_path` is Data going in. `accounts` is the registry with `enabled` and
 /// `default_for_provider` already set. The set `accounts.enabled` is written
 /// here: it holds every account that is not a provider default, so the
@@ -38,9 +46,7 @@ pub fn env_edit_block(var: &str) -> EditBlocked {
 pub fn workspace(ws: &mut Workspace, host_path: &str, accounts: &AccountRegistry) {
     ws.workdir = PROJECT_DIR.into();
     ws.mounts = vec![Mount::host(host_path, PROJECT_DIR).isolation(Isolation::Clone)];
-    ws.keep_awake = false;
-    ws.git_pull = false;
-    ws.dirty_policy = DirtyExitPolicy::Ask;
+    policies(ws);
     ws.accounts.disabled_defaults.clear();
     ws.accounts.enabled = accounts
         .accounts

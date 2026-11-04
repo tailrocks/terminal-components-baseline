@@ -1325,6 +1325,14 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         }
     }
 
+    for ws in &mut w.workspaces {
+        ws.github = w
+            .instances
+            .iter()
+            .filter(|i| i.workspace == Some(ws.id))
+            .find_map(|i| i.github.clone());
+    }
+
     let now_ms = w.now_ms();
     let mut d1 = Daemon::new("payments-platform");
     let claude = PaneRequest::new(

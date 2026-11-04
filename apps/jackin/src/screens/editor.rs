@@ -56,6 +56,9 @@ pub const WORKDIR: WidgetId = WidgetId::of("editor.workdir");
 
 const GENERAL: WidgetId = WidgetId::of("editor.general");
 pub const KEEP_AWAKE: WidgetId = WidgetId::of("editor.keep_awake");
+/// Columns of the workspace name in the save hint, so the status line fits.
+const SAVED_NAME_COLUMNS: usize = 20;
+
 pub const GIT_PULL: WidgetId = WidgetId::of("editor.git_pull");
 pub const DOCKER: WidgetId = WidgetId::of("editor.docker");
 pub const DIRTY_POLICY: WidgetId = WidgetId::of("editor.dirty_policy");
@@ -554,8 +557,21 @@ impl EditorScreen {
         w.apply((**snapshot).clone());
         self.workspace = id.or(self.workspace);
         self.original = self.pending.clone();
-        cx.status(format!("Workspace {name} saved"));
+        cx.status(self.saved_status(&name, w));
         cx.go(Go::Manager);
+    }
+
+    /// The status after a save. A world that fixes the editor (`Fixed`) says
+    /// what to set when the saved workspace has no default role and there are
+    /// roles to choose from.
+    fn saved_status(&self, name: &str, w: &World) -> String {
+        match &w.surfaces.fixed {
+            Some(fixed) if self.pending.roles.default.is_none() && w.roles.len() > 1 => fill_in(
+                &fixed.save_hint,
+                &[("name", &truncate(name, SAVED_NAME_COLUMNS))],
+            ),
+            _ => format!("Workspace {name} saved"),
+        }
     }
 
     fn leave(&mut self, cx: &mut Cx) {

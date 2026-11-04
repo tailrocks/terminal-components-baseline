@@ -3,6 +3,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use super::account::{AccountId, AccountRegistry, LaunchBlock, Lifecycle};
 use super::agent::Provider;
 use super::fixed::Fixed;
+use super::instance::RepoRef;
 
 pub type WorkspaceId = u32;
 pub type RoleName = String;
@@ -24,6 +25,7 @@ pub struct Workspace {
 
     pub accounts: AccountPolicy,
     pub dirty_policy: DirtyExitPolicy,
+    pub github: Option<RepoRef>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -152,6 +154,7 @@ impl Workspace {
             docker: false,
             accounts: AccountPolicy::default(),
             dirty_policy: DirtyExitPolicy::Ask,
+            github: None,
         }
     }
 

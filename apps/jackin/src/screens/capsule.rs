@@ -680,46 +680,14 @@ impl CapsuleScreen {
             1 => self.spawn(Some(a), offer.accounts.first().cloned(), w, cx),
             _ => {
                 self.pending_agent = Some(a);
-                let mut p = Picker::new(
+                let (p, ids) = super::modals::account_picker(
                     WidgetId::of("capsule.provider"),
-                    &format!("Account for {}", a.label()),
+                    w,
+                    a,
+                    ws,
+                    &offer,
                 );
-                p.set_searchable(false);
-                p.list.width = (72, 72);
-                p.scope = Some("active for this Workspace".into());
-                let mut items = vec![];
-                self.picker_accounts.clear();
-                for (i, id) in offer.accounts.iter().enumerate() {
-                    let Some(acc) = w.accounts.get(id) else {
-                        continue;
-                    };
-                    let mut tags = vec![];
-                    if acc.default_for_provider {
-                        tags.push("global default");
-                    }
-                    if ws.is_some_and(|x| x.accounts.preferred.get(&a.provider()) == Some(id)) {
-                        tags.push("Workspace preference");
-                    }
-                    if i == 0 {
-                        tags.push("preselected");
-                    }
-                    items.push(
-                        Item::new(acc.display_name.clone())
-                            .detail(format!(
-                                "{} · {}{}",
-                                acc.source.origin_label(),
-                                acc.status_word(),
-                                if tags.is_empty() {
-                                    String::new()
-                                } else {
-                                    format!(" · {}", tags.join(" · "))
-                                }
-                            ))
-                            .glyph(if acc.default_for_provider { "★" } else { " " }),
-                    );
-                    self.picker_accounts.push(acc.id.clone());
-                }
-                p.set_items(items);
+                self.picker_accounts = ids;
                 cx.open(p, LayerTag::new("provider"));
             }
         }

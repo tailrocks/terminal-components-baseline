@@ -36,6 +36,7 @@ use ratatui::style::{Modifier, Style};
 use super::modals::{InfoDialog, InfoResult};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::Effect;
+use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::instance::{DaemonSnapshot, InstanceStatus};
 use crate::domain::role::LaunchRole;
@@ -122,6 +123,24 @@ enum DetailRow {
     Blank,
 }
 
+/// What starts once the user has picked among the accounts an agent offers.
+enum Start {
+    Launch {
+        workspace: Option<WorkspaceId>,
+        role: String,
+    },
+    Session {
+        instance: String,
+    },
+}
+
+/// The account picker that is open, and what it starts.
+struct Choosing {
+    start: Start,
+    agent: Agent,
+    accounts: Vec<AccountId>,
+}
+
 pub struct ManagerScreen {
     pub selected: RowKey,
     pub expanded: HashSet<WorkspaceId>,
@@ -139,6 +158,7 @@ pub struct ManagerScreen {
     pub busy_rows: Vec<(RowKey, &'static str)>,
     pending_launch: Option<(Option<WorkspaceId>, String)>,
     pending_session: Option<String>,
+    choosing: Option<Choosing>,
     picker_targets: Vec<(Agent, Option<String>)>,
     wide: bool,
 
@@ -173,6 +193,7 @@ impl ManagerScreen {
             busy_rows: vec![],
             pending_launch: None,
             pending_session: None,
+            choosing: None,
             picker_targets: vec![],
             wide: false,
             menu: RowMenu::new(MENU),
@@ -455,6 +476,28 @@ impl ManagerScreen {
         p.set_items(items);
         self.picker_targets = targets;
         cx.open(p, LayerTag::new("launch"));
+    }
+
+    /// Asks which of the accounts an agent offers it starts with, when the
+    /// offer names none.
+    fn choose_account(&mut self, start: Start, agent: Agent, w: &World, cx: &mut Cx) {
+        let (workspace, role) = match &start {
+            Start::Launch { workspace, role } => (*workspace, role.clone()),
+            Start::Session { instance } => match w.instance(instance) {
+                Some(i) => (i.workspace, i.role.clone()),
+                None => return,
+            },
+        };
+        let ws = workspace.and_then(|id| w.workspace(id));
+        let offer = w.offer_for(agent, ws, Some(&role));
+        let (picker, accounts) =
+            super::modals::account_picker(WidgetId::of("manager.account"), w, agent, ws, &offer);
+        self.choosing = Some(Choosing {
+            start,
+            agent,
+            accounts,
+        });
+        cx.open(picker, LayerTag::new("account"));
     }
 
     fn open_session_picker(&mut self, instance: &str, w: &World, cx: &mut Cx) {
@@ -1918,6 +1961,11 @@ fn agent_rows(
                 )
             }
             (None, Some(why)) => (why.clone(), true, Some("unavailable")),
+            (None, None) if offer.accounts.len() > 1 => (
+                format!("{} accounts · choose at start", offer.accounts.len()),
+                false,
+                Some("choose at start"),
+            ),
             (None, None) => ("no usable account".to_owned(), true, Some("unavailable")),
         };
         items.push(Item {
@@ -2010,7 +2058,13 @@ impl Page<Jackin> for ManagerScreen {
                             &[("id", instance.trim_start_matches(ID_PREFIX))],
                         ));
                     }
-                    Err(error) => cx.error(error.clone()),
+                    Err(error) => {
+                        let text = match &w.surfaces.vocabulary.lifecycle.purge_refused_next {
+                            Some(next) => format!("{error} · {next}"),
+                            None => error.clone(),
+                        };
+                        cx.error(text);
+                    }
                 }
             }
             Msg::WorkspaceDeleted { id, result } => match result {
@@ -2433,12 +2487,45 @@ impl Page<Jackin> for ManagerScreen {
                 let Some((ws, role)) = self.pending_launch.take() else {
                     return Outcome::Changed;
                 };
+                if account.is_none() {
+                    let start = Start::Launch {
+                        workspace: ws,
+                        role,
+                    };
+                    self.choose_account(start, agent, w, cx);
+                    return Outcome::Changed;
+                }
                 cx.go(Go::Launch {
                     workspace: ws,
                     role,
                     agent,
                     account,
                 });
+                Outcome::Changed
+            }
+            ("account", ModalResult::Picked(i)) => {
+                let Some(Choosing {
+                    start,
+                    agent,
+                    accounts,
+                }) = self.choosing.take()
+                else {
+                    return Outcome::Changed;
+                };
+                let account = accounts.get(i).cloned();
+                match start {
+                    Start::Launch { workspace, role } => cx.go(Go::Launch {
+                        workspace,
+                        role,
+                        agent,
+                        account,
+                    }),
+                    Start::Session { instance } => cx.go(Go::NewSession {
+                        instance,
+                        agent: Some(agent),
+                        account,
+                    }),
+                }
                 Outcome::Changed
             }
             ("session", ModalResult::Picked(i)) => {
@@ -2449,6 +2536,10 @@ impl Page<Jackin> for ManagerScreen {
                     return Outcome::Changed;
                 };
                 let shell = account.as_deref() == Some("__shell__");
+                if account.is_none() && !shell {
+                    self.choose_account(Start::Session { instance }, agent, w, cx);
+                    return Outcome::Changed;
+                }
                 cx.go(Go::NewSession {
                     instance,
                     agent: if shell { None } else { Some(agent) },

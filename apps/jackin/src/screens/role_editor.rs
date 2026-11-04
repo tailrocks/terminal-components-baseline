@@ -1127,7 +1127,13 @@ impl RoleEditorScreen {
         }
         findings
             .iter()
-            .map(|f| Notice::error(f.message.clone()).hint(f.fix.clone()))
+            .map(|f| {
+                let notice = Notice::error(f.message.clone());
+                match &f.fix {
+                    Some(fix) => notice.hint(fix.clone()),
+                    None => notice,
+                }
+            })
             .collect()
     }
 
