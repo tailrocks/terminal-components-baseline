@@ -1,4 +1,7 @@
-use junie_tui::core::event::Key;
+use std::sync::Arc;
+
+use junie_tui::core::event::{Key, Outcome};
+use junie_tui::core::hit::Axis;
 use junie_tui::theme::Tone;
 use junie_tui::ui::layout::SplitDir;
 use junie_tui::widgets::viewport_ops::ViewportOps;
@@ -7,8 +10,24 @@ use ratatui::layout::Rect;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::instance::{AgentState, InstanceId};
+use crate::domain::vocabulary::PaneWords;
+
+mod clipboard;
+mod link;
+mod policy;
+mod terminal;
+
+pub use link::{
+    DetachCause, EndKind, Lease, LinkEvent, LinkSource, LinkStatus, PaneCommand, PaneLink,
+    PaneSize, Sent,
+};
+pub use policy::{ClipboardWrite, PanePolicy, PaneTiming};
+pub use terminal::{TerminalPane, sanitize_title};
 
 pub use junie_tui::ui::pane_tree::PaneId;
+
+/// The rows of history a terminal pane keeps.
+pub const SCROLLBACK: usize = 2_000;
 
 pub const MIN_PANE_COLS: u16 = 20;
 pub const MIN_PANE_ROWS: u16 = 4;
@@ -54,8 +73,38 @@ pub struct PaneNote {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PasteOutcome {
     Sent,
-    NeedsConfirm { lines: usize },
+    NeedsConfirm {
+        lines: usize,
+    },
     TooLarge,
+    /// The pane has no program to take it.
+    Dropped,
+}
+
+/// What a pane shows in place of its screen.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PaneFace {
+    /// The screen of the program.
+    Grid,
+    /// The last screen, dimmed: nothing changes on it any more.
+    Dimmed,
+    /// An empty state: there is no screen to show yet.
+    Empty { title: String, hint: Option<String> },
+}
+
+/// What a pane asks the console to do for it. The console takes them from the
+/// pane on its tick and runs them on the screen's own request channel.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PaneEffect {
+    Status {
+        text: String,
+        tone: Tone,
+    },
+    /// Copy `text` as the operator's copy; the status reads `Copied {what}`.
+    Copy {
+        text: String,
+        what: String,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -118,12 +167,38 @@ pub trait PaneBody: std::fmt::Debug {
     fn kind(&self) -> PaneKindTag;
     fn state(&self) -> AgentState;
     fn title(&self) -> Option<&str>;
-    fn note(&self) -> Option<PaneNote>;
+    /// The one row the pane says over its bottom edge when its link is not
+    /// live, in the words the console gives it.
+    fn note(&self, words: &PaneWords) -> Option<PaneNote>;
+    /// A word after the pane's name in its border.
+    fn suffix(&self, _words: &PaneWords) -> Option<String> {
+        None
+    }
+    fn face(&self, _words: &PaneWords) -> PaneFace {
+        PaneFace::Grid
+    }
     fn viewport(&self) -> &dyn ViewportOps;
     fn viewport_mut(&mut self) -> &mut dyn ViewportOps;
     fn key(&mut self, key: &Key, now_ms: i64) -> PaneKey;
+    /// The operator clicked in the pane.
+    fn gesture(&mut self, _now_ms: i64) {}
+    /// A wheel step the pane takes for itself, or `None` to let the viewport
+    /// scroll.
+    fn wheel(&mut self, _axis: Axis, _delta: i32) -> Option<Outcome> {
+        None
+    }
     fn paste(&mut self, text: &str, now_ms: i64) -> PasteOutcome;
+    /// A paste the operator confirmed after `NeedsConfirm`.
+    fn paste_confirmed(&mut self, text: &str, now_ms: i64) -> PasteOutcome {
+        self.paste(text, now_ms)
+    }
     fn tick(&mut self, now_ms: i64) -> bool;
+    /// What the pane asks of the console since the last call.
+    fn take_effects(&mut self, _words: &PaneWords) -> Vec<PaneEffect> {
+        Vec::new()
+    }
+    /// The console's policy for what a program may do through a pane.
+    fn set_policy(&mut self, _policy: &Arc<PanePolicy>) {}
     fn sync_size(&mut self, inner: Rect);
     fn focus_changed(&mut self, focused: bool, now_ms: i64);
     fn redraw(&mut self);
@@ -151,6 +226,7 @@ pub struct Daemon {
     pub next_id: u64,
 
     pub attached_by: Option<String>,
+    pub policy: Arc<PanePolicy>,
 }
 
 impl Daemon {
@@ -162,6 +238,15 @@ impl Daemon {
             panes: vec![],
             next_id: 1,
             attached_by: None,
+            policy: Arc::new(PanePolicy::default()),
+        }
+    }
+
+    /// Gives the daemon, and every pane in it, the console's policy.
+    pub fn set_policy(&mut self, policy: &Arc<PanePolicy>) {
+        self.policy = Arc::clone(policy);
+        for pane in &mut self.panes {
+            pane.body.set_policy(policy);
         }
     }
 
@@ -199,11 +284,12 @@ impl Daemon {
     ) -> PaneId {
         let id = self.alloc();
         let agent = request.agent();
-        let body = make(PaneSpawn {
+        let mut body = make(PaneSpawn {
             id,
             workspace: self.workspace.clone(),
             now_ms,
         });
+        body.set_policy(&self.policy);
         self.panes.push(Pane {
             id,
             label: agent.map_or_else(|| "Shell".to_owned(), |a| a.label().to_owned()),

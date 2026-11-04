@@ -1,4 +1,4 @@
-use crate::domain::vocabulary::{DaemonWords, LifecycleWords, StatusWords, Vocabulary};
+use crate::domain::vocabulary::{DaemonWords, LifecycleWords, PaneWords, StatusWords, Vocabulary};
 
 impl Vocabulary {
     pub fn demo() -> Self {
@@ -127,6 +127,18 @@ impl Vocabulary {
             sandbox_id: Some("3f9c{run8}e21a".into()),
             invocation_id: Some("{run}-4f11".into()),
             attached_status: "Attached to {name} · tabs and panes restored".into(),
+            pane: PaneWords::demo(),
+        }
+    }
+}
+
+impl PaneWords {
+    pub fn demo() -> Self {
+        Self {
+            viewing: "Read-only · another terminal controls this pane".into(),
+            connection_lost: "Connection to the daemon lost · press Enter to reattach".into(),
+            exited: "{agent} exited (code {code}) · the container keeps running".into(),
+            ..Self::openshell()
         }
     }
 }

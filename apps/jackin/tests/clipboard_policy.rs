@@ -1,0 +1,272 @@
+//! What a program may put on the clipboard (OSC 52) and what it may show in
+//! the pane info dialog (its title).
+
+mod pane_support;
+
+use std::sync::Arc;
+
+use jackin_console::panes::{
+    ClipboardWrite, LinkEvent, PaneBody, PaneEffect, PanePolicy, TerminalPane, sanitize_title,
+};
+use junie_tui::theme::Tone;
+use pane_support::*;
+
+const HELLO: &[u8] = b"\x1b]52;c;SGVsbG8=\x07";
+
+fn base64(bytes: &[u8]) -> String {
+    const ABC: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    let mut out = String::new();
+    for chunk in bytes.chunks(3) {
+        let n = chunk
+            .iter()
+            .enumerate()
+            .fold(0u32, |n, (i, b)| n | u32::from(*b) << (16 - 8 * i));
+        for i in 0..4 {
+            if i <= chunk.len() {
+                out.push(ABC[(n >> (18 - 6 * i) & 63) as usize] as char);
+            } else {
+                out.push('=');
+            }
+        }
+    }
+    out
+}
+
+fn osc52(selection: &str, data: &str) -> Vec<u8> {
+    format!("\x1b]52;{selection};{data}\x07").into_bytes()
+}
+
+struct Rig {
+    bench: Arc<Bench>,
+    pane: TerminalPane,
+}
+
+/// An attached Codex pane that has the focus and was typed into at 1,000 ms.
+fn rig(request: jackin_console::panes::PaneRequest, policy: PanePolicy) -> Rig {
+    let bench = Bench::new();
+    let mut pane = pane_for(request, &bench, policy);
+    pane.sync_size(inner(80, 24));
+    bench.push(0, LinkEvent::Attached);
+    pane.tick(0);
+    pane.tick(800);
+    pane.focus_changed(true, 800);
+    pane.key(&key("a"), 1_000);
+    Rig { bench, pane }
+}
+
+impl Rig {
+    fn codex() -> Self {
+        rig(codex(), PanePolicy::default())
+    }
+
+    fn write(&mut self, at: i64, bytes: &[u8]) -> Vec<PaneEffect> {
+        self.bench.output(0, bytes);
+        self.pane.tick(at);
+        self.pane.take_effects(&words())
+    }
+}
+
+fn copied(text: &str, what: &str) -> PaneEffect {
+    PaneEffect::Copy {
+        text: text.to_owned(),
+        what: what.to_owned(),
+    }
+}
+
+fn blocked(text: &str) -> PaneEffect {
+    PaneEffect::Status {
+        text: text.to_owned(),
+        tone: Tone::Warning,
+    }
+}
+
+const WRITE_BLOCKED: &str = "Clipboard write from Codex blocked · select text to copy it";
+
+#[test]
+fn osc52_allowed_cases() {
+    let mut rig = Rig::codex();
+    assert_eq!(
+        rig.write(2_000, HELLO),
+        [copied("Hello", "from Codex · 5 characters")],
+        "the status is the copy's own, every time"
+    );
+    assert_eq!(
+        rig.write(4_000, HELLO),
+        [copied("Hello", "from Codex · 5 characters")],
+        "a second write 2 s later is allowed again"
+    );
+    assert_eq!(
+        rig.write(4_100, &osc52("p", "SGVsbG8=")),
+        [copied("Hello", "from Codex · 5 characters")],
+        "the selection field is ignored"
+    );
+    assert_eq!(
+        rig.write(4_200, &osc52("c", &base64("日本".as_bytes()))),
+        [copied("日本", "from Codex · 2 characters")]
+    );
+
+    let exact = "x".repeat(100_000);
+    let effects = rig.write(4_300, &osc52("c", &base64(exact.as_bytes())));
+    assert_eq!(
+        effects.len(),
+        1,
+        "100,000 decoded bytes (133,336 encoded) is at the cap, not over it"
+    );
+    assert!(matches!(&effects[0], PaneEffect::Copy { text, .. } if text.len() == 100_000));
+}
+
+#[test]
+fn the_gesture_window_is_five_seconds_from_the_last_forwarded_key() {
+    let mut rig = Rig::codex();
+    assert_eq!(rig.write(5_999, HELLO).len(), 1, "4,999 ms after the key");
+    let mut late = Rig::codex();
+    assert_eq!(
+        late.write(6_001, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "5,001 ms after the key"
+    );
+
+    let mut never = rig_without_gesture();
+    assert_eq!(
+        never.write(1_000, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "a pane never typed into is refused at a small clock"
+    );
+}
+
+fn rig_without_gesture() -> Rig {
+    let bench = Bench::new();
+    let mut pane = pane(&bench);
+    pane.sync_size(inner(80, 24));
+    bench.push(0, LinkEvent::Attached);
+    pane.tick(0);
+    pane.tick(800);
+    pane.focus_changed(true, 800);
+    Rig { bench, pane }
+}
+
+#[test]
+fn only_a_key_or_a_click_is_a_gesture() {
+    let mut wheel = rig_without_gesture();
+    wheel.pane.wheel(junie_tui::core::hit::Axis::Vertical, -3);
+    assert_eq!(
+        wheel.write(1_000, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "the wheel"
+    );
+
+    let mut chord = rig_without_gesture();
+    chord.pane.key(&key("ctrl+d"), 900);
+    assert_eq!(
+        chord.write(1_000, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "a key the filter drops was not forwarded"
+    );
+
+    let mut click = rig_without_gesture();
+    click.pane.gesture(900);
+    assert!(
+        matches!(click.write(1_000, HELLO)[..], [PaneEffect::Copy { .. }]),
+        "a click in the pane"
+    );
+}
+
+#[test]
+fn osc52_refusal_matrix() {
+    let mut shell_pane = rig(shell(), PanePolicy::default());
+    assert_eq!(
+        shell_pane.write(2_000, HELLO),
+        [blocked(
+            "Clipboard write from Shell blocked · select text to copy it"
+        )],
+        "a shell pane never writes"
+    );
+    let mut shell_read = rig(shell(), PanePolicy::default());
+    assert_eq!(
+        shell_read.write(2_000, &osc52("c", "?")),
+        [blocked("Clipboard read from Shell blocked")]
+    );
+
+    let mut unfocused = Rig::codex();
+    unfocused.pane.focus_changed(false, 1_500);
+    assert_eq!(
+        unfocused.write(2_000, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "an unfocused pane or a pane in a background tab"
+    );
+
+    let mut read = Rig::codex();
+    assert_eq!(
+        read.write(2_000, &osc52("c", "?")),
+        [blocked("Clipboard read from Codex blocked")]
+    );
+    assert!(
+        read.bench
+            .commands(0)
+            .iter()
+            .all(|c| !matches!(c, jackin_console::panes::PaneCommand::Reply(_))),
+        "a read is never answered"
+    );
+
+    let mut garbage = Rig::codex();
+    assert_eq!(
+        garbage.write(2_000, &osc52("c", "!!!!")),
+        [],
+        "bad base64 is dropped"
+    );
+    assert_eq!(
+        garbage.write(2_100, &osc52("c", &base64(&[0xff, 0xfe, 0xfd]))),
+        [],
+        "bytes that are not UTF-8 are dropped"
+    );
+
+    let mut big = Rig::codex();
+    let over = "x".repeat(100_001);
+    assert_eq!(
+        big.write(2_000, &osc52("c", &base64(over.as_bytes()))),
+        [blocked("Clipboard write from Codex blocked · too large")]
+    );
+
+    let deny = PanePolicy {
+        clipboard_write: ClipboardWrite::Deny,
+        ..PanePolicy::default()
+    };
+    let mut denied = rig(codex(), deny);
+    assert_eq!(
+        denied.write(2_000, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "the demo policy refuses everything"
+    );
+}
+
+#[test]
+fn a_refusal_shows_its_status_at_most_once_every_ten_seconds() {
+    let mut rig = Rig::codex();
+    rig.pane.focus_changed(false, 1_000);
+    assert_eq!(rig.write(1_000, HELLO), [blocked(WRITE_BLOCKED)]);
+    assert_eq!(rig.write(5_000, HELLO), [], "4 s later shows nothing new");
+    assert_eq!(rig.write(9_999, HELLO), [], "just inside the interval");
+    assert_eq!(
+        rig.write(11_000, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "11 s after the first shows the status again"
+    );
+}
+
+#[test]
+fn title_is_sanitised_and_shown() {
+    assert_eq!(sanitize_title("a\u{9b}b\u{202e}c  \t d"), "abc d");
+    assert_eq!(sanitize_title("\u{2066}x\u{2069}\n\n y\u{7}"), "x y");
+    assert_eq!(sanitize_title("   "), "");
+    let wide = "日".repeat(35);
+    let cut = sanitize_title(&wide);
+    assert_eq!(cut, "日".repeat(32), "70 columns are cut at 64");
+    assert_eq!(sanitize_title(&"ab".repeat(40)), "ab".repeat(32));
+
+    let mut rig = Rig::codex();
+    assert_eq!(rig.pane.title(), None);
+    rig.write(1_100, "\x1b]2;  build\u{202e}  done \x07".as_bytes());
+    assert_eq!(rig.pane.title(), Some("build done"));
+    rig.write(1_200, b"\x1b]0;second\x07");
+    assert_eq!(rig.pane.title(), Some("second"));
+}

@@ -98,3 +98,14 @@ fn a_paste_over_the_limit_is_refused_by_its_byte_count() {
         }
     );
 }
+
+#[test]
+fn a_confirmed_paste_is_sent_as_it_is_without_brackets() {
+    let policy = ForwardPolicy::new(8);
+    assert_eq!(
+        policy.confirmed("a\x01\nb\x1bc"),
+        Paste::Send(b"a\nbc".to_vec()),
+        "the operator said yes, the control bytes still go"
+    );
+    assert_eq!(policy.confirmed("123456789"), Paste::TooLarge { bytes: 9 });
+}

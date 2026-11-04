@@ -3740,6 +3740,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("terminal::ForwardPolicy::new"),
     Capability::function("terminal::ForwardPolicy::key"),
     Capability::function("terminal::ForwardPolicy::paste"),
+    Capability::function("terminal::ForwardPolicy::confirmed"),
     Capability::ty("terminal::Paste"),
     Capability::variant("terminal::Paste::Send"),
     Capability::variant("terminal::Paste::NeedsConfirm"),
@@ -3883,6 +3884,10 @@ pub static ALLOWLIST: &[Allowed] = &[
     },
     Allowed {
         id: "terminal::ForwardPolicy::paste",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::ForwardPolicy::confirmed",
         reason: HOST_FED,
     },
     Allowed {

@@ -51,13 +51,10 @@ impl ForwardPolicy {
     /// Decides one paste. `bracketed` is whether the program turned on
     /// bracketed paste.
     pub fn paste(&self, text: &str, bracketed: bool) -> Paste {
-        if text.len() > self.paste_max_bytes {
-            return Paste::TooLarge { bytes: text.len() };
-        }
-        let clean: String = text
-            .chars()
-            .filter(|c| !c.is_control() || matches!(c, '\t' | '\n'))
-            .collect();
+        let clean = match self.clean(text) {
+            Ok(clean) => clean,
+            Err(too_large) => return too_large,
+        };
         if bracketed {
             if clean.is_empty() {
                 return Paste::Send(Vec::new());
@@ -70,6 +67,25 @@ impl ForwardPolicy {
             };
         }
         Paste::Send(clean.into_bytes())
+    }
+
+    /// The paste after the operator confirmed it: sent as it is, with no
+    /// brackets, because the program has none to give.
+    pub fn confirmed(&self, text: &str) -> Paste {
+        match self.clean(text) {
+            Ok(clean) => Paste::Send(clean.into_bytes()),
+            Err(too_large) => too_large,
+        }
+    }
+
+    fn clean(&self, text: &str) -> Result<String, Paste> {
+        if text.len() > self.paste_max_bytes {
+            return Err(Paste::TooLarge { bytes: text.len() });
+        }
+        Ok(text
+            .chars()
+            .filter(|c| !c.is_control() || matches!(c, '\t' | '\n'))
+            .collect())
     }
 }
 

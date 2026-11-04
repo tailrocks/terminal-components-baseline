@@ -14,6 +14,7 @@ use jackin_console::domain::instance::{
 };
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
+use jackin_console::domain::vocabulary::PaneWords;
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{
     Daemon, PaneBody, PaneId, PaneKey, PaneKind, PaneKindTag, PaneNote, PaneRequest, PaneSpawn,
@@ -97,7 +98,7 @@ impl PaneBody for FakeBody {
         None
     }
 
-    fn note(&self) -> Option<PaneNote> {
+    fn note(&self, _: &PaneWords) -> Option<PaneNote> {
         None
     }
 

@@ -65,6 +65,7 @@ fn the_openshell_words_avoid_the_false_strings() {
 #[test]
 fn the_openshell_vocabulary_renames_the_demo_words() {
     const SAME: [&str; 2] = ["status.superseded", "capsule"];
+    const PANE_RENAMED: [&str; 3] = ["pane.viewing", "pane.connection_lost", "pane.exited"];
     let demo = Vocabulary::demo();
     let openshell = Vocabulary::openshell();
     let (demo, live) = (demo.fields(), openshell.fields());
@@ -73,7 +74,7 @@ fn the_openshell_vocabulary_renames_the_demo_words() {
         live.iter().map(|f| f.0).collect::<Vec<_>>(),
     );
     for ((name, was), (_, now)) in demo.iter().zip(&live) {
-        if SAME.contains(name) {
+        if SAME.contains(name) || (name.starts_with("pane.") && !PANE_RENAMED.contains(name)) {
             assert_eq!(was, now, "{name}");
         } else {
             assert_ne!(was, now, "{name}");

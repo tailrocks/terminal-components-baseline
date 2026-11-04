@@ -41,6 +41,99 @@ pub struct LifecycleWords {
     pub purged: String,
 }
 
+/// What a terminal pane says about itself. Templates take `{agent}` (the
+/// agent's label, or `shell_label`), `{code}`, `{reason}`, `{lines}`,
+/// `{bytes}`, `{source}` and `{chars}`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PaneWords {
+    pub waiting_title: String,
+    pub waiting_hint: String,
+    pub attaching_title: String,
+    pub attaching_hint: String,
+    pub unattached_title: String,
+    pub too_small: String,
+    pub viewing_suffix: String,
+    pub viewing: String,
+    pub detached: String,
+    pub connection_lost: String,
+    pub exited: String,
+    pub exited_unknown_code: String,
+    pub failed: String,
+    pub stream_closed: String,
+    pub shell_label: String,
+    pub paste_confirm_title: String,
+    pub paste_confirm_body: String,
+    pub paste_confirm_button: String,
+    pub paste_too_large: String,
+    pub title_label: String,
+    pub copied_from: String,
+    pub clip_write_blocked: String,
+    pub clip_read_blocked: String,
+    pub clip_too_large: String,
+}
+
+impl PaneWords {
+    pub fn openshell() -> Self {
+        Self {
+            waiting_title: "Waiting for room".into(),
+            waiting_hint: "{agent} starts when the pane is big enough".into(),
+            attaching_title: "Attaching to {agent}…".into(),
+            attaching_hint: "Ctrl+B x cancels".into(),
+            unattached_title: "{agent} is not attached".into(),
+            too_small: "Pane too small · zoom with Ctrl+B z".into(),
+            viewing_suffix: "(viewing)".into(),
+            viewing: "Read-only · another client controls this pane".into(),
+            detached: "Detached from {agent} · press Enter to reattach".into(),
+            connection_lost: "Connection to the gateway lost · press Enter to reattach".into(),
+            exited: "{agent} exited (code {code}) · the sandbox keeps running".into(),
+            exited_unknown_code: "unknown".into(),
+            failed: "Could not attach to {agent}: {reason} · press Enter to retry".into(),
+            stream_closed: "the connection closed before the pane attached".into(),
+            shell_label: "Shell".into(),
+            paste_confirm_title: "Paste {lines}?".into(),
+            paste_confirm_body:
+                "This pane has no paste protection, so each line runs as you paste it.".into(),
+            paste_confirm_button: "Paste".into(),
+            paste_too_large: "Paste too large · {bytes} bytes".into(),
+            title_label: "Title".into(),
+            copied_from: "from {source} · {chars}".into(),
+            clip_write_blocked: "Clipboard write from {source} blocked · select text to copy it"
+                .into(),
+            clip_read_blocked: "Clipboard read from {source} blocked".into(),
+            clip_too_large: "Clipboard write from {source} blocked · too large".into(),
+        }
+    }
+
+    pub fn fields(&self) -> Vec<(&'static str, &str)> {
+        vec![
+            ("pane.waiting_title", &self.waiting_title),
+            ("pane.waiting_hint", &self.waiting_hint),
+            ("pane.attaching_title", &self.attaching_title),
+            ("pane.attaching_hint", &self.attaching_hint),
+            ("pane.unattached_title", &self.unattached_title),
+            ("pane.too_small", &self.too_small),
+            ("pane.viewing_suffix", &self.viewing_suffix),
+            ("pane.viewing", &self.viewing),
+            ("pane.detached", &self.detached),
+            ("pane.connection_lost", &self.connection_lost),
+            ("pane.exited", &self.exited),
+            ("pane.exited_unknown_code", &self.exited_unknown_code),
+            ("pane.failed", &self.failed),
+            ("pane.stream_closed", &self.stream_closed),
+            ("pane.shell_label", &self.shell_label),
+            ("pane.paste_confirm_title", &self.paste_confirm_title),
+            ("pane.paste_confirm_body", &self.paste_confirm_body),
+            ("pane.paste_confirm_button", &self.paste_confirm_button),
+            ("pane.paste_too_large", &self.paste_too_large),
+            ("pane.title_label", &self.title_label),
+            ("pane.copied_from", &self.copied_from),
+            ("pane.clip_write_blocked", &self.clip_write_blocked),
+            ("pane.clip_read_blocked", &self.clip_read_blocked),
+            ("pane.clip_too_large", &self.clip_too_large),
+        ]
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Vocabulary {
     pub construct: String,
@@ -118,6 +211,7 @@ pub struct Vocabulary {
     pub sandbox_id: Option<String>,
     pub invocation_id: Option<String>,
     pub attached_status: String,
+    pub pane: PaneWords,
 }
 
 impl Vocabulary {
@@ -241,6 +335,7 @@ impl Vocabulary {
             sandbox_id: None,
             invocation_id: None,
             attached_status: "Attached to {name}".into(),
+            pane: PaneWords::openshell(),
         }
     }
 
@@ -358,6 +453,9 @@ impl Vocabulary {
             ("invocation_id", self.invocation_id.as_deref().unwrap_or("")),
             ("attached_status", &self.attached_status),
         ]
+        .into_iter()
+        .chain(self.pane.fields())
+        .collect()
     }
 
     pub fn status_description(&self, status: InstanceStatus) -> &str {
