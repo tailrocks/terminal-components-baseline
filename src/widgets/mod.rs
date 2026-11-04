@@ -56,5 +56,6 @@ pub mod too_small;
 pub mod toolbar;
 pub mod tree;
 pub mod viewport;
+pub mod viewport_ops;
 mod viewport_specimen;
 pub mod widget_hints;

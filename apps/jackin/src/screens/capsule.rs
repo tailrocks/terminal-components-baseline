@@ -32,7 +32,7 @@ use junie_tui::widgets::segments::{self, Segment};
 use junie_tui::widgets::splitter::Splitter;
 use junie_tui::widgets::statusbar::{StatusBar, StatusItem};
 use junie_tui::widgets::tabs::{TabAction, TabItem, Tabs};
-use junie_tui::widgets::viewport::TextViewport;
+use junie_tui::widgets::viewport_ops::ViewportOps;
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
@@ -46,10 +46,10 @@ use crate::domain::instance::AgentState;
 use crate::domain::usage::Freshness;
 use crate::domain::vocabulary::{Vocabulary, fill_in};
 use crate::panes::{
-    Daemon, Direction, MAX_LABEL, MIN_PANE_COLS, MIN_PANE_ROWS, PaneId, PaneNode, Seam, nearest,
+    Daemon, Direction, MAX_LABEL, MIN_PANE_COLS, MIN_PANE_ROWS, PaneId, PaneKey, PaneNode,
+    PaneRequest, Seam, nearest,
 };
 use crate::world::{Msg, World};
-use junie_tui::core::scroll::Scrollable;
 use junie_tui::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
 use junie_tui::ui::modal::modal_frame;
 use junie_tui::ui::text::plural;
@@ -204,7 +204,7 @@ impl CapsuleScreen {
     }
 
     fn account_suffix(w: &World, p: &crate::panes::Pane) -> Option<String> {
-        let id = p.proc.account.as_ref()?;
+        let id = p.account.as_ref()?;
         let a = w.accounts.get(id)?;
         if w.accounts.by_provider(a.provider).count() >= 2 {
             Some(a.display_name.clone())
@@ -323,7 +323,7 @@ impl CapsuleScreen {
         let pane = self
             .focused_pane(w)
             .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)));
-        let selected = pane.is_some_and(|p| p.term.has_selection());
+        let selected = pane.is_some_and(|p| p.body.viewport().has_selection());
         let panes = self
             .daemon(w)
             .and_then(|d| d.active_tab())
@@ -423,7 +423,7 @@ impl CapsuleScreen {
                 let sel = self
                     .focused_pane(w)
                     .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
-                    .and_then(|p| p.term.selected_text());
+                    .and_then(|p| p.body.viewport().selected_text());
                 match sel {
                     Some(text) => {
                         let path = text.lines().next().unwrap_or("").trim().to_owned();
@@ -444,7 +444,7 @@ impl CapsuleScreen {
                 let sel = self
                     .focused_pane(w)
                     .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
-                    .and_then(|p| p.term.selected_text());
+                    .and_then(|p| p.body.viewport().selected_text());
                 match sel {
                     Some(t) => {
                         cx.copy_as(t, "selection");
@@ -457,16 +457,11 @@ impl CapsuleScreen {
                 match text {
                     Some(t) => {
                         let now = w.now_ms();
-                        let ws = self
-                            .daemon(w)
-                            .map(|d| d.workspace.clone())
-                            .unwrap_or_default();
                         if let Some(p) = self.focused_pane(w)
                             && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
                         {
-                            for c in t.chars().take(200) {
-                                pane.type_char(c, now, &ws);
-                            }
+                            let head: String = t.chars().take(200).collect();
+                            pane.body.paste(&head, now);
                         }
                         cx.status("Pasted into the focused pane");
                     }
@@ -477,14 +472,14 @@ impl CapsuleScreen {
                 if let Some(p) = self.focused_pane(w)
                     && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
                 {
-                    pane.term.clear_selection();
+                    pane.body.viewport_mut().clear_selection();
                 }
             }
             "Clear pane" => {
                 if let Some(p) = self.focused_pane(w)
                     && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
                 {
-                    pane.clear();
+                    pane.body.clear();
                     cx.status(w.surfaces.vocabulary.pane_cleared.as_str());
                 }
             }
@@ -743,14 +738,18 @@ impl CapsuleScreen {
         let Some((intent, agent, account, _ws, now)) = self.pending_spawn.take() else {
             return;
         };
+        let backend = std::sync::Arc::clone(&w.backend);
+        let request = PaneRequest::new(&self.instance, agent, account.clone());
         let Some(d) = self.daemon_mut(w) else { return };
         match intent {
             Intent::NewTab => {
-                d.new_tab(agent, account.clone(), now, false);
+                d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
             }
             Intent::Split(dir, first) => {
-                if d.split(dir, first, agent, account.clone(), now, false)
-                    .is_none()
+                if d.split(dir, first, &request, now, |spawn| {
+                    backend.spawn_pane(&request, spawn)
+                })
+                .is_none()
                 {
                     cx.error("Cannot split: focused pane not found");
                 }
@@ -892,7 +891,7 @@ impl CapsuleScreen {
         let has_sel = self
             .focused_pane(w)
             .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
-            .is_some_and(|p| p.term.has_selection());
+            .is_some_and(|p| p.body.viewport().has_selection());
         let q = query.to_lowercase();
         let mut out = vec![];
         self.palette_cmds.clear();
@@ -988,7 +987,7 @@ impl CapsuleScreen {
                 let text = self
                     .focused_pane(w)
                     .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
-                    .and_then(|p| p.term.selected_text())
+                    .and_then(|p| p.body.viewport().selected_text())
                     .unwrap_or_default();
                 let path = text.lines().next().unwrap_or("").trim().to_owned();
                 self.export_kind = Some((cmd.ends_with("reveal"), cmd.ends_with("open")));
@@ -1005,7 +1004,7 @@ impl CapsuleScreen {
                 if let Some(p) = self.focused_pane(w)
                     && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
                 {
-                    pane.clear();
+                    pane.body.clear();
                 }
             }
             "Usage" => self.open_usage(w, cx),
@@ -1089,7 +1088,7 @@ impl CapsuleScreen {
             let runs_agent = self
                 .focused_pane(w)
                 .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
-                .is_some_and(|p| p.proc.agent.is_some());
+                .is_some_and(|p| p.agent.is_some());
             Dialog::destructive(
                 WidgetId::of("capsule.closepane"),
                 "Close pane?",
@@ -1169,7 +1168,7 @@ impl CapsuleScreen {
         let mut accounts: Vec<AccountId> = vec![];
         if let Some(d) = self.daemon(w) {
             for p in &d.panes {
-                if let Some(a) = &p.proc.account
+                if let Some(a) = &p.account
                     && !accounts.contains(a)
                 {
                     accounts.push(a.clone());
@@ -1186,7 +1185,7 @@ impl CapsuleScreen {
         let focused = self
             .focused_pane(w)
             .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
-            .and_then(|p| p.proc.account.clone());
+            .and_then(|p| p.account.clone());
         let mut dlg = UsageDialog::new(accounts.clone(), w);
         if let Some(f) = focused
             && let Some(i) = accounts.iter().position(|a| *a == f)
@@ -1205,12 +1204,11 @@ impl CapsuleScreen {
             .focused_pane(w)
             .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)));
         let agent = match focused {
-            Some(p) => match p.proc.agent {
+            Some(p) => match p.agent {
                 Some(a) => format!(
                     "{} ({})",
                     a.short(),
-                    p.proc
-                        .account
+                    p.account
                         .as_ref()
                         .and_then(|id| w.accounts.get(id))
                         .map(|x| x.title())
@@ -1316,7 +1314,7 @@ impl CapsuleScreen {
             if let Some(p) = self.focused_pane(w)
                 && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
             {
-                pane.clear();
+                pane.body.clear();
             }
             return Outcome::Changed;
         }
@@ -1401,78 +1399,65 @@ impl CapsuleScreen {
             return Outcome::Consumed;
         };
         let now = w.now_ms();
-        let ws = self
-            .daemon(w)
-            .map(|d| d.workspace.clone())
-            .unwrap_or_default();
         self.prime(p, w);
         let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p)) else {
             return Outcome::Consumed;
         };
 
-        if !pane.term.follow {
+        let term = pane.body.viewport_mut();
+        if !term.follow() {
             match key.code {
                 KeyCode::Up => {
-                    let _ = pane.term.wheel(Axis::Vertical, -1);
+                    let _ = term.wheel(Axis::Vertical, -1);
                     return Outcome::Changed;
                 }
                 KeyCode::Down => {
-                    let _ = pane.term.wheel(Axis::Vertical, 1);
+                    let _ = term.wheel(Axis::Vertical, 1);
                     return Outcome::Changed;
                 }
                 KeyCode::PageUp => {
-                    pane.term.scroll.page_up();
+                    term.page_up();
                     return Outcome::Changed;
                 }
                 KeyCode::PageDown => {
-                    pane.term.scroll.page_down();
-                    pane.term.follow = pane.term.is_at_tail();
+                    term.page_down();
                     return Outcome::Changed;
                 }
                 KeyCode::Home => {
-                    pane.term.scroll.jump_start();
+                    term.jump_start();
                     return Outcome::Changed;
                 }
 
                 KeyCode::Left if key.plain() => {
-                    return pane.term.wheel(Axis::Horizontal, -1).outcome();
+                    return term.wheel(Axis::Horizontal, -1);
                 }
                 KeyCode::Right if key.plain() => {
-                    return pane.term.wheel(Axis::Horizontal, 1).outcome();
+                    return term.wheel(Axis::Horizontal, 1);
                 }
                 KeyCode::End | KeyCode::Esc => {
-                    pane.term.set_follow(true);
+                    term.set_follow(true);
                     return Outcome::Changed;
                 }
                 _ => {}
             }
         }
-        if pane.term.has_selection() {
+        if term.has_selection() {
             if key.is(KeyCode::Esc) {
-                pane.term.clear_selection();
+                term.clear_selection();
                 return Outcome::Changed;
             }
             if key.is_char('y')
                 && key.plain()
-                && let Some(t) = pane.term.selected_text()
+                && let Some(t) = term.selected_text()
             {
                 cx.copy_as(t, "selection");
                 return Outcome::Changed;
             }
         }
-        match key.code {
-            KeyCode::Char(c) if !key.chord() => {
-                pane.term.clear_selection();
-                pane.type_char(c, now, &ws);
-            }
-            KeyCode::Backspace => pane.backspace(),
-            KeyCode::Enter => pane.commit(now, &ws),
-            KeyCode::Esc => {
-                pane.term.set_follow(true);
-            }
-            _ => return Outcome::Consumed,
+        match pane.body.key(key, now) {
+            PaneKey::Forwarded => Outcome::Changed,
+            PaneKey::Consumed => Outcome::Consumed,
         }
-        Outcome::Changed
     }
 
     fn prime(&self, pid: PaneId, w: &mut World) {
@@ -1481,7 +1466,7 @@ impl CapsuleScreen {
         };
         let inner = self.inner_of(w, r);
         if let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid)) {
-            pane.term.set_area(inner);
+            pane.body.sync_size(inner);
         }
     }
 
@@ -1568,14 +1553,14 @@ impl CapsuleScreen {
                     .border_type(ratatui::widgets::BorderType::Rounded)
                     .border_style(t.border(focused).bg(t.canvas));
                 ratatui::widgets::Widget::render(block, *r, buf);
-                let (g, gt) = match pane.state() {
+                let (g, gt) = match pane.body.state() {
                     AgentState::Blocked => ("●", t.warning),
                     AgentState::Done => ("○", t.text_secondary),
                     AgentState::Working => ("▶", t.accent),
                     AgentState::Idle => ("◆", t.text_muted),
                     AgentState::Unknown => ("", t.text_muted),
                 };
-                let mut title = format!(" {}", pane.label());
+                let mut title = format!(" {}", pane.label);
                 if let Some(s) = Self::account_suffix(w, pane) {
                     title.push_str(&format!(" ({s})"));
                 }
@@ -1607,13 +1592,14 @@ impl CapsuleScreen {
                     }
                 }
                 let mut meta = String::new();
-                if !pane.term.follow {
-                    let range = pane.term.scroll.visible_range();
+                let term = pane.body.viewport();
+                if !term.follow() {
+                    let range = term.scroll().visible_range();
                     meta = format!(
                         "{}–{} of {}",
                         junie_tui::ui::text::thousands(range.start + 1),
                         junie_tui::ui::text::thousands(range.end),
-                        junie_tui::ui::text::thousands(pane.term.scroll.content_len)
+                        junie_tui::ui::text::thousands(term.scroll().content_len)
                     );
                 }
                 if tab.zoomed.is_some() {
@@ -1637,34 +1623,24 @@ impl CapsuleScreen {
                 }
             }
 
-            let mut term = pane.term.clone();
-            term.caret_visible = pane.term.caret_visible
-                && !dialog
-                && focused
-                && self.selecting.is_none()
-                && self.drag.is_none();
-            let saved_focus = ctx.interaction.focus;
+            let term = pane.body.viewport();
+            let caret_allowed =
+                !dialog && focused && self.selecting.is_none() && self.drag.is_none();
 
             ctx.inert = true;
-            term.render(inner, buf, ctx, t.canvas);
+            let cursor = term.draw(inner, buf, ctx, t.canvas, caret_allowed);
             ctx.inert = false;
-            if focused
-                && term.follow
-                && term.caret_visible
-                && let Some(c) = term.caret
-                && let Some(p) = term.screen_pos(c)
-            {
+            if let Some(p) = cursor {
                 ctx.set_cursor(p);
             }
-            let _ = saved_focus;
 
-            if !pane.term.follow {
+            if !term.follow() {
                 scrollbar::render_with_fade(
                     inner,
                     buf,
                     ctx,
                     PANES.child(*pid as usize),
-                    &pane.term.scroll,
+                    term.scroll(),
                     focused,
                 );
             }
@@ -1760,15 +1736,14 @@ impl CapsuleScreen {
 
         let pane = self.focused_pane(w).and_then(|p| d.and_then(|d| d.pane(p)));
         if let Some(pane) = pane {
-            let agent = pane.proc.agent.map(|a| a.label()).unwrap_or("shell");
+            let agent = pane.agent.map(|a| a.label()).unwrap_or("shell");
             let account = pane
-                .proc
                 .account
                 .as_ref()
                 .and_then(|id| w.accounts.get(id))
                 .map(|a| format!(" · {}", a.display_name))
                 .unwrap_or_default();
-            let (state, tone) = match pane.state() {
+            let (state, tone) = match pane.body.state() {
                 AgentState::Working => (" · working", Tone::Secondary),
                 AgentState::Blocked => (" · needs input", Tone::Warning),
                 AgentState::Done => (" · done", Tone::Secondary),
@@ -1794,7 +1769,7 @@ impl CapsuleScreen {
         }
 
         let acc = pane
-            .and_then(|p| p.proc.account.clone())
+            .and_then(|p| p.account.clone())
             .and_then(|id| w.accounts.get(&id).cloned());
         match acc {
             Some(a) => {
@@ -1964,7 +1939,7 @@ impl Page<Jackin> for CapsuleScreen {
             let at = self
                 .focused_pane(w)
                 .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
-                .map(|p| p.term.context_point());
+                .map(|p| p.body.viewport().context_point());
             match at {
                 Some(at) => self.open_pane_menu(at, w),
                 None => {
@@ -2058,16 +2033,11 @@ impl Page<Jackin> for CapsuleScreen {
 
     fn on_paste(&mut self, text: &str, w: &mut World, _cx: &mut Cx) -> Outcome {
         let now = w.now_ms();
-        let ws = self
-            .daemon(w)
-            .map(|d| d.workspace.clone())
-            .unwrap_or_default();
         if let Some(p) = self.focused_pane(w)
             && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
         {
-            for c in text.chars().filter(|c| *c != '\n' && *c != '\r') {
-                pane.type_char(c, now, &ws);
-            }
+            let line: String = text.chars().filter(|c| *c != '\n' && *c != '\r').collect();
+            pane.body.paste(&line, now);
             return Outcome::Changed;
         }
         Outcome::Consumed
@@ -2403,7 +2373,7 @@ impl Page<Jackin> for CapsuleScreen {
                 let scrolled = self
                     .focused_pane(w)
                     .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
-                    .is_some_and(|p| !p.term.follow);
+                    .is_some_and(|p| !p.body.viewport().follow());
                 if scrolled {
                     vec![
                         hint("↑↓", "Scroll"),
@@ -2845,10 +2815,10 @@ impl Layer<ModalResult, World> for UsageDialog {
 }
 
 impl CapsuleScreen {
-    fn hbar_of(term: &TextViewport) -> Bar {
+    fn hbar_of(term: &dyn ViewportOps) -> Bar {
         Bar {
-            id: scrollbar::h_id_for(term.id),
-            owner: term.id,
+            id: scrollbar::h_id_for(term.id()),
+            owner: term.id(),
             axis: Axis::Horizontal,
             track: term.hbar(),
         }
@@ -2946,9 +2916,9 @@ impl CapsuleScreen {
             }
             self.prime(pid, w);
             if let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid))
-                && !pane.term.hbar().contains(pos)
+                && !pane.body.viewport().hbar().contains(pos)
             {
-                pane.term.on_click(pos);
+                pane.body.viewport_mut().on_click(pos);
             }
             return Outcome::Changed;
         }
@@ -2970,16 +2940,16 @@ impl CapsuleScreen {
             }
             self.prime(pid, w);
             if let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid)) {
-                if pane.term.hbar().contains(pos) {
+                if pane.body.viewport().hbar().contains(pos) {
                     self.hbar_held = Some(pid);
-                    let bar = Self::hbar_of(&pane.term);
+                    let bar = Self::hbar_of(pane.body.viewport());
                     return pane
-                        .term
+                        .body
+                        .viewport_mut()
                         .bar_input(&bar, pos, true)
-                        .outcome()
                         .or(Outcome::Changed);
                 }
-                pane.term.on_click(pos);
+                pane.body.viewport_mut().on_click(pos);
             }
             return Outcome::Changed;
         }
@@ -3022,8 +2992,8 @@ impl CapsuleScreen {
         if let Some(pid) = self.pane_at(pos)
             && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid))
         {
-            let o = pane.term.select_word_at(pos);
-            if let Some(text) = pane.term.selected_text() {
+            let o = pane.body.viewport_mut().select_word_at(pos);
+            if let Some(text) = pane.body.viewport().selected_text() {
                 cx.copy_as(text, "selection");
             }
             return o;
@@ -3048,8 +3018,8 @@ impl CapsuleScreen {
         if let Some(pid) = self.hbar_held {
             self.prime(pid, w);
             if let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid)) {
-                let bar = Self::hbar_of(&pane.term);
-                return pane.term.bar_input(&bar, pos, false).outcome();
+                let bar = Self::hbar_of(pane.body.viewport());
+                return pane.body.viewport_mut().bar_input(&bar, pos, false);
             }
         }
 
@@ -3060,7 +3030,7 @@ impl CapsuleScreen {
             && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid))
         {
             self.selecting = Some(pid);
-            return pane.term.on_drag(pos);
+            return pane.body.viewport_mut().on_drag(pos);
         }
         Outcome::Ignored
     }
@@ -3075,7 +3045,7 @@ impl CapsuleScreen {
         }
         if let Some(pid) = self.selecting.take() {
             if let Some(pane) = self.daemon(w).and_then(|d| d.pane(pid))
-                && let Some(text) = pane.term.selected_text()
+                && let Some(text) = pane.body.viewport().selected_text()
                 && !text.trim().is_empty()
             {
                 cx.copy_as(text, "selection");
@@ -3092,7 +3062,7 @@ impl CapsuleScreen {
         if let Some(pid) = self.pane_at(pos)
             && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid))
         {
-            return pane.term.wheel(axis, delta).outcome();
+            return pane.body.viewport_mut().wheel(axis, delta);
         }
         Outcome::Ignored
     }

@@ -12,13 +12,13 @@ use jackin_console::backend::{
 };
 use jackin_console::domain::account::{AccountRegistry, CredentialSource};
 use jackin_console::domain::agent::Provider;
-use jackin_console::domain::instance::InstanceStatus;
+use jackin_console::domain::instance::{Instance, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::usage::{Freshness, FreshnessInfo};
 use jackin_console::domain::workspace::RoleSource;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchPlan, LaunchTarget};
-use jackin_console::panes::SessionScript;
+use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
 use jackin_console::world::{GlobalConfig, Msg, World};
@@ -110,8 +110,12 @@ impl Backend for TestBackend {
         self.inner.launch_plan(world, target)
     }
 
-    fn session_script(&self) -> Arc<dyn SessionScript> {
-        self.inner.session_script()
+    fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody> {
+        self.inner.spawn_pane(request, spawn)
+    }
+
+    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
+        self.inner.initial_panes(instance)
     }
 
     fn file_source(&self, world: &World) -> Box<dyn FileSource> {

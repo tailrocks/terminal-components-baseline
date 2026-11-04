@@ -1767,8 +1767,10 @@ impl App {
                 agent,
                 account,
             } => {
+                let backend = Arc::clone(&self.world.backend);
+                let request = crate::panes::PaneRequest::new(&instance, agent, account.clone());
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
-                    d.new_tab(agent, account.clone(), now, false);
+                    d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
                 }
                 crate::world::refresh_snapshots(&mut self.world);
                 self.go(Go::Attach {

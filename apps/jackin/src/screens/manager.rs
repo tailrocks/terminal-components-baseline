@@ -502,10 +502,11 @@ impl ManagerScreen {
     fn attach_restored(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
         let Some(i) = w.instance(id) else { return };
         let wsname = w.workspace_label(i);
-        let agent = i.agent;
         let now = w.now_ms();
-        let mut d = crate::panes::Daemon::new(&wsname, w.backend.session_script());
-        d.new_tab(Some(agent), None, now, false);
+        let mut d = crate::panes::Daemon::new(&wsname);
+        for request in &w.backend.initial_panes(i) {
+            d.new_tab(request, now, |spawn| w.backend.spawn_pane(request, spawn));
+        }
         w.daemons.insert(id.to_owned(), d);
         crate::world::refresh_snapshots(w);
         w.sync_arbiter();

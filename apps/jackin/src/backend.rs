@@ -6,14 +6,14 @@ use crate::domain::account::{
 };
 use crate::domain::account::{AccountId, AccountRegistry};
 use crate::domain::agent::{Agent, Provider};
-use crate::domain::instance::InstanceId;
+use crate::domain::instance::{Instance, InstanceId};
 use crate::domain::launch::LaunchContent;
 use crate::domain::onepassword::OpReference;
 use crate::domain::role::RoleManifestDoc;
 use crate::domain::usage::AccountUsage;
 use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
 use crate::launch::{LaunchPlan, LaunchTarget};
-use crate::panes::SessionScript;
+use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
 use crate::world::{GlobalConfig, Msg, World};
 
 pub use junie_tui::widgets::diff::{
@@ -416,7 +416,9 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
         LaunchPlan::Clean
     }
 
-    fn session_script(&self) -> Arc<dyn SessionScript>;
+    fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody>;
+
+    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest>;
 
     fn file_source(&self, world: &World) -> Box<dyn FileSource> {
         Box::new(

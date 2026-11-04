@@ -10,12 +10,12 @@ use jackin_console::backend::{
 };
 use jackin_console::domain::account::CredentialSource;
 use jackin_console::domain::agent::Provider;
-use jackin_console::domain::instance::{InstanceStatus, RepoRef};
+use jackin_console::domain::instance::{Instance, InstanceStatus, RepoRef};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::launch::{LaunchPlan, LaunchTarget};
-use jackin_console::panes::SessionScript;
+use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::sim::SimBackend;
 use jackin_console::world::World;
 use junie_tui::theme::Tone;
@@ -82,8 +82,12 @@ impl Backend for SourceBackend {
         self.0.launch_plan(world, target)
     }
 
-    fn session_script(&self) -> Arc<dyn SessionScript> {
-        self.0.session_script()
+    fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody> {
+        self.0.spawn_pane(request, spawn)
+    }
+
+    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
+        self.0.initial_panes(instance)
     }
 
     fn file_source(&self, _: &World) -> Box<dyn FileSource> {

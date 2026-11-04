@@ -1,22 +1,25 @@
 #![cfg(not(feature = "demo"))]
 
+mod product_support;
+
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
+use product_support::{NOT_USED, SignedInOnly};
+
 use jackin_console::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, Remote, assemble};
 use jackin_console::backend::{
-    Backend, ChangeSet, Completion, Effect, FieldDescriptor, FolderProbe, OnePassword, OpAccount,
-    OpError, OpField, OpItem, OpSession, OpVault, SecretClass, ValidationOutcome,
+    Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, ValidationOutcome,
 };
 use jackin_console::domain::account::{AccountRegistry, CredentialSource};
 use jackin_console::domain::agent::Provider;
+use jackin_console::domain::instance::Instance;
 use jackin_console::domain::launch::LaunchContent;
-use jackin_console::domain::onepassword::OpReference;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::domain::workspace::{
     AccountPolicy, AllowedRoles, DirtyExitPolicy, RolePolicy, Workspace,
 };
-use jackin_console::panes::SessionScript;
+use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::rain::INTRO_END;
 use jackin_console::world::{Snapshot, World, WorldParts};
 use junie_tui::clock::SimClock;
@@ -27,8 +30,6 @@ use junie_tui::theme::{ColorLevel, Theme};
 use ratatui::Terminal;
 use ratatui::backend::TestBackend;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
-
-const NOT_USED: &str = "the product-shape test only renders the manager";
 
 #[derive(Debug)]
 struct TestBackendData;
@@ -61,63 +62,12 @@ impl Backend for TestBackendData {
         unreachable!("{NOT_USED}")
     }
 
-    fn session_script(&self) -> Arc<dyn SessionScript> {
-        unreachable!("{NOT_USED}")
-    }
-}
-
-#[derive(Debug, Clone)]
-struct SignedInOnly;
-
-impl OnePassword for SignedInOnly {
-    fn session(&self) -> OpSession {
-        OpSession::SignedIn
-    }
-
-    fn set_session(&mut self, _: OpSession) {}
-
-    fn accounts(&self) -> &[OpAccount] {
-        &[]
-    }
-
-    fn latency_ms(&self) -> i64 {
-        0
-    }
-
-    fn list_accounts(&self) -> Result<Vec<&OpAccount>, OpError> {
-        Ok(Vec::new())
-    }
-
-    fn list_vaults(&self, _: &str) -> Result<Vec<&OpVault>, OpError> {
+    fn spawn_pane(&self, _: &PaneRequest, _: PaneSpawn) -> Box<dyn PaneBody> {
         unreachable!("{NOT_USED}")
     }
 
-    fn list_items(&self, _: &str, _: &str) -> Result<Vec<&OpItem>, OpError> {
+    fn initial_panes(&self, _: &Instance) -> Vec<PaneRequest> {
         unreachable!("{NOT_USED}")
-    }
-
-    fn list_fields(&self, _: &str, _: &str, _: &str) -> Result<Vec<&OpField>, OpError> {
-        unreachable!("{NOT_USED}")
-    }
-
-    fn reference(&self, _: &str, _: &str, _: &str, _: &str) -> Result<OpReference, OpError> {
-        unreachable!("{NOT_USED}")
-    }
-
-    fn describe(&self, _: &OpReference) -> Result<FieldDescriptor, OpError> {
-        unreachable!("{NOT_USED}")
-    }
-
-    fn endpoint_of(&self, _: &OpReference) -> Option<String> {
-        None
-    }
-
-    fn classify(&self, _: &OpReference) -> Result<SecretClass, OpError> {
-        unreachable!("{NOT_USED}")
-    }
-
-    fn box_clone(&self) -> Box<dyn OnePassword> {
-        Box::new(self.clone())
     }
 }
 

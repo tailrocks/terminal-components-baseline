@@ -3196,6 +3196,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("widgets::viewport::TextViewport::screen_pos"),
     Capability::function("widgets::viewport::TextViewport::context_point"),
     Capability::function("widgets::viewport::TextViewport::hbar"),
+    Capability::ty("widgets::viewport_ops::ViewportOps"),
     Capability::function("core::nav::step_index"),
     Capability::function("ui::fade::scroll_edges"),
     Capability::function("ui::fade::scroll_edges_except"),
@@ -3762,6 +3763,10 @@ pub static ALLOWLIST: &[Allowed] = &[
     },
     Allowed {
         id: "widgets::list_detail::Event",
+        reason: PREVIEW,
+    },
+    Allowed {
+        id: "widgets::viewport_ops::ViewportOps",
         reason: PREVIEW,
     },
     Allowed {

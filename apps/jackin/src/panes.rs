@@ -1,18 +1,15 @@
-use std::collections::VecDeque;
-use std::sync::Arc;
-
-use junie_tui::core::id::WidgetId;
+use junie_tui::core::event::Key;
 use junie_tui::theme::Tone;
 use junie_tui::ui::layout::SplitDir;
-use junie_tui::widgets::viewport::{Line, Span, TextViewport};
+use junie_tui::widgets::viewport_ops::ViewportOps;
+use ratatui::layout::Rect;
 
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
-use crate::domain::instance::AgentState;
+use crate::domain::instance::{AgentState, InstanceId};
 
 pub use junie_tui::ui::pane_tree::PaneId;
 
-pub const SCROLLBACK: usize = 2_000;
 pub const MIN_PANE_COLS: u16 = 20;
 pub const MIN_PANE_ROWS: u16 = 4;
 pub const MAX_LABEL: usize = 16;
@@ -33,339 +30,133 @@ impl Tab {
     }
 }
 
-pub trait SessionScript: std::fmt::Debug + Send + Sync {
-    fn script(&self, agent: Option<Agent>, workspace: &str) -> Vec<Step>;
-
-    fn respond(
-        &self,
-        proc: &mut AgentProcess,
-        input: &str,
-        now_ms: i64,
-        workspace: &str,
-    ) -> Vec<Line>;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PaneKindTag {
+    Agent,
+    Shell,
+    Script,
 }
 
-#[derive(Debug, Clone)]
-pub enum Step {
-    Emit(i64, Line),
-    State(AgentState),
-
-    Touch(&'static str),
-
-    Await,
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PaneKey {
+    /// The capsule swallowed the key: nothing reached the pane.
+    Consumed,
+    /// The pane took the key.
+    Forwarded,
 }
 
-#[derive(Debug, Clone)]
-pub struct AgentProcess {
-    pub agent: Option<Agent>,
-    pub account: Option<AccountId>,
-    pub state: AgentState,
-    pub script: Vec<Step>,
-    pub pc: usize,
-    pub next_at_ms: i64,
-
-    scheduled: bool,
-    scripts: Arc<dyn SessionScript>,
-    pub reply_queue: VecDeque<(i64, Line)>,
-    pub reply_cursor: usize,
-    pub prompt: String,
-    pub cursor_hidden: bool,
-    pub awaiting_permission: bool,
-    pub touched: Vec<String>,
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PaneNote {
+    pub text: String,
+    pub tone: Tone,
 }
 
-fn sp(text: &str, tone: Tone) -> Span {
-    Span::new(text, tone)
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PasteOutcome {
+    Sent,
+    NeedsConfirm { lines: usize },
+    TooLarge,
 }
 
-impl AgentProcess {
-    pub fn new(
-        agent: Option<Agent>,
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PaneKind {
+    Agent {
+        agent: Agent,
         account: Option<AccountId>,
-        workspace: &str,
-        start_ms: i64,
-        scripts: Arc<dyn SessionScript>,
-    ) -> Self {
-        let prompt = match agent {
-            Some(Agent::ClaudeCode) => "❯ ".to_owned(),
-            Some(Agent::Codex) => "❯ ".to_owned(),
-            Some(Agent::OpenCode) | Some(Agent::GrokBuild) => "> ".to_owned(),
-            Some(_) => "› ".to_owned(),
-            None => format!("{workspace} ❯ "),
-        };
+    },
+    Shell,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PaneRequest {
+    pub instance: InstanceId,
+    pub kind: PaneKind,
+}
+
+impl PaneRequest {
+    pub fn new(instance: &str, agent: Option<Agent>, account: Option<AccountId>) -> Self {
         Self {
-            agent,
-            account,
-            state: if agent.is_some() {
-                AgentState::Working
-            } else {
-                AgentState::Unknown
+            instance: instance.to_owned(),
+            kind: match agent {
+                Some(agent) => PaneKind::Agent { agent, account },
+                None => PaneKind::Shell,
             },
-            script: scripts.script(agent, workspace),
-            pc: 0,
-            next_at_ms: start_ms,
-            scheduled: false,
-            scripts,
-            reply_queue: VecDeque::new(),
-            reply_cursor: 0,
-            prompt,
-            cursor_hidden: false,
-            awaiting_permission: false,
-            touched: vec![],
         }
     }
 
-    pub fn boot_all(&mut self, out: &mut Vec<Line>) {
-        while self.pc < self.script.len() {
-            match &self.script[self.pc] {
-                Step::Emit(_, l) => out.push(l.clone()),
-                Step::State(s) => self.state = *s,
-                Step::Touch(p) => self.touched.push((*p).to_owned()),
-                Step::Await => {
-                    self.pc += 1;
-                    self.awaiting_permission = self.state == AgentState::Blocked;
-                    return;
-                }
-            }
-            self.pc += 1;
+    pub fn agent(&self) -> Option<Agent> {
+        match self.kind {
+            PaneKind::Agent { agent, .. } => Some(agent),
+            PaneKind::Shell => None,
         }
     }
 
-    pub fn awaiting(&self) -> bool {
-        self.pc > 0
-            && matches!(self.script.get(self.pc - 1), Some(Step::Await))
-            && self.reply_queue.is_empty()
-    }
-
-    pub fn tick(&mut self, now_ms: i64) -> Vec<Line> {
-        let mut out = vec![];
-        while let Some((due, _)) = self.reply_queue.front() {
-            if *due <= now_ms {
-                let (_, l) = self.reply_queue.pop_front().unwrap();
-                out.push(l);
-            } else {
-                break;
-            }
+    pub fn account(&self) -> Option<&AccountId> {
+        match &self.kind {
+            PaneKind::Agent { account, .. } => account.as_ref(),
+            PaneKind::Shell => None,
         }
-        if self.reply_queue.is_empty()
-            && self.state == AgentState::Working
-            && self.awaiting()
-            && !self.awaiting_permission
-        {
-            self.state = AgentState::Done;
-        }
-        while self.pc < self.script.len() {
-            match self.script[self.pc].clone() {
-                Step::Emit(delay, l) => {
-                    if !self.scheduled {
-                        self.next_at_ms += delay;
-                        self.scheduled = true;
-                    }
-                    if now_ms < self.next_at_ms {
-                        break;
-                    }
-                    self.scheduled = false;
-                    out.push(l);
-                    self.pc += 1;
-                }
-                Step::State(s) => {
-                    self.state = s;
-                    self.pc += 1;
-                }
-                Step::Touch(p) => {
-                    self.touched.push(p.to_owned());
-                    self.pc += 1;
-                }
-                Step::Await => {
-                    self.awaiting_permission = self.state == AgentState::Blocked;
-                    self.pc += 1;
-                    break;
-                }
-            }
-        }
-        out
-    }
-
-    pub fn on_input(&mut self, input: &str, now_ms: i64, workspace: &str) -> Vec<Line> {
-        let scripts = self.scripts.clone();
-        scripts.respond(self, input, now_ms, workspace)
     }
 }
 
-#[derive(Debug, Clone)]
+/// What the daemon decides before a body exists and hands to the backend that
+/// builds it: the id the pane will have, the daemon's workspace name and the
+/// time of the request.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PaneSpawn {
+    pub id: PaneId,
+    pub workspace: String,
+    pub now_ms: i64,
+}
+
+/// The inside of a pane. The capsule draws, sizes, scrolls and types into a
+/// pane only through this trait, so it does not know what runs behind it.
+///
+/// There is no `Send` bound: `TextViewport` holds an `Rc` (the edit menu's
+/// validator), and the `World` that owns the panes is not `Send` either.
+pub trait PaneBody: std::fmt::Debug {
+    fn kind(&self) -> PaneKindTag;
+    fn state(&self) -> AgentState;
+    fn title(&self) -> Option<&str>;
+    fn note(&self) -> Option<PaneNote>;
+    fn viewport(&self) -> &dyn ViewportOps;
+    fn viewport_mut(&mut self) -> &mut dyn ViewportOps;
+    fn key(&mut self, key: &Key, now_ms: i64) -> PaneKey;
+    fn paste(&mut self, text: &str, now_ms: i64) -> PasteOutcome;
+    fn tick(&mut self, now_ms: i64) -> bool;
+    fn sync_size(&mut self, inner: Rect);
+    fn focus_changed(&mut self, focused: bool, now_ms: i64);
+    fn redraw(&mut self);
+    fn clear(&mut self);
+    fn touched(&self) -> &[String];
+    fn sends_prefix(&self) -> bool;
+    fn close_needs_confirm(&self) -> bool;
+}
+
+#[derive(Debug)]
 pub struct Pane {
     pub id: PaneId,
-    pub proc: AgentProcess,
-    pub term: TextViewport,
-    pub input: String,
-    pub received_output: bool,
+    pub label: String,
+    pub agent: Option<Agent>,
+    pub account: Option<AccountId>,
+    pub body: Box<dyn PaneBody>,
 }
 
-impl Pane {
-    pub fn new(
-        id: PaneId,
-        agent: Option<Agent>,
-        account: Option<AccountId>,
-        workspace: &str,
-        start_ms: i64,
-        scripts: Arc<dyn SessionScript>,
-    ) -> Self {
-        let mut term = TextViewport::new(WidgetId::of("capsule.pane").child(id as usize))
-            .max_lines(SCROLLBACK);
-        term.follow = true;
-        Self {
-            id,
-            proc: AgentProcess::new(agent, account, workspace, start_ms, scripts),
-            term,
-            input: String::new(),
-            received_output: false,
-        }
-    }
-
-    pub fn label(&self) -> String {
-        match self.proc.agent {
-            Some(a) => a.label().to_owned(),
-            None => "Shell".into(),
-        }
-    }
-
-    fn prompt_line(&self) -> Line {
-        vec![
-            sp(&self.proc.prompt, Tone::Secondary),
-            sp(&self.input, Tone::Normal),
-        ]
-    }
-
-    fn refresh_prompt(&mut self) {
-        let waiting = self.proc.awaiting() || !self.input.is_empty();
-        if waiting {
-            let last_is_prompt = self
-                .term
-                .last()
-                .is_some_and(|l| l.first().is_some_and(|s| s.text == self.proc.prompt));
-            let pl = self.prompt_line();
-            if last_is_prompt {
-                self.term.replace_last(pl);
-            } else {
-                self.term.push(pl);
-            }
-            let n = self.term.len().saturating_sub(1);
-            let col = junie_tui::ui::text::width(&self.proc.prompt)
-                + junie_tui::ui::text::width(&self.input);
-            self.term.caret = Some(junie_tui::widgets::viewport::CellPos { line: n, col });
-        } else {
-            self.term.caret = None;
-        }
-        self.term.caret_visible = !self.proc.cursor_hidden;
-    }
-
-    fn push_lines(&mut self, lines: Vec<Line>) {
-        if lines.is_empty() {
-            return;
-        }
-
-        if self
-            .term
-            .last()
-            .is_some_and(|l| l.first().is_some_and(|s| s.text == self.proc.prompt))
-        {
-            self.term.pop();
-        }
-        for l in lines {
-            if l.first().is_some_and(|s| s.text == "\u{0}clear") {
-                self.term.clear();
-                continue;
-            }
-            if l.first().is_some_and(|s| s.text == "⠋ ") {
-                self.term.push(l);
-                continue;
-            }
-
-            if self
-                .term
-                .last()
-                .is_some_and(|x| x.first().is_some_and(|s| s.text == "⠋ "))
-            {
-                self.term.pop();
-            }
-            self.term.push(l);
-            self.received_output = true;
-        }
-        self.refresh_prompt();
-    }
-
-    pub fn boot_all(&mut self) {
-        let mut out = vec![];
-        self.proc.boot_all(&mut out);
-        self.push_lines(out);
-        self.refresh_prompt();
-    }
-
-    pub fn tick(&mut self, now_ms: i64) -> bool {
-        let out = self.proc.tick(now_ms);
-        let changed = !out.is_empty();
-        self.push_lines(out);
-        self.refresh_prompt();
-        changed
-    }
-
-    pub fn type_char(&mut self, c: char, now_ms: i64, workspace: &str) {
-        self.term.set_follow(true);
-        let _ = now_ms;
-        let _ = workspace;
-        self.input.push(c);
-        self.refresh_prompt();
-    }
-
-    pub fn backspace(&mut self) {
-        self.term.set_follow(true);
-        self.input.pop();
-        self.refresh_prompt();
-    }
-
-    pub fn commit(&mut self, now_ms: i64, workspace: &str) {
-        self.term.set_follow(true);
-        let text = std::mem::take(&mut self.input);
-        if self
-            .term
-            .last()
-            .is_some_and(|l| l.first().is_some_and(|s| s.text == self.proc.prompt))
-        {
-            self.term.pop();
-        }
-        let out = self.proc.on_input(&text, now_ms, workspace);
-        self.push_lines(out);
-        self.refresh_prompt();
-    }
-
-    pub fn clear(&mut self) {
-        self.term.clear();
-        self.term.set_follow(true);
-        self.refresh_prompt();
-    }
-
-    pub fn state(&self) -> AgentState {
-        self.proc.state
-    }
-}
-
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Daemon {
     pub workspace: String,
     pub tabs: Vec<Tab>,
     pub active: usize,
     pub panes: Vec<Pane>,
     pub next_id: u64,
-    scripts: Arc<dyn SessionScript>,
 
     pub attached_by: Option<String>,
 }
 
 impl Daemon {
-    pub fn new(workspace: &str, scripts: Arc<dyn SessionScript>) -> Self {
+    pub fn new(workspace: &str) -> Self {
         Self {
             workspace: workspace.to_owned(),
-            scripts,
             tabs: vec![],
             active: 0,
             panes: vec![],
@@ -402,35 +193,34 @@ impl Daemon {
 
     pub fn new_pane(
         &mut self,
-        agent: Option<Agent>,
-        account: Option<AccountId>,
+        request: &PaneRequest,
         now_ms: i64,
-        boot: bool,
+        make: impl FnOnce(PaneSpawn) -> Box<dyn PaneBody>,
     ) -> PaneId {
         let id = self.alloc();
-        let mut p = Pane::new(
+        let agent = request.agent();
+        let body = make(PaneSpawn {
             id,
-            agent,
-            account,
-            &self.workspace,
+            workspace: self.workspace.clone(),
             now_ms,
-            self.scripts.clone(),
-        );
-        if boot {
-            p.boot_all();
-        }
-        self.panes.push(p);
+        });
+        self.panes.push(Pane {
+            id,
+            label: agent.map_or_else(|| "Shell".to_owned(), |a| a.label().to_owned()),
+            agent,
+            account: request.account().cloned(),
+            body,
+        });
         id
     }
 
     pub fn new_tab(
         &mut self,
-        agent: Option<Agent>,
-        account: Option<AccountId>,
+        request: &PaneRequest,
         now_ms: i64,
-        boot: bool,
+        make: impl FnOnce(PaneSpawn) -> Box<dyn PaneBody>,
     ) -> usize {
-        let pid = self.new_pane(agent, account, now_ms, boot);
+        let pid = self.new_pane(request, now_ms, make);
         self.tabs.push(Tab {
             custom_label: None,
             root: PaneNode::Leaf(pid),
@@ -445,13 +235,12 @@ impl Daemon {
         &mut self,
         dir: SplitDir,
         new_first: bool,
-        agent: Option<Agent>,
-        account: Option<AccountId>,
+        request: &PaneRequest,
         now_ms: i64,
-        boot: bool,
+        make: impl FnOnce(PaneSpawn) -> Box<dyn PaneBody>,
     ) -> Option<PaneId> {
         let target = self.focused_pane()?;
-        let pid = self.new_pane(agent, account, now_ms, boot);
+        let pid = self.new_pane(request, now_ms, make);
         let tab = self.active_tab_mut()?;
         if tab.root.split_leaf(target, pid, dir, new_first) {
             tab.focused = pid;
@@ -507,7 +296,7 @@ impl Daemon {
         let mut has_shell = false;
         for id in &leaves {
             if let Some(p) = self.pane(*id) {
-                match p.proc.agent {
+                match p.agent {
                     Some(a) => {
                         let mut l = a.label().to_owned();
                         if let Some(s) = account_suffix(p) {
@@ -537,7 +326,7 @@ impl Daemon {
     pub fn tab_state(&self, tab: &Tab) -> AgentState {
         tab.leaves()
             .iter()
-            .filter_map(|id| self.pane(*id).map(|p| p.state()))
+            .filter_map(|id| self.pane(*id).map(|p| p.body.state()))
             .max_by_key(|s| s.rank())
             .unwrap_or(AgentState::Unknown)
     }
@@ -545,7 +334,7 @@ impl Daemon {
     pub fn tick(&mut self, now_ms: i64) -> bool {
         let mut changed = false;
         for p in &mut self.panes {
-            changed |= p.tick(now_ms);
+            changed |= p.body.tick(now_ms);
         }
         changed
     }
@@ -554,7 +343,7 @@ impl Daemon {
         let mut v: Vec<String> = self
             .panes
             .iter()
-            .flat_map(|p| p.proc.touched.clone())
+            .flat_map(|p| p.body.touched().iter().cloned())
             .collect();
         v.sort();
         v.dedup();
@@ -578,9 +367,9 @@ impl Daemon {
                         .iter()
                         .filter_map(|id| self.pane(*id))
                         .map(|p| PaneSnapshot {
-                            label: p.label(),
-                            agent: p.proc.agent,
-                            state: p.state(),
+                            label: p.label.clone(),
+                            agent: p.agent,
+                            state: p.body.state(),
                             focused: t.focused == p.id,
                         })
                         .collect(),

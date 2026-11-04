@@ -1,6 +1,7 @@
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 
+use self::pane::ScriptPane;
 use crate::backend::{
     Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, OpSession, Validation,
     ValidationOutcome,
@@ -14,12 +15,13 @@ use crate::domain::launch::LaunchContent;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchPlan, LaunchTarget};
-use crate::panes::SessionScript;
+use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
 use crate::world::{GlobalConfig, Msg, Snapshot, World};
 
 pub mod changes;
 pub mod launch;
 pub mod onepassword;
+pub mod pane;
 pub mod provider;
 pub mod scripts;
 pub mod surfaces;
@@ -485,8 +487,16 @@ impl Backend for SimBackend {
         }
     }
 
-    fn session_script(&self) -> Arc<dyn SessionScript> {
-        scripts::SimScripts::shared()
+    fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody> {
+        Box::new(ScriptPane::new(
+            request,
+            &spawn,
+            scripts::SimScripts::shared(),
+        ))
+    }
+
+    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
+        vec![PaneRequest::new(&instance.id, Some(instance.agent), None)]
     }
 }
 
