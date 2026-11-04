@@ -1028,6 +1028,98 @@ fn a_cache_shared_with_the_backend_lends_the_accounts_to_the_picker() {
     );
 }
 
+fn duplicated_titles_account() -> OpAccount {
+    let field = OpField {
+        id: "f1".into(),
+        label: "key".into(),
+        kind: jackin_console::backend::FieldKind::Concealed,
+        material: Some("anthropic:valid".into()),
+        tail: "1234".into(),
+    };
+    let item = |id: &str| OpItem {
+        id: id.into(),
+        title: "api".into(),
+        category: "API credential",
+        fields: vec![field.clone()],
+    };
+    let vault = |id: &str| OpVault {
+        id: id.into(),
+        name: "Shared".into(),
+        access: VaultAccess::ReadWrite,
+        items: vec![item("i1"), item("i2")],
+    };
+    OpAccount {
+        id: "dup.1password.com".into(),
+        email: "dup@example.test".into(),
+        state: OpAccountState::Available,
+        vaults: vec![vault("v1"), vault("v2")],
+    }
+}
+
+#[test]
+fn the_picker_keeps_the_id_of_the_row_chosen_when_titles_repeat() {
+    let mut world = world_for(Scenario::AccountsMixed);
+    let mut op = SimOnePassword::fixture(0);
+    op.accounts = vec![duplicated_titles_account()];
+    world.op = Box::new(op);
+    let (mut app, backend) = held(world, Scenario::AccountsMixed);
+
+    open_picker(&mut app);
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Vaults(
+            ["v1", "v2"]
+                .map(|id| OpVaultRow {
+                    id: id.into(),
+                    name: "Shared".into(),
+                    items: 2,
+                    access: None,
+                })
+                .to_vec(),
+        ),
+    );
+    press(&mut app, "down");
+    press(&mut app, "enter");
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Items(
+            ["i1", "i2"]
+                .map(|id| OpItemRow {
+                    id: id.into(),
+                    title: "api".into(),
+                    category: "API credential".into(),
+                    fields: Some(1),
+                })
+                .to_vec(),
+        ),
+    );
+    press(&mut app, "down");
+    press(&mut app, "enter");
+    assert_eq!(
+        backend.op_scopes().last(),
+        Some(&OpScope::Fields {
+            account: "dup.1password.com".into(),
+            vault: "v2".into(),
+            item: "i2".into(),
+        }),
+        "the second vault and the second item, not the first ones with the same title"
+    );
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Fields(vec![jackin_console::backend::OpFieldRow {
+            id: "f1".into(),
+            label: "key".into(),
+            kind: jackin_console::backend::FieldKind::Concealed,
+        }]),
+    );
+    press(&mut app, "enter");
+    let shown = screen(&mut app);
+    assert!(shown.contains("op://v2/i2/f1"), "{shown}");
+}
+
 // Gap 5: a change set says how many files it left out and which it did not
 // read, and the Vocabulary words both.
 
