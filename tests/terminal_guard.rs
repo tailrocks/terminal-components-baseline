@@ -291,3 +291,219 @@ fn escape_heavy_output_gives_the_screen_of_the_bare_parser_however_it_is_split()
         assert_eq!(rows, bare_rows, "chunks of {size}");
     }
 }
+
+const MARKS: usize = 16;
+
+fn marks() -> String {
+    "\u{301}".repeat(MARKS)
+}
+
+fn cell_marks(state: &TerminalState, col: u16) -> usize {
+    cell_text(state, col).chars().count().saturating_sub(1)
+}
+
+#[test]
+fn marks_cannot_pile_onto_one_cell_by_moving_the_cursor_back() {
+    let cases: [(&str, &[u8], &[u8]); 8] = [
+        ("cub", b"", b"b\x1b[D"),
+        ("bs", b"", b"b\x08"),
+        ("cup", b"", b"b\x1b[1;2H"),
+        ("cr_cuf", b"", b"b\r\x1b[C"),
+        ("cha", b"", b"b\x1b[2G"),
+        ("restore", b"\x1b7", b"b\x1b8"),
+        ("bs_inside_sgr", b"", b"b\x1b[\x08m"),
+        ("bs_inside_esc", b"", b"b\x1b\x08\x1b[m"),
+    ];
+    let mut broken = Vec::new();
+    for (name, save, back) in cases {
+        let mut state = TerminalState::new(4, 40);
+        state.feed(b"a");
+        state.feed(marks().as_bytes());
+        state.feed(save);
+        for _ in 0..50 {
+            state.feed(back);
+            state.feed(marks().as_bytes());
+        }
+        if cell_marks(&state, 0) != MARKS {
+            broken.push((name, cell_marks(&state, 0)));
+        }
+    }
+    assert_eq!(broken, vec![], "cell 0 must keep exactly {MARKS} marks");
+}
+
+#[test]
+fn marks_cannot_pile_onto_one_cell_through_a_wide_base_that_does_not_print() {
+    let mut state = TerminalState::new(2, 10);
+    state.feed(b"\x1b[?7l\x1b[1;10Ha");
+    state.feed(marks().as_bytes());
+    for _ in 0..50 {
+        state.feed("\u{4e2d}".as_bytes());
+        state.feed(marks().as_bytes());
+    }
+    assert_eq!(cell_marks(&state, 9), MARKS);
+}
+
+#[test]
+fn a_wide_base_starts_a_new_run_once_wrapping_is_back_on() {
+    let resets: [(&str, &[u8]); 2] = [("decset_7h", b"\x1b[?7h"), ("ris", b"\x1bc")];
+    let mut broken = Vec::new();
+    for (name, reset) in resets {
+        let mut state = TerminalState::new(2, 10);
+        state.feed(b"\x1b[?7l");
+        state.feed(reset);
+        state.feed(b"a");
+        state.feed(marks().as_bytes());
+        state.feed("\u{4e2d}".as_bytes());
+        state.feed(marks().as_bytes());
+        let runs = (cell_marks(&state, 0), cell_marks(&state, 1));
+        if runs != (MARKS, MARKS) {
+            broken.push((name, runs));
+        }
+    }
+    assert_eq!(
+        broken,
+        vec![],
+        "each of the two cells must keep {MARKS} marks"
+    );
+}
+
+#[test]
+fn characters_the_parser_swallows_do_not_count_as_a_base() {
+    let swallowed: [(&str, &[u8]); 2] = [
+        ("charset_designation", b"\x1b(B"),
+        ("c1_control", "\u{85}".as_bytes()),
+    ];
+    let mut broken = Vec::new();
+    for (name, bytes) in swallowed {
+        let mut state = TerminalState::new(4, 40);
+        state.feed(b"a");
+        state.feed(marks().as_bytes());
+        state.feed(bytes);
+        state.feed(marks().as_bytes());
+        if cell_marks(&state, 0) != MARKS {
+            broken.push((name, cell_marks(&state, 0)));
+        }
+    }
+    assert_eq!(broken, vec![], "cell 0 must keep exactly {MARKS} marks");
+}
+
+#[test]
+fn combining_text_after_a_cursor_move_still_renders() {
+    let mut state = TerminalState::new(4, 40);
+    state.feed(
+        "\x1b[2;5He\u{301}\x1b[1mx\x1b[0m\u{301}\x1b[3;1H\u{1F468}\u{200D}\u{1F469}".as_bytes(),
+    );
+    let view = state.view(0);
+    let text = |row, col| view.cell(row, col).map(|c| c.text().to_owned());
+    assert_eq!(text(1, 4), Some("e\u{301}".to_owned()));
+    assert_eq!(text(1, 5), Some("x\u{301}".to_owned()));
+    assert_eq!(text(2, 0), Some("\u{1F468}\u{200D}\u{1F469}".to_owned()));
+}
+
+#[test]
+fn a_cluster_keeps_its_marks_up_to_the_cap_on_every_line() {
+    let mut state = TerminalState::new(4, 40);
+    for line in 0..3 {
+        state.feed(format!("\x1b[{};1Hz", line + 1).as_bytes());
+        state.feed("\u{301}".repeat(MARKS + 5).as_bytes());
+    }
+    for line in 0..3u16 {
+        assert_eq!(
+            state
+                .view(0)
+                .cell(line, 0)
+                .map(|c| c.text().chars().count()),
+            Some(1 + MARKS)
+        );
+    }
+}
+
+const CELL_CHARS: usize = 1 + MARKS;
+
+fn longest_cell(state: &TerminalState) -> usize {
+    let view = state.view(0);
+    (0..view.rows())
+        .flat_map(|row| (0..view.cols()).map(move |col| (row, col)))
+        .filter_map(|(row, col)| view.cell(row, col))
+        .map(|cell| cell.text().chars().count())
+        .max()
+        .unwrap_or(0)
+}
+
+fn any_cell_holds(state: &TerminalState, wanted: char) -> bool {
+    let view = state.view(0);
+    (0..view.rows())
+        .flat_map(|row| (0..view.cols()).map(move |col| (row, col)))
+        .filter_map(|(row, col)| view.cell(row, col))
+        .any(|cell| cell.text().contains(wanted))
+}
+
+#[test]
+fn a_dcs_ended_by_a_raw_st_byte_cannot_release_text_unfiltered() {
+    let mut state = TerminalState::new(4, 40);
+    let mut bytes = b"\x1bPq\x9cA\xe2\x80\xaeB".to_vec();
+    bytes.extend_from_slice("\u{301}".repeat(1_000).as_bytes());
+    bytes.extend_from_slice(b"\x18visible\xe2\x80\xaex");
+    for chunk in bytes.chunks(97) {
+        state.feed(chunk);
+    }
+    assert!(
+        !any_cell_holds(&state, '\u{202e}'),
+        "a bidi control reached a cell"
+    );
+    assert!(
+        longest_cell(&state) <= CELL_CHARS,
+        "{}",
+        longest_cell(&state)
+    );
+    assert_eq!(
+        row(&state, 0),
+        "visiblex",
+        "text after the string still prints"
+    );
+}
+
+#[test]
+fn a_printable_after_a_joiner_cannot_grow_a_cell_without_bound() {
+    let mut state = TerminalState::new(4, 40);
+    state.feed(b"a");
+    for _ in 0..2_000 {
+        state.feed("\u{200d}b".as_bytes());
+    }
+    assert!(
+        longest_cell(&state) <= CELL_CHARS,
+        "{}",
+        longest_cell(&state)
+    );
+    assert_eq!(cell_marks(&state, 0), MARKS);
+}
+
+#[test]
+fn marks_after_a_soft_reset_at_the_margin_cannot_grow_the_last_cell() {
+    let mut state = TerminalState::new(2, 10);
+    state.feed(b"\x1b[1;10Ha\x1b[!p");
+    for _ in 0..200 {
+        state.feed(b"b");
+        state.feed("\u{301}".repeat(20).as_bytes());
+    }
+    assert!(
+        longest_cell(&state) <= CELL_CHARS,
+        "{}",
+        longest_cell(&state)
+    );
+}
+
+#[test]
+fn marks_after_a_wide_glyph_suppressed_by_no_wrap_cannot_grow_the_last_cell() {
+    let mut state = TerminalState::new(2, 10);
+    state.feed("\x1b[?7l\x1b[1;10Ha\u{4e2d}\x1b[?7h".as_bytes());
+    for _ in 0..200 {
+        state.feed(b"b");
+        state.feed("\u{301}".repeat(20).as_bytes());
+    }
+    assert!(
+        longest_cell(&state) <= CELL_CHARS,
+        "{}",
+        longest_cell(&state)
+    );
+}
