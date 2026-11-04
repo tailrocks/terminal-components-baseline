@@ -188,12 +188,11 @@ variant of these enums stays a breaking change and is recorded here.
   the primary-screen scroll operations that start at row 0, so a delete-line
   at row 0 over-counts. `ESC[2J` discards the visible rows
   (`EraseDisplayPolicy::Discard`), so it changes neither value.
-- `termpane` is a git dependency pinned to commit `b8c60fe3` (the tip of
-  termpane branch `fix/csi-counts`, on top of `main` after PR #37:
-  `EraseDisplayPolicy`, the cap on characters per cell, the clamp of the
-  `CSI L`, `M`, `S` and `T` counts and the shared OSC 8 hyperlink). It is
-  not on termpane `main` until that branch is merged, and it becomes
-  `=0.1.1` or later once published on crates.io; see
+- `termpane` is a git dependency pinned to commit `6dcb352d` (termpane
+  `main` after PR #39: `EraseDisplayPolicy`, the cap on characters per
+  cell, the clamp of the `CSI L`, `M`, `S` and `T` counts and the shared
+  OSC 8 hyperlink). It becomes `=0.1.1` or later once published on
+  crates.io; see
   [dependencies](dependencies.md).
 - The crate is a monolith: library and four binaries in one package.
   Splitting it is the refactoring programme in
