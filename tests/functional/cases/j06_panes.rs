@@ -451,19 +451,33 @@ fn backspace(app: &App, typed: &str, gone: &[&str]) -> TerminalSnapshot {
         {
             return screen;
         }
-        let previous = if input.is_empty() {
-            typed.to_string()
-        } else {
-            input
-        };
-        confirm_backspace(app, side, &previous, deadline);
+        // An empty prompt cannot confirm a backspace. Waiting inside that
+        // call misses the frame where the marker has already left.
+        if input.is_empty() {
+            std::thread::sleep(Duration::from_millis(20));
+            continue;
+        }
+        confirm_backspace(app, side, &input, deadline);
     }
+}
+
+fn claude_answered(screen: &TerminalSnapshot) -> bool {
+    let Some(seams) = seams_of(screen) else {
+        return false;
+    };
+    let edits = find_all(screen, EDIT);
+    !edits.is_empty()
+        && edits
+            .iter()
+            .all(|hit| side_of(*hit, &seams) == Side::Claude)
+        && text(screen).contains("Done · 3 files changed")
+        && !text(screen).contains(SKIPPED)
 }
 
 /// `y` is the whole permission token. Enter before that glyph paints submits
 /// an empty line and the `(y/n)` prompt never answers. A slow paint must not
 /// type another `y`: the live token then becomes a run, and neither branch
-/// submits it.
+/// submits it. The simulator can consume the single `y` before the next read.
 fn submit_claude_yes(app: &App) {
     let deadline = Instant::now() + Duration::from_secs(12);
     let mut armed = false;
@@ -474,6 +488,9 @@ fn submit_claude_yes(app: &App) {
             "claude yes was not armed\n{}",
             text(&app.screen())
         );
+        if claude_answered(&app.screen()) {
+            return;
+        }
         let input = live_input(&app.screen(), Side::Claude);
         if input == "y" {
             app.key("enter");
@@ -695,17 +712,7 @@ fn j06_panes_input() {
     boundaries(&cleared, None, &[], false, false);
 
     submit_claude_yes(&app);
-    let replied = app.wait_screen("claude yes reply", |screen| {
-        let Some(seams) = seams_of(screen) else {
-            return false;
-        };
-        !find_all(screen, EDIT).is_empty()
-            && find_all(screen, EDIT)
-                .iter()
-                .all(|hit| side_of(*hit, &seams) == Side::Claude)
-            && text(screen).contains("Done · 3 files changed")
-            && !text(screen).contains(SKIPPED)
-    });
+    let replied = app.wait_screen("claude yes reply", claude_answered);
     boundaries(&replied, None, &[], true, false);
     assert!(
         find_all(&replied, "Done · 3 files changed")
