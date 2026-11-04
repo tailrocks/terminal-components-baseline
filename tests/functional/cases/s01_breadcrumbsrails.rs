@@ -147,7 +147,11 @@ fn still_this_page(screen: &TerminalSnapshot) {
 #[test]
 fn route_opens_by_page_keyboard_and_pointer() {
     let keys = launch("s01-route-keys", &["--frame", "40"], 120, 40);
-    let overview = keys.wait_text("Tokens and principles");
+    // The overview blurb paints while the breadcrumb trails are still on screen.
+    let overview = keys.wait_screen("overview without the live trail", |screen| {
+        let raw = text(screen);
+        raw.contains("Tokens · planes and text") && !raw.contains("Disk › Users › alex")
+    });
     assert_has(&overview, "Overview");
     assert_lacks(&overview, "Disk › Users › alex");
     keys.key("down");
@@ -162,7 +166,12 @@ fn route_opens_by_page_keyboard_and_pointer() {
     playground_visible(&opened);
     enter_page(&keys);
     keys.key("]");
-    let left = keys.wait_text("App shell › Help & keys");
+    let left = keys.wait_screen("help page without the live trail", |screen| {
+        let raw = text(screen);
+        raw.contains("App shell › Help & keys")
+            && raw.contains("KeyReference")
+            && !raw.contains("Disk › Users › alex")
+    });
     assert_has(&left, "KeyReference");
     assert_has(&left, "› Help");
     assert_lacks(&left, "Disk › Users › alex");
@@ -173,7 +182,12 @@ fn route_opens_by_page_keyboard_and_pointer() {
     playground_visible(&returned);
     assert_has(&returned, "the live widget");
     click_first(&keys, "Overview");
-    let away = keys.wait_text("Tokens and principles");
+    let away = keys.wait_screen("overview again without the live trail", |screen| {
+        let raw = text(screen);
+        raw.contains("Tokens · planes and text")
+            && !raw.contains("Disk › Users › alex")
+            && !raw.contains("App shell › Breadcrumbs & rails")
+    });
     assert_has(&away, "Overview");
     assert_lacks(&away, "Disk › Users › alex");
     assert_lacks(&away, "App shell › Breadcrumbs & rails");
