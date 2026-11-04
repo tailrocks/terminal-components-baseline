@@ -193,6 +193,16 @@ fn dialog_painted(screen: &TerminalSnapshot) -> bool {
         && (visible.contains(LEAVE) || visible.contains(STOP_QUIT))
 }
 
+/// A captured frame can clear the title row before the confirm button.
+/// Stay is real only once that button and its hint are gone.
+fn guard_closed(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    !visible.contains(TITLE)
+        && !visible.contains(STOP_QUIT)
+        && !visible.contains(LEAVE)
+        && !visible.contains("Enter Stay")
+}
+
 fn assert_local_title(screen: &TerminalSnapshot) {
     see(screen, &[TITLE, &format!("▎{STAY}")], &[REMOTE_TITLE]);
 }
@@ -461,8 +471,7 @@ fn h06_quit_route_stay_returns() {
 
     app.key("enter");
     let stayed = app.wait_screen("stay returned", |screen| {
-        let visible = text(screen);
-        visible.contains(MONITOR) && !visible.contains(TITLE)
+        text(screen).contains(MONITOR) && guard_closed(screen)
     });
     assert!(app.child_running(), "Stay quit the process");
     see(&stayed, &[MONITOR, "btm"], &[TITLE, LEAVE, STOP_QUIT]);
@@ -556,7 +565,9 @@ fn h06_quit_guard_waits() {
         "combined guard missing\n{body}"
     );
     app.key("esc");
-    let stayed = app.wait_screen("combined stay", |screen| !text(screen).contains(TITLE));
+    let stayed = app.wait_screen("combined stay", |screen| {
+        text(screen).contains("btm") && guard_closed(screen)
+    });
     assert!(app.child_running(), "Esc quit while both were running");
     see(&stayed, &["btm"], &[TITLE, STOP_QUIT]);
     app.key("alt+1");
@@ -576,7 +587,9 @@ fn h06_quit_guard_waits() {
     assert!(app.child_running(), "the open guard exited");
     quit_shots(&app);
     app.key("enter");
-    let stayed = app.wait_screen("dialog dismissed", |screen| !text(screen).contains(TITLE));
+    let stayed = app.wait_screen("dialog dismissed", |screen| {
+        text(screen).contains(REPORT) && guard_closed(screen)
+    });
     assert!(app.child_running(), "Stay quit after the report");
     see(&stayed, &[REPORT], &[TITLE, LEAVE]);
     app.finish();
@@ -606,8 +619,7 @@ fn h06_quit_guard_waits() {
     );
     app.key("esc");
     let stayed = app.wait_screen("esc stayed", |screen| {
-        let visible = text(screen);
-        visible.contains(MONITOR) && !visible.contains(TITLE)
+        text(screen).contains(MONITOR) && guard_closed(screen)
     });
     assert!(app.child_running(), "Esc quit the process");
     see(&stayed, &[MONITOR], &[TITLE, STOP_QUIT]);
