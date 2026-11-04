@@ -195,10 +195,36 @@ fn monorepo_identities() -> &'static [&'static str] {
     &["mbp", "acme", "frontend", "~/work/acme"]
 }
 
+fn wait_painted(
+    app: &App,
+    reason: &str,
+    pred: impl Fn(&TerminalSnapshot) -> bool,
+) -> TerminalSnapshot {
+    let started = Instant::now();
+    loop {
+        let screen = app.screen();
+        if pred(&screen) {
+            return screen;
+        }
+        let visible = text(&screen);
+        assert!(
+            app.child_running(),
+            "holla exited before {reason}\n{visible}"
+        );
+        assert!(
+            started.elapsed() < Duration::from_secs(25),
+            "timed out: {reason}\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(25));
+    }
+}
+
 #[test]
 fn h01_scope_route() {
     let app = open("h01-scope-route", "monorepo-child");
-    let here = app.wait_text(HERE);
+    // The first paint can stay blank longer than the shared 10s wait when
+    // several Holla processes start together.
+    let here = wait_painted(&app, "scope here", |screen| text(screen).contains(HERE));
     see(&here, &[HERE, "acme › frontend"], remote_identities());
     app.key("ctrl+up");
     let parent = app.wait_text(PARENT);
@@ -433,8 +459,9 @@ fn h01_scope_scope() {
 #[test]
 fn h01_scope_scenario_monorepo_child() {
     let app = open("h01-scope-monorepo", "monorepo-child");
-    // The scope marker paints while the In column still ellipsizes the path.
-    let here = app.wait_screen("monorepo child", |screen| {
+    // The first paint can stay blank longer than the shared 10s wait. The
+    // scope marker then paints while the In column still ellipsizes the path.
+    let here = wait_painted(&app, "monorepo child", |screen| {
         let visible = text(screen);
         visible.contains(HERE) && visible.contains("~/work/acme/apps/frontend")
     });

@@ -8,8 +8,10 @@
 //! Pull's alternatives include "Fetch only". Review's include
 //! "Open in a Git TUI (lazygit)". Alt+Enter is the finder binding
 //! (`finder.rs`, and the help line in `main.rs`).
-//! The preview's freshness line advances one simulated second at a time, so a
-//! shot waits until the next second starts and then finishes inside that second.
+//! The preview freshness line advances one simulated second at a time. The wide
+//! baseline reads `live · 1 s ago`. `visual` waits 700ms for a quiet frame and
+//! locks the next second, so the wide shot compares the last menu frame that
+//! still reads 1.
 
 use std::time::Duration;
 
@@ -127,25 +129,6 @@ fn select_review(app: &App) {
     see(&review, &[ROW_B, ROW_B_ALT], &[ROW_A_ALT, MENU]);
 }
 
-fn freshness_seconds(screen: &TerminalSnapshot) -> u32 {
-    let visible = text(screen);
-    let marker = "live · ";
-    let at = visible
-        .find(marker)
-        .unwrap_or_else(|| panic!("no freshness\n{visible}"));
-    let rest = &visible[at + marker.len()..];
-    let digits: String = rest.chars().take_while(char::is_ascii_digit).collect();
-    digits
-        .parse()
-        .unwrap_or_else(|_| panic!("freshness {rest:?}\n{visible}"))
-}
-
-fn wait_fresh_second(app: &App) {
-    let now = freshness_seconds(&app.screen());
-    let needle = format!("live · {} s ago", now + 1);
-    app.wait_text(&needle);
-}
-
 fn open_alternatives(app: &App) {
     app.key("alt+enter");
     let menu = app.wait_screen("alternatives for Review", menu_for_review);
@@ -191,6 +174,17 @@ fn shot(app: &App, checkpoint: &str) {
     app.visual(&visual_id(checkpoint));
 }
 
+/// Compare the last 120×40 alternatives frame whose freshness digit is still 1.
+fn shot_wide_fresh(app: &App) {
+    let id = visual_id(WIDE);
+    app.visual_while(&id, |screen| {
+        screen.cols() == 120
+            && screen.rows() == 40
+            && menu_for_review(screen)
+            && text(screen).contains("live · 1 s ago")
+    });
+}
+
 #[test]
 fn h01_alternatives_route_returns_to_the_finder_row() {
     let app = open("h01-alternatives-route");
@@ -214,13 +208,11 @@ fn h01_alternatives_lists_the_selected_rows_action() {
     let app = open("h01-alternatives-list");
     select_review(&app);
     open_alternatives(&app);
-    wait_fresh_second(&app);
     flash_settle(&app);
-
+    shot_wide_fresh(&app);
     let wide = app.screen();
     assert_eq!((wide.cols(), wide.rows()), (120, 40));
     assert!(menu_for_review(&wide), "wide menu\n{}", text(&wide));
-    shot(&app, WIDE);
 
     app.resize(80, 24);
     let narrowed = app.wait_screen("alternatives at 80x24", |screen| {

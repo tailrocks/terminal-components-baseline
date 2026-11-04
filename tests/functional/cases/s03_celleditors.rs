@@ -93,22 +93,30 @@ fn popup_blob(screen: &TerminalSnapshot) -> String {
     lines_with(screen, "│").join("\n")
 }
 
-fn value_under(screen: &TerminalSnapshot, label: &str) -> String {
+fn value_token(screen: &TerminalSnapshot, label: &str) -> Option<String> {
     let lines: Vec<String> = (0..screen.rows())
         .map(|row| row_text(screen, row))
         .collect();
-    let index = lines
-        .iter()
-        .position(|line| line.contains(label))
-        .unwrap_or_else(|| panic!("label {label:?} missing\n{}", text(screen)));
-    let column = lines[index].find(label).expect("label column");
+    let index = lines.iter().position(|line| line.contains(label))?;
+    let column = lines[index].find(label)?;
     let column = lines[index][..column].chars().count();
     let value_line = lines.get(index + 1).map(String::as_str).unwrap_or("");
     let rest: String = value_line.chars().skip(column).collect();
-    rest.split_whitespace()
-        .find(|token| *token != "▎")
-        .unwrap_or("")
-        .to_string()
+    Some(
+        rest.split_whitespace()
+            .find(|token| *token != "▎")
+            .unwrap_or("")
+            .to_string(),
+    )
+}
+
+fn value_under(screen: &TerminalSnapshot, label: &str) -> String {
+    value_token(screen, label)
+        .unwrap_or_else(|| panic!("label {label:?} missing\n{}", text(screen)))
+}
+
+fn token_starts(screen: &TerminalSnapshot, label: &str, value: &str) -> bool {
+    value_token(screen, label).is_some_and(|got| got.starts_with(value))
 }
 
 fn assert_value(screen: &TerminalSnapshot, label: &str, value: &str, others: &[&str]) {
@@ -1172,7 +1180,20 @@ fn option_affordance_always() {
         &["Page options", CANCELLED, SAVED, "1 edits"],
     );
     click_tab(&app, "Options");
-    let options = app.wait_text("▾ affordance");
+    // The affordance label paints before the value under Popup placement is
+    // `below`. A torn row reads the checkbox glyph `✓]` as that value.
+    let options = app.wait_screen("affordance options", |screen| {
+        token_starts(screen, "▾ affordance", "always")
+            && token_starts(screen, "Dismiss", "light")
+            && token_starts(screen, "On blur", "cancel")
+            && token_starts(screen, "Popup rows", "8")
+            && token_starts(screen, "Popup width", "14-48")
+            && token_starts(screen, "Popup cursor", "fill")
+            && token_starts(screen, "Tag separator", "comma")
+            && token_starts(screen, "Popup placement", "below")
+            && text(screen).contains("Type-ahead on")
+            && text(screen).contains("Flag values outside the set on")
+    });
     assert_value(&options, "▾ affordance", "always", &["focused", "never"]);
     defaults_besides(&options, "affordance");
     click_tab(&app, "Playground");
