@@ -538,7 +538,19 @@ fn sections_narrow_then_wide() {
     );
 
     app.click_text("Playground");
-    let wide_play = app.wait_text(PLAY);
+    // The tab caption paints before the radio group and the last-result line.
+    let wide_play = app.wait_screen("playground grown to 120 by 40", |screen| {
+        if screen.cols() != 120 || screen.rows() != 40 {
+            return false;
+        }
+        let raw = text(screen);
+        raw.contains(PLAY)
+            && raw.contains("Radio groups")
+            && raw.contains("Toggles")
+            && raw.contains(LAST_NONE)
+            && raw.contains("(●) Read committed")
+            && raw.contains("120×40")
+    });
     assert_size(&wide_play, 120, 40);
     assert_one_gutter(&wide_play);
     assert_defaults(&wide_play);
