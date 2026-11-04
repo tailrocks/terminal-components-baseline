@@ -515,7 +515,37 @@ fn h06_gate_confirm_rejects_partial_wrong_and_stale_text() {
         }
         std::thread::sleep(Duration::from_millis(20));
     }
-    app.finish();
+    // The finder paints no cleanup line while `cleanup_job` is still set.
+    // Ctrl+Q then opens the quit guard instead of exiting.
+    quit_settled(&app);
+}
+
+fn quit_settled(app: &App) {
+    app.key("ctrl+q");
+    let started = Instant::now();
+    let mut moved = false;
+    let mut confirmed = false;
+    loop {
+        if !app.child_running() {
+            break;
+        }
+        let visible = text(&app.screen());
+        if !confirmed && visible.contains("Leave when it settles") {
+            if visible.contains("▎Leave when it settles") {
+                app.key("enter");
+                confirmed = true;
+            } else if !moved {
+                app.key("right");
+                moved = true;
+            }
+        }
+        assert!(
+            started.elapsed() < Duration::from_secs(15),
+            "quit did not exit\n{visible}"
+        );
+        std::thread::sleep(Duration::from_millis(20));
+    }
+    app.assert_restored_exit();
 }
 
 #[test]

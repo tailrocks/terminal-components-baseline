@@ -491,6 +491,11 @@ impl App {
                 timeout_ms: Some(10_000),
             })
             .expect("application must exit after Ctrl+Q");
+        self.assert_restored_exit();
+    }
+
+    /// The child has already exited. The terminal modes match a clean quit.
+    pub(crate) fn assert_restored_exit(&self) {
         let OperationResult::State(state) =
             self.session.execute(Operation::State).expect("exit state")
         else {
