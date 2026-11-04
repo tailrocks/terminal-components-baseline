@@ -33,6 +33,7 @@ use junie_tui::ui::layout::SplitDir;
 
 pub mod scenario;
 pub mod surfaces;
+pub mod terminal;
 pub mod vocabulary;
 
 pub use scenario::{
@@ -1325,6 +1326,14 @@ fn populated(scenario: Scenario, rich: bool) -> World {
         }
     }
 
+    for ws in &mut w.workspaces {
+        ws.github = w
+            .instances
+            .iter()
+            .filter(|i| i.workspace == Some(ws.id))
+            .find_map(|i| i.github.clone());
+    }
+
     let now_ms = w.now_ms();
     let mut d1 = Daemon::new("payments-platform");
     let claude = PaneRequest::new(
@@ -1500,6 +1509,11 @@ pub fn world_for(scenario: Scenario) -> World {
         Scenario::LaunchFailure => {
             let mut w = populated(scenario, false);
             w.backend = SimBackend::failing_launch();
+            w
+        }
+        Scenario::CapsuleTerminal => {
+            let mut w = populated(scenario, false);
+            terminal::capsule_terminal(&mut w);
             w
         }
         Scenario::LaunchChecks => {

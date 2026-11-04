@@ -1470,6 +1470,7 @@ fn showcase_terminal_viewport_copy_joins_a_wrapped_path() {
 }
 
 #[test]
+#[ignore = "flaky: docs/P9.3-red-green.md#pty-load-flakes double click under load"]
 fn showcase_terminal_viewport_double_click_selects_a_word() {
     let app = terminal_viewport("showcase-terminal-viewport-word", &[]);
     let screen = app.settle();

@@ -16,7 +16,7 @@ fn missing(area: FindingArea, key: &str, path: &str) -> RoleFinding {
         area,
         key: Some(key.into()),
         message: format!("{path}: file not found in the role repository"),
-        fix: "Create the file or choose an existing one with Choose….".into(),
+        fix: Some("Create the file or choose an existing one with Choose….".into()),
     }
 }
 
@@ -72,7 +72,7 @@ pub fn check_role(doc: &RoleManifestDoc) -> Vec<RoleFinding> {
             area: FindingArea::Dockerfile,
             key: Some("role.dockerfile".into()),
             message: "Dockerfile.old:12: the final stage must start FROM construct, found \"ubuntu:24.04\"".into(),
-            fix: "Change the last FROM line to FROM construct, then press F5.".into(),
+            fix: Some("Change the last FROM line to FROM construct, then press F5.".into()),
         });
     } else if !FILES.contains(&doc.dockerfile.as_str()) {
         findings.push(missing(

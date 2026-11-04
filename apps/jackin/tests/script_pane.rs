@@ -3,6 +3,7 @@
 
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{AgentState, DaemonSnapshot, Instance, InstanceStatus};
+use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::panes::{PaneBody, PaneKey, PaneKindTag, PaneRequest, PaneSpawn, PasteOutcome};
 use jackin_console::sim::SimBackend;
@@ -138,7 +139,7 @@ fn a_script_body_keeps_the_design_defaults() {
     let mut body = spawn(Some(Agent::Codex), 1_000);
     body.tick(10_000);
     assert_eq!(body.title(), None);
-    assert!(body.note().is_none());
+    assert!(body.note(&Vocabulary::openshell().pane).is_none());
     assert!(!body.sends_prefix());
     assert!(body.close_needs_confirm());
     body.focus_changed(false, 5);

@@ -389,12 +389,14 @@ fn store_accounts(effect: &Effect, world: &World) -> Option<Msg> {
         }
     }
     Some(Msg::AccountsSaved {
+        added: None,
         result: Ok(Box::new(snapshot)),
     })
 }
 
 fn fail_accounts(effect: &Effect, _: &World) -> Option<Msg> {
     matches!(effect, Effect::SaveAccounts { .. }).then(|| Msg::AccountsSaved {
+        added: None,
         result: Err("disk full".into()),
     })
 }
@@ -1266,7 +1268,7 @@ fn finding() -> RoleFinding {
         area: FindingArea::Policy,
         key: Some("role.policy".into()),
         message: "found by the backend".into(),
-        fix: "nothing to fix".into(),
+        fix: Some("nothing to fix".into()),
     }
 }
 

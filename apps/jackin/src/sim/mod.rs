@@ -4,12 +4,12 @@ use std::sync::{Arc, Mutex};
 use self::pane::ScriptPane;
 use crate::backend::{Backend, Completion, Effect, OpSession, PlainKey, Validation};
 use crate::domain::account::{
-    Account, AccountOrigin, AccountRegistry, CredentialSource, ValidationLevel,
+    Account, AccountId, AccountOrigin, AccountRegistry, CredentialSource, ValidationLevel,
 };
 use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::LaunchContent;
 use crate::domain::role::{RoleCheckState, RoleRecord};
-use crate::domain::vocabulary::fill_in;
+use crate::domain::vocabulary::{Rejection, fill_in};
 use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
@@ -19,6 +19,7 @@ use self::launch::{LaunchPlan, Opening, SimLaunch};
 
 pub mod changes;
 pub mod launch;
+pub mod link;
 pub mod onepassword;
 pub mod pane;
 pub mod provider;
@@ -420,7 +421,10 @@ impl Backend for SimBackend {
                         }
                         Ok(Box::new(snapshot))
                     }
-                    None => Err(format!("{role} is not in the registry")),
+                    None => Err(world
+                        .surfaces
+                        .vocabulary
+                        .rejection(&Rejection::UnknownRole { role: role.clone() })),
                 };
                 Some(Msg::RoleTrusted {
                     role: role.clone(),
@@ -520,7 +524,10 @@ impl Backend for SimBackend {
                     result: if removed {
                         Ok(Box::new(snapshot))
                     } else {
-                        Err(format!("{role} is not in the registry"))
+                        Err(world
+                            .surfaces
+                            .vocabulary
+                            .rejection(&Rejection::UnknownRole { role: role.clone() }))
                     },
                 })
             }
@@ -545,7 +552,12 @@ impl Backend for SimBackend {
                         i.last_seen_secs = world.clock.now_secs();
                         Ok(Box::new(snapshot))
                     }
-                    None => Err(format!("{instance} is not in the roster")),
+                    None => Err(world
+                        .surfaces
+                        .vocabulary
+                        .rejection(&Rejection::NotInRoster {
+                            instance: instance.clone(),
+                        })),
                 };
                 Some(Msg::Restored {
                     instance: instance.clone(),
@@ -605,6 +617,8 @@ impl Backend for SimBackend {
 /// account that the registry drops (the twin of a folder that was registered)
 /// leaves them as they are.
 fn settle_accounts_save(base: &AccountRegistry, registry: &AccountRegistry, world: &World) -> Msg {
+    let mut registry = registry.clone();
+    let added = give_ids(&mut registry);
     let mut snapshot = snapshot(world);
     for gone in base
         .accounts
@@ -618,10 +632,48 @@ fn settle_accounts_save(base: &AccountRegistry, registry: &AccountRegistry, worl
             ws.accounts.role_preferred.retain(|_, v| *v != gone.id);
         }
     }
-    snapshot.accounts = registry.clone();
+    snapshot.accounts = registry;
     Msg::AccountsSaved {
+        added,
         result: Ok(Box::new(snapshot)),
     }
+}
+
+/// Gives each account the form sent without an id the id `acct-<provider>-<name>`,
+/// with a number added when another account has it. Returns the last one given.
+fn give_ids(registry: &mut AccountRegistry) -> Option<AccountId> {
+    let mut added = None;
+    for i in 0..registry.accounts.len() {
+        if !registry.accounts[i].is_unsaved() {
+            continue;
+        }
+        let account = &registry.accounts[i];
+        let stem = format!(
+            "acct-{}-{}",
+            account
+                .provider
+                .short()
+                .to_lowercase()
+                .replace(['/', ' ', '.'], ""),
+            account
+                .display_name
+                .to_lowercase()
+                .replace(|c: char| !c.is_ascii_alphanumeric(), "-")
+        );
+        let id = (1..)
+            .map(|n| {
+                if n == 1 {
+                    stem.clone()
+                } else {
+                    format!("{stem}-{n}")
+                }
+            })
+            .find(|id| registry.get(id).is_none())
+            .expect("an unused id");
+        registry.accounts[i].id.clone_from(&id);
+        added = Some(id);
+    }
+    added
 }
 
 /// The roster after `instance` stopped running: its status, the time it was
@@ -662,7 +714,14 @@ fn with_role(
         .roles
         .as_mut()
         .and_then(|admin| admin.role_mut(role))
-        .ok_or_else(|| format!("{role} is not in the registry"))?;
+        .ok_or_else(|| {
+            world
+                .surfaces
+                .vocabulary
+                .rejection(&Rejection::UnknownRole {
+                    role: role.to_owned(),
+                })
+        })?;
     edit(record);
     Ok(Box::new(snapshot))
 }

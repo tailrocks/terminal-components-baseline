@@ -17,7 +17,7 @@ use jackin_console::domain::workspace::{
     AccountPolicy, AllowedRoles, DirtyExitPolicy, RolePolicy, Workspace,
 };
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
-use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
+use jackin_console::panes::{PaneBody, PanePolicy, PaneRequest, PaneSpawn};
 use jackin_console::rain::INTRO_END;
 use jackin_console::world::{Snapshot, World, WorldParts};
 use junie_tui::clock::SimClock;
@@ -87,6 +87,7 @@ fn workspace(id: u32, name: &str) -> Workspace {
         docker: false,
         accounts: AccountPolicy::default(),
         dirty_policy: DirtyExitPolicy::Ask,
+        github: None,
     }
 }
 
@@ -102,6 +103,7 @@ fn app_over(world: World) -> App {
             frame: INTRO_END,
             theme: Theme::for_level(ColorLevel::TrueColor),
             clipboard: ClipboardMode::Preview,
+            panes: PanePolicy::default(),
         },
     )
 }

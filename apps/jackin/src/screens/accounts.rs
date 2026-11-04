@@ -40,8 +40,8 @@ use crate::backend::{
 };
 use crate::domain::account::{
     Account, AccountId, AccountOrigin, AccountRegistry, CredentialSource, DetectedKind,
-    DuplicateProbe, IssueCode, Lifecycle, SourceKind, ValidationState, fingerprint, masked,
-    tail_of,
+    DuplicateProbe, IssueCode, Lifecycle, SourceKind, UNSAVED_ID, ValidationState, fingerprint,
+    masked, tail_of,
 };
 use crate::domain::agent::{Provider, UsageSurface};
 use crate::domain::onepassword::OpReference;
@@ -157,9 +157,17 @@ fn end_pending(form: &mut FormDialog) {
 /// What the screen does when the backend has stored the registry it sent.
 struct Saving {
     status: String,
-    select: Option<Sel>,
+    select: Pick,
     unfold: Option<UsageSurface>,
     form: bool,
+}
+
+/// What a save selects once the backend has stored it.
+enum Pick {
+    Keep,
+    Row(Sel),
+    /// The account the backend added, which it names in its reply.
+    Added,
 }
 
 pub struct AccountsScreen {
@@ -1032,15 +1040,7 @@ impl AccountsScreen {
         }
         let name_taken = w.accounts.name_taken(provider, &name, editing.as_deref());
         let now = w.now_secs();
-        let id = match &editing {
-            Some(id) => id.clone(),
-            None => format!(
-                "acct-{}-{}",
-                provider.short().to_lowercase().replace(['/', ' ', '.'], ""),
-                name.to_lowercase()
-                    .replace(|c: char| !c.is_ascii_alphanumeric(), "-")
-            ),
-        };
+        let id = editing.clone().unwrap_or_else(|| UNSAVED_ID.to_owned());
         let purpose = get("purpose").trim().to_owned();
         let endpoint = if provider.supports_endpoint() && source_kind != SourceKind::LocalFolder {
             let e = get("endpoint").trim().to_owned();
@@ -1113,7 +1113,10 @@ impl AccountsScreen {
             registry,
             Saving {
                 status,
-                select: Some(Sel::Account(id)),
+                select: match editing {
+                    Some(id) => Pick::Row(Sel::Account(id)),
+                    None => Pick::Added,
+                },
                 unfold: Some(provider.usage_surface()),
                 form: true,
             },
@@ -1132,13 +1135,15 @@ impl AccountsScreen {
         });
     }
 
-    fn finish_saving(&mut self, saving: Saving, cx: &mut Cx) {
+    fn finish_saving(&mut self, saving: Saving, added: Option<AccountId>, cx: &mut Cx) {
         if saving.form {
             self.form = None;
             cx.close();
         }
-        if let Some(sel) = saving.select {
-            self.selected = sel;
+        match (saving.select, added) {
+            (Pick::Row(sel), _) => self.selected = sel,
+            (Pick::Added, Some(id)) => self.selected = Sel::Account(id),
+            (Pick::Added, None) | (Pick::Keep, _) => {}
         }
         if let Some(surface) = saving.unfold {
             self.folded.remove(&surface);
@@ -1209,7 +1214,7 @@ impl AccountsScreen {
             registry,
             Saving {
                 status,
-                select: None,
+                select: Pick::Keep,
                 unfold: None,
                 form: false,
             },
@@ -1228,7 +1233,7 @@ impl AccountsScreen {
                     registry,
                     Saving {
                         status,
-                        select: None,
+                        select: Pick::Keep,
                         unfold: None,
                         form: false,
                     },
@@ -2340,13 +2345,13 @@ impl Page<Jackin> for AccountsScreen {
 
     fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
         match msg {
-            Msg::AccountsSaved { result } => {
+            Msg::AccountsSaved { added, result } => {
                 let saving = self.saving.take();
                 match (result, saving) {
                     (Ok(snapshot), saving) => {
                         w.apply((**snapshot).clone());
                         if let Some(saving) = saving {
-                            self.finish_saving(saving, cx);
+                            self.finish_saving(saving, added.clone(), cx);
                         }
                     }
                     (Err(error), Some(Saving { form: true, .. })) => {
@@ -2798,7 +2803,7 @@ impl Page<Jackin> for AccountsScreen {
                         registry,
                         Saving {
                             status: format!("Removed {}", a.title()),
-                            select: Some(Sel::Provider(a.surface)),
+                            select: Pick::Row(Sel::Provider(a.surface)),
                             unfold: None,
                             form: false,
                         },

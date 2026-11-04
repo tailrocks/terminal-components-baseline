@@ -157,6 +157,7 @@ pub enum Msg {
         result: Result<Box<Snapshot>, SaveFailure>,
     },
     AccountsSaved {
+        added: Option<AccountId>,
         result: Result<Box<Snapshot>, String>,
     },
     WorkspaceDeleted {
@@ -757,10 +758,7 @@ impl World {
     }
 
     pub fn workspace_repo(&self, id: WorkspaceId) -> Option<&RepoRef> {
-        self.instances
-            .iter()
-            .filter(|i| i.workspace == Some(id))
-            .find_map(|i| i.github.as_ref())
+        self.workspace(id)?.github.as_ref()
     }
 
     pub fn instance(&self, id: &str) -> Option<&Instance> {
@@ -919,11 +917,14 @@ impl World {
             };
         }
 
-        let preselected = self
-            .account_for(provider, ws, role, None)
+        let resolved = self.account_for(provider, ws, role, None);
+        let preselected = resolved
             .account
-            .filter(|id| ready.contains(id))
-            .or_else(|| ready.first().cloned());
+            .filter(|id| resolved.explicit && ready.contains(id))
+            .or_else(|| match ready.as_slice() {
+                [only] => Some(only.clone()),
+                _ => None,
+            });
         if let Some(p) = &preselected
             && let Some(i) = ready.iter().position(|x| x == p)
             && i > 0

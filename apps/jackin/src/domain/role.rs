@@ -65,7 +65,7 @@ pub struct RoleFinding {
     pub area: FindingArea,
     pub key: Option<String>,
     pub message: String,
-    pub fix: String,
+    pub fix: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

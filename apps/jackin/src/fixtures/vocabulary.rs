@@ -1,4 +1,4 @@
-use crate::domain::vocabulary::{DaemonWords, LifecycleWords, StatusWords, Vocabulary};
+use crate::domain::vocabulary::{DaemonWords, LifecycleWords, PaneWords, StatusWords, Vocabulary};
 
 impl Vocabulary {
     pub fn demo() -> Self {
@@ -55,6 +55,7 @@ impl Vocabulary {
             },
             lifecycle: LifecycleWords {
                 restored: "Restored {id} · container restarted".into(),
+                purge_refused_next: None,
                 stop_body: "The container stops and every session in it ends. The instance record stays reconnectable ({state}).".into(),
                 purge_action: "purge the instance record and its container".into(),
                 purge_scope: "1 container · {sessions} · {copy}".into(),
@@ -141,6 +142,26 @@ impl Vocabulary {
             doctor_failed: "The doctor could not run: {reason}".into(),
             doctor_timed_out: "the daemon did not answer".into(),
             doctor_no_gateway: "no usable daemon".into(),
+
+            cannot_save: "{field} is not stored by the preview".into(),
+            no_project: "a workspace needs a mount".into(),
+            not_a_folder: "{folder} is not a directory the preview can mount".into(),
+            no_role_left: "at least one role must stay allowed".into(),
+            not_in_roster: "{id} is not in the roster".into(),
+            unknown_role: "{role} is not in the registry".into(),
+            role_not_loaded: "the role manifest has not loaded yet".into(),
+            pane: PaneWords::demo(),
+        }
+    }
+}
+
+impl PaneWords {
+    pub fn demo() -> Self {
+        Self {
+            viewing: "Read-only · another terminal controls this pane".into(),
+            connection_lost: "Connection to the daemon lost · press Enter to reattach".into(),
+            exited: "{agent} exited (code {code}) · the container keeps running".into(),
+            ..Self::openshell()
         }
     }
 }

@@ -145,6 +145,7 @@ pub fn workspace_fixed(ws: &Workspace, registry: &AccountRegistry) -> WorkspaceF
         docker: _,
         accounts,
         dirty_policy,
+        github: _,
     } = ws;
     let AccountPolicy {
         disabled_defaults,

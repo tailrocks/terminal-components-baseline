@@ -632,6 +632,15 @@ fn keyboard_copy_is_off() {
 }
 
 #[test]
+fn the_terminal_viewport_draws_its_own_track() {
+    let v = blank();
+    assert!(
+        v.draws_track(),
+        "a host that draws a second bar over the track column would double it"
+    );
+}
+
+#[test]
 fn the_ops_drive_the_terminal_viewport_through_the_trait() {
     let mut v = viewport(100);
     let ops: &mut dyn ViewportOps = &mut v;
@@ -721,4 +730,33 @@ fn default_colours_follow_the_theme_and_program_colours_stay() {
 fn terminal_viewport_is_send() {
     fn assert_send<T: Send>() {}
     assert_send::<TerminalViewport>();
+}
+
+#[test]
+fn clear_scrollback_returns_to_the_tail_and_drops_the_selection() {
+    let mut v = viewport(100);
+    wheel_up(&mut v, 2);
+    drag(&mut v, (0, 0), (8, 2));
+    assert!(!v.follow() && v.has_selection());
+
+    v.clear_scrollback();
+
+    assert!(v.follow());
+    assert!(!v.has_selection());
+    assert_eq!(v.offset(), 0);
+    assert_eq!(v.state().scrollback_len(), 0);
+    assert_eq!(v.scroll().content_len, 10, "only the live rows are left");
+    assert_eq!(screen(&v), lines(91, 100), "the screen itself is kept");
+
+    let mut live = viewport(100);
+    drag(&mut live, (0, 3), (8, 5));
+    live.clear_scrollback();
+    assert!(
+        live.has_selection(),
+        "a selection of live rows does not depend on the history"
+    );
+    assert_eq!(
+        live.selected_text().as_deref(),
+        Some("line 094\nline 095\nline 096")
+    );
 }

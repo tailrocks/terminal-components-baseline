@@ -34,6 +34,7 @@ pub struct DaemonWords {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LifecycleWords {
     pub restored: String,
+    pub purge_refused_next: Option<String>,
     pub stop_body: String,
     pub purge_action: String,
     pub purge_scope: String,
@@ -68,6 +69,7 @@ pub enum Unbuilt {
     Doctor,
     Launch,
     Pane,
+    AddGitRole,
 }
 
 impl Unbuilt {
@@ -93,6 +95,7 @@ impl Unbuilt {
             Unbuilt::Doctor => "The doctor".to_owned(),
             Unbuilt::Launch => format!("Launching a {noun}"),
             Unbuilt::Pane => "A terminal pane".to_owned(),
+            Unbuilt::AddGitRole => "Adding a role from a Git URL".to_owned(),
         }
     }
 }
@@ -103,6 +106,170 @@ impl Unbuilt {
 pub enum Notice {
     GatewayUnreachable { gateway: String, reason: String },
     UnreadableLabels { count: usize },
+}
+
+/// A field of a record that a backend cannot store.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SaveField {
+    Workdir,
+    Mounts,
+    KeepAwake,
+    GitPull,
+    DirtyPolicy,
+    DisabledDefaults,
+    EnabledAccounts,
+    RoleAccounts,
+    CoauthorTrailer,
+    DcoSignoff,
+    GlobalMounts,
+    GlobalRoleVariables,
+    AgentModes,
+    Trust,
+    AccountName,
+    AccountProvider,
+    Purpose,
+    Endpoint,
+    EnvSource,
+    ApiKey,
+    Agent,
+    RoleSource,
+    RoleName,
+}
+
+impl SaveField {
+    pub fn label(self) -> &'static str {
+        match self {
+            SaveField::Workdir => "workdir",
+            SaveField::Mounts => "mounts",
+            SaveField::KeepAwake => "keep_awake",
+            SaveField::GitPull => "git_pull",
+            SaveField::DirtyPolicy => "dirty_policy",
+            SaveField::DisabledDefaults => "disabled_defaults",
+            SaveField::EnabledAccounts => "enabled accounts",
+            SaveField::RoleAccounts => "role accounts",
+            SaveField::CoauthorTrailer => "coauthor_trailer",
+            SaveField::DcoSignoff => "dco_signoff",
+            SaveField::GlobalMounts => "global mounts",
+            SaveField::GlobalRoleVariables => "global role variables",
+            SaveField::AgentModes => "agent modes",
+            SaveField::Trust => "trust",
+            SaveField::AccountName => "account name",
+            SaveField::AccountProvider => "account provider",
+            SaveField::Purpose => "purpose",
+            SaveField::Endpoint => "endpoint",
+            SaveField::EnvSource => "env source",
+            SaveField::ApiKey => "api key",
+            SaveField::Agent => "agent",
+            SaveField::RoleSource => "role source",
+            SaveField::RoleName => "role name",
+        }
+    }
+}
+
+/// Why a backend would not store or find something. The backend names the
+/// case, and the vocabulary words it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Rejection {
+    CannotSave(SaveField),
+    NoProject,
+    NotAFolder { folder: String },
+    NoRoleLeft,
+    NotInRoster { instance: String },
+    UnknownRole { role: String },
+    RoleNotLoaded,
+}
+
+/// What a terminal pane says about itself. Templates take `{agent}` (the
+/// agent's label, or `shell_label`), `{code}`, `{reason}`, `{lines}`,
+/// `{bytes}`, `{source}` and `{chars}`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PaneWords {
+    pub waiting_title: String,
+    pub waiting_hint: String,
+    pub attaching_title: String,
+    pub attaching_hint: String,
+    pub unattached_title: String,
+    pub too_small: String,
+    pub viewing_suffix: String,
+    pub viewing: String,
+    pub detached: String,
+    pub connection_lost: String,
+    pub exited: String,
+    pub exited_unknown_code: String,
+    pub failed: String,
+    pub stream_closed: String,
+    pub shell_label: String,
+    pub paste_confirm_title: String,
+    pub paste_confirm_body: String,
+    pub paste_confirm_button: String,
+    pub paste_too_large: String,
+    pub title_label: String,
+    pub copied_from: String,
+    pub clip_write_blocked: String,
+    pub clip_read_blocked: String,
+    pub clip_too_large: String,
+}
+
+impl PaneWords {
+    pub fn openshell() -> Self {
+        Self {
+            waiting_title: "Waiting for room".into(),
+            waiting_hint: "{agent} starts when the pane is big enough".into(),
+            attaching_title: "Attaching to {agent}…".into(),
+            attaching_hint: "Ctrl+B x cancels".into(),
+            unattached_title: "{agent} is not attached".into(),
+            too_small: "Pane too small · zoom with Ctrl+B z".into(),
+            viewing_suffix: "(viewing)".into(),
+            viewing: "Read-only · another client controls this pane".into(),
+            detached: "Detached from {agent} · press Enter to reattach".into(),
+            connection_lost: "Connection to the gateway lost · press Enter to reattach".into(),
+            exited: "{agent} exited (code {code}) · the sandbox keeps running".into(),
+            exited_unknown_code: "unknown".into(),
+            failed: "Could not attach to {agent}: {reason} · press Enter to retry".into(),
+            stream_closed: "the connection closed before the pane attached".into(),
+            shell_label: "Shell".into(),
+            paste_confirm_title: "Paste {lines}?".into(),
+            paste_confirm_body:
+                "This pane has no paste protection, so each line runs as you paste it.".into(),
+            paste_confirm_button: "Paste".into(),
+            paste_too_large: "Paste too large · {bytes} bytes".into(),
+            title_label: "Title".into(),
+            copied_from: "from {source} · {chars}".into(),
+            clip_write_blocked: "Clipboard write from {source} blocked · select text to copy it"
+                .into(),
+            clip_read_blocked: "Clipboard read from {source} blocked".into(),
+            clip_too_large: "Clipboard write from {source} blocked · too large".into(),
+        }
+    }
+
+    pub fn fields(&self) -> Vec<(&'static str, &str)> {
+        vec![
+            ("pane.waiting_title", &self.waiting_title),
+            ("pane.waiting_hint", &self.waiting_hint),
+            ("pane.attaching_title", &self.attaching_title),
+            ("pane.attaching_hint", &self.attaching_hint),
+            ("pane.unattached_title", &self.unattached_title),
+            ("pane.too_small", &self.too_small),
+            ("pane.viewing_suffix", &self.viewing_suffix),
+            ("pane.viewing", &self.viewing),
+            ("pane.detached", &self.detached),
+            ("pane.connection_lost", &self.connection_lost),
+            ("pane.exited", &self.exited),
+            ("pane.exited_unknown_code", &self.exited_unknown_code),
+            ("pane.failed", &self.failed),
+            ("pane.stream_closed", &self.stream_closed),
+            ("pane.shell_label", &self.shell_label),
+            ("pane.paste_confirm_title", &self.paste_confirm_title),
+            ("pane.paste_confirm_body", &self.paste_confirm_body),
+            ("pane.paste_confirm_button", &self.paste_confirm_button),
+            ("pane.paste_too_large", &self.paste_too_large),
+            ("pane.title_label", &self.title_label),
+            ("pane.copied_from", &self.copied_from),
+            ("pane.clip_write_blocked", &self.clip_write_blocked),
+            ("pane.clip_read_blocked", &self.clip_read_blocked),
+            ("pane.clip_too_large", &self.clip_too_large),
+        ]
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -196,6 +363,15 @@ pub struct Vocabulary {
     pub doctor_failed: String,
     pub doctor_timed_out: String,
     pub doctor_no_gateway: String,
+
+    pub cannot_save: String,
+    pub no_project: String,
+    pub not_a_folder: String,
+    pub no_role_left: String,
+    pub not_in_roster: String,
+    pub unknown_role: String,
+    pub role_not_loaded: String,
+    pub pane: PaneWords,
 }
 
 impl Vocabulary {
@@ -251,6 +427,7 @@ impl Vocabulary {
             },
             lifecycle: LifecycleWords {
                 restored: "Restored {id} · sandbox restarted".into(),
+                purge_refused_next: Some("to delete it anyway, run jackin purge --force".into()),
                 stop_body: "The sandbox stops and every session in it ends. You can restore it later.".into(),
                 purge_action: "delete the sandbox".into(),
                 purge_scope: "{sessions} · {copy}".into(),
@@ -334,6 +511,15 @@ impl Vocabulary {
             doctor_failed: "The checks could not run: {reason}".into(),
             doctor_timed_out: "no answer in time".into(),
             doctor_no_gateway: "no usable gateway".into(),
+
+            cannot_save: "{field} cannot be saved".into(),
+            no_project: "a workspace needs a project folder".into(),
+            not_a_folder: "{folder} is not a folder jackin can use".into(),
+            no_role_left: "no allowed role is left".into(),
+            not_in_roster: "{id} is not in the roster".into(),
+            unknown_role: "unknown role {role}".into(),
+            role_not_loaded: "the role manifest is read when the role is loaded".into(),
+            pane: PaneWords::openshell(),
         }
     }
 
@@ -379,6 +565,10 @@ impl Vocabulary {
             ("daemon.list_no_tabs", &d.list_no_tabs),
             ("daemon.list_unavailable", &d.list_unavailable),
             ("lifecycle.restored", &l.restored),
+            (
+                "lifecycle.purge_refused_next",
+                l.purge_refused_next.as_deref().unwrap_or(""),
+            ),
             ("lifecycle.stop_body", &l.stop_body),
             ("lifecycle.purge_action", &l.purge_action),
             ("lifecycle.purge_scope", &l.purge_scope),
@@ -462,7 +652,17 @@ impl Vocabulary {
             ("doctor_failed", &self.doctor_failed),
             ("doctor_timed_out", &self.doctor_timed_out),
             ("doctor_no_gateway", &self.doctor_no_gateway),
+            ("cannot_save", &self.cannot_save),
+            ("no_project", &self.no_project),
+            ("not_a_folder", &self.not_a_folder),
+            ("no_role_left", &self.no_role_left),
+            ("not_in_roster", &self.not_in_roster),
+            ("unknown_role", &self.unknown_role),
+            ("role_not_loaded", &self.role_not_loaded),
         ]
+        .into_iter()
+        .chain(self.pane.fields())
+        .collect()
     }
 
     pub fn status_description(&self, status: InstanceStatus) -> &str {
@@ -548,6 +748,20 @@ impl Vocabulary {
             EngineEndpoint::TlsPort(port) => {
                 fill_in(&self.engine_tls_port, &[("port", &port.to_string())])
             }
+        }
+    }
+
+    pub fn rejection(&self, rejection: &Rejection) -> String {
+        match rejection {
+            Rejection::CannotSave(field) => fill_in(&self.cannot_save, &[("field", field.label())]),
+            Rejection::NoProject => self.no_project.clone(),
+            Rejection::NotAFolder { folder } => fill_in(&self.not_a_folder, &[("folder", folder)]),
+            Rejection::NoRoleLeft => self.no_role_left.clone(),
+            Rejection::NotInRoster { instance } => {
+                fill_in(&self.not_in_roster, &[("id", instance)])
+            }
+            Rejection::UnknownRole { role } => fill_in(&self.unknown_role, &[("role", role)]),
+            Rejection::RoleNotLoaded => self.role_not_loaded.clone(),
         }
     }
 
