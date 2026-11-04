@@ -162,3 +162,55 @@ fn a_shell_copy_with_the_hook_installed_queues_no_osc52_after_a_native_write() {
     assert_eq!(native.0.load(std::sync::atomic::Ordering::SeqCst), 1);
     assert_eq!(queued(), Vec::<String>::new());
 }
+
+#[derive(Debug, Default)]
+struct Recording(std::sync::Mutex<Vec<String>>);
+
+impl NativeClipboard for Recording {
+    fn write(&self, text: &str) -> bool {
+        self.0.lock().expect("writes").push(text.to_owned());
+        true
+    }
+}
+
+fn cmd_on(field: &mut TextInput, keys: &[char]) -> Vec<String> {
+    let sink = Arc::new(Recording::default());
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(sink.clone());
+    shell.clipboard.install();
+    queued();
+    for c in keys {
+        field.on_key(&cmd(*c));
+    }
+    let writes = sink.0.lock().expect("writes").clone();
+    assert_eq!(queued(), Vec::<String>::new(), "no OSC 52");
+    writes
+}
+
+fn masked_secret_after(second: char) {
+    let mut field = TextInput::new(WidgetId::of("t.secret"), "Key")
+        .value("sk-secret")
+        .masked();
+    let writes = cmd_on(&mut field, &['a', second]);
+    assert_eq!(writes, Vec::<String>::new(), "Cmd+A, Cmd+{second}");
+    assert_eq!(field.text(), "sk-secret", "Cmd+{second} must not cut");
+}
+
+#[test]
+fn a_masked_field_copies_nothing_to_the_clipboard() {
+    masked_secret_after('c');
+}
+
+#[test]
+fn a_masked_field_cuts_nothing_to_the_clipboard() {
+    masked_secret_after('x');
+}
+
+#[test]
+fn an_unmasked_field_still_copies_and_cuts() {
+    let mut copied = TextInput::new(WidgetId::of("t.plain"), "Name").value("alpha");
+    assert_eq!(cmd_on(&mut copied, &['a', 'c']), ["alpha"]);
+    let mut cut = TextInput::new(WidgetId::of("t.plain"), "Name").value("alpha");
+    assert_eq!(cmd_on(&mut cut, &['a', 'x']), ["alpha"]);
+    assert_eq!(cut.text(), "");
+}

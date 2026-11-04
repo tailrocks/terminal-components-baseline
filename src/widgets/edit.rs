@@ -190,6 +190,8 @@ pub struct EditField {
 
     pub read_only: bool,
 
+    pub secret: bool,
+
     pub undo_runs: bool,
 
     pub required: Option<String>,
@@ -221,6 +223,7 @@ impl EditField {
             validate_when: ValidateWhen::default(),
             multiline,
             read_only: false,
+            secret: false,
             undo_runs: true,
             required: None,
             line_off: 0,
@@ -318,6 +321,7 @@ impl EditField {
             action,
             key.code,
             read_only,
+            self.secret,
         ) == Some(Applied::Edited);
         if edited {
             if !self.undo_runs {

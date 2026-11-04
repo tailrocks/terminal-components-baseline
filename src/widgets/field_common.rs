@@ -293,6 +293,7 @@ pub fn apply_edit(
     action: EditAction,
     key_code: KeyCode,
     read_only: bool,
+    secret: bool,
 ) -> Option<Applied> {
     let before = buf.clone();
     let kind = match (action, key_code) {
@@ -325,6 +326,7 @@ pub fn apply_edit(
             undo.seal();
             return Some(Applied::Moved);
         }
+        EditAction::Copy | EditAction::Cut if secret => return Some(Applied::Moved),
         EditAction::Copy => {
             if let Some(t) = buf.selected_text() {
                 clipboard::copy(t);
