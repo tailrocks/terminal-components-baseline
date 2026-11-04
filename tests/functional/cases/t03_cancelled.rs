@@ -212,9 +212,11 @@ fn type_statements(app: &App) {
     app.type_text(FIRST_SQL);
     app.key("enter");
     app.type_text(SECOND_SQL);
+    // The token `t03_cancelled_second` is painted one frame before the
+    // closing quote. The statement is present only when that quote is too.
     let typed = app.wait_screen("both statements", |screen| {
         let visible = text(screen);
-        visible.contains(FIRST) && visible.contains(SECOND)
+        visible.contains(FIRST_SQL) && visible.contains(SECOND_SQL)
     });
     see(
         &typed,

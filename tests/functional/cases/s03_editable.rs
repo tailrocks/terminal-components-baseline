@@ -1035,7 +1035,14 @@ fn option_numeric_off_sorts_changes_as_text() {
         app.key("right");
     }
     app.key("s");
-    let sorted = app.wait_text("118");
+    // Four Rights already reveal 118. The ascending marker is painted on
+    // the next frame, so the sorted header is the one that carries it.
+    let sorted = app.wait_screen("changes sorted ascending", |screen| {
+        text(screen).contains("118")
+            && lines_of(screen)
+                .iter()
+                .any(|line| line.contains("Task") && line.contains("Owner") && line.contains('▴'))
+    });
     see(
         &sorted,
         &[
@@ -1053,12 +1060,10 @@ fn option_numeric_off_sorts_changes_as_text() {
         "Changes did not sort ascending: {header}"
     );
     let held = hold_pressed(&app, "Write release notes for 3.2", "Add rate limiting");
-    shot(
-        &app,
-        "opt.editable.numeric",
-        "numeric off sorts Changes as text so 118 sits with the leading rows",
-        &args,
-    );
+    // The accepted cells are this held row. A hidden cursor parks on a
+    // different cell of an otherwise equal frame, which `visual` rejects.
+    let pressed = app.screen();
+    check_frame(&app, &pressed, &visual_id("opt.editable.numeric"));
     app.up(held);
     app.finish();
 }
