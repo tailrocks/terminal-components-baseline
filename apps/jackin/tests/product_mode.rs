@@ -87,6 +87,7 @@ fn workspace(id: u32, name: &str) -> Workspace {
         docker: false,
         accounts: AccountPolicy::default(),
         dirty_policy: DirtyExitPolicy::Ask,
+        github: None,
     }
 }
 

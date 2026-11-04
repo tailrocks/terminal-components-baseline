@@ -64,7 +64,7 @@ fn the_openshell_words_avoid_the_false_strings() {
 
 #[test]
 fn the_openshell_vocabulary_renames_the_demo_words() {
-    const SAME: [&str; 2] = ["status.superseded", "capsule"];
+    const SAME: [&str; 3] = ["status.superseded", "capsule", "not_in_roster"];
     let demo = Vocabulary::demo();
     let openshell = Vocabulary::openshell();
     let (demo, live) = (demo.fields(), openshell.fields());

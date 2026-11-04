@@ -18,6 +18,7 @@ pub struct Fixed {
 
     pub last_role: String,
     pub git_url: String,
+    pub save_hint: String,
 
     pub commits: Reason,
     pub trust: Reason,
@@ -50,6 +51,7 @@ impl Fixed {
                 .short("prints path only"),
             last_role: "Keep one role allowed · allow another first".into(),
             git_url: "Clone the repository first, then choose its folder".into(),
+            save_hint: "Saved {name} · set a default role in Roles".into(),
             commits: Reason::new("Both stay off · jackin does not edit commit messages"),
             trust: Reason::new("Sources you add are trusted · remove the role to revoke"),
             env_sources: Reason::new("Plain values only · use an account for credentials"),

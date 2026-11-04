@@ -116,15 +116,9 @@ fn source_error_is_inline() {
 const MANAGER_GITHUB: &str = "down o";
 
 #[test]
-fn github_comes_from_the_instance() {
+fn github_comes_from_the_workspace() {
     let mut world = world_for(Scenario::Returning);
-    for instance in world
-        .instances
-        .iter_mut()
-        .filter(|i| i.workspace == Some(1))
-    {
-        instance.github = Some(other_repo());
-    }
+    world.workspaces[0].github = Some(other_repo());
     let mut app = app_with(Scenario::Returning, world);
     press(&mut app, MANAGER_GITHUB);
     assert_eq!(
@@ -165,6 +159,7 @@ fn name_suffix_no_longer_matches() {
     for instance in &mut world.instances {
         instance.github = None;
     }
+    world.workspaces[0].github = None;
     let mut app = app_with(Scenario::Returning, world);
     press(&mut app, MANAGER_GITHUB);
     assert_eq!(

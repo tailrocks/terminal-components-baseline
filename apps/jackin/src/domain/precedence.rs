@@ -34,6 +34,10 @@ pub struct ResolvedAccount {
     pub level: PrecedenceLevel,
     pub why: String,
 
+    /// False when nothing chose the account: it is the first one the
+    /// workspace enables, taken because no rule names another.
+    pub explicit: bool,
+
     pub shadowed: Vec<(PrecedenceLevel, AccountId)>,
 }
 
@@ -143,12 +147,14 @@ pub fn resolve_account(
             ));
         }
     }
+    let mut implicit: Vec<AccountId> = vec![];
     if let (Some(w), Some(set)) = (ws, effective.as_ref()) {
         let extra: Vec<AccountId> = set
             .iter()
             .filter(|e| e.provider == provider && !candidates.iter().any(|(_, id, _)| id == &e.id))
             .map(|e| e.id.clone())
             .collect();
+        implicit.clone_from(&extra);
         for id in extra {
             candidates.push((
                 PrecedenceLevel::Workspace,
@@ -185,6 +191,7 @@ pub fn resolve_account(
                 }
             }
             ResolvedAccount {
+                explicit: !implicit.contains(&id),
                 account: Some(id),
                 level,
                 why,
@@ -192,6 +199,7 @@ pub fn resolve_account(
             }
         }
         None => ResolvedAccount {
+            explicit: false,
             account: None,
             level: PrecedenceLevel::None,
             why: match ws {

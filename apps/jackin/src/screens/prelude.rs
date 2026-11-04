@@ -17,6 +17,7 @@ use ratatui::layout::Rect;
 
 use super::modals::{BrowserResult, ChoiceDialog};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
+use crate::domain::openshell;
 use crate::domain::workspace::{Mount, WizardDefaults, Workspace};
 use crate::world::World;
 
@@ -386,6 +387,9 @@ impl PreludeScreen {
         };
         let workdir = self.workdir.clone().unwrap_or_else(|| dest.clone());
         let mut ws = Workspace::new(0, name, &workdir);
+        if w.surfaces.fixed.is_some() {
+            openshell::policies(&mut ws);
+        }
         ws.mounts = vec![match src {
             Source::Host { path, readonly } => {
                 Mount::host(&w.tilde(path), dest).readonly(*readonly)

@@ -1070,6 +1070,10 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
     ws.role_env
         .insert("probe-role".into(), vec![EnvVar::plain("R", "v")]);
     ws.docker = true;
+    ws.github = Some(RepoRef {
+        full_name: "acme/probe".into(),
+        url: "https://github.com/acme/probe".into(),
+    });
     ws.accounts
         .preferred
         .insert(Provider::OpenAi, plain_ids(&registry).remove(0));
@@ -1088,8 +1092,10 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
         docker,
         accounts,
         dirty_policy: _,
+        github,
     } = &ws;
     assert_eq!(*id, before.id);
+    assert_eq!(github, &before.github);
     assert_eq!(name, &before.name);
     assert_eq!(roles, &before.roles);
     assert_eq!(env, &before.env);

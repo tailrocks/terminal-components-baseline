@@ -391,7 +391,15 @@ pub struct Account {
     pub edit_blocked: Option<EditBlocked>,
 }
 
+/// The id of an account the backend has not stored yet. The backend gives
+/// the account its id and names it in the reply.
+pub const UNSAVED_ID: &str = "";
+
 impl Account {
+    pub fn is_unsaved(&self) -> bool {
+        self.id == UNSAVED_ID
+    }
+
     pub fn registered(id: &str, name: &str, provider: Provider, source: CredentialSource) -> Self {
         Self {
             id: id.to_owned(),

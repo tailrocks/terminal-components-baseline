@@ -14,8 +14,11 @@ use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
 use crate::backend::{FieldKind, OnePassword, OpError, OpListing, OpScope, Ticket};
+use crate::domain::account::AccountId;
+use crate::domain::agent::Agent;
 use crate::domain::onepassword::OpReference;
-use crate::world::World;
+use crate::domain::workspace::Workspace;
+use crate::world::{AgentOffer, World};
 
 use super::ModalResult;
 use crate::domain::docker::DockerRiskText;
@@ -44,6 +47,53 @@ pub fn unsaved_dialog(id: WidgetId, changes: usize) -> Dialog {
         ],
         Some(0),
     )
+}
+
+/// The picker that asks which account an agent starts with: the accounts the
+/// workspace offers, in the offer's order, and their ids in row order. The
+/// offer's own choice, when it has one, carries the `preselected` tag.
+pub fn account_picker(
+    id: WidgetId,
+    w: &World,
+    agent: Agent,
+    ws: Option<&Workspace>,
+    offer: &AgentOffer,
+) -> (Picker, Vec<AccountId>) {
+    let mut p = Picker::new(id, &format!("Account for {}", agent.label()));
+    p.set_searchable(false);
+    p.list.width = (72, 72);
+    p.scope = Some("active for this Workspace".into());
+    let mut items = vec![];
+    let mut ids = vec![];
+    for acc in offer.accounts.iter().filter_map(|id| w.accounts.get(id)) {
+        let mut tags = vec![];
+        if acc.default_for_provider {
+            tags.push("global default");
+        }
+        if ws.is_some_and(|x| x.accounts.preferred.get(&agent.provider()) == Some(&acc.id)) {
+            tags.push("Workspace preference");
+        }
+        if offer.preselected.as_ref() == Some(&acc.id) {
+            tags.push("preselected");
+        }
+        items.push(
+            Item::new(acc.display_name.clone())
+                .detail(format!(
+                    "{} · {}{}",
+                    acc.source.origin_label(),
+                    acc.status_word(),
+                    if tags.is_empty() {
+                        String::new()
+                    } else {
+                        format!(" · {}", tags.join(" · "))
+                    }
+                ))
+                .glyph(if acc.default_for_provider { "★" } else { " " }),
+        );
+        ids.push(acc.id.clone());
+    }
+    p.set_items(items);
+    (p, ids)
 }
 
 pub fn docker_row_hints() -> [Hint; 2] {
