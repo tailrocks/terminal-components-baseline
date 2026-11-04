@@ -241,11 +241,12 @@ fn pick_crates(app: &App) {
         );
     }
     app.key("enter");
+    // The field label and the name's "save to apply" are already visible while
+    // the picker is open. The picker hint is "Type Filter". The closed form
+    // hint is "Enter Choose…", so that text does not mean the picker is open.
     let applied = app.wait_screen("workdir status", |screen| {
         let visible = text(screen);
-        visible.contains("Working directory ")
-            && visible.contains("save to apply")
-            && !visible.contains("Type to search")
+        visible.contains(WORKDIR_STATUS) && !visible.contains("Type Filter")
     });
     let status = text(&applied);
     assert!(
