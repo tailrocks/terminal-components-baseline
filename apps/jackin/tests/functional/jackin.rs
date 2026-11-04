@@ -2589,7 +2589,7 @@ fn jackin_fixed_launch_picker_disables_every_agent_jackin_cannot_launch() {
     for agent in ["Claude Code", "Amp", "Kimi Code", "OpenCode", "Grok Build"] {
         assert!(
             rows.iter().any(|row| row.contains(&format!(" {agent} "))
-                && row.contains("usage only · jackin launches Codex")
+                && row.contains("usage only · launches Codex only")
                 && row.contains("unavailable")),
             "{agent} is a disabled row with its reason:\n{}",
             text(&picker)
