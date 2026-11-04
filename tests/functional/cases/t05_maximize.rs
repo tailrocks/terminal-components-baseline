@@ -378,53 +378,76 @@ fn drag_seam(app: &App, seam: Point, delta: (i16, i16), thin: char, heavy: char)
     let rested = app.wait_screen("seam at rest", |screen| {
         statement(screen, TWO)
             && both_tabs(screen)
-            && seam_resting(screen, at, thin, heavy, vertical_line)
+            && seam_released(screen, thin, heavy, vertical_line)
     });
     assert!(
-        seam_resting(&rested, at, thin, heavy, vertical_line),
-        "seam stayed heavy near {at:?}\n{}",
+        seam_released(&rested, thin, heavy, vertical_line),
+        "seam stayed heavy after the pointer left {at:?}\n{}",
         text(&rested)
     );
     assert!(statement(&rested, TWO) && both_tabs(&rested));
 }
 
-/// Drag quantizes to a percent, so the committed rule can sit one cell off
-/// the pointer. A resting rule is the thin glyph with no heavy thumb on it.
-fn seam_resting(
-    screen: &TerminalSnapshot,
-    at: Point,
-    thin: char,
-    heavy: char,
-    vertical_line: bool,
-) -> bool {
-    for delta in [0i16, -1, 1] {
-        let (x, y) = if vertical_line {
-            let Some(x) = at.x.checked_add_signed(delta) else {
-                continue;
-            };
-            (x, at.y)
-        } else {
-            let Some(y) = at.y.checked_add_signed(delta) else {
-                continue;
-            };
-            (at.x, y)
-        };
-        if x >= screen.cols() as u16 || y >= screen.rows() as u16 {
-            continue;
+/// The held accent midpoint is not the committed rule. Percent snapping can
+/// move the split by more than one cell, and the tab underline is a heavy
+/// `━` on a different row. A resting query seam is the long thin rule between
+/// the statement and the results. A resting explorer seam is the triple thin
+/// bars on the statement row. Either one still carrying the heavy glyph fails.
+fn seam_released(screen: &TerminalSnapshot, thin: char, heavy: char, vertical_line: bool) -> bool {
+    if vertical_line {
+        explorer_resting(screen, thin, heavy)
+    } else {
+        query_resting(screen, thin, heavy)
+    }
+}
+
+fn query_resting(screen: &TerminalSnapshot, thin: char, heavy: char) -> bool {
+    let sql = find_all(screen, TWO);
+    let results = find_all(screen, RESULTS);
+    if sql.len() != 1 || results.len() != 1 || results[0].y <= sql[0].y + 1 {
+        return false;
+    }
+    for y in (sql[0].y + 1)..results[0].y {
+        let mut thin_run = 0u16;
+        let mut heavy_run = 0u16;
+        for x in 0..screen.cols() {
+            let cell = glyph(screen, x as u16, y);
+            if cell == thin {
+                thin_run += 1;
+            } else if cell == heavy {
+                heavy_run += 1;
+            }
         }
-        if glyph(screen, x, y) != thin {
-            continue;
-        }
-        let heavy_on_line = if vertical_line {
-            (0..screen.rows()).any(|row| glyph(screen, x, row as u16) == heavy)
-        } else {
-            row_has(screen, y, heavy)
-        };
-        if !heavy_on_line {
+        if thin_run > 8 && heavy_run == 0 {
             return true;
         }
     }
     false
+}
+
+fn explorer_resting(screen: &TerminalSnapshot, thin: char, heavy: char) -> bool {
+    let sql = find_all(screen, TWO);
+    if sql.len() != 1 || sql[0].x < 2 {
+        return false;
+    }
+    let y = sql[0].y;
+    let mut x = sql[0].x;
+    let mut seam_x = None;
+    while x >= 2 {
+        x -= 1;
+        if x >= 2
+            && glyph(screen, x, y) == thin
+            && glyph(screen, x - 1, y) == thin
+            && glyph(screen, x - 2, y) == thin
+        {
+            seam_x = Some(x - 1);
+            break;
+        }
+    }
+    let Some(seam_x) = seam_x else {
+        return false;
+    };
+    !(0..screen.rows()).any(|row| glyph(screen, seam_x, row as u16) == heavy)
 }
 
 fn seam_neighbours(seam: Point, delta: (i16, i16)) -> ((u16, u16), (u16, u16)) {

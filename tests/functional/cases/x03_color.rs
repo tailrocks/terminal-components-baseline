@@ -428,7 +428,13 @@ fn launch_states(color: &str) {
         &["--scenario", "hard-cases"],
         color,
     );
-    let screen = app.wait_text("Current directory");
+    // The detail facts paint before the action row. "Edit" is on that row.
+    let screen = app.wait_screen("workspace actions", |screen| {
+        let visible = text(screen);
+        visible.contains("Current directory")
+            && visible.contains("Launch")
+            && visible.contains("Edit")
+    });
     require(&screen, "Edit");
     let launch = one(&screen, LAUNCH);
     let (rest, hover, pressed) = launch_ink(color);

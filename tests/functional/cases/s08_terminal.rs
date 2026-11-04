@@ -123,6 +123,10 @@ fn value_under(screen: &TerminalSnapshot, label: &str) -> String {
         .unwrap_or_else(|| panic!("label {label:?} missing\n{}", text(screen)))
 }
 
+fn select_is(screen: &TerminalSnapshot, label: &str, value: &str) -> bool {
+    select_token(screen, label).as_deref() == Some(value)
+}
+
 fn assert_select(screen: &TerminalSnapshot, label: &str, value: &str, others: &[&str]) {
     let got = value_under(screen, label);
     assert_eq!(got, value, "{label} shows {got:?}, expected {value}");
@@ -475,10 +479,6 @@ fn assert_omitted(screen: &TerminalSnapshot) {
             text(screen)
         );
     }
-}
-
-fn confirm_options(app: &App, check: impl Fn(&TerminalSnapshot)) {
-    confirm_options_ready(app, |_| true, check);
 }
 
 fn confirm_options_ready(
@@ -982,11 +982,15 @@ fn run_resets_and_seam_drag_is_held() {
 fn option_wrap_on_leaves_the_reset_frame() {
     let app = page("s08-wrap", "terminal.wrap=on", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_toggle(screen, "Wrap long lines", "on");
-        assert_select(screen, "Lines kept", "2000", &["20"]);
-        assert_select(screen, "Horizontal scroll", "theme", &["on", "off"]);
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Lines kept", "2000"),
+        |screen| {
+            assert_toggle(screen, "Wrap long lines", "on");
+            assert_select(screen, "Lines kept", "2000", &["20"]);
+            assert_select(screen, "Horizontal scroll", "theme", &["on", "off"]);
+        },
+    );
     finish_option(&app, "opt.terminal.wrap", unchanged_reset);
 }
 
@@ -1017,11 +1021,17 @@ fn option_max_lines_20_leaves_the_reset_frame() {
 fn option_horizontal_off_leaves_the_reset_frame() {
     let app = page("s08-horizontal", "terminal.horizontal=off", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_select(screen, "Horizontal scroll", "off", &["theme", "on"]);
-        assert_toggle(screen, "Wrap long lines", "off");
-        assert_select(screen, "Lines kept", "2000", &["20"]);
-    });
+    confirm_options_ready(
+        &app,
+        |screen| {
+            select_is(screen, "Horizontal scroll", "off") && select_is(screen, "Lines kept", "2000")
+        },
+        |screen| {
+            assert_select(screen, "Horizontal scroll", "off", &["theme", "on"]);
+            assert_toggle(screen, "Wrap long lines", "off");
+            assert_select(screen, "Lines kept", "2000", &["20"]);
+        },
+    );
     finish_option(&app, "opt.terminal.horizontal", unchanged_reset);
 }
 
@@ -1029,11 +1039,15 @@ fn option_horizontal_off_leaves_the_reset_frame() {
 fn option_scrollbar_gap_0_leaves_the_reset_frame() {
     let app = page("s08-sgap", "terminal.scrollbar_gap=0", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_select(screen, "Scrollbar gap", "0", &["1", "2"]);
-        assert_select(screen, "Track click", "page", &["jump"]);
-        assert_toggle(screen, "Wrap long lines", "off");
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Scrollbar gap", "0"),
+        |screen| {
+            assert_select(screen, "Scrollbar gap", "0", &["1", "2"]);
+            assert_select(screen, "Track click", "page", &["jump"]);
+            assert_toggle(screen, "Wrap long lines", "off");
+        },
+    );
     finish_option(&app, "opt.terminal.scrollbar_gap", unchanged_reset);
 }
 
@@ -1041,11 +1055,15 @@ fn option_scrollbar_gap_0_leaves_the_reset_frame() {
 fn option_track_click_jump_leaves_the_reset_frame() {
     let app = page("s08-jump", "terminal.track_click=jump", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_select(screen, "Track click", "jump", &["page"]);
-        assert_select(screen, "Scrollbar gap", "1", &["0", "2"]);
-        assert_select(screen, "Viewport keys", "default", &["vim", "no-page"]);
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Track click", "jump"),
+        |screen| {
+            assert_select(screen, "Track click", "jump", &["page"]);
+            assert_select(screen, "Scrollbar gap", "1", &["0", "2"]);
+            assert_select(screen, "Viewport keys", "default", &["vim", "no-page"]);
+        },
+    );
     finish_option(&app, "opt.terminal.track_click", unchanged_reset);
 }
 
@@ -1053,11 +1071,15 @@ fn option_track_click_jump_leaves_the_reset_frame() {
 fn option_nav_vim_leaves_the_reset_frame() {
     let app = page("s08-nav", "terminal.nav=vim", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_select(screen, "Viewport keys", "vim", &["default", "no-page"]);
-        assert_select(screen, "Rail keys", "default", &["vim", "no-page"]);
-        assert_select(screen, "Command keys", "default", &["custom"]);
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Viewport keys", "vim"),
+        |screen| {
+            assert_select(screen, "Viewport keys", "vim", &["default", "no-page"]);
+            assert_select(screen, "Rail keys", "default", &["vim", "no-page"]);
+            assert_select(screen, "Command keys", "default", &["custom"]);
+        },
+    );
     finish_option(&app, "opt.terminal.nav", unchanged_reset);
 }
 
@@ -1065,11 +1087,15 @@ fn option_nav_vim_leaves_the_reset_frame() {
 fn option_keymap_custom_leaves_the_reset_frame() {
     let app = page("s08-keymap", "terminal.keymap=custom", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_select(screen, "Command keys", "custom", &["default"]);
-        assert_select(screen, "Viewport keys", "default", &["vim", "no-page"]);
-        assert_toggle(screen, "Find marks", "off");
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Command keys", "custom"),
+        |screen| {
+            assert_select(screen, "Command keys", "custom", &["default"]);
+            assert_select(screen, "Viewport keys", "default", &["vim", "no-page"]);
+            assert_toggle(screen, "Find marks", "off");
+        },
+    );
     finish_option(&app, "opt.terminal.keymap", unchanged_reset);
 }
 
@@ -1077,11 +1103,15 @@ fn option_keymap_custom_leaves_the_reset_frame() {
 fn option_mark_on_paints_jackin() {
     let app = page("s08-mark", "terminal.mark=on", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_toggle(screen, "Find marks", "on");
-        assert_toggle(screen, "Numbered steps", "on");
-        assert_select(screen, "Lines kept", "2000", &["20"]);
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Lines kept", "2000"),
+        |screen| {
+            assert_toggle(screen, "Find marks", "on");
+            assert_toggle(screen, "Numbered steps", "on");
+            assert_select(screen, "Lines kept", "2000", &["20"]);
+        },
+    );
     finish_option(&app, "opt.terminal.mark", |screen| {
         see(
             screen,
@@ -1104,11 +1134,15 @@ fn option_mark_on_paints_jackin() {
 fn option_selectable_on_leaves_the_reset_frame() {
     let app = page("s08-selectable", "terminal.selectable=on", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_toggle(screen, "Selectable rail", "on");
-        assert_toggle(screen, "Numbered steps", "on");
-        assert_select(screen, "Rail keys", "default", &["vim", "no-page"]);
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Rail keys", "default"),
+        |screen| {
+            assert_toggle(screen, "Selectable rail", "on");
+            assert_toggle(screen, "Numbered steps", "on");
+            assert_select(screen, "Rail keys", "default", &["vim", "no-page"]);
+        },
+    );
     finish_option(&app, "opt.terminal.selectable", unchanged_reset);
 }
 
@@ -1116,11 +1150,15 @@ fn option_selectable_on_leaves_the_reset_frame() {
 fn option_numbered_off_drops_the_numbers() {
     let app = page("s08-numbered", "terminal.numbered=off", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_toggle(screen, "Numbered steps", "off");
-        assert_toggle(screen, "Selectable rail", "off");
-        assert_select(screen, "Rail keys", "default", &["vim", "no-page"]);
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Rail keys", "default"),
+        |screen| {
+            assert_toggle(screen, "Numbered steps", "off");
+            assert_toggle(screen, "Selectable rail", "off");
+            assert_select(screen, "Rail keys", "default", &["vim", "no-page"]);
+        },
+    );
     finish_option(&app, "opt.terminal.numbered", |screen| {
         see(
             screen,
@@ -1149,10 +1187,14 @@ fn option_numbered_off_drops_the_numbers() {
 fn option_rail_nav_vim_leaves_the_reset_frame() {
     let app = page("s08-rail", "terminal.rail_nav=vim", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_select(screen, "Rail keys", "vim", &["default", "no-page"]);
-        assert_select(screen, "Viewport keys", "default", &["vim", "no-page"]);
-        assert_toggle(screen, "Numbered steps", "on");
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_is(screen, "Rail keys", "vim"),
+        |screen| {
+            assert_select(screen, "Rail keys", "vim", &["default", "no-page"]);
+            assert_select(screen, "Viewport keys", "default", &["vim", "no-page"]);
+            assert_toggle(screen, "Numbered steps", "on");
+        },
+    );
     finish_option(&app, "opt.terminal.rail_nav", unchanged_reset);
 }
