@@ -1303,8 +1303,10 @@ impl AccountsScreen {
             started_tick: w.clock.now_ms as u64,
         };
         let title = a.title();
+        let source = a.source.clone();
         w.perform(Effect::ValidateAccount {
             account: id.to_owned(),
+            source,
         });
         cx.progress(job::ACCOUNT_VALIDATE, format!("Validating {title}…"));
     }
@@ -2433,8 +2435,17 @@ impl Page<Jackin> for AccountsScreen {
                 self.build_rows(w);
                 Outcome::Changed
             }
-            Msg::AccountValidated { account, result } => {
-                self.show_validation(account, result, w, cx);
+            Msg::AccountValidated {
+                account,
+                source,
+                result,
+            } => {
+                if w.accounts
+                    .get(account)
+                    .is_some_and(|a| a.source == **source)
+                {
+                    self.show_validation(account, result, w, cx);
+                }
                 self.build_rows(w);
                 Outcome::Changed
             }

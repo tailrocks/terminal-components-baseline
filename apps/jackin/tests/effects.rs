@@ -5,9 +5,11 @@ mod common;
 use std::sync::{Arc, Mutex};
 
 use common::*;
-use jackin_console::app::{App, Route};
+use jackin_console::app::{App, Remote, Route};
 use jackin_console::backend::{Backend, Completion, Effect, FileSource, Refresh};
-use jackin_console::domain::account::AccountRegistry;
+use jackin_console::domain::account::{
+    AccountRegistry, CredentialSource, DetectedKind, ValidationState,
+};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{Instance, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
@@ -21,7 +23,7 @@ use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
 use jackin_console::world::{GlobalConfig, Msg, SaveFailure, World};
-use junie_tui::core::event::Input;
+use junie_tui::core::event::{External, Input};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
@@ -843,6 +845,48 @@ fn the_sim_refreshes_as_it_did() {
     );
 }
 
+#[test]
+fn a_validation_reply_for_a_replaced_source_does_not_touch_the_edited_account() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    let old = app
+        .world
+        .accounts
+        .get(PERSONAL)
+        .expect("account")
+        .source
+        .clone();
+    press(&mut app, "c down down v");
+    assert!(matches!(
+        app.world
+            .accounts
+            .get(PERSONAL)
+            .expect("account")
+            .validation,
+        ValidationState::Validating { .. }
+    ));
+
+    let mut snapshot = sim::snapshot(&app.world);
+    let edited = snapshot.accounts.get_mut(PERSONAL).expect("account");
+    edited.source = CredentialSource::HostEnv {
+        var: "REPLACEMENT_KEY".into(),
+        detected: DetectedKind::ClaudeApiKeyEnv,
+    };
+    edited.validation = ValidationState::NeverValidated;
+    let edited = edited.clone();
+    Application::handle(
+        &mut app,
+        Input::External(External::new(Remote::Reloaded(Box::new(snapshot)))),
+    );
+    settle(&mut app);
+
+    let kept = app.world.accounts.get(PERSONAL).expect("account");
+    assert_ne!(kept.source, old);
+    assert_eq!(kept.validation, ValidationState::NeverValidated);
+    assert_eq!(*kept, edited);
+    let shown = status(&app);
+    assert!(!shown.contains(&kept.title()), "{shown}");
+}
+
 fn failure_app() -> App {
     let mut app = timed(Scenario::Returning, world_for(Scenario::Returning));
     screen(&mut app);
@@ -888,8 +932,16 @@ fn a_failed_prewarm_shows_the_reply_error() {
 #[test]
 fn a_failed_validation_shows_the_reply_error() {
     let mut app = failure_app();
+    let source = app
+        .world
+        .accounts
+        .get(PERSONAL)
+        .expect("account")
+        .source
+        .clone();
     app.deliver(&Msg::AccountValidated {
         account: PERSONAL.into(),
+        source: Box::new(source),
         result: Err("the provider did not answer".into()),
     });
     assert!(

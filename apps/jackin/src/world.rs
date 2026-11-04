@@ -7,7 +7,8 @@ use crate::backend::{
     Ticket, Validation, ValidationOutcome, apply_validation,
 };
 use crate::domain::account::{
-    AccountId, AccountRegistry, IssueCode, Recoverability, RecoverableIssue, ValidationState,
+    AccountId, AccountRegistry, CredentialSource, IssueCode, Recoverability, RecoverableIssue,
+    ValidationState,
 };
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorFailure, DoctorReport};
@@ -191,6 +192,7 @@ pub enum Msg {
     },
     AccountValidated {
         account: AccountId,
+        source: Box<CredentialSource>,
         result: Result<Validation, String>,
     },
     RoleLoaded {
@@ -718,9 +720,17 @@ impl World {
                     }
                 }
             }
-            Msg::AccountValidated { account, result } => {
+            Msg::AccountValidated {
+                account,
+                source,
+                result,
+            } => {
                 let now = self.now_secs();
-                if let Some(a) = self.accounts.get_mut(account) {
+                if let Some(a) = self
+                    .accounts
+                    .get_mut(account)
+                    .filter(|a| a.source == **source)
+                {
                     match result {
                         Ok(validation) => match validation {
                             Validation::Fingerprint { level } => {

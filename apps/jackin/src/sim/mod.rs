@@ -362,10 +362,10 @@ impl Backend for SimBackend {
                         .ok_or_else(|| format!("{account} is not in the registry")),
                 })
             }
-            Effect::ValidateAccount { account } => {
+            Effect::ValidateAccount { account, source } => {
                 let result = match world.accounts.get(account) {
                     None => Err(format!("{account} is not in the registry")),
-                    Some(a) => Ok(match &a.source {
+                    Some(a) => Ok(match source {
                         CredentialSource::PlainApiKey { .. } => Validation::Fingerprint {
                             level: fingerprint_level(a),
                         },
@@ -380,6 +380,7 @@ impl Backend for SimBackend {
                 };
                 Some(Msg::AccountValidated {
                     account: account.clone(),
+                    source: Box::new(source.clone()),
                     result,
                 })
             }
