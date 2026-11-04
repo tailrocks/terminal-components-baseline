@@ -40,6 +40,15 @@ fn open(name: &str, scenario: &str) -> App {
     try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
 }
 
+/// The activity title switches before its log replaces the previous body.
+fn api_tests_body(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(TESTS_HEAD)
+        && visible.contains(TESTS_LINE)
+        && !visible.contains(VITE_LINE)
+        && !visible.contains("listening on 0.0.0.0:8080")
+}
+
 fn see(screen: &TerminalSnapshot, present: &[&str], absent: &[&str]) {
     let visible = text(screen);
     for item in present {
@@ -171,7 +180,11 @@ fn h03_output_route() {
     app.key("esc");
     app.wait_text("Search actions");
     app.key("alt+3");
-    let output = app.wait_text(TESTS_HEAD);
+    let output = app.wait_screen("api tests output", |screen| {
+        api_tests_body(screen)
+            && text(screen).contains("128 tests run: 128 passed")
+            && text(screen).contains("started by Run api tests")
+    });
     see(
         &output,
         &[
@@ -218,7 +231,11 @@ fn h03_output_states() {
         &[VITE_LINE, TESTS_LINE],
     );
     app.key("alt+3");
-    let succeeded = app.wait_text(TESTS_HEAD);
+    let succeeded = app.wait_screen("api tests output", |screen| {
+        api_tests_body(screen)
+            && text(screen).contains("Open the failing test")
+            && text(screen).contains("Run tests again")
+    });
     see(
         &succeeded,
         &[
@@ -300,7 +317,9 @@ fn h03_output_scenario_activities_multi() {
     let app = open("h03-output-activities", "activities-multi");
     app.wait_text("api tests");
     app.key("alt+3");
-    let tests = app.wait_text(TESTS_HEAD);
+    let tests = app.wait_screen("api tests output", |screen| {
+        api_tests_body(screen) && text(screen).contains("128 tests run: 128 passed")
+    });
     see(
         &tests,
         &[TESTS_LINE, "128 tests run: 128 passed"],
@@ -360,7 +379,7 @@ fn h03_output_scenario_activities_multi() {
     assert!(!text(&filtered).contains(TESTS_LINE), "{}", text(&filtered));
 
     app.key("alt+3");
-    let still = app.wait_text(TESTS_HEAD);
+    let still = app.wait_screen("api tests output again", api_tests_body);
     assert!(text(&still).contains(TESTS_LINE));
     app.key("tab");
     app.wait_text("▎Run tests again");
@@ -376,7 +395,11 @@ fn h03_output_scenario_activities_multi() {
         &[TESTS_LINE, VITE_LINE],
     );
     app.key("alt+3");
-    let kept = app.wait_text(TESTS_HEAD);
+    let kept = app.wait_screen("api tests kept", |screen| {
+        api_tests_body(screen)
+            && text(screen).contains("128 tests run: 128 passed")
+            && !text(screen).contains("[mise] test finished")
+    });
     see(
         &kept,
         &[TESTS_LINE, "128 tests run: 128 passed", "exit 0"],
