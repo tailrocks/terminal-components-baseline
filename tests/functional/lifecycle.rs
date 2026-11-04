@@ -83,6 +83,7 @@ fn showcase_popover_survives_resize_and_escape_returns_focus() {
         "selected tab must go neutral under the popover"
     );
     app.move_to(super::support::Point { x: 79, y: 0 });
+    app.advance_clock(200);
     let trigger = find(&app.screen(), "Open popover \u{25be}");
     app.wait_screen("trigger unhovered under popover", |s| {
         super::support::cell_bg(s, trigger) == tui_test::SnapshotColor::Rgb(39, 39, 42)

@@ -1129,6 +1129,7 @@ fn refused_with(app: &App, reason: &str) -> TerminalSnapshot {
 }
 
 fn status_gone(app: &App, reason: &str) -> TerminalSnapshot {
+    app.advance_clock(5_000);
     app.wait_screen("status expired", |s| !footer_row(s).contains(reason))
 }
 

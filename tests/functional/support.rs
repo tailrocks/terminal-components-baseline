@@ -2,6 +2,7 @@ use std::cell::{Cell, RefCell};
 use std::path::PathBuf;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
+use junie_tui::clock::TestRequest;
 use tui_test::{
     CheckedMouseAction, KeyAction, LaunchEnvMode, LaunchOptions, MouseOptions, OpenOptions,
     Operation, OperationResult, RunOptions, Session, SnapshotCell, SnapshotScope, TerminalSnapshot,
@@ -245,6 +246,11 @@ impl App {
     }
 
     pub fn key(&self, key: &str) {
+        self.send_key(key);
+        self.fence();
+    }
+
+    fn send_key(&self, key: &str) {
         self.log(format!("key {key}"));
         self.session
             .execute(Operation::Key {
@@ -259,6 +265,7 @@ impl App {
         self.session
             .write_bytes(value.as_bytes())
             .expect("type through terminal input");
+        self.fence();
     }
 
     pub fn paste(&self, value: &str) {
@@ -266,10 +273,54 @@ impl App {
         self.session
             .paste(value)
             .expect("paste using negotiated terminal mode");
+        self.fence();
     }
 
     pub fn advance_clock(&self, milliseconds: u64) {
-        self.paste(&format!("junie-tui:advance-clock:{milliseconds}"));
+        self.paste(&TestRequest::advance(milliseconds));
+    }
+
+    fn accepts_paste(&self) -> bool {
+        let OperationResult::State(state) = self
+            .session
+            .execute(Operation::State)
+            .expect("process state")
+        else {
+            panic!("missing process state");
+        };
+        state.exited.is_none() && state.modes.get("bracketed_paste") == Some(&true)
+    }
+
+    fn bells(&self) -> u64 {
+        let OperationResult::BellCount(count) = self
+            .session
+            .execute(Operation::GetBellCount)
+            .expect("bell count")
+        else {
+            panic!("missing bell count");
+        };
+        count
+    }
+
+    fn fence(&self) {
+        if !self.accepts_paste() {
+            return;
+        }
+        let before = self.bells();
+        self.log("fence".to_string());
+        self.session
+            .paste(TestRequest::FENCE)
+            .expect("fence through bracketed paste");
+        let deadline = Instant::now() + TIMEOUT;
+        while self.bells() == before {
+            self.assert_running("waiting for the application to handle the input");
+            assert!(
+                Instant::now() < deadline,
+                "the application did not acknowledge the input within {TIMEOUT:?}\n{}",
+                text(&self.screen())
+            );
+            std::thread::sleep(Duration::from_millis(2));
+        }
     }
 
     pub fn move_to(&self, point: Point) {
@@ -308,6 +359,7 @@ impl App {
         self.session
             .mouse_checked(action)
             .expect("application must negotiate SGR mouse input for this action");
+        self.fence();
     }
 
     pub fn click(&self, point: Point) {
@@ -329,6 +381,7 @@ impl App {
                 .write_bytes(bytes.as_bytes())
                 .expect("wheel through application PTY");
         }
+        self.fence();
     }
 
     pub fn resize(&self, cols: u16, rows: u16) {
@@ -336,11 +389,12 @@ impl App {
         self.session
             .execute(Operation::Resize { cols, rows })
             .expect("resize PTY");
+        self.fence();
     }
 
     pub fn finish(&self) {
         self.assert_running("before Ctrl+Q");
-        self.key("ctrl+q");
+        self.send_key("ctrl+q");
         self.session
             .execute(Operation::WaitExit {
                 timeout_ms: Some(10_000),

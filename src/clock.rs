@@ -32,17 +32,26 @@ pub trait Clock {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct WallClock {
     origin: Instant,
+    stepped: Option<u64>,
 }
 
 impl WallClock {
     pub fn new() -> Self {
-        Self {
-            origin: Instant::now(),
-        }
+        Self::with_origin(Instant::now())
     }
 
     pub fn with_origin(origin: Instant) -> Self {
-        Self { origin }
+        Self {
+            origin,
+            stepped: None,
+        }
+    }
+
+    pub fn for_run() -> Self {
+        Self {
+            stepped: TestRequest::opted_in().then_some(0),
+            ..Self::new()
+        }
     }
 
     pub fn origin(&self) -> Instant {
@@ -50,11 +59,27 @@ impl WallClock {
     }
 
     pub fn now_ms(&self) -> u64 {
-        self.origin.elapsed().as_millis() as u64
+        match self.stepped {
+            Some(ms) => ms,
+            None => self.origin.elapsed().as_millis() as u64,
+        }
     }
 
     pub fn elapsed(&self) -> Duration {
-        self.origin.elapsed()
+        match self.stepped {
+            Some(ms) => Duration::from_millis(ms),
+            None => self.origin.elapsed(),
+        }
+    }
+
+    pub fn is_stepped(&self) -> bool {
+        self.stepped.is_some()
+    }
+
+    pub fn advance(&mut self, ms: u64) {
+        if let Some(now) = &mut self.stepped {
+            *now = now.saturating_add(ms);
+        }
     }
 }
 
@@ -157,10 +182,17 @@ impl SimClock {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct ClockStep;
+pub enum TestRequest {
+    Advance(u64),
+    Fence,
+}
 
-impl ClockStep {
-    pub const PREFIX: &'static str = "junie-tui:advance-clock:";
+impl TestRequest {
+    pub const ADVANCE_PREFIX: &'static str = "junie-tui:advance-clock:";
+
+    pub const FENCE: &'static str = "junie-tui:fence";
+
+    pub const FENCE_ACK: &'static str = "\x07";
 
     pub const ENV: &'static str = "JUNIE_TUI_TEST_CLOCK";
 
@@ -169,17 +201,38 @@ impl ClockStep {
         *OPTED_IN.get_or_init(|| std::env::var_os(Self::ENV).is_some_and(|v| v == "1"))
     }
 
-    pub fn request(ms: u64) -> String {
-        format!("{}{ms}", Self::PREFIX)
+    pub fn advance(ms: u64) -> String {
+        format!("{}{ms}", Self::ADVANCE_PREFIX)
     }
 
-    pub fn parse(text: &str) -> Option<u64> {
-        let digits = text.strip_prefix(Self::PREFIX)?;
+    pub fn parse(text: &str) -> Option<Self> {
+        if text == Self::FENCE {
+            return Some(Self::Fence);
+        }
+        let digits = text.strip_prefix(Self::ADVANCE_PREFIX)?;
         if digits.is_empty() || !digits.bytes().all(|b| b.is_ascii_digit()) {
             return None;
         }
-        digits.parse().ok().filter(|ms| *ms > 0)
+        digits.parse().ok().filter(|ms| *ms > 0).map(Self::Advance)
     }
+}
+
+pub fn step_wall<A: ?Sized>(
+    app: &mut A,
+    clock: fn(&mut A) -> &mut WallClock,
+    ms: u64,
+    interval_ms: fn(&A) -> u64,
+    mut tick: impl FnMut(&mut A) -> Outcome,
+) -> Outcome {
+    let mut out = Outcome::Ignored;
+    let mut left = ms;
+    while left > 0 {
+        let step = left.min(interval_ms(app).max(1));
+        clock(app).advance(step);
+        out = out.or(tick(app));
+        left -= step;
+    }
+    out
 }
 
 pub fn run_step<A: ?Sized>(

@@ -19,7 +19,7 @@ use crate::widgets::keyhint::Hint;
 use crate::widgets::too_small::TooSmall;
 
 use super::{Clipboard, Copied, Cx, Request, StatusLine};
-use crate::clock::Moment;
+use crate::clock::{Moment, TestRequest};
 use crate::theme::Strings;
 use crate::ui::context::ContextConfig;
 use crate::ui::leave::{LeaveGuard, Stakes};
@@ -60,7 +60,7 @@ pub struct Shell<P = ()> {
 
     pub motion: Motion,
 
-    pub clock_steps: bool,
+    pub test_requests: bool,
 
     pub focus_fallback: FocusFallback,
 
@@ -100,7 +100,7 @@ impl<P> Shell<P> {
             too_small: false,
             quit: false,
             motion: Motion::Full,
-            clock_steps: crate::clock::ClockStep::opted_in(),
+            test_requests: crate::clock::TestRequest::opted_in(),
             focus_fallback: FocusFallback::Nearest,
             footer_keys: HintKeys::default(),
             context: ContextConfig::DEFAULT,
@@ -343,6 +343,14 @@ pub fn render<A: App + ?Sized>(app: &mut A, frame: &mut Frame) {
 }
 
 pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
+    let request = match &input {
+        Input::Paste(text) if app.shell().test_requests => TestRequest::parse(text),
+        _ => None,
+    };
+    if request == Some(TestRequest::Fence) {
+        super::clipboard::queue_output(TestRequest::FENCE_ACK.to_owned());
+        return Outcome::Ignored;
+    }
     crate::core::refusal::clear_refusal();
     let shown = |app: &A| {
         app.shell()
@@ -357,8 +365,8 @@ pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
     }
     let logged = input.clone();
 
-    let step = match &input {
-        Input::Paste(text) if app.shell().clock_steps => crate::clock::ClockStep::parse(text),
+    let step = match request {
+        Some(TestRequest::Advance(ms)) => Some(ms),
         _ => None,
     };
     let mut out = match step.and_then(|ms| app.advance_clock(ms)) {
