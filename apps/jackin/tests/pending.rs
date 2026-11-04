@@ -514,6 +514,149 @@ fn a_folder_probe_that_fails_keeps_the_form_open() {
     assert_eq!(backend.saves(), 0);
 }
 
+#[test]
+fn a_probe_reply_for_a_path_the_user_has_since_edited_saves_nothing() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, FOLDER);
+    click_text(&mut app, "Save");
+    let ticket = backend.check_ticket();
+    let outcome = folder_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    let probe = backend.probe_ticket();
+
+    click_text(&mut app, "~/.claude-spare");
+    press(&mut app, "x y z");
+    assert!(screen(&mut app).contains("xyz"), "the field shows the edit");
+
+    app.deliver(&Msg::FolderProbed {
+        ticket: probe,
+        result: Ok(FolderProbe::Found(DetectedKind::CodexAuthJson)),
+    });
+    ticks(&mut app, 4);
+
+    assert_eq!(backend.saves(), 0, "the old path is not stored");
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains("New account"),
+        "the form stays open:\n{shown}"
+    );
+    assert!(shown.contains("xyz"), "the typed text is kept:\n{shown}");
+    assert!(!shown.contains("checking"), "{shown}");
+}
+
+#[test]
+fn a_check_reply_for_a_key_the_user_has_since_edited_is_not_shown() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, PLAIN_KEY);
+    click_text(&mut app, "Validate");
+    let ticket = backend.check_ticket();
+
+    click_text(&mut app, "1234");
+    press(&mut app, "x y z");
+
+    let outcome = key_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    let shown = screen(&mut app);
+    assert!(
+        !shown.contains(SPARE_CANARY),
+        "the rows describe the old key:\n{shown}"
+    );
+    assert!(!shown.contains("checking"), "{shown}");
+    assert!(shown.contains("New account"), "{shown}");
+}
+
+#[test]
+fn a_save_whose_check_reply_finds_the_form_edited_stores_nothing() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, FOLDER);
+    click_text(&mut app, "Save");
+    let ticket = backend.check_ticket();
+
+    click_text(&mut app, "~/.claude-spare");
+    press(&mut app, "x y z");
+    let outcome = folder_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    ticks(&mut app, 4);
+
+    assert!(
+        backend
+            .seen()
+            .iter()
+            .all(|e| !matches!(e, Effect::ProbeFolder { .. })),
+        "a reply for the old path starts no probe"
+    );
+    assert_eq!(backend.saves(), 0);
+    assert!(screen(&mut app).contains("xyz"));
+}
+
+#[test]
+fn browsing_for_a_folder_drops_the_pending_check() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, FOLDER);
+    click_text(&mut app, "Save");
+    let ticket = backend.check_ticket();
+
+    click_text(&mut app, "Browse…");
+    let outcome = folder_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    ticks(&mut app, 4);
+
+    assert!(
+        backend
+            .seen()
+            .iter()
+            .all(|e| !matches!(e, Effect::ProbeFolder { .. })),
+        "the chooser buttons drop the pending check"
+    );
+    assert_eq!(backend.saves(), 0);
+}
+
+fn choose_a_reference(app: &mut App) {
+    open_picker(app);
+    until_loaded(app);
+    press(app, "enter");
+    until_loaded(app);
+    press(app, "enter");
+    until_loaded(app);
+    press(app, "W o r k");
+    press(app, "enter");
+    until_loaded(app);
+    press(app, "enter");
+    assert!(screen(app).contains("Anthropic · Work"));
+}
+
+#[test]
+fn choosing_a_reference_drops_the_pending_check() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    choose_a_reference(&mut app);
+    click_text(&mut app, "Validate");
+    assert!(screen(&mut app).contains("… material   checking"));
+
+    click_text(&mut app, "Choose…");
+    ticks(&mut app, 14);
+
+    let said = status(&app);
+    assert!(
+        !said.starts_with("Validat"),
+        "the reply to a dropped check says nothing: {said}"
+    );
+}
+
+#[test]
+fn entering_plain_text_drops_the_pending_check() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    choose_a_reference(&mut app);
+    click_text(&mut app, "Validate");
+    assert!(screen(&mut app).contains("… material   checking"));
+
+    click_text(&mut app, "Enter plain text instead");
+    let shown = screen(&mut app);
+    assert!(
+        !shown.contains("checking"),
+        "the pending rows are gone:\n{shown}"
+    );
+}
+
 fn view_changes(app: &mut App) {
     press(app, "f10");
     click_text(app, "View");

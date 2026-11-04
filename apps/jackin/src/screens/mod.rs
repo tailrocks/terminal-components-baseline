@@ -174,6 +174,11 @@ pub trait Screen: junie_tui::shell::Page<Jackin> {
 
     fn form_changed(&mut self, _tag: &LayerTag, _form: &mut FormDialog, _w: &World) {}
 
+    /// A backend reply is about to be delivered to the screen, and `form` is
+    /// one of its open forms. A form that waits for the reply drops the wait
+    /// when it no longer holds what the request was made from.
+    fn reply_arrives(&mut self, _tag: &LayerTag, _form: &mut FormDialog, _m: &Msg) {}
+
     fn strip_right(&self, _w: &World) -> Vec<Segment> {
         vec![]
     }

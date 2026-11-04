@@ -93,6 +93,9 @@ struct FormCtx {
 /// the form does with the reply.
 struct Check {
     ticket: Ticket,
+    /// What the form held when the request went out: a reply is the form's
+    /// only while the form still holds it.
+    request: FormValues,
     then: Then,
 }
 
@@ -747,12 +750,17 @@ impl AccountsScreen {
     /// shows the check as pending until the reply arrives; `then` says what
     /// the reply does.
     fn start_check(&mut self, values: &FormValues, then: Then, w: &mut World, cx: &mut Cx) {
-        if let Some(check) = self.form.as_mut().and_then(|ctx| ctx.check.as_mut()) {
-            if matches!(then, Then::Save(_)) && matches!(check.then, Then::Show) {
-                check.then = then;
-                cx.status("Saving as soon as the check finishes");
+        if let Some(ctx) = self.form.as_mut()
+            && let Some(check) = ctx.check.as_mut()
+        {
+            if check.request == *values {
+                if matches!(then, Then::Save(_)) && matches!(check.then, Then::Show) {
+                    check.then = then;
+                    cx.status("Saving as soon as the check finishes");
+                }
+                return;
             }
-            return;
+            ctx.check = None;
         }
         let (provider, source, key) = match self.check_request(values, w) {
             Ok(request) => request,
@@ -763,7 +771,11 @@ impl AccountsScreen {
         };
         let ticket = w.next_ticket();
         if let Some(ctx) = self.form.as_mut() {
-            ctx.check = Some(Check { ticket, then });
+            ctx.check = Some(Check {
+                ticket,
+                request: values.clone(),
+                then,
+            });
         }
         w.perform(Effect::CheckSource {
             ticket,
@@ -932,6 +944,7 @@ impl AccountsScreen {
             if let Some(ctx) = self.form.as_mut() {
                 ctx.check = Some(Check {
                     ticket,
+                    request: values.clone(),
                     then: Then::Probe {
                         values,
                         outcome: Box::new(outcome),
@@ -2698,6 +2711,7 @@ impl Page<Jackin> for AccountsScreen {
                         cx.open(b, LayerTag::new("browse"));
                     }
                     "plain" => {
+                        self.cancel_check(cx);
                         let plain = source_index(w, SourceKind::PlainApiKey).unwrap_or(0);
                         cx.with_top::<FormDialog>(move |f| {
                             if let Some(field) = f.field_mut("source")
@@ -2954,6 +2968,24 @@ impl Screen for AccountsScreen {
                 ctx.validation = None;
                 ctx.check = None;
             }
+            end_pending(form);
+        }
+    }
+
+    fn reply_arrives(&mut self, tag: &LayerTag, form: &mut FormDialog, m: &Msg) {
+        let (Msg::SourceChecked { ticket, .. } | Msg::FolderProbed { ticket, .. }) = m else {
+            return;
+        };
+        if tag.kind != "form" {
+            return;
+        }
+        if let Some(ctx) = self.form.as_mut()
+            && ctx
+                .check
+                .as_ref()
+                .is_some_and(|c| c.ticket == *ticket && c.request != form.values())
+        {
+            ctx.check = None;
             end_pending(form);
         }
     }
