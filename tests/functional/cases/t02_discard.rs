@@ -386,8 +386,21 @@ fn tablepro_discard_cancel_keeps_the_edit_and_confirm_restores_it() {
     shot(&app, "T02.discard.discard.narrow");
 
     app.resize(120, 40);
+    // The 120×40 size is reported while the narrow grid is still painted,
+    // so the dialog still covers the edited name.
     let restored = app.wait_screen("discard dialog back at 120x40", |screen| {
-        screen.cols() == 120 && screen.rows() == 40 && text(screen).contains(TITLE)
+        if screen.cols() != 120 || screen.rows() != 40 {
+            return false;
+        }
+        let visible = text(screen);
+        visible.contains("120×40")
+            && visible.contains(TITLE)
+            && visible.contains(DROPPED)
+            && visible.contains(RELOADED)
+            && visible.contains(EDITED)
+            && visible.contains(&format!("{FOCUS}Cancel"))
+            && !visible.contains(&format!("{FOCUS}Discard"))
+            && !visible.contains(DISCARDED)
     });
     assert_dialog(&restored, EDITED);
 
