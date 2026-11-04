@@ -299,6 +299,24 @@ fn option_page(app: &crate::support::App) -> TerminalSnapshot {
     app.wait_text("Page options")
 }
 
+fn value_line(screen: &TerminalSnapshot, label: &str) -> Option<String> {
+    let lines = lines_of(screen);
+    let index = lines.iter().position(|line| line.contains(label))?;
+    lines.get(index + 1).cloned()
+}
+
+/// The first Options frame can place Rail label directly above the keyboard
+/// row. The value row is the following paint.
+fn option_values(app: &crate::support::App, width: &str) -> TerminalSnapshot {
+    option_page(app);
+    app.wait_screen("sidebar option values", |screen| {
+        let open = value_line(screen, "Open width");
+        let rail = value_line(screen, "Rail label");
+        open.is_some_and(|row| row.contains(width) && !row.contains("Keyboard"))
+            && rail.is_some_and(|row| row.contains("Navigation") && !row.contains("Keyboard"))
+    })
+}
+
 fn toggle_row(screen: &TerminalSnapshot, label: &str) -> String {
     row_with(screen, label)
 }
@@ -963,7 +981,7 @@ fn option_open_width_shifts_the_card() {
         "default card title\n{}",
         text(&play)
     );
-    let options = option_page(&app);
+    let options = option_values(&app, "24");
     assert_defaults_except(&options, &[]);
     app.finish();
 
@@ -977,7 +995,7 @@ fn option_open_width_shifts_the_card() {
         text(&play)
     );
     assert!(row_with(&play, "T Tasks").contains('3'));
-    let options = option_page(&app);
+    let options = option_values(&app, "20");
     assert_defaults_except(&options, &[("Open width", "20", false)]);
     app.finish();
 
@@ -1001,7 +1019,7 @@ fn option_open_width_shifts_the_card() {
         "open width 30 shifts the Tasks card title to column 64; 24 stays at 58 and 20 at 54",
         &wide_args,
     );
-    let options = option_page(&app);
+    let options = option_values(&app, "30");
     assert_defaults_except(&options, &[("Open width", "30", false)]);
     app.finish();
 }

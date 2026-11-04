@@ -97,7 +97,7 @@ fn row_with(screen: &TerminalSnapshot, needle: &str) -> String {
         .unwrap_or_else(|| panic!("row {needle:?} missing\n{}", text(screen)))
 }
 
-fn value_under(screen: &TerminalSnapshot, label: &str) -> String {
+fn select_token(screen: &TerminalSnapshot, label: &str) -> Option<String> {
     let lines: Vec<String> = (0..screen.rows())
         .map(|row| row_text(screen, row))
         .collect();
@@ -105,16 +105,22 @@ fn value_under(screen: &TerminalSnapshot, label: &str) -> String {
         .iter()
         .enumerate()
         .find(|(row, line)| *row >= 6 && line.contains(label))
-        .map(|(row, _)| row)
-        .unwrap_or_else(|| panic!("label {label:?} missing\n{}", text(screen)));
-    let column = lines[index].find(label).expect("label column");
+        .map(|(row, _)| row)?;
+    let column = lines[index].find(label)?;
     let column = lines[index][..column].chars().count();
     let value_line = lines.get(index + 1).map(String::as_str).unwrap_or("");
     let rest: String = value_line.chars().skip(column).collect();
-    rest.split_whitespace()
-        .find(|token| *token != "▎")
-        .unwrap_or("")
-        .to_string()
+    Some(
+        rest.split_whitespace()
+            .find(|token| *token != "▎")
+            .unwrap_or("")
+            .to_string(),
+    )
+}
+
+fn value_under(screen: &TerminalSnapshot, label: &str) -> String {
+    select_token(screen, label)
+        .unwrap_or_else(|| panic!("label {label:?} missing\n{}", text(screen)))
 }
 
 fn assert_select(screen: &TerminalSnapshot, label: &str, value: &str, others: &[&str]) {
@@ -472,8 +478,18 @@ fn assert_omitted(screen: &TerminalSnapshot) {
 }
 
 fn confirm_options(app: &App, check: impl Fn(&TerminalSnapshot)) {
+    confirm_options_ready(app, |_| true, check);
+}
+
+fn confirm_options_ready(
+    app: &App,
+    ready: impl Fn(&TerminalSnapshot) -> bool,
+    check: impl Fn(&TerminalSnapshot),
+) {
     click_tab(app, "Options");
-    let screen = app.wait_text("Page options");
+    let screen = app.wait_screen("page options", |screen| {
+        text(screen).contains("Page options") && ready(screen)
+    });
     check(&screen);
     click_tab(app, "Playground");
     app.wait_text("jackin");
@@ -978,11 +994,15 @@ fn option_wrap_on_leaves_the_reset_frame() {
 fn option_max_lines_20_leaves_the_reset_frame() {
     let app = page("s08-lines", "terminal.max_lines=20", 120, 40);
     app.wait_text("jackin launch");
-    confirm_options(&app, |screen| {
-        assert_select(screen, "Lines kept", "20", &["2000"]);
-        assert_toggle(screen, "Wrap long lines", "off");
-        assert_select(screen, "Horizontal scroll", "theme", &["on", "off"]);
-    });
+    confirm_options_ready(
+        &app,
+        |screen| select_token(screen, "Lines kept").as_deref() == Some("20"),
+        |screen| {
+            assert_select(screen, "Lines kept", "20", &["2000"]);
+            assert_toggle(screen, "Wrap long lines", "off");
+            assert_select(screen, "Horizontal scroll", "theme", &["on", "off"]);
+        },
+    );
     finish_option(&app, "opt.terminal.max_lines", |screen| {
         unchanged_reset(screen);
         assert!(

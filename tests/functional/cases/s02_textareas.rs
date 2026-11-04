@@ -6,6 +6,7 @@
 use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
+use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, TerminalSnapshot};
 use tuiscotti_latest::check::CheckOutcome;
 
@@ -133,6 +134,27 @@ fn label_shot(screen: &TerminalSnapshot) -> bool {
     screen
         .cell_at(u32::from(hit.x), u32::from(hit.y))
         .is_some_and(|cell| cell.bg() == SnapshotColor::Rgb(0x4a, 0x4a, 0x52))
+}
+
+/// The field-keys baseline paints the commit gutter and `Q` on `#3a3a40`
+/// bold. A quiet frame can keep those glyphs and drop the fill.
+fn commit_q_focused(screen: &TerminalSnapshot) -> bool {
+    let fill = SnapshotColor::Rgb(0x3a, 0x3a, 0x40);
+    (0..screen.rows()).any(|row| {
+        let line = row_text(screen, row);
+        if !line.contains('▎') || !line.contains('Q') || line.contains(FIX) {
+            return false;
+        }
+        let Some(cells) = screen.row(row) else {
+            return false;
+        };
+        let focused = |glyph: &str| {
+            cells
+                .iter()
+                .any(|cell| cell.text() == glyph && cell.has(Attrs::BOLD) && cell.bg() == fill)
+        };
+        focused("▎") && focused("Q")
+    })
 }
 
 fn click_filtered(session: &AppSession, needle: &str, pred: impl Fn(&Point) -> bool) {
@@ -788,6 +810,9 @@ fn field_keys_desktop() {
         &[EDITING, "ln 1/1", "Q"],
         &[FIX, "stuff", "Qfix stuff", "fix stuffQ", MOOD],
     );
+    session
+        .app
+        .wait_screen("commit focus fill", commit_q_focused);
     see(
         &session,
         "opt.textareas.field_keys",

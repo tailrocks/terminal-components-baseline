@@ -1047,7 +1047,18 @@ fn option_radio_nav_vim_boundary() {
 fn option_disabled_from_the_control() {
     let app = open_page("s02-checksradios-disabled", 120, 40);
     app.click_text("Options");
-    let before = app.wait_text("Page options");
+    let before = app.wait_screen("checks options", |screen| {
+        let raw = text(screen);
+        [
+            "Page options",
+            "label",
+            "\"Select all\" starts mixed on",
+            "default",
+            "○── Disable every control off",
+        ]
+        .iter()
+        .all(|needle| raw.contains(needle))
+    });
     expect(
         &before,
         &[

@@ -461,10 +461,13 @@ fn backspace(app: &App, typed: &str, gone: &[&str]) -> TerminalSnapshot {
 }
 
 /// `y` is the whole permission token. Enter before that glyph paints submits
-/// an empty line and the `(y/n)` prompt never answers.
+/// an empty line and the `(y/n)` prompt never answers. A slow paint must not
+/// type another `y`: the live token then becomes a run, and neither branch
+/// submits it.
 fn submit_claude_yes(app: &App) {
     let deadline = Instant::now() + Duration::from_secs(8);
-    let mut typed_at: Option<Instant> = None;
+    let mut typed = false;
+    let mut backed_from: Option<usize> = None;
     loop {
         assert!(
             Instant::now() < deadline && app.child_running(),
@@ -475,19 +478,22 @@ fn submit_claude_yes(app: &App) {
         if input == "y" {
             app.key("enter");
             let sent = Instant::now();
-            while sent.elapsed() < Duration::from_millis(400) {
+            while sent.elapsed() < Duration::from_millis(400) && Instant::now() < deadline {
                 if live_input(&app.screen(), Side::Claude).is_empty() {
                     return;
                 }
                 std::thread::sleep(Duration::from_millis(25));
             }
-            typed_at = None;
             continue;
         }
-        if input.is_empty() && typed_at.is_none_or(|at| at.elapsed() >= Duration::from_millis(400))
-        {
+        let extra_y = input.len() > 1 && input.bytes().all(|byte| byte == b'y');
+        if extra_y && backed_from != Some(input.len()) {
+            app.key("backspace");
+            backed_from = Some(input.len());
+        } else if input.is_empty() && !typed {
             app.type_text("y");
-            typed_at = Some(Instant::now());
+            typed = true;
+            backed_from = None;
         }
         std::thread::sleep(Duration::from_millis(25));
     }

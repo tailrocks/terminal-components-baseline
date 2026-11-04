@@ -91,6 +91,29 @@ fn click_connect(app: &App) {
     app.click(hits[0]);
 }
 
+/// The status footer is the last row. The body already contains "Connected to
+/// Development" while that footer is still blank, and `visual` compares the
+/// next stable frame.
+fn footer_connected(screen: &TerminalSnapshot) -> bool {
+    let last = screen.rows().saturating_sub(1);
+    row_text(screen, last).contains("✓ Connected to Development")
+}
+
+fn wide_triggers(screen: &TerminalSnapshot) -> bool {
+    screen.cols() == 120
+        && screen.rows() == 40
+        && text(screen).contains(NO_TRIGGERS)
+        && text(screen).contains("public › products")
+        && footer_connected(screen)
+}
+
+fn narrow_connected(screen: &TerminalSnapshot) -> bool {
+    screen.cols() == 80
+        && screen.rows() == 24
+        && text(screen).contains(NO_TRIGGERS)
+        && footer_connected(screen)
+}
+
 /// The 140ms press flash stays painted until a later frame. A same-size resize
 /// does not force that frame, so the nudge goes one column out and back.
 fn flash_settle(app: &App) {
@@ -113,6 +136,14 @@ fn flash_settle(app: &App) {
             screen.cols() == u32::from(cols) && screen.rows() == u32::from(rows)
         });
     }
+}
+
+fn open_table(app: &App, name: &str) {
+    click_left(app, name);
+    let title = format!("public › {name}");
+    app.wait_text(&title);
+    app.key("enter");
+    app.wait_text(&title);
 }
 
 fn open_object(app: &App, name: &str) {
@@ -165,8 +196,50 @@ fn footer(count: &str, what: &str) -> String {
     format!("{count} {what} · {CATALOG} · {QUEUED}")
 }
 
+/// The connected status lasts five seconds. The structure tour is longer than
+/// that on a loaded runner, so the baseline frames are taken on a fresh
+/// session that reaches the empty trigger list while the footer is still up.
+fn capture_trigger_baselines() {
+    let app = open();
+    click_left(&app, "Development");
+    app.wait_text(HOST);
+    click_connect(&app);
+    app.wait_screen("connected footer", |screen| {
+        text(screen).contains("Query 1") && footer_connected(screen)
+    });
+    open_table(&app, "customers");
+    open_table(&app, "products");
+    app.key("ctrl+d");
+    app.wait_text(CATALOG);
+    click_structure_tab(&app, "Triggers");
+    let wide = app.wait_screen("wide triggers", wide_triggers);
+    assert_eq!((wide.cols(), wide.rows()), (120, 40));
+    see(
+        &wide,
+        &[
+            NO_TRIGGERS,
+            "public › products",
+            "✓ Connected to Development",
+        ],
+        &[ORG_TRIGGER, CUSTOMER_TRIGGER],
+    );
+    app.visual(WIDE_ID);
+
+    app.resize(80, 24);
+    let narrow = app.wait_screen("narrow triggers", narrow_connected);
+    assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
+    see(
+        &narrow,
+        &[NO_TRIGGERS, CONNECTED],
+        &[ORG_TRIGGER, CUSTOMER_TRIGGER],
+    );
+    app.visual(NARROW_ID);
+    app.finish();
+}
+
 #[test]
 fn structure_tabs_follow_the_open_object_including_an_empty_trigger_list() {
+    capture_trigger_baselines();
     let app = open();
     let landing = app.screen();
     assert_eq!((landing.cols(), landing.rows()), (120, 40));
@@ -424,23 +497,15 @@ fn structure_tabs_follow_the_open_object_including_an_empty_trigger_list() {
         ],
     );
     assert_eq!((triggers.cols(), triggers.rows()), (120, 40));
-    flash_settle(&app);
-    let wide = app.screen();
-    assert_eq!((wide.cols(), wide.rows()), (120, 40));
     see(
-        &wide,
+        &triggers,
         &[NO_TRIGGERS, "public › products"],
         &[ORG_TRIGGER, CUSTOMER_TRIGGER],
     );
-    app.visual(WIDE_ID);
 
     app.resize(80, 24);
     let narrow = app.wait_screen("narrow triggers", |screen| {
-        let visible = text(screen);
-        screen.cols() == 80
-            && screen.rows() == 24
-            && visible.contains(NO_TRIGGERS)
-            && visible.contains(CONNECTED)
+        screen.cols() == 80 && screen.rows() == 24 && text(screen).contains(NO_TRIGGERS)
     });
     assert_eq!((narrow.cols(), narrow.rows()), (80, 24));
     see(
@@ -448,20 +513,6 @@ fn structure_tabs_follow_the_open_object_including_an_empty_trigger_list() {
         &[NO_TRIGGERS, "products", "public › products"],
         &[ORG_TRIGGER, CUSTOMER_TRIGGER, "BEFORE UPDATE"],
     );
-    flash_settle(&app);
-    let narrow_settled = app.wait_screen("narrow triggers settled", |screen| {
-        let visible = text(screen);
-        screen.cols() == 80
-            && screen.rows() == 24
-            && visible.contains(NO_TRIGGERS)
-            && visible.contains(CONNECTED)
-    });
-    see(
-        &narrow_settled,
-        &[NO_TRIGGERS, CONNECTED],
-        &[ORG_TRIGGER, CUSTOMER_TRIGGER],
-    );
-    app.visual(NARROW_ID);
 
     app.resize(120, 40);
     let restored = app.wait_screen("restored triggers", |screen| {
