@@ -1,0 +1,45 @@
+#![cfg(feature = "demo")]
+
+mod common;
+
+use common::*;
+use jackin_console::fixtures::Scenario;
+use junie_tui::core::event::Input;
+use junie_tui::runtime::Application;
+
+fn entered(url: &str) -> String {
+    let mut app = app(Scenario::Returning);
+    press(&mut app, "n g");
+    Application::handle(&mut app, Input::Paste(url.to_owned()));
+    press(&mut app, "enter");
+    screen(&mut app)
+}
+
+#[test]
+fn a_known_repository_url_in_any_spelling_is_accepted() {
+    for url in [
+        "github.com/chainargos/payments-platform",
+        "https://github.com/chainargos/payments-platform",
+        "https://GitHub.com/chainargos/payments-platform.git",
+        "git@github.com:chainargos/payments-platform.git",
+        "ssh://git@github.com/chainargos/payments-platform/",
+    ] {
+        let shown = entered(url);
+        assert!(shown.contains("step 2 of 5"), "{url}:\n{shown}");
+    }
+}
+
+#[test]
+fn a_url_that_only_contains_a_known_repository_is_refused() {
+    for url in [
+        "https://evil.invalid/chainargos/payments-platform",
+        "https://github.com/other/chainargos/payments-platform",
+        "https://github.com/chainargos/payments-platform-extra",
+        "https://github.com.evil.invalid/chainargos/payments-platform",
+        "https://github.com@evil.invalid/chainargos/payments-platform",
+    ] {
+        let shown = entered(url);
+        assert!(shown.contains("Could not resolve"), "{url}:\n{shown}");
+        assert!(shown.contains("step 1 of 5"), "{url}:\n{shown}");
+    }
+}

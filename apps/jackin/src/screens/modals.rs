@@ -170,6 +170,21 @@ impl FileSource for BackendSource {
     }
 }
 
+fn repo_identity(text: &str) -> Option<(String, String)> {
+    let text = text.trim();
+    let (authority, path) = match text.split_once("://") {
+        Some((_, rest)) => rest.split_once('/')?,
+        None => match text.split_once(':') {
+            Some((head, path)) if head.contains('@') => (head, path),
+            _ => text.split_once('/')?,
+        },
+    };
+    let host = authority.rsplit('@').next()?.to_ascii_lowercase();
+    let path = path.trim_matches('/');
+    let path = path.strip_suffix(".git").unwrap_or(path);
+    (!host.is_empty() && !path.is_empty()).then(|| (host, path.to_owned()))
+}
+
 pub fn file_browser(
     id: WidgetId,
     title: &str,
@@ -179,7 +194,13 @@ pub fn file_browser(
     w: &World,
 ) -> FileBrowser {
     let source = BackendSource(w.backend.file_source(w));
-    let repos: Vec<String> = w.github.iter().map(|r| r.full_name.clone()).collect();
+    let repos: Vec<(String, String)> = w
+        .github
+        .iter()
+        .filter_map(|r| {
+            repo_identity(&r.url).or_else(|| repo_identity(&format!("github.com/{}", r.full_name)))
+        })
+        .collect();
     let git_url = w.surfaces.fixed.as_ref().map(|f| f.git_url.clone());
     let url = UrlEntry::new("Git URL…", "Git URL")
         .back("Browse folders")
@@ -192,7 +213,7 @@ pub fn file_browser(
         .validate(move |url| {
             if let Some(error) = &git_url {
                 Err(error.clone())
-            } else if repos.iter().any(|r| url.contains(r.as_str())) {
+            } else if repo_identity(url).is_some_and(|id| repos.contains(&id)) {
                 Ok(())
             } else {
                 Err(format!("Could not resolve {url}: repository not found"))
