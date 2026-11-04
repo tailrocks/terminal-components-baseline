@@ -287,9 +287,41 @@ fn j04_usage_route() {
         "hard-cases failure replaced Go\n{}",
         text(&failed)
     );
-    let current = up_until(&app, "work became current", |visible| {
-        visible.contains(WORK) && visible.contains("76%") && visible.contains("· current ·")
-    });
+    // Experiments stays on the fixture's refreshing row, so the header keeps
+    // "refreshing". Stop on Work instead of stepping past it while it is stale.
+    let current = 'work: {
+        for _ in 0..40 {
+            let screen = app.screen();
+            let visible = text(&screen);
+            if visible.contains(WORK) && visible.contains("76%") && visible.contains("· current ·")
+            {
+                no_secrets(&screen);
+                break 'work screen;
+            }
+            if visible.contains(WORK) && visible.contains(STALE) {
+                let settled = app.wait_screen("work became current", |screen| {
+                    let visible = text(screen);
+                    visible.contains(WORK)
+                        && visible.contains("76%")
+                        && visible.contains("· current ·")
+                        && !visible.contains(STALE)
+                });
+                no_secrets(&settled);
+                break 'work settled;
+            }
+            let before = selection(&visible);
+            app.key("up");
+            let deadline = Instant::now() + Duration::from_millis(800);
+            loop {
+                let moved = selection(&text(&app.screen()));
+                if moved != before || Instant::now() >= deadline {
+                    break;
+                }
+                std::thread::sleep(Duration::from_millis(20));
+            }
+        }
+        panic!("work became current\n{}", text(&app.screen()));
+    };
     assert!(
         !text(&current).contains(STALE),
         "stale work stayed stale after refresh\n{}",
