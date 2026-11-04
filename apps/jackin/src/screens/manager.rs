@@ -578,6 +578,12 @@ impl ManagerScreen {
             InstanceStatus::RestoreAvailable
             | InstanceStatus::PreservedDirty
             | InstanceStatus::PreservedUnpushed => {
+                let row = RowKey::Instance(id.to_owned());
+                if self.busy_rows.iter().any(|(k, _)| *k == row) {
+                    cx.status("Restore already running");
+                    return Outcome::Consumed;
+                }
+                self.busy_rows.push((row, "restoring…"));
                 w.perform(Effect::Restore {
                     instance: id.to_owned(),
                 });
@@ -1999,9 +2005,8 @@ impl Page<Jackin> for ManagerScreen {
             out = Outcome::Changed;
         }
 
-        if w.now_secs() - w.last_refresh_secs >= 5 {
+        if w.now_secs() - w.last_refresh_secs >= 5 && w.refresh() {
             w.last_refresh_secs = w.now_secs();
-            w.perform(Effect::Refresh);
             out = Outcome::Changed;
         }
         self.build_rows(w);
@@ -2074,18 +2079,23 @@ impl Page<Jackin> for ManagerScreen {
                 }
                 Err(error) => cx.error(error.clone()),
             },
-            Msg::Restored { instance, result } => match result {
-                Ok(snapshot) => {
-                    w.apply((**snapshot).clone());
-                    self.attach_restored(instance, w, cx);
+            Msg::Restored { instance, result } => {
+                self.busy_rows
+                    .retain(|(k, _)| *k != RowKey::Instance(instance.clone()));
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        self.attach_restored(instance, w, cx);
+                    }
+                    Err(error) => cx.error(error.clone()),
                 }
-                Err(error) => cx.error(error.clone()),
-            },
+            }
             Msg::LaunchCancelled { .. } => {}
-            Msg::Refreshed { result } => match result {
-                Ok(snapshot) => w.apply((**snapshot).clone()),
-                Err(error) => cx.error(format!("Refresh failed: {error} · showing last-good rows")),
-            },
+            Msg::Refreshed { result } => {
+                if let Err(error) = result {
+                    cx.error(format!("Refresh failed: {error} · showing last-good rows"));
+                }
+            }
             _ => return Outcome::Ignored,
         }
         self.build_rows(w);

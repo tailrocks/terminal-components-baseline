@@ -37,6 +37,7 @@ struct TestBackend {
     inner: Arc<dyn Backend>,
     seen: Mutex<Vec<Effect>>,
     answer: Answer,
+    unanswered: fn(&Effect) -> bool,
     files: Option<fn() -> Box<dyn FileSource>>,
 }
 
@@ -46,6 +47,7 @@ impl TestBackend {
             inner: SimBackend::shared(),
             seen: Mutex::new(vec![]),
             answer,
+            unanswered: |_| false,
             files: None,
         })
     }
@@ -66,6 +68,9 @@ impl TestBackend {
 impl Backend for TestBackend {
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
         self.seen.lock().expect("seen").push(effect.clone());
+        if (self.unanswered)(effect) {
+            return None;
+        }
         match (self.answer)(effect, world) {
             Some(msg) => Some(Completion::ready(0, msg)),
             None => self.inner.perform(effect, world),
@@ -1037,6 +1042,7 @@ fn workdir_picker(world: World, files: Option<fn() -> Box<dyn FileSource>>) -> S
         inner: SimBackend::shared(),
         seen: Mutex::new(vec![]),
         answer: |_, _| None,
+        unanswered: |_| false,
         files,
     });
     let mut world = world;
@@ -1555,4 +1561,83 @@ fn a_restored_instance_gets_the_host_pane_policy_when_it_is_created() {
         "the host policy is on the daemon before the attach request runs"
     );
     assert!(!daemon.panes.is_empty());
+}
+
+fn held(unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBackend>) {
+    let backend = Arc::new(TestBackend {
+        inner: SimBackend::shared(),
+        seen: Mutex::new(vec![]),
+        answer: restore,
+        unanswered,
+        files: None,
+    });
+    let mut world = world_for(Scenario::Returning);
+    world.backend = backend.clone();
+    (timed(Scenario::Returning, world), backend)
+}
+
+fn restores(backend: &TestBackend) -> usize {
+    backend
+        .seen()
+        .iter()
+        .filter(|e| matches!(e, Effect::Restore { .. }))
+        .count()
+}
+
+#[test]
+fn a_second_enter_on_a_restoring_instance_does_not_restore_it_again() {
+    let (mut app, backend) = held(|e| matches!(e, Effect::Restore { .. }));
+    press(&mut app, "down right down down enter");
+    press(&mut app, "enter");
+
+    assert_eq!(restores(&backend), 1, "one restore for two Enters");
+    assert_eq!(status(&app), "Restore already running");
+
+    let reply = restore(
+        &Effect::Restore {
+            instance: "jk-c41e".into(),
+        },
+        &app.world,
+    )
+    .expect("the reply");
+    app.deliver(&reply);
+    assert_eq!(app.route(), Route::Capsule);
+    assert!(app.world.daemons.contains_key("jk-c41e"));
+}
+
+#[test]
+fn a_refresh_waits_for_the_one_in_flight() {
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh));
+    run_for(&mut app, 30_000);
+    assert_eq!(backend.refreshes(), 1, "no second refresh while one is out");
+
+    app.deliver(&Msg::Refreshed {
+        result: Ok(Box::new(sim::snapshot(&app.world))),
+    });
+    run_for(&mut app, 6_000);
+    assert_eq!(backend.refreshes(), 2, "the next one goes after the reply");
+}
+
+#[test]
+fn a_refresh_that_lands_after_a_newer_snapshot_is_dropped() {
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh));
+    run_for(&mut app, 6_000);
+    assert_eq!(backend.refreshes(), 1);
+
+    let old = sim::snapshot(&app.world);
+    let mut newer = old.clone();
+    newer.instances.retain(|i| i.id != "jk-c41e");
+    app.deliver(&Msg::Purged {
+        instance: "jk-c41e".into(),
+        result: Ok(Box::new(newer)),
+    });
+    assert!(app.world.instance("jk-c41e").is_none());
+
+    app.deliver(&Msg::Refreshed {
+        result: Ok(Box::new(old)),
+    });
+    assert!(
+        app.world.instance("jk-c41e").is_none(),
+        "the older refresh did not bring the instance back"
+    );
 }

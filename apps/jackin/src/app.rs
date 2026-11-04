@@ -196,6 +196,7 @@ impl App {
             ClipboardMode::Preview => shell::Clipboard::new().write(false),
             ClipboardMode::Host(sink) => shell::Clipboard::new().native(sink),
         };
+        shell.clipboard.install();
         let router = crate::pages::router(&world);
         let keys = shell_keys(&world);
         let host_menus = Self::build_host_menu(Route::Manager, &world);

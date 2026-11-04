@@ -81,7 +81,11 @@ impl Clipboard {
     }
 
     pub fn copy(&self, text: &str) -> Copied {
-        clipboard::copy(text);
+        clipboard::store(text);
+        self.deliver(text)
+    }
+
+    fn deliver(&self, text: &str) -> Copied {
         let native = self.native.as_ref().map(|sink| sink.write(text));
         if native == Some(true) {
             return Copied::Copied {
@@ -115,7 +119,7 @@ impl Clipboard {
     pub fn install(&self) {
         let this = self.clone();
         clipboard::set_hook(move |t| {
-            this.system(t);
+            this.deliver(t);
         });
     }
 

@@ -284,8 +284,12 @@ pub mod clipboard {
         static HOOK: RefCell<Option<Hook>> = const { RefCell::new(None) };
     }
 
-    pub fn copy(text: &str) {
+    pub(crate) fn store(text: &str) {
         TEXT.with(|t| *t.borrow_mut() = Some(text.to_owned()));
+    }
+
+    pub fn copy(text: &str) {
+        store(text);
         HOOK.with(|h| {
             if let Some(f) = h.borrow().as_ref() {
                 f(text);

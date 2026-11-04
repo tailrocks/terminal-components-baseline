@@ -352,6 +352,9 @@ pub struct World {
 
     pub tickets: Ticket,
 
+    pub snapshots_applied: u64,
+    pub refresh_from: Option<u64>,
+
     /// What a program may do through a pane; every daemon the world creates
     /// starts with it.
     pub pane_policy: Arc<PanePolicy>,
@@ -487,6 +490,8 @@ impl World {
             discovery_pending: false,
             surfaces,
             tickets: 0,
+            snapshots_applied: 0,
+            refresh_from: None,
             pane_policy: Arc::default(),
         };
         world.sync_arbiter();
@@ -507,6 +512,17 @@ impl World {
     pub fn next_ticket(&mut self) -> Ticket {
         self.tickets += 1;
         self.tickets
+    }
+
+    /// Asks the backend for a fresh snapshot unless an earlier ask is still
+    /// unanswered, so replies cannot arrive out of order.
+    pub fn refresh(&mut self) -> bool {
+        if self.refresh_from.is_some() {
+            return false;
+        }
+        self.refresh_from = Some(self.snapshots_applied);
+        self.perform(Effect::Refresh);
+        true
     }
 
     pub fn now_ms(&self) -> i64 {
@@ -625,6 +641,7 @@ impl World {
             index_error,
             daemon_health,
         } = snapshot;
+        self.snapshots_applied += 1;
         self.workspaces = workspaces;
         self.roles = roles;
         self.instances = instances;
@@ -662,7 +679,17 @@ impl World {
                     r.load_error = Some(error.clone());
                 }
             }
-            Msg::Refreshed { result: Err(_) } => self.daemon_health = DaemonHealth::Stale,
+            Msg::Refreshed { result } => {
+                let current = self
+                    .refresh_from
+                    .take()
+                    .is_none_or(|from| from == self.snapshots_applied);
+                match result {
+                    Ok(snapshot) if current => self.apply((**snapshot).clone()),
+                    Err(_) if current => self.daemon_health = DaemonHealth::Stale,
+                    Ok(_) | Err(_) => {}
+                }
+            }
             Msg::LaunchCancelled { instance } => self.record((**instance).clone()),
             Msg::AccountRefreshed { account, result } => {
                 let now = self.now_secs();
@@ -981,13 +1008,14 @@ impl World {
             ready.push(only.id.clone());
         }
         let resolved = self.account_for(provider, ws, role, None);
-        let preselected = resolved
-            .account
-            .filter(|id| resolved.explicit && ready.contains(id))
-            .or_else(|| match ready.as_slice() {
+        let explicit = resolved.account.filter(|_| resolved.explicit);
+        let preselected = match &explicit {
+            Some(id) => ready.contains(id).then(|| id.clone()),
+            None => match ready.as_slice() {
                 [only] => Some(only.clone()),
                 _ => None,
-            });
+            },
+        };
         if let Some(p) = &preselected
             && let Some(i) = ready.iter().position(|x| x == p)
             && i > 0
@@ -995,19 +1023,23 @@ impl World {
             let x = ready.remove(i);
             ready.insert(0, x);
         }
-        let block = if ready.is_empty() {
-            blocked.first().map(|(id, why)| {
-                let launch_block = self.accounts.get(id).and_then(|a| a.launch_blocked);
-                if launch_block.is_some_and(|b| b.text(self.surfaces.fixed.as_ref()) == *why) {
-                    return why.clone();
-                }
-                let name = self
-                    .accounts
-                    .get(id)
-                    .map(|a| a.title())
-                    .unwrap_or(id.clone());
-                format!("{name} · {why}")
-            })
+        let block = if preselected.is_none() && ready.len() <= 1 {
+            blocked
+                .iter()
+                .find(|(id, _)| explicit.as_ref() == Some(id))
+                .or(blocked.first())
+                .map(|(id, why)| {
+                    let launch_block = self.accounts.get(id).and_then(|a| a.launch_blocked);
+                    if launch_block.is_some_and(|b| b.text(self.surfaces.fixed.as_ref()) == *why) {
+                        return why.clone();
+                    }
+                    let name = self
+                        .accounts
+                        .get(id)
+                        .map(|a| a.title())
+                        .unwrap_or(id.clone());
+                    format!("{name} · {why}")
+                })
         } else {
             None
         };
