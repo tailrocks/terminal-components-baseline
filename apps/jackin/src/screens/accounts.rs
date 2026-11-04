@@ -1157,11 +1157,24 @@ impl AccountsScreen {
                 form: true,
             },
             w,
+            cx,
         );
     }
 
-    fn save_registry(&mut self, registry: AccountRegistry, saving: Saving, w: &mut World) {
+    fn save_registry(
+        &mut self,
+        registry: AccountRegistry,
+        saving: Saving,
+        w: &mut World,
+        cx: &mut Cx,
+    ) {
         if self.saving.is_some() {
+            let msg = "Saving the previous change… try again when it finishes".to_owned();
+            if saving.form {
+                cx.with_top::<FormDialog>(move |f| f.error = Some(msg));
+            } else {
+                cx.status(msg);
+            }
             return;
         }
         self.saving = Some(saving);
@@ -1255,6 +1268,7 @@ impl AccountsScreen {
                 form: false,
             },
             w,
+            cx,
         );
     }
 
@@ -1274,6 +1288,7 @@ impl AccountsScreen {
                         form: false,
                     },
                     w,
+                    cx,
                 );
             }
             Err(e) => cx.error(format!("Cannot set default: {e}")),
@@ -2844,6 +2859,7 @@ impl Page<Jackin> for AccountsScreen {
                             form: false,
                         },
                         w,
+                        cx,
                     );
                 }
                 self.build_rows(w);

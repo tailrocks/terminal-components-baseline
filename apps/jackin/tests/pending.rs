@@ -12,7 +12,8 @@ use jackin_console::backend::{
     ValidationOutcome,
 };
 use jackin_console::domain::account::{
-    AccountIdentity, CredentialSource, DetectedKind, IssueCode, Recoverability, RecoverableIssue,
+    Account, AccountIdentity, AccountOrigin, CredentialSource, DetectedKind, IssueCode,
+    Recoverability, RecoverableIssue,
 };
 use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::Instance;
@@ -36,6 +37,7 @@ use junie_tui::theme::{ColorLevel, Theme};
 struct Held {
     inner: Arc<dyn Backend>,
     seen: Mutex<Vec<Effect>>,
+    hold_saves: bool,
 }
 
 impl Held {
@@ -43,6 +45,15 @@ impl Held {
         Arc::new(Self {
             inner: SimBackend::shared(),
             seen: Mutex::new(vec![]),
+            hold_saves: false,
+        })
+    }
+
+    fn holding_saves() -> Arc<Self> {
+        Arc::new(Self {
+            inner: SimBackend::shared(),
+            seen: Mutex::new(vec![]),
+            hold_saves: true,
         })
     }
 
@@ -122,6 +133,7 @@ impl Backend for Held {
             | Effect::ProbeFolder { .. }
             | Effect::ReadChanges { .. }
             | Effect::LoadOp { .. } => None,
+            Effect::SaveAccounts { .. } if self.hold_saves => None,
             _ => self.inner.perform(effect, world),
         }
     }
@@ -153,6 +165,13 @@ impl Backend for Held {
 
 fn held(scenario: Scenario) -> (App, Arc<Held>) {
     let backend = Held::new();
+    let mut world = world_for(scenario);
+    world.backend = backend.clone();
+    (timed(scenario, world), backend)
+}
+
+fn held_saves(scenario: Scenario) -> (App, Arc<Held>) {
+    let backend = Held::holding_saves();
     let mut world = world_for(scenario);
     world.backend = backend.clone();
     (timed(scenario, world), backend)
@@ -1057,4 +1076,69 @@ fn the_sim_holds_a_1password_check_for_900_ms() {
         done.contains("✓ material   1Password reference resolved"),
         "{done}"
     );
+}
+
+#[test]
+fn a_change_made_while_the_registry_is_saving_is_refused_out_loud() {
+    let (mut app, backend) = held_saves(Scenario::AccountsMixed);
+    press(&mut app, "j j t");
+    assert_eq!(backend.saves(), 1);
+
+    press(&mut app, "j j space");
+
+    assert_eq!(backend.saves(), 1, "the second change is not sent");
+    let shown = status(&app);
+    assert!(
+        shown.contains("Saving the previous change") && shown.contains("try again"),
+        "the refusal reaches the operator: {shown}"
+    );
+}
+
+/// "Spare", provider Claude, the local folder source and the folder that
+/// discovery already found.
+const DISCOVERED_FOLDER: &str = "~/.claude-spare";
+
+#[test]
+fn registering_a_copy_of_a_discovered_folder_replaces_the_discovered_account() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    let discovered = Account::discovered(
+        "disc-claude-spare",
+        "discovered",
+        Provider::Anthropic,
+        CredentialSource::LocalFolder {
+            path: DISCOVERED_FOLDER.into(),
+            detected: DetectedKind::Unknown,
+        },
+    );
+    app.world.accounts.insert(discovered);
+    press(&mut app, FOLDER);
+    click_text(&mut app, "Save");
+    let ticket = backend.check_ticket();
+    let outcome = folder_outcome(&app);
+    app.deliver(&checked(ticket, outcome));
+    let ticket = backend.probe_ticket();
+    app.deliver(&Msg::FolderProbed {
+        ticket,
+        result: Ok(FolderProbe::Found(DetectedKind::CodexAuthJson)),
+    });
+    ticks(&mut app, 4);
+
+    let shown = screen(&mut app);
+    assert!(!shown.contains("Already registered"), "{shown}");
+    let Some(Effect::SaveAccounts { registry, .. }) = backend
+        .seen()
+        .into_iter()
+        .find(|e| matches!(e, Effect::SaveAccounts { .. }))
+    else {
+        panic!("the copy is stored:\n{shown}");
+    };
+    let at_folder: Vec<_> = registry
+        .accounts
+        .iter()
+        .filter(|a| {
+            matches!(&a.source, CredentialSource::LocalFolder { path, .. } if path == DISCOVERED_FOLDER)
+        })
+        .map(|a| (a.display_name.as_str(), a.origin))
+        .collect();
+    assert_eq!(at_folder, vec![("Spare", AccountOrigin::Registered)]);
 }
