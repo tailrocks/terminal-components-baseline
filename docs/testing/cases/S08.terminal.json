@@ -1,0 +1,2084 @@
+{
+  "task_id": "S08.terminal",
+  "cases": [
+    {
+      "case_id": "sc.terminal.route",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "--page terminal, keyboard ], and the Text & code sidebar open the paused reset frame: payments-platform, jackin launch, profile, dev, jackin.toml, and LIVE, with Resolve workspace running. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_route.tui.json"
+      ],
+      "route": "terminal",
+      "label": "Terminal",
+      "entry_path": "--page terminal",
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "39780b9f8262239e24cd42acf21c64d08a2ac2df695cde6e6282c1c5659b744d",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_route 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.playground",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "Playground shows the live widget caption and the paused reset frame: payments-platform, jackin launch, profile, dev, jackin.toml, and LIVE, with Resolve workspace running. Options and States captions stay absent. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1bacab9c4019d13a55b8ff8d0c79ea6a6ed8119a17d66ee8bcd3ae1d7df1ca88",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_playground 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.playground.120x40",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Playground at 120 by 40 shows the live widget and the paused reset frame: payments-platform, jackin launch, profile, dev, jackin.toml, and LIVE, with Resolve workspace running. The header shows 120×40. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground_120x40.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.terminal.playground.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "Playground at 120 by 40 shows the live widget and the paused reset frame: payments-platform, jackin launch, profile, dev, jackin.toml, and LIVE, with Resolve workspace running.",
+      "forbidden_effects": "A different section caption is active, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "action_sequence": "Launch showcase --page terminal --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ce97b629c92f5780c977a46179d0b61a4a297ba6469f68ff0e0880ee717eaeda",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_playground_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.terminal.playground.80x24",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Playground at 80 by 24 shows the clipped reset frame, including 0/7 and one focus gutter. The header has no size chip and no truecolor text.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground_80x24.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.terminal.playground.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "Playground at 80 by 24 shows the clipped reset frame as 0/7, with one focus gutter and no size chip.",
+      "forbidden_effects": "The header shows 80×24 or truecolor, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "action_sequence": "Launch showcase --page terminal --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bc40c81c1aa657b2a729939e1b7a9961951ee9e61252b50271ee43caf03cedbb",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_playground_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.terminal.options",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "Options shows Page options and one control per option, including wrap off, max lines 2000, and numbered on. Compare levels and the playground caption stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b4c0b4e9fd8bba4ebb8869f944d36e8b8646493c2da030d2b482858428d6edef",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_options 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.options.120x40",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Options at 120 by 40 shows Page options, wrap off, max lines 2000, and numbered on. The header shows 120×40.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options_120x40.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.terminal.options.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "Options at 120 by 40 shows every terminal control at its default.",
+      "forbidden_effects": "Compare levels or the playground caption is the active caption.",
+      "action_sequence": "Launch showcase --page terminal --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e9f3e74ca569cbde71a3f2dd2702a92da5e05c821916c38f219dcdff027fe954",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_options_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.terminal.options.80x24",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Options at 80 by 24 shows the options section and the default controls that fit, including wrap off and max lines 2000. The header has no size chip.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options_80x24.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.terminal.options.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "Options at 80 by 24 shows the options section without a size chip.",
+      "forbidden_effects": "The header shows 80×24 or truecolor, or Compare levels is the active caption.",
+      "action_sequence": "Launch showcase --page terminal --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "626e0a47a6d8953d4ae6149442bbae95f3b49514e93ff8192b3e28c921b2ff1e",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_options_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.terminal.states",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "States draws the labels rest, focused, selected, empty, overflow, and narrow, with the focus-sample legend. Overflow shows Finished. The playground caption stays absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "721cd473dd7d9417ce7c9e9b46063f2d3a3843b80f01de23d14340ab2239f1c8",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_states 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.states.120x40",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "States at 120 by 40 shows rest, focused, selected, empty, overflow, and narrow, plus Viewport, Wrapped, and Step rail. The header shows 120×40.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states_120x40.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.terminal.states.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "States at 120 by 40 draws rest, focused, selected, empty, overflow, and narrow.",
+      "forbidden_effects": "A specimen label outside that row list is drawn, or the playground caption is active.",
+      "action_sequence": "Launch showcase --page terminal --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5b9da5dd5b6ac77ece79548ecee8565ae1a0e52203f86b55f6eefb13116e1cc8",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_states_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.terminal.states.80x24",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "States at 80 by 24 shows the States caption and the drawn labels that fit. The header has no size chip.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states_80x24.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.terminal.states.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "States at 80 by 24 shows the States section without a size chip.",
+      "forbidden_effects": "The header shows 80×24 or truecolor, or the playground caption is active.",
+      "action_sequence": "Launch showcase --page terminal --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f3482a0d52fb8d0de1292fab171bd7f11cc9f3df58c43b48c15be0ac5b257a38",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_states_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.terminal.specimen.rest",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "The States frame shows the rest label.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_rest.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bd47412943b1f58e7254016a8b8d37b45929eb3213c08d8d47abc9cea4f903c7",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_specimen_rest 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.specimen.hover",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/terminal.rs states_grid lines 309-312. Line 312 is `.rows(&[Rest, Focused, Selected, Empty, Overflow, Narrow])`. The list omits SpecimenState::Hover.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.terminal.specimen.pressed",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/terminal.rs states_grid lines 309-312. Line 312 is `.rows(&[Rest, Focused, Selected, Empty, Overflow, Narrow])`. The list omits SpecimenState::Pressed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.terminal.specimen.focused",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "The States frame shows the focused label.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_focused.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e3e9e092161a9d8a6e74dad49fafbcee32bc3ab20c73a104ad75f4a42509725b",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_specimen_focused 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.specimen.focused_hover",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/terminal.rs states_grid lines 309-312. Line 312 is `.rows(&[Rest, Focused, Selected, Empty, Overflow, Narrow])`. The list omits SpecimenState::FocusedHover.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.terminal.specimen.selected",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "The States frame shows the selected label.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_selected.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "85826f6cdada920013033255e1fbef26d5a675c160a07a0a243e752674cb5f65",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_specimen_selected 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.specimen.disabled",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/terminal.rs states_grid lines 309-312. Line 312 is `.rows(&[Rest, Focused, Selected, Empty, Overflow, Narrow])`. The list omits SpecimenState::Disabled.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.terminal.specimen.busy",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/terminal.rs states_grid lines 309-312. Line 312 is `.rows(&[Rest, Focused, Selected, Empty, Overflow, Narrow])`. The list omits SpecimenState::Busy.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.terminal.specimen.error",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/terminal.rs states_grid lines 309-312. Line 312 is `.rows(&[Rest, Focused, Selected, Empty, Overflow, Narrow])`. The list omits SpecimenState::Error.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.terminal.specimen.editing",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/terminal.rs states_grid lines 309-312. Line 312 is `.rows(&[Rest, Focused, Selected, Empty, Overflow, Narrow])`. The list omits SpecimenState::Editing.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": false
+    },
+    {
+      "case_id": "sc.terminal.specimen.empty",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "The States frame shows the empty label.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_empty.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e08ec0c528e158d74933d0d9714414f10052a23ac941695f0b0a6729da218f0e",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_specimen_empty 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.specimen.loading",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/terminal.rs states_grid lines 309-312. Line 312 is `.rows(&[Rest, Focused, Selected, Empty, Overflow, Narrow])`. The list omits SpecimenState::Loading.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.terminal.specimen.overflow",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "The States frame shows the overflow label, Finished, and 0.4.0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_overflow.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "31a742068aec43ecbf2413f46db7ef0b0bae3a12bdfbcf363d6fe50df4acd097",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_specimen_overflow 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.specimen.narrow",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "The States frame shows the narrow label.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_narrow.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ba50b0c4f5c7da7763a2b6152244b1f44863a2492644a9c7eb681bebcd76c649",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_specimen_narrow 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.compare-levels",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Compare levels on stacks the truecolor grid, 256 colors, 16 colors, and no color. The 80 by 24 capture still shows the no color heading. Wheel back restores the toggle, and Options does not show Compare levels.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_compare-levels_80x24.tui.json"
+      ],
+      "route": "terminal",
+      "section_or_overlay": "states",
+      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
+      "expected_results": "Compare levels shows truecolor, 256 colors, 16 colors, and no color, including the no color heading at 80 by 24.",
+      "forbidden_effects": "Leaving Compare levels changes the selected page or an option value. The 80 by 24 capture misses the no color heading.",
+      "checkpoint_ids": [
+        "sc.terminal.compare-levels.120x40",
+        "sc.terminal.compare-levels.80x24"
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5a984a4eda9592a60b49a08de138dc869874497c82a5ef2bc08f837fc5add406",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_compare-levels_120x40 120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "aed423d2b4ba67b584f51de8f217fd23c8eef0595d6374939d5e7eafd48a88dd",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_compare-levels_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "opt.terminal.wrap",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Wrap long lines shows on. The paused reset-frame glyphs stay unchanged because the long stage lines never arrive. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_wrap.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.wrap from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Wrap long lines shows on, and the paused reset-frame glyphs stay the same.",
+      "forbidden_effects": "The reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.wrap=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7ad395782749b6d9172cf22e2334b8c1b9c44c6829ce5c2bfd249907c5687d37",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_wrap 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.max_lines",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Lines kept shows 20. The paused reset-frame glyphs stay the same, and last 20 kept stays absent. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_max_lines.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "2000",
+        "20"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.max_lines from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Lines kept shows 20. The paused reset frame is unchanged and last 20 kept is absent.",
+      "forbidden_effects": "last 20 kept appears, or the reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.max_lines=20",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2c1120ab960b272c05da52b0e74b9028cdb7f95a83a57f9e575edbff6ee0a2a9",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_max_lines 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.horizontal",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Horizontal scroll shows off. The paused reset-frame glyphs stay unchanged because the long stage lines never arrive. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_horizontal.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "theme",
+        "on",
+        "off"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.horizontal from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Horizontal scroll shows off, and the paused reset-frame glyphs stay the same.",
+      "forbidden_effects": "The reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.horizontal=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "674cfe77b04eb3a621773da273a75cda03aa32a5969f5cbff2ee72f179ea9161",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_horizontal 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.scrollbar_gap",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Scrollbar gap shows 0. The paused reset-frame glyphs stay unchanged because the long stage lines never arrive. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_scrollbar_gap.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "1",
+        "0",
+        "2"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.scrollbar_gap from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Scrollbar gap shows 0, and the paused reset-frame glyphs stay the same.",
+      "forbidden_effects": "The reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.scrollbar_gap=0",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "563812545f3114823f903edac7c6ac648178e33883be3617de64c107aa7720ab",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_scrollbar_gap 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.track_click",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Track click shows jump. The paused reset-frame glyphs stay unchanged because the long stage lines never arrive. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_track_click.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "page",
+        "jump"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.track_click from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Track click shows jump, and the paused reset-frame glyphs stay the same.",
+      "forbidden_effects": "The reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.track_click=jump",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c2f7d36e8e54bfd4de278e1b945b36d3f00af277cec76237e7c537cc55ddf60a",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_track_click 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.nav",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Viewport keys shows vim. The paused reset-frame glyphs stay unchanged because the long stage lines never arrive. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_nav.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "default",
+        "vim",
+        "no-page"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.nav from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Viewport keys shows vim, and the paused reset-frame glyphs stay the same.",
+      "forbidden_effects": "The reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.nav=vim",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b36a8fcd2ff2ca13630176a2b9c430eaf5a040c5495063b873d66ea4a0bf4048",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_nav 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.keymap",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Command keys shows custom. The paused reset-frame glyphs stay unchanged because the long stage lines never arrive. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_keymap.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "default",
+        "custom"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.keymap from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Command keys shows custom, and the paused reset-frame glyphs stay the same.",
+      "forbidden_effects": "The reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.keymap=custom",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3e50e7f0f476b1a6338d5189965c1c8b699fa785489a89faf57ad1dcb7d18fc6",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_keymap 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.mark",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Find marks shows on. The j of jackin has a different background from launch, the letters stay jackin, and the step numbers stay 01. The mark is visible without ticks. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_mark.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.mark from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Find marks on paints jackin without changing its letters or the 01 step numbers, and without a tick.",
+      "forbidden_effects": "The word jackin or the step numbers change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.mark=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3f943e24a0b01843720e61b8ca80d162473ea553e9060be3dc34711c6f24f1d0",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_mark 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.selectable",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Selectable rail shows on. The paused reset-frame glyphs stay unchanged because the long stage lines never arrive. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_selectable.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.selectable from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Selectable rail shows on, and the paused reset-frame glyphs stay the same.",
+      "forbidden_effects": "The reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.selectable=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4f4f20f8fdada40272118cc00c659582de253083c04ec7dda712d76bac913d78",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_selectable 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.numbered",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Numbered steps shows off. The viewport drops 01 through 07 and shows Resolve credentials. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_numbered.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.numbered from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Numbered steps off removes 01 through 07 and shows Resolve credentials.",
+      "forbidden_effects": "Step numbers 01 through 07 remain, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.numbered=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1b4bc9d1f0068ffd874d2f226e9cf48943793d7147c07bec999fd3beb7e511b4",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_numbered 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.terminal.rail_nav",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Rail keys shows vim. The paused reset-frame glyphs stay unchanged because the long stage lines never arrive. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_rail_nav.tui.json"
+      ],
+      "route": "terminal",
+      "option_values": [
+        "default",
+        "vim",
+        "no-page"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set terminal.rail_nav from its default to another listed value through --opt or the Options control.",
+      "expected_results": "Rail keys shows vim, and the paused reset-frame glyphs stay the same.",
+      "forbidden_effects": "The reset-frame glyphs change, or a later stage, network unreachable, a layer percent, or 0.1 s appears.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--opt",
+          "terminal.rail_nav=vim",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "daccbd68abaf3420ecbf38b81313c1e7d4b2f44cce99192c515c68ac02481500",
+        "expect_baseline": "missing",
+        "precondition": "opt_terminal_rail_nav 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.terminal.run",
+      "owner_task": "S08.terminal",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Run and Run with a failure both leave the paused reset frame: payments-platform, jackin launch, profile, dev, jackin.toml, and LIVE, with Resolve workspace running. The seam capture is the heavy rule while the pointer is still held, and after release the seam is the thin rule again. A later stage marked done, network unreachable, a layer percent, and 0.1 s stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_run_before.tui.json",
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_run_after.tui.json",
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_seam_held.tui.json"
+      ],
+      "route": "terminal",
+      "action_sequence": "Run a successful demonstration and a failed one. Select a step, toggle follow, show find marks, and wrap or scroll horizontally.",
+      "expected_results": "Run and Run with a failure keep the paused reset frame: payments-platform, jackin launch, profile, dev, jackin.toml, and LIVE, with Resolve workspace running. The seam capture is taken before release and shows the heavy rule on the seam cells.",
+      "forbidden_effects": "A later stage is marked done, network unreachable, a layer percent, or 0.1 s appears, or the seam capture is taken after the pointer is released.",
+      "checkpoint_ids": [
+        "sc.terminal.run.before",
+        "sc.terminal.run.after"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a75925fdf14f505bb2e425be7b04bb2056a875e30245618db4c0a66055517bed",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_run_before 120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "767891f235bf9efa1ff7f6a70cdf08f153bb99c24f34fd5ebf61f6b8c31503e3",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_run_after 120x40"
+      },
+      "acceptance_receipt_seam": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "terminal",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "927c419f2716e6ad6abdf023d8fe749d5481038acb9012399589f841e0a3e563",
+        "expect_baseline": "missing",
+        "precondition": "sc_terminal_seam_held 120x40"
+      }
+    }
+  ]
+}

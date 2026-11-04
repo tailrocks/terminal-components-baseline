@@ -1,0 +1,124 @@
+{
+  "task_id": "X01.clipboard",
+  "cases": [
+    {
+      "case_id": "X01.clipboard.route",
+      "owner_task": "X01.clipboard",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "showcase --page readonlyreport opens Read-only report in src/bin/showcase/pages/readonly_report.rs. The Copy report button calls cx.copy_as, Request::Copy reaches Shell::copy_at in src/bin/showcase/app.rs and src/shell/app.rs, and Clipboard::report in src/shell/clipboard.rs paints Copied the report (13 lines). The process is still running. finish then sends Ctrl+Q and the process exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "398005f7d0fe2a1153ff2390315395e26e961053",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X01.clipboard",
+      "entry_path": "showcase --page readonlyreport --color truecolor --motion reduced, then the Copy report button",
+      "return_path": "The copied status stays on Read-only report, then finish sends Ctrl+Q and the process exits 0"
+    },
+    {
+      "case_id": "X01.clipboard.copy",
+      "owner_task": "X01.clipboard",
+      "application": "cross",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "QuitKeys::classify in src/ui/leave.rs returns LeaveKey::Copy when KeyContext.selection is set and LeaveKey::Quit otherwise, while ctrl_c is on. src/shell/router.rs treats that selection as the focused ring's has_selection. With a selection it skips quit and the page handles the key. With no selection, Ctrl+C requests quit before page_key. Showcase Read-only report, tablepro connections, and holla --scenario parity-files each exit 0 on Ctrl+C when nothing is selected. A data-grid range sets the ring through ctx.selection in src/widgets/grid.rs. After shift+right on Northwind Traders, Ctrl+C leaves the process running and src/bin/showcase/pages/grid.rs paints Copied N chars, not Not copied. Tablepro history y calls copy_as(sql, \"query\") in src/bin/tablepro/workbench.rs through Request::Copy in src/bin/tablepro/app.rs. After the history scope is all connections, the status is Copied query and the process stays running. Holla Copy this folder's path is Launch::Copy in src/bin/holla/domain/catalog.rs and goes through copy_osc52 in src/bin/holla/app.rs. parity-files sets osc52_limit to 64 in src/bin/holla/domain/parity.rs and leaves osc52 on. The folder path encodes under that limit, so the status is Copied to the terminal clipboard (OSC 52, flushed) \u00b7 /Users/alex/work/notes. The 71-byte cloud-only.txt path encodes to 96 bytes, so y reports Not copied \u00b7 96 encoded bytes exceed the terminal's 64 byte OSC 52 limit and does not report Copied. parity-platforms-linux sets osc52 false. The same folder action reports Not copied \u00b7 this terminal does not accept OSC 52 \u00b7 no system clipboard is wired and does not contain a Copied line. Jackin sets clipboard write to false in src/bin/jackin/app.rs. y on the launch-failure dialog reports Copied 21 characters \u00b7 run-202609030914-b5df. layer_key consumes Ctrl+C while that dialog is open, so the process stays on Launch failed. OSC 52 bytes are queued only when Clipboard.write is true in src/shell/clipboard.rs. tests/functional/support.rs does not expose that side channel, and the cell snapshot does not include OSC. This case does not call take_output and does not claim a host pasteboard change. Holla copy_osc52 and jackin set write to false, so they do not emit OSC even when the status mentions OSC 52. The checkpoint is showcase --page readonlyreport after Copy report, still running, with Copied the report (13 lines) visible. The 80\u00d724 frame is the same session after resize and before the return to 120\u00d740. finish then sends Ctrl+Q.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "398005f7d0fe2a1153ff2390315395e26e961053",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x01_clipboard/x01_clipboard_copy_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/x01_clipboard/x01_clipboard_copy_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Ctrl+C with no selection on showcase Read-only report, tablepro connections, and holla parity-files. Shift-select a data-grid cell and press Ctrl+C. Copy a tablepro history query with y. Copy this folder's path under parity-files and parity-platforms-linux. Copy the 71-byte cloud-only.txt path under parity-files. Copy the jackin launch-failure run id with y, then press Ctrl+C. Click Copy report, capture 120\u00d740, resize to 80\u00d724, capture that frame, resize back, then finish.",
+      "expected_results": "A consumed copy leaves the process running and paints its copy report. Ctrl+C with nothing consuming it exits 0. The checkpoint shows Copied the report (13 lines) at 120\u00d740 and at 80\u00d724.",
+      "forbidden_effects": "An unsupported or oversized clipboard path is reported as a copied payload. When osc52 is false the screen contains Not copied and does not contain a Copied line.",
+      "checkpoint_ids": [
+        "X01.clipboard.copy.120x40",
+        "X01.clipboard.copy.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "readonlyreport",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f0438f03a6e73fa37a394fcfdc00cb84e1f478e9f795d541d60d81d67eff7113",
+        "expect_baseline": "missing",
+        "precondition": "X01.clipboard.copy.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "readonlyreport",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1892baacb7f54a32986b858f245faf16c34324937afb594129113a6218a1129f",
+        "expect_baseline": "missing",
+        "precondition": "X01.clipboard.copy.narrow"
+      }
+    }
+  ]
+}

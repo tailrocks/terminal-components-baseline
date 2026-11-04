@@ -1,0 +1,124 @@
+{
+  "task_id": "H05.find",
+  "cases": [
+    {
+      "case_id": "H05.find.route",
+      "owner_task": "H05.find",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla parity-files at 120×40 in truecolor with reduced motion and HOLLA_NO_HISTORY=1 opens the finder. Pasting Find files under home… selects that catalog row and Enter launches Launch::Find. The painted header is Here › Files › Find, from the page crumb Files › Find in files.rs. The field placeholder is Find files under home…, the empty list says Type to search under home, and Quit holla is not drawn. Pasting src selects the directory hit ▸ src under ~/work/app. Esc with that query clears it, stays on Find, and shows 0 results · home scope. A second Esc with an empty query pops back to the finder, which still shows the catalog label and does not show Files › Find or Quit holla. App::finish sends Ctrl+Q and exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f738696a300b0ad3ff608dd29f70d5d7996a5e31",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H05.find",
+      "entry_path": "launch holla --scenario parity-files --color truecolor --motion reduced at 120x40; paste Find files under home…; Enter",
+      "return_path": "Esc clears src; Esc returns to the finder; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H05.find.find",
+      "owner_task": "H05.find",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Pasting src on Files › Find selects one directory hit. render_find_list paints ▸ src and the parent ~/work/app; the preview title is ~/work/app/src, which is Location::short of /Users/alex/work/app/src. The hit list does not contain /Users/alex/work/site. The readout is 29 of 29 indexed, not indexing. That open result list, before Enter, is captured at 120×40 and then at 80×24, and the narrow shot is taken before the terminal returns to 120×40. Delete clears the query. Pasting zztyped-absent shows No matches for “zztyped-absent” and Esc clears the query. Enter calls open_actions; selected_path is None, so the status is Select a file or folder first and the page stays on Find. It does not open Files · ~/work/notes (the status chip ~/work/notes is the scenario cwd, not a navigation). Delete, then src again, and Enter opens the menu titled /Users/alex/work/app/src with Open in the OS, Reveal in the file manager, Copy full path, Analyze disk usage, and Preview here. End, Enter confirms Preview here and does not activate the other four items. The _ arm of file_action sets Mode::Browse and navigates to that path. The visible directory is Files · ~/work/app/src, crumb Files › src, listing main.rs, not the parent ~/work/app and not ~/work/notes. App::finish exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f738696a300b0ad3ff608dd29f70d5d7996a5e31",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h05_find/h05_find_find_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h05_find/h05_find_find_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Search, clear to empty results, select a hit, and open it.",
+      "expected_results": "The opened directory is the selected hit.",
+      "forbidden_effects": "Empty results open the previous path.",
+      "checkpoint_ids": [
+        "H05.find.find.120x40",
+        "H05.find.find.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-files",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "56c489edc9397db68daab133b7d77439aed0a220cff63cb9054d7b9e48c860b3",
+        "expect_baseline": "missing",
+        "precondition": "H05.find.find.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-files",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "77553164a24f6577adeb6a1edce7f17d7b3a7c632a6604826221dbb8f32f1961",
+        "expect_baseline": "missing",
+        "precondition": "H05.find.find.narrow"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1573 @@
+{
+  "task_id": "S06.progress",
+  "cases": [
+    {
+      "case_id": "sc.progress.route",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "--page progress opens the playground with the sidebar on Progress",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_route.tui.json"
+      ],
+      "route": "progress",
+      "label": "Progress",
+      "entry_path": "--page progress",
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "33c677ed3d1820a62f9049381597dd716c32e8bde33a1fecde7fc46c4eda8685",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_route 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.playground",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "playground is the visible Progress section at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_playground.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8019b36b6fa15516c72b191d624b085f4155ac71cd8a3ed162827c29aa744544",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_playground 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.playground.120x40",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "playground at 120 by 40 shows the live bars, the job tally, and the Low capacity meter",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_playground_120x40.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.progress.playground.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Progress playground section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page progress --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a43e5f676248b66fc7b41e90c7ebbb901aa4eadc3269e51fa3a5f7c24a7296a1",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_playground_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.progress.playground.80x24",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "playground at 80 by 24 clips the building value column and the blurb before capacity meters",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_playground_80x24.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.progress.playground.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Progress playground section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page progress --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "294cc1cff51bb5a6d29dccd07dc0366704132d554b3c72f6b3bbbd3fb1aac82a",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_playground_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.progress.options",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "options is the visible Progress section at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_options.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "be32a90c265f9f52a335b24f911bf3d1893544b3d9b6e6e57b1acbbe453f1fae",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_options 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.options.120x40",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "options at 120 by 40 shows Label column 16, reserve on, meter line, and stale dashed",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_options_120x40.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.progress.options.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Progress options section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page progress --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f605d660098899daaa9fbf0febd54acb194e57677c3b6ef8425c67890612f4dd",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_options_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.progress.options.80x24",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "options at 80 by 24 before the terminal grows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_options_80x24.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.progress.options.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Progress options section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page progress --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2ed07359ad13596e385a2d9c75ae1d149ccd5964c0d2d14542b653c3545c4366",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_options_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.progress.states",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "states at 120 by 40 draws the six grid rows; the default stale style is dashed",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_states.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1caa08c5a2eeb677f59e80f859b19144f1938d5e8dc357cfb106058c14911eac",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_states 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.states.120x40",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "states at 120 by 40 draws Rest, Empty, Loading, Error, Overflow, and Narrow with the dashed stale style",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_states_120x40.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.progress.states.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Progress states section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page progress --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7e7ec4b9b3add8d233134f543d0574f4a9cb8d5434795df97610c884367d9b9a",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_states_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.progress.states.80x24",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "states at 80 by 24 before the terminal grows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_states_80x24.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.progress.states.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Progress states section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page progress --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6ae0efb90a17c2b0e62632e57732d8e77b07489ad090a131591e02e09fbfa4d6",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_states_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.progress.specimen.rest",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "rest row shows the dashed stale meter",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_rest.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a6bcd41282e9406a7d2a71d0d845c9836aeb731024b136264bee88436c9aa905",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_specimen_rest 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.specimen.hover",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/progress.rs states_grid lines 272-297. Line 282 is `.rows(&[Rest, Empty, Loading, Error, Overflow, Narrow])`. The list omits SpecimenState::Hover. The grid takes the page options; the default stale style is dashed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.progress.specimen.pressed",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/progress.rs states_grid lines 272-297. Line 282 is `.rows(&[Rest, Empty, Loading, Error, Overflow, Narrow])`. The list omits SpecimenState::Pressed. The grid takes the page options; the default stale style is dashed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.progress.specimen.focused",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/progress.rs states_grid lines 272-297. Line 282 is `.rows(&[Rest, Empty, Loading, Error, Overflow, Narrow])`. The list omits SpecimenState::Focused. The grid takes the page options; the default stale style is dashed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.progress.specimen.focused_hover",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/progress.rs states_grid lines 272-297. Line 282 is `.rows(&[Rest, Empty, Loading, Error, Overflow, Narrow])`. The list omits SpecimenState::FocusedHover. The grid takes the page options; the default stale style is dashed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.progress.specimen.selected",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/progress.rs states_grid lines 272-297. Line 282 is `.rows(&[Rest, Empty, Loading, Error, Overflow, Narrow])`. The list omits SpecimenState::Selected. The grid takes the page options; the default stale style is dashed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.progress.specimen.disabled",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/progress.rs states_grid lines 272-297. Line 282 is `.rows(&[Rest, Empty, Loading, Error, Overflow, Narrow])`. The list omits SpecimenState::Disabled. The grid takes the page options; the default stale style is dashed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.progress.specimen.busy",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/progress.rs states_grid lines 272-297. Line 282 is `.rows(&[Rest, Empty, Loading, Error, Overflow, Narrow])`. The list omits SpecimenState::Busy. The grid takes the page options; the default stale style is dashed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.progress.specimen.error",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "error row is on the states grid",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_error.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f2ccf251f2dc6b66f140d1624f703ccb1866aca3a1c13d28f83abe19d71f1364",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_specimen_error 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.specimen.editing",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/progress.rs states_grid lines 272-297. Line 282 is `.rows(&[Rest, Empty, Loading, Error, Overflow, Narrow])`. The list omits SpecimenState::Editing. The grid takes the page options; the default stale style is dashed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": false
+    },
+    {
+      "case_id": "sc.progress.specimen.empty",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "empty row is on the states grid",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_empty.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f044e017885d6b363aaace34c6c0bcbc65fc6dfd46c36aa832e3362f2481be4d",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_specimen_empty 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.specimen.loading",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "loading row is on the states grid",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_loading.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e027719379dafbef476cf0a7c6e389c7ff48e907e067018cf787159d77a62495",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_specimen_loading 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.specimen.overflow",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "overflow row shows the unsupported dash on empty-label bars and the long meter value",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_overflow.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d407d0df3008bb05d08dc1d377378db4af3ef481017ef9820ba6281393669495",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_specimen_overflow 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.specimen.narrow",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "narrow row is on the states grid",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_specimen_narrow.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "95d2b73f73e4b74fa4a77bcacca112356dabe5d1965dc1513a545ef6c4c19cc7",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_specimen_narrow 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.compare-levels",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "compare levels reached no color at 120 by 40, kept that band at 80 by 24, then returned to the truecolor band",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_compare-levels_80x24.tui.json"
+      ],
+      "route": "progress",
+      "section_or_overlay": "states",
+      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
+      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
+      "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
+      "checkpoint_ids": [
+        "sc.progress.compare-levels.120x40",
+        "sc.progress.compare-levels.80x24"
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7a043c6b65014b411520d3cc70547f7b3021a64db90088843c94cd047acc7a19",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_compare-levels_120x40 120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "14b534d72877a1e674acdabc0d573f9cc241a4019987973bd6628a9d24da1979",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_compare-levels_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "opt.progress.label_width",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "progress.label_width=10 truncates Push to registry and Build image and leaves the value column reserved",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/opt_progress_label_width.tui.json"
+      ],
+      "route": "progress",
+      "option_values": [
+        "16",
+        "measured",
+        "10"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set progress.label_width from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Label column effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--opt",
+          "progress.label_width=10",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "caf37c1a8d095764a33e31ee0b3bbf281846bb1e7192acd0fd176c299a4b1c82",
+        "expect_baseline": "missing",
+        "precondition": "opt_progress_label_width 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.progress.reserve_value",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "progress.reserve_value=off lengthens the Resolving track past the Building track and leaves the label width at 16",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/opt_progress_reserve_value.tui.json"
+      ],
+      "route": "progress",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set progress.reserve_value from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Reserve the value column effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--opt",
+          "progress.reserve_value=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "eb78c7e1875d3d62c7c65136c0f2bfda0cc5be596d0cbe102c30a4390da21669",
+        "expect_baseline": "missing",
+        "precondition": "opt_progress_reserve_value 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.progress.meter_visual",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "progress.meter_visual=block draws the Low meter without a line track",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/opt_progress_meter_visual.tui.json"
+      ],
+      "route": "progress",
+      "option_values": [
+        "line",
+        "block"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set progress.meter_visual from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Meter visual effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--opt",
+          "progress.meter_visual=block",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bd26f400a2c2a2205a06c2bb7afefaffe1f24e06a4918989da3ef9767d9a34ce",
+        "expect_baseline": "missing",
+        "precondition": "opt_progress_meter_visual 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.progress.stale_style",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "progress.stale_style=faint drops the dashed glyph on the Stale meter and leaves 82% stale warning dashed",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/opt_progress_stale_style.tui.json"
+      ],
+      "route": "progress",
+      "option_values": [
+        "dashed",
+        "faint"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set progress.stale_style from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Stale style effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--opt",
+          "progress.stale_style=faint",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "43d02533a91f5f1e616b04c1f689af48abc3f9b5be00a59327f9b583ba98d887",
+        "expect_baseline": "missing",
+        "precondition": "opt_progress_stale_style 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.progress.progress",
+      "owner_task": "S06.progress",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "pause, resume, and restart leave Building at 0 percent; the paused phase shows Resume",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "51eafd5947634c4453f28b291997fe8e39f3bb17",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_progress_before.tui.json",
+        "tests/functional/baselines/pre_refactor/s06_progress/sc_progress_progress_after.tui.json"
+      ],
+      "route": "progress",
+      "action_sequence": "Start, pause, resume, restart, and complete determinate, indeterminate, and aggregate progress.",
+      "expected_results": "The numeric value and the available actions match the phase.",
+      "forbidden_effects": "A completed bar still shows the running action as the only action.",
+      "checkpoint_ids": [
+        "sc.progress.progress.before",
+        "sc.progress.progress.after"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7f1a11dbc746b4124d3674db433c26b5574d65f4e4eb447ddec4fa7cb9b5c64b",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_progress_before 120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "progress",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1e67eff636fb90506436d33af608fe7064c5c4763aca83cdde52931fd6dbb86f",
+        "expect_baseline": "missing",
+        "precondition": "sc_progress_progress_after 120x40"
+      }
+    }
+  ]
+}

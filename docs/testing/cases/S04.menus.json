@@ -1,0 +1,2364 @@
+{
+  "task_id": "S04.menus",
+  "cases": [
+    {
+      "case_id": "sc.menus.route",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "--page menus opens the playground with the sidebar on Menus",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_route.tui.json"
+      ],
+      "route": "menus",
+      "label": "Menus",
+      "entry_path": "--page menus",
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "68b9506591e42439744c88d2a02fe7460c885e7035e3bb7a0d36bc1f6446c858",
+        "expect_baseline": "missing",
+        "precondition": "--page menus opens the playground with the sidebar on Menus"
+      }
+    },
+    {
+      "case_id": "sc.menus.playground",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "playground is the visible Menus section",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_playground.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7506f55a991d498f25a77dcfcf43ccce0c3740adf245d5cf6934704e721e62d9",
+        "expect_baseline": "missing",
+        "precondition": "playground is the visible Menus section"
+      }
+    },
+    {
+      "case_id": "sc.menus.playground.120x40",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "playground tab at 120 by 40 after the narrow capture",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_playground_120x40.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.menus.playground.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Menus playground section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page menus --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "edad9d7ad024667a8419dc52a569fc1d1d5d87adc4af48d95cbf44f4d4d9049b",
+        "expect_baseline": "missing",
+        "precondition": "playground tab at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.menus.playground.80x24",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "playground at 80 by 24 before the terminal grows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_playground_80x24.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.menus.playground.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Menus playground section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page menus --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "932a67a01c2e6e407b7e852da16e838bac18eeec6f1ca83f66d9241db5364528",
+        "expect_baseline": "missing",
+        "precondition": "playground at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.menus.options",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "options is the visible Menus section",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_options.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e748888b630811f444c96b678f9f2a04b6897e2f95410c8eda182fa78d4427d6",
+        "expect_baseline": "missing",
+        "precondition": "options is the visible Menus section"
+      }
+    },
+    {
+      "case_id": "sc.menus.options.120x40",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "options caption and the default values at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_options_120x40.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.menus.options.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Menus options section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page menus --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "40df49b368b1627dc26dcbb51819ea654d21a587b84d279a30508c3974821fe7",
+        "expect_baseline": "missing",
+        "precondition": "options caption and the default values at 120 by 40"
+      }
+    },
+    {
+      "case_id": "sc.menus.options.80x24",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "options at 80 by 24 before the terminal grows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_options_80x24.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.menus.options.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Menus options section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page menus --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "cfa274ab0ba32bb50106fe779b6dfa1f3a7f0dc536642060953388a0c2a26549",
+        "expect_baseline": "missing",
+        "precondition": "options at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.menus.states",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "states is the visible Menus section",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_states.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5ee51b04337324547ea7a54db2e1687b72026217203f258457956c5e22983cd7",
+        "expect_baseline": "missing",
+        "precondition": "states is the visible Menus section"
+      }
+    },
+    {
+      "case_id": "sc.menus.states.120x40",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "states caption and the drawn Menus specimens that fit at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_states_120x40.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.menus.states.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Menus states section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page menus --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2ed1acab674248947ea692bc79c915da6f9b85612f17d9ca2cdb8531b9dd895a",
+        "expect_baseline": "missing",
+        "precondition": "states caption and the drawn Menus specimens that fit at 120 by 40"
+      }
+    },
+    {
+      "case_id": "sc.menus.states.80x24",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "states grid at 80 by 24 before the terminal grows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_states_80x24.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.menus.states.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Menus states section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page menus --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c543f696b00011c6c570c98f0f55fd3a37958827ea22e8d8cc29cd600a90c2f6",
+        "expect_baseline": "missing",
+        "precondition": "states grid at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.menus.specimen.rest",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_rest.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "26ce219c880f52a19fa9979eae73583b6b4aa8aa1aa9023c814bcb697372886c",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.menus.specimen.hover",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_hover.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f48fb5c80c7d0bef4ad6048b5e62fd866bf80cddbc8860d493808bc0f32a89de",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.menus.specimen.pressed",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_pressed.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "231ce5970eee2fcd23ce5bc4955ad0ff1f71c41f0daf036904253edb237b58e5",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.menus.specimen.focused",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/menus.rs states_grid lines 331-336 build the Menus StateGrid. Lines 331-336 list Rest, Hover, Pressed, Disabled, Overflow, and Narrow. The list omits SpecimenState::Focused.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.menus.specimen.focused_hover",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/menus.rs states_grid lines 331-336 build the Menus StateGrid. Lines 331-336 list Rest, Hover, Pressed, Disabled, Overflow, and Narrow. The list omits SpecimenState::FocusedHover.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.menus.specimen.selected",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/menus.rs states_grid lines 331-336 build the Menus StateGrid. Lines 331-336 list Rest, Hover, Pressed, Disabled, Overflow, and Narrow. The list omits SpecimenState::Selected.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.menus.specimen.disabled",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_disabled.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "73476ce96036a516414bd180a817d3d4416458223b407d94fdb67b3601650782",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.menus.specimen.busy",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/menus.rs states_grid lines 331-336 build the Menus StateGrid. Lines 331-336 list Rest, Hover, Pressed, Disabled, Overflow, and Narrow. The list omits SpecimenState::Busy.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.menus.specimen.error",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/menus.rs states_grid lines 331-336 build the Menus StateGrid. Lines 331-336 list Rest, Hover, Pressed, Disabled, Overflow, and Narrow. The list omits SpecimenState::Error.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.menus.specimen.editing",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/menus.rs states_grid lines 331-336 build the Menus StateGrid. Lines 331-336 list Rest, Hover, Pressed, Disabled, Overflow, and Narrow. The list omits SpecimenState::Editing.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": false
+    },
+    {
+      "case_id": "sc.menus.specimen.empty",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/menus.rs states_grid lines 331-336 build the Menus StateGrid. Lines 331-336 list Rest, Hover, Pressed, Disabled, Overflow, and Narrow. The list omits SpecimenState::Empty.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.menus.specimen.loading",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/menus.rs states_grid lines 331-336 build the Menus StateGrid. Lines 331-336 list Rest, Hover, Pressed, Disabled, Overflow, and Narrow. The list omits SpecimenState::Loading.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.menus.specimen.overflow",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_overflow.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d5beef1f9e10e78bca73543b18a1cb4207cbfcedef66f2821c4494ca00ef894e",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.menus.specimen.narrow",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_specimen_narrow.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6a4c71c28ed57df3afeda14dd2a6538b88f35df10d7788ac3d7503ca2c138345",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.menus.compare-levels",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "compare levels scrolled to no color at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_compare-levels_80x24.tui.json"
+      ],
+      "route": "menus",
+      "section_or_overlay": "states",
+      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
+      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
+      "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
+      "checkpoint_ids": [
+        "sc.menus.compare-levels.120x40",
+        "sc.menus.compare-levels.80x24"
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e92ff28106e85211ea6e01eb53b43c7719fd211ea527985c4c067229cb68aaca",
+        "expect_baseline": "missing",
+        "precondition": "compare levels scrolled to no color at 120 by 40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e475479d3b321e3c22cc1cc5d25c24e618409cfdce7782cab0e1713171e7633d",
+        "expect_baseline": "missing",
+        "precondition": "compare levels still on at 80 by 24 before restoring 120 by 40"
+      }
+    },
+    {
+      "case_id": "opt.menus.placement",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "actions menu opens to the right of its button",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_placement.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "below",
+        "above",
+        "right",
+        "left",
+        "center"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.placement from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Actions placement effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "47d4fb3b92c5079fc72bc41ff38785aa5eb2c8449125dc4cd842df872224c8a9",
+        "expect_baseline": "missing",
+        "precondition": "actions menu opens to the right of its button"
+      }
+    },
+    {
+      "case_id": "opt.menus.fit",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "flush fit shrinks the actions menu when neither side can hold it",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_fit.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "menu",
+        "flush",
+        "default"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.fit from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Fit effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "terminal_columns": 120,
+      "terminal_rows": 24,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bd768958f0a45e031defc909b0f740d9f4b79ca50bf538ad6db343f869111255",
+        "expect_baseline": "missing",
+        "precondition": "flush fit shrinks the actions menu when neither side can hold it"
+      }
+    },
+    {
+      "case_id": "opt.menus.edge_margin",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "edge margin select shows 2 and the other menu options stay at their defaults",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_edge_margin.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "0",
+        "1",
+        "2"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.edge_margin from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Edge margin effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b11cd081e7cb4d352174c8c5ca8bb7a7abda43c196f3c26aa3f29a3be87f2bf2",
+        "expect_baseline": "missing",
+        "precondition": "edge margin select shows 2 and the other menu options stay at their defaults"
+      }
+    },
+    {
+      "case_id": "opt.menus.min_width",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "min width 24 widens the file menu past its labels",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_min_width.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "8",
+        "16",
+        "24"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.min_width from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Min width effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ca428f18e9e30fd6c8ef51d46bc143633d4e9d24e913a21475ab1cef56015cc3",
+        "expect_baseline": "missing",
+        "precondition": "min width 24 widens the file menu past its labels"
+      }
+    },
+    {
+      "case_id": "opt.menus.max_rows",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "max rows 4 clips the actions menu and shows the more marker",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_max_rows.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "all",
+        "8",
+        "4"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.max_rows from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Max rows effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "cd4f888173da036154cc6920af93378c01a42d3f00c396f98a054a540fa95a0d",
+        "expect_baseline": "missing",
+        "precondition": "max rows 4 clips the actions menu and shows the more marker"
+      }
+    },
+    {
+      "case_id": "opt.menus.title",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "title off removes the file name from the open menu",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_title.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.title from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Title effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6cc36fa8f5307ac9813a3a7b4057d5591f4377e09b03e7824a23f643830ba21b",
+        "expect_baseline": "missing",
+        "precondition": "title off removes the file name from the open menu"
+      }
+    },
+    {
+      "case_id": "opt.menus.release_selects",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "release on an item does not choose when release selects is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_release_selects.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.release_selects from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Release selects effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "fac75a5a47ff22cefa4bf2c5f03a498e66d2fc0c06c46e183b5179a20650b50b",
+        "expect_baseline": "missing",
+        "precondition": "release on an item does not choose when release selects is off"
+      }
+    },
+    {
+      "case_id": "opt.menus.hide_owner_focus",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "hide page focus off keeps the file gutter while the menu is open",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_hide_owner_focus.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.hide_owner_focus from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Hide page focus effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e357be1ec883913ad5819e2bca99cf92e2aad4f46bc199c42cc7af78faa759e5",
+        "expect_baseline": "missing",
+        "precondition": "hide page focus off keeps the file gutter while the menu is open"
+      }
+    },
+    {
+      "case_id": "opt.menus.nav",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "vim j moves the menu cursor and leaves the menu open",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_nav.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "desktop",
+        "vim"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.nav from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Nav keys effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8695b18064b4054a3b973f12fc834c04e213bea96baf671d626c698a8b706769",
+        "expect_baseline": "missing",
+        "precondition": "vim j moves the menu cursor and leaves the menu open"
+      }
+    },
+    {
+      "case_id": "opt.menus.wrap",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "wrap off keeps the cursor on Open when up is pressed",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_wrap.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.wrap from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Wrap effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "001089dbd6cc27de8bef9a006752f4cae81102886988715a2739efaeae9075ec",
+        "expect_baseline": "missing",
+        "precondition": "wrap off keeps the cursor on Open when up is pressed"
+      }
+    },
+    {
+      "case_id": "opt.menus.type_ahead",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "type-ahead d moves the cursor to Duplicate and leaves the menu open",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_type_ahead.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.type_ahead from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Type-ahead effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a2c632c11907c35f2739ca1961cd730617de1c449fa97cbd61a0ed209f6e2c9c",
+        "expect_baseline": "missing",
+        "precondition": "type-ahead d moves the cursor to Duplicate and leaves the menu open"
+      }
+    },
+    {
+      "case_id": "opt.menus.dismiss",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "escape dismiss ignores an outside click and does not choose",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_dismiss.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "light",
+        "escape"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.dismiss from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Dismiss effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e913b17d8f1925fe4ad625ea76143af4e50d6724ffe3a5c0fb7c9b9816e98ab4",
+        "expect_baseline": "missing",
+        "precondition": "escape dismiss ignores an outside click and does not choose"
+      }
+    },
+    {
+      "case_id": "opt.menus.unknown_key",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "swallow keeps the menu open when an unknown key is pressed",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_unknown_key.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "close-and-pass",
+        "swallow"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.unknown_key from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Other keys effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "eb12988ba67009f81ccaac7b10eca7fbf67da92c21a9f8ab5b218d98fb8919bb",
+        "expect_baseline": "missing",
+        "precondition": "swallow keeps the menu open when an unknown key is pressed"
+      }
+    },
+    {
+      "case_id": "opt.menus.moves_cursor",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "a right-click opens the menu under the pointer and leaves the cursor",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_moves_cursor.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.moves_cursor from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Click moves cursor effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8e6beb0bed1a08f82e65f83bcd347ca9dc71fa93e73e66f3d6f0044a3b0bac3e",
+        "expect_baseline": "missing",
+        "precondition": "a right-click opens the menu under the pointer and leaves the cursor"
+      }
+    },
+    {
+      "case_id": "opt.menus.shift_f10",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Shift+F10 off drops the key from the readout and does not open a menu",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_shift_f10.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.shift_f10 from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Shift+F10 effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e74135a4284830480115914b2d45a6cf41bf29151624e116337f0b57dcda4b0e",
+        "expect_baseline": "missing",
+        "precondition": "Shift+F10 off drops the key from the readout and does not open a menu"
+      }
+    },
+    {
+      "case_id": "opt.menus.menu_key",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "menu key off drops Menu key from the readout",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_menu_key.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.menu_key from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Menu key effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "056351b58b0f2012445093ce1d986bd21d80c6a82cf090ec350cd0e4063af828",
+        "expect_baseline": "missing",
+        "precondition": "menu key off drops Menu key from the readout"
+      }
+    },
+    {
+      "case_id": "opt.menus.extra_key",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "extra key m is shown in the readout and opens the file menu",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/opt_menus_extra_key.tui.json"
+      ],
+      "route": "menus",
+      "option_values": [
+        "none",
+        "m"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set menus.extra_key from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Extra key effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a05625ce5b07c76bd6cd65b2c5a8f8f3c432d91bc68f12ff61cb2c1b38fe0bdd",
+        "expect_baseline": "missing",
+        "precondition": "extra key m is shown in the readout and opens the file menu"
+      }
+    },
+    {
+      "case_id": "sc.menus.menus",
+      "owner_task": "S04.menus",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "file menu is open on report.pdf before a choice or a dismiss",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f1ae91dfb0626552e587ef9103842f508cad0557",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_menus_open.tui.json",
+        "tests/functional/baselines/pre_refactor/s04_menus/sc_menus_menus_dismissed.tui.json"
+      ],
+      "route": "menus",
+      "action_sequence": "Open each menu by keyboard and pointer. Move across separators, disabled rows, type-ahead, release selection, drag selection, placement, and each dismissal policy.",
+      "expected_results": "The chosen row is the row that was released inside. Dismissal keeps the previous value.",
+      "forbidden_effects": "A disabled row runs.",
+      "checkpoint_ids": [
+        "sc.menus.menus.open",
+        "sc.menus.menus.dismissed"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a1563eab729084a51d1df686c91b92431d7bcc131aea9afa36a08d66a5884934",
+        "expect_baseline": "missing",
+        "precondition": "file menu is open on report.pdf before a choice or a dismiss"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "menus",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e01fe9533fa6daa97f4161dfce9bb9eb19e25e76cdc0ff70edbd7977dae84f88",
+        "expect_baseline": "missing",
+        "precondition": "esc dismisses the file menu and does not choose an item"
+      }
+    }
+  ]
+}

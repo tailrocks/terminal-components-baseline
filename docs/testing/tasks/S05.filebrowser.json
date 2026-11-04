@@ -1,0 +1,83 @@
+{
+  "task_id": "S05.filebrowser",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s05_filebrowser.rs",
+    "docs/testing/cases/S05.filebrowser.json",
+    "tests/functional/baselines/pre_refactor/S05.filebrowser/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/file_browser.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.filebrowser.route",
+    "sc.filebrowser.playground",
+    "sc.filebrowser.playground.120x40",
+    "sc.filebrowser.playground.80x24",
+    "sc.filebrowser.options",
+    "sc.filebrowser.options.120x40",
+    "sc.filebrowser.options.80x24",
+    "sc.filebrowser.states",
+    "sc.filebrowser.states.120x40",
+    "sc.filebrowser.states.80x24",
+    "sc.filebrowser.specimen.rest",
+    "sc.filebrowser.specimen.hover",
+    "sc.filebrowser.specimen.pressed",
+    "sc.filebrowser.specimen.focused",
+    "sc.filebrowser.specimen.focused_hover",
+    "sc.filebrowser.specimen.selected",
+    "sc.filebrowser.specimen.disabled",
+    "sc.filebrowser.specimen.busy",
+    "sc.filebrowser.specimen.error",
+    "sc.filebrowser.specimen.editing",
+    "sc.filebrowser.specimen.empty",
+    "sc.filebrowser.specimen.loading",
+    "sc.filebrowser.specimen.overflow",
+    "sc.filebrowser.specimen.narrow",
+    "sc.filebrowser.compare-levels",
+    "opt.filebrowser.choose",
+    "opt.filebrowser.source",
+    "opt.filebrowser.path_bar",
+    "opt.filebrowser.filter",
+    "opt.filebrowser.hidden_toggle",
+    "opt.filebrowser.show_hidden",
+    "opt.filebrowser.type_ahead",
+    "opt.filebrowser.keys",
+    "opt.filebrowser.url_entry",
+    "opt.filebrowser.checkbox",
+    "opt.filebrowser.stepper",
+    "opt.filebrowser.dismiss",
+    "sc.filebrowser.browse"
+  ],
+  "checkpoints": [
+    "sc.filebrowser.playground.120x40",
+    "sc.filebrowser.playground.80x24",
+    "sc.filebrowser.options.120x40",
+    "sc.filebrowser.options.80x24",
+    "sc.filebrowser.states.120x40",
+    "sc.filebrowser.states.80x24",
+    "sc.filebrowser.compare-levels",
+    "sc.filebrowser.browse"
+  ],
+  "acceptance": "Open File browser by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

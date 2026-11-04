@@ -1,0 +1,120 @@
+{
+  "task_id": "T04.quickly",
+  "cases": [
+    {
+      "case_id": "T04.quickly.route",
+      "owner_task": "T04.quickly",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing screen shows Development and Filter connections, and Query 1 is absent. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with Type SQL and status Connected to Development, after Loading schema has left the screen. Ctrl+O opens Open Quickly. Esc closes it and returns to Query 1. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "5ef19634945b870386174f4793a234938e257b3d",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T04.quickly",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect; Ctrl+O",
+      "return_path": "Esc closes Open Quickly on Query 1; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "T04.quickly.switcher",
+      "owner_task": "T04.quickly",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Query 1, Ctrl+O opens Open Quickly. Typing products selects the public products row, detail public · Development, group Tables. That open picker is captured at 120×40 and at 80×24, and the narrow shot is taken before the terminal returns to 120×40. Enter opens the products tab, leaves Query 1 open, and sets status Opened public.products. Ctrl+O again and typing ordres chooses the seeded history row SELECT * FROM ordres. Enter puts that SQL in a new Query 2 editor and does not run it. The products tab stays open and is not the active editor. Ctrl+O again and choosing the Open tabs row Query 1 switches to the existing Query 1 without a second copy. Typing t04_quickly_missing shows No matches. Enter leaves the picker open and does not activate a row. Esc clears the query and keeps the picker. A second Esc closes it. Query 1 is still the active tab.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "5ef19634945b870386174f4793a234938e257b3d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t04_quickly/t04_quickly_switcher_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t04_quickly/t04_quickly_switcher_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Open Quickly for a table, a History entry, and a query tab. Then show no-match and cancel.",
+      "expected_results": "The opened object is the chosen row. Cancel leaves the active tab unchanged.",
+      "forbidden_effects": "No-match activates the first row.",
+      "checkpoint_ids": [
+        "T04.quickly.switcher.120x40",
+        "T04.quickly.switcher.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f36e0655509b8da89ee4f07a8db96c2a2581591ac444b823d37ebd7caa266f3c",
+        "expect_baseline": "missing",
+        "precondition": "T04.quickly.switcher.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "29be6bae14cb75d227fc6a2ded8b8be8237525e68c4c381500ce0434e6098ee4",
+        "expect_baseline": "missing",
+        "precondition": "T04.quickly.switcher.narrow"
+      }
+    }
+  ]
+}

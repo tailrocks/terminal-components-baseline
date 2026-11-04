@@ -1,0 +1,37 @@
+{
+  "task_id": "H03.guards",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h03_guards.rs",
+    "docs/testing/cases/H03.guards.json",
+    "tests/functional/baselines/pre_refactor/H03.guards/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/app.rs",
+    "src/bin/holla/screens/activity.rs"
+  ],
+  "coverage_rows": [
+    "H03.guards.route",
+    "H03.guards.quit"
+  ],
+  "checkpoints": [
+    "H03.guards.quit.120x40"
+  ],
+  "acceptance": "Running-tab close and quit offer Stay or Stop. Finder q stays query text. Confirmed exit restores the terminal.",
+  "status": "queued",
+  "architecture_refactor": false
+}

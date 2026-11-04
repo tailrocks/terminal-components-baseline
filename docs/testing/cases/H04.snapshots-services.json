@@ -1,0 +1,159 @@
+{
+  "task_id": "H04.snapshots-services",
+  "cases": [
+    {
+      "case_id": "H04.snapshots-services.route",
+      "owner_task": "H04.snapshots-services",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-platforms --color truecolor --motion reduced opens the finder at 120×40. Paste Homebrew services and Enter opens the page titled Homebrew services. The body shows redis started, ~/work/mac, and start · stop · restart. postgresql@17, payments-worker, and mise configuration are absent. Start, Stop, and Restart stay unpressed. Esc is shell Back and returns to the finder with the Homebrew services row still selected. The brew action row and postgresql@17 are absent there. Ctrl+Q exits 0, and no quit dialog opens.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f72aae56c2b1c393e34a510d8dba795c1a9352c7",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H04.snapshots-services",
+      "entry_path": "launch holla --scenario parity-platforms --color truecolor --motion reduced at 120x40; paste Homebrew services; Enter",
+      "return_path": "Esc returns to the finder on the Homebrew services row; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H04.snapshots-services.services",
+      "owner_task": "H04.snapshots-services",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "parity-platforms-linux opens Homebrew services with postgresql@17 stopped and ~/work/box. The mac redis started row and ~/work/mac are absent. Paste Show payments status and the finder reports No matches for. payments.service, nginx.service, and Journal are absent. service_items returns only when host.role is Production and systemctl is installed (src/bin/holla/domain/catalog.rs). platforms_linux sets HostRole::Local (src/bin/holla/domain/parity.rs), so that scenario lists no systemd rows. rust-dirty opens Show mise configuration. The title is mise configuration, the detail is Tools and tasks, and the body shows cargo-nextest 0.9.101 and the shots task. payments-worker, nginx.service, Homebrew services, postgresql@17, and .service are absent. The same scenario opens Upgrade 3 outdated mise tools. The title is Outdated mise tools, cargo-nextest shows 0.9.104, and .service, shots, payments-worker, Homebrew services, and nginx.service are absent. Show PostgreSQL activity opens with title PostgreSQL activity, detail Sessions · blockers first, and session 48197 idle in transaction. mise configuration, Homebrew services, payments-worker, redis, and Who is blocking the database? are absent. Who is blocking the database? then opens with the same session 48197. PostgreSQL activity, mise configuration, Homebrew services, redis, and .service are absent. Open pg_activity and Cancel stay unpressed. remote-host is Production and includes systemctl, so Show payments status opens. The title is payments.service, the detail is Journal, and the body contains Started payments.service. mise configuration, redis, payments-worker, and nginx.service are absent. The visual checkpoints are the open Homebrew services page on parity-platforms, before Esc, at 120×40 and then at 80×24. Each shot sleeps 200ms, nudges the width by one column, and returns. The narrow frame is taken after the resize to 80×24 and before the resize back to 120×40. The restored 120×40 wait also requires ~/work/mac, Esc Back, and the redis started row, because the first frame after that resize can omit the status bar.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f72aae56c2b1c393e34a510d8dba795c1a9352c7",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow.tui.json"
+      ],
+      "scenario": [
+        "parity-platforms",
+        "parity-platforms-linux"
+      ],
+      "action_sequence": "Open pg, pg-blocking, mise, mise-outdated, service, and brew-services.",
+      "expected_results": "Each body names its family.",
+      "forbidden_effects": "A service row appears in the mise snapshot.",
+      "checkpoint_ids": [
+        "H04.snapshots-services.services.120x40",
+        "H04.snapshots-services.services.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-platforms",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "74094efac42325e33dcca664d651ceb6123d13d04f8118d0596ee81c6ac3ef63",
+        "expect_baseline": "missing",
+        "precondition": "H04.snapshots-services.services.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-platforms",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3a7589f1763bc16fb71df9595bfc4e4f03007149507ee3e9bcfabff6f2039637",
+        "expect_baseline": "missing",
+        "precondition": "H04.snapshots-services.services.narrow"
+      }
+    },
+    {
+      "case_id": "H04.snapshots-services.scenario.parity-platforms",
+      "owner_task": "H04.snapshots-services",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-platforms --color truecolor --motion reduced at 120×40. Paste Homebrew services and Enter opens Homebrew services. The row is redis started, and the status shows ~/work/mac. postgresql@17, payments-worker, mise configuration, and ~/work/box are absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f72aae56c2b1c393e34a510d8dba795c1a9352c7",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-platforms",
+      "action_sequence": "Launch the application with scenario parity-platforms and exercise the surface owned by H04.snapshots-services.",
+      "expected_results": "The visible fixture data belongs to parity-platforms.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H04.snapshots-services.scenario.parity-platforms-linux",
+      "owner_task": "H04.snapshots-services",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-platforms-linux --color truecolor --motion reduced at 120×40. The client platform stays macos. Paste Homebrew services and Enter opens Homebrew services. The row is postgresql@17 stopped, and the status shows ~/work/box. ~/work/mac, payments-worker, and mise configuration are absent, and the mac redis started row is absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f72aae56c2b1c393e34a510d8dba795c1a9352c7",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-platforms-linux",
+      "action_sequence": "Launch the application with scenario parity-platforms-linux and exercise the surface owned by H04.snapshots-services.",
+      "expected_results": "The visible fixture data belongs to parity-platforms-linux.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

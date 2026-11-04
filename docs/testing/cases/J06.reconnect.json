@@ -1,0 +1,126 @@
+{
+  "task_id": "J06.reconnect",
+  "cases": [
+    {
+      "case_id": "J06.reconnect.route",
+      "owner_task": "J06.reconnect",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. start in src/bin/jackin/app.rs takes JoinActive, because populated in src/bin/jackin/domain/fixtures.rs inserts running jk-7f3a and jk-9b02 and sync_arbiter sets the count. Scenario::Returning does not call Go::Attach. ManagerScreen::new in src/bin/jackin/screens/manager.rs selects RowKey::CurrentDir and leaves workspaces collapsed. The first frame's focus gutter is on Current directory. Down selects payments-platform, Right expands it, and Down selects the jk-7f3a row. The row paints the id as 7f3a via trim_start_matches. Enter calls activate, then reconnect. InstanceStatus::Running calls Go::Attach with pane None. Go::Attach in src/bin/jackin/app.rs requires Running, sets attached_by to this terminal, opens CapsuleScreen, and sets Attached to payments-platform · tabs and panes restored. The identity bar shows payments-platform › the-architect. The daemon in fixtures.rs is the booted Claude pane, the Codex split, and the shell, focused on pane 1, plus the docs tab. Ctrl+B d calls detach in src/bin/jackin/screens/capsule.rs and Go::Detach, which returns to the manager, select_instance leaves 7f3a selected, and the status is Detached · payments-platform keeps running. The process stays there. You were in the Construct from src/bin/jackin/rain.rs stays absent. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "499dec0a2f1bbb2d3c4f518f94732881a884e870",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J06.reconnect",
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40, then Down, Right, Down, Enter on the jk-7f3a row",
+      "return_path": "Ctrl+B then d detaches to the workspace manager with 7f3a still selected; the process stays there and does not play the outro"
+    },
+    {
+      "case_id": "J06.reconnect.reconnect",
+      "owner_task": "J06.reconnect",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The same returning manager is the start. The focused row is 7f3a, the painted form of jk-7f3a, before Enter. Go::Attach in src/bin/jackin/app.rs opens that capsule and sets Attached to payments-platform · tabs and panes restored. Ctrl+B d calls detach in src/bin/jackin/screens/capsule.rs, then Go::Detach. select_instance leaves the same row selected, so the manager still shows 7f3a and the attach status is gone. Enter calls reconnect again. Go::Attach opens the same Running instance. That reconnected capsule is the checkpoint, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40). The manager title Workspaces is absent. The container id in src/bin/jackin/screens/capsule.rs would show 7f3a, and the identity bar drops it at both widths, so the shots show the attach status and, at 120 columns, payments-platform › the-architect. They are not the pre-launch manager. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "499dec0a2f1bbb2d3c4f518f94732881a884e870",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j06_reconnect/j06_reconnect_reconnect_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j06_reconnect/j06_reconnect_reconnect_narrow.tui.json"
+      ],
+      "scenario": [
+        "returning"
+      ],
+      "action_sequence": "Detach and reconnect.",
+      "expected_results": "The capsule instance id is the same id. The checkpoint shows the reconnected capsule.",
+      "forbidden_effects": "The baseline is taken before launch.",
+      "checkpoint_ids": [
+        "J06.reconnect.reconnect.120x40",
+        "J06.reconnect.reconnect.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "99620fc573fed74f1cdd675a755b4e727b6c06fc0abf1b65d2fdd89fe0c34659",
+        "expect_baseline": "missing",
+        "precondition": "J06.reconnect.reconnect.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f883f40c3d3b567e53549cb7bcf91cbad24318036fea86a5452504e96b2e21f4",
+        "expect_baseline": "missing",
+        "precondition": "J06.reconnect.reconnect.narrow"
+      }
+    }
+  ]
+}

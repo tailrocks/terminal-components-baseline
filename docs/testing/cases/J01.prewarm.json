@@ -1,0 +1,124 @@
+{
+  "task_id": "J01.prewarm",
+  "cases": [
+    {
+      "case_id": "J01.prewarm.route",
+      "owner_task": "J01.prewarm",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40 opens the manager on Current directory. returning joins live instances, so the intro does not play and Space is not sent. Down selects the payments-platform workspace row. w is src/bin/jackin/screens/manager.rs on_key KeyCode::Char('w'), and it calls prewarm only for RowKey::Workspace. prewarm pushes the busy row prewarming…, paints Prewarming the derived image…, and src/bin/jackin/sim/world.rs schedule queues one Msg::Prewarmed at 2400 ms. The screen shows prewarming and that progress sentence. After the message, the status is Prewarmed payments-platform · derived image cached, the busy row is gone, and payments-platform, infra-control-plane, release-automation, and customer-portal stay. The manager stays the surface. finish() sends Ctrl+Q and exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b6b824bd3b8701209d6b2e66ab7c3d07051f2ac",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J01.prewarm",
+      "entry_path": "launch jackin --scenario returning --color truecolor --motion reduced at 120x40; Down to payments-platform; w",
+      "return_path": "the manager stays up after Prewarmed payments-platform · derived image cached; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J01.prewarm.prewarm",
+      "owner_task": "J01.prewarm",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "w on the payments-platform workspace row is src/bin/jackin/screens/manager.rs prewarm. The first w, while that workspace is idle, pushes the busy row prewarming…, paints Prewarming the derived image…, and src/bin/jackin/sim/world.rs schedule queues one Msg::Prewarmed at 2400 ms. The painted instance ids before that w are 7f3a and c41e. The checkpoints are that in-progress frame, while prewarming or Prewarming the derived image… is still visible, before the second w and before Prewarmed. At 120×40 the tree clips the row meta, so the strip paints prewarming and the ellipsis prewarming… is absent; the detail still shows daemon · 4 s ago. At 80×24 the focused row paints prewarming…. The narrow shot is taken before the terminal returns to 120×40. The spinner in src/bin/jackin/screens/manager.rs changes every reduced-motion tick, so a 200 ms nudge would leave the pinned glyph and spend the 2400 ms window. Both shots are the live frame with no extra sleep. The second w, while the busy row is still present, paints Prewarm already running and returns from prewarm with no further schedule. The refusal replaces the progress sentence and leaves every recorded id in place. Msg::Prewarmed in manager.rs on_msg only clears that busy row and paints Prewarmed payments-platform · derived image cached. After the refusal and after that single completion, 7f3a and c41e are still the painted ids, the screen has no jk- id, the detail still says 1 running, and payments-platform, infra-control-plane, release-automation, and customer-portal stay. 77aa, 88bb, and no instances stay absent. w on the 7f3a instance row leaves that completion status in place, because on_key Char('w') matches only RowKey::Workspace. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "3b6b824bd3b8701209d6b2e66ab7c3d07051f2ac",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j01_prewarm/j01_prewarm_prewarm_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j01_prewarm/j01_prewarm_prewarm_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "On the payments-platform workspace row, press w, capture the in-progress prewarm at both sizes, press w again, then wait for the single completion.",
+      "expected_results": "The first w paints prewarming and Prewarming the derived image…. The second w paints Prewarm already running and leaves the painted instance ids unchanged. Msg::Prewarmed clears the busy row and paints Prewarmed payments-platform · derived image cached.",
+      "forbidden_effects": "The duplicate adds a jk- instance. w on an instance row starts prewarm.",
+      "checkpoint_ids": [
+        "J01.prewarm.prewarm.120x40",
+        "J01.prewarm.prewarm.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f1bcb3c0bdef29d78881b99f65a12428f5f2ef0a3bbeca6295d3affa4ed0b996",
+        "expect_baseline": "missing",
+        "precondition": "J01.prewarm.prewarm.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ad0cd36a7b2a045eef84faaefeafbe725ba7acd945926e50755668456951676b",
+        "expect_baseline": "missing",
+        "precondition": "J01.prewarm.prewarm.narrow"
+      }
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "task_id": "H05.disk",
+  "cases": [
+    {
+      "case_id": "H05.disk.route",
+      "owner_task": "H05.disk",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-disk-navigation --color truecolor --motion reduced at 120×40 with HOLLA_NO_HISTORY=1 opens the finder. Paste Analyze disk usage and Enter. The page shows Disk › Usage and Disk usage · ~/work/big. Quit holla is not drawn. Esc returns to the finder, which still shows Analyze disk usage and scope ‹ here ›. The disk title and scan complete are gone. finish() sends Ctrl+Q and exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "1e599ee86d401adfcc334cd54143e161726a49e6",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H05.disk",
+      "entry_path": "launch holla --scenario parity-disk-navigation --color truecolor --motion reduced at 120x40; paste Analyze disk usage; Enter",
+      "return_path": "Esc returns to the finder on Analyze disk usage; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H05.disk.tree",
+      "owner_task": "H05.disk",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "parity-disk-navigation does not open the disk page. Paste Analyze disk usage and Enter, then wait for scan complete, Disk › Usage, and Disk usage · ~/work/big. The tree shows ~/work/big, Cargo.toml, target with lib.rlib and the release bin, src/main.rs, docs/guide.md, and sparse vm.img. noise/ contains every cleanup noise name, including target, node_modules, and .git. sparse.img, evicted.bin, ~/work/data, 842 of 926, /Volumes/Backup, and ~/Projects/web are absent. Space on vm.img records the banner selected total. s switches to Sorted by apparent size · rows still show allocated bytes and that total stays the same. The quiet tree, after that selection and that sort, and before Overview or Top files, is captured at 120×40 and then at 80×24. The narrow shot is taken before the terminal returns to 120×40. A second s returns to Sorted by allocated size with the same total. f unfolds the noise folders, including target, then folds them again with Noise folders folded · sizes unchanged, and the selected total stays. Go, Disk, then Disk overview pushes Disk › Overview. The header contains cached sizes are hints with their age. Esc returns to Disk usage · ~/work/big and the same detail path ~/work/big/vm.img. t pushes Top files · Spotlight with Usage › Top files. The list shows iso.iso and big.mov, and vanished.bin contains stat failed. iso.iso is the list row, the detail title, and the detail path. small.bin is absent. Esc returns to the same tree node and the same detail path. a selects every visible eligible entry (Every visible entry selected) and the total changes, then a again shows Everything unselected and 0 selected (0 B). finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "1e599ee86d401adfcc334cd54143e161726a49e6",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h05_disk/h05_disk_tree_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h05_disk/h05_disk_tree_narrow.tui.json"
+      ],
+      "scenario": [
+        "parity-disk-navigation",
+        "parity-insights"
+      ],
+      "action_sequence": "Select vm.img, sort, capture both sizes, return from Overview and Top files, then select all and clear.",
+      "expected_results": "Overview and Top files return to ~/work/big/vm.img. Sort leaves the selected-byte total unchanged.",
+      "forbidden_effects": "Sort changes the total without changing the selected set.",
+      "checkpoint_ids": [
+        "H05.disk.tree.120x40",
+        "H05.disk.tree.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-disk-navigation",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "839f954e685756b2b04cf7111f35e9ad92adaa40c45c3aa723c387e055f217d6",
+        "expect_baseline": "missing",
+        "precondition": "H05.disk.tree.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-disk-navigation",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "573d52236599c8b7d41357d99a7904c4e24fb6bbabfe4910121da3b2b42039e3",
+        "expect_baseline": "missing",
+        "precondition": "H05.disk.tree.narrow"
+      }
+    },
+    {
+      "case_id": "H05.disk.scenario.parity-disk-navigation",
+      "owner_task": "H05.disk",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "The tree journey launches --scenario parity-disk-navigation. The painted fixture is ~/work/big, with vm.img and Cargo.toml. sparse.img, evicted.bin, ~/work/data, 842 of 926, /Volumes/Backup, and ~/Projects/web are absent, so parity-insights and parity-disk-scan identities stay off this screen. This row has no baseline.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "1e599ee86d401adfcc334cd54143e161726a49e6",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-disk-navigation",
+      "action_sequence": "Launch the application with scenario parity-disk-navigation and exercise the surface owned by H05.disk.",
+      "expected_results": "The visible fixture data belongs to parity-disk-navigation.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H05.disk.scenario.parity-insights",
+      "owner_task": "H05.disk",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "A separate launch of --scenario parity-insights. Paste Analyze disk usage and Enter, then wait for scan complete and Disk usage · ~/Projects/web. package.json or node_modules is visible. vm.img and ~/work/big are absent. Top files is not opened. This row has no baseline. finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "1e599ee86d401adfcc334cd54143e161726a49e6",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-insights",
+      "action_sequence": "Launch the application with scenario parity-insights and exercise the surface owned by H05.disk.",
+      "expected_results": "The visible fixture data belongs to parity-insights.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

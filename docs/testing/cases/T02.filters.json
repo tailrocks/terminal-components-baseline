@@ -1,0 +1,155 @@
+{
+  "task_id": "T02.filters",
+  "cases": [
+    {
+      "case_id": "T02.filters.route",
+      "owner_task": "T02.filters",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro opens the connections screen at 120 by 40, truecolor, reduced motion. Clicking Development and Enter reaches the workbench and Query 1. Enter on public.organizations opens the grid, which draws Tessellate, Northwind Labs, and the slug column. Ctrl+W closes that tab: Query 1 remains, public \u203a organizations, Northwind Labs, Tessellate, and match all are gone, and the explorer still shows the word organizations. The size stays 120 by 40. Ctrl+Q exits.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "286fc81f7a2983f1d5e3a1438afafd5e109dedd4",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T02.filters",
+      "entry_path": "Connect Development at 120x40, truecolor, reduced motion, then Enter on public.organizations",
+      "return_path": "Ctrl+W closes the organizations tab and leaves Query 1"
+    },
+    {
+      "case_id": "T02.filters.filters",
+      "owner_task": "T02.filters",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Development connects under reduced motion and Enter on public.organizations opens the grid. The first drawn name is Tessellate. One Down parks the gutter on Northwind Labs. The chip name contains 'Labs' keeps only Northwind Labs, drops Tessellate, and the gutter stays on Northwind Labs, under match all \u25be. That settled frame is the 120 by 40 checkpoint. At 80 by 24 the same chip still fits, and the terminal then returns to 120 by 40. Editing the chip to name contains 'Retail' keeps Lumen Retail and drops Northwind Labs. x removes it, the status is Filter removed, and both names return. f on the focused name cell keeps that cell's value as name = '<name>'. Shift+F on the grid clears with Filters cleared and the first name is Tessellate again. Esc from a dirty zzz value adds no chip. Two chips, name contains 'Labs' and name contains 'Retail', draw Loading rows\u2026 and neither organization name. m switches the lead to match any \u25be and the grid stays empty, because predicates are still combined with AND. Shift+X on the chip bar clears without the Filters cleared status. All 18 operators draw their chips. =, !=, contains, starts with, ends with, >, >=, <, <=, in list, between, and matches regex change the drawn names to the rows that operator keeps. is NULL and is empty draw Loading rows\u2026, and the editor says No value needed for this operator. The zero-value chip is name is NULL. The two-value chip is name between Lumen and Orbit. is not NULL and is not empty keep the unfiltered name prefix. not contains and not in list draw their chips and also keep that prefix, because those operators publish no predicate. matches regex keeps the same names as contains. The gutter stays on Tessellate for every operator that does not change the set. The last reset restores the unfiltered prefix, starting at Tessellate, with no chip.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "286fc81f7a2983f1d5e3a1438afafd5e109dedd4",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_filters/t02_filters_filters_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t02_filters/t02_filters_filters_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Add, edit, remove, and reset chips. Exercise match-all, match-any, no rows, and filter-on-cell.",
+      "expected_results": "The visible row identities match the filter. Reset restores the unfiltered identities. Selection stays on the same identity when it remains.",
+      "forbidden_effects": "No-rows shows the previous rows.",
+      "checkpoint_ids": [
+        "T02.filters.filters.120x40",
+        "T02.filters.filters.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "case_id": "T02.filters.filters",
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "expect_baseline": "missing",
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "checkpoints": [
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+            "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+            "fixture_args": [
+              "--color",
+              "truecolor",
+              "--motion",
+              "reduced"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "aaf04e30136897010f114284298425778b467a49e17c78585a95045c029a6e15",
+            "expect_baseline": "missing",
+            "precondition": "chip name contains 'Labs' on organizations at 120 by 40",
+            "case_id": "T02.filters.filters.120x40",
+            "checkpoint_id": "T02.filters.filters.120x40"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+            "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+            "fixture_args": [
+              "--color",
+              "truecolor",
+              "--motion",
+              "reduced"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "8aec3c718101e2e7af95c3fcc43807e6f450371bbcafbe165e729e16e86c55c1",
+            "expect_baseline": "missing",
+            "precondition": "chip name contains 'Labs' on organizations at 80 by 24",
+            "case_id": "T02.filters.filters.narrow",
+            "checkpoint_id": "T02.filters.filters.narrow"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "task_id": "J01.refresh",
+  "cases": [
+    {
+      "case_id": "J01.refresh.route",
+      "owner_task": "J01.refresh",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40 opens the manager on Current directory. returning joins live instances, so the intro does not play. Down and Right expand payments-platform. Down selects 7f3a, whose lifecycle is running · Container and Capsule daemon are live. F5 is src/bin/jackin/screens/manager.rs on_key KeyCode::F(5) and paints Refreshing…. Down selects c41e while that status is up. The detail lifecycle is preserved · dirty and the stopped-with-uncommitted-changes description, not the running sentence. After the refresh tick, both 7f3a and c41e stay painted, no instances stays absent, and Refresh failed stays absent. ▲ stale stays absent because src/bin/jackin/domain/fixtures.rs base_world leaves daemon health healthy and refresh_fails false. Up returns to 7f3a with its own lifecycle. The manager stays the surface. finish() sends Ctrl+Q and exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d0be796c2ed6fe0db5f876098ea813c194c6744b",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J01.refresh",
+      "entry_path": "launch jackin --scenario returning --color truecolor --motion reduced at 120x40; expand payments-platform; F5",
+      "return_path": "the manager stays up after refresh; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J01.refresh.refresh",
+      "owner_task": "J01.refresh",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "hard-cases is populated(true). src/bin/jackin/domain/fixtures.rs world_for sets refresh_fails and daemon_health Stale, and discovery IndexUnreadable. The manager opens with the returning rows plus data-pipeline. ▲ daemon stale may already be painted and is not the failure. F5 in src/bin/jackin/screens/manager.rs paints Refreshing…. Down selects c41e while that status is up, and the detail is c41e's preserved · dirty lifecycle, not 7f3a's running sentence. The following tick takes the refresh_fails branch in manager.rs on_tick. That branch does not clear instances and does not rewrite instance status, so the list stays the last good rows. Msg::Refreshed { ok: false } paints Refresh failed: instance index unreadable · showing last-good rows. Every instance id that was on screen before F5 is still painted. no instances, parity, vm.img, and 842 of 926 stay absent. The selected lifecycle stays c41e's. The quiet manager, still on those rows, is the checkpoint at 120×40 and then at 80×24, before the terminal returns to 120×40.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d0be796c2ed6fe0db5f876098ea813c194c6744b",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Start refresh, show success and failure, and change selection while a result is pending.",
+      "expected_results": "Failure leaves the last good rows. A stale result does not change the other target.",
+      "forbidden_effects": "Failure clears the list.",
+      "checkpoint_ids": [
+        "J01.refresh.refresh.120x40",
+        "J01.refresh.refresh.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "hard-cases",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "418f14fc7e807c65d3585ce07d10373ca8d171fb3a6ee106efca147e13d83efc",
+        "expect_baseline": "missing",
+        "precondition": "J01.refresh.refresh.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "hard-cases",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c2fbd0b03d42da1f22d9c56fb0d25c5cf2a5322a1b4c643c2cedd6a6ba5aaa73",
+        "expect_baseline": "missing",
+        "precondition": "J01.refresh.refresh.narrow"
+      }
+    }
+  ]
+}

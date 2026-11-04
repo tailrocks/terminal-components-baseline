@@ -1,0 +1,120 @@
+{
+  "task_id": "T03.plan",
+  "cases": [
+    {
+      "case_id": "T03.plan.route",
+      "owner_task": "T03.plan",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing lists Development and does not show Query 1. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with status Connected to Development and the empty editor placeholder Type SQL. The status is not Loading schema, and EXPLAIN · raw is absent. The route keeps no baseline.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "235d032f0fd5fde71226f34ae8f8db7a6bb78c0c",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.plan",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "the workbench is already Query 1; the route keeps no baseline"
+    },
+    {
+      "case_id": "T03.plan.plan",
+      "owner_task": "T03.plan",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Development, the Query 1 editor receives SELECT sku FROM products. Development Safe Mode stays Silent, so EXPLAIN of this SELECT does not open a confirm dialog. Ctrl+X finishes on the plan tree: header Operation, node Seq Scan, status Planning 0.210 ms · r Raw, and no EXPLAIN · raw card. The plan is not Gather, Parallel Seq Scan, or Sort. A click on the Seq Scan row moves focus to the plan, and r toggles the raw card. The editor still contains SELECT sku FROM products. The raw card is titled EXPLAIN · raw, shows Planning Time: 0.210 ms and Seq Scan on public.products (cost=0.00..15.90 rows=312 width=64), and does not show Operation. That raw card is the 120×40 frame. The 80×24 frame, captured before the terminal returns to 120×40, still shows EXPLAIN · raw and Planning Time:. Alt+X then runs EXPLAIN ANALYZE. Its status is Planning 0.210 ms · Execution 0.466 ms, which is not the tree-only Operation header. Ctrl+Q opens Quit TablePro? for the unsaved query; confirming Quit exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "235d032f0fd5fde71226f34ae8f8db7a6bb78c0c",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t03_plan/t03_plan_plan_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t03_plan/t03_plan_plan_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Explain a statement, switch to the raw plan, and run EXPLAIN ANALYZE where the mode allows it.",
+      "expected_results": "Each body contains that view's text.",
+      "forbidden_effects": "The raw view still shows only the tree.",
+      "checkpoint_ids": [
+        "T03.plan.plan.120x40",
+        "T03.plan.plan.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2f4fd9f15be27c86ea3f1e963fac39f8d259cf25af9a851f5e20116761f70b42",
+        "expect_baseline": "missing",
+        "precondition": "T03.plan.plan.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "62c08279f424f8eb715af612abd8bb3976fd80d8d90f60cec2510bf3b18a4dc4",
+        "expect_baseline": "missing",
+        "precondition": "T03.plan.plan.narrow"
+      }
+    }
+  ]
+}

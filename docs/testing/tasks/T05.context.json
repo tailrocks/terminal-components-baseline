@@ -1,0 +1,36 @@
+{
+  "task_id": "T05.context",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t05_context.rs",
+    "docs/testing/cases/T05.context.json",
+    "tests/functional/baselines/pre_refactor/T05.context/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/context.rs"
+  ],
+  "coverage_rows": [
+    "T05.context.route",
+    "T05.context.context"
+  ],
+  "checkpoints": [
+    "T05.context.context.120x40"
+  ],
+  "acceptance": "Context-menu actions apply to the selected cell or row.",
+  "status": "queued",
+  "architecture_refactor": false
+}

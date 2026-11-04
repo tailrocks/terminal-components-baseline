@@ -1,0 +1,38 @@
+{
+  "task_id": "J03.environments",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "J02.environments"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j03_environments.rs",
+    "docs/testing/cases/J03.environments.json",
+    "tests/functional/baselines/pre_refactor/J03.environments/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/settings.rs",
+    "src/bin/jackin/screens/config.rs"
+  ],
+  "coverage_rows": [
+    "J03.environments.route",
+    "J03.environments.env"
+  ],
+  "checkpoints": [
+    "J03.environments.env.120x40"
+  ],
+  "acceptance": "Global environment values use the shared form and keep their scope.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,40 @@
+{
+  "task_id": "T01.connections",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t01_connections.rs",
+    "docs/testing/cases/T01.connections.json",
+    "tests/functional/baselines/pre_refactor/T01.connections/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/connections.rs",
+    "src/bin/tablepro/app.rs",
+    "src/bin/tablepro/model.rs"
+  ],
+  "coverage_rows": [
+    "T01.connections.route",
+    "T01.connections.select",
+    "T01.connections.status"
+  ],
+  "checkpoints": [
+    "T01.connections.select.120x40",
+    "T01.connections.status.120x40"
+  ],
+  "acceptance": "Tree selection, filtering, empty search, and connection status stay on the selected connection.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,2154 @@
+{
+  "task_id": "S01.statushints",
+  "cases": [
+    {
+      "case_id": "sc.statushints.route",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_route.tui.json"
+      ],
+      "route": "statushints",
+      "label": "Status & hints",
+      "entry_path": "--page statushints",
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4284a0c4d4aa9299b84450ecccad41178292e23e63417fbc3753cde52246b73f",
+        "expect_baseline": "missing",
+        "precondition": "pointer opens Status & hints from the sidebar after keyboard leave and return"
+      }
+    },
+    {
+      "case_id": "sc.statushints.playground",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d8923c8b3e134ce24629d22d6fdbb44cc170e0b04aad1a0c7197916bacf1af96",
+        "expect_baseline": "missing",
+        "precondition": "playground at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.playground.120x40",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.statushints.playground.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Status & hints playground section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page statushints --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d8923c8b3e134ce24629d22d6fdbb44cc170e0b04aad1a0c7197916bacf1af96",
+        "expect_baseline": "missing",
+        "precondition": "playground at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.playground.80x24",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_80x24.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.statushints.playground.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Status & hints playground section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page statushints --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "98d5079c12116f31c7450bf6e91119ec5054a33155870fdde13d541b7c119a75",
+        "expect_baseline": "missing",
+        "precondition": "playground at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.statushints.options",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "eb3f89ea5693186cdc46fe20766604db8610bc274b83bca493a15bcc75d9d791",
+        "expect_baseline": "missing",
+        "precondition": "options at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.options.120x40",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.statushints.options.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Status & hints options section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page statushints --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "eb3f89ea5693186cdc46fe20766604db8610bc274b83bca493a15bcc75d9d791",
+        "expect_baseline": "missing",
+        "precondition": "options at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.options.80x24",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_80x24.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.statushints.options.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Status & hints options section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page statushints --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "deae165f6840b75859d38e31efabed03428c8125d15354e2da4dbeb0339b69ad",
+        "expect_baseline": "missing",
+        "precondition": "options at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.statushints.states",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "90369a75a863efeb0b4d70cc8d53c448d402f9b71621c66986d01a2489c8068a",
+        "expect_baseline": "missing",
+        "precondition": "states at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.states.120x40",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.statushints.states.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Status & hints states section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page statushints --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "90369a75a863efeb0b4d70cc8d53c448d402f9b71621c66986d01a2489c8068a",
+        "expect_baseline": "missing",
+        "precondition": "states at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.states.80x24",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_80x24.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.statushints.states.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Status & hints states section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page statushints --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f9750c4d85742ae12219a37d7d23b366f2e67bb85f4ab180f862fb80bd0ad906",
+        "expect_baseline": "missing",
+        "precondition": "states at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.statushints.specimen.rest",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "90369a75a863efeb0b4d70cc8d53c448d402f9b71621c66986d01a2489c8068a",
+        "expect_baseline": "missing",
+        "precondition": "states at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.specimen.hover",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.pressed",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.focused",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.focused_hover",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.selected",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.disabled",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.busy",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.error",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "90369a75a863efeb0b4d70cc8d53c448d402f9b71621c66986d01a2489c8068a",
+        "expect_baseline": "missing",
+        "precondition": "states at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.specimen.editing",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": false,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "90369a75a863efeb0b4d70cc8d53c448d402f9b71621c66986d01a2489c8068a",
+        "expect_baseline": "missing",
+        "precondition": "states at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.specimen.empty",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.loading",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "NOT_APPLICABLE: StatusHintsPage::states_grid in src/bin/showcase/pages/status_hints.rs draws rows(&[Rest, Overflow, Error, Editing, Narrow]) only. HintLayer::supports in src/widgets/hintbar.rs matches only Rest, Overflow, Error, Editing, and Narrow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.statushints.specimen.overflow",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "90369a75a863efeb0b4d70cc8d53c448d402f9b71621c66986d01a2489c8068a",
+        "expect_baseline": "missing",
+        "precondition": "states at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.specimen.narrow",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "90369a75a863efeb0b4d70cc8d53c448d402f9b71621c66986d01a2489c8068a",
+        "expect_baseline": "missing",
+        "precondition": "states at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.statushints.compare-levels",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_80x24.tui.json"
+      ],
+      "route": "statushints",
+      "section_or_overlay": "states",
+      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
+      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
+      "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
+      "checkpoint_ids": [
+        "sc.statushints.compare-levels.120x40",
+        "sc.statushints.compare-levels.80x24"
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ab689610f4102df097e9caf2e8897baf1f33b6600442870fc45c3effedb63dae",
+        "expect_baseline": "missing",
+        "precondition": "Compare levels on at 80 by 24, captured before restoring the wide size"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "cd4134bebb4529247059f5d3b3055ea15828fb07e429c6ed245e56c4f96ae14f",
+        "expect_baseline": "missing",
+        "precondition": "Compare levels on at 120 by 40, before the terminal narrows"
+      }
+    },
+    {
+      "case_id": "opt.statushints.layer",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_layer.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "screen",
+        "menu",
+        "modal"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.layer from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Top layer effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "29a371fb11810c87b6d99ab4a1b5afe083f27f0ad3b6e505603e0f6974361ba5",
+        "expect_baseline": "missing",
+        "precondition": "Options control sets Top layer to modal; Align stays start"
+      }
+    },
+    {
+      "case_id": "opt.statushints.align",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_align.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "start",
+        "center"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.align from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Align effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.align=center",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "612a2fd2d7512ffdf71bf5b1cf3880b7a0c1a7d4397d97c80a86a9eb5d0b0e21",
+        "expect_baseline": "missing",
+        "precondition": "Align center; Top layer stays screen"
+      }
+    },
+    {
+      "case_id": "opt.statushints.width",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_width.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "full",
+        "narrow"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.width from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Bar width effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.width=narrow",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3ac9602857324df192c5e809f697fc3f05a1dac6cf07878b4f3227a566a34908",
+        "expect_baseline": "missing",
+        "precondition": "Bar width narrow drops F5; Align stays start and Compact stays off"
+      }
+    },
+    {
+      "case_id": "opt.statushints.compact",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_compact.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [
+        [
+          "statushints.width",
+          "narrow"
+        ]
+      ],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.compact from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Compact keys effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.width=narrow",
+          "--opt",
+          "statushints.compact=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7963338c2489e472ffc730c2b4eb3f648608fff6ad46390a2e630052169e8293",
+        "expect_baseline": "missing",
+        "precondition": "Compact on with the required narrow width; share stays 50%"
+      }
+    },
+    {
+      "case_id": "opt.statushints.share",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_share.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "50",
+        "30",
+        "80"
+      ],
+      "effect": "frame",
+      "needs": [
+        [
+          "statushints.width",
+          "narrow"
+        ],
+        [
+          "statushints.status",
+          "plain"
+        ]
+      ],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.share from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Status share % effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.width=narrow",
+          "--opt",
+          "statushints.status=plain",
+          "--opt",
+          "statushints.share=30",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "88ec93e96809f8c0f6c5f5a4c7c0ee90dd3c277833ab1ba8315155a9db671b9f",
+        "expect_baseline": "missing",
+        "precondition": "Status share 30% with narrow width and plain status"
+      }
+    },
+    {
+      "case_id": "opt.statushints.priority",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_priority.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "auto",
+        "normal",
+        "pinned"
+      ],
+      "effect": "frame",
+      "needs": [
+        [
+          "statushints.width",
+          "narrow"
+        ]
+      ],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.priority from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible F5 priority effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.width=narrow",
+          "--opt",
+          "statushints.priority=pinned",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "302d03a9679b4d635667a4ba492a2787f1da374122bb78dc2107d6538f512a84",
+        "expect_baseline": "missing",
+        "precondition": "F5 pinned on a narrow bar; Compact stays off"
+      }
+    },
+    {
+      "case_id": "opt.statushints.status",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_status.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "none",
+        "plain",
+        "warning",
+        "error",
+        "parts"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.status from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Status effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.status=parts",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "90da8e340001a20552478efdbdf916784e62a133e4027cb7cecf299559d0b992",
+        "expect_baseline": "missing",
+        "precondition": "Status parts shows payments.settlements; Align stays start"
+      }
+    },
+    {
+      "case_id": "opt.statushints.badge",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_badge.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.badge from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible EDIT badge effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.badge=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0fc9c6e7636a23096dbc83f81c7f122542ed504038ad209c9d77bce93409a1af",
+        "expect_baseline": "missing",
+        "precondition": "EDIT badge on; hidden-files hint stays Show hidden"
+      }
+    },
+    {
+      "case_id": "opt.statushints.hidden",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_hidden.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.hidden from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Hidden files shown effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.hidden=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0b4300e6d2cbf09dd77905aa3a7f6d66dd95cf2ac9fdad132e745f0e2e9da965",
+        "expect_baseline": "missing",
+        "precondition": "Hidden files on changes the hint to Hide hidden; badge stays off"
+      }
+    },
+    {
+      "case_id": "opt.statushints.too_small_min",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_too_small_min.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "72x20",
+        "100x30"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.too_small_min from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Too small below effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.too_small_min=100x30",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "26e32cb257af54dae027d914c41d46b851fd77095aed409e3aef708173d688f5",
+        "expect_baseline": "missing",
+        "precondition": "Too small minimum 100\u00d730; quit hint stays q Quit"
+      }
+    },
+    {
+      "case_id": "opt.statushints.quit_hint",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_quit_hint.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "default",
+        "custom"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.quit_hint from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Too-small quit hint effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.quit_hint=custom",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "45a2274112fbbf011560ee158c416d03bc6d308bfc5e030339140341b46e2ecd",
+        "expect_baseline": "missing",
+        "precondition": "Custom too-small quit hint; minimum stays 72\u00d720"
+      }
+    },
+    {
+      "case_id": "opt.statushints.brand",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_brand.tui.json"
+      ],
+      "route": "statushints",
+      "option_values": [
+        "title",
+        "accent"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set statushints.brand from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Too-small brand effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--opt",
+          "statushints.brand=accent",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bb99149482c9721fb56e14e5cff0af58459278d2a70df07e00cc7f9076b99eaf",
+        "expect_baseline": "missing",
+        "precondition": "Too-small brand uses the accent ink; the brand text stays junie showcase"
+      }
+    },
+    {
+      "case_id": "sc.statushints.status",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_before.tui.json",
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_after.tui.json"
+      ],
+      "route": "statushints",
+      "action_sequence": "Post success, error, and progress through the page controls.",
+      "expected_results": "Each status text appears, a progress status expires, and an error stays while the page says it is persistent.",
+      "forbidden_effects": "An expired success message is still visible after its lifetime.",
+      "checkpoint_ids": [
+        "sc.statushints.status.before",
+        "sc.statushints.status.after"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e742afc6aed5eb4c139217512ed2b21538990d67e9acf4ed64727ce5ad2ee6eb",
+        "expect_baseline": "missing",
+        "precondition": "Indexing finished has expired and Connection lost is still on the footer"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d696b6cf5e572f757503fd73bf62bc50aab916fd0ebdd373f2baa782c850579e",
+        "expect_baseline": "missing",
+        "precondition": "footer has no posted status before Post info"
+      }
+    },
+    {
+      "case_id": "sc.statushints.hints",
+      "owner_task": "S01.statushints",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Passed on the reference showcase through the PTY.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_before.tui.json",
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_after.tui.json"
+      ],
+      "route": "statushints",
+      "action_sequence": "Exercise hint priority, hidden hints, width, and the too-small option.",
+      "expected_results": "The visible hint set matches the selected priority and width.",
+      "forbidden_effects": "A hidden hint remains visible.",
+      "checkpoint_ids": [
+        "sc.statushints.hints.before",
+        "sc.statushints.hints.after"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "60cf87ed96e72d3ee9c31832cd49cd55db0cf60d5b3f8ac7c3506d448b05abed",
+        "expect_baseline": "missing",
+        "precondition": "narrow pinned bar keeps F5 Refresh and Show hidden is gone"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "statushints",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ef1496f148bdb98d1a3a3a2e450f19e9b7ce590d6d576536bbf8c4feec61b4d6",
+        "expect_baseline": "missing",
+        "precondition": "full-width hints show Ctrl+H Show hidden"
+      }
+    }
+  ]
+}

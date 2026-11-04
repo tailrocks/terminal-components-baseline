@@ -1,0 +1,120 @@
+{
+  "task_id": "J04.form",
+  "cases": [
+    {
+      "case_id": "J04.form.route",
+      "owner_task": "J04.form",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --color truecolor --motion reduced at 120×40. No --scenario is passed, so src/bin/jackin/main.rs keeps the default first-use scenario. The reduced intro in src/bin/jackin/rain.rs paints Knock, knock, operator. and finishes on its own. Shell key c is JackinCmd::Accounts in src/bin/jackin/app.rs. AccountsScreen::enter in src/bin/jackin/screens/accounts.rs focuses the tree. The empty registry paints Accounts › Overview and No accounts registered. Key a calls open_form(None) while focus is off the action row, opening New account with meta form · unsaved. Esc from that clean form is FormDialog cancel in src/widgets/form_dialog.rs. on_layer_result sets Cancelled · nothing saved and does not insert an account. Esc from the tree with no filter calls Go::Manager. The manager shows Current directory. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "95028d7565ca39266e0830c32cab7e181fa52fbf",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J04.form",
+      "entry_path": "jackin --color truecolor --motion reduced at 120x40; c; a",
+      "return_path": "Esc cancels the new-account form; Esc from the accounts tree returns to the manager; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J04.form.form",
+      "owner_task": "J04.form",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The default first-use registry is empty, so the case records scenario null. open_form in src/bin/jackin/screens/accounts.rs builds New account. A fully empty display name fails TextInput::validate first, so FormDialog::submit in src/widgets/form_dialog.rs paints the theme string Required from src/theme.rs and never calls save_form. A whitespace-only name passes that check. save_form trims it and paints Display name is required, and it does not insert an account. The checkpoint is that open form, at 120×40 and then at 80×24, before the error is dismissed and before a valid save. The frame contains no API key. Cancel and reopen show the blank form and No accounts registered. The other painted rejections are Display name is too long (64 max), Choose a 1Password item and field first, Enter or browse to the local agent folder, and API key required: the field is empty, all from save_form or run_validation in src/bin/jackin/screens/accounts.rs. provider::validate in src/bin/jackin/sim/provider.rs supplies Folder not found, Folder not readable: permission denied, and No credential found with level None, so save_form does not insert. A wrong-provider folder is CheckRow::Ok, so its level is Some and save_form inserts it. The case does not use that outcome as a rejection. Each rejection leaves New account open and adds no row. Filling Desk with the local folder ~/.claude and activating Cancel restores the blank form, because a new form is not stored. Saving the same values inserts Claude · Desk and status Saved Claude · Desk. Key e reopens Edit account · Claude · Desk with ~/.claude. A second folder of ~/.claude paints Already registered: this source is used by Claude · Desk. /Users/alexey/.claude paints Already registered: Claude · Desk authenticates the same identity. Neither insert adds an account, and reopening Desk still shows ~/.claude.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "95028d7565ca39266e0830c32cab7e181fa52fbf",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j04_form/j04_form_form_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j04_form/j04_form_form_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Submit a whitespace display name and capture the open error. Cancel, reopen, and submit each other painted invalid case. Fill a valid account, cancel, reopen the blank form, save, and reopen the saved values.",
+      "expected_results": "Cancel reopens the previous values. A valid save reopens the new values. Each invalid submit leaves the form open and adds no account.",
+      "forbidden_effects": "An invalid form saves a partial account. The checkpoint frame shows no raw API key.",
+      "checkpoint_ids": [
+        "J04.form.form.120x40",
+        "J04.form.form.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "89e0a3dd210cdc9ed3240c64700cc456d3d33f45ede64178efd0a3333a6ca70f",
+        "expect_baseline": "missing",
+        "precondition": "J04.form.form.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2544db9319943fdb0b98e6a0b0e69ed4edf4676daa4e8a4c5602b4047e82d1ce",
+        "expect_baseline": "missing",
+        "precondition": "J04.form.form.narrow"
+      }
+    }
+  ]
+}

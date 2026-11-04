@@ -1,0 +1,120 @@
+{
+  "task_id": "T03.running",
+  "cases": [
+    {
+      "case_id": "T03.running.route",
+      "owner_task": "T03.running",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing lists Development and does not show Query 1. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with status ✓ Connected to Development and the empty editor placeholder Type SQL. The status is not Loading schema. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "a7b9c0ffea5651cc8d165e4c4e4187f5b301d7ef",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.running",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "the workbench is already Query 1; Ctrl+Q exits"
+    },
+    {
+      "case_id": "T03.running.cancel",
+      "owner_task": "T03.running",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Development, the Query 1 editor receives SELECT 1 AS t03_running_marker. Development Safe Mode is Silent, so this read does not open an Execute confirm. Ctrl+R draws a running line ending in Esc cancels, and Cancelled is absent. A second Ctrl+R sets status Already running · Esc cancels and leaves that same running line, with no result tab and no Query 2. Esc then shows one result tab Cancelled, the result line Cancelled · nothing was recorded, and the empty state titled Cancelled with hint The statement was stopped before it finished; nothing was recorded. The statement stays in the editor. The marker is not a result row. The 120×40 frame is that cancelled result. The 80×24 frame, captured before the terminal returns to 120×40, still shows the title, the hint, the result line, and the statement. After both frames the cancelled title and hint remain. Ctrl+Y opens Query history and does not list t03_running_marker. Ctrl+W closes history and returns to Query 1 with the cancelled result still shown. Ctrl+Q opens Quit TablePro? for the unsaved query; confirming Quit exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "a7b9c0ffea5651cc8d165e4c4e4187f5b301d7ef",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t03_running/t03_running_cancel_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t03_running/t03_running_cancel_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Start a query, observe running feedback, refuse a second run, and cancel.",
+      "expected_results": "The cancelled result stays cancelled. A later completion does not replace it.",
+      "forbidden_effects": "Duplicate run starts a second result.",
+      "checkpoint_ids": [
+        "T03.running.cancel.120x40",
+        "T03.running.cancel.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "006545f2e20ec2e62d24a7dba1fc82c917b776e3ef324cc8f8142cf652b30b53",
+        "expect_baseline": "missing",
+        "precondition": "T03.running.cancel.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "939f48f6dbe84034bde7691d7e0d133b00294e3d3db84a7ffc7084a88a016c15",
+        "expect_baseline": "missing",
+        "precondition": "T03.running.cancel.narrow"
+      }
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "task_id": "H04.snapshots-docker",
+  "cases": [
+    {
+      "case_id": "H04.snapshots-docker.route",
+      "owner_task": "H04.snapshots-docker",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario docker-cleanup --color truecolor --motion reduced at 120×40 with HOLLA_NO_HISTORY=1 opens the finder on the seeded query docker clean, with Clean Docker completely selected. App::start writes that query (src/bin/holla/app.rs). The first Esc drops the selection and the second clears the text (src/bin/holla/screens/finder.rs). Paste List containers and Enter opens the Containers snapshot. The body lists acme-api-1, acme-worker-1, acme-scheduler-1, acme-db-1, acme-redis-1, build-cache-7f2, registry-mirror, tmp-shell, tmp-shell-2, pgadmin, grafana, and loki. acme-api-1 is healthy in project acme, grafana is in project monitoring, and build-cache-7f2 is exited. Cannot connect to the Docker daemon at unix:///var/run/docker.sock and daemon unreachable are absent. Esc is shell Back and returns to the finder on List containers. acme/api:dev is gone. No quit dialog is drawn. finish() sends Ctrl+Q and exits 0. Clean Docker completely was not opened.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8024cc64766ce1586693ab386f0fca2c0091c93a",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H04.snapshots-docker",
+      "entry_path": "launch holla --scenario docker-cleanup --color truecolor --motion reduced at 120x40; Esc clears docker clean; paste List containers; Enter",
+      "return_path": "Esc returns to the finder on List containers; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H04.snapshots-docker.docker",
+      "owner_task": "H04.snapshots-docker",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On docker-cleanup, List containers opens docker-ps. The live header is Containers and the twelve devbox container names are on the page. Esc, then Show Docker disk usage, opens docker-df. That live header is Docker disk usage and does not contain Containers. The page still shows 9.8 GB, ~18.4, acme-api-1, and monitoring. The sock error and daemon unreachable are absent from both pages. Show Compose services has no row. docker_devbox sets compose to None (src/bin/holla/domain/fixtures.rs) and docker_compose_items adds Show Compose services only when compose is Some (src/bin/holla/domain/catalog.rs). The finder shows No matches for “Show Compose services” and Nothing to preview. Enter stays on that finder. Clean Docker completely is not activated, and no compose up or down runs. A second launch, parity-discovery, pastes Docker and opens docker-unavailable. The live header is Docker. The body contains $ docker info and Cannot connect to the Docker daemon at unix:///var/run/docker.sock. The fact and the panel title are Daemon, and the capability line includes daemon unreachable. Clean Docker completely is absent, and the docker-cleanup containers are not listed as running. That open page is the checkpoint, at 120×40 and then at 80×24, before Esc. The narrow shot is taken before the terminal returns to 120×40. Esc returns to the finder on Docker. finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8024cc64766ce1586693ab386f0fca2c0091c93a",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h04_snapshots_docker/h04_snapshots-docker_docker_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h04_snapshots_docker/h04_snapshots-docker_docker_narrow.tui.json"
+      ],
+      "scenario": [
+        "docker-cleanup",
+        "parity-discovery"
+      ],
+      "action_sequence": "Open docker-ps and docker-df from docker-cleanup. Show Compose services has no row there. Open docker-unavailable from parity-discovery.",
+      "expected_results": "Unavailable does not list containers as running.",
+      "forbidden_effects": "Unavailable offers a follow-up that claims a container started.",
+      "checkpoint_ids": [
+        "H04.snapshots-docker.docker.120x40",
+        "H04.snapshots-docker.docker.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-discovery",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0c8595ecd99e930d238dec64cc691268ad47781d55249556589a1a23f3594b6b",
+        "expect_baseline": "missing",
+        "precondition": "H04.snapshots-docker.docker.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-discovery",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a2a2c355b850fedaf7609c786b272fb3516e6e98cdba5265213961ad5ce8c3df",
+        "expect_baseline": "missing",
+        "precondition": "H04.snapshots-docker.docker.narrow"
+      }
+    },
+    {
+      "case_id": "H04.snapshots-docker.scenario.docker-cleanup",
+      "owner_task": "H04.snapshots-docker",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "Reduced docker-cleanup at 120×40 shows Clean Docker completely, devbox, 18.4 GB, and the seeded query docker clean. Cannot connect to the Docker daemon at unix:///var/run/docker.sock is absent. After the query is cleared, List containers shows devbox, acme/api:dev, project monitoring, and 18.4, with the same container names as docker_devbox. mbp · live is absent. The parity-discovery sock error is absent. finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8024cc64766ce1586693ab386f0fca2c0091c93a",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "docker-cleanup",
+      "action_sequence": "Launch the application with scenario docker-cleanup and exercise the surface owned by H04.snapshots-docker.",
+      "expected_results": "The visible fixture data belongs to docker-cleanup.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

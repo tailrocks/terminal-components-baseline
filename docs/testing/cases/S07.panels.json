@@ -1,0 +1,1968 @@
+{
+  "task_id": "S07.panels",
+  "cases": [
+    {
+      "case_id": "sc.panels.route",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "--page panels opens the playground with the sidebar on Panels",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_route.tui.json"
+      ],
+      "route": "panels",
+      "label": "Panels",
+      "entry_path": "--page panels",
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "64413886da854843aade75393bbd71c6a1f62d11d79726120ef9977d6ce71aa1",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_route 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.playground",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "playground is the visible Panels section at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2dc9de118dffa40384b36c5209eed447e0a3c7b608cc10d2a39f17a325e3b036",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_playground 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.playground.120x40",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "playground at 120 by 40 shows the titled card, the framed prose, the nested list, and the scrollable log side by side",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground_120x40.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.panels.playground.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Panels playground section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page panels --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2cc76c07d1578e974a1d16d10ab277bc39fadc69ed510de4820fbc80f3df666e",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_playground_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.panels.playground.80x24",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "playground at 80 by 24 stacks the cards and clips the blurb before nothing boxed twice. The framed pane, nested list, and log are below the fold, and the header has no size chip",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground_80x24.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.panels.playground.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Panels playground section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page panels --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f7e161e58816bdac440f48259895075010449b01750e27688e571f52d091de87",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_playground_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.panels.options",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "options is the visible Panels section at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "fb19bb58c6e0252c6100fd04d4d8167d67a8bd058793daf3e12884b70f33f788",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_options 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.options.120x40",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "options at 120 by 40 shows all eleven Panels controls",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options_120x40.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.panels.options.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Panels options section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page panels --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "661299036389492adf1d453be7512bf1587edf98083b663a27f2dab2210a02e4",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_options_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.panels.options.80x24",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "options at 80 by 24 shows controls through Log sideways. Track click, Keys, and Follow key are below the fold, and the section caption is clipped",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options_80x24.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.panels.options.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Panels options section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page panels --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "be223f9db5489a1cedfe380329c1febf6cf6d7c057e8758bfba94731719eb0cd",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_options_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.panels.states",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "states is the visible Panels section at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "dc98af74a7e97544461c3fe8d32b27b9f3a9ee1a3b66f6a61fc66784a19da91b",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_states 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.states.120x40",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "states at 120 by 40 shows rest, focused, overflow, and narrow for Card, Card \u00b7 bar mark, and Framed",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states_120x40.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.panels.states.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Panels states section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page panels --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f7637af5eecdcc109f113f7dbdd8f7a08e9c48610d7eae096310d62224d9649e",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_states_120x40 120x40"
+      }
+    },
+    {
+      "case_id": "sc.panels.states.80x24",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "states at 80 by 24 shows rest, focused, and overflow for Card and Card \u00b7 bar mark. The narrow row and the Framed column are off screen, live clips to li, and the focus legend clips before where your focus is",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states_80x24.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.panels.states.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Panels states section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page panels --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "aa1ce733062c1c16d23d212cdd38206e39489a0c33ae3fe77c3845bfac3098b4",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_states_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "sc.panels.specimen.rest",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "rest row is on the states grid",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_rest.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7b07821f44c84d59acd05c7dcb4993550df9abad62fc41410a9f0b0a5634f8cf",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_specimen_rest 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.specimen.hover",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Hover. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.pressed",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Pressed. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.focused",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "focused row is on the states grid and the bar-mark column draws the specimen mark",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_focused.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7c5aaeb13da49868126988f84fac1ebac81d2b51930c303c258255e677353f4c",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_specimen_focused 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.specimen.focused_hover",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::FocusedHover. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.selected",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Selected. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.disabled",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Disabled. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.busy",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Busy. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.error",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Error. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.editing",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Editing. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": false
+    },
+    {
+      "case_id": "sc.panels.specimen.empty",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Empty. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.loading",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/panels.rs states_grid lines 328-350. Line 343 is `.rows(&[Rest, Focused, Overflow, Narrow])`. The list omits SpecimenState::Loading. The grid takes the card heading and does not apply focus mark, padding, title minimum, or short meta.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.panels.specimen.overflow",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "overflow row is on the states grid and replaces the meta with a long value",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_overflow.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e5b8a00550276a4ff816fec6d1db978ce37ec74572e0449cdc8f8c68a98b76eb",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_specimen_overflow 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.specimen.narrow",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "narrow row is on the states grid and shortens the framed title",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_narrow.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "774ebf2ef57122c0771fa08740a2bdf675384011875f116345947ff56e9a8912",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_specimen_narrow 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.compare-levels",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "compare levels reached no color at 120 by 40, kept that band at 80 by 24, then returned to the resting states grid without changing an option",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_compare-levels_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_compare-levels_80x24.tui.json"
+      ],
+      "route": "panels",
+      "section_or_overlay": "states",
+      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
+      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
+      "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
+      "checkpoint_ids": [
+        "sc.panels.compare-levels.120x40",
+        "sc.panels.compare-levels.80x24"
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6c1842e71d6e13739583a7adeba4409c8a645dab7056398da95d5ea2477a65ff",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_compare-levels_120x40 120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1172ae58cd62819dc333f26c5625e87ff9f2d821b9671675f294b461aff2342c",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_compare-levels_80x24 80x24"
+      }
+    },
+    {
+      "case_id": "opt.panels.focus_mark",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.focus_mark=bar draws the focus gutter on Card \u00b7 scrollable after the log is clicked, and the prose stays at 1\u201313 of 24",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_focus_mark.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "title",
+        "bar"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.focus_mark from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Card focus mark effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.focus_mark=bar",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "adf9a366c8c767d3297acdc81215e7878ad8ddb09c92dfd763a97a248d24d81e",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_focus_mark 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.heading",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.heading=plain removes the rule under Titled card, Nested, and Card \u00b7 scrollable, and the states column label becomes Card \u00b7 plain",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_heading.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "theme",
+        "plain",
+        "rule",
+        "band",
+        "emphasis"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.heading from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Card heading effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.heading=plain",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "288b4e465c67ec9a2cb5c6fd7703f122010d060eee444d4924b86804079c5a84",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_heading 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.title_min",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.title_min=20 is shown on Title keeps. The framed title and the of meta do not change at 120 by 40. They also stayed the same at the minimum side-by-side pane (terminal 95, main 74, right pane 36), so this baseline stays 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_title_min.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "12",
+        "4",
+        "20"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.title_min from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Title keeps effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.title_min=20",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a2696c75bc495a115c02abba5eab4576a3f5e97322c0b994e4c127c8eebc114b",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_title_min 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.pad_x",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.pad_x=0 joins the untitled card onto content starts at and shows Resolving workspace members without the previous ellipsis. The framed meta stays 1\u201313 of 24",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_pad_x.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "2",
+        "1",
+        "0"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.pad_x from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Card padding effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.pad_x=0",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6f26f5c308770b87454c9a03465f81c0066b70000de862c561472338d46c8cdf",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_pad_x 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.meta_short",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.meta_short=custom is shown on Short meta. The full meta still fits, so the text stays 1\u201313 of 24 and 1\u201311 of 60 rather than the slash form",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_meta_short.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "auto",
+        "custom"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.meta_short from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Short meta effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.meta_short=custom",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "45a82dfd96eec3e9c5f47122ee0ee9068ae0d26a254550711475b1ab98aa4b5d",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_meta_short 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.wrap",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.wrap=off stops the prose wrapping, drops the framed 1\u201313 of 24 meta, and leaves the log at 1\u201311 of 60",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_wrap.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.wrap from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Wrap prose effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.wrap=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2e6827ff91f11a3fc58efa7b4ba308b74021ac810dccd109c557636eda2241e0",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_wrap 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.tail",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.tail=on moves the log to 50\u201360 of 60 \u00b7 following, starting at 18.13s, and leaves the prose at 1\u201313 of 24",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_tail.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.tail from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Log follows its tail effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.tail=on",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ffc0f36e945460d91d5411e273aaf35f2439ba2b1ac5b1651f3b6068a78916ac",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_tail 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.hscroll",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.hscroll=off changes the log window to 1\u201312 of 60 and shows the 4.07s line in the row the horizontal bar used",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_hscroll.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "theme",
+        "off",
+        "bar-always",
+        "bar-never",
+        "step-1",
+        "jump"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.hscroll from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Log sideways effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.hscroll=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "23dd9afa33fda7cc5bab4089fd8b0ffe0ff233021d4accdc31ee46b3fcd9ea48",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_hscroll 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.track_click",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.track_click=jump lands on 45\u201355 of 60 after a click on the log track. The page value and the app default both land on 12\u201322 of 60, which stays absent",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_track_click.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "app",
+        "page",
+        "jump"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.track_click from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Track click effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.track_click=jump",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "75dd906132841414e22176a8a189267e79e9b1d78591dc1465640e71013df874",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_track_click 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.nav",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.nav=vim replaces Home End with g G Ends while the log is focused, and j moves the log from 1\u201311 of 60 to 2\u201312 of 60. The prose stays at 1\u201313 of 24",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_nav.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "desktop",
+        "vim",
+        "no-paging"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.nav from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Keys effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.nav=vim",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bfb1d36a0f5385e6ed11cc3f193ca67c620256f05eeb6765f629d1eae6c65e2a",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_nav 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "opt.panels.keymap",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "panels.keymap=t is shown on Follow key. Tail is off, so the Follow tail hint stays absent and t and f leave the log at 1\u201311 of 60",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_keymap.tui.json"
+      ],
+      "route": "panels",
+      "option_values": [
+        "f",
+        "t"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set panels.keymap from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Follow key effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--opt",
+          "panels.keymap=t",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3d414cae0e739900be9356b7d53466e17baed7d711b4363bf3ef87e5b2ff7301",
+        "expect_baseline": "missing",
+        "precondition": "opt_panels_keymap 120x40"
+      },
+      "terminal_columns": 120,
+      "terminal_rows": 40
+    },
+    {
+      "case_id": "sc.panels.panels",
+      "owner_task": "S07.panels",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "scrolling the log down and right changes its window to 2\u201312 of 60 and shifts the line sideways, scrolling the framed prose changes only that pane to 2\u201314 of 24, and moving the nested selection from Local to CLI leaves both scrolls where they are",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_panels_before.tui.json",
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_panels_after.tui.json"
+      ],
+      "route": "panels",
+      "action_sequence": "Scroll adjacent and nested panels on both axes.",
+      "expected_results": "The scrolled panel's first visible line changes and the neighbour does not.",
+      "forbidden_effects": "Scrolling one panel moves the other panel's content.",
+      "checkpoint_ids": [
+        "sc.panels.panels.before",
+        "sc.panels.panels.after"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "59a169a4afc2a79b041db25f051789cf13b0dbb97f135d0cf51e92dc873f2924",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_panels_before 120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "panels",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "472e01b9a97e87144c4fd507a2600e6d7df13af873265e4db221d5e2ed458286",
+        "expect_baseline": "missing",
+        "precondition": "sc_panels_panels_after 120x40"
+      }
+    }
+  ]
+}

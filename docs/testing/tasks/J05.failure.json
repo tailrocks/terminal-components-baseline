@@ -1,0 +1,37 @@
+{
+  "task_id": "J05.failure",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j05_failure.rs",
+    "docs/testing/cases/J05.failure.json",
+    "tests/functional/baselines/pre_refactor/J05.failure/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/cockpit.rs",
+    "src/bin/jackin/sim/launch.rs"
+  ],
+  "coverage_rows": [
+    "J05.failure.route",
+    "J05.failure.failure"
+  ],
+  "checkpoints": [
+    "J05.failure.failure.120x40"
+  ],
+  "acceptance": "The actual failed stage is visible before acknowledgement, and retry or fallback follows the source.",
+  "status": "queued",
+  "architecture_refactor": false
+}

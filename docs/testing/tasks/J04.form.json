@@ -1,0 +1,36 @@
+{
+  "task_id": "J04.form",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j04_form.rs",
+    "docs/testing/cases/J04.form.json",
+    "tests/functional/baselines/pre_refactor/J04.form/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/accounts.rs"
+  ],
+  "coverage_rows": [
+    "J04.form.route",
+    "J04.form.form"
+  ],
+  "checkpoints": [
+    "J04.form.form.120x40"
+  ],
+  "acceptance": "The account form rejects duplicate source, duplicate identity, a missing name, and an overlong name, and cancel restores the opened values.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,76 @@
+{
+  "task_id": "S10.activity",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s10_activity.rs",
+    "docs/testing/cases/S10.activity.json",
+    "tests/functional/baselines/pre_refactor/S10.activity/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/activity.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.activity.route",
+    "sc.activity.playground",
+    "sc.activity.playground.120x40",
+    "sc.activity.playground.80x24",
+    "sc.activity.options",
+    "sc.activity.options.120x40",
+    "sc.activity.options.80x24",
+    "sc.activity.states",
+    "sc.activity.states.120x40",
+    "sc.activity.states.80x24",
+    "sc.activity.specimen.rest",
+    "sc.activity.specimen.hover",
+    "sc.activity.specimen.pressed",
+    "sc.activity.specimen.focused",
+    "sc.activity.specimen.focused_hover",
+    "sc.activity.specimen.selected",
+    "sc.activity.specimen.disabled",
+    "sc.activity.specimen.busy",
+    "sc.activity.specimen.error",
+    "sc.activity.specimen.editing",
+    "sc.activity.specimen.empty",
+    "sc.activity.specimen.loading",
+    "sc.activity.specimen.overflow",
+    "sc.activity.specimen.narrow",
+    "sc.activity.compare-levels",
+    "opt.activity.state",
+    "opt.activity.wrap",
+    "opt.activity.retention",
+    "opt.activity.find",
+    "opt.activity.digit_toggles",
+    "sc.activity.activity"
+  ],
+  "checkpoints": [
+    "sc.activity.playground.120x40",
+    "sc.activity.playground.80x24",
+    "sc.activity.options.120x40",
+    "sc.activity.options.80x24",
+    "sc.activity.states.120x40",
+    "sc.activity.states.80x24",
+    "sc.activity.compare-levels",
+    "sc.activity.activity"
+  ],
+  "acceptance": "Open Activity by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

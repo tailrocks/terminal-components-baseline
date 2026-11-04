@@ -556,8 +556,18 @@ fn showcase_scrollbar_thumb_drag_moves_list() {
     app.finish();
 }
 
+fn gutter_on(screen: &TerminalSnapshot, label: &str) -> bool {
+    let point = find(screen, label);
+    (1..=3).any(|back| {
+        point.x >= back
+            && screen
+                .cell_at(u32::from(point.x - back), u32::from(point.y))
+                .is_some_and(|cell| cell.text() == "▎")
+    })
+}
+
 #[test]
-fn showcase_keyboard_activation_after_click_focus() {
+fn showcase_keyboard_activates_focused_run_task() {
     let app = App::new(
         "showcase-keyboard",
         SHOWCASE,
@@ -568,17 +578,31 @@ fn showcase_keyboard_activation_after_click_focus() {
     );
     let initial = app.wait_text("Run task");
     assert!(!text(&initial).contains("Run task ✓"));
+    assert!(!text(&initial).contains("Preview ✓"));
 
-    app.click(inside(find(&initial, "Preview")));
-    app.wait_text("Preview ✓");
-    app.key("tab");
+    let mut screen = initial;
+    for _ in 0..16 {
+        if gutter_on(&screen, "Run task") {
+            break;
+        }
+        app.key("tab");
+        screen = app.settle();
+    }
+    assert!(
+        gutter_on(&app.screen(), "Run task"),
+        "Run task starts unactivated and receives keyboard focus:\n{}",
+        text(&app.screen())
+    );
+    assert!(!text(&app.screen()).contains("Run task ✓"));
+    assert!(!text(&app.screen()).contains("Preview ✓"));
     app.key("enter");
-    let done = app.wait_screen("keyboard activation fires the focused control", |s| {
-        let t = text(s);
-        t.contains("Run task ✓") || t.contains("Preview ✓")
-    });
-    assert!(text(&done).contains("Preview ✓"));
-    app.visual("functional/showcase_keyboard_activation");
+    let done = app.wait_text("Run task ✓");
+    assert!(
+        !text(&done).contains("Preview ✓"),
+        "Preview stays idle when Run task is the activated control:\n{}",
+        text(&done)
+    );
+    app.visual("functional/showcase_keyboard_run_task");
     app.finish();
 }
 
@@ -734,18 +758,37 @@ fn showcase_dialog_opens_traps_and_escape_cancels() {
     );
     app.wait_text("Open a dialog");
     app.click(inside(find(&app.screen(), "Confirm run")));
-    let open = app.wait_screen("confirm dialog opens", |s| {
-        let t = text(s);
-        t.contains("Cancel") && (t.contains("Run") || t.contains("Confirm"))
-    });
-    assert!(!text(&open).contains("Nothing yet") || text(&open).contains("Cancel"));
+    let open = app.wait_text("Run task now?");
+    assert!(text(&open).contains("Nothing yet"));
+    assert!(text(&open).contains("Cancel"));
 
     app.visual("functional/showcase_dialogs");
-    app.key("escape");
-    let cancelled = app.wait_screen("escape cancels the dialog", |s| {
-        text(s).contains("Nothing yet") || text(s).contains("Cancelled")
+    app.key("tab");
+    let tabbed = app.wait_screen("tab stays inside the confirm dialog", |s| {
+        text(s).contains("Run task now?") && text(s).contains("Nothing yet")
     });
-    assert!(text(&cancelled).contains("Open a dialog"));
+    assert!(!text(&tabbed).contains("Delete branch?"));
+    app.key("shift+tab");
+    let shifted = app.wait_screen("shift+tab stays inside the confirm dialog", |s| {
+        text(s).contains("Run task now?") && text(s).contains("Nothing yet")
+    });
+    assert!(!text(&shifted).contains("Task started"));
+    app.key("d");
+    let trapped = app.settle();
+    assert!(
+        text(&trapped).contains("Run task now?"),
+        "the page shortcut must not open Delete branch while the dialog is up:\n{}",
+        text(&trapped)
+    );
+    assert!(!text(&trapped).contains("Delete branch?"));
+    assert!(text(&trapped).contains("Nothing yet"));
+    app.key("escape");
+    let cancelled = app.wait_screen("escape cancels and returns to the opener", |s| {
+        let t = text(s);
+        t.contains("Cancelled") && !t.contains("Run task now?") && gutter_on(s, "Confirm run")
+    });
+    assert!(!text(&cancelled).contains("Nothing yet"));
+    assert!(!text(&cancelled).contains("Task started"));
     app.finish();
 }
 
@@ -761,15 +804,50 @@ fn showcase_table_header_sort_changes_row_order() {
     );
     let initial = app.wait_text("#1040");
     assert!(text(&initial).contains("unsorted"));
-    let first_before = row_text(&initial, u32::from(find(&initial, "#1040").y)).to_string();
+    let before = task_lines(&initial);
+    let on_1040 = before
+        .iter()
+        .find(|line| line.contains("#1040"))
+        .expect("row identity on #1040")
+        .clone();
+    assert!(
+        on_1040.contains("Add rate limiting") && on_1040.contains("Done"),
+        "{on_1040}"
+    );
+    assert!(
+        before.iter().any(|line| line.contains("#1041")),
+        "unsorted neighbor #1041 is visible:\n{}",
+        text(&initial)
+    );
     app.click(inside(find(&initial, "Status")));
     let sorted = app.wait_screen("header click sorts the table", |s| {
-        !text(s).contains("unsorted")
+        !text(s).contains("unsorted") && text(s).contains("sorted by status")
     });
-    assert!(text(&sorted).contains("#1040"));
-    let _ = first_before;
+    let after = task_lines(&sorted);
+    assert_ne!(before, after, "status sort changes row order");
+    let moved = after
+        .iter()
+        .find(|line| !line.contains("#1040"))
+        .expect("a row other than #1040")
+        .clone();
+    assert_ne!(on_1040, moved);
+    assert!(
+        after.iter().any(|line| line.contains("#1040")),
+        "the #1040 identity stays in the table"
+    );
+    assert!(
+        !after.iter().take(2).any(|line| line.contains("#1041")),
+        "Running #1041 leaves the top of the status order:\n{after:?}"
+    );
     app.visual("functional/showcase_table_sort");
     app.finish();
+}
+
+fn task_lines(screen: &TerminalSnapshot) -> Vec<String> {
+    (0..screen.rows())
+        .map(|row| row_text(screen, row))
+        .filter(|line| line.contains("#10"))
+        .collect()
 }
 
 #[test]
@@ -784,12 +862,39 @@ fn showcase_form_required_validation_and_reset() {
     );
     app.wait_text("New task");
     app.click(inside(find(&app.screen(), "Create task")));
-    let invalid = app.wait_screen("empty required field blocks creation", |s| {
-        let t = text(s).to_lowercase();
-        t.contains("required") || t.contains("task name") && t.contains("!")
-    });
+    let invalid = app.wait_text("Required");
     assert!(text(&invalid).contains("New task"));
+    assert!(!text(&invalid).contains("Task created ✓"));
     app.visual("functional/showcase_forms");
+    app.finish();
+
+    let app = App::new(
+        "showcase-forms-reset",
+        SHOWCASE,
+        &["--page", "forms", "--motion", "reduced"],
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("Short imperative summary");
+    app.click(inside(find(&app.screen(), "Short imperative summary")));
+    app.type_text("Ship login fix");
+    app.wait_text("Ship login fix");
+    app.click(inside(find(&app.screen(), "Reset")));
+    let reset = app.wait_text("Form reset");
+    assert!(
+        !text(&reset).contains("Ship login fix"),
+        "Reset clears the task name:\n{}",
+        text(&reset)
+    );
+    assert!(text(&reset).contains("Short imperative summary"));
+    app.click(inside(find(&app.screen(), "Short imperative summary")));
+    app.type_text("Ship login fix");
+    app.wait_text("Ship login fix");
+    app.click(inside(find(&app.screen(), "Create task")));
+    let created = app.wait_text("Task created ✓");
+    assert!(text(&created).contains("Ship login fix"));
+    assert!(!text(&created).contains("Required"));
     app.finish();
 }
 
@@ -803,8 +908,6 @@ fn visit_page(slug: &str, heading: &str) {
         "truecolor",
     );
     app.wait_text(heading);
-    app.settle();
-    app.advance_clock(100);
     app.settle();
     app.visual(&format!("functional/showcase_page_{slug}"));
     app.finish();

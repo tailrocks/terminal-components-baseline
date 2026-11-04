@@ -1,0 +1,37 @@
+{
+  "task_id": "J01.prewarm",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j01_prewarm.rs",
+    "docs/testing/cases/J01.prewarm.json",
+    "tests/functional/baselines/pre_refactor/J01.prewarm/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/manager.rs",
+    "src/bin/jackin/sim/world.rs"
+  ],
+  "coverage_rows": [
+    "J01.prewarm.route",
+    "J01.prewarm.prewarm"
+  ],
+  "checkpoints": [
+    "J01.prewarm.prewarm.120x40"
+  ],
+  "acceptance": "Prewarm runs once and a duplicate request is refused.",
+  "status": "queued",
+  "architecture_refactor": false
+}

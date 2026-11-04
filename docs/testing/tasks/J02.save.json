@@ -1,0 +1,39 @@
+{
+  "task_id": "J02.save",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j02_save.rs",
+    "docs/testing/cases/J02.save.json",
+    "tests/functional/baselines/pre_refactor/J02.save/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/editor.rs",
+    "src/bin/jackin/sim/changes.rs",
+    "src/bin/jackin/sim/world.rs"
+  ],
+  "coverage_rows": [
+    "J02.save.route",
+    "J02.save.save",
+    "J02.save.scenario.hard-cases"
+  ],
+  "checkpoints": [
+    "J02.save.save.120x40"
+  ],
+  "acceptance": "Preview cancel, direct save, leave Save, Stay, Discard, and the one-shot save failure keep workspace identity.",
+  "status": "queued",
+  "architecture_refactor": false
+}

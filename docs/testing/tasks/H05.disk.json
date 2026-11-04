@@ -1,0 +1,38 @@
+{
+  "task_id": "H05.disk",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h05_disk.rs",
+    "docs/testing/cases/H05.disk.json",
+    "tests/functional/baselines/pre_refactor/H05.disk/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/disk.rs"
+  ],
+  "coverage_rows": [
+    "H05.disk.route",
+    "H05.disk.tree",
+    "H05.disk.scenario.parity-disk-navigation",
+    "H05.disk.scenario.parity-insights"
+  ],
+  "checkpoints": [
+    "H05.disk.tree.120x40"
+  ],
+  "acceptance": "Tree sorting, selection totals, Overview, and TopFiles return to the same node.",
+  "status": "queued",
+  "architecture_refactor": false
+}

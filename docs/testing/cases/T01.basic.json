@@ -1,0 +1,258 @@
+{
+  "task_id": "T01.basic",
+  "cases": [
+    {
+      "case_id": "T01.basic.route",
+      "owner_task": "T01.basic",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro opens on Connections with no --page flag. A click on Production in the tree, then e, opens a card titled Edit connection with Basic selected. The drawn fields include Name, Host, Port, Database, and Username. Cancel drops the form. The detail still shows Production and prod-db-1.acme.io:5432. The footer still shows Fix the highlighted fields from the rejected submit.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "89263a012c376b8d5edc17a46678762e1a381977",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_basic/t01_basic_fields_120x40.tui.json"
+      ],
+      "route": "T01.basic",
+      "entry_path": "launch tablepro with no --page; click Production in the tree; press e",
+      "return_path": "click Cancel; the detail shows Production and prod-db-1.acme.io:5432",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "340c99bb0ecc0e2de53f12f4acf84ee9bff3de142fd568b9bf3a388c97bf63f7",
+        "expect_baseline": "missing",
+        "precondition": "T01.basic.fields.120x40"
+      }
+    },
+    {
+      "case_id": "T01.basic.fields",
+      "owner_task": "T01.basic",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Production, a blank name and a one-space name both draw Required under Name and leave port 5432. The space keeps the caret column of the one-character name. Ports 65536, abc, and 0 draw Port must\u2026 (U+2026). The validator in connections.rs returns Port must be 1\u201365535; reveal::fit clips that string in the port column at 120\u00d740. Submit sets the status Fix the highlighted fields, leaves Edit connection open, and leaves Production in the tree. Connection saved is absent. The 120\u00d740 checkpoint is that frame with a blank name, port 0, both drawn errors, host prod-db-1.acme.io, database acme_prod, and username acme_ops. At 80\u00d724 the same form is a drawer, so the tree is covered. Name is blank with Required, the port is 0, and the port error is clipped to Port mus\u2026 (U+2026). The status Fix the highlighted fields is on the footer and Connection saved is absent. After the reopen shots, Ctrl+S with port 65535 saves. The detail shows Production, prod-db-1.acme.io:65535, Engine PostgreSQL, Environment production, and Safe Mode with deliberate acknowledgement. Opening Edit again shows name Production and port 65535.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "89263a012c376b8d5edc17a46678762e1a381977",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_basic/t01_basic_fields_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t01_basic/t01_basic_fields_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Open Edit on Production. Submit a blank name, a one-space name, and ports 65536, abc, and 0. Submit again with a blank name and port 0. Capture 120\u00d740, then 80\u00d724, then restore 120\u00d740. After the reopen shots, set the port to 65535 and submit.",
+      "expected_results": "The blank and whitespace names draw Required. The invalid ports draw Port must\u2026 at 120\u00d740 and Port mus\u2026 at 80\u00d724, with status Fix the highlighted fields. The saved record shows name Production, host prod-db-1.acme.io, port 65535, engine PostgreSQL, environment production, and Safe Mode.",
+      "forbidden_effects": "Connection saved appears, or the tree replaces Production with the rejected name.",
+      "checkpoint_ids": [
+        "T01.basic.fields.120x40",
+        "T01.basic.fields.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "340c99bb0ecc0e2de53f12f4acf84ee9bff3de142fd568b9bf3a388c97bf63f7",
+        "expect_baseline": "missing",
+        "precondition": "T01.basic.fields.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ba144a90e872f8bb495b5b85b09113a99f311f57a78e6b8903401ba874d351de",
+        "expect_baseline": "missing",
+        "precondition": "T01.basic.fields.narrow"
+      }
+    },
+    {
+      "case_id": "T01.basic.reopen",
+      "owner_task": "T01.basic",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Cancel closes the form. Pressing e opens Edit connection on Production again. Name is Production, host is prod-db-1.acme.io, and port is 5432. Database is acme_prod and username is acme_ops. The blank name and port 0 are gone. Connection saved is absent. The footer still shows Fix the highlighted fields. At 80\u00d724 the reopened form is a drawer showing Name Production, host prod-db-1.acme.io, and port 5432. Connection saved is absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "89263a012c376b8d5edc17a46678762e1a381977",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_basic/t01_basic_reopen_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t01_basic/t01_basic_reopen_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Cancel the rejected edit, press e, capture 120\u00d740, resize to 80\u00d724, capture that frame, then restore 120\u00d740.",
+      "expected_results": "Name, Host, and Port show Production, prod-db-1.acme.io, and 5432 at both sizes.",
+      "forbidden_effects": "Connection saved appears, or the reopened form shows the rejected name or port.",
+      "checkpoint_ids": [
+        "T01.basic.reopen.120x40",
+        "T01.basic.reopen.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7b143db45a459f43625142f383a70295238bbd96da6b1f897fe8f802026a9924",
+        "expect_baseline": "missing",
+        "precondition": "T01.basic.reopen.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6ee9f15375582782dd9459b3f3aa74a1661e1d352fae9a97505b9911a679207f",
+        "expect_baseline": "missing",
+        "precondition": "T01.basic.reopen.narrow"
+      }
+    }
+  ]
+}

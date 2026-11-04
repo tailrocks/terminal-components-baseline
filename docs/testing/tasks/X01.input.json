@@ -1,0 +1,38 @@
+{
+  "task_id": "X01.input",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x01_input.rs",
+    "docs/testing/cases/X01.input.json",
+    "tests/functional/baselines/pre_refactor/X01.input/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/core/keyboard.rs",
+    "src/core/event.rs",
+    "src/shell/app.rs"
+  ],
+  "coverage_rows": [
+    "X01.input.route",
+    "X01.input.input"
+  ],
+  "checkpoints": [
+    "X01.input.input.120x40"
+  ],
+  "acceptance": "Keyboard fallback, modified keys, bracketed paste, and modal paste ownership match the current routing.",
+  "status": "queued",
+  "architecture_refactor": false
+}

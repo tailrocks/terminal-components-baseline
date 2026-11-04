@@ -1,0 +1,158 @@
+{
+  "task_id": "T02.structure",
+  "cases": [
+    {
+      "case_id": "T02.structure.route",
+      "owner_task": "T02.structure",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro opens on Connections with no --page flag. Development shows host dev-db.internal.acme.io and database acme_dev. Connect, launched with reduced motion, finishes on the workbench: Query 1, status Connected to Development, and the catalog header acme_prod › public. Opening customers, then products, and pressing Ctrl+D reaches Structure. Ctrl+D returns to Data on products, where sku is visible and No triggers is gone. The 120×40 baseline is the products Triggers frame on that path.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "bdd16291f2ec81a5be8ede2bfc97b82787c39b18",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_120x40.tui.json"
+      ],
+      "route": "T02.structure",
+      "entry_path": "launch tablepro with --color truecolor --motion reduced; click Development; click Connect; open customers; press Ctrl+D",
+      "return_path": "press Ctrl+D on products; Data shows sku and No triggers is gone",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b85355716831a823d7272e132bfa5e775c5abf167c6fd40491ab5c0c32391443",
+        "expect_baseline": "missing",
+        "precondition": "T02.structure.tabs.120x40"
+      }
+    },
+    {
+      "case_id": "T02.structure.tabs",
+      "owner_task": "T02.structure",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On customers, Columns shows public › customers with organization_id, full_name, email, uuid, and gen_random_uuid(), footer 11 columns · read from the catalog · changes are queued until Save. Indexes shows customers_pkey, customers_email_key, customers_org_idx, and btree, footer 3 indexes. Foreign keys shows organization_id, organizations(id), and CASCADE, footer 1 foreign keys. Constraints shows customers_pkey, customers_email_key, customers_organization_id_fkey, FOREIGN KEY, and (organization_id) REFERENCES o… (U+2026), footer 3 constraints. Triggers shows set_updated_at BEFORE UPDATE and audit_customers AFTER INSERT OR UPDATE OR DELETE, footer 2 triggers. DDL is a card titled DDL. Its lines start with CREATE TABLE public.customers (, and the drawn constraint and index lines are CONSTRAINT customers_organization_id_fkey FOREIGN KEY (organization_id) … and CREATE INDEX customers_org_idx ON public.customers USING btree (organization…. On products, Columns shows sku, unit_price, numeric(12,2), and 'USD', footer 9 columns. Indexes shows products_pkey, products_sku_key, and btree, footer 2 indexes. Foreign keys draws No foreign keys, footer 0 foreign keys. Constraints shows products_unit_price_check, products_pkey, products_sku_key, and (unit_price >= 0), footer 3 constraints. Triggers draws No triggers, footer 0 triggers, and does not show set_updated_at or audit_customers. DDL is a card titled DDL whose lines start with CREATE TABLE public.products (, including sku text NOT NULL and unit_price numeric(12,2) NOT NULL. The 120×40 checkpoint is products Triggers: the tab label Triggers, headers Trigger and Timing · event, centered No triggers, and footer 0 triggers · read from the catalog · changes are queued until Save. The 80×24 frame is captured before the size is restored. Its strip shows Columns, Indexes, Foreign keys, Constraints, then 2› +2, and the body is still No triggers without set_updated_at.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "bdd16291f2ec81a5be8ede2bfc97b82787c39b18",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Open Columns, Indexes, Foreign keys, Constraints, Triggers, and DDL on customers, then the same six tabs on products. Jump back to Triggers. Capture 120×40, then 80×24, then restore 120×40.",
+      "expected_results": "Each tab's heading and cell values belong to the opened object. customers keeps its own names on every tab. products Foreign keys draws No foreign keys and products Triggers draws No triggers.",
+      "forbidden_effects": "An empty tab shows another tab's rows. products Triggers does not show set_updated_at or audit_customers.",
+      "checkpoint_ids": [
+        "T02.structure.tabs.120x40",
+        "T02.structure.tabs.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b85355716831a823d7272e132bfa5e775c5abf167c6fd40491ab5c0c32391443",
+        "expect_baseline": "missing",
+        "precondition": "T02.structure.tabs.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bd8f9849edd6db80b506d63a024a5352b7f99afa60697148c913b9d2cad1c3bb",
+        "expect_baseline": "missing",
+        "precondition": "T02.structure.tabs.narrow"
+      }
+    }
+  ]
+}

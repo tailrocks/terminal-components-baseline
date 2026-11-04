@@ -1,0 +1,142 @@
+{
+  "task_id": "J02.save",
+  "cases": [
+    {
+      "case_id": "J02.save.route",
+      "owner_task": "J02.save",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario hard-cases --color truecolor --motion reduced at 120×40. world_for in src/bin/jackin/domain/fixtures.rs sets DaemonHealth::Stale and save_fails_once, and payments-platform keep_awake starts true. hard-cases skips the intro, so the manager is already showing Current directory. ManagerScreen::new in src/bin/jackin/screens/manager.rs selects RowKey::CurrentDir with expanded empty. One Down focuses payments-platform. The painted stale marker is ▲ daemon stale, from the shell chip in src/bin/jackin/app.rs and the instances meta in src/bin/jackin/screens/manager.rs. The Daemon section's ▲ stale row is below the fold, so this row locks the visible chip and does not require an age. Key e on that workspace calls Go::Editor in manager.rs. editor.rs crumb() is Workspaces › payments-platform › edit. draw_host_menu in src/bin/jackin/app.rs gives that crumb priority 7, and segments::render drops it behind the priority-8 index error and ▲ daemon stale. The painted editor identity is Directory basename by default, Keep awake [✓], and footer Save…. Clicking footer Cancel with no pending change calls leave and returns to the manager. payments-platform, infra-control-plane, release-automation, and customer-portal stay listed. No toggle and no save. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4eb35d9cc2649cb0918f0994d68e5e7eb6203783",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J02.save",
+      "entry_path": "jackin --scenario hard-cases --color truecolor --motion reduced at 120x40; Down to payments-platform; e",
+      "return_path": "footer Cancel with no change; the manager lists payments-platform; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J02.save.save",
+      "owner_task": "J02.save",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open Save workspace preview from open_preview in src/bin/jackin/screens/editor.rs, before Cancel and before Save. Leave's Save action Some(2) calls open_preview and does not write. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Dialog::facts in src/widgets/dialog.rs has no ack token, so the focused line contains Cancel. The painted facts are Workspace payments-platform, Changes 1 change, and the diff line ~ keep_awake true → false. That line fits on one row at both sizes. Saving, Save failed, and Workspace payments-platform saved are absent. The footer behind the dialog still shows Save…. Preview Cancel paints Not saved · keep editing and does not write. leave in editor.rs opens Unsaved changes. Dialog::confirm is 54 columns, so the body paints as Save changes before leaving?, 1 change would be, and lost. Its Cancel, on the row that also contains Discard, stays in the editor and does not paint Discarded or Workspace payments-platform saved. Discard is action Some(1): status Discarded 1 change, then Go::Manager, and Keep awake is [✓] again. sync_pending copies the checkbox from src/widgets/choice.rs. start_save sets ok to the inverse of save_fails_once, clears the flag, and schedules WorkspaceSaved. The first confirm opens Save failed · payments-platform with write failed: ~/.jackin/workspaces is not writable (EACCES) and your edits are intact · nothing was written. Workspace payments-platform saved stays absent. Dismiss returns to the editor with Keep awake [ ]. The second confirm is the retry: Workspace payments-platform saved and Go::Manager. Reopening shows the same name and Keep awake [ ]. payments-platform, infra-control-plane, release-automation, and customer-portal stay listed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4eb35d9cc2649cb0918f0994d68e5e7eb6203783",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j02_save/j02_save_save_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j02_save/j02_save_save_narrow.tui.json"
+      ],
+      "scenario": [
+        "hard-cases"
+      ],
+      "action_sequence": "Cancel a preview, Stay, Discard, fail one save, retry, and reopen.",
+      "expected_results": "Failure keeps the pending edit and the previous saved values. Retry then reopen shows the new values.",
+      "forbidden_effects": "Failure reports the edit as saved.",
+      "checkpoint_ids": [
+        "J02.save.save.120x40",
+        "J02.save.save.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "hard-cases",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "983883b9ddee90ea7b248624389b0ece4a4262d4c8e008329ab557163de0f7df",
+        "expect_baseline": "missing",
+        "precondition": "J02.save.save.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "hard-cases",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "85281ae67b1f46d6bc30a0606b1d6211011f6333333eaa1c65504b84e2164bd1",
+        "expect_baseline": "missing",
+        "precondition": "J02.save.save.narrow"
+      }
+    },
+    {
+      "case_id": "J02.save.scenario.hard-cases",
+      "owner_task": "J02.save",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "world_for in src/bin/jackin/domain/fixtures.rs builds hard-cases with DaemonHealth::Stale, save_fails_once, and payments-platform keep_awake true. The save journey is the evidence. The manager paints ▲ daemon stale from src/bin/jackin/screens/manager.rs. The one-shot failure is the EACCES dialog from finish_save in src/bin/jackin/screens/editor.rs, and the retry writes payments-platform. infra-control-plane, release-automation, and customer-portal stay listed. The journey does not require identities that belong only to another scenario.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4eb35d9cc2649cb0918f0994d68e5e7eb6203783",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "hard-cases",
+      "action_sequence": "Launch the application with scenario hard-cases and exercise the surface owned by J02.save.",
+      "expected_results": "The visible fixture data belongs to hard-cases.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "task_id": "H01.finder",
+  "cases": [
+    {
+      "case_id": "H01.finder.route",
+      "owner_task": "H01.finder",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Launch holla --scenario first-use --color truecolor --motion reduced at 120×40. The finder shows Here, Search actions and resources, ~/scratch, and no project. The parity unavailable banner, discovering, and Review 5 modified are absent. Ctrl+Q through finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "cdfd601630335f2ccf55d44a01e5d94b40227cbd",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H01.finder",
+      "entry_path": "launch holla --scenario first-use --color truecolor --motion reduced at 120x40",
+      "return_path": "Ctrl+Q through finish() exits 0"
+    },
+    {
+      "case_id": "H01.finder.discovery",
+      "owner_task": "H01.finder",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Parity discovery does not paint the words pending, ready, or failed. Reduced motion sets every source done_at to 0 (src/bin/holla/domain/parity.rs), so those stages are separate --motion paused --frame processes (src/bin/holla/main.rs, src/bin/holla/app.rs). Frame 0 shows discovering … · 0 of 9, › stays on Clean IntelliJ, Pull and Run tests are absent, and a docker query is No matches for with Nothing to preview and no selected row. Frame 8 shows discovering … · 5 of 9 and Run tests, Pull is still absent, and › is still Clean IntelliJ. Frame 12 shows the docker Data row unavailable · Cannot connect to the Docker daemon while status is still discovering … · 6 of 9, and › is still Clean IntelliJ. Frame 20 shows discovering git, brew · 7 of 9 and 4 config warnings. The clone row is absent: github.clone is built inside git_items, which returns until source_ready(\"git\") (src/bin/holla/domain/catalog.rs), and git finishes at tick 40. Frame 40 shows ! docker, github unavailable. Pull is present above Clean IntelliJ and its line has no ›; › is still Clean IntelliJ. On the reduced surface every source is already finished, so › starts on Pull. Typing \"cargo \" selects cargo test. Pasting clippy selects cargo clippy. One backspace leaves the query cargo clipp. Esc restores › Pull. Typing zzzz-no-such-action shows No matches for and Nothing to preview, with no selected item row. Enter leaves that screen: activate_current returns Consumed when current() is None (src/bin/holla/screens/finder.rs), so the previous result does not run. The hint still says Enter Run. Esc restores the open surface. That surface is captured at 120×40, then at 80×24, and only then does the terminal return to 120×40.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "cdfd601630335f2ccf55d44a01e5d94b40227cbd",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h01_finder/h01_finder_discovery_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h01_finder/h01_finder_discovery_narrow.tui.json"
+      ],
+      "scenario": [
+        "first-use",
+        "rust-dirty",
+        "monorepo-root",
+        "parity-discovery"
+      ],
+      "action_sequence": "Show pending, ready, failed, and unavailable discovery. Type, paste, backspace, and clear the query.",
+      "expected_results": "The selected identity stays while order changes. Empty results have no runnable row.",
+      "forbidden_effects": "Enter on an empty result runs the previous result.",
+      "checkpoint_ids": [
+        "H01.finder.discovery.120x40",
+        "H01.finder.discovery.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-discovery",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ccef80503031a3f794522820160ce9d112051ead9f84dc2e193b915400aa1d2f",
+        "expect_baseline": "missing",
+        "precondition": "H01.finder.discovery.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-discovery",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6618c437b0bd406785b78f105d2a35a3b543839735d4d3ca72275e631ab4df56",
+        "expect_baseline": "missing",
+        "precondition": "H01.finder.discovery.narrow"
+      }
+    },
+    {
+      "case_id": "H01.finder.scenario.first-use",
+      "owner_task": "H01.finder",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "Reduced first-use at 120×40 shows ~/scratch, / is 91% full, CPU 78% for 4 min, and no project. Review 5 modified, Follow acme-api-1, ~/work/probe, ~/work/holla, ~/work/acme, and the parity unavailable banner are absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "cdfd601630335f2ccf55d44a01e5d94b40227cbd",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "first-use",
+      "action_sequence": "Launch the application with scenario first-use and exercise the surface owned by H01.finder.",
+      "expected_results": "The visible fixture data belongs to first-use.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H01.finder.scenario.rust-dirty",
+      "owner_task": "H01.finder",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "Reduced rust-dirty at 120×40 shows ~/work/holla, Review 5 modified, 3 commits behind, and Who is blocking. ~/scratch, 91% full, Follow acme-api-1, ~/work/probe, the unavailable banner, and Children · 3 are absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "cdfd601630335f2ccf55d44a01e5d94b40227cbd",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "rust-dirty",
+      "action_sequence": "Launch the application with scenario rust-dirty and exercise the surface owned by H01.finder.",
+      "expected_results": "The visible fixture data belongs to rust-dirty.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H01.finder.scenario.monorepo-root",
+      "owner_task": "H01.finder",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "Reduced monorepo-root at 120×40 shows ~/work/acme, acme · mise monorepo, Follow acme-api-1, and Children · 3 projects. ~/scratch, Review 5 modified, ~/work/probe, ~/work/holla, 91% full, and the unavailable banner are absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "cdfd601630335f2ccf55d44a01e5d94b40227cbd",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "monorepo-root",
+      "action_sequence": "Launch the application with scenario monorepo-root and exercise the surface owned by H01.finder.",
+      "expected_results": "The visible fixture data belongs to monorepo-root.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H01.finder.scenario.parity-discovery",
+      "owner_task": "H01.finder",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "Reduced parity-discovery at 120×40 shows ~/work/probe, probe · Rust project, ! docker, github unavailable, Clean IntelliJ, and branch is 1 commits. The behind count wraps onto the next row, so the contiguous phrase is branch is 1 commits. ~/scratch, ~/work/holla, ~/work/acme, Review 5 modified, Follow acme-api-1, and 91% full are absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "cdfd601630335f2ccf55d44a01e5d94b40227cbd",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-discovery",
+      "action_sequence": "Launch the application with scenario parity-discovery and exercise the surface owned by H01.finder.",
+      "expected_results": "The visible fixture data belongs to parity-discovery.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

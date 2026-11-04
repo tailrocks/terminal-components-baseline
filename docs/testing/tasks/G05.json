@@ -1,0 +1,31 @@
+{
+  "task_id": "G05",
+  "wave": "B",
+  "kind": "prerequisite",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G00",
+    "G01",
+    "G02"
+  ],
+  "owned_files": [
+    "docs/testing/reference-manifest.json",
+    "tests/functional/support.rs"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    "AGENTS.md",
+    "docs/GOAL.md",
+    "docs/functional-testing.md",
+    "tests/functional/support.rs",
+    "src/catalog.rs"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "Ordinary runs read CARGO_BIN_EXE and cannot accept baselines. Reference capture is a separate mode aimed at the unchanged reference binaries. Every new baseline records source, binary digest, fixture, environment, and comparator.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,36 @@
+{
+  "task_id": "H04.snapshots-host",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h04_snapshots-host.rs",
+    "docs/testing/cases/H04.snapshots-host.json",
+    "tests/functional/baselines/pre_refactor/H04.snapshots-host/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/snapshot.rs"
+  ],
+  "coverage_rows": [
+    "H04.snapshots-host.route",
+    "H04.snapshots-host.host"
+  ],
+  "checkpoints": [
+    "H04.snapshots-host.host.120x40"
+  ],
+  "acceptance": "Host snapshot families keep their kind in the title and body.",
+  "status": "queued",
+  "architecture_refactor": false
+}

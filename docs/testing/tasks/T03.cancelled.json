@@ -1,0 +1,36 @@
+{
+  "task_id": "T03.cancelled",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t03_cancelled.rs",
+    "docs/testing/cases/T03.cancelled.json",
+    "tests/functional/baselines/pre_refactor/T03.cancelled/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/app.rs"
+  ],
+  "coverage_rows": [
+    "T03.cancelled.route",
+    "T03.cancelled.boundary"
+  ],
+  "checkpoints": [
+    "T03.cancelled.boundary.120x40"
+  ],
+  "acceptance": "A cancelled statement stays cancelled through the rest of the batch.",
+  "status": "queued",
+  "architecture_refactor": false
+}

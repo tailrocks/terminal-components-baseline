@@ -1,0 +1,37 @@
+{
+  "task_id": "X01.clipboard",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x01_clipboard.rs",
+    "docs/testing/cases/X01.clipboard.json",
+    "tests/functional/baselines/pre_refactor/X01.clipboard/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/shell/clipboard.rs",
+    "src/core/keyboard.rs"
+  ],
+  "coverage_rows": [
+    "X01.clipboard.route",
+    "X01.clipboard.copy"
+  ],
+  "checkpoints": [
+    "X01.clipboard.copy.120x40"
+  ],
+  "acceptance": "Selection copy precedes quit where the app implements it. OSC 52 or a paste round trip is asserted only when the app emits it.",
+  "status": "queued",
+  "architecture_refactor": false
+}

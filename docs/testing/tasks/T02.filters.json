@@ -1,0 +1,36 @@
+{
+  "task_id": "T02.filters",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t02_filters.rs",
+    "docs/testing/cases/T02.filters.json",
+    "tests/functional/baselines/pre_refactor/T02.filters/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/filter_editor.rs"
+  ],
+  "coverage_rows": [
+    "T02.filters.route",
+    "T02.filters.filters"
+  ],
+  "checkpoints": [
+    "T02.filters.filters.120x40"
+  ],
+  "acceptance": "Every implemented filter operator and the zero, one, and two-value forms change the visible row set.",
+  "status": "queued",
+  "architecture_refactor": false
+}

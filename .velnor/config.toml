@@ -18,6 +18,11 @@ test_runner = "cargo_nextest"
 
 run_ignored = "default"
 
+# Profile ci excludes binary(functional), and that binary is the only
+# one that contains tests. Run 41783685777 then reported 0 tests and
+# nextest exited 4. The suite job owns those tests.
+allow_empty_test_suite = true
+
 [discovery]
 
 exclude = ["docs/**"]
@@ -36,10 +41,14 @@ options = ["functional"]
 id = "functional"
 profile = "functional"
 run_ignored = "default"
-partitions = 1
+# One job of 1096 PTY tests was cancelled at the 15-minute limit
+# (run 41781135706). Eight hash shards run at once. test_threads 8
+# fills the pty group (max-threads 8, each test threads-required 2).
+partitions = 8
 build = "inline"
 timeout_minutes = 15
-test_threads = 4
+test_threads = 8
 triggers = ["pull_request", "push", "workflow_dispatch"]
+required = true
 dispatch_inputs = { tier = ["functional"] }
-artifacts = [{ name = "functional-terminal-evidence", paths = ["target/functional", "target/nextest/functional"], when = "failure", retention_days = 14 }]
+artifacts = [{ name = "functional-terminal-evidence", paths = ["target/functional", "target/nextest/functional"], when = "always", retention_days = 14 }]

@@ -1,0 +1,155 @@
+{
+  "task_id": "T03.query",
+  "cases": [
+    {
+      "case_id": "T03.query.route",
+      "owner_task": "T03.query",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "tablepro --color truecolor --motion reduced at 120 by 40 opens Connections. Click Development, wait for dev-db.internal.acme.io, then Enter connects. The screen shows Connected to Development, Query 1, and the SQL editor placeholder Type SQL. The header token is silent. There is no safety dialog and the schema is not still loading. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "45aeb52b8139dcafb010fbbf723d8f19d17885a4",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.query",
+      "entry_path": "tablepro --color truecolor --motion reduced at 120x40, click Development, Enter",
+      "return_path": "Ctrl+Q exits 0 from Query 1 with no safety dialog"
+    },
+    {
+      "case_id": "T03.query.classify",
+      "owner_task": "T03.query",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Development starts at Silent. A syntax error draws the error card and is not a deny. A comment and a quoted semicolon stay one SELECT. A scoped write and an unscoped write run with no dialog. DELETE FROM orders opens This query may permanently modify or delete data, Action DELETE without WHERE, Safe Mode Silent · confirm before running, and Execute. That open dialog is the 120 by 40 frame and the 80 by 24 frame. Esc cancels it. Empty SQL says Nothing to run. DROP, TRUNCATE, and ALTER that drops use the same dangerous title. EXPLAIN and EXPLAIN ANALYZE of a SELECT run. A mixed SELECT and scoped UPDATE runs both. Alert confirms a write with Execute write query? and Alert · confirm before running, and runs a SELECT. A batch that ends in DROP uses the dangerous title. Alert (Full) confirms a SELECT with Execute query? and Alert (Full) · confirm before running. Safe Mode runs a SELECT and asks Type products to confirm with Safe Mode · type to confirm for a write. Safe Mode (Full) asks Type organizations to confirm. Read-Only on a fresh Query 2 denies a write with Cannot execute write queries, adds no result grid and no History row for that statement, and still runs a SELECT.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "45aeb52b8139dcafb010fbbf723d8f19d17885a4",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t03_query/t03_query_classify_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t03_query/t03_query_classify_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Run SELECT, a scoped write, an unscoped write, a destructive statement, a mixed batch, EXPLAIN, and EXPLAIN ANALYZE under each implemented safe mode. Include comments, a quoted semicolon, empty SQL, and a syntax error.",
+      "expected_results": "The safety decision is the highest applicable decision. Denied execution adds no result and no History entry.",
+      "forbidden_effects": "A denied statement produces a result grid.",
+      "checkpoint_ids": [
+        "T03.query.classify.120x40",
+        "T03.query.classify.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "case_id": "T03.query.classify",
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "expect_baseline": "missing",
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "checkpoints": [
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+            "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+            "fixture_args": [
+              "--color",
+              "truecolor",
+              "--motion",
+              "reduced"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "ab11a88b2d32a50e4c0d5cb50cf487f2f60e31d735d2190e86804610b648cd47",
+            "expect_baseline": "missing",
+            "precondition": "Silent DELETE confirm at 120 by 40 shows DELETE without WHERE before Cancel.",
+            "case_id": "T03.query.classify.120x40",
+            "checkpoint_id": "T03.query.classify.120x40"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+            "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+            "fixture_args": [
+              "--color",
+              "truecolor",
+              "--motion",
+              "reduced"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "06eee6c7bc5196cedb1c1b2c3f92e6f34f9f7ebd5aa788877ef70c5da47543c1",
+            "expect_baseline": "missing",
+            "precondition": "Silent DELETE confirm at 80 by 24 shows DELETE without WHERE before Cancel.",
+            "case_id": "T03.query.classify.narrow",
+            "checkpoint_id": "T03.query.classify.narrow"
+          }
+        ]
+      }
+    }
+  ]
+}

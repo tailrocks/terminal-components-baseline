@@ -1,0 +1,176 @@
+{
+  "task_id": "H03.output",
+  "cases": [
+    {
+      "case_id": "H03.output.route",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario activities-multi --color truecolor --motion reduced opens at 120×40 with the activity tabs already open. Ctrl+G opens the Activities dialog. The wait is Enter Switch, because the Here footer already contains Ctrl+G Activities. The dialog lists frontend dev (running · child), api dev, api tests (succeeded · project), logs · api worker scheduler, and btm (detached · host). ~/work/batch and Retry frontend dev are absent. Esc returns to Search actions. Alt+3 shows api tests · succeeded · 2 s · exit 0, aliases_beat_everything, 128 tests run: 128 passed, and started by Run api tests. VITE v6.3.1 and EADDRINUSE are absent. Esc returns to Here, and aliases_beat_everything is gone from that screen. Live activities open Quit holla. Stay starts focused. Right moves to Stop and quit. Enter exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f0ea32ec2e8cd62d3b9b20d5139027538ee8f997",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H03.output",
+      "entry_path": "launch holla --scenario activities-multi --color truecolor --motion reduced at 120x40; Ctrl+G opens Activities",
+      "return_path": "Esc closes Activities and returns to Here; the quit guard confirms Stop and quit and exits 0"
+    },
+    {
+      "case_id": "H03.output.states",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "activities-multi draws running, cancelling, stopped, succeeded, and detached. frontend dev · running shows port 5173, url http://localhost:5173/, pid 7731, and VITE v6.3.1. api dev · running shows port 8080, pid 9120, Compiling api v0.9.2, and listening on 0.0.0.0:8080. api tests · succeeded · 2 s · exit 0 keeps aliases_beat_everything. btm · detached shows btm 0.11.1 and started by Open system monitor. s on the running frontend sends SIGTERM: the header becomes frontend dev · cancelling, with Stopping frontend dev · SIGTERM sent · output kept and stop requested by holla · SIGTERM to the process group, and VITE v6.3.1 stays. The header then becomes frontend dev · stopped, with exit 130 and terminated (SIGTERM) · process group reaped, and the VITE line and url stay. Queued is not on these screens. Activity::new sets the state to Running (src/bin/holla/domain/activity.rs). World::start_batch assigns Queued only to a later sequential member (src/bin/holla/sim/world.rs). activities_multi, launch_failure, and executor do not call start_batch. The clock runs when motion is not Paused (src/bin/holla/domain/fixtures.rs), and World::tick returns before advancing activities only while the clock is stopped (src/bin/holla/sim/world.rs), so a live activity keeps changing the frame under reduced motion. The checkpoint is the finished launch-failure activity frontend dev · failed · 1 s · exit 1, with listen EADDRINUSE: address already in use :::5173 and the sticky status ! frontend dev failed · exit 1. launch_failure starts task:frontend-dev-fail, which ends at exit 1. The same frame is captured at 120×40 and then at 80×24, and the terminal returns to 120×40. The footer draws r Restart, and the follow-up Retry frontend dev is on screen. Both were left unused. KeyCode::Char('r') calls Activity::restart (src/bin/holla/screens/activity.rs). Activity::restart clears that activity's output and keeps its id (src/bin/holla/domain/activity.rs). The retry follow-up sends Go::Restart into App::run_derived, which restarts the same id (src/bin/holla/app.rs). The separate row is Run tests again, recorded on the activities-multi scenario. Open the failing test is drawn. FOLLOW_UPS does not include that label, so follow_up_supported leaves it inactive (src/bin/holla/screens/activity.rs). Find, copy, follow, and the log-stream digit filter are driven on the activities-multi scenario.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f0ea32ec2e8cd62d3b9b20d5139027538ee8f997",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h03_output/h03_output_states_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h03_output/h03_output_states_narrow.tui.json"
+      ],
+      "scenario": [
+        "activities-multi",
+        "launch-failure",
+        "parity-executor"
+      ],
+      "action_sequence": "Reach each implemented activity state, including spawn failure, nonzero exit, and restart. Filter, find, select, copy, and follow output.",
+      "expected_results": "The visible status and exit status belong to that activity. Another activity's output does not change.",
+      "forbidden_effects": "Restart rewrites the failed run's identity.",
+      "checkpoint_ids": [
+        "H03.output.states.120x40",
+        "H03.output.states.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "launch-failure",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2b8ff6356bd701747d57366bf8098c352c1e453e1acc7660f61f297b3ab93882",
+        "expect_baseline": "missing",
+        "precondition": "H03.output.states.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "launch-failure",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "dd24365d6c18b68399bd0ca7aa2a3b5ba55095d028e9fa994a94bb0687d1950a",
+        "expect_baseline": "missing",
+        "precondition": "H03.output.states.narrow"
+      }
+    },
+    {
+      "case_id": "H03.output.scenario.activities-multi",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "Reduced activities-multi at 120×40. Alt+3 shows api tests · succeeded · 2 s · exit 0 and aliases_beat_everything. Alt+1 shows frontend dev · running, VITE v6.3.1, and pid 7731, and the test line is absent. Alt+3 restores aliases_beat_everything and exit 0, and VITE v6.3.1 and pid 7731 are absent. / aliases_beat shows find “aliases_beat” · 1 of 1. Esc closes the find bar. Ctrl+A then y shows Copied $ cargo nextest run, and aliases_beat_everything remains on the api tests screen. f shows Following the tail. f again shows Follow paused · End resumes. The test line stays. Alt+1 still shows VITE v6.3.1 and http://localhost:5173/, and the test line and 128 tests run: 128 passed are absent. Alt+4 shows logs · api worker scheduler · running, worker ready · queue=orders concurrency=4, and GET /health 200. Digit 1 hides the api stream: GET /health 200 leaves and the worker line stays. Alt+3 still shows the original test line. Tab focuses Run tests again. Enter starts a separate activity test · succeeded · 0 s · exit 0 with $ mise run test and [mise] test finished. Alt+3 still shows api tests · succeeded · 2 s · exit 0, aliases_beat_everything, and 128 tests run: 128 passed, and [mise] test finished is absent. Ctrl+G lists succeeded · project for api tests and succeeded · here for the new test. ~/work/batch, Retry frontend dev, and EADDRINUSE are absent. r and Retry frontend dev were not pressed. Both call Activity::restart on the same id (src/bin/holla/screens/activity.rs, src/bin/holla/domain/activity.rs, src/bin/holla/app.rs). Run tests again calls Go::Run for the mise test task and starts a new activity (src/bin/holla/screens/activity.rs). Open the failing test stays inactive because FOLLOW_UPS omits that label. The quit guard confirms Stop and quit and exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f0ea32ec2e8cd62d3b9b20d5139027538ee8f997",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "activities-multi",
+      "action_sequence": "Launch the application with scenario activities-multi and exercise the surface owned by H03.output.",
+      "expected_results": "The visible fixture data belongs to activities-multi.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H03.output.scenario.launch-failure",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "Reduced launch-failure at 120×40 opens on frontend dev · failed · 1 s · exit 1. The output shows listen EADDRINUSE: address already in use :::5173, ELIFECYCLE, mise ERROR task failed: //apps/frontend:dev exited with 1, started by Start frontend dev, and ~/work/acme/apps/frontend. The follow-ups are Find the process on port 5173, Retry frontend dev, and Open the mise task definition. aliases_beat_everything, api tests, btm 0.11.1, ~/work/batch, Emit a mixed stream, and index file corrupt are absent. Tab focuses Find the process on port 5173. Enter opens the Port 5173 snapshot, which draws node (stale vite), pid 5120, and *:5173 (LISTEN). That row is launch_failure's system.top entry (src/bin/holla/domain/fixtures.rs), drawn by the port snapshot (src/bin/holla/screens/snapshot.rs). It is not a line of the activity output. Esc returns to Search actions. Alt+1 reopens frontend dev · failed · 1 s · exit 1 with EADDRINUSE, and 5120 is absent. No live activity remains, so finish() sends Ctrl+Q and exits 0. Retry frontend dev was not pressed.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f0ea32ec2e8cd62d3b9b20d5139027538ee8f997",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "launch-failure",
+      "action_sequence": "Launch the application with scenario launch-failure and exercise the surface owned by H03.output.",
+      "expected_results": "The visible fixture data belongs to launch-failure.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H03.output.scenario.parity-executor",
+      "owner_task": "H03.output",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "Reduced parity-executor at 120×40 shows batch · project collection, ~/work/batch, Emit a mixed stream, Emit a burst, Current folder · trusted, and 0 dirty · 1 behind. frontend dev, aliases_beat_everything, EADDRINUSE, ~/work/acme, and Retry frontend dev are absent. Enter opens Status across child projects. The rows are one, two, and three, each with main. index file corrupt is absent from that snapshot. executor sets command_failure on child two (src/bin/holla/domain/parity.rs). The hygiene item is the place that formats that string (src/bin/holla/domain/catalog.rs). outcomes.rs prints fatal: {failure} when a git command runs in that repository (src/bin/holla/domain/outcomes.rs). GitState::block_reason and summary do not include command_failure (src/bin/holla/domain/stack.rs). Paste Emit a mixed stream. The wrapped preview shows CRLF, ANSI, invalid, ./emit-stream, UTF-8 and a final, and fragment. Enter runs until emit a mixed stream · succeeded, exit 0, with first, green, and last fragment. burst line is absent. Esc returns to Here with the query still set (Esc Clear). A second Esc clears it. Paste Emit a burst and wait until the script has finished: burst line 4499, succeeded, and exit 0 are present, and last fragment is absent. That burst frame is not a baseline. Alt+1 returns to emit a mixed stream · succeeded with first, green, and last fragment, and burst line 4499 is absent. finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f0ea32ec2e8cd62d3b9b20d5139027538ee8f997",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-executor",
+      "action_sequence": "Launch the application with scenario parity-executor and exercise the surface owned by H03.output.",
+      "expected_results": "The visible fixture data belongs to parity-executor.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

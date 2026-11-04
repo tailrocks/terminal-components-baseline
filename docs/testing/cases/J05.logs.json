@@ -1,0 +1,124 @@
+{
+  "task_id": "J05.logs",
+  "cases": [
+    {
+      "case_id": "J05.logs.route",
+      "owner_task": "J05.logs",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario launch-running --color truecolor --motion reduced at 120×40. Scenario::LaunchRunning in src/bin/jackin/app.rs sends Go::Launch with LaunchPlan::Clean, workspace Some(1), role the-architect, Claude Code, and account acct-claude-work. CockpitScreen::on_key in src/bin/jackin/screens/cockpit.rs handles b while the log is empty and the frontier is still before Derived Image by setting the status No build output yet · the derived image stage has not started, and it does not open the log. After LaunchRun::advance in src/bin/jackin/sim/launch.rs has emitted a BUILD_LOG line, b sets log_open. Esc, b, and q are matched before the viewport, so each one clears log_open. Ctrl+C with the log closed finds no selection, so on_key takes the abort arm: it sets Aborted · terminal restored, cleanup deferred, calls run.cancel(), records a FailedSetup instance, and sends Go::LaunchFailedAck. The populated world still has running instances, so LaunchFailedAck in src/bin/jackin/app.rs shows the manager and paints Launch failed. leave_construct is not taken. The cockpit is gone and Hardline open is absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "a74b5609674868cb18fb8d61fa3076cd099e14f8",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.logs",
+      "entry_path": "jackin --scenario launch-running --color truecolor --motion reduced at 120x40; b before Derived Image",
+      "return_path": "Esc, b, or q closes the log; Ctrl+C with no selection leaves the cockpit for the manager without attaching a capsule"
+    },
+    {
+      "case_id": "J05.logs.logs",
+      "owner_task": "J05.logs",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open log after all 44 BUILD_LOG lines in src/bin/jackin/sim/launch.rs, including exporting to image, and before Ctrl+A, Ctrl+C, the quit dialog, and handoff. draw_log in src/bin/jackin/screens/cockpit.rs titles it Docker build once the frontier has passed Derived Image, with meta 44 lines · following while follow is on. An empty open log paints (waiting for docker build output…). Reduced motion holds the rain and steps three launch ticks per frame, so the activity spinner is the cell that changes. The shots are that open log at 120×40 (J05.logs.logs.120x40, ⠏ Mounting the Workspace, 5/11 stages) and after resize at 80×24 (J05.logs.logs.narrow, ⠋ Waiting for the Capsule daemon). Ctrl+A is SELECT_ALL in src/core/keymap.rs, handled by Viewport::on_key in src/widgets/viewport.rs. Ctrl+C while log_open and has_selection skips the cockpit abort arm, and ViewportCmd::Copy reaches Shell::copy_at, which reports through Clipboard::report in src/shell/clipboard.rs. The log stays open and Aborted · terminal restored, cleanup deferred is absent. Ctrl+Q calls open_quit while the log is open. The body contains Quitting force-stops the launch immediately, and Cancel is focused. Enter is action 0, so the launch stays and the process keeps running. Right then Enter activates Quit. on_layer_result for action Some(1) calls Go::Quit. The process exits 0 and Hardline open stays absent. This row is not a scenario-identity row, so scenario stays null.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "a74b5609674868cb18fb8d61fa3076cd099e14f8",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j05_logs/j05_logs_logs_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j05_logs/j05_logs_logs_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Open the completed build log and capture it at 120x40, then at 80x24. Ctrl+A and Ctrl+C copy. Ctrl+Q, Enter on Cancel, then Ctrl+Q, Right, and Enter on Quit.",
+      "expected_results": "The open log shows Docker build and exporting to image. Copy leaves the log open. Cancel leaves the launch running. Quit exits 0 without a capsule.",
+      "forbidden_effects": "Ctrl+C aborts while a selection exists. The checkpoint shows Quit jackin, Aborted, Launch failed, or Hardline open.",
+      "checkpoint_ids": [
+        "J05.logs.logs.120x40",
+        "J05.logs.logs.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "launch-running",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "18bf501e3d26049d2d3cfe30c5897c866930dafae23609a175186cc94db6de1a",
+        "expect_baseline": "missing",
+        "precondition": "J05.logs.logs.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "launch-running",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6bc0f41c1c94617ae114ab7cfa2602f8f9e62d8e651ee1c366da489da4a1c32d",
+        "expect_baseline": "missing",
+        "precondition": "J05.logs.logs.narrow"
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "task_id": "J03.general",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j03_general.rs",
+    "docs/testing/cases/J03.general.json",
+    "tests/functional/baselines/pre_refactor/J03.general/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/settings.rs"
+  ],
+  "coverage_rows": [
+    "J03.general.route",
+    "J03.general.edit"
+  ],
+  "checkpoints": [
+    "J03.general.edit.120x40"
+  ],
+  "acceptance": "A real General edit sets the dirty marker and the change count.",
+  "status": "queued",
+  "architecture_refactor": false
+}

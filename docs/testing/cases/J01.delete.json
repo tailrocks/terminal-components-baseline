@@ -1,0 +1,124 @@
+{
+  "task_id": "J01.delete",
+  "cases": [
+    {
+      "case_id": "J01.delete.route",
+      "owner_task": "J01.delete",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40 opens the manager on Current directory with expanded empty. Down selects payments-platform. Key d in src/bin/jackin/screens/manager.rs calls delete only when the selected row is a workspace. Dialog::destructive in src/widgets/dialog.rs places Cancel before Delete and sets the initial focus on Cancel. instances_of in src/bin/jackin/sim/world.rs keeps jk-7f3a and jk-c41e and drops hidden Superseded jk-77aa, so delete in src/bin/jackin/screens/manager.rs builds the kids==2 body. Clicking Cancel is Dialog action Some(0). The cancel arm paints Cancelled · nothing changed and leaves payments-platform listed, with 7f3a and c41e still visible. running_count in src/bin/jackin/sim/world.rs still paints 2 running. infra-control-plane, release-automation, and customer-portal stay. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "21754af34787c79853b523d8b2616d2aaa998bec",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J01.delete",
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; Down to payments-platform; d",
+      "return_path": "click Cancel; payments-platform stays listed and the painted count stays 2 running; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J01.delete.delete",
+      "owner_task": "J01.delete",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open payments-platform delete dialog from delete in src/bin/jackin/screens/manager.rs, before Cancel and before Delete. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. The title is Delete workspace payments-platform?. instances_of in src/bin/jackin/sim/world.rs returns jk-7f3a and jk-c41e, so kids is 2 and the body uses plural in src/ui/text.rs. The painted pieces are The saved configuration is removed. 2 instance and records and files on disk are kept. Dialog::destructive in src/widgets/dialog.rs focuses Cancel. Clicking Delete is the delete layer result with action Some(1). That arm removes the workspace, sets workspace to None on its instances, selects Current directory, calls build_rows, and paints Deleted workspace payments-platform · instances and files kept. build_rows in src/bin/jackin/screens/manager.rs lists only instances_of(Some(ws.id)), so the unlinked 7f3a and c41e rows leave the tree. running_count in src/bin/jackin/sim/world.rs still counts Running instances after they are unlinked, and the screen still paints 2 running. infra-control-plane, release-automation, and customer-portal stay. On --scenario hard-cases, auth-service has an empty instances_of list. kids==0 uses the word Instances in delete and does not call plural, so the body does not say 0 instance records. After confirm the status is Deleted workspace auth-service · instances and files kept, auth-service is gone, and data-pipeline, docs-site, gateway, and payments-platform remain.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "21754af34787c79853b523d8b2616d2aaa998bec",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j01_delete/j01_delete_delete_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j01_delete/j01_delete_delete_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Delete a workspace that the fixture links to an instance and one that does not.",
+      "expected_results": "The visible result matches the current reference rule for each case.",
+      "forbidden_effects": "A different workspace disappears.",
+      "checkpoint_ids": [
+        "J01.delete.delete.120x40",
+        "J01.delete.delete.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4010748f59c3b9f9c07f976cac9b09a53bc58167aae83473d2def866ddb7c538",
+        "expect_baseline": "missing",
+        "precondition": "J01.delete.delete.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6c773862fe2b4e778b436bf8ef4641e344ca56ef5cb16e10b277109f96b5c8de",
+        "expect_baseline": "missing",
+        "precondition": "J01.delete.delete.narrow"
+      }
+    }
+  ]
+}

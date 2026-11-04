@@ -1,0 +1,120 @@
+{
+  "task_id": "T03.error",
+  "cases": [
+    {
+      "case_id": "T03.error.route",
+      "owner_task": "T03.error",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing lists Filter connections and Development and does not show Query 1. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with status ✓ Connected to Development and the empty editor placeholder Type SQL. The status is not Loading schema, and the workbench does not show a syntax error. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7cd6b57d5052e691c254458eaac316596cace959",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.error",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "the workbench is already Query 1; Ctrl+Q exits"
+    },
+    {
+      "case_id": "T03.error.recover",
+      "owner_task": "T03.error",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Development, the Query 1 editor receives SELEC sku FROM products. Development Safe Mode is Silent, so Ctrl+R runs it without an Execute confirm. The editor line is ▎! 1 SELEC sku FROM products. Result tab Error 1 shows a card titled Error whose notice is syntax error at or near \"SELEC\" with detail syntax error, and the result line is ✗ failed · 1 ms. That frame does not show 1 row or Esc cancels. Replacing the editor with SELECT sku FROM products LIMIT 1 and pressing Ctrl+R removes the Error card, the failed line, and the SELEC token. The result tab is SELECT products (1), the line is ✓ 1 row · 3 ms, and the grid shows one sku cell SKU-01000. The 120×40 frame is that recovered result with the explorer open. The 80×24 frame, captured before the terminal returns to 120×40, keeps the same statement, the 1 row · 3 ms line, and SKU-01000, with the explorer collapsed to a rail. Query history is not opened. Ctrl+Q opens Quit TablePro? for the unsaved query; confirming Quit exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7cd6b57d5052e691c254458eaac316596cace959",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t03_error/t03_error_recover_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t03_error/t03_error_recover_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Run a statement that fails, then correct it and run it again.",
+      "expected_results": "The error text is the failure. The recovered result is the corrected statement's result, and the old error is gone.",
+      "forbidden_effects": "Recovery still shows the old error.",
+      "checkpoint_ids": [
+        "T03.error.recover.120x40",
+        "T03.error.recover.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2c0121bb0097c547744706d7291266f76754123477f896511dc2edf95a9cf28c",
+        "expect_baseline": "missing",
+        "precondition": "T03.error.recover.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7ea8cd9247992d0fb3ec8e742ae463b5dc58e692c258137bd8f97a601190c2ae",
+        "expect_baseline": "missing",
+        "precondition": "T03.error.recover.narrow"
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "task_id": "S10.workspaces",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s10_workspaces.rs",
+    "docs/testing/cases/S10.workspaces.json",
+    "tests/functional/baselines/pre_refactor/S10.workspaces/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/workspaces.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.workspaces.route",
+    "sc.workspaces.playground",
+    "sc.workspaces.playground.120x40",
+    "sc.workspaces.playground.80x24",
+    "sc.workspaces.options",
+    "sc.workspaces.options.120x40",
+    "sc.workspaces.options.80x24",
+    "sc.workspaces.states",
+    "sc.workspaces.states.120x40",
+    "sc.workspaces.states.80x24",
+    "sc.workspaces.specimen.rest",
+    "sc.workspaces.specimen.hover",
+    "sc.workspaces.specimen.pressed",
+    "sc.workspaces.specimen.focused",
+    "sc.workspaces.specimen.focused_hover",
+    "sc.workspaces.specimen.selected",
+    "sc.workspaces.specimen.disabled",
+    "sc.workspaces.specimen.busy",
+    "sc.workspaces.specimen.error",
+    "sc.workspaces.specimen.editing",
+    "sc.workspaces.specimen.empty",
+    "sc.workspaces.specimen.loading",
+    "sc.workspaces.specimen.overflow",
+    "sc.workspaces.specimen.narrow",
+    "sc.workspaces.compare-levels",
+    "opt.workspaces.collapse_below",
+    "opt.workspaces.size",
+    "opt.workspaces.roster",
+    "opt.workspaces.esc_returns",
+    "opt.workspaces.typed",
+    "sc.workspaces.workspaces"
+  ],
+  "checkpoints": [
+    "sc.workspaces.playground.120x40",
+    "sc.workspaces.playground.80x24",
+    "sc.workspaces.options.120x40",
+    "sc.workspaces.options.80x24",
+    "sc.workspaces.states.120x40",
+    "sc.workspaces.states.80x24",
+    "sc.workspaces.compare-levels",
+    "sc.workspaces.workspaces"
+  ],
+  "acceptance": "Open Workspaces by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

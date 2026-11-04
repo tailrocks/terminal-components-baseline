@@ -1,0 +1,37 @@
+{
+  "task_id": "J01.stop",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j01_stop.rs",
+    "docs/testing/cases/J01.stop.json",
+    "tests/functional/baselines/pre_refactor/J01.stop/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/manager.rs",
+    "src/bin/jackin/domain/instance.rs"
+  ],
+  "coverage_rows": [
+    "J01.stop.route",
+    "J01.stop.stop"
+  ],
+  "checkpoints": [
+    "J01.stop.stop.120x40"
+  ],
+  "acceptance": "Stop cancellation keeps the selected running instance. Confirmed stop changes that instance and the running count.",
+  "status": "queued",
+  "architecture_refactor": false
+}

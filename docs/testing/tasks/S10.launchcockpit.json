@@ -1,0 +1,75 @@
+{
+  "task_id": "S10.launchcockpit",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s10_launchcockpit.rs",
+    "docs/testing/cases/S10.launchcockpit.json",
+    "tests/functional/baselines/pre_refactor/S10.launchcockpit/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/launch_cockpit.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.launchcockpit.route",
+    "sc.launchcockpit.playground",
+    "sc.launchcockpit.playground.120x40",
+    "sc.launchcockpit.playground.80x24",
+    "sc.launchcockpit.options",
+    "sc.launchcockpit.options.120x40",
+    "sc.launchcockpit.options.80x24",
+    "sc.launchcockpit.states",
+    "sc.launchcockpit.states.120x40",
+    "sc.launchcockpit.states.80x24",
+    "sc.launchcockpit.specimen.rest",
+    "sc.launchcockpit.specimen.hover",
+    "sc.launchcockpit.specimen.pressed",
+    "sc.launchcockpit.specimen.focused",
+    "sc.launchcockpit.specimen.focused_hover",
+    "sc.launchcockpit.specimen.selected",
+    "sc.launchcockpit.specimen.disabled",
+    "sc.launchcockpit.specimen.busy",
+    "sc.launchcockpit.specimen.error",
+    "sc.launchcockpit.specimen.editing",
+    "sc.launchcockpit.specimen.empty",
+    "sc.launchcockpit.specimen.loading",
+    "sc.launchcockpit.specimen.overflow",
+    "sc.launchcockpit.specimen.narrow",
+    "sc.launchcockpit.compare-levels",
+    "opt.launchcockpit.outcome",
+    "opt.launchcockpit.numbered",
+    "opt.launchcockpit.selectable",
+    "opt.launchcockpit.wrap",
+    "sc.launchcockpit.launch"
+  ],
+  "checkpoints": [
+    "sc.launchcockpit.playground.120x40",
+    "sc.launchcockpit.playground.80x24",
+    "sc.launchcockpit.options.120x40",
+    "sc.launchcockpit.options.80x24",
+    "sc.launchcockpit.states.120x40",
+    "sc.launchcockpit.states.80x24",
+    "sc.launchcockpit.compare-levels",
+    "sc.launchcockpit.launch"
+  ],
+  "acceptance": "Open Launch cockpit by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

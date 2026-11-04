@@ -1,0 +1,12 @@
+{
+  "routes": [
+    "overview"
+  ],
+  "option_keys": [
+    "shell.color"
+  ],
+  "holla_scenarios": [
+    "first-use"
+  ],
+  "jackin_scenarios": []
+}

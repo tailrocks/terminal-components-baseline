@@ -1,0 +1,120 @@
+{
+  "task_id": "T03.rows",
+  "cases": [
+    {
+      "case_id": "T03.rows.route",
+      "owner_task": "T03.rows",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing screen shows Development and Filter connections, and Query 1 is absent. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with Type SQL and status Connected to Development, after Loading schema has left the screen. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "2960082fee44dbc73e22af0d9236e12b78cf6c35",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.rows",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "Query 1 with Type SQL; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "T03.rows.rows",
+      "owner_task": "T03.rows",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Query 1, the editor receives SELECT id, name, slug for the unmatched name zzz-empty-t03-rows. Ctrl+R finishes with No rows and The query matched nothing. Tessellate and Northwind Labs are absent. The next statement keeps those two names and LIMIT 2. The grid shows tessellate above northwind-labs, and the status says 2 rows. With the slug cell focused, s sorts that column: northwind-labs moves above tessellate, the header shows slug ▴, and the 2 rows status line is unchanged. That finished grid is captured at 120×40 and at 80×24, with the narrow shot taken before the terminal returns to 120×40. Enter shows Query results are read-only · open the table to edit its rows. and leaves the Northwind name and slug in place. Space marks the Northwind row with ✓. y reports Copied. p on the result tab pins SELECT organizations (2). A second statement, SELECT id, name, slug FROM organizations, keeps that pinned tab and shows Showing 500 rows. Clicking the pinned tab returns the sorted pair. x leaves the pin in place. p removes the pin and x closes the tab, leaving the 500-row result. Ctrl+Q asks to quit because 1 unsaved query will be lost; Right then Enter confirms and the process exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "2960082fee44dbc73e22af0d9236e12b78cf6c35",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t03_rows/t03_rows_rows_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t03_rows/t03_rows_rows_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Run a query with no rows, a query with known rows, and a large result. Try to edit the result. Select, sort, copy, pin, switch, and close it.",
+      "expected_results": "The grid values are the fixture values. Sort changes row order. Editing is refused.",
+      "forbidden_effects": "Sort changes the status text without the row order.",
+      "checkpoint_ids": [
+        "T03.rows.rows.120x40",
+        "T03.rows.rows.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8eeab552eab9f35c738b4b1c6a873b08b4a7a58570788a1f37756812f885d97e",
+        "expect_baseline": "missing",
+        "precondition": "T03.rows.rows.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bceba7d4f888c0594bfddab2e36ba51e5355164eb4801c591dd428e34b5ea520",
+        "expect_baseline": "missing",
+        "precondition": "T03.rows.rows.narrow"
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "task_id": "J03.agents",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j03_agents.rs",
+    "docs/testing/cases/J03.agents.json",
+    "tests/functional/baselines/pre_refactor/J03.agents/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/settings.rs"
+  ],
+  "coverage_rows": [
+    "J03.agents.route",
+    "J03.agents.agents"
+  ],
+  "checkpoints": [
+    "J03.agents.agents.120x40"
+  ],
+  "acceptance": "Agent authorization changes are part of the dirty count.",
+  "status": "queued",
+  "architecture_refactor": false
+}

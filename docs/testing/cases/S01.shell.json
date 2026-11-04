@@ -1,0 +1,3929 @@
+{
+  "task_id": "S01.shell",
+  "cases": [
+    {
+      "case_id": "opt.shell.color",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-color-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "truecolor",
+        "256",
+        "16",
+        "mono"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.color=mono",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "bed5c0db2986aa39993d1b2cd1f5d4ab4330142171feb5ae46984a95692fdd1b",
+          "expect_baseline": "missing",
+          "precondition": "colour level mono keeps unicode chrome"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.overrides",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-overrides-default.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-overrides-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "none",
+        "ascii-mono"
+      ],
+      "effect": "frame",
+      "needs": [
+        [
+          "shell.color",
+          "mono"
+        ]
+      ],
+      "combination_reason": "Combined with shell.color=mono because Opt::needs in src/bin/showcase/options.rs requires shell.color=mono for shell.overrides. The default is none and the boundary is ascii-mono.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.color=mono",
+            "--opt",
+            "shell.overrides=none",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "e17d069598278cf81a6e7a5c9634a22a0b13e841ed241e5cb78ec40b5e6b61d7",
+          "expect_baseline": "missing",
+          "precondition": "overrides none combined with shell.color=mono"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.color=mono",
+            "--opt",
+            "shell.overrides=ascii-mono",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "480ddeba5fa60324a982cdd6ab5562059949cb255bc219bac1f48fa58c17fffc",
+          "expect_baseline": "missing",
+          "precondition": "ascii-mono combined with shell.color=mono"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.glyphs",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-glyphs-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "unicode",
+        "ascii"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.glyphs=ascii",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "1c3a4d9eb92b7d297fb561d9321520f4c0ed6c175257c6d573e560d45996147a",
+          "expect_baseline": "missing",
+          "precondition": "glyphs ascii"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.strings",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-strings-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "default",
+        "ascii"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.strings=ascii",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "e43bf428a55bb66ffd95bc8fb94e26c181d43b4004edf7a32503b2287afeec1f",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.strings=ascii"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.motion",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-motion-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "full",
+        "reduced",
+        "paused"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "63cbed9239dde61bd2da7b73452ac742c8dfac87849482571c9cd53d6492dd88",
+          "expect_baseline": "missing",
+          "precondition": "harness --motion paused is the motion boundary"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.focus_on",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-focus_on-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "press",
+        "release"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.focus_on=release",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "1344e64dc69c2b290deaf75e7a870e49b9fcc3fe75a764df486cce602aa93289",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.focus_on=release"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.double_click_ms",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-double_click_ms-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "250",
+        "500",
+        "800"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.double_click_ms=800",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "6109a346859d1eddb640182807e8e319b2ec2536b9500a1205b27e1e34fccd5e",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.double_click_ms=800"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.double_click_slop",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-double_click_slop-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "0",
+        "1",
+        "2"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.double_click_slop=0",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "054762859a93916e4e6ce1984731a7a4f591b927a690f6ab74eeb16baa569e17",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.double_click_slop=0"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.wheel_lines",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-wheel-lines-default.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-wheel-lines-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "1",
+        "3",
+        "5"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "datagrid",
+            "--frame",
+            "40",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "1a7879b94f2f9a228c35bee2bc68316851da64379427324414ab4f926bd27752",
+          "expect_baseline": "missing",
+          "precondition": "one wheel shows 1004"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "datagrid",
+            "--frame",
+            "40",
+            "--opt",
+            "shell.wheel_lines=1",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "70e5eca13dff6c5290ba5ec3842b5c999255bfbb1c77800ed51fc7fe43803c62",
+          "expect_baseline": "missing",
+          "precondition": "one wheel shows 1002"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.hover_refresh_after_scroll",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-hover_refresh_after_scroll-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.hover_refresh_after_scroll=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "ac2945fdfd50465ab26be899cfd74490bd437b66d544c735d3ceb07f438c4640",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.hover_refresh_after_scroll=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.flash_ms",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-flash_ms-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "70",
+        "140",
+        "280"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.flash_ms=280",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "76066e69abdb2effc2d9ee3ad7f214a1c9b18bac2f4f9c3a1c3227ced74fdda7",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.flash_ms=280"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.secondary_outside",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-secondary_outside-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "reopen",
+        "close",
+        "ignore"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.secondary_outside=ignore",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "4c2e057a03bc67dbbd79e0b40ba0e7d23d7b16700712e3e067e790b946b110c6",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.secondary_outside=ignore"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.end_edit_on_dead_space",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-end_edit_on_dead_space-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.end_edit_on_dead_space=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "d4e844a7b848d5ef5a5f6973b21ffd766aa0d5b77460e0b423ed231a09271158",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.end_edit_on_dead_space=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.autoscroll",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-autoscroll-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.autoscroll=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "f42e362388c4b4db271bbc0e9bdfcedd3688a441f177708767f213f2b9106c2c",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.autoscroll=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.autoscroll_ms",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-autoscroll_ms-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "25",
+        "50",
+        "100"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.autoscroll_ms=100",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "83819e36f50d939f5e2b342d3f8017ecbba6e1c3a246bdc04954ddf1bc928811",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.autoscroll_ms=100"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.track_repeat",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_repeat-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.track_repeat=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "819b2a1ee182dfc23b384a05fe7bc1220037f3c13f2801276019c329d3aacc79",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.track_repeat=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.track_repeat_ms",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_repeat_ms-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "150/25",
+        "300/50",
+        "500/100"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.track_repeat_ms=500/100",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "490808f334ba7de2348e2cad3434d1ac751c123af13a459bd79641ce55d29234",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.track_repeat_ms=500/100"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.track_click",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_click-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "page",
+        "jump"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.track_click=jump",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "6b0c2434fbbec3639e2e991590dafc24ec48d38051c260053c5dae9ff7f0af88",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.track_click=jump"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.pointer_shapes",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-pointer_shapes-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.pointer_shapes=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "8360c913c6eacfeed1c8b918e921d173af1b72dce856c5db89eef2be8c553a25",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.pointer_shapes=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.caret_shape",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-caret_shape-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "bar",
+        "block",
+        "underline",
+        "terminal"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.caret_shape=terminal",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "fdd7248db10ef7e006e77508de3ce979ec796fbe6c08055db89fa88716a1c9ad",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.caret_shape=terminal"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.click_skips_animation",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-click_skips_animation-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.click_skips_animation=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "2c3b977344bd10ae93254948015aa0c5a9f41c5b041c1f3c9754d922d4ee304e",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.click_skips_animation=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.tooltips",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-tooltips-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.tooltips=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "e221b9b6bdc874c681fa674cb2ff992bd58df1f3826e3bcf4ec673f9fa283a78",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.tooltips=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.reveal",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-reveal-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.reveal=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "df4c88fd48ce8ae6f2dc1f9194be6f23b5187eb9c5fcb11bef9c17c1b029f71c",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.reveal=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.platform",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-platform-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "auto",
+        "macos",
+        "other"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.platform=other",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "f5f32e98248a8d9e4f439507d659774f724b9ed87eefe8df1fb091ec5355ea7b",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.platform=other"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.field_keys",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-field_keys-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "auto",
+        "emacs",
+        "desktop"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.field_keys=desktop",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "cb51ccd1198589529614fb097d2895224e72f8eefc8ed71c8ce5922cf2052229",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.field_keys=desktop"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.edit_entry",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-edit_entry-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "immediate",
+        "type-to-edit",
+        "explicit"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.edit_entry=explicit",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "fd844dedb080821a4a1a6a4d466e17578663d36d6ba85ece500639d9c9b00995",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.edit_entry=explicit"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.focus_fallback",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-focus_fallback-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "first",
+        "nearest"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.focus_fallback=first",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "a9f2e3284df759e50d3932173e06f2132099debc311f309b043963822befc19e",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.focus_fallback=first"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.shift_wheel_horizontal",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-shift_wheel_horizontal-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.shift_wheel_horizontal=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "23a9c843583a62c78093b98973fd513658ade04e527e21dc572fd98e3297fd0a",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.shift_wheel_horizontal=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.legacy_ctrl_punctuation",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-legacy_ctrl_punctuation-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.legacy_ctrl_punctuation=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "17d9c47dbef01ca320df126d2e87f6380f2ca0e1e462156f9bd626c5578d86c4",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.legacy_ctrl_punctuation=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.keyboard_protocol",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-keyboard_protocol-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "auto",
+        "on",
+        "off"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.keyboard_protocol=off",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "8ce1c0e781f84f6bc4aa248f1ea518f308dbcd42fa6633a7e3ee241a9dd32c11",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.keyboard_protocol=off"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.alt_keys",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-alt_keys-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "auto",
+        "delivered",
+        "refused",
+        "until-seen",
+        "with-protocol"
+      ],
+      "effect": "behaviour",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.alt_keys=with-protocol",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "91d612b3ac5626d69b0c01f6a20f886aefec3af95e97da1b88a9650869f38f29",
+          "expect_baseline": "missing",
+          "precondition": "boundary shell.alt_keys=with-protocol"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.card_heading",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-card-heading-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "plain",
+        "rule",
+        "band",
+        "emphasis"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.card_heading=plain",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "5b40abdc18360bb1e657fa10ec2baac61ba80e19bf56b99bb72d6f97b6c2e59b",
+          "expect_baseline": "missing",
+          "precondition": "card heading plain leaves the tab underline"
+        }
+      }
+    },
+    {
+      "case_id": "opt.shell.inactive_selection",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-inactive-selection-boundary.tui.json"
+      ],
+      "route": "shell",
+      "option_values": [
+        "accent",
+        "neutral",
+        "none"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "needs is empty, so the default and the boundary are separate captures.",
+      "acceptance_receipt": {
+        "default": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.motion=full",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "7e70a34368fc0e22fe65e12eac93ff86c2b72e9cce20c5b4076cce7983ac5cc2",
+          "expect_baseline": "missing",
+          "precondition": "inspector options at each shell default, motion full overriding paused"
+        },
+        "boundary": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--opt",
+            "shell.inactive_selection=none",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "bf07cc9d92346b5e32035befacb783f7f3a0b3b1badf39e88f1f5ab12798cdd9",
+          "expect_baseline": "missing",
+          "precondition": "inactive selection none while focus is in the inspector"
+        }
+      }
+    },
+    {
+      "case_id": "sc.shell.inspector",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-inspector-narrow.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-inspector-120x40.tui.json"
+      ],
+      "action_sequence": "Open the Inspector, move through its sections, change an option, and close it.",
+      "expected_results": "The Inspector shows the current page and the option change is visible on that page.",
+      "forbidden_effects": "Closing the Inspector changes the page selection.",
+      "checkpoint_ids": [
+        "sc.shell.inspector.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "narrow": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "1a960ee0b9354fecd3f2e7fa631cd8fd9545f36bd8a7b269d6c495a20bf85ebb",
+          "expect_baseline": "missing",
+          "precondition": "narrow overlay while the inspector is open, before restoring 120x40"
+        },
+        "checkpoint": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "cfef3c6e27d10e292ce05161f3616c067e44f17366849e42c849662866412ac8",
+          "expect_baseline": "missing",
+          "precondition": "close the inspector after changing glyphs; the page stays Overview"
+        }
+      }
+    },
+    {
+      "case_id": "sc.shell.sidebar-policy",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-all-open.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-accordion.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-current.tui.json"
+      ],
+      "action_sequence": "Switch Current, Accordion, and All expansion.",
+      "expected_results": "The visible groups match the selected policy.",
+      "forbidden_effects": "All leaves a collapsed group expanded.",
+      "checkpoint_ids": [
+        "sc.shell.sidebar-policy.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "all-open": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--nav",
+            "all",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "932c6339221665c825badbd4c11d8244e8e4bbe360e11bbd7aa3c90d7ea7ed14",
+          "expect_baseline": "missing",
+          "precondition": "nav all shows every group expanded on Overview"
+        },
+        "checkpoint": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "overview",
+            "--nav",
+            "all",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "1ee6aa0c716a3ace3e595704cf5ad412a37ce1b767eedfe7b1c778f2109be7b2",
+          "expect_baseline": "missing",
+          "precondition": "under All, a collapsed group stays collapsed after opening Buttons"
+        },
+        "accordion": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "chrome",
+            "--nav",
+            "accordion",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "4c5a9fd806203938e6c851b0e6996ce6c584ad2f4f64c59b4268419697009da5",
+          "expect_baseline": "missing",
+          "precondition": "accordion keeps only the Buttons group expanded"
+        },
+        "current": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "chrome",
+            "--nav",
+            "current",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "bfeefcd8ccd3a8b631ba148472bf0324ff567f4248988e0c2cbb7e6223fc70de",
+          "expect_baseline": "missing",
+          "precondition": "current policy collapses the auto group and keeps the manually expanded Inputs group"
+        }
+      }
+    },
+    {
+      "case_id": "sc.shell.shell-override",
+      "owner_task": "S01.shell",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Reference showcase capture matches the candidate. The opened page stays in the header.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-reduced.tui.json",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-page-option.tui.json"
+      ],
+      "action_sequence": "Change a shell option that the page says affects a control, from the default to one other value.",
+      "expected_results": "The control's visible behaviour matches that value.",
+      "forbidden_effects": "The page option changes when only the shell option was edited.",
+      "checkpoint_ids": [
+        "sc.shell.shell-override.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "checkpoint": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "statushints",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "d270cc8c77fa23029c8c88f52577fa3b3c5973bfab2434c6f5a5e933c072cfaa",
+          "expect_baseline": "missing",
+          "precondition": "after shell.motion reduced, restore 120x40 without retargeting the page"
+        },
+        "reduced": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "statushints",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "cf865cbebba2389b039d6fdca6429b6d88012fa6345e8b4854ff16004a403f0d",
+          "expect_baseline": "missing",
+          "precondition": "shell.motion reduced from the inspector at 120x90; the status hints page stays"
+        },
+        "page-option": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "statushints",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "649342099aff077a4eb12bdd537fe580f329cb9cf07ae8db05841e4337b208d7",
+          "expect_baseline": "missing",
+          "precondition": "Top layer stays screen after only shell.motion changed"
+        }
+      }
+    }
+  ]
+}

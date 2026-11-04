@@ -1,0 +1,145 @@
+{
+  "task_id": "J04.accounts",
+  "cases": [
+    {
+      "case_id": "J04.accounts.route",
+      "owner_task": "J04.accounts",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. Returning joins the manager, so the test reaches Current directory without the intro. Shell key c is JackinCmd::Accounts in src/bin/jackin/app.rs, and shell_action sends Go::Accounts only from the manager or Usage. AccountsScreen::crumb in src/bin/jackin/screens/accounts.rs paints Accounts › Overview. Esc with no filter calls cx.go(Go::Manager). The manager shows Current directory again. Ctrl+Q exits 0. The visible rows are the returning fixture, which world_for in src/bin/jackin/domain/fixtures.rs builds with accounts_mixed, so Revoked key stays absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f8bccdb3fa19af6f5439daad5b6ff6b230706ebe",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J04.accounts",
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; c from the manager",
+      "return_path": "Esc from the accounts tree returns to the manager; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J04.accounts.accounts",
+      "owner_task": "J04.accounts",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Four launches at 120×40, truecolor, reduced motion. first-use is world_for(FirstUse) in src/bin/jackin/domain/fixtures.rs: an empty registry with discovery_pending set. No screen reads discovery_pending, so the inspector paints No accounts registered and the hint from the empty state in src/bin/jackin/screens/accounts.rs. The tree still lists the providers. The per-provider meta no accounts stays hidden because the tree row is narrower than 40 columns. returning and accounts-mixed both use accounts_mixed. The tree shows Personal, Work, Primary, Experiments, and Go subscription. Personal is a local folder ~/.claude, Claude OAuth profile, alexey@donbeave.dev, Max 5x. Work is 1Password Engineering › Anthropic · Work › credential, op://v_eng01/it_ant01/credential, mask ••••••••…3c9e. Experiments is an API key, fingerprint 7f3a91c2, tail k7Qz, mask ••••••••…k7Qz. Go subscription is an API key, fingerprint c41d0be9, tail m2Xa. Kimi paints No credential found: ~/.kimi has no api key from IssueCode::CredentialFileMissing. ci-bot paints Quota not visible: OpenCode returned 403. That is the fixture's painted denial. hard-cases uses accounts_hard, locks the 1Password session, and the Sources line paints 1Password locked. Revoked key paints Not authorized: xAI rejected the credential and HTTP 401. The test does not press r or v. src/bin/jackin/sim/provider.rs can report Provider mismatch and folder permission failures, and src/bin/jackin/sim/onepassword.rs can report vault access denied, but no accounts-mixed or hard-cases account row paints those sentences, so the test does not require them. On Primary, t calls toggle_enabled and paints Disabled Codex · Primary · provider default cleared, then Enabled Codex · Primary. Space calls set_default and paints Default set: OpenAI → Codex · Primary. Experiments stays Freshness::Refreshing with no scheduled refresh, and strip_right paints a spinner from now_ms, so the test confirms Remove on Experiments before the checkpoint. That dialog's body is the remove() sentence with 1 workspace reference. The checkpoint is the later open dialog Remove account Work?, before Remove is activated, at 120×40 and then at 80×24. Work's issue retry is reset_label in src/clock.rs, and duration_spoken in src/ui/text.rs includes seconds under an hour, so the test drags the accounts seam until that row leaves the inspector. Its body says Claude · Work is removed from the registry and that 1 Workspace or Role selections fall back to the provider default. Activating Remove paints Removed Claude · Work and leaves Accounts › Claude › Work. Esc returns to the manager. e opens the payments-platform editor. [ moves from General to Accounts without opening Environments. Personal's account row paints inherited default, from Effective::InheritedDefault in src/bin/jackin/domain/workspace.rs. No account row contains Work. Sim plaintext values from src/bin/jackin/sim/onepassword.rs stay absent after every action and in both captures.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f8bccdb3fa19af6f5439daad5b6ff6b230706ebe",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j04_accounts/j04_accounts_accounts_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j04_accounts/j04_accounts_accounts_narrow.tui.json"
+      ],
+      "scenario": [
+        "first-use",
+        "accounts-mixed",
+        "returning",
+        "hard-cases"
+      ],
+      "action_sequence": "Open first-use, returning, and hard-cases. On accounts-mixed, read local-folder, 1Password, and API-key rows, the missing kimi credential, and the OpenCode 403. Disable, enable, and set the OpenAI default. Confirm removal of the refreshing Experiments account, then open Remove account Work? and capture it before activating Remove. Activate Remove and read the payments-platform Accounts tab.",
+      "expected_results": "The Work dialog stays open for both captures. After Remove, Work is gone from the accounts crumb and the payments-platform binding falls back to Personal as the inherited provider default.",
+      "forbidden_effects": "A raw secret is visible. The captures are not the accounts tree with the dialog closed. The accounts-mixed journey does not require Revoked key.",
+      "checkpoint_ids": [
+        "J04.accounts.accounts.120x40",
+        "J04.accounts.accounts.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "accounts-mixed",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f5261f675fa7e55e255ff8e170dd333f1e1b4a5b7d9da038e8b216f47f44bbe9",
+        "expect_baseline": "missing",
+        "precondition": "J04.accounts.accounts.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "accounts-mixed",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7b21e4b735cd43c4c5a3402038d1787a550a8dbb9106cdfdfbc1b739ff7de276",
+        "expect_baseline": "missing",
+        "precondition": "J04.accounts.accounts.narrow"
+      }
+    },
+    {
+      "case_id": "J04.accounts.scenario.accounts-mixed",
+      "owner_task": "J04.accounts",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario accounts-mixed --color truecolor --motion reduced. Scenario::AccountsMixed in src/bin/jackin/app.rs opens Accounts immediately. world_for in src/bin/jackin/domain/fixtures.rs uses accounts_mixed for this scenario. The screen shows Personal, Work, Primary, Experiments, and Go subscription, with alexey@donbeave.dev, alexey@chainargos.com, fingerprints 7f3a91c2 and c41d0be9, and tails k7Qz and m2Xa. Kimi paints No credential found: ~/.kimi has no api key. ci-bot paints OpenCode returned 403. Revoked key belongs to accounts_hard and stays absent. Plaintext values from src/bin/jackin/sim/onepassword.rs stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f8bccdb3fa19af6f5439daad5b6ff6b230706ebe",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "accounts-mixed",
+      "action_sequence": "Launch jackin with --scenario accounts-mixed and read the mixed-fixture identities, including the local folder, 1Password reference, API-key fingerprints, the missing kimi credential, and the OpenCode 403.",
+      "expected_results": "The visible identities are the accounts-mixed registry. Masks, references, fingerprints, and tails are the only credential material.",
+      "forbidden_effects": "The journey requires Revoked key or any other hard-cases-only identity. A raw secret is visible."
+    }
+  ]
+}

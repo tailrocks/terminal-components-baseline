@@ -1,0 +1,82 @@
+{
+  "task_id": "S08.terminal",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s08_terminal.rs",
+    "docs/testing/cases/S08.terminal.json",
+    "tests/functional/baselines/pre_refactor/S08.terminal/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/terminal.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.terminal.route",
+    "sc.terminal.playground",
+    "sc.terminal.playground.120x40",
+    "sc.terminal.playground.80x24",
+    "sc.terminal.options",
+    "sc.terminal.options.120x40",
+    "sc.terminal.options.80x24",
+    "sc.terminal.states",
+    "sc.terminal.states.120x40",
+    "sc.terminal.states.80x24",
+    "sc.terminal.specimen.rest",
+    "sc.terminal.specimen.hover",
+    "sc.terminal.specimen.pressed",
+    "sc.terminal.specimen.focused",
+    "sc.terminal.specimen.focused_hover",
+    "sc.terminal.specimen.selected",
+    "sc.terminal.specimen.disabled",
+    "sc.terminal.specimen.busy",
+    "sc.terminal.specimen.error",
+    "sc.terminal.specimen.editing",
+    "sc.terminal.specimen.empty",
+    "sc.terminal.specimen.loading",
+    "sc.terminal.specimen.overflow",
+    "sc.terminal.specimen.narrow",
+    "sc.terminal.compare-levels",
+    "opt.terminal.wrap",
+    "opt.terminal.max_lines",
+    "opt.terminal.horizontal",
+    "opt.terminal.scrollbar_gap",
+    "opt.terminal.track_click",
+    "opt.terminal.nav",
+    "opt.terminal.keymap",
+    "opt.terminal.mark",
+    "opt.terminal.selectable",
+    "opt.terminal.numbered",
+    "opt.terminal.rail_nav",
+    "sc.terminal.run"
+  ],
+  "checkpoints": [
+    "sc.terminal.playground.120x40",
+    "sc.terminal.playground.80x24",
+    "sc.terminal.options.120x40",
+    "sc.terminal.options.80x24",
+    "sc.terminal.states.120x40",
+    "sc.terminal.states.80x24",
+    "sc.terminal.compare-levels",
+    "sc.terminal.run"
+  ],
+  "acceptance": "Open Terminal by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

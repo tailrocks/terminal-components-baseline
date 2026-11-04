@@ -1,0 +1,126 @@
+{
+  "task_id": "H02.trust",
+  "cases": [
+    {
+      "case_id": "H02.trust.route",
+      "owner_task": "H02.trust",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario monorepo-child --color truecolor --motion reduced opens at 120×40 on the child finder, From acme · the parent root. Typing test selects Run tests (alias test). Enter opens Trust ~/work/acme/apps/frontend/mise.toml? with File ~/work/acme/apps/frontend/mise.toml, [tasks.test], and Trust scope this exact file · not the folder, not descendants. Cancel starts focused (▎Cancel). That mise page has no Digest line. Esc returns to Run tests, status is Not trusted · the task did not run, and 19 passed is absent. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "cafa9cb8fada743e56492074079b567df2d357c3",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H02.trust",
+      "entry_path": "launch holla --scenario monorepo-child --color truecolor --motion reduced at 120x40; type test; Enter",
+      "return_path": "Esc closes the trust dialog and returns to Run tests; Ctrl+Q exits"
+    },
+    {
+      "case_id": "H02.trust.trust",
+      "owner_task": "H02.trust",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "In monorepo-child, Deploy preview is unreviewed. Enter opens Trust ~/work/acme/.holla.toml? with File ~/work/acme/.holla.toml, argv tools/deploy-preview.sh --env preview, Trust scope the whole file by content digest, and Digest sha256:4abea82557e55d9a5a325425792e1569110e81b25e7c6f1930f539e33978b1c5 read from the screen. Cancel starts focused. The open dialog is captured at 120×40 and then at 80×24, before Esc. At 80×24 the same digest wraps after 30f539 and the title, path, and sha256 line stay visible. Esc cancels: the title is gone, Deploy preview remains, and no activity starts. Enter reopens the same title and digest. Right moves onto Trust this file. Enter confirms. The activity header is parent · ~/work/acme, not apps/frontend, and the command is $ tools/deploy-preview.sh --env preview. The preview has no simulated outcome, so the activity fails exit 127; the directory is still the reviewed config directory. Esc returns to the finder. Clearing the query and running the child mise task repeats cancel, then confirm: status Trusted ~/work/acme/apps/frontend/mise.toml · re-resolving the task, and Ctrl+S runs $ mise run //apps/frontend:test with working directory ~/work/acme/apps/frontend, then 19 passed and succeeded. The mise dialog does not show a digest. src/bin/holla/screens/review.rs pushes Digest only for custom_project and custom_global; the mise branch pushes File and Trust scope and does not push Digest.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "cafa9cb8fada743e56492074079b567df2d357c3",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h02_trust/h02_trust_trust_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h02_trust/h02_trust_trust_narrow.tui.json"
+      ],
+      "scenario": [
+        "monorepo-child"
+      ],
+      "action_sequence": "Cancel trust, then confirm trust for the same action.",
+      "expected_results": "Cancel starts no activity. Confirm records trust for that path and digest.",
+      "forbidden_effects": "Confirm trusts a different directory.",
+      "checkpoint_ids": [
+        "H02.trust.trust.120x40",
+        "H02.trust.trust.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "monorepo-child",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b5ef9ea7ab604eb2fdfc5a7b936217e19a5bbd9aeeaf789ecff11e65c3e43d16",
+        "expect_baseline": "missing",
+        "precondition": "H02.trust.trust.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "monorepo-child",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "60c4c5b479eb498d7a003ab7dd6b636c746439a8f15654fec372724a6a7fcf22",
+        "expect_baseline": "missing",
+        "precondition": "H02.trust.trust.narrow"
+      }
+    }
+  ]
+}

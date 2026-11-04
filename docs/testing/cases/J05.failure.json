@@ -1,0 +1,124 @@
+{
+  "task_id": "J05.failure",
+  "cases": [
+    {
+      "case_id": "J05.failure.route",
+      "owner_task": "J05.failure",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario launch-failure --color truecolor --motion reduced at 120×40. Scenario::LaunchFailure in src/bin/jackin/app.rs sends Go::Launch with LaunchPlan::FailNetwork, workspace Some(1), role the-architect, Claude Code, and account acct-claude-work. LaunchRun durations are [14, 18, 26, 30, 8, 92, 22, 20, 18, 34, 16] in src/bin/jackin/sim/launch.rs, and the Network stage fails with summary The Construct network could not be attached. open_failure in src/bin/jackin/screens/cockpit.rs titles that dialog Launch failed and sets failure_shown. While stages are still running, Esc is consumed by CockpitScreen::on_key. App::capturing in src/bin/jackin/app.rs is true for Route::Cockpit, so page_key in src/shell/router.rs runs before shell Esc, the manager stays closed, and on_esc_top does not paint. The failure text is on screen before the later Esc. That Esc is a non-copy result on the failure tag, so on_layer_result sends Go::LaunchFailedAck. running_count stays above zero, so the manager shows the failed setup instance, nothing to attach to, and status Launch failed · N instances still running in the Construct. Hardline open stays absent. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "89b07dc3477d0029573f58db77e8617d52f643e1",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.failure",
+      "entry_path": "jackin --scenario launch-failure --color truecolor --motion reduced at 120x40. Esc while stages are still running, then Esc on the open Launch failed dialog.",
+      "return_path": "Esc on the open dialog returns to the manager with the failed setup instance and no capsule. Ctrl+Q exits 0."
+    },
+    {
+      "case_id": "J05.failure.failure",
+      "owner_task": "J05.failure",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open Launch failed dialog from jackin --scenario launch-failure --color truecolor --motion reduced, before Enter, Esc, or the close control, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40). Both frames show Launch failed, Network, and The Construct network could not be attached, and they omit Hardline open and Resolving credentials…. open_failure in src/bin/jackin/screens/cockpit.rs uses Launch failed because the stage is Network, not DerivedImage or Credentials. LaunchEvent::Failed sets log_open false and pushes a FailedSetup instance. The detail in LaunchPlan::FailNetwork in src/bin/jackin/sim/launch.rs includes docker: Error response from daemon: network jackin-net not found, capsule: not started, and credentials: material was resolved in memory and discarded. That credentials line sits below the fold on the 120×40 dialog. Down moves the props cursor onto Run id. y copies. App::layer_event in src/bin/jackin/app.rs handles InfoResult::Copy and returns before tell_owner, so the cockpit Copy arm is not the path that runs. take_result in src/ui/layers.rs leaves the dialog open. Shell::copy_at paints Copied 21 characters · run-202609030914-b5df through Clipboard::report in src/shell/clipboard.rs. The cockpit stays up. A later Esc acknowledges through Go::LaunchFailedAck in src/bin/jackin/app.rs. There is no CLI scenario for CredentialsLocked. --scenario hard-cases locks the 1Password session in world_for in src/bin/jackin/domain/fixtures.rs. One Down from Current directory selects payments-platform, whose default role is the-architect. Enter calls activate and open_launch_picker in src/bin/jackin/screens/manager.rs. One Down selects Codex. Its account id contains codex-primary, so the launch arm chooses LaunchPlan::CredentialsLocked. At elapsed 10 of the Credentials stage the plan emits 1Password locked: unlock the app and retry, and LaunchEvent::CredentialError opens Credential source unavailable with Retry, Enter plain text instead, and Cancel launch. Enter on Retry sets the session signed in, calls retry_credentials, and paints 1Password unlocked · resolving the reference again. Right then Enter chooses plain text, clears the account, and paints Using a plain-text key for this launch only. Esc on that dialog is the cancel index, so cancel runs. Go::LaunchFailedAck replaces the status in the same turn, and the painted manager shows failed setup and nothing to attach to. Two Downs select infra-control-plane, whose default role is sre. The first picker row is Claude · Personal, which does not match work, grok, or codex-primary, so the same arm chooses LaunchPlan::BlockedSidecar. The sidecar stage paints Blocked · this stage cannot continue. Esc then paints This stage is blocked · x cancels the launch, Ctrl+Q quits and leaves the cockpit in place. Hardline open stays absent on each of these frames. JSON scenario stays null. J05.launch owns the launch-running and launch-failure scenario rows.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "89b07dc3477d0029573f58db77e8617d52f643e1",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j05_failure/j05_failure_failure_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Launch --scenario launch-failure and shoot the open Launch failed dialog at 120×40, resize to 80×24, shoot it, and resize back, before any dismiss. Copy the run id, then Esc. On --scenario hard-cases, launch Codex · Primary from payments-platform and use Retry, Enter plain text instead, and Cancel launch. Launch the default agent from infra-control-plane and Esc on the blocked sidecar.",
+      "expected_results": "The failure text is Launch failed for the Network stage, with The Construct network could not be attached. Copy keeps the cockpit. Dismiss returns to the manager with no capsule. Retry and plain text stay on the cockpit. Cancel and the network dismiss show failed setup and nothing to attach to. The blocked sidecar stays on the cockpit.",
+      "forbidden_effects": "Acknowledgement is available before the failure is visible. Hardline open appears on the failure dialog. Copy leaves the cockpit.",
+      "checkpoint_ids": [
+        "J05.failure.failure.120x40",
+        "J05.failure.failure.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "launch-failure",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "df06f4822b8dd9f6c7327f8f12d71098ea89f4aa662f6f9da94b8d7261ddb522",
+        "expect_baseline": "missing",
+        "precondition": "J05.failure.failure.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "launch-failure",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "db0271b96aa7635b998d26641ce23646c7997ceac8d2acfdbf080d37d56b018b",
+        "expect_baseline": "missing",
+        "precondition": "J05.failure.failure.narrow"
+      }
+    }
+  ]
+}

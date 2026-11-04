@@ -1,0 +1,25 @@
+{
+  "task_id": "C01",
+  "cases": [
+    {
+      "case_id": "C01.ci",
+      "owner_task": "C01",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Generated Run suite (functional) in .github/workflows/ci.yml and .github/workflows/suites.yml is mbx nextest run --workspace --no-tests fail --profile functional. --profile functional selects .config/nextest.toml profile.functional default-filter binary(functional). --no-tests fail is present. partitions = 1 stays explicit in .velnor/config.toml, so velnor-actions 0.1.73 emits one unsharded job and does not add --partition. required = true only adds suite-functional to the generated required verdict needs and VELNOR_NEEDS_EXPECTED; it does not call the GitHub branch-protection API. Artifact functional-terminal-evidence when is always (if: always()), paths target/functional and target/nextest/functional, retention 14 days. Blockers: no --locked argv, because RustSuiteConfig has no suite argv field and mbx 1.29.1 run_cargo does not inject --locked (mbx nextest run --help lists it as optional); no inventory-script step, because velnor-actions cannot emit scripts/check-refactor-coverage.py, and that script must not be a required check yet (2223 inventory rows are BLOCKED and the script exits 1; missing committed baselines already fail functional tests through Tuiscotti FrozenStore); branch protection unverified (HTTP 404 {\"message\":\"Branch not protected\",\"documentation_url\":\"https://docs.github.com/rest/branches/branch-protection#get-branch-protection\",\"status\":\"404\"} on test/pre-refactor-protection and design/interaction-polish; rulesets []); macOS and Windows unclaimed (one runner_label ubuntu-26.04, no OS matrix); schedule left empty because a cron would attach to the existing suites workflow rather than an additional workflow, and the required gate is already on pull_request and push.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "42a77a760a33971083ef7a6fb04d9640e2adb5cc",
+      "evidence_paths": [
+        ".velnor/config.toml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/suites.yml",
+        "docs/ci.md"
+      ],
+      "baseline_paths": [],
+      "route": "C01.ci",
+      "entry_path": "pull_request and push run job suite-functional; workflow_dispatch tier functional runs the same command on suites.yml",
+      "return_path": "the required verdict job needs suite-functional; the functional profile command is unchanged"
+    }
+  ]
+}

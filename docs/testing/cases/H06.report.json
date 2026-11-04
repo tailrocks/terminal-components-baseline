@@ -1,0 +1,142 @@
+{
+  "task_id": "H06.report",
+  "cases": [
+    {
+      "case_id": "H06.report.route",
+      "owner_task": "H06.report",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-cleanup-results --color truecolor --motion reduced at 120×40 with HOLLA_NO_HISTORY=1 opens the finder. The shell paints ~/Projects/safe and mbp. Paste Review cleanup candidates, the label of catalog id cleanup.review-all, which launches Launch::Cleanup { category: None }. Enter opens Cleanup review. The crumb is Here › Cleanup, the heading prefix is mode Trash (recoverable until emptied) · live · m toggles the mode, and the header is 1 selected (44.0 KiB). a sets Every eligible candidate selected · 2.1 GiB and 6 selected (2.1 GiB). d opens gate 1 of 2 with focus on Cancel. Right moves focus to Continue…. Enter opens the dialog whose title ends with · gate 2 of 2 and whose phrase, read from the screen, is TRASH 6 UNDER /Users/alex ON mbp. Typing TRASH 0 and Enter paints Does not match and does not start cleanup. Clearing the field, typing that phrase, and Enter paints cleanup started · 6 items · quitting waits for it. The title is first Cleanup running. Its Outcome contains running ·, of 6 items, and quitting waits for the rest, and the Bytes fact still contains 0 B freed now. When the job finishes the title is Cleanup report, the summary is 6 trashed, Mode is trash, the log fact is ~/.cache/holla/ops.log · every record written, and the Bytes fact is 2.1 GiB left the tree · 0 B freed now · the rest returns when the Trash is emptied. Esc returns to the finder. The finder shows Review cleanup candidates and ~/Projects/safe. Cleanup report, Cleanup running, Cleanup review, and Quit holla are gone. App::finish sends Ctrl+Q and exits 0. vm.img, sparse.img, ~/work/android, build.gradle.kts, workspace.xml, and 842 of 926 stay absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "44e52f023bcac3b6a69497091ebcde976957aafc",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H06.report",
+      "entry_path": "launch holla --scenario parity-cleanup-results --color truecolor --motion reduced at 120x40; paste Review cleanup candidates; Enter; a; d; confirm TRASH 6 UNDER /Users/alex ON mbp",
+      "return_path": "Esc from Cleanup report returns to the finder; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H06.report.results",
+      "owner_task": "H06.report",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "parity-cleanup-results reaches the quiet Cleanup report only after Cleanup running has been seen. The partial Outcome contains running ·, of 6 items, and quitting waits for the rest, and freed now is 0 B. The final title is Cleanup report. The summary is 6 trashed. Mode is trash. The log fact is ~/.cache/holla/ops.log · every record written. The Bytes fact is 2.1 GiB left the tree · 0 B freed now · the rest returns when the Trash is emptied. The trashed rows are ~/Library/Caches/com.apple.dt.Xcode 900.0 MiB, ~/Library/Caches/Google 100.0 MiB, ~/Library/Caches/com.app 100.0 MiB, ~/Library/Logs/DiagnosticReports 44.0 KiB, ~/Projects/safe/target 1000.0 MiB, and ünï 1.0 MiB. Those sizes are in the bytes-left-the-tree total. freed now stays 0 B because the mode is Trash. ~/Projects/safe/locked is not a selectable row, so the report does not paint size traversal failed · unreadable entry. A painted line containing failed or skipped must not also contain KiB, MiB, or GiB. would_remove, skipped, and ~/work/legacy/node_modules stay absent. The 120×40 shot is that quiet report, after a 200ms pause and a one-column resize nudge, and before the terminal becomes 80×24. The 80×24 shot shows Cleanup report and does not show Cleanup running or Quit holla, and it is taken before the terminal returns to 120×40. The restored 120×40 screen still shows the Bytes line with 0 B freed now. No Quit holla dialog is drawn. finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "44e52f023bcac3b6a69497091ebcde976957aafc",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h06_report/h06_report_results_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h06_report/h06_report_results_narrow.tui.json"
+      ],
+      "scenario": [
+        "parity-cleanup-results"
+      ],
+      "action_sequence": "Complete a cleanup with mixed item outcomes and open the running and final reports.",
+      "expected_results": "The total and each item status match the simulation.",
+      "forbidden_effects": "A failed item is counted as freed.",
+      "checkpoint_ids": [
+        "H06.report.results.120x40",
+        "H06.report.results.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-cleanup-results",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "727101315ab44637ca999bf72abbdf294a84d0b3a247606ab92ac85fca7ec5bd",
+        "expect_baseline": "missing",
+        "precondition": "H06.report.results.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-cleanup-results",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "052bbd044e14ca430c7e650f3ad0d62b02f98b29b36a28f36a5bd7ffaff5e1fb",
+        "expect_baseline": "missing",
+        "precondition": "H06.report.results.narrow"
+      }
+    },
+    {
+      "case_id": "H06.report.scenario.parity-cleanup-results",
+      "owner_task": "H06.report",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "The scenario journey and the results journey both launch --scenario parity-cleanup-results at 120×40 in truecolor with reduced motion. The finder shows ~/Projects/safe, mbp, and safe · Rust project, and it does not show Cleanup review. vm.img, sparse.img, ~/work/android, build.gradle.kts, workspace.xml, and 842 of 926 are absent. big/blob is asserted only when the finder already paints blob. The completed report shows Cleanup report, ~/Projects/safe, 6 trashed, the Bytes line 2.1 GiB left the tree · 0 B freed now · the rest returns when the Trash is emptied, and every record written. ~/work/legacy/node_modules is absent from the report. finish() exits 0. No Quit holla dialog is drawn.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "44e52f023bcac3b6a69497091ebcde976957aafc",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-cleanup-results",
+      "action_sequence": "Launch the application with scenario parity-cleanup-results and exercise the surface owned by H06.report.",
+      "expected_results": "The visible fixture data belongs to parity-cleanup-results.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

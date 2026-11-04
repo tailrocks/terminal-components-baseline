@@ -1,0 +1,37 @@
+{
+  "task_id": "T04.history",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t04_history.rs",
+    "docs/testing/cases/T04.history.json",
+    "tests/functional/baselines/pre_refactor/T04.history/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/tabs.rs",
+    "src/bin/tablepro/app.rs"
+  ],
+  "coverage_rows": [
+    "T04.history.route",
+    "T04.history.rerun"
+  ],
+  "checkpoints": [
+    "T04.history.rerun.120x40"
+  ],
+  "acceptance": "History search, scope, details, copy, open, and rerun use the selected entry's SQL.",
+  "status": "queued",
+  "architecture_refactor": false
+}

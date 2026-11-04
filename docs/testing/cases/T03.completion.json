@@ -1,0 +1,120 @@
+{
+  "task_id": "T03.completion",
+  "cases": [
+    {
+      "case_id": "T03.completion.route",
+      "owner_task": "T03.completion",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with Type SQL and status Connected to Development, and the screen no longer says Loading schema. The completion list stays closed: the screen has no WITH, no EXPLAIN ANALYZE, and no Enter Accept. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7768501ab19718ad1eabafccfa9ab84112396088",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T03.completion",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "Query 1 with Type SQL and completion closed; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "T03.completion.complete",
+      "owner_task": "T03.completion",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Query 1, clicking Type SQL focuses the editor. Ctrl+Space opens statement completion with WITH first. Down moves the fill onto BEGIN. The open list is captured at 120×40 and at 80×24, then the terminal returns to 120×40. Enter accepts BEGIN and does not insert WITH, COMMIT, SELECT, UPDATE, EXPLAIN, ROLLBACK, or TRUNCATE. Ctrl+Left returns the caret to column 1 and Ctrl+Space opens the unfiltered list again. Down highlights BEGIN. Esc closes the list and leaves the editor text BEGIN. Ctrl+Q asks to quit because 1 unsaved query will be lost; Right then Enter confirms Quit and the process exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7768501ab19718ad1eabafccfa9ab84112396088",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t03_completion/t03_completion_complete_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t03_completion/t03_completion_complete_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Open completion, move the selection, accept one item, then dismiss another.",
+      "expected_results": "Accepted text is the selected item. Dismiss leaves the SQL unchanged.",
+      "forbidden_effects": "Dismiss inserts the highlighted item.",
+      "checkpoint_ids": [
+        "T03.completion.complete.120x40",
+        "T03.completion.complete.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "da93c1ce7c497a22020ee9ec973486d044481261002699973d0bf4da1f658d30",
+        "expect_baseline": "missing",
+        "precondition": "T03.completion.complete.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6224fa19a3b51ab27032cbd5ae33e29483904d363961c3831e091383672b3479",
+        "expect_baseline": "missing",
+        "precondition": "T03.completion.complete.narrow"
+      }
+    }
+  ]
+}

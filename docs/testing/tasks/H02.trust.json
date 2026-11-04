@@ -1,0 +1,37 @@
+{
+  "task_id": "H02.trust",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h02_trust.rs",
+    "docs/testing/cases/H02.trust.json",
+    "tests/functional/baselines/pre_refactor/H02.trust/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/review.rs",
+    "src/bin/holla/domain/digest.rs"
+  ],
+  "coverage_rows": [
+    "H02.trust.route",
+    "H02.trust.trust"
+  ],
+  "checkpoints": [
+    "H02.trust.trust.120x40"
+  ],
+  "acceptance": "Trust cancel and confirm apply to the reviewed path, directory, and digest.",
+  "status": "queued",
+  "architecture_refactor": false
+}

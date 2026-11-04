@@ -1,0 +1,77 @@
+{
+  "task_id": "S01.quitleave",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s01_quitleave.rs",
+    "docs/testing/cases/S01.quitleave.json",
+    "tests/functional/baselines/pre_refactor/S01.quitleave/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/quit_leave.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.quitleave.route",
+    "sc.quitleave.playground",
+    "sc.quitleave.playground.120x40",
+    "sc.quitleave.playground.80x24",
+    "sc.quitleave.options",
+    "sc.quitleave.options.120x40",
+    "sc.quitleave.options.80x24",
+    "sc.quitleave.states",
+    "sc.quitleave.states.120x40",
+    "sc.quitleave.states.80x24",
+    "sc.quitleave.specimen.rest",
+    "sc.quitleave.specimen.hover",
+    "sc.quitleave.specimen.pressed",
+    "sc.quitleave.specimen.focused",
+    "sc.quitleave.specimen.focused_hover",
+    "sc.quitleave.specimen.selected",
+    "sc.quitleave.specimen.disabled",
+    "sc.quitleave.specimen.busy",
+    "sc.quitleave.specimen.error",
+    "sc.quitleave.specimen.editing",
+    "sc.quitleave.specimen.empty",
+    "sc.quitleave.specimen.loading",
+    "sc.quitleave.specimen.overflow",
+    "sc.quitleave.specimen.narrow",
+    "sc.quitleave.compare-levels",
+    "opt.quitleave.stakes",
+    "opt.quitleave.save",
+    "opt.quitleave.letter",
+    "opt.quitleave.esc_quits",
+    "opt.quitleave.ctrl_c",
+    "opt.quitleave.ctrl_q",
+    "sc.quitleave.leave"
+  ],
+  "checkpoints": [
+    "sc.quitleave.playground.120x40",
+    "sc.quitleave.playground.80x24",
+    "sc.quitleave.options.120x40",
+    "sc.quitleave.options.80x24",
+    "sc.quitleave.states.120x40",
+    "sc.quitleave.states.80x24",
+    "sc.quitleave.compare-levels",
+    "sc.quitleave.leave"
+  ],
+  "acceptance": "Open Quit & leave by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

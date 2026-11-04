@@ -1,0 +1,37 @@
+{
+  "task_id": "H06.quit",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h06_quit.rs",
+    "docs/testing/cases/H06.quit.json",
+    "tests/functional/baselines/pre_refactor/H06.quit/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/app.rs",
+    "src/bin/holla/screens/cleanup.rs"
+  ],
+  "coverage_rows": [
+    "H06.quit.route",
+    "H06.quit.quit"
+  ],
+  "checkpoints": [
+    "H06.quit.quit.120x40"
+  ],
+  "acceptance": "Quit during cleanup waits for the current report and log contract.",
+  "status": "queued",
+  "architecture_refactor": false
+}

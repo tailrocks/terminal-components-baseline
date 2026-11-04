@@ -1,0 +1,193 @@
+{
+  "task_id": "T01.leave",
+  "cases": [
+    {
+      "case_id": "T01.leave.route",
+      "owner_task": "T01.leave",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens the connections screen at 120 by 40, truecolor, reduced motion. The header shows TablePro, Connections, 6 saved, and truecolor \u00b7 120\u00d740. The list has Filter connections, Local PostgreSQL, and Production. Edit connection, Unsaved changes, Query 1, New connection, and Connection saved are absent. Ctrl+Q exits.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "002ed160a4ca225c02f55066f15615dabadd516a",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_route_120x40.tui.json"
+      ],
+      "route": "T01.leave",
+      "entry_path": "tablepro --color truecolor --motion reduced at 120x40, with no --page flag",
+      "return_path": "Ctrl+Q exits from the connections screen",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "24dc6cb4d33e1570cf309d0d13aed6acd46c2d990c3f7443ba6890943b720860",
+        "expect_baseline": "missing",
+        "precondition": "connections screen at 120 by 40 with no page flag"
+      }
+    },
+    {
+      "case_id": "T01.leave.guards",
+      "owner_task": "T01.leave",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "A dirty Production form, host prod-db-2.acme.io, opens Unsaved changes for Close (Esc), New (Ctrl+N), Edit another (e on Analytics), and Quit (Ctrl+Q) while Edit connection and the draft are still on screen. The body is drawn as Save before leaving? Unsaved changes would be and then lost. Buttons are Cancel, Discard, and Save, with Save focused. Esc stays on the draft and Connection saved is absent. Discard on Close closes the form and the detail host is prod-db-1.acme.io:5432 with database acme_prod. Clearing the name and choosing Save shows Fix the highlighted fields and Required, keeps the form and prod-db-2.acme.io, keeps Production in the list, and does not show Connection saved. Typing Production back and choosing Save shows Connection saved, closes the form, and the detail host is prod-db-2.acme.io:5432. Reopening the form shows that host. A clean Esc returns to the connections list. The 80 by 24 frame was taken while the dialog was still narrow, before the terminal returned to 120 by 40.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "002ed160a4ca225c02f55066f15615dabadd516a",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_guards_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_guards_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "From a dirty form, try close, New, Edit another, and Quit. Choose Stay, Discard, and Save. Also attempt invalid Save from the dialog.",
+      "expected_results": "Stay and a failed validation keep the draft and the original record. Discard restores the original. Save stores the draft.",
+      "forbidden_effects": "A leave path drops the draft without a choice.",
+      "checkpoint_ids": [
+        "T01.leave.guards.120x40",
+        "T01.leave.guards.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "case_id": "T01.leave.guards",
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "expect_baseline": "missing",
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "checkpoints": [
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+            "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+            "fixture_args": [
+              "--color",
+              "truecolor",
+              "--motion",
+              "reduced"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "f0d7476ffd1e974ae2e891bb839837d33b3d7af9821161b104c456cbb5a9542b",
+            "expect_baseline": "missing",
+            "precondition": "unsaved dialog from Close at 120 by 40, before Stay",
+            "case_id": "T01.leave.guards.120x40",
+            "checkpoint_id": "T01.leave.guards.120x40"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+            "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+            "fixture_args": [
+              "--color",
+              "truecolor",
+              "--motion",
+              "reduced"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "559e6b09a7b9c7b8e6b2fccd51f5cc7aa74216cb5846fc579135ad3d5926f3fb",
+            "expect_baseline": "missing",
+            "precondition": "unsaved dialog from Close at 80 by 24, before the terminal grows",
+            "case_id": "T01.leave.guards.narrow",
+            "checkpoint_id": "T01.leave.guards.narrow"
+          }
+        ]
+      }
+    }
+  ]
+}

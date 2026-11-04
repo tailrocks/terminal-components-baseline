@@ -1,0 +1,39 @@
+{
+  "task_id": "H01.scope",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h01_scope.rs",
+    "docs/testing/cases/H01.scope.json",
+    "tests/functional/baselines/pre_refactor/H01.scope/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/finder.rs",
+    "src/bin/holla/domain/usage.rs"
+  ],
+  "coverage_rows": [
+    "H01.scope.route",
+    "H01.scope.scope",
+    "H01.scope.scenario.monorepo-child",
+    "H01.scope.scenario.remote-host"
+  ],
+  "checkpoints": [
+    "H01.scope.scope.120x40"
+  ],
+  "acceptance": "Here, project, and host scope, groups, pin, hide, and ranking reset change the visible set only.",
+  "status": "queued",
+  "architecture_refactor": false
+}

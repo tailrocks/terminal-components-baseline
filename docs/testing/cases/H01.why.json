@@ -1,0 +1,128 @@
+{
+  "task_id": "H01.why",
+  "cases": [
+    {
+      "case_id": "H01.why.route",
+      "owner_task": "H01.why",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla first-use at 120×40 in truecolor with reduced motion, --frame 40, and HOLLA_NO_HISTORY=1 opens the finder. Home selects Analyze disk usage. Down selects Open btm. Alt+Enter opens the alternatives menu titled Open btm. End focuses Why is this here?, and Enter opens Why is “Open btm” here? from that item's explain rows. Esc closes the modal, the selection returns to Open btm, and Why is is gone. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b626cb866f38ac051f6db123940cfd60b3dacf8",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H01.why",
+      "entry_path": "launch holla --scenario first-use --frame 40 --color truecolor --motion reduced at 120x40; Home; Down; Alt+Enter; End; Enter",
+      "return_path": "Esc returns to Open btm; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H01.why.why",
+      "owner_task": "H01.why",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "With Open btm selected, Alt+Enter opens alternatives titled Open btm. End and Enter open Why is “Open btm” here?. The title names Open btm and does not name Analyze disk usage. The body shows live state, sustained pressure · continuous view fits, read-only · runs directly · never changes the rank, and the ranking-order sentence. The open modal is captured at 120×40, then at 80×24, and the narrow shot is taken before the terminal returns to 120×40. Esc returns the selection to Open btm and removes Why is. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8b626cb866f38ac051f6db123940cfd60b3dacf8",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h01_why/h01_why_why_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h01_why/h01_why_why_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Open Why for the selected row and close it.",
+      "expected_results": "The explanation names the selected item. Focus returns to that row.",
+      "forbidden_effects": "Why names a different item.",
+      "checkpoint_ids": [
+        "H01.why.why.120x40",
+        "H01.why.why.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "first-use",
+          "--frame",
+          "40",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d8629d051176924a7381f43fd00ee291cbb708e761ae37358b5c5e24df569b98",
+        "expect_baseline": "missing",
+        "precondition": "H01.why.why.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "first-use",
+          "--frame",
+          "40",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8a54528483ad48b45678c0ae0874fc4eb210463a521f8065801023e683e6b388",
+        "expect_baseline": "missing",
+        "precondition": "H01.why.why.narrow"
+      }
+    }
+  ]
+}

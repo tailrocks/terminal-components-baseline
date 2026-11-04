@@ -1,0 +1,124 @@
+{
+  "task_id": "X03.color",
+  "cases": [
+    {
+      "case_id": "X03.color.route",
+      "owner_task": "X03.color",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "showcase --page buttons at 120×40 in truecolor with reduced motion opens Inputs & forms › Buttons. parse_page in src/bin/showcase/main.rs calls PageId::from_name, and from_name accepts the buttons slug. The screen shows Primary, secondary, subtle, danger, toggle, disabled, busy, Run task, Disabled primary, ● Verbose, and truecolor · 120×40. The overview line is absent. The process is still running, and finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "b78b89705fa190c2fb2da60f3219c5f5d5645994",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X03.color",
+      "entry_path": "showcase --page buttons --color truecolor --motion reduced at 120x40",
+      "return_path": "finish sends Ctrl+Q and the process exits 0"
+    },
+    {
+      "case_id": "X03.color.matrix",
+      "owner_task": "X03.color",
+      "application": "cross",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The shared treatment is the showcase Buttons playground in src/bin/showcase/pages/buttons.rs. Run task is the primary button for rest, hover, and pressed. Disabled primary is disabled, and Button::render clears hover and pressed in that case before Theme::interactive supplies the style. Verbose is the on toggle, and its ● is the selected mark, drawn with the accent. RenderCtx::state is what feeds hovered, pressed, and focused into that style. The test reads the cells the binary paints. CommonArgs::level in src/cli.rs uses an explicit --color before ColorLevel::detect. The values are truecolor, 256, 16, and none. ColorLevel::detect returns Mono when NO_COLOR is non-empty, and otherwise TrueColor when COLORTERM is truecolor. The harness sets COLORTERM=truecolor. The fifth configuration is Launch color nocolor: support sets NO_COLOR=1 and passes no --color flag. Those cells are Default, the RGB count is 0, the accent is not Rgb(72, 224, 84), and the showcase chrome says no color. X01.env measured the same Default result when --color truecolor is combined with NO_COLOR, because crossterm writes no SGR while NO_COLOR is set and src never calls force_color_output. This leaf does not use that combination. Pointer hover and press drive Run task. Disabled primary is held through hover and press and stays on its rest ink. truecolor Run task: rest fg Rgb(25, 25, 28) bg Rgb(72, 224, 84) bold, contrast 10.08; hover bg Rgb(58, 179, 67) bold, 6.44; pressed bg Rgb(46, 154, 56) bold, 4.84. Disabled primary fg Rgb(77, 77, 77) bg Rgb(39, 39, 42), no modifier, contrast 1.76. Selected ● fg Rgb(72, 224, 84) bg Rgb(39, 39, 42), contrast 8.56. 256: rest Indexed(232) on Indexed(78) bold, palette (8, 8, 8) on (95, 215, 135), 11.02; hover Indexed(71) (95, 175, 95), 7.42; pressed Indexed(65) (95, 135, 95), 4.88. Disabled Indexed(239) on Indexed(235), (78, 78, 78) on (38, 38, 38), 1.82. Selected Indexed(78) on Indexed(235), 8.33. 16: rest Indexed(0) on Indexed(10) bold, (0, 0, 0) on (0, 255, 0), 15.30; hover Indexed(2) (0, 128, 0) bold, 4.09; pressed Indexed(0) on Indexed(10) bold and inverse, 15.30. Disabled Indexed(7) on Indexed(8) dim, (192, 192, 192) on (128, 128, 128), 2.17. Selected Indexed(10) on Indexed(8), 2.88. none: rest Indexed(0) on Indexed(15) bold and inverse, 21.00; hover adds underline, 21.00; pressed is bold and underline, 21.00. Disabled matches the 16-color disabled cell, 2.17. Selected Indexed(15) on Indexed(8), 3.95. NO_COLOR: every measured cell is Default. The terminal defaults resolve to (192, 192, 192) on (0, 0, 0), contrast 11.54. Rest is bold and inverse, hover adds underline, pressed is bold and underline, disabled is dim, and selected has no modifier. StateModifiers::MONO is where those modifiers come from when colour cannot carry state. The five states differ at every level, by colour or by a modifier. Contrast defects are recorded here and left in src. Disabled primary is below 4.5:1 at truecolor (1.76), 256 (1.82), and 16 and none (2.17). The 16-color hover of Run task and of tablepro Connect is 4.09. The 16-color selected ● is 2.88. The none selected ● is 3.95. NO_COLOR disabled stays at the default-pair 11.54 because the grey ink is not painted. Tablepro opens on Filter connections. Connect is the primary button and paints the same three Run task cells at every level. That card has no disabled button and no on-state mark. Holla --scenario activities-multi, with HOLLA_NO_HISTORY=1, opens Quit holla through running_dialog in src/ui/leave.rs. Stay is the secondary cancel. Dialog mnemonics default on, so Stay's S is underlined. At 16, none, and NO_COLOR that S cell does not change on hover. The body cell t does. truecolor t is bold white on Rgb(39, 39, 42), then Rgb(55, 55, 61), then Rgb(74, 74, 82), contrasts 14.89, 11.82, and 8.78. 256 t is bold Indexed(231) on Indexed(235), Indexed(238), and Indexed(240), contrasts 15.13, 9.74, and 7.11. 16 and none t are Indexed(0) on Indexed(8): rest bold and dim, hover adds underline, pressed is bold, dim, and inverse. The colour pair is 5.32. NO_COLOR uses those same modifiers on Default, contrast 11.54. That dialog has no disabled button and no toggle. Jackin --scenario hard-cases, with the clock off, reaches Current directory. Launch is an unfocused secondary. truecolor is white on the same three backgrounds, with bold only while pressed, contrasts 14.89, 11.82, and 8.78. 256 is Indexed(231) on Indexed(235), Indexed(238), and Indexed(240), bold only while pressed, contrasts 15.13, 9.74, and 7.11. 16 and none are Indexed(0) on Indexed(8): rest has no modifier, hover is underline, pressed is bold and inverse, contrast 5.32. NO_COLOR uses those modifiers on Default, contrast 11.54. The jackin status label for the colour level has priority 1 in src/bin/jackin/app.rs and is dropped while instance index unreadable and daemon stale fill the bar, so that screen's text does not show truecolor. The Launch cells carry the level. That screen has no disabled button and no on-state mark. Press can move focus, so the cell after cancel may keep bold. The three paints during the gesture are the ones that differ. The checkpoint is the resting truecolor Buttons page from the unchanged reference showcase sha256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b. The 120×40 frame is stored while Run task, Preview, Disabled primary, and Verbose are up and Run task is at the truecolor rest ink. The terminal then resizes to 80×24, and that frame is stored before the return to 120×40. Both frames contain those labels and Inputs & forms › Buttons. Keyboard focus is the single ▎ on the Buttons nav row. finish() exits 0, and the stored frames are what the check compares.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "b78b89705fa190c2fb2da60f3219c5f5d5645994",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x03_color/x03_color_matrix_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/x03_color/x03_color_matrix_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Capture one shared control treatment in all five colour configurations for each application shell.",
+      "expected_results": "Rest, hover, pressed, disabled, and selected are distinguishable at every level, including NO_COLOR modifiers.",
+      "forbidden_effects": "A colour change that keeps the text is accepted as equal.",
+      "checkpoint_ids": [
+        "X03.color.matrix.120x40",
+        "X03.color.matrix.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "buttons",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "336ed35ef60d37f7eb8c5e79a75a763e534d79d481b20e9daf4aaffcf2c639cb",
+        "expect_baseline": "missing",
+        "precondition": "X03.color.matrix.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "buttons",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "849df08887c8f5a90d80ecc3969cc05bc88a274c9a214d416b1cb3a10861787c",
+        "expect_baseline": "missing",
+        "precondition": "X03.color.matrix.narrow"
+      }
+    }
+  ]
+}

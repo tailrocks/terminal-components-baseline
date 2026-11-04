@@ -1,0 +1,124 @@
+{
+  "task_id": "J01.stop",
+  "cases": [
+    {
+      "case_id": "J01.stop.route",
+      "owner_task": "J01.stop",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40 opens the manager on Current directory with the painted count 2 running. Down, Right, Down selects 7f3a, which paints running · Container and Capsule daemon are live. t calls stop in src/bin/jackin/screens/manager.rs. The dialog title is Stop instance 7f3a?. The body fact is preserved with uncommitted work because src/bin/jackin/domain/instance.rs is_dirty is true. The buttons are Stop and Keep running. Clicking Keep running closes the dialog. 7f3a stays running, the painted count stays 2 running, and preserved · dirty is absent. Msg::Stopped has not run. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "96691d92705048f06d7bfdff2103b2ef8f7a83b6",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J01.stop",
+      "entry_path": "launch jackin --scenario returning --color truecolor --motion reduced at 120x40; Down, Right, Down to 7f3a; t",
+      "return_path": "click Keep running; 7f3a stays running and the painted count stays 2 running; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J01.stop.stop",
+      "owner_task": "J01.stop",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The open dialog from src/bin/jackin/screens/manager.rs stop is the checkpoint, before Keep running and before Stop. The title is Stop instance 7f3a?. The body fact is preserved with uncommitted work because src/bin/jackin/domain/instance.rs is_dirty is true. The buttons are Stop and Keep running. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Keep running closes the dialog and leaves 7f3a running with the painted count still 2 running. Opening the dialog again and choosing Stop is the stop layer result with action Some(1). That arm pushes the busy row stopping…, schedules Msg::Stopped 1800 ms later, and sets progress to Stopping…. After Instance 7f3a stopped, Msg::Stopped has set the dirty instance to PreservedDirty, so the screen paints preserved · dirty. The painted running count is 1. Expanding infra-control-plane shows 9b02 still running. The dialog is gone. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "96691d92705048f06d7bfdff2103b2ef8f7a83b6",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j01_stop/j01_stop_stop_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j01_stop/j01_stop_stop_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Select a running instance, open Stop, cancel, then confirm on the same instance.",
+      "expected_results": "Cancel keeps 7f3a running and the painted count at 2 running. Confirm stops that instance: the painted count drops to 1 running and 7f3a shows preserved · dirty, while 9b02 stays running.",
+      "forbidden_effects": "The stop dialog is absent from the stop checkpoint.",
+      "checkpoint_ids": [
+        "J01.stop.stop.120x40",
+        "J01.stop.stop.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bdb14000f7e0ccf9c49e07b9a7d5f41918d7ba63cad4ed9f596f1477fba2791d",
+        "expect_baseline": "missing",
+        "precondition": "J01.stop.stop.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0b881bed1646821c4fc5d95f77eec2a29b4d5eec14a74ae0b6e633a043d417d8",
+        "expect_baseline": "missing",
+        "precondition": "J01.stop.stop.narrow"
+      }
+    }
+  ]
+}

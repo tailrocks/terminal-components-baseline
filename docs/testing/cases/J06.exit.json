@@ -1,0 +1,127 @@
+{
+  "task_id": "J06.exit",
+  "cases": [
+    {
+      "case_id": "J06.exit.route",
+      "owner_task": "J06.exit",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario outro-last --color truecolor --motion reduced at 120×40. start in src/bin/jackin/app.rs attaches jk-7f3a for Scenario::OutroLast. world_for in src/bin/jackin/domain/fixtures.rs marks jk-9b02 CleanExited and removes its daemon, so the launch does not attach that daemon. jk-7f3a has uncommitted 2 and unpushed 1 in populated. The Claude script in src/bin/jackin/sim/pty.rs touches src/settlement/retry.rs and src/settlement/mod.rs. CapsuleScreen::is_dirty in src/bin/jackin/screens/capsule.rs is true when Instance::is_dirty is true or the daemon touched_files list is non-empty. Route::Capsule is capturing in src/bin/jackin/app.rs, so src/shell/router.rs gives Ctrl+Q to the page before the shell quit chord. CapsuleScreen::on_key calls request_exit. The dirty arm opens ChoiceDialog \"Unsaved work — quit?\" with rows Start a new agent, Inspect changes, Quit & keep changes, and Quit & discard changes, plus the warning line payments-platform   • 4 changed · 1 unpushed. Esc is Choice(None). The cancel arm in on_layer_result does not call end_instance. The capsule returns, the process stays running, and You were in the Construct stays absent. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "e438b248742677e7a7d5df70967e0bb8e68aa4b6",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J06.exit",
+      "entry_path": "jackin --scenario outro-last --color truecolor --motion reduced at 120x40, already attached to jk-7f3a, then Ctrl+Q",
+      "return_path": "Esc closes the unsaved-work choice and returns to the same capsule; the process stays there"
+    },
+    {
+      "case_id": "J06.exit.exit",
+      "owner_task": "J06.exit",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Both scenarios come from world_for in src/bin/jackin/domain/fixtures.rs. HardCases sets arbiter.discovery to DiscoveryError::IndexUnreadable and leaves jk-9b02 Running with uncommitted 0 and unpushed 0, identity infra-control-plane › sre. That is the clean instance. jk-7f3a stays Running with uncommitted 2 and unpushed 1. ManagerScreen starts on Current directory. Down, Down, Right, Down selects jk-9b02, and Enter attaches it. Ctrl+Q calls request_exit in src/bin/jackin/screens/capsule.rs. is_dirty is false, so Dialog::destructive in src/widgets/dialog.rs opens \"Quit jackin❯?\" and focuses Cancel. The body says force-stops the container. Enter cancels and the capsule stays up. Right then Enter is Dialog action Some(1) on tag exit, which calls end_instance(false). Go::InstanceEnded in src/bin/jackin/app.rs sets CleanExited because Instance::is_dirty is false, removes the daemon, and leave_construct takes ExitDecision::Unknown. The manager shows \"The final session ended cleanly\" and \"returning to host without the outro\". The outro does not play. Keep attaches jk-7f3a, opens the dirty choice, and Enter on Quit & keep changes is Choice(Some(2)). on_layer_result sets \"Exited · changes kept in the preserved instance\" and calls end_instance without zeroing uncommitted. leave_construct replaces that status before paint. The manager detail keeps \"2 uncommitted · 1 unpushed\" and \"Stopped with uncommitted changes\" from InstanceStatus::PreservedDirty in src/bin/jackin/domain/instance.rs. Discard moves to Quit & discard changes. That screen still lacks \"Changes discarded\" and \"Quit and discard changes?\". Enter is the else arm: Dialog::facts with tag discard, title \"Quit and discard changes?\", and token Some(workspace). It does not zero the counters. Typing payments-platform and Enter is Dialog action Some(1) on tag discard, which sets uncommitted and unpushed to 0, sets \"Changes discarded\", then end_instance. leave_construct replaces that status before paint, and the manager shows \"The final session ended cleanly\" without \"2 uncommitted · 1 unpushed\". Cancelling the second dialog is Esc. That dismiss finishes action Some(0), which matches the general cancel arm after the discard confirm arm, so the counters stay and \"Changes discarded\" stays absent. Reopening the choice still shows \"4 changed · 1 unpushed\". Inspect is outro-last on the attached jk-7f3a. Enter on Inspect changes calls open_inspect with from_exit true. The compact list shows src/settlement/mod.rs, src/settlement/retry.rs, and \"1 commit not pushed\". Esc calls InspectChanges::leave in src/bin/jackin/screens/inspect.rs. returns_to_exit makes that ModalResult::Custom(\"back\"), and the inspect arm calls request_exit again. The same \"Unsaved work — quit?\" dialog returns with Start a new agent chosen. The checkpoint is that second discard dialog on outro-last, before Discard and before Cancel, at 120×40 and after resize(80, 24). Both frames contain \"Quit and discard changes?\" and lack \"Changes discarded\". resize(120, 40) restores the wide dialog, Esc returns to the capsule, and the process stays running. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "e438b248742677e7a7d5df70967e0bb8e68aa4b6",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j06_exit/j06_exit_exit_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/j06_exit/j06_exit_exit_narrow.tui.json"
+      ],
+      "scenario": [
+        "outro-last",
+        "hard-cases"
+      ],
+      "action_sequence": "Exit clean. On a dirty capsule choose Keep, Discard and confirm the second prompt, cancel Discard, and Inspect then return.",
+      "expected_results": "Keep retains the changes. The second confirm discards them. Cancel keeps them. Inspect returns to the same choice.",
+      "forbidden_effects": "The first Discard confirmation discards without the second prompt.",
+      "checkpoint_ids": [
+        "J06.exit.exit.120x40",
+        "J06.exit.exit.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "outro-last",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ccf21a15a339c8bf32cb2fb892d41fdb03a7700f2be1da1b6bf24370b4d7b31b",
+        "expect_baseline": "missing",
+        "precondition": "J06.exit.exit.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "outro-last",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3563a3ce3027fe60e084a441275cafef7a1e7c2495ffda544fcb359264c0aadb",
+        "expect_baseline": "missing",
+        "precondition": "J06.exit.exit.narrow"
+      }
+    }
+  ]
+}

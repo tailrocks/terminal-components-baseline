@@ -1,0 +1,36 @@
+{
+  "task_id": "T04.preview",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t04_preview.rs",
+    "docs/testing/cases/T04.preview.json",
+    "tests/functional/baselines/pre_refactor/T04.preview/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/workbench.rs"
+  ],
+  "coverage_rows": [
+    "T04.preview.route",
+    "T04.preview.preview"
+  ],
+  "checkpoints": [
+    "T04.preview.preview.120x40"
+  ],
+  "acceptance": "Preview reuse does not replace a pinned or dirty tab.",
+  "status": "queued",
+  "architecture_refactor": false
+}

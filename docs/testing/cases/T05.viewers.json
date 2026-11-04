@@ -1,0 +1,120 @@
+{
+  "task_id": "T05.viewers",
+  "cases": [
+    {
+      "case_id": "T05.viewers.route",
+      "owner_task": "T05.viewers",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro opens Connections at 120×40 in truecolor with reduced motion. A click on Development, then Connect, finishes on Query 1 once Connected to Development is shown and Loading schema has left the screen. Ctrl+O, products, Enter opens the editable public › products table (SKU-01000, Monitor arm, 9 cols, Enter Edit) rather than a query result. No viewer is open. Ctrl+W returns to Query 1, and Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f0f4e561544dec7f04e15ba5513a87eab95f0fb8",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T05.viewers",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40; click Development; click Connect; Ctrl+O; type products; Enter",
+      "return_path": "public › products table tab; Ctrl+W returns to Query 1; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "T05.viewers.viewer",
+      "owner_task": "T05.viewers",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Ctrl+O opens public › products. Two Rights land on the name cell and y copies Monitor arm (Copied 11 characters). Five more Rights land on attributes of row 0, whose raw text is {\"color\": \"white\", \"weight_kg\": 21.1}. Enter opens Dialog::facts titled attributes, with that cell pretty-printed (\"color\":\"white\", and \"weight_kg\":21.1) and a single Close button. The neighbor row's pretty tokens are absent. Dialog::facts paints the body as lines and has no selection widget and no copy command, so y while the dialog is open leaves the previous copy status in place. The open viewer is captured at 120×40, then after resize to 80×24, and the terminal returns to 120×40 before Close. Esc dismisses it: the pretty tokens and Close are gone, and the focus gutter is back on the same row, which still shows the white 21.1 cell. y then copies that cell's raw JSON (Copied 37 characters · {\"color\": \"white\", \"weight_kg\": 21.1}), not the name and not the neighbor row. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f0f4e561544dec7f04e15ba5513a87eab95f0fb8",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t05_viewers/t05_viewers_viewer_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t05_viewers/t05_viewers_viewer_narrow.tui.json"
+      ],
+      "scenario": null,
+      "action_sequence": "Open a viewer, select text, copy, and close.",
+      "expected_results": "The copy payload is the viewer text. Close returns focus to the cell.",
+      "forbidden_effects": "Close leaves the viewer title visible.",
+      "checkpoint_ids": [
+        "T05.viewers.viewer.120x40",
+        "T05.viewers.viewer.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "df4bb5bf1ac5510062027b769df85038474e11ea46052d18849c8937702c3ff2",
+        "expect_baseline": "missing",
+        "precondition": "T05.viewers.viewer.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3cb61086f72003d14411e631c67f2639cf82996114f0181b87a891d3da4b69b0",
+        "expect_baseline": "missing",
+        "precondition": "T05.viewers.viewer.narrow"
+      }
+    }
+  ]
+}

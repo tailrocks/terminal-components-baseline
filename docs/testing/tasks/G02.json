@@ -1,0 +1,29 @@
+{
+  "task_id": "G02",
+  "wave": "B",
+  "kind": "prerequisite",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G01"
+  ],
+  "owned_files": [
+    "tests/functional/support.rs",
+    "tests/functional/cases/g02_harness.rs"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    "AGENTS.md",
+    "docs/GOAL.md",
+    "docs/functional-testing.md",
+    "tests/functional/support.rs",
+    "src/catalog.rs"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "stable_screen fails when 700ms of stability is not reached. The fingerprint covers comparator fields. A dead child fails a wait. Unsupported clock paste is not sent. Negative cases use a temporary baseline store.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": "J01.prelude",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "J02.save"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j01_prelude.rs",
+    "docs/testing/cases/J01.prelude.json",
+    "tests/functional/baselines/pre_refactor/J01.prelude/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/prelude.rs",
+    "src/bin/jackin/domain/workspace.rs"
+  ],
+  "coverage_rows": [
+    "J01.prelude.route",
+    "J01.prelude.steps"
+  ],
+  "checkpoints": [
+    "J01.prelude.steps.120x40"
+  ],
+  "acceptance": "Prelude cancel leaves no workspace. Finish reaches the Editor values and save uses the J02 contract.",
+  "status": "queued",
+  "architecture_refactor": false
+}

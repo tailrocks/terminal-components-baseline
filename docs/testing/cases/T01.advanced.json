@@ -1,0 +1,120 @@
+{
+  "task_id": "T01.advanced",
+  "cases": [
+    {
+      "case_id": "T01.advanced.route",
+      "owner_task": "T01.advanced",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro opens on the connections screen with no arguments. Click Production, press e, and open Advanced. Use SSL / TLS and SSH tunnel are on, the SSH host is bastion.acme.io, the SSH user is deploy, and the hint is Basic / Advanced. Cancel returns to the list. Connection saved does not appear.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d8cbbb53f58bc8e207fc55dba2eebef3da60eb50",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T01.advanced",
+      "entry_path": "Launch with no arguments. Click Production, press e, click Advanced.",
+      "return_path": "Click Cancel above the footer. The connections list shows bastion.acme.io."
+    },
+    {
+      "case_id": "T01.advanced.secrets",
+      "owner_task": "T01.advanced",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Basic and Advanced are separate tabs, so both frozen frames are the masked password, taken after the advanced fields were edited and before save. The password row shows ••••••••••••••• and not the typed secret. At 80×24 the Basic column keeps the wide scroll offset, so Tab and Shift+Tab return focus to Password and bring that row into view before the narrow shot. The size is restored to 120×40 before Ctrl+S. Ctrl+S shows Connection saved and the detail SSH line is gate.acme.io. Reopen shows the placeholder stored in the keychain and no bullets, because the connection record does not store the password. The SSH user returns to deploy. extra_float_digits=0 and Local only do not survive. Cancel of drop.acme.io and Discard of leave.acme.io, both before any save, do not show Connection saved and leave bastion.acme.io.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d8cbbb53f58bc8e207fc55dba2eebef3da60eb50",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_advanced/t01_advanced_secrets_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/t01_advanced/t01_advanced_secrets_narrow.tui.json"
+      ],
+      "scenario": "Edit Production. Change SSH host, SSH user, startup commands, and Local only. Mask a password on Basic. Save and reopen.",
+      "action_sequence": "Cancel a change to drop.acme.io. Discard a dirty change to leave.acme.io from the unsaved-changes dialog. Set SSH host to gate.acme.io, SSH user to notdeploy, startup to extra_float_digits=0, and Local only on. On Basic, paste the secret into Password and capture the masked field at 120×40, then at 80×24, then restore 120×40. Ctrl+S, then reopen.",
+      "expected_results": "The password cells are fifteen bullets. After save the detail SSH line is gate.acme.io and the status is Connection saved. Reopen shows stored in the keychain, SSH user deploy, SSH tunnel on, and no startup text or Local only.",
+      "forbidden_effects": "The plaintext password appears on any frame. Connection saved appears after Cancel or Discard. The typed password, notdeploy, extra_float_digits=0, or a changed Local only bit survives reopen.",
+      "checkpoint_ids": [
+        "T01.advanced.secrets.120x40",
+        "T01.advanced.secrets.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d315a5505fef91313677ffc304dd11a5bac05abb4f6d9ff6c6868208b203aa69",
+        "expect_baseline": "missing",
+        "precondition": "T01.advanced.secrets.120x40 masked password"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "46421c2d36feff65ffee7797132e93c50a8035fc4fc302b8a29423960730df48",
+        "expect_baseline": "missing",
+        "precondition": "T01.advanced.secrets.narrow masked password"
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "task_id": "H06.report",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h06_report.rs",
+    "docs/testing/cases/H06.report.json",
+    "tests/functional/baselines/pre_refactor/H06.report/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/snapshot.rs",
+    "src/bin/holla/domain/cleanup.rs"
+  ],
+  "coverage_rows": [
+    "H06.report.route",
+    "H06.report.results",
+    "H06.report.scenario.parity-cleanup-results"
+  ],
+  "checkpoints": [
+    "H06.report.results.120x40"
+  ],
+  "acceptance": "Per-item success, failure, and partial results and the freed-byte total match the simulation.",
+  "status": "queued",
+  "architecture_refactor": false
+}

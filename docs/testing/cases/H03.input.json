@@ -1,0 +1,63 @@
+{
+  "task_id": "H03.input",
+  "cases": [
+    {
+      "case_id": "H03.input.route",
+      "owner_task": "H03.input",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla --scenario parity-task-input opens the finder at 120×40 in truecolor with reduced motion and history off. The world is /srv/app on devbox, production. Pasting Deploy the release selects that row. The preview shows ./deploy.sh and wraps the description as asks for a password and then for confirmation. Enter runs the activity. The output shows $ ./deploy.sh, connecting to release server…, and Password:. i sets Typing goes to the program and typing goes to stdin · Esc returns. Esc leaves input mode (Keyboard returned to holla and Back to Here; Release keyboard is gone). s stops the activity (terminated (SIGTERM) · process group reaped). Esc returns to the finder hint Type Search on the Deploy the release row. Password: and h03-secret are absent. The activity is stopped before Ctrl+Q, so the quit dialog does not open. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9da6eb724fcdba0cfe8b207ecc258811b6a02b8e",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H03.input",
+      "entry_path": "launch holla --scenario parity-task-input --color truecolor --motion reduced at 120x40; paste Deploy the release; Enter",
+      "return_path": "Esc returns to the finder on the deploy row after the activity stops; Ctrl+Q exits"
+    },
+    {
+      "case_id": "H03.input.prompts",
+      "owner_task": "H03.input",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "No baseline file is accepted because a quiet frame of the open secret prompt does not exist, and a spinner frame must not be stored. The prompt is a live Running activity, so animating in src/bin/holla/app.rs is true and on_tick returns Changed; tick there is world.now_ms()/80. SimClock::advance in src/clock.rs adds TICK_MS from src/bin/holla/sim/world.rs only while running, and reduced motion leaves the clock running, so the tab and running-chip spinner change every 80ms. tests/functional/support.rs settle requires 150ms of visual quiet, which never happens. Paused motion freezes now_ms, but World::tick returns before self.tick += 1 when the clock is not running, so elapsed time never reaches the password prompt at at: 3 (prompt(3, \"Password: \", true) in src/bin/holla/domain/parity.rs; src/bin/holla/domain/scripts.rs is the other script catalog and does not define this line). The semantic check types h03-secret while Password: is open: the body stays Password: and h03-secret is absent at 120×40, then at 80×24, then again after the restore to 120×40. Enter submits the secret. The public prompt Proceed with rollout? [y/N] shows the answer nope, and h03-secret stays absent. nope is not y, so the script ends with rollout cancelled by operator. On finished Quick no-op, plain i reports The program has finished · nothing reads input and zztyped is not an output line. InputError::NotStarted (Queued · it has no stdin until it starts) and InputError::NoStdin (No stdin · a detached monitor takes no input) are the other refusal strings in activity.rs; this fixture has no queued activity and no detached monitor. On Run the stubborn worker, while Release keyboard is showing, Ctrl+C emits ^C and Sent ^C · stopping · SIGKILL follows if it lingers. Esc then returns the keyboard, and a later z is not appended to the program output.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9da6eb724fcdba0cfe8b207ecc258811b6a02b8e",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": [
+        "parity-task-input"
+      ],
+      "action_sequence": "Answer a public prompt and a secret prompt. Try input when it is refused. Press Ctrl+C and then Escape.",
+      "expected_results": "The secret is masked. Escape returns keys to the shell. Refused input does not appear as a delivered line.",
+      "forbidden_effects": "The secret is echoed.",
+      "checkpoint_ids": [
+        "H03.input.prompts.120x40",
+        "H03.input.prompts.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    },
+    {
+      "case_id": "H03.input.scenario.parity-task-input",
+      "owner_task": "H03.input",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "The launch is --scenario parity-task-input at /srv/app on devbox, production. The finder shows Deploy the release (./deploy.sh, asks for a password), Run the stubborn worker (./stubborn, ignores SIGTERM), and Quick no-op. Enter on deploy shows $ ./deploy.sh, connecting to release server…, and Password:. ~/work/poly, ~/work/acme, ~/work/team, and Bad Id stay off the screen. Esc returns to the finder. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9da6eb724fcdba0cfe8b207ecc258811b6a02b8e",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-task-input",
+      "action_sequence": "Launch the application with scenario parity-task-input and exercise the surface owned by H03.input.",
+      "expected_results": "The visible fixture data belongs to parity-task-input.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "task_id": "C03",
+  "wave": "F",
+  "kind": "closing",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "C02"
+  ],
+  "owned_files": [
+    "docs/testing/refactor-coverage.json",
+    "docs/testing/known-gaps.md",
+    "docs/audits/refactor-test-readiness.md"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    ".velnor/config.toml",
+    "docs/ci.md"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "An independent reviewer who did not write the reviewed cases accepts the inventory. Untested implemented states stay BLOCKED.",
+  "status": "queued",
+  "architecture_refactor": false
+}

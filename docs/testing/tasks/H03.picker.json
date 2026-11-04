@@ -1,0 +1,36 @@
+{
+  "task_id": "H03.picker",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h03_picker.rs",
+    "docs/testing/cases/H03.picker.json",
+    "tests/functional/baselines/pre_refactor/H03.picker/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/activity.rs"
+  ],
+  "coverage_rows": [
+    "H03.picker.route",
+    "H03.picker.picker"
+  ],
+  "checkpoints": [
+    "H03.picker.picker.120x40"
+  ],
+  "acceptance": "The activity picker acts on the selected activity.",
+  "status": "queued",
+  "architecture_refactor": false
+}

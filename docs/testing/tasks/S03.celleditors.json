@@ -1,0 +1,81 @@
+{
+  "task_id": "S03.celleditors",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s03_celleditors.rs",
+    "docs/testing/cases/S03.celleditors.json",
+    "tests/functional/baselines/pre_refactor/S03.celleditors/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/celleditors.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.celleditors.route",
+    "sc.celleditors.playground",
+    "sc.celleditors.playground.120x40",
+    "sc.celleditors.playground.80x24",
+    "sc.celleditors.options",
+    "sc.celleditors.options.120x40",
+    "sc.celleditors.options.80x24",
+    "sc.celleditors.states",
+    "sc.celleditors.states.120x40",
+    "sc.celleditors.states.80x24",
+    "sc.celleditors.specimen.rest",
+    "sc.celleditors.specimen.hover",
+    "sc.celleditors.specimen.pressed",
+    "sc.celleditors.specimen.focused",
+    "sc.celleditors.specimen.focused_hover",
+    "sc.celleditors.specimen.selected",
+    "sc.celleditors.specimen.disabled",
+    "sc.celleditors.specimen.busy",
+    "sc.celleditors.specimen.error",
+    "sc.celleditors.specimen.editing",
+    "sc.celleditors.specimen.empty",
+    "sc.celleditors.specimen.loading",
+    "sc.celleditors.specimen.overflow",
+    "sc.celleditors.specimen.narrow",
+    "sc.celleditors.compare-levels",
+    "opt.celleditors.dismiss",
+    "opt.celleditors.blur",
+    "opt.celleditors.max_rows",
+    "opt.celleditors.popup_width",
+    "opt.celleditors.cursor_style",
+    "opt.celleditors.type_ahead",
+    "opt.celleditors.affordance",
+    "opt.celleditors.flag_out_of_set",
+    "opt.celleditors.tag_separator",
+    "opt.celleditors.placement",
+    "sc.celleditors.editors"
+  ],
+  "checkpoints": [
+    "sc.celleditors.playground.120x40",
+    "sc.celleditors.playground.80x24",
+    "sc.celleditors.options.120x40",
+    "sc.celleditors.options.80x24",
+    "sc.celleditors.states.120x40",
+    "sc.celleditors.states.80x24",
+    "sc.celleditors.compare-levels",
+    "sc.celleditors.editors"
+  ],
+  "acceptance": "Open Cell editors by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

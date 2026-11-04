@@ -1,0 +1,142 @@
+{
+  "task_id": "H06.cleanup",
+  "cases": [
+    {
+      "case_id": "H06.cleanup.route",
+      "owner_task": "H06.cleanup",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-delete-safety --color truecolor --motion reduced at 120×40 with HOLLA_NO_HISTORY=1 opens the finder. The shell paints ~/Projects/safe and mbp. Paste Review cleanup candidates, the label of catalog id cleanup.review-all, which launches Launch::Cleanup { category: None }. Enter opens Cleanup review. The crumb is Here › Cleanup and the heading prefix is mode Trash (recoverable until emptied) · live · m toggles the mode. Categories start collapsed, so one Esc pops back to the finder. The finder shows Review cleanup candidates and ~/Projects/safe. Cleanup review, the live heading, and Quit holla are gone. App::finish sends Ctrl+Q and exits 0. vm.img, ~/work/big, sparse.img, and 842 of 926 stay absent, as do ~/.Trash, Application Support, Mobile Documents, com.apple.Safari, ~/work/other, and safe/linked.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "e87ff6976f051626ef79dc09fa88a43fb319405f",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H06.cleanup",
+      "entry_path": "launch holla --scenario parity-delete-safety --color truecolor --motion reduced at 120x40; paste Review cleanup candidates; Enter",
+      "return_path": "Esc returns to the finder; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H06.cleanup.select",
+      "owner_task": "H06.cleanup",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "parity-delete-safety opens Cleanup review through Review cleanup candidates. The default heading prefix is mode Trash (recoverable until emptied) · live · m toggles the mode, with 1 selected (44.0 KiB) because User logs is preselected and marked [✓]. Cargo registry cache is [–]. Right expands it to no candidates · nothing to remove. Space leaves the mark [–] and the status is No eligible candidate in this category. The count stays 1 selected (44.0 KiB). This fixture paints no Eligibility::Ineligible row, so Cannot select, ineligible ·, and Denied are absent. User caches expands to ~/Library/Caches/Google and ~/Library/Caches/com.app. Google's detail is eligible · review first and never preselected. Space checks it to [✓] and the header says 2 items selected. Project artifacts shows ~/Projects/safe/locked, Unreadable, 1 folder skipped, and 2 of 2 candidates eligible. locked is not a [✓] row. Expanding shows ~/Projects/safe/target and ünï. Space checks target and the header says 3 items selected. target/debug is absent. a sets Every eligible candidate selected · 2.1 GiB and 6 selected (2.1 GiB). Cargo stays [–] and the count is not 7 selected. A second a sets Everything unselected and 0 selected (0 B). A third a checks the eligible rows again. m sets Mode: PERMANENT · cannot be undone · any earlier review is void, the heading mode PERMANENT (cannot be undone), and the detail prefix permanent · cannot be. m returns Mode: Trash · recoverable until the Trash is emptied. n sets the status prefix Dry run: paths are validated and sized, the log records would-remove, nothing is deleted and no daemon, the heading dry run: nothing is removed, and the detail dry run · would be removed and nothing changes. A second n sets Live run. A third n returns to the dry-run checklist before any d. The 120×40 shot is that checklist with [✓] on ~/Projects/safe/target. The 80×24 shot is taken after Left collapses Project artifacts, so the heading row fits, and before the terminal returns to 120×40. It shows Here › Cleanup, [✓], and dry run: nothing is removed, and it does not show Review · . Right reopens the category and Down returns to target. The restored 120×40 screen shows the dry-run heading, 6 selected (2.1 GiB), and ~/Projects/safe/target. No Quit holla dialog is drawn. finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "e87ff6976f051626ef79dc09fa88a43fb319405f",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h06_cleanup/h06_cleanup_select_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h06_cleanup/h06_cleanup_select_narrow.tui.json"
+      ],
+      "scenario": [
+        "parity-delete-safety"
+      ],
+      "action_sequence": "Detect categories, try disabled and protected items, and select eligible items in each mode.",
+      "expected_results": "Protected items stay. The mode label matches the selected mode.",
+      "forbidden_effects": "A protected descendant is included.",
+      "checkpoint_ids": [
+        "H06.cleanup.select.120x40",
+        "H06.cleanup.select.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-delete-safety",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e8bf624ba7a354e65fa7132b540e747bef562ce364dae20a998d1c4318b6af8c",
+        "expect_baseline": "missing",
+        "precondition": "H06.cleanup.select.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-delete-safety",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "523862f3b116f8d7182fdc4ab12b2a7809815ee01f2cd593d0091ec2dfdf2a37",
+        "expect_baseline": "missing",
+        "precondition": "H06.cleanup.select.narrow"
+      }
+    },
+    {
+      "case_id": "H06.cleanup.scenario.parity-delete-safety",
+      "owner_task": "H06.cleanup",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "The select journey and this case both launch --scenario parity-delete-safety at 120×40 in truecolor with reduced motion. The finder shows ~/Projects/safe, mbp, and safe · Rust project, and it does not show Cleanup review. vm.img, ~/work/big, sparse.img, and 842 of 926 are absent, as are ~/.Trash, Application Support, Mobile Documents, com.apple.Safari, ~/work/other, and safe/linked. Paste Review cleanup candidates and Enter. The page is Cleanup review with Here › Cleanup and the live Trash heading. Focusing User caches shows ~/Library/Caches. Focusing Project artifacts and expanding shows ~/Projects/safe/target, ~/Projects/safe/locked, Unreadable, and ünï. target/debug is absent. finish() exits 0. No Quit holla dialog is drawn.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "e87ff6976f051626ef79dc09fa88a43fb319405f",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-delete-safety",
+      "action_sequence": "Launch the application with scenario parity-delete-safety and exercise the surface owned by H06.cleanup.",
+      "expected_results": "The visible fixture data belongs to parity-delete-safety.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

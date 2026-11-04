@@ -1,0 +1,75 @@
+{
+  "task_id": "S01.overview",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s01_overview.rs",
+    "docs/testing/cases/S01.overview.json",
+    "tests/functional/baselines/pre_refactor/S01.overview/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/overview.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.overview.route",
+    "sc.overview.playground",
+    "sc.overview.playground.120x40",
+    "sc.overview.playground.80x24",
+    "sc.overview.options",
+    "sc.overview.options.120x40",
+    "sc.overview.options.80x24",
+    "sc.overview.states",
+    "sc.overview.states.120x40",
+    "sc.overview.states.80x24",
+    "sc.overview.specimen.rest",
+    "sc.overview.specimen.hover",
+    "sc.overview.specimen.pressed",
+    "sc.overview.specimen.focused",
+    "sc.overview.specimen.focused_hover",
+    "sc.overview.specimen.selected",
+    "sc.overview.specimen.disabled",
+    "sc.overview.specimen.busy",
+    "sc.overview.specimen.error",
+    "sc.overview.specimen.editing",
+    "sc.overview.specimen.empty",
+    "sc.overview.specimen.loading",
+    "sc.overview.specimen.overflow",
+    "sc.overview.specimen.narrow",
+    "sc.overview.compare-levels",
+    "opt.overview.plane",
+    "opt.overview.kind",
+    "opt.overview.ladder",
+    "opt.overview.mods",
+    "sc.overview.tokens"
+  ],
+  "checkpoints": [
+    "sc.overview.playground.120x40",
+    "sc.overview.playground.80x24",
+    "sc.overview.options.120x40",
+    "sc.overview.options.80x24",
+    "sc.overview.states.120x40",
+    "sc.overview.states.80x24",
+    "sc.overview.compare-levels",
+    "sc.overview.tokens"
+  ],
+  "acceptance": "Open Overview by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,128 @@
+{
+  "task_id": "H01.alternatives",
+  "cases": [
+    {
+      "case_id": "H01.alternatives.route",
+      "owner_task": "H01.alternatives",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla --scenario rust-dirty --frame 1 opens the finder at 120×40 in truecolor with reduced motion. The first suggested row is Inspect 12 GB of generated artifacts. Down selects Pull, whose preview names Fetch only. Down selects Review 5 modified files, whose preview names Open in a Git TUI (lazygit). Alt+Enter opens Alternatives for that row. Esc returns to the finder on Review, and Fetch only is absent. Ctrl+Q exits 0. The test does not inject focus.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "6dd67ef819e28aa250e693ed5855d8eaebc2267d",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H01.alternatives",
+      "entry_path": "launch holla --scenario rust-dirty --frame 1 --color truecolor --motion reduced at 120x40; Down from Inspect 12 GB to Pull; Down to Review 5 modified files; Alt+Enter",
+      "return_path": "Esc returns to the finder on Review; Ctrl+Q exits"
+    },
+    {
+      "case_id": "H01.alternatives.alternatives",
+      "owner_task": "H01.alternatives",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On rust-dirty, Down selects Pull and Down selects Review 5 modified files. Alt+Enter opens Alternatives. The list names Review 5 modified files and Open in a Git TUI (lazygit), and does not name Fetch only or Pull with rebase. The open list is captured at 120×40, then at 80×24 while it is still up, and only then does the terminal return to 120×40. Esc returns to Review. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "6dd67ef819e28aa250e693ed5855d8eaebc2267d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h01_alternatives/h01_alternatives_alternatives_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h01_alternatives/h01_alternatives_alternatives_narrow.tui.json"
+      ],
+      "scenario": "rust-dirty",
+      "action_sequence": "Open Alternatives for the selected row.",
+      "expected_results": "Every alternative names that row's action.",
+      "forbidden_effects": "Alternatives shows another row's action.",
+      "checkpoint_ids": [
+        "H01.alternatives.alternatives.120x40",
+        "H01.alternatives.alternatives.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "rust-dirty",
+          "--frame",
+          "1",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7443b4da0a31cbc9170b9ed983a7cd0fc6a4b3f56f4a5910bbec23d3ca2965db",
+        "expect_baseline": "missing",
+        "precondition": "H01.alternatives.alternatives.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "rust-dirty",
+          "--frame",
+          "1",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a428cde75dedba06f6acb809a8c38ea44856f4736deeff4d210ecb7b3e2d7d36",
+        "expect_baseline": "missing",
+        "precondition": "H01.alternatives.alternatives.narrow"
+      }
+    }
+  ]
+}

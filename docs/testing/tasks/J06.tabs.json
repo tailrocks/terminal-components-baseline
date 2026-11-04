@@ -1,0 +1,36 @@
+{
+  "task_id": "J06.tabs",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j06_tabs.rs",
+    "docs/testing/cases/J06.tabs.json",
+    "tests/functional/baselines/pre_refactor/J06.tabs/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/capsule.rs"
+  ],
+  "coverage_rows": [
+    "J06.tabs.route",
+    "J06.tabs.layout"
+  ],
+  "checkpoints": [
+    "J06.tabs.layout.120x40"
+  ],
+  "acceptance": "Tabs, splits, zoom, rename, and close keep unaffected pane identity.",
+  "status": "queued",
+  "architecture_refactor": false
+}

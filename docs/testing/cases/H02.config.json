@@ -1,0 +1,157 @@
+{
+  "task_id": "H02.config",
+  "cases": [
+    {
+      "case_id": "H02.config.route",
+      "owner_task": "H02.config",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla --scenario parity-custom-actions opens the finder at 120×40 in truecolor with reduced motion and history off. The arguments are --scenario parity-custom-actions --color truecolor --motion reduced. The screen shows Here, Search actions and resources, and ~/work/team. Searching Custom action configuration selects that row, drawn as Custom action configurat…, with some entries were skipped and 5 valid actions. Enter opens the Custom actions page for ~/work/team/.holla.toml. It names action[2] id \"shared\" is already defined by the global configuration and action[3] invalid id \"Bad Id\". Trust stays Moved. Esc returns to the finder (Here, scope ‹, ~/work/team). follow tail is absent. Ctrl+Q through finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8bbeddd48d20269bdf3ee764ea515b53ca697284",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H02.config",
+      "entry_path": "holla --scenario parity-custom-actions --color truecolor --motion reduced at 120x40",
+      "return_path": "Esc returns to the finder; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H02.config.config",
+      "owner_task": "H02.config",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On hard-cases the finder shows northwind-traders-platform-migration and the 44-column path chip tail iation-service, because truncate_middle splits inventory-reconciliation-service, plus ! docker, github unavailable. Search selects Stop all containers. Enter stays on the finder. The status is Stop all containers is unavailable · Cannot connect to the Docker daemon at unix:///var/run/docker.sock. follow tail does not appear. That refusal is docker.stop_all (Launch::Activity, Freshness::Unavailable). It is not a custom-action diagnostic, and the Docker resource is not the proof because that row uses Launch::Snapshot. On parity-custom-actions, search for Duplicate of a global id shows No matches for and selects no row, and Enter does not open an activity. Search for Bad Id does not offer a Bad Id row or a label x row. Enter on Custom action configuration opens Custom actions before Esc or any trust confirm. The page draws /Users/alex/work/team/.holla.toml action[2]: id \"shared\" is already defined by the global configuration and action[3]: invalid id \"Bad Id\": lowercase ASCII letters, digits, `.`, `_`, `-… . Valid rows include deploy.preview, wipe, and multi. Trust is Moved. The open page is captured at 120×40, then at 80×24, and the terminal returns to 120×40 after the narrow shot. No activity tab opens.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8bbeddd48d20269bdf3ee764ea515b53ca697284",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h02_config/h02_config_config_120x40.tui.json",
+        "tests/functional/baselines/pre_refactor/h02_config/h02_config_config_narrow.tui.json"
+      ],
+      "scenario": [
+        "parity-custom-actions",
+        "hard-cases"
+      ],
+      "action_sequence": "Load a malformed action, a duplicate action, and an unavailable action.",
+      "expected_results": "The error names that action. No activity starts.",
+      "forbidden_effects": "The unavailable action starts.",
+      "checkpoint_ids": [
+        "H02.config.config.120x40",
+        "H02.config.config.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-custom-actions",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "07b20e3cd1df8789671c8e8e35372962d9cfe3751fd3ed2c508da34e9989777b",
+        "expect_baseline": "missing",
+        "precondition": "H02.config.config.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-custom-actions",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8717ee79944a90acf3bc25003068fdcba695ce23fb8368ffe73976243bb08eaf",
+        "expect_baseline": "missing",
+        "precondition": "H02.config.config.narrow"
+      }
+    },
+    {
+      "case_id": "H02.config.scenario.parity-custom-actions",
+      "owner_task": "H02.config",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "A separate launch of parity-custom-actions selects Open notes and shows ~/work/team and mbp. Deploy preview is selectable on ~/work/team. The Custom actions page shows ~/work/team/.holla.toml, /Users/alex/work/team/.holla.toml, Bad Id, id \"shared\" is already defined by the global configuration, and Deploy preview. northwind-traders-platform-migration and iation-service are absent. follow tail and the unavailable status are absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8bbeddd48d20269bdf3ee764ea515b53ca697284",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-custom-actions",
+      "action_sequence": "Launch the application with scenario parity-custom-actions and exercise the surface owned by H02.config.",
+      "expected_results": "The visible fixture data belongs to parity-custom-actions.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H02.config.scenario.hard-cases",
+      "owner_task": "H02.config",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "A separate launch of hard-cases shows ! docker, github unavailable, northwind-traders-platform-migration, the cwd tail iation-service, rebase, and 2 conflicts. Deploy preview, Open notes, Bad Id, Duplicate of a global id, ~/work/team/.holla.toml, and Cannot connect to the Docker daemon at unix:///var/run/docker.sock are absent on that home screen. follow tail is absent. The Docker socket sentence appears only after Enter on Stop all containers, on the H02.config.config row.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8bbeddd48d20269bdf3ee764ea515b53ca697284",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "hard-cases",
+      "action_sequence": "Launch the application with scenario hard-cases and exercise the surface owned by H02.config.",
+      "expected_results": "The visible fixture data belongs to hard-cases.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}
