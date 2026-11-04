@@ -169,6 +169,7 @@ pub struct ListDetail {
     buttons: Vec<Button>,
     items: usize,
     item_rows: Vec<usize>,
+    detail_had_focus: bool,
 }
 
 impl ListDetail {
@@ -194,6 +195,7 @@ impl ListDetail {
             buttons: vec![],
             items: 0,
             item_rows: vec![],
+            detail_had_focus: false,
         }
     }
 
@@ -227,6 +229,12 @@ impl ListDetail {
         if let Some(&row) = self.item_rows.get(self.item_cursor) {
             self.detail_scroll.ensure_visible(row);
         }
+    }
+
+    fn cursor_item_visible(&self) -> bool {
+        self.item_rows
+            .get(self.item_cursor)
+            .is_none_or(|row| self.detail_scroll.visible_range().contains(row))
     }
 
     fn move_cursor(&mut self, delta: isize, len: usize) {
@@ -297,6 +305,10 @@ impl ListDetail {
                 self.detail_scroll.page_down();
             }
             KeyCode::Enter if self.items > 0 => {
+                if !self.cursor_item_visible() {
+                    self.reveal_item();
+                    return (Outcome::Changed, None);
+                }
                 return (Outcome::Changed, Some(Event::Item(self.item_cursor)));
             }
             KeyCode::Esc | KeyCode::Left | KeyCode::BackTab => self.md.close_drawer(focus),
@@ -683,6 +695,10 @@ impl ListDetail {
         ctx.control(self.detail, body, false);
         ctx.scrollable(self.detail, body);
         let detail_focused = ctx.interaction.focused(self.detail);
+        if detail_focused && !self.detail_had_focus {
+            self.reveal_item();
+        }
+        self.detail_had_focus = detail_focused;
         for (k, i) in self.detail_scroll.visible_range().enumerate() {
             let y = body.y + k as u16;
             match &rendered[i] {

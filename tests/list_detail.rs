@@ -182,3 +182,31 @@ fn clicking_an_item_after_wheel_scrolling_picks_the_global_item() {
     assert_eq!(rig.click(Position::new(x, y)), Some(Event::Item(10)));
     assert_eq!(rig.ld.item_cursor, 10);
 }
+
+#[test]
+fn focusing_the_detail_shows_the_cursor_item_before_enter_acts_on_it() {
+    let mut rig = Rig::new();
+    let buf = rig.render();
+    assert!(
+        find(&buf, "item00").is_some(),
+        "the cursor item is on screen once the detail has focus"
+    );
+    assert_eq!(rig.key(KeyCode::Enter), Some(Event::Item(0)));
+}
+
+#[test]
+fn enter_after_the_detail_scrolled_away_reveals_the_cursor_item_first() {
+    let mut rig = Rig::new();
+    rig.ld.wheel(DETAIL, -40);
+    assert!(find(&rig.render(), "item00").is_none(), "scrolled away");
+
+    assert_eq!(
+        rig.key(KeyCode::Enter),
+        None,
+        "nothing acts on a hidden item"
+    );
+    let buf = rig.render();
+    let y = find(&buf, "item00").expect("Enter brought the cursor item into view");
+    assert!(row(&buf, y).contains('▎'));
+    assert_eq!(rig.key(KeyCode::Enter), Some(Event::Item(0)));
+}
