@@ -1,0 +1,184 @@
+mod common;
+
+use common::*;
+use junie_tui::core::focus::{Focus, FocusRing};
+use junie_tui::core::hit::HitRegistry;
+use junie_tui::core::id::WidgetId;
+use junie_tui::theme::{ColorLevel, Theme};
+use junie_tui::ui::ctx::{Interaction, RenderCtx};
+use junie_tui::ui::layout::Split;
+use junie_tui::widgets::list_detail::{Event, Frame, Line, ListDetail, ListRow};
+use ratatui::buffer::Buffer;
+use ratatui::crossterm::event::KeyCode;
+use ratatui::layout::{Position, Rect};
+
+const MASTER: WidgetId = WidgetId::of("t.ld.master");
+const DETAIL: WidgetId = WidgetId::of("t.ld.detail");
+const AREA: Rect = Rect::new(0, 0, 120, 20);
+const ITEMS: usize = 16;
+
+fn rows() -> Vec<ListRow> {
+    vec![ListRow::new("first"), ListRow::new("second")]
+}
+
+fn lines() -> Vec<Line> {
+    let mut v: Vec<Line> = (0..30)
+        .map(|n| {
+            Line::Prop(
+                format!("key{n:02}"),
+                format!("value {n:02}"),
+                junie_tui::theme::Tone::Secondary,
+            )
+        })
+        .collect();
+    for n in 0..ITEMS {
+        v.push(Line::Item {
+            mark: None,
+            cols: [format!("item{n:02}"), "agent".into(), "meta".into()],
+            tone: junie_tui::theme::Tone::Secondary,
+        });
+    }
+    v
+}
+
+struct Rig {
+    ld: ListDetail,
+    focus: Focus,
+    rows: Vec<ListRow>,
+    hits: HitRegistry,
+}
+
+impl Rig {
+    fn new() -> Self {
+        let mut focus = Focus::default();
+        focus.focus(DETAIL);
+        let mut rig = Self {
+            ld: ListDetail::new(MASTER, DETAIL, Split::new(42, 36, 44)),
+            focus,
+            rows: rows(),
+            hits: HitRegistry::default(),
+        };
+        rig.render();
+        rig
+    }
+
+    fn render(&mut self) -> Buffer {
+        let theme = Theme::for_level(ColorLevel::TrueColor);
+        let mut buf = Buffer::empty(AREA);
+        self.hits = HitRegistry::default();
+        let mut ring = FocusRing::default();
+        let interaction = Interaction {
+            focus: self.focus.current(),
+            ..Default::default()
+        };
+        let mut ctx = RenderCtx::new(&theme, interaction, &mut self.hits, &mut ring);
+        let frame = Frame {
+            title: "List",
+            meta: String::new(),
+            head: vec![],
+            rows: &self.rows,
+            under: None,
+            detail_title: "Detail".into(),
+            detail_meta: String::new(),
+            lines: lines(),
+            actions: vec![],
+        };
+        self.ld.render(AREA, &mut buf, &mut ctx, &frame);
+        buf
+    }
+
+    fn key(&mut self, code: KeyCode) -> Option<Event> {
+        let len = self.rows.len();
+        let (_, event) = self.ld.on_key(&key(code), &mut self.focus, len);
+        event
+    }
+
+    fn click(&mut self, pos: Position) -> Option<Event> {
+        let id = self
+            .hits
+            .hit(pos)
+            .expect("a clickable region under the pointer");
+        let len = self.rows.len();
+        self.ld.click(id, pos, &mut self.focus, len).1
+    }
+}
+
+fn find(buf: &Buffer, needle: &str) -> Option<u16> {
+    (0..AREA.height).find(|&y| row(buf, y).contains(needle))
+}
+
+#[test]
+fn moving_the_item_cursor_scrolls_the_detail_to_keep_it_on_screen() {
+    let mut rig = Rig::new();
+    assert!(
+        find(&rig.render(), "item15").is_none(),
+        "the items start below the viewport"
+    );
+
+    for _ in 0..ITEMS - 1 {
+        rig.key(KeyCode::Down);
+    }
+    let buf = rig.render();
+
+    let y = find(&buf, "item15").expect("the cursor item is on screen");
+    assert!(
+        row(&buf, y).contains('▎'),
+        "the focus gutter is on the cursor row"
+    );
+    assert_eq!(rig.key(KeyCode::Enter), Some(Event::Item(ITEMS - 1)));
+
+    for _ in 0..ITEMS - 1 {
+        rig.key(KeyCode::Up);
+    }
+    let buf = rig.render();
+    let y = find(&buf, "item00").expect("moving back up keeps the cursor item on screen");
+    assert!(row(&buf, y).contains('▎'));
+}
+
+#[test]
+fn clicking_an_item_after_the_detail_scrolled_picks_that_item() {
+    let mut rig = Rig::new();
+    for _ in 0..ITEMS - 1 {
+        rig.key(KeyCode::Down);
+    }
+    let buf = rig.render();
+    let first_on_screen = (0..ITEMS)
+        .find(|n| find(&buf, &format!("item{n:02}")).is_some())
+        .expect("some item is visible");
+    assert!(
+        first_on_screen > 0,
+        "the detail scrolled past the first item"
+    );
+
+    let target = first_on_screen + 1;
+    let y = find(&buf, &format!("item{target:02}")).expect("target visible");
+    let x = row(&buf, y)
+        .find(&format!("item{target:02}"))
+        .expect("column") as u16;
+
+    assert_eq!(rig.click(Position::new(x, y)), Some(Event::Item(target)));
+    assert_eq!(rig.ld.item_cursor, target);
+
+    let buf = rig.render();
+    let y = find(&buf, &format!("item{target:02}")).expect("still visible");
+    assert!(
+        row(&buf, y).contains('▎'),
+        "the clicked row now holds the gutter"
+    );
+}
+
+#[test]
+fn clicking_an_item_after_wheel_scrolling_picks_the_global_item() {
+    let mut rig = Rig::new();
+    rig.ld.wheel(DETAIL, 40);
+    let buf = rig.render();
+    assert!(
+        find(&buf, "item00").is_none(),
+        "the first item scrolled out"
+    );
+    let y = find(&buf, "item10").expect("a later item is visible");
+    let x = row(&buf, y).find("item10").expect("column") as u16;
+
+    assert_eq!(rig.click(Position::new(x, y)), Some(Event::Item(10)));
+    assert_eq!(rig.ld.item_cursor, 10);
+}
