@@ -511,6 +511,7 @@ impl AccountsScreen {
             None => "New account".into(),
         };
         let data = &w.surfaces.account_form;
+        let words = &w.surfaces.vocabulary.source;
         let provider_idx = editing
             .map(|a| {
                 data.providers
@@ -589,6 +590,18 @@ impl AccountsScreen {
             )
             .hidden(),
             FormField::chooser("browse", FORM.sub("browse"), "", "", "Browse…").hidden(),
+            FormField::input(
+                "env",
+                TextInput::new(FORM.sub("env"), &words.env_label)
+                    .required(true)
+                    .placeholder(&words.env_placeholder)
+                    .help(&words.env_help)
+                    .value(match editing.map(|a| &a.source) {
+                        Some(CredentialSource::HostEnv { var, .. }) => var.as_str(),
+                        _ => "",
+                    }),
+            )
+            .hidden(),
             FormField::input(
                 "key",
                 TextInput::new(FORM.sub("key"), "API key")
@@ -680,6 +693,7 @@ impl AccountsScreen {
         form.set_visible("op_note", source == SourceKind::OnePassword);
         form.set_visible("folder", source == SourceKind::LocalFolder);
         form.set_visible("browse", source == SourceKind::LocalFolder);
+        form.set_visible("env", source == SourceKind::HostEnv);
         form.set_visible("key", source == SourceKind::PlainApiKey);
         form.set_visible(
             "endpoint",
@@ -733,6 +747,20 @@ impl AccountsScreen {
                     provider,
                     CredentialSource::LocalFolder {
                         path: path.trim().to_owned(),
+                        detected: DetectedKind::Unknown,
+                    },
+                    None,
+                ))
+            }
+            SourceKind::HostEnv => {
+                let var = text_of(values, "env");
+                if var.trim().is_empty() {
+                    return Err(w.surfaces.vocabulary.source.env_empty.clone());
+                }
+                Ok((
+                    provider,
+                    CredentialSource::HostEnv {
+                        var: var.trim().to_owned(),
                         detected: DetectedKind::Unknown,
                     },
                     None,
@@ -989,6 +1017,10 @@ impl AccountsScreen {
                 path: get("folder").trim().to_owned(),
                 detected,
             },
+            SourceKind::HostEnv => CredentialSource::HostEnv {
+                var: get("env").trim().to_owned(),
+                detected,
+            },
             SourceKind::PlainApiKey => {
                 let key = get("key");
                 CredentialSource::PlainApiKey {
@@ -1011,9 +1043,9 @@ impl AccountsScreen {
                 provider,
                 fingerprint: fingerprint.clone(),
             },
-            CredentialSource::HostEnv { .. } => DuplicateProbe::Folder {
+            CredentialSource::HostEnv { var, .. } => DuplicateProbe::HostEnv {
                 provider,
-                path: String::new(),
+                var: var.clone(),
             },
         };
         if let Some(dup) = w.accounts.find_duplicate(&probe)

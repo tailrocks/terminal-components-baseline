@@ -76,6 +76,7 @@ fn the_openshell_vocabulary_renames_the_demo_words() {
     for ((name, was), (_, now)) in demo.iter().zip(&live) {
         if SAME.contains(name)
             || name.starts_with("reason.")
+            || name.starts_with("source.")
             || (name.starts_with("pane.") && !PANE_RENAMED.contains(name))
         {
             assert_eq!(was, now, "{name}");

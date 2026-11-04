@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use jackin_console::domain::fixed::Fixed;
+use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::rain;
 use tui_test::{SnapshotColor, TerminalSnapshot};
 
@@ -2202,6 +2203,47 @@ fn jackin_fixed_account_form_refuses_a_typed_key_and_its_button() {
     assert!(!text(&clicked).contains("paste the key"));
     status_expired(&app, &reason);
 
+    app.key("esc");
+    app.wait_absent("New account");
+    leave_accounts(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_account_form_offers_an_environment_variable() {
+    let words = Vocabulary::openshell().source;
+    let app = fixed_app("jackin-fixed-account-env");
+    open_fixed_accounts(&app, 0, "Accounts › Overview");
+    app.key("a");
+    app.wait_text("New account");
+    for _ in 0..3 {
+        app.key("tab");
+    }
+    app.wait_screen("focus reaches the source radio", |s| {
+        row_has(s, "Local agent folder", "▎")
+    });
+    assert!(!text(&app.screen()).contains(&words.env_placeholder));
+    for _ in 0..2 {
+        app.key("down");
+    }
+    let chosen = app.wait_screen("the environment variable is chosen", |s| {
+        text(s).contains(&format!("(●) {}", words.env_label))
+    });
+    let shown = text(&chosen);
+    assert!(shown.contains(&words.env_placeholder), "{shown}");
+    assert!(!shown.contains("paste the key"), "{shown}");
+    assert!(row_with(&chosen, "Plain-text API key").contains("( )"));
+
+    app.key("tab");
+    app.key("enter");
+    app.type_text("ANTHROPIC_API_KEY");
+    let typed = app.wait_text("ANTHROPIC_API_KEY");
+    let shown = text(&typed);
+    assert!(shown.contains(&words.env_help), "{shown}");
+    assert!(!shown.contains(&words.env_placeholder), "{shown}");
+    app.visual("functional/jackin_fixed_account_form_env");
+
+    app.key("esc");
     app.key("esc");
     app.wait_absent("New account");
     leave_accounts(&app);

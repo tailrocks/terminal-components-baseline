@@ -416,7 +416,7 @@ impl ReasonWords {
             unknown_provider: "unknown".into(),
             skipped: phrase("not attempted", "not attempted"),
             env_invalid: phrase(
-                "{name} is not a valid environment variable name",
+                "Not a valid variable name · letters, digits and _ only",
                 "Not a valid variable name",
             ),
             env_missing: phrase(
@@ -730,6 +730,39 @@ impl ReasonWords {
     }
 }
 
+/// The words of the environment-variable source of the account form. The demo
+/// form has no such source, so the demo shares these words with OpenShell, as
+/// it shares `ReasonWords` and the `PaneWords` it does not rename.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SourceWords {
+    /// The radio choice and the field label.
+    pub env_label: String,
+    pub env_placeholder: String,
+    pub env_help: String,
+    /// The form error when the name is empty.
+    pub env_empty: String,
+}
+
+impl SourceWords {
+    pub fn openshell() -> Self {
+        Self {
+            env_label: "Environment variable".into(),
+            env_placeholder: "variable name · never its value".into(),
+            env_help: "Only the name is saved; the value stays in your environment".into(),
+            env_empty: "Enter the name of the environment variable".into(),
+        }
+    }
+
+    pub fn fields(&self) -> Vec<(&'static str, &str)> {
+        vec![
+            ("source.env_label", &self.env_label),
+            ("source.env_placeholder", &self.env_placeholder),
+            ("source.env_help", &self.env_help),
+            ("source.env_empty", &self.env_empty),
+        ]
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Vocabulary {
     pub construct: String,
@@ -834,6 +867,7 @@ pub struct Vocabulary {
     pub changes_unread: String,
     pub pane: PaneWords,
     pub reason: ReasonWords,
+    pub source: SourceWords,
 }
 
 impl Vocabulary {
@@ -986,6 +1020,7 @@ impl Vocabulary {
             changes_unread: "content not read".into(),
             pane: PaneWords::openshell(),
             reason: ReasonWords::openshell(),
+            source: SourceWords::openshell(),
         }
     }
 
@@ -1131,6 +1166,7 @@ impl Vocabulary {
         .into_iter()
         .chain(self.pane.fields())
         .chain(self.reason.fields())
+        .chain(self.source.fields())
         .collect()
     }
 

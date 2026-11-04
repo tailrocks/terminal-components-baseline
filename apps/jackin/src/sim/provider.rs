@@ -225,10 +225,10 @@ pub fn validate(
             classify_plain(provider, plain_value.unwrap_or("")),
             Found::KeyPresent,
         )),
-        CredentialSource::LocalFolder { path, .. }
-        | CredentialSource::HostEnv { var: path, .. } => {
+        CredentialSource::LocalFolder { path, .. } => {
             return validate_folder(provider, path, now);
         }
+        CredentialSource::HostEnv { var, .. } => return validate_env(var),
     };
     let (class, material_found) = match key_class {
         Ok(v) => v,
@@ -444,6 +444,81 @@ fn no_login(path: &str) -> IssueReason {
     IssueReason::LoginMissing {
         path: path.into(),
         file: "auth.json".into(),
+    }
+}
+
+/// What the simulated host environment holds under `name`.
+enum HostVar {
+    Set,
+    Empty,
+    Unset,
+}
+
+fn host_var(name: &str) -> HostVar {
+    match name {
+        "ANTHROPIC_API_KEY" | "OPENAI_API_KEY" | "XAI_API_KEY" | "ZAI_API_KEY"
+        | "MINIMAX_API_TOKEN" => HostVar::Set,
+        "JACKIN_EMPTY_KEY" => HostVar::Empty,
+        _ => HostVar::Unset,
+    }
+}
+
+fn is_variable_name(name: &str) -> bool {
+    let mut chars = name.chars();
+    chars
+        .next()
+        .is_some_and(|c| c.is_ascii_alphabetic() || c == '_')
+        && chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
+}
+
+/// A variable of the host answers with its presence only: the simulator
+/// cannot tell which identity a key belongs to.
+fn validate_env(name: &str) -> ValidationOutcome {
+    let fail = |code, reason: IssueReason, lifecycle| ValidationOutcome {
+        level: None,
+        identity: AccountIdentity::default(),
+        confidence: Confidence::None,
+        lifecycle,
+        issue: Some(issue(code, reason.clone(), Recoverability::ActionRequired)),
+        usage: None,
+        material: CheckRow::Failed(reason),
+        identity_row: not_attempted(),
+        quota_row: not_attempted(),
+    };
+    let named = || name.to_owned();
+    if !is_variable_name(name) {
+        return fail(
+            IssueCode::ApiKeyInvalid,
+            IssueReason::EnvInvalid { name: named() },
+            Lifecycle::Error,
+        );
+    }
+    match host_var(name) {
+        HostVar::Unset => fail(
+            IssueCode::ApiKeyEmpty,
+            IssueReason::EnvMissing { name: named() },
+            Lifecycle::NeedsSecret,
+        ),
+        HostVar::Empty => fail(
+            IssueCode::ApiKeyEmpty,
+            IssueReason::EnvEmpty { name: named() },
+            Lifecycle::NeedsSecret,
+        ),
+        HostVar::Set => ValidationOutcome {
+            level: Some(ValidationLevel::MaterialDiscovered),
+            identity: AccountIdentity::default(),
+            confidence: Confidence::PresenceOnly,
+            lifecycle: Lifecycle::Available,
+            issue: Some(issue(
+                IssueCode::IdentityUnresolved,
+                IssueReason::IdentityUnresolved,
+                Recoverability::Unsupported,
+            )),
+            usage: None,
+            material: CheckRow::Ok(Found::EnvSet { name: named() }),
+            identity_row: CheckRow::Skipped(IssueReason::IdentityUnresolved),
+            quota_row: CheckRow::Skipped(IssueReason::PresenceOnly),
+        },
     }
 }
 

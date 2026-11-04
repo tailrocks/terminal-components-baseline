@@ -5,7 +5,7 @@ use super::fixed::Fixed;
 use super::onepassword::OpReference;
 use super::reason::IssueReason;
 use super::usage::{AccountUsage, Freshness};
-use super::vocabulary::Vocabulary;
+use super::vocabulary::{SourceWords, Vocabulary};
 use super::workspace::{Usability, usability_of};
 
 pub type AccountId = String;
@@ -512,6 +512,10 @@ pub enum DuplicateProbe {
         provider: Provider,
         fingerprint: String,
     },
+    HostEnv {
+        provider: Provider,
+        var: String,
+    },
     Identity {
         surface: UsageSurface,
         subject: IdentitySubject,
@@ -578,6 +582,10 @@ impl AccountRegistry {
                 a.provider == *provider
                     && matches!(&a.source, CredentialSource::PlainApiKey { fingerprint: f, .. } if f == fingerprint)
             }
+            DuplicateProbe::HostEnv { provider, var } => {
+                a.provider == *provider
+                    && matches!(&a.source, CredentialSource::HostEnv { var: v, .. } if v == var)
+            }
             DuplicateProbe::Identity { surface, subject } => {
                 a.surface == *surface && a.identity.subject.as_ref() == Some(subject)
             }
@@ -636,6 +644,7 @@ impl AccountRegistry {
 pub enum SourceKind {
     OnePassword,
     LocalFolder,
+    HostEnv,
     PlainApiKey,
 }
 
@@ -645,7 +654,7 @@ impl CredentialSource {
             CredentialSource::OnePassword(_) => Some(SourceKind::OnePassword),
             CredentialSource::LocalFolder { .. } => Some(SourceKind::LocalFolder),
             CredentialSource::PlainApiKey { .. } => Some(SourceKind::PlainApiKey),
-            CredentialSource::HostEnv { .. } => None,
+            CredentialSource::HostEnv { .. } => Some(SourceKind::HostEnv),
         }
     }
 }
@@ -683,19 +692,14 @@ fn provider_choices(providers: &[Provider]) -> Vec<ProviderChoice> {
         .collect()
 }
 
-fn source_choices(labels: [&str; 3]) -> Vec<SourceChoice> {
-    [
-        SourceKind::OnePassword,
-        SourceKind::LocalFolder,
-        SourceKind::PlainApiKey,
-    ]
-    .into_iter()
-    .zip(labels)
-    .map(|(kind, label)| SourceChoice {
-        kind,
-        label: label.into(),
-    })
-    .collect()
+fn source_choices(sources: &[(SourceKind, &str)]) -> Vec<SourceChoice> {
+    sources
+        .iter()
+        .map(|&(kind, label)| SourceChoice {
+            kind,
+            label: label.into(),
+        })
+        .collect()
 }
 
 /// The form of the demo: four providers.
@@ -708,10 +712,13 @@ impl Default for AccountForm {
                 Provider::XAi,
                 Provider::OpenCode,
             ]),
-            sources: source_choices([
-                "1Password item / field  (recommended)",
-                "Local agent folder",
-                "Plain-text API key",
+            sources: source_choices(&[
+                (
+                    SourceKind::OnePassword,
+                    "1Password item / field  (recommended)",
+                ),
+                (SourceKind::LocalFolder, "Local agent folder"),
+                (SourceKind::PlainApiKey, "Plain-text API key"),
             ]),
             default_source: None,
             op_note: None,
@@ -721,14 +728,19 @@ impl Default for AccountForm {
 
 impl AccountForm {
     /// Only a local Codex login can launch, so the local folder is the
-    /// recommended source and the preselected one.
+    /// recommended source and the preselected one. A host variable is the way
+    /// to add a key the console may not type.
     pub fn openshell() -> Self {
         Self {
             providers: provider_choices(&Provider::ALL),
-            sources: source_choices([
-                "1Password item / field  (usage only)",
-                "Local agent folder  (recommended)",
-                "Plain-text API key",
+            sources: source_choices(&[
+                (
+                    SourceKind::OnePassword,
+                    "1Password item / field  (usage only)",
+                ),
+                (SourceKind::LocalFolder, "Local agent folder  (recommended)"),
+                (SourceKind::PlainApiKey, "Plain-text API key"),
+                (SourceKind::HostEnv, &SourceWords::openshell().env_label),
             ]),
             default_source: Some(1),
             op_note: Some("Usage only · launching Codex needs a local login".into()),

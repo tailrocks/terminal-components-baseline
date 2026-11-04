@@ -53,6 +53,7 @@ fn surfaces_openshell_sets_every_field() {
             "1Password item / field  (usage only)",
             "Local agent folder  (recommended)",
             "Plain-text API key",
+            "Environment variable",
         ]
     );
     assert_eq!(

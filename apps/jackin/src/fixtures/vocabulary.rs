@@ -1,5 +1,5 @@
 use crate::domain::vocabulary::{
-    DaemonWords, LifecycleWords, PaneWords, ReasonWords, StatusWords, Vocabulary,
+    DaemonWords, LifecycleWords, PaneWords, ReasonWords, SourceWords, StatusWords, Vocabulary,
 };
 
 impl Vocabulary {
@@ -156,6 +156,7 @@ impl Vocabulary {
             changes_unread: "not read".into(),
             pane: PaneWords::demo(),
             reason: ReasonWords::openshell(),
+            source: SourceWords::openshell(),
         }
     }
 }
