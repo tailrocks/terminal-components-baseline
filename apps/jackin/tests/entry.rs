@@ -301,7 +301,6 @@ impl NativeClipboard for Sink {
     }
 }
 
-const DEBUG_ROW_OSC52: &str = "\x1b]52;c;amFja2luLXBheW1lbnRzLXBsYXRmb3JtLTdmM2E=\x07";
 const SELECTED: &str = "the settlement retry loop so failed ba";
 const SELECTED_OSC52: &str = "\x1b]52;c;dGhlIHNldHRsZW1lbnQgcmV0cnkgbG9vcCBzbyBmYWlsZWQgYmE=\x07";
 
@@ -364,7 +363,11 @@ fn clipboard_modes() {
     let sink = Sink::new(true);
     let host = copy_selection(ClipboardMode::Host(sink.clone()));
     assert_eq!(sink.writes(), [SELECTED]);
-    assert_eq!(host.output, [SELECTED_OSC52]);
+    assert!(
+        host.output.is_empty(),
+        "no OSC 52 after the native write: {:?}",
+        host.output
+    );
 
     let preview = copy_selection(ClipboardMode::Preview);
     assert!(preview.output.is_empty(), "{:?}", preview.output);
@@ -384,7 +387,7 @@ fn native_sink_decides_the_wording() {
     let accepted = copy_selection(ClipboardMode::Host(accepting.clone()));
     assert_eq!(accepted.status, "Copied selection");
     assert_eq!(accepting.writes(), [SELECTED]);
-    assert_eq!(accepted.output, [SELECTED_OSC52]);
+    assert!(accepted.output.is_empty(), "{:?}", accepted.output);
 
     let refusing = Sink::new(false);
     let refused = copy_selection(ClipboardMode::Host(refusing.clone()));
@@ -401,5 +404,5 @@ fn native_sink_decides_the_wording() {
         counted.status,
         "Copied 29 characters · jackin-payments-platform-7f3a"
     );
-    assert_eq!(counted.output, [DEBUG_ROW_OSC52]);
+    assert!(counted.output.is_empty(), "{:?}", counted.output);
 }

@@ -22,7 +22,7 @@ pub enum Copied {
 
     Unsupported,
 
-    TooLarge { encoded: usize, limit: usize },
+    TooLarge { bytes: usize, limit: usize },
 }
 
 impl Copied {
@@ -83,11 +83,13 @@ impl Clipboard {
     pub fn copy(&self, text: &str) -> Copied {
         clipboard::copy(text);
         let native = self.native.as_ref().map(|sink| sink.write(text));
+        if native == Some(true) {
+            return Copied::Copied {
+                chars: text.chars().count(),
+            };
+        }
         match (self.system(text), native) {
             (Copied::Copied { chars }, Some(false)) => Copied::Requested { chars },
-            (_, Some(true)) => Copied::Copied {
-                chars: text.chars().count(),
-            },
             (result, _) => result,
         }
     }
@@ -96,10 +98,9 @@ impl Clipboard {
         if !self.osc52 {
             return Copied::Unsupported;
         }
-        let encoded = text.len().div_ceil(3) * 4;
-        if encoded > self.limit {
+        if text.len() > self.limit {
             return Copied::TooLarge {
-                encoded,
+                bytes: text.len(),
                 limit: self.limit,
             };
         }
@@ -141,9 +142,9 @@ impl Clipboard {
                 "Not copied · this terminal does not accept OSC 52".to_owned(),
                 Tone::Error,
             ),
-            Copied::TooLarge { encoded, limit } => (
+            Copied::TooLarge { bytes, limit } => (
                 format!(
-                    "Not copied · {encoded} encoded bytes exceed the terminal's {limit} byte OSC 52 limit"
+                    "Not copied · {bytes} bytes exceed the terminal's {limit} byte OSC 52 limit"
                 ),
                 Tone::Error,
             ),
