@@ -73,6 +73,32 @@ pub enum FolderProbe {
     Found(DetectedKind),
 }
 
+/// Names one request and its reply, so a reply that arrives after the screen
+/// has moved on is told from the one it waits for. `World::next_ticket` hands
+/// them out.
+pub type Ticket = u64;
+
+/// A key typed into a form. It travels in an effect so the backend can check
+/// it, and it never appears in `Debug` output.
+#[derive(Clone, PartialEq, Eq)]
+pub struct PlainKey(String);
+
+impl PlainKey {
+    pub fn new(key: &str) -> Self {
+        Self(key.to_owned())
+    }
+
+    pub fn expose(&self) -> &str {
+        &self.0
+    }
+}
+
+impl std::fmt::Debug for PlainKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("PlainKey(…)")
+    }
+}
+
 pub fn apply_validation(a: &mut Account, v: &ValidationOutcome, now: i64) {
     a.validation = match (&v.level, &v.issue) {
         (Some(l), None) => crate::domain::account::ValidationState::Valid(*l),
@@ -188,6 +214,65 @@ pub struct OpAccount {
     pub email: String,
     pub state: OpAccountState,
     pub vaults: Vec<OpVault>,
+}
+
+/// What the 1Password picker asks the backend to list. Each step names the
+/// ids of the steps before it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum OpScope {
+    Accounts,
+    Vaults {
+        account: String,
+    },
+    Items {
+        account: String,
+        vault: String,
+    },
+    Fields {
+        account: String,
+        vault: String,
+        item: String,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct OpAccountRow {
+    pub id: String,
+    pub email: String,
+    pub state: OpAccountState,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct OpVaultRow {
+    pub id: String,
+    pub name: String,
+    pub items: usize,
+    pub access: VaultAccess,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct OpItemRow {
+    pub id: String,
+    pub title: String,
+    pub category: String,
+    pub fields: usize,
+}
+
+/// A field as the picker shows it: never the value.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct OpFieldRow {
+    pub id: String,
+    pub label: String,
+    pub kind: FieldKind,
+}
+
+/// The reply to one `OpScope`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum OpListing {
+    Accounts(Vec<OpAccountRow>),
+    Vaults(Vec<OpVaultRow>),
+    Items(Vec<OpItemRow>),
+    Fields(Vec<OpFieldRow>),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -347,6 +432,27 @@ pub enum Effect {
         role: RoleName,
     },
     RunDoctor,
+    CheckSource {
+        ticket: Ticket,
+        provider: Provider,
+        source: CredentialSource,
+        key: Option<PlainKey>,
+    },
+    ProbeFolder {
+        ticket: Ticket,
+        path: String,
+    },
+    ReadChanges {
+        ticket: Ticket,
+        instance: InstanceId,
+        touched: Vec<String>,
+        uncommitted: usize,
+        unpushed: usize,
+    },
+    LoadOp {
+        ticket: Ticket,
+        scope: OpScope,
+    },
 }
 
 /// How a backend answers an effect that finishes later. `Ready` is a message
@@ -382,17 +488,6 @@ impl Completion {
 }
 
 pub trait Backend: std::fmt::Debug + Send + Sync {
-    fn validate(
-        &self,
-        provider: Provider,
-        source: &CredentialSource,
-        plain_value: Option<&str>,
-        op: &dyn OnePassword,
-        now: i64,
-    ) -> ValidationOutcome;
-
-    fn probe_folder(&self, path: &str) -> FolderProbe;
-
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion>;
 
     /// Messages the backend raises on its own at the current time, such as a
@@ -406,14 +501,6 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
     fn settle(&self, _effect: &Effect, _world: &World) -> Option<Msg> {
         None
     }
-
-    fn changes(
-        &self,
-        instance_id: &str,
-        touched: &[String],
-        uncommitted: usize,
-        unpushed: usize,
-    ) -> ChangeSet;
 
     fn launch_content(&self) -> Arc<LaunchContent>;
 

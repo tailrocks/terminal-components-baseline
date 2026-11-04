@@ -13,7 +13,7 @@ use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
-use crate::backend::{FieldKind, OnePassword, OpError};
+use crate::backend::{FieldKind, OnePassword, OpError, OpListing, OpScope, Ticket};
 use crate::domain::onepassword::OpReference;
 use crate::world::World;
 
@@ -188,14 +188,16 @@ pub struct OpFlow {
     pub result: Option<Option<OpReference>>,
 
     pub dismissed: bool,
-    pub loading_until: Option<i64>,
+    want: Option<OpScope>,
+    in_flight: Option<Ticket>,
+    listing: Option<OpListing>,
     pub last_error: Option<OpError>,
 
     pub concealed_only: bool,
 }
 
 impl OpFlow {
-    pub fn new(id: WidgetId, op: &dyn OnePassword, now_ms: i64) -> Self {
+    pub fn new(id: WidgetId, op: &dyn OnePassword) -> Self {
         let mut f = Self {
             dismiss: junie_tui::ui::popup::Dismiss::LIGHT,
             step: OpStep::Account,
@@ -205,7 +207,9 @@ impl OpFlow {
             picker: Picker::new(id.sub("picker"), "1Password"),
             result: None,
             dismissed: false,
-            loading_until: None,
+            want: None,
+            in_flight: None,
+            listing: None,
             last_error: None,
             concealed_only: true,
         };
@@ -220,8 +224,56 @@ impl OpFlow {
             f.account = Some(op.accounts()[0].id.clone());
             f.step = OpStep::Vault;
         }
-        f.begin_load(now_ms, op);
+        f.begin_load();
         f
+    }
+
+    fn scope(&self) -> OpScope {
+        let account = self.account.clone().unwrap_or_default();
+        let vault = self.vault.as_ref().map(|v| v.0.clone()).unwrap_or_default();
+        let item = self.item.as_ref().map(|i| i.0.clone()).unwrap_or_default();
+        match self.step {
+            OpStep::Account => OpScope::Accounts,
+            OpStep::Vault => OpScope::Vaults { account },
+            OpStep::Item => OpScope::Items { account, vault },
+            OpStep::Field => OpScope::Fields {
+                account,
+                vault,
+                item,
+            },
+        }
+    }
+
+    /// True from the moment a listing is wanted until the backend answers it.
+    pub fn loading(&self) -> bool {
+        self.want.is_some() || self.in_flight.is_some()
+    }
+
+    /// The listing the flow wants asked of the backend, once. The host sends
+    /// it and tells the flow which ticket the reply will carry.
+    pub fn take_request(&mut self) -> Option<OpScope> {
+        self.want.take()
+    }
+
+    pub fn sent(&mut self, ticket: Ticket) {
+        self.in_flight = Some(ticket);
+    }
+
+    /// Takes in the reply to the listing it sent. A reply to an earlier
+    /// request, one the flow has since left behind, is not the flow's.
+    pub fn loaded(&mut self, ticket: Ticket, result: &Result<OpListing, OpError>) -> bool {
+        if self.in_flight != Some(ticket) {
+            return false;
+        }
+        self.in_flight = None;
+        match result {
+            Ok(listing) => {
+                self.listing = Some(listing.clone());
+                self.refresh();
+            }
+            Err(e) => self.set_error(e.clone()),
+        }
+        true
     }
 
     fn crumb(&self) -> String {
@@ -238,7 +290,7 @@ impl OpFlow {
         parts.join(" › ")
     }
 
-    fn begin_load(&mut self, now_ms: i64, op: &dyn OnePassword) {
+    fn begin_load(&mut self) {
         self.picker.set_query("");
         self.picker.title = match self.step {
             OpStep::Account => "Choose 1Password account".into(),
@@ -267,18 +319,9 @@ impl OpFlow {
             ),
         });
         self.picker.set_items(vec![]);
-        self.loading_until = Some(now_ms + op.latency_ms());
-    }
-
-    pub fn tick(&mut self, now_ms: i64, op: &dyn OnePassword) -> Outcome {
-        if let Some(t) = self.loading_until
-            && now_ms >= t
-        {
-            self.loading_until = None;
-            self.refresh(op);
-            return Outcome::Changed;
-        }
-        Outcome::Ignored
+        self.listing = None;
+        self.in_flight = None;
+        self.want = Some(self.scope());
     }
 
     fn set_error(&mut self, e: OpError) {
@@ -306,96 +349,64 @@ impl OpFlow {
         self.last_error = Some(e);
     }
 
-    pub fn refresh(&mut self, op: &dyn OnePassword) {
+    fn refresh(&mut self) {
         self.picker.status = PickerStatus::Ready;
         self.last_error = None;
         let q = self.picker.query().to_lowercase();
         let matches = |s: &str| q.is_empty() || s.to_lowercase().contains(&q);
-        let items: Vec<Item> = match self.step {
-            OpStep::Account => match op.list_accounts() {
-                Ok(accts) => accts
-                    .iter()
-                    .filter(|a| matches(&a.id) || matches(&a.email))
-                    .map(|a| {
-                        Item::new(a.id.clone())
-                            .detail(a.email.clone())
-                            .glyph("▪")
-                            .tag(match a.state {
-                                crate::backend::OpAccountState::Available => "signed in",
-                                crate::backend::OpAccountState::Locked => "locked",
-                                crate::backend::OpAccountState::AuthorizationRequired => {
-                                    "authorize"
-                                }
-                            })
-                    })
-                    .collect(),
-                Err(e) => {
-                    self.set_error(e);
-                    return;
-                }
-            },
-            OpStep::Vault => match op.list_vaults(self.account.as_deref().unwrap_or("")) {
-                Ok(vaults) => vaults
-                    .iter()
-                    .filter(|v| matches(&v.name))
-                    .map(|v| {
-                        Item::new(v.name.clone())
-                            .detail(format!("{} items", v.items.len()))
-                            .glyph("▪")
-                            .tag(match v.access {
-                                crate::backend::VaultAccess::ReadWrite => "",
-                                crate::backend::VaultAccess::ReadOnly => "read-only",
-                                crate::backend::VaultAccess::Denied => "no access",
-                            })
-                    })
-                    .collect(),
-                Err(e) => {
-                    self.set_error(e);
-                    return;
-                }
-            },
-            OpStep::Item => {
-                let (vid, _) = self.vault.clone().unwrap_or_default();
-                match op.list_items(self.account.as_deref().unwrap_or(""), &vid) {
-                    Ok(items) => items
-                        .iter()
-                        .filter(|i| matches(&i.title))
-                        .map(|i| {
-                            Item::new(i.title.clone())
-                                .detail(format!("{} · {} fields", i.category, i.fields.len()))
-                                .glyph(" ")
+        let items: Vec<Item> = match &self.listing {
+            Some(OpListing::Accounts(rows)) => rows
+                .iter()
+                .filter(|a| matches(&a.id) || matches(&a.email))
+                .map(|a| {
+                    Item::new(a.id.clone())
+                        .detail(a.email.clone())
+                        .glyph("▪")
+                        .tag(match a.state {
+                            crate::backend::OpAccountState::Available => "signed in",
+                            crate::backend::OpAccountState::Locked => "locked",
+                            crate::backend::OpAccountState::AuthorizationRequired => "authorize",
                         })
-                        .collect(),
-                    Err(e) => {
-                        self.set_error(e);
-                        return;
-                    }
-                }
-            }
-            OpStep::Field => {
-                let (vid, _) = self.vault.clone().unwrap_or_default();
-                let (iid, _) = self.item.clone().unwrap_or_default();
-                match op.list_fields(self.account.as_deref().unwrap_or(""), &vid, &iid) {
-                    Ok(fields) => fields
-                        .iter()
-                        .filter(|f| matches(&f.label))
-                        .map(|f| {
-                            Item::new(f.label.clone())
-                                .detail(f.kind.label().to_owned())
-                                .glyph(if f.kind == FieldKind::Concealed {
-                                    "•"
-                                } else {
-                                    " "
-                                })
-                                .disabled(self.concealed_only && f.kind != FieldKind::Concealed)
+                })
+                .collect(),
+            Some(OpListing::Vaults(rows)) => rows
+                .iter()
+                .filter(|v| matches(&v.name))
+                .map(|v| {
+                    Item::new(v.name.clone())
+                        .detail(format!("{} items", v.items))
+                        .glyph("▪")
+                        .tag(match v.access {
+                            crate::backend::VaultAccess::ReadWrite => "",
+                            crate::backend::VaultAccess::ReadOnly => "read-only",
+                            crate::backend::VaultAccess::Denied => "no access",
                         })
-                        .collect(),
-                    Err(e) => {
-                        self.set_error(e);
-                        return;
-                    }
-                }
-            }
+                })
+                .collect(),
+            Some(OpListing::Items(rows)) => rows
+                .iter()
+                .filter(|i| matches(&i.title))
+                .map(|i| {
+                    Item::new(i.title.clone())
+                        .detail(format!("{} · {} fields", i.category, i.fields))
+                        .glyph(" ")
+                })
+                .collect(),
+            Some(OpListing::Fields(rows)) => rows
+                .iter()
+                .filter(|f| matches(&f.label))
+                .map(|f| {
+                    Item::new(f.label.clone())
+                        .detail(f.kind.label().to_owned())
+                        .glyph(if f.kind == FieldKind::Concealed {
+                            "•"
+                        } else {
+                            " "
+                        })
+                        .disabled(self.concealed_only && f.kind != FieldKind::Concealed)
+                })
+                .collect(),
+            None => return,
         };
         if items.is_empty() {
             self.picker.empty_text = "No matches".into();
@@ -403,7 +414,7 @@ impl OpFlow {
         self.picker.set_items(items);
     }
 
-    fn back(&mut self, now_ms: i64, op: &dyn OnePassword) -> Outcome {
+    fn back(&mut self, op: &dyn OnePassword) -> Outcome {
         match self.step {
             OpStep::Account => {
                 self.result = Some(None);
@@ -412,7 +423,7 @@ impl OpFlow {
                 if op.accounts().len() > 1 {
                     self.step = OpStep::Account;
                     self.account = None;
-                    self.begin_load(now_ms, op);
+                    self.begin_load();
                 } else {
                     self.result = Some(None);
                 }
@@ -420,18 +431,28 @@ impl OpFlow {
             OpStep::Item => {
                 self.step = OpStep::Vault;
                 self.vault = None;
-                self.begin_load(now_ms, op);
+                self.begin_load();
             }
             OpStep::Field => {
                 self.step = OpStep::Item;
                 self.item = None;
-                self.begin_load(now_ms, op);
+                self.begin_load();
             }
         }
         Outcome::Changed
     }
 
-    fn choose(&mut self, i: usize, now_ms: i64, op: &dyn OnePassword) -> Outcome {
+    fn id_of(&self, label: &str) -> String {
+        match &self.listing {
+            Some(OpListing::Vaults(rows)) => rows.iter().find(|v| v.name == label).map(|v| &v.id),
+            Some(OpListing::Items(rows)) => rows.iter().find(|i| i.title == label).map(|i| &i.id),
+            _ => None,
+        }
+        .cloned()
+        .unwrap_or_default()
+    }
+
+    fn choose(&mut self, i: usize, op: &dyn OnePassword) -> Outcome {
         let Some(row) = self.picker.items.get(i).cloned() else {
             return Outcome::Consumed;
         };
@@ -441,30 +462,11 @@ impl OpFlow {
                 self.step = OpStep::Vault;
             }
             OpStep::Vault => {
-                let vid = op
-                    .list_vaults(self.account.as_deref().unwrap_or(""))
-                    .ok()
-                    .and_then(|vs| {
-                        vs.iter()
-                            .find(|v| v.name == row.label)
-                            .map(|v| v.id.clone())
-                    })
-                    .unwrap_or_default();
-                self.vault = Some((vid, row.label));
+                self.vault = Some((self.id_of(&row.label), row.label));
                 self.step = OpStep::Item;
             }
             OpStep::Item => {
-                let (vid, _) = self.vault.clone().unwrap_or_default();
-                let iid = op
-                    .list_items(self.account.as_deref().unwrap_or(""), &vid)
-                    .ok()
-                    .and_then(|is| {
-                        is.iter()
-                            .find(|i| i.title == row.label)
-                            .map(|i| i.id.clone())
-                    })
-                    .unwrap_or_default();
-                self.item = Some((iid, row.label));
+                self.item = Some((self.id_of(&row.label), row.label));
                 self.step = OpStep::Field;
             }
             OpStep::Field => {
@@ -485,19 +487,19 @@ impl OpFlow {
                 return Outcome::Changed;
             }
         }
-        self.begin_load(now_ms, op);
+        self.begin_load();
         Outcome::Changed
     }
 
-    pub fn on_key(&mut self, key: &Key, now_ms: i64, op: &dyn OnePassword) -> Outcome {
+    pub fn on_key(&mut self, key: &Key, op: &dyn OnePassword) -> Outcome {
         if key.is_char('r')
             && self.picker.status != PickerStatus::Ready
             && self.picker.query().is_empty()
         {
-            self.begin_load(now_ms, op);
+            self.begin_load();
             return Outcome::Changed;
         }
-        if self.loading_until.is_some() && !key.is(KeyCode::Esc) {
+        if self.loading() && !key.is(KeyCode::Esc) {
             return Outcome::Consumed;
         }
         let (o, ev) = self.picker.on_key(key);
@@ -507,19 +509,17 @@ impl OpFlow {
                     || matches!(self.picker.status, PickerStatus::Error { .. }))
                     && self.last_error.is_none()
                 {
-                    self.refresh(op);
+                    self.refresh();
                 }
                 Outcome::Changed
             }
-            Some(PickerAction::Chosen(i)) | Some(PickerAction::ChosenAlt(i)) => {
-                self.choose(i, now_ms, op)
-            }
-            Some(PickerAction::Back) | Some(PickerAction::Cancelled) => self.back(now_ms, op),
+            Some(PickerAction::Chosen(i)) | Some(PickerAction::ChosenAlt(i)) => self.choose(i, op),
+            Some(PickerAction::Back) | Some(PickerAction::Cancelled) => self.back(op),
             _ => o.or(Outcome::Consumed),
         }
     }
 
-    pub fn pointer(&mut self, ev: &PointerEvent, now_ms: i64, op: &dyn OnePassword) -> Outcome {
+    pub fn pointer(&mut self, ev: &PointerEvent, op: &dyn OnePassword) -> Outcome {
         let Some(r) = self.picker.route(ev) else {
             return match ev.wheel() {
                 Some((Axis::Vertical, delta)) => {
@@ -531,7 +531,7 @@ impl OpFlow {
         };
         let (o, act) = r.into_parts();
         match act {
-            Some(PickerAction::Chosen(i)) => self.choose(i, now_ms, op),
+            Some(PickerAction::Chosen(i)) => self.choose(i, op),
             Some(PickerAction::Cancelled) if self.dismiss.outside_click => {
                 self.dismissed = true;
                 Outcome::Changed
@@ -580,13 +580,10 @@ impl Layer<ModalResult, World> for OpFlow {
         OpFlow::render(self, screen, buf, ctx);
     }
     fn on_key(&mut self, key: &Key, cx: &mut LayerCx<'_, World>) -> Outcome {
-        OpFlow::on_key(self, key, cx.app.now_ms(), cx.app.op.as_ref()).or(Outcome::Consumed)
+        OpFlow::on_key(self, key, cx.app.op.as_ref()).or(Outcome::Consumed)
     }
     fn pointer(&mut self, ev: &PointerEvent, cx: &mut LayerCx<'_, World>) -> Outcome {
-        OpFlow::pointer(self, ev, cx.app.now_ms(), cx.app.op.as_ref())
-    }
-    fn on_tick(&mut self, w: &World) -> Outcome {
-        self.tick(w.now_ms(), w.op.as_ref())
+        OpFlow::pointer(self, ev, cx.app.op.as_ref())
     }
     fn hints(&self, _: Option<WidgetId>) -> Vec<Hint> {
         OpFlow::hints(self)

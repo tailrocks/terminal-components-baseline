@@ -2,14 +2,10 @@ use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 
 use self::pane::ScriptPane;
-use crate::backend::{
-    Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, OpSession, Validation,
-    ValidationOutcome,
-};
+use crate::backend::{Backend, Completion, Effect, OpSession, PlainKey, Validation};
 use crate::domain::account::{
     Account, AccountOrigin, AccountRegistry, CredentialSource, ValidationLevel,
 };
-use crate::domain::agent::Provider;
 use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::LaunchContent;
 use crate::domain::role::{RoleCheckState, RoleRecord};
@@ -200,21 +196,6 @@ impl SimBackend {
 }
 
 impl Backend for SimBackend {
-    fn validate(
-        &self,
-        provider: Provider,
-        source: &CredentialSource,
-        plain_value: Option<&str>,
-        op: &dyn OnePassword,
-        now: i64,
-    ) -> ValidationOutcome {
-        provider::validate(provider, source, plain_value, op, now)
-    }
-
-    fn probe_folder(&self, path: &str) -> FolderProbe {
-        provider::probe_folder(path)
-    }
-
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
         let (after_ms, msg) = match effect {
             Effect::SaveWorkspace { .. } => return Some(Completion::settle(900)),
@@ -258,6 +239,35 @@ impl Backend for SimBackend {
                 )
             }
             Effect::LoadRole { .. } => return Some(Completion::settle(1_100)),
+            Effect::CheckSource { source, .. } => {
+                return Some(Completion::settle(provider::check_duration_ms(source)));
+            }
+            Effect::ProbeFolder { ticket, path } => (
+                0,
+                Msg::FolderProbed {
+                    ticket: *ticket,
+                    result: Ok(provider::probe_folder(path)),
+                },
+            ),
+            Effect::ReadChanges {
+                ticket,
+                instance,
+                touched,
+                uncommitted,
+                unpushed,
+            } => (
+                0,
+                Msg::ChangesRead {
+                    ticket: *ticket,
+                    result: Ok(changes::changes_for(
+                        instance,
+                        touched,
+                        *uncommitted,
+                        *unpushed,
+                    )),
+                },
+            ),
+            Effect::LoadOp { .. } => return Some(Completion::settle(world.op.latency_ms())),
         };
         Some(Completion::ready(after_ms, msg))
     }
@@ -339,7 +349,7 @@ impl Backend for SimBackend {
                         CredentialSource::PlainApiKey { .. } => Validation::Fingerprint {
                             level: fingerprint_level(a),
                         },
-                        source => Validation::Checked(Box::new(self.validate(
+                        source => Validation::Checked(Box::new(provider::validate(
                             a.provider,
                             source,
                             None,
@@ -353,6 +363,25 @@ impl Backend for SimBackend {
                     result,
                 })
             }
+            Effect::CheckSource {
+                ticket,
+                provider,
+                source,
+                key,
+            } => Some(Msg::SourceChecked {
+                ticket: *ticket,
+                result: Ok(Box::new(provider::validate(
+                    *provider,
+                    source,
+                    key.as_ref().map(PlainKey::expose),
+                    world.op.as_ref(),
+                    world.now_secs(),
+                ))),
+            }),
+            Effect::LoadOp { ticket, scope } => Some(Msg::OpLoaded {
+                ticket: *ticket,
+                result: provider::list_op(world.op.as_ref(), scope),
+            }),
             Effect::TrustRole { role } => {
                 let mut snapshot = snapshot(world);
                 let result = match snapshot.roles.iter_mut().find(|r| r.name == *role) {
@@ -510,16 +539,6 @@ impl Backend for SimBackend {
             }
             _ => None,
         }
-    }
-
-    fn changes(
-        &self,
-        instance_id: &str,
-        touched: &[String],
-        uncommitted: usize,
-        unpushed: usize,
-    ) -> ChangeSet {
-        changes::changes_for(instance_id, touched, uncommitted, unpushed)
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {

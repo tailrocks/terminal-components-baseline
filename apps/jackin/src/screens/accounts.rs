@@ -35,7 +35,8 @@ use ratatui::style::{Modifier, Style};
 use super::modals::{BrowserResult, FormDialog, FormField, FormValues, OpFlow};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::{
-    CheckRow, Effect, FolderProbe, Validation, ValidationOutcome, apply_validation,
+    CheckRow, Effect, FolderProbe, PlainKey, Ticket, Validation, ValidationOutcome,
+    apply_validation,
 };
 use crate::domain::account::{
     Account, AccountId, AccountOrigin, AccountRegistry, CredentialSource, DetectedKind,
@@ -85,6 +86,69 @@ struct FormCtx {
     op_ref: Option<OpReference>,
     op_masked: Option<String>,
     validation: Option<ValidationOutcome>,
+    check: Option<Check>,
+}
+
+/// The form's one request to the backend that has not come back, and what
+/// the form does with the reply.
+struct Check {
+    ticket: Ticket,
+    then: Then,
+}
+
+enum Then {
+    Show,
+    Save(FormValues),
+    Probe {
+        values: FormValues,
+        outcome: Box<ValidationOutcome>,
+    },
+}
+
+fn text_of(values: &FormValues, name: &str) -> String {
+    values
+        .iter()
+        .find(|(n, _)| n == name)
+        .map(|(_, v)| match v {
+            super::modals::FieldValue::Text(s) => s.clone(),
+            _ => String::new(),
+        })
+        .unwrap_or_default()
+}
+
+fn choice_of(values: &FormValues, name: &str) -> usize {
+    values
+        .iter()
+        .find(|(n, _)| n == name)
+        .map(|(_, v)| match v {
+            super::modals::FieldValue::Choice(i) => *i,
+            _ => 0,
+        })
+        .unwrap_or(0)
+}
+
+fn pending_note() -> Vec<(String, Tone)> {
+    ["material", "identity", "quota   "]
+        .iter()
+        .map(|label| (format!("… {label}   checking"), Tone::Muted))
+        .collect()
+}
+
+fn set_busy(form: &mut FormDialog, busy: bool) {
+    if let Some((_, b)) = form.actions.iter_mut().find(|(n, _)| n == "validate") {
+        b.busy = busy;
+    }
+}
+
+fn begin_pending(form: &mut FormDialog) {
+    set_busy(form, true);
+    form.error = None;
+    form.set_note("validation", pending_note());
+}
+
+fn end_pending(form: &mut FormDialog) {
+    set_busy(form, false);
+    form.set_note("validation", vec![]);
 }
 
 /// What the screen does when the backend has stored the registry it sent.
@@ -544,6 +608,7 @@ impl AccountsScreen {
             op_ref: None,
             op_masked: None,
             validation: None,
+            check: None,
         };
         if let Some(CredentialSource::OnePassword(r)) = editing.map(|a| &a.source) {
             ctx.op_ref = Some(r.clone());
@@ -631,34 +696,13 @@ impl AccountsScreen {
         }
     }
 
-    fn run_validation(
-        &mut self,
+    fn check_request(
+        &self,
         values: &FormValues,
         w: &World,
-    ) -> Result<ValidationOutcome, String> {
-        let get = |name: &str| -> String {
-            values
-                .iter()
-                .find(|(n, _)| n == name)
-                .map(|(_, v)| match v {
-                    super::modals::FieldValue::Text(s) => s.clone(),
-                    _ => String::new(),
-                })
-                .unwrap_or_default()
-        };
-        let choice = |name: &str| -> usize {
-            values
-                .iter()
-                .find(|(n, _)| n == name)
-                .map(|(_, v)| match v {
-                    super::modals::FieldValue::Choice(i) => *i,
-                    _ => 0,
-                })
-                .unwrap_or(0)
-        };
-        let provider = chosen_provider(w, choice("provider"));
-        let source = chosen_source(w, choice("source"));
-        let now = w.now_secs();
+    ) -> Result<(Provider, CredentialSource, Option<PlainKey>), String> {
+        let provider = chosen_provider(w, choice_of(values, "provider"));
+        let source = chosen_source(w, choice_of(values, "source"));
         let ctx = self.form.as_ref().ok_or("no form")?;
         match source {
             SourceKind::OnePassword => {
@@ -666,47 +710,158 @@ impl AccountsScreen {
                     .op_ref
                     .clone()
                     .ok_or("Choose a 1Password item and field first")?;
-                Ok(w.backend.validate(
-                    provider,
-                    &CredentialSource::OnePassword(r),
-                    None,
-                    w.op.as_ref(),
-                    now,
-                ))
+                Ok((provider, CredentialSource::OnePassword(r), None))
             }
             SourceKind::LocalFolder => {
-                let path = get("folder");
+                let path = text_of(values, "folder");
                 if path.trim().is_empty() {
                     return Err("Enter or browse to the local agent folder".into());
                 }
-                Ok(w.backend.validate(
+                Ok((
                     provider,
-                    &CredentialSource::LocalFolder {
+                    CredentialSource::LocalFolder {
                         path: path.trim().to_owned(),
                         detected: DetectedKind::Unknown,
                     },
                     None,
-                    w.op.as_ref(),
-                    now,
                 ))
             }
             SourceKind::PlainApiKey => {
-                let key = get("key");
+                let key = text_of(values, "key");
                 if key.trim().is_empty() {
                     return Err("API key required: the field is empty".into());
                 }
-                Ok(w.backend.validate(
+                Ok((
                     provider,
-                    &CredentialSource::PlainApiKey {
+                    CredentialSource::PlainApiKey {
                         fingerprint: fingerprint(&key),
                         tail: tail_of(&key),
                     },
-                    Some(&key),
-                    w.op.as_ref(),
-                    now,
+                    Some(PlainKey::new(&key)),
                 ))
             }
         }
+    }
+
+    /// Asks the backend to check the source the form describes. The form
+    /// shows the check as pending until the reply arrives; `then` says what
+    /// the reply does.
+    fn start_check(&mut self, values: &FormValues, then: Then, w: &mut World, cx: &mut Cx) {
+        if let Some(check) = self.form.as_mut().and_then(|ctx| ctx.check.as_mut()) {
+            if matches!(then, Then::Save(_)) && matches!(check.then, Then::Show) {
+                check.then = then;
+                cx.status("Saving as soon as the check finishes");
+            }
+            return;
+        }
+        let (provider, source, key) = match self.check_request(values, w) {
+            Ok(request) => request,
+            Err(e) => {
+                cx.with_top::<FormDialog>(move |f| f.error = Some(e));
+                return;
+            }
+        };
+        let ticket = w.next_ticket();
+        if let Some(ctx) = self.form.as_mut() {
+            ctx.check = Some(Check { ticket, then });
+        }
+        w.perform(Effect::CheckSource {
+            ticket,
+            provider,
+            source,
+            key,
+        });
+        cx.progress(job::SOURCE_CHECK, "Validating the source…");
+        cx.with_top::<FormDialog>(begin_pending);
+    }
+
+    /// The pending check, if `ticket` is the one the form waits for.
+    fn take_check(&mut self, ticket: Ticket) -> Option<Check> {
+        let ctx = self.form.as_mut()?;
+        if ctx.check.as_ref()?.ticket != ticket {
+            return None;
+        }
+        ctx.check.take()
+    }
+
+    /// Drops the pending check: its reply, when it comes, is not the form's.
+    fn cancel_check(&mut self, cx: &mut Cx) {
+        if let Some(ctx) = self.form.as_mut()
+            && ctx.check.take().is_some()
+        {
+            cx.with_top::<FormDialog>(end_pending);
+        }
+    }
+
+    fn source_checked(
+        &mut self,
+        ticket: Ticket,
+        result: &Result<Box<ValidationOutcome>, String>,
+        w: &mut World,
+        cx: &mut Cx,
+    ) -> Outcome {
+        let Some(check) = self.take_check(ticket) else {
+            return Outcome::Ignored;
+        };
+        let outcome = match result {
+            Ok(outcome) => (**outcome).clone(),
+            Err(error) => {
+                let error = error.clone();
+                cx.with_top::<FormDialog>(move |f| {
+                    end_pending(f);
+                    f.error = Some(error);
+                });
+                return Outcome::Changed;
+            }
+        };
+        match check.then {
+            Then::Show => {
+                let note = Self::validation_note(&outcome);
+                let ok = outcome.level.is_some();
+                if let Some(ctx) = self.form.as_mut() {
+                    ctx.validation = Some(outcome);
+                }
+                cx.with_top::<FormDialog>(move |f| {
+                    set_busy(f, false);
+                    f.set_note("validation", note);
+                    f.error = None;
+                });
+                cx.status(if ok {
+                    "Validated · Save stores the reference, never the secret"
+                } else {
+                    "Validation failed · fix the source and try again"
+                });
+            }
+            Then::Save(values) => self.checked_for_save(values, outcome, w, cx),
+            Then::Probe { .. } => {}
+        }
+        Outcome::Changed
+    }
+
+    fn folder_probed(
+        &mut self,
+        ticket: Ticket,
+        result: &Result<FolderProbe, String>,
+        w: &mut World,
+        cx: &mut Cx,
+    ) -> Outcome {
+        let Some(Check {
+            then: Then::Probe { values, outcome },
+            ..
+        }) = self.take_check(ticket)
+        else {
+            return Outcome::Ignored;
+        };
+        cx.with_top::<FormDialog>(end_pending);
+        match result {
+            Ok(FolderProbe::Found(kind)) => self.finish_save(values, *outcome, *kind, w, cx),
+            Ok(_) => self.finish_save(values, *outcome, DetectedKind::Unknown, w, cx),
+            Err(error) => {
+                let error = error.clone();
+                cx.with_top::<FormDialog>(move |f| f.error = Some(error));
+            }
+        }
+        Outcome::Changed
     }
 
     fn validation_note(v: &ValidationOutcome) -> Vec<(String, Tone)> {
@@ -736,27 +891,7 @@ impl AccountsScreen {
     }
 
     fn save_form(&mut self, values: FormValues, w: &mut World, cx: &mut Cx) {
-        let get = |name: &str| -> String {
-            values
-                .iter()
-                .find(|(n, _)| n == name)
-                .map(|(_, v)| match v {
-                    super::modals::FieldValue::Text(s) => s.clone(),
-                    _ => String::new(),
-                })
-                .unwrap_or_default()
-        };
-        let choice = |name: &str| -> usize {
-            values
-                .iter()
-                .find(|(n, _)| n == name)
-                .map(|(_, v)| match v {
-                    super::modals::FieldValue::Choice(i) => *i,
-                    _ => 0,
-                })
-                .unwrap_or(0)
-        };
-        let name = get("name").trim().to_owned();
+        let name = text_of(&values, "name").trim().to_owned();
         if name.is_empty() {
             cx.with_top::<FormDialog>(|f| f.error = Some("Display name is required".into()));
             return;
@@ -767,38 +902,16 @@ impl AccountsScreen {
             });
             return;
         }
-        let provider = chosen_provider(w, choice("provider"));
-        let source_kind = chosen_source(w, choice("source"));
+        self.start_check(&values, Then::Save(values.clone()), w, cx);
+    }
 
-        let outcome = match self.run_validation(&values, w) {
-            Ok(o) => o,
-            Err(e) => {
-                cx.with_top::<FormDialog>(move |f| f.error = Some(e));
-                return;
-            }
-        };
-        let Some(ctx) = self.form.as_ref() else {
-            return;
-        };
-        let editing = ctx.editing.clone();
-        let source = match source_kind {
-            SourceKind::OnePassword => CredentialSource::OnePassword(ctx.op_ref.clone().unwrap()),
-            SourceKind::LocalFolder => {
-                let path = get("folder").trim().to_owned();
-                let detected = match w.backend.probe_folder(&path) {
-                    FolderProbe::Found(k) => k,
-                    _ => DetectedKind::Unknown,
-                };
-                CredentialSource::LocalFolder { path, detected }
-            }
-            SourceKind::PlainApiKey => {
-                let key = get("key");
-                CredentialSource::PlainApiKey {
-                    fingerprint: fingerprint(&key),
-                    tail: tail_of(&key),
-                }
-            }
-        };
+    fn checked_for_save(
+        &mut self,
+        values: FormValues,
+        outcome: ValidationOutcome,
+        w: &mut World,
+        cx: &mut Cx,
+    ) {
         if outcome.level.is_none() {
             let msg = outcome
                 .issue
@@ -807,11 +920,61 @@ impl AccountsScreen {
                 .unwrap_or("Validation failed".into());
             let note = Self::validation_note(&outcome);
             cx.with_top::<FormDialog>(move |f| {
+                end_pending(f);
                 f.error = Some(msg);
                 f.set_note("validation", note);
             });
             return;
         }
+        if chosen_source(w, choice_of(&values, "source")) == SourceKind::LocalFolder {
+            let ticket = w.next_ticket();
+            let path = text_of(&values, "folder").trim().to_owned();
+            if let Some(ctx) = self.form.as_mut() {
+                ctx.check = Some(Check {
+                    ticket,
+                    then: Then::Probe {
+                        values,
+                        outcome: Box::new(outcome),
+                    },
+                });
+            }
+            w.perform(Effect::ProbeFolder { ticket, path });
+            return;
+        }
+        cx.with_top::<FormDialog>(end_pending);
+        self.finish_save(values, outcome, DetectedKind::Unknown, w, cx);
+    }
+
+    fn finish_save(
+        &mut self,
+        values: FormValues,
+        outcome: ValidationOutcome,
+        detected: DetectedKind,
+        w: &mut World,
+        cx: &mut Cx,
+    ) {
+        let get = |name: &str| text_of(&values, name);
+        let name = get("name").trim().to_owned();
+        let provider = chosen_provider(w, choice_of(&values, "provider"));
+        let source_kind = chosen_source(w, choice_of(&values, "source"));
+        let Some(ctx) = self.form.as_ref() else {
+            return;
+        };
+        let editing = ctx.editing.clone();
+        let source = match source_kind {
+            SourceKind::OnePassword => CredentialSource::OnePassword(ctx.op_ref.clone().unwrap()),
+            SourceKind::LocalFolder => CredentialSource::LocalFolder {
+                path: get("folder").trim().to_owned(),
+                detected,
+            },
+            SourceKind::PlainApiKey => {
+                let key = get("key");
+                CredentialSource::PlainApiKey {
+                    fingerprint: fingerprint(&key),
+                    tail: tail_of(&key),
+                }
+            }
+        };
 
         let probe = match &source {
             CredentialSource::OnePassword(r) => DuplicateProbe::OpReference {
@@ -2206,6 +2369,8 @@ impl Page<Jackin> for AccountsScreen {
                 self.build_rows(w);
                 Outcome::Changed
             }
+            Msg::SourceChecked { ticket, result } => self.source_checked(*ticket, result, w, cx),
+            Msg::FolderProbed { ticket, result } => self.folder_probed(*ticket, result, w, cx),
             _ => Outcome::Ignored,
         }
     }
@@ -2516,11 +2681,12 @@ impl Page<Jackin> for AccountsScreen {
             ("form", ModalResult::FormAction(name, values)) => {
                 match name.as_str() {
                     "choose:op" => {
-                        let flow =
-                            OpFlow::new(WidgetId::of("accounts.op"), w.op.as_ref(), w.now_ms());
+                        self.cancel_check(cx);
+                        let flow = OpFlow::new(WidgetId::of("accounts.op"), w.op.as_ref());
                         cx.open(flow, LayerTag::new("op"));
                     }
                     "choose:browse" => {
+                        self.cancel_check(cx);
                         let b = super::modals::file_browser(
                             WidgetId::of("accounts.browser"),
                             "Choose the local agent folder",
@@ -2553,27 +2719,7 @@ impl Page<Jackin> for AccountsScreen {
                         });
                         cx.status("Plain text chosen · the key is masked and never stored");
                     }
-                    "validate" => match self.run_validation(&values, w) {
-                        Ok(o) => {
-                            let note = Self::validation_note(&o);
-                            let ok = o.level.is_some();
-                            if let Some(ctx) = self.form.as_mut() {
-                                ctx.validation = Some(o);
-                            }
-                            cx.with_top::<FormDialog>(move |f| {
-                                f.set_note("validation", note);
-                                f.error = None;
-                            });
-                            cx.status(if ok {
-                                "Validated · Save stores the reference, never the secret"
-                            } else {
-                                "Validation failed · fix the source and try again"
-                            });
-                        }
-                        Err(e) => {
-                            cx.with_top::<FormDialog>(move |f| f.error = Some(e));
-                        }
-                    },
+                    "validate" => self.start_check(&values, Then::Show, w, cx),
                     "save" => self.save_form(values, w, cx),
                     _ => {}
                 }
@@ -2806,8 +2952,9 @@ impl Screen for AccountsScreen {
             form.error = None;
             if let Some(ctx) = self.form.as_mut() {
                 ctx.validation = None;
+                ctx.check = None;
             }
-            form.set_note("validation", vec![]);
+            end_pending(form);
         }
     }
 

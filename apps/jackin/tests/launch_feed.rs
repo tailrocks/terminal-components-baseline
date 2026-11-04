@@ -7,12 +7,8 @@ use std::sync::{Arc, Mutex};
 
 use common::*;
 use jackin_console::app::{App, Route};
-use jackin_console::backend::{
-    Backend, ChangeSet, Completion, Effect, FileSource, FolderProbe, OnePassword, OpSession,
-    ValidationOutcome,
-};
-use jackin_console::domain::account::CredentialSource;
-use jackin_console::domain::agent::{Agent, Provider};
+use jackin_console::backend::{Backend, Completion, Effect, FileSource, OnePassword, OpSession};
+use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use jackin_console::domain::launch::{LaunchContent, LaunchFailure};
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
@@ -267,37 +263,12 @@ struct FeedBackend {
 }
 
 impl Backend for FeedBackend {
-    fn validate(
-        &self,
-        provider: Provider,
-        source: &CredentialSource,
-        plain_value: Option<&str>,
-        op: &dyn OnePassword,
-        now: i64,
-    ) -> ValidationOutcome {
-        self.inner.validate(provider, source, plain_value, op, now)
-    }
-
-    fn probe_folder(&self, path: &str) -> FolderProbe {
-        self.inner.probe_folder(path)
-    }
-
     fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
         self.inner.perform(effect, world)
     }
 
     fn settle(&self, effect: &Effect, world: &World) -> Option<Msg> {
         self.inner.settle(effect, world)
-    }
-
-    fn changes(
-        &self,
-        id: &str,
-        touched: &[String],
-        uncommitted: usize,
-        unpushed: usize,
-    ) -> ChangeSet {
-        self.inner.changes(id, touched, uncommitted, unpushed)
     }
 
     fn launch_content(&self) -> Arc<LaunchContent> {

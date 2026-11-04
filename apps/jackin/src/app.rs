@@ -28,6 +28,7 @@ use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::{Position, Rect};
 
 use crate::arbiter::{EntryDecision, ExitDecision};
+use crate::backend::Effect;
 use crate::domain::instance::InstanceId;
 use crate::domain::instance::InstanceStatus;
 use crate::domain::vocabulary::fill_in;
@@ -38,7 +39,7 @@ use crate::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
 use crate::screens::capsule::CapsuleScreen;
 use crate::screens::cockpit::CockpitScreen;
 use crate::screens::editor::EditorScreen;
-use crate::screens::modals::{FormAction, FormDialog, HelpOverlay, InfoResult};
+use crate::screens::modals::{FormAction, FormDialog, HelpOverlay, InfoResult, OpFlow};
 use crate::screens::prelude::PreludeScreen;
 use crate::screens::role_editor::RoleEditorScreen;
 use crate::screens::settings::SettingsScreen;
@@ -389,11 +390,31 @@ impl App {
     /// Delivers the replies that are due now, and the ones they start, so an
     /// effect that answers at once is finished before the next frame.
     fn deliver_due(&mut self) -> Outcome {
+        self.send_op_requests();
         let mut out = Outcome::Ignored;
         while let Some(m) = self.world.take_due() {
             out = out.or(self.dispatch_msg(&m));
         }
         out
+    }
+
+    /// Sends the listing each open 1Password picker wants, in the same step
+    /// as the key or click that made it want one.
+    fn send_op_requests(&mut self) {
+        let asked: Vec<_> = self
+            .layers
+            .iter_mut()
+            .filter_map(|e| e.get_mut::<OpFlow>())
+            .filter_map(|flow| flow.take_request().map(|scope| (flow, scope)))
+            .map(|(flow, scope)| {
+                let ticket = self.world.next_ticket();
+                flow.sent(ticket);
+                Effect::LoadOp { ticket, scope }
+            })
+            .collect();
+        for effect in asked {
+            self.world.perform(effect);
+        }
     }
 
     fn on_tick(&mut self) -> Outcome {
@@ -474,6 +495,18 @@ impl App {
     }
 
     fn dispatch_msg(&mut self, m: &Msg) -> Outcome {
+        if let Msg::OpLoaded { ticket, result } = m {
+            let taken = self
+                .layers
+                .iter_mut()
+                .filter_map(|e| e.get_mut::<OpFlow>())
+                .any(|flow| flow.loaded(*ticket, result));
+            return if taken {
+                Outcome::Changed
+            } else {
+                Outcome::Ignored
+            };
+        }
         self.world.absorb(m);
         let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));
         let route = self.route();
