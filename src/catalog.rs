@@ -3778,10 +3778,6 @@ pub static ALLOWLIST: &[Allowed] = &[
         reason: PREVIEW,
     },
     Allowed {
-        id: "widgets::viewport_ops::ViewportOps",
-        reason: PREVIEW,
-    },
-    Allowed {
         id: "terminal::TerminalState::with_scrollback",
         reason: HOST_FED,
     },
