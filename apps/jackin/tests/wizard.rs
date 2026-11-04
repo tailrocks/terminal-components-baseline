@@ -42,7 +42,8 @@ fn the_wizard_data_offers_one_destination() {
     let step2 = screen(&mut app);
     assert!(step2.contains("Project destination"), "{step2}");
     assert!(step2.contains("(●) Project folder /sandbox/project"));
-    assert!(!step2.contains("Edit destination…") && !step2.contains("Same path"));
+    assert!(step2.contains("( ) Edit destination…"));
+    assert!(!step2.contains("Same path"));
 }
 
 #[test]

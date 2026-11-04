@@ -4,7 +4,7 @@
 //! these functions, so the two cannot disagree. The class of each field is in
 //! `fixed_fields`.
 
-use super::account::{Account, AccountOrigin, AccountRegistry};
+use super::account::{Account, AccountOrigin, AccountRegistry, EditBlocked};
 use super::agent::{Agent, AuthMode};
 use super::fixed::Fixed;
 use super::fixed_fields::SurfaceFixed;
@@ -18,6 +18,17 @@ pub const PROJECT_DIR: &str = "/sandbox/project";
 pub fn account(a: &mut Account) {
     a.enabled = true;
     a.origin = AccountOrigin::Registered;
+}
+
+/// Edit… is refused for an account that reads a host variable: the account
+/// form has no such source. The variable name is cut to 16 columns plus `…`,
+/// so the text stays within `Reason::TEXT_MAX`.
+pub fn env_edit_block(var: &str) -> EditBlocked {
+    let var = junie_tui::ui::text::truncate(var, 17);
+    EditBlocked::new(
+        &format!("reads {var} · change it with jackin account add"),
+        "env account",
+    )
 }
 
 /// `host_path` is Data going in. `accounts` is the registry with `enabled` and

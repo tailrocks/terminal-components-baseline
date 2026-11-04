@@ -147,6 +147,12 @@ impl ChoiceDialog {
     }
 
     pub fn initial_focus(&self) -> WidgetId {
+        if self.radio.disabled {
+            return self
+                .buttons
+                .get(self.primary())
+                .map_or(self.radio.id, |b| b.id);
+        }
         self.radio.id
     }
 
@@ -234,7 +240,9 @@ impl ChoiceDialog {
     pub fn on_click(&mut self, id: WidgetId, focus: &mut Focus) -> Outcome {
         for i in 0..self.radio.options.len() {
             if self.radio.option_id(i) == id {
-                focus.focus(self.radio.id);
+                if !self.radio.disabled {
+                    focus.focus(self.radio.id);
+                }
                 return self.radio.on_click(i);
             }
         }
@@ -353,7 +361,9 @@ impl ChoiceDialog {
         }
         if let Some(r) = self.radio.route(ev) {
             if ev.is(Phase::Click) {
-                focus.focus(self.radio.id);
+                if !self.radio.disabled {
+                    focus.focus(self.radio.id);
+                }
 
                 if self.double_click_confirms
                     && ev.count() >= 2

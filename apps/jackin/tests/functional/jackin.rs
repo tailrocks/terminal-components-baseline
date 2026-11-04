@@ -1946,3 +1946,518 @@ fn jackin_fixed_workspace_env_keeps_the_role_scope_live_and_refuses_the_sources(
     leave_without_a_prompt(&app);
     app.finish();
 }
+
+fn row_has(screen: &TerminalSnapshot, needle: &str, part: &str) -> bool {
+    (0..screen.rows())
+        .map(|row| row_text(screen, row))
+        .any(|row| row.contains(needle) && row.contains(part))
+}
+
+fn open_fixed_accounts(app: &App, downs: usize, crumb: &str) -> TerminalSnapshot {
+    app.wait_text("Current directory");
+    app.key("c");
+    app.wait_text("Accounts › Overview");
+    for _ in 0..downs {
+        app.key("down");
+    }
+    app.wait_text(crumb)
+}
+
+fn leave_accounts(app: &App) {
+    for _ in 0..3 {
+        if text(&app.settle()).contains("Current directory") {
+            break;
+        }
+        app.key("esc");
+    }
+    let manager = app.wait_text("Current directory");
+    assert!(!text(&manager).contains("Unsaved changes"));
+}
+
+fn tab_until(
+    app: &App,
+    reason: &str,
+    reached: impl Fn(&TerminalSnapshot) -> bool,
+) -> TerminalSnapshot {
+    for _ in 0..8 {
+        let screen = app.settle();
+        if reached(&screen) {
+            return screen;
+        }
+        app.key("tab");
+    }
+    app.wait_screen(reason, reached)
+}
+
+fn quiet_after(app: &App, reason: &str, unrelated_key: &str) {
+    status_expired(app, reason);
+    app.key(unrelated_key);
+    let after = app.settle();
+    assert!(
+        !footer(&after).contains(reason),
+        "{unrelated_key} brought the reason back:\n{}",
+        text(&after)
+    );
+}
+
+#[test]
+fn jackin_fixed_account_enable_refuses_by_key_button_and_menu() {
+    let fixed = Fixed::openshell();
+    let reason = fixed.enable_global.text;
+    let short = fixed.enable_global.short.expect("a short reason");
+    let app = fixed_app("jackin-fixed-account-enable");
+    let account = open_fixed_accounts(&app, 7, "Accounts › Codex › Experiments");
+    assert!(row_with(&account, "Enabled").contains("yes"));
+    assert!(!footer(&account).contains("t Disable"));
+    assert!(!footer(&account).contains("t Enable"));
+
+    app.key("shift+f10");
+    app.wait_text("Show usage");
+    for _ in 0..5 {
+        app.key("down");
+    }
+    app.wait_screen("the highlight reaches Disable", |s| {
+        text(s).contains(&format!(" {short} "))
+    });
+    app.visual("functional/jackin_fixed_account_menu");
+    app.key("enter");
+    let fired = app.settle();
+    assert!(text(&fired).contains(&short), "a disabled item stays shut");
+    assert!(row_with(&fired, "Enabled").contains("yes"));
+    assert!(!footer(&fired).contains(&reason));
+    app.key("esc");
+    app.wait_absent("Show usage");
+
+    app.key("t");
+    let keyed = refused_with(&app, &reason);
+    assert!(row_with(&keyed, "Enabled").contains("yes"));
+    assert!(!text(&keyed).contains("account · disabled"));
+    assert!(
+        row_has(&keyed, "Remove…", "Disable"),
+        "the button still reads Disable"
+    );
+    quiet_after(&app, &reason, "down");
+    app.key("up");
+
+    app.key("tab");
+    app.key("tab");
+    for _ in 0..4 {
+        app.key("right");
+    }
+    let button = app.wait_screen("focus reaches the Disable button", |s| {
+        row_has(s, "Disable", "▎Disable")
+    });
+    assert!(!footer(&button).contains("Enter Disable"));
+    app.key("enter");
+    let pressed = refused_with(&app, &reason);
+    assert!(row_with(&pressed, "Disable").contains("▎Disable"));
+    assert!(row_with(&pressed, "Enabled").contains("yes"));
+    status_expired(&app, &reason);
+
+    app.click(inside(find(&app.screen(), "Disable")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Enabled").contains("yes"));
+    assert!(row_with(&clicked, "Disable").contains("▎Disable"));
+    app.visual("functional/jackin_fixed_account_disable_refused");
+    quiet_after(&app, &reason, "left");
+    leave_accounts(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_account_form_refuses_a_typed_key_and_its_button() {
+    let fixed = Fixed::openshell();
+    let reason = fixed.typed_key.text;
+    let app = fixed_app("jackin-fixed-account-form");
+    open_fixed_accounts(&app, 0, "Accounts › Overview");
+    app.key("a");
+    app.wait_text("New account");
+    for _ in 0..3 {
+        app.key("tab");
+    }
+    let form = app.wait_screen("focus reaches the source radio", |s| {
+        row_has(s, "Local agent folder", "▎")
+    });
+    assert!(
+        row_with(&form, "1Password item / field")
+            .contains("( ) 1Password item / field  (usage only)")
+    );
+    assert!(
+        row_with(&form, "Local agent folder").contains("(●) Local agent folder  (recommended)")
+    );
+    assert!(row_with(&form, "Plain-text API key").contains("( ) Plain-text API key"));
+    assert!(text(&form).contains(&reason));
+    assert!(!text(&form).contains("Usage only · launching Codex needs a local login"));
+    assert!(!text(&form).contains("paste the key"));
+    let ratio = contrast(&form, find(&form, &reason));
+    assert!(ratio >= 4.5, "the reason is legible, contrast {ratio:.2}");
+    app.visual("functional/jackin_fixed_account_form");
+
+    app.key("down");
+    app.wait_screen("the cursor reaches the typed key option", |s| {
+        row_has(s, "Plain-text API key", "▎")
+    });
+    for key in ["space", "enter"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(
+            row_with(&keyed, "Local agent folder").contains("(●)"),
+            "{key}"
+        );
+        assert!(
+            row_with(&keyed, "Plain-text API key").contains("( )"),
+            "{key}"
+        );
+        assert!(!text(&keyed).contains("paste the key"), "{key}");
+        status_expired(&app, &reason);
+    }
+    app.key("space");
+    refused_with(&app, &reason);
+    app.visual("functional/jackin_fixed_account_form_refused");
+    status_expired(&app, &reason);
+
+    app.click(inside(find(&app.screen(), "Plain-text API key")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Local agent folder").contains("(●)"));
+    assert!(!text(&clicked).contains("paste the key"));
+    quiet_after(&app, &reason, "up");
+
+    app.key("up");
+    let one_password = app.wait_screen("1Password is chosen", |s| {
+        row_has(s, "1Password item / field", "(●)")
+    });
+    assert!(text(&one_password).contains("Usage only · launching Codex needs a local login"));
+    app.visual("functional/jackin_fixed_account_form_1password");
+    let plain = "Enter plain text instead";
+    let button = tab_until(&app, "focus reaches the plain text button", |s| {
+        row_has(s, plain, &format!("▎{plain}"))
+    });
+    assert!(!(0..button.rows()).any(|r| row_text(&button, r).contains("Enter Enter plain")));
+    assert!(!footer(&button).contains(&format!("Enter {plain}")));
+    app.key("enter");
+    let pressed = refused_with(&app, &reason);
+    assert!(row_with(&pressed, "1Password item / field").contains("(●)"));
+    assert!(!text(&pressed).contains("paste the key"));
+    status_expired(&app, &reason);
+    app.click(inside(find(&app.screen(), plain)));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "1Password item / field").contains("(●)"));
+    assert!(!text(&clicked).contains("paste the key"));
+    status_expired(&app, &reason);
+
+    app.key("esc");
+    app.wait_absent("New account");
+    leave_accounts(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_account_edit_refuses_a_host_variable_account() {
+    let reason = "reads ZAI_API_KEY · change it with jackin account add";
+    let app = fixed_app("jackin-fixed-account-edit");
+    let account = open_fixed_accounts(&app, 13, "Accounts › Z.AI › host login");
+    assert!(text(&account).contains("Host env · $ZAI_API_KEY"));
+    assert!(!footer(&account).contains("e Edit…"));
+
+    app.key("shift+f10");
+    app.wait_text("Show usage");
+    for _ in 0..3 {
+        app.key("down");
+    }
+    app.wait_screen("the highlight reaches Edit…", |s| {
+        text(s).contains(" env account ")
+    });
+    app.key("enter");
+    let fired = app.settle();
+    assert!(
+        !text(&fired).contains("Edit account"),
+        "a disabled item stays shut"
+    );
+    assert!(!footer(&fired).contains(reason));
+    app.key("esc");
+    app.wait_absent("Show usage");
+
+    app.key("e");
+    let keyed = refused_with(&app, reason);
+    assert!(!text(&keyed).contains("Edit account"));
+    app.visual("functional/jackin_fixed_account_edit_env");
+    quiet_after(&app, reason, "up");
+    app.key("down");
+
+    app.key("tab");
+    app.key("tab");
+    app.key("right");
+    app.key("right");
+    let button = app.wait_screen("focus reaches the Edit… button", |s| {
+        row_has(s, "Edit…", "▎Edit…")
+    });
+    assert!(!footer(&button).contains("Enter Edit…"));
+    app.key("enter");
+    let pressed = refused_with(&app, reason);
+    assert!(!text(&pressed).contains("Edit account"));
+    status_expired(&app, reason);
+    app.click(inside(find(&app.screen(), "Edit…")));
+    let clicked = refused_with(&app, reason);
+    assert!(!text(&clicked).contains("Edit account"));
+    status_expired(&app, reason);
+
+    app.key("esc");
+    app.key("d");
+    let remove = app.wait_text("Remove");
+    assert!(text(&remove).contains("host login"));
+    app.key("esc");
+    leave_accounts(&app);
+    app.finish();
+}
+
+fn open_fixed_wizard(app: &App) -> TerminalSnapshot {
+    app.wait_text("Current directory");
+    app.key("n");
+    app.wait_text("New workspace · step 1 of 5 · Source")
+}
+
+fn cancel_wizard(app: &App) {
+    if text(&app.settle()).contains("step 2 of 5") {
+        app.key("esc");
+        app.wait_text("step 1 of 5");
+    }
+    app.click(button(app, "Cancel"));
+    let manager = app.wait_text("Current directory");
+    assert!(footer(&manager).contains("Cancelled · nothing created"));
+}
+
+#[test]
+fn jackin_fixed_browser_git_url_keeps_its_help_and_refuses_a_url() {
+    let fixed = Fixed::openshell();
+    let words = jackin_console::domain::vocabulary::Vocabulary::openshell();
+    let app = fixed_app("jackin-fixed-browser-url");
+    open_fixed_wizard(&app);
+    app.key("g");
+    let entry = app.wait_text(&words.git_url_help[0]);
+    assert!(text(&entry).contains(&words.git_url_help[1]));
+    assert!(text(&entry).contains(&fixed.wizard_ro.text));
+    assert!(row_with(&entry, "Read-only").contains("[ ] Read-only"));
+    assert!(
+        !text(&entry).contains(&format!("! {}", fixed.git_url)),
+        "no error before an attempt"
+    );
+    app.visual("functional/jackin_fixed_browser_url");
+
+    app.paste("github.com/acme/payments");
+    app.key("enter");
+    let refused = app.wait_text(&format!("! {}", fixed.git_url));
+    assert!(
+        text(&refused).contains("github.com/acme/payments"),
+        "the typed value is kept"
+    );
+    assert!(
+        text(&refused).contains("step 1 of 5 · Source"),
+        "the wizard does not advance"
+    );
+    assert!(!text(&refused).contains("repository not found"));
+    assert!(
+        !footer(&refused).contains(&fixed.git_url),
+        "the error sits under the field, not in the status"
+    );
+    app.visual("functional/jackin_fixed_browser_url_refused");
+
+    app.key("enter");
+    let again = app.settle();
+    assert!(text(&again).contains(&format!("! {}", fixed.git_url)));
+    assert!(text(&again).contains("step 1 of 5 · Source"));
+    cancel_wizard(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_browser_read_only_refuses_by_key_and_click() {
+    let reason = Fixed::openshell().wizard_ro.text;
+    let app = fixed_app("jackin-fixed-browser-read-only");
+    let browser = open_fixed_wizard(&app);
+    let row = row_with(&browser, "Read-only");
+    assert!(
+        row.contains("[ ] Read-only") && row.contains(&reason),
+        "{row}"
+    );
+    let ratio = contrast(&browser, find(&browser, &reason));
+    assert!(ratio >= 4.5, "the reason is legible, contrast {ratio:.2}");
+
+    app.key("tab");
+    let focused = app.wait_screen("focus reaches the Read-only box", |s| {
+        row_has(s, "Read-only", "▎")
+    });
+    assert!(!footer(&focused).contains("Toggle"));
+    for key in ["space", "enter"] {
+        app.key(key);
+        let keyed = refused_with(&app, &reason);
+        assert!(
+            row_with(&keyed, "Read-only").contains("[ ] Read-only"),
+            "{key}"
+        );
+        assert!(row_with(&keyed, "Read-only").contains('▎'), "{key}");
+        if key == "space" {
+            app.visual("functional/jackin_fixed_browser_read_only");
+        }
+        status_expired(&app, &reason);
+    }
+    app.click(inside(find(&app.screen(), "Read-only")));
+    let clicked = refused_with(&app, &reason);
+    assert!(row_with(&clicked, "Read-only").contains("[ ] Read-only"));
+    status_expired(&app, &reason);
+
+    app.click(button(&app, "Choose"));
+    let next = app.wait_text("step 2 of 5 · Destination");
+    assert!(text(&next).contains("Source  ~/src/payments-platform"));
+    assert!(
+        !text(&next).contains("read-only"),
+        "the source is not read-only"
+    );
+    cancel_wizard(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_wizard_destination_cannot_change_and_next_advances() {
+    let fixed = Fixed::openshell();
+    let app = fixed_app("jackin-fixed-wizard-destination");
+    open_fixed_wizard(&app);
+    app.key("space");
+    let step = app.wait_text("step 2 of 5 · Destination");
+    assert!(row_with(&step, "Project folder").contains("(●) Project folder /sandbox/project"));
+    assert!(row_with(&step, "Edit destination…").contains("( ) Edit destination…"));
+    assert!(text(&step).contains(&fixed.destination.text));
+    assert!(text(&step).contains("Edit skipped") || text(&step).contains("Edit"));
+    let ratio = contrast(&step, find(&step, &fixed.destination.text));
+    assert!(ratio >= 4.5, "the reason is legible, contrast {ratio:.2}");
+    assert!(footer(&step).contains("Enter Next"), "{}", footer(&step));
+    app.visual("functional/jackin_fixed_wizard_destination");
+
+    app.key("down");
+    let still = app.settle();
+    assert!(row_with(&still, "Project folder").contains("(●)"));
+    assert!(row_with(&still, "Edit destination…").contains("( )"));
+    assert!(
+        !footer(&still).contains(&fixed.destination.text),
+        "no status is posted"
+    );
+    app.click(inside(find(&still, "Edit destination…")));
+    let clicked = app.settle();
+    assert!(row_with(&clicked, "Project folder").contains("(●)"));
+    assert!(text(&clicked).contains("step 2 of 5 · Destination"));
+
+    app.key("enter");
+    let workdir = app.wait_text("step 4 of 5 · Working dir");
+    assert!(text(&workdir).contains("▪ /sandbox/project"));
+    assert!(!text(&workdir).contains("Edit destination"));
+    assert!(
+        !footer(&workdir).contains(&fixed.destination.text),
+        "no status appears"
+    );
+    app.visual("functional/jackin_fixed_wizard_workdir");
+
+    app.key("enter");
+    let name = app.wait_text("step 5 of 5 · Name");
+    assert!(text(&name).contains("▎ payments-platform"));
+    assert!(!text(&name).contains("▎ project"));
+    for _ in 0..6 {
+        if text(&app.settle()).contains("step 1 of 5") {
+            break;
+        }
+        app.key("esc");
+    }
+    cancel_wizard(&app);
+    app.finish();
+}
+
+fn attach_capsule(app: &App) {
+    app.wait_text("Current directory");
+    app.key("down");
+    app.key("right");
+    app.key("down");
+    app.key("enter");
+    app.wait_text("Ctrl+B Pane commands");
+}
+
+fn detach_capsule(app: &App) {
+    app.key("ctrl+b");
+    app.wait_text("prefix…");
+    app.key("d");
+    app.wait_text("Detached · payments-platform keeps running");
+}
+
+fn palette_row(screen: &TerminalSnapshot, label: &str) -> String {
+    row_with(screen, label)
+}
+
+#[test]
+fn jackin_fixed_palette_shows_reveal_and_open_as_unavailable() {
+    let fixed = Fixed::openshell();
+    let short = fixed.reveal_open.short.expect("a short reason");
+    let app = fixed_app("jackin-fixed-palette-export");
+    attach_capsule(&app);
+    app.key("ctrl+\\");
+    let palette = app.wait_text("Command palette");
+    for label in ["Export file and reveal", "Export file and open"] {
+        let row = palette_row(&palette, label);
+        assert!(row.contains(&short), "{row}");
+    }
+    assert!(palette_row(&palette, "Export file  ").contains("host"));
+    assert!(!palette_row(&palette, "Export file  ").contains(&short));
+    app.visual("functional/jackin_fixed_palette_export");
+
+    app.type_text("reveal");
+    let found = app.wait_screen("the filter keeps the reveal rows", |s| {
+        text(s).contains("3 of 20") || text(s).contains(&short)
+    });
+    assert!(text(&found).contains(&short));
+    app.key("enter");
+    let fired = app.settle();
+    assert!(
+        !text(&fired).contains("Copies to ~/Downloads/jackin/"),
+        "a disabled row stays shut"
+    );
+    app.key("esc");
+    app.key("esc");
+
+    app.key("ctrl+\\");
+    app.wait_text("Command palette");
+    app.key("down");
+    app.key("down");
+    app.key("down");
+    app.key("enter");
+    let export = app.wait_text("Copies to ~/Downloads/jackin/");
+    assert!(text(&export).contains("Export file"));
+    app.key("esc");
+    detach_capsule(&app);
+    app.finish();
+}
+
+#[test]
+fn jackin_fixed_file_menu_shows_reveal_as_unavailable() {
+    let fixed = Fixed::openshell();
+    let short = fixed.reveal_open.short.expect("a short reason");
+    let app = fixed_app("jackin-fixed-file-menu-export");
+    attach_capsule(&app);
+    app.key("f10");
+    app.wait_text("Export selected file and reveal…");
+    for _ in 0..4 {
+        app.key("down");
+    }
+    let menu = app.wait_screen("the highlight reaches the reveal item", |s| {
+        text(s).contains(&format!(" {short} "))
+    });
+    assert!(row_with(&menu, "Export selected file and reveal…").contains("Export"));
+    app.visual("functional/jackin_fixed_file_menu_export");
+    app.key("enter");
+    let fired = app.settle();
+    assert!(text(&fired).contains(&short), "a disabled item stays shut");
+    assert!(!text(&fired).contains("Select a path in a pane first"));
+    app.key("up");
+    let live = app.wait_screen("the plain export item shows no reason", |s| {
+        !text(s).contains(&format!(" {short} "))
+    });
+    assert!(text(&live).contains("Export selected file…"));
+    app.key("esc");
+    detach_capsule(&app);
+    app.finish();
+}

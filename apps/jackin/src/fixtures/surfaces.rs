@@ -1,6 +1,6 @@
 use std::collections::BTreeSet;
 
-use crate::domain::account::{AccountForm, Provenance};
+use crate::domain::account::{AccountForm, CredentialSource, Provenance};
 use crate::domain::agent::{Agent, AuthMode};
 use crate::domain::docker::{DockerRiskText, DockerSetting, EngineState};
 use crate::domain::doctor::{DoctorState, DoctorSurface};
@@ -213,6 +213,9 @@ pub fn fixed(w: &mut World) {
     w.global.env.retain(plain);
     for a in &mut w.accounts.accounts {
         openshell::account(a);
+        if let CredentialSource::HostEnv { var, .. } = &a.source {
+            a.edit_blocked = Some(openshell::env_edit_block(var));
+        }
         if a.provenance == [Provenance::LiveHost] {
             a.provenance = vec![Provenance::ConfiguredSource];
         }

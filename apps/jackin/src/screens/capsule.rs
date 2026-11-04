@@ -42,6 +42,7 @@ use super::modals::{ChoiceDialog, InfoDialog, InfoResult};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
+use crate::domain::fixed::Fixed;
 use crate::domain::instance::AgentState;
 use crate::domain::usage::Freshness;
 use crate::domain::vocabulary::{Vocabulary, fill_in};
@@ -160,7 +161,7 @@ impl CapsuleScreen {
             pane_rects: vec![],
             seams: vec![],
             tabs: Tabs::with_items(STRIP, vec![]),
-            menubar: Self::build_menubar(&w.surfaces.vocabulary),
+            menubar: Self::build_menubar(&w.surfaces.vocabulary, w.surfaces.fixed.as_ref()),
             tab_menu: None,
             context: ContextConfig::DEFAULT,
             body: Rect::ZERO,
@@ -244,8 +245,13 @@ impl CapsuleScreen {
         }
     }
 
-    fn build_menubar(words: &Vocabulary) -> MenuBar {
+    fn build_menubar(words: &Vocabulary, fixed: Option<&Fixed>) -> MenuBar {
         let info_label = words.info_label();
+        let reveal = MenuItem::new("Export selected file and reveal…").separator();
+        let reveal = match fixed.and_then(|f| f.reveal_open.short.as_deref()) {
+            Some(short) => reveal.reason(short),
+            None => reveal,
+        };
         let entries: Vec<(&str, Vec<MenuItem>)> = vec![
             (
                 "File",
@@ -256,7 +262,7 @@ impl CapsuleScreen {
                         .shortcut("Ctrl+B \"")
                         .separator(),
                     MenuItem::new("Export selected file…"),
-                    MenuItem::new("Export selected file and reveal…").separator(),
+                    reveal,
                     MenuItem::new("Close pane").shortcut("Ctrl+B x"),
                 ],
             ),
@@ -904,6 +910,12 @@ impl CapsuleScreen {
             if !q.is_empty() && !label.to_lowercase().contains(&q) {
                 continue;
             }
+            let reveal_open = w
+                .surfaces
+                .fixed
+                .as_ref()
+                .and_then(|f| f.reveal_open.short.as_deref())
+                .filter(|_| c.ends_with("and reveal") || c.ends_with("and open"));
             let (detail, disabled) = match c {
                 "New tab" => ("Ctrl+B c", false),
                 "Split pane" => ("Ctrl+B \" %", false),
@@ -932,6 +944,10 @@ impl CapsuleScreen {
                     (w.surfaces.vocabulary.detail_unavailable.as_str(), true)
                 }
                 _ => ("host", false),
+            };
+            let (detail, disabled) = match reveal_open {
+                Some(short) => (short, true),
+                None => (detail, disabled),
             };
             let matched: Vec<usize> = if q.is_empty() {
                 vec![]

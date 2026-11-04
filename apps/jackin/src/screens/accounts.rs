@@ -443,16 +443,31 @@ impl AccountsScreen {
                     .unwrap_or(0)
             })
             .unwrap_or(0);
+        let typed_key =
+            w.surfaces.fixed.as_ref().and_then(|f| {
+                source_index(w, SourceKind::PlainApiKey).map(|at| (at, &f.typed_key))
+            });
         let source_idx = match editing {
             Some(a) => a
                 .source
                 .kind()
                 .and_then(|k| source_index(w, k))
+                .filter(|at| typed_key.is_none_or(|(typed, _)| typed != *at))
+                .or(data.default_source)
                 .unwrap_or(0),
             None => data.default_source.unwrap_or(0),
         };
         let labels: Vec<&str> = data.providers.iter().map(|c| c.label.as_str()).collect();
         let source_labels: Vec<&str> = data.sources.iter().map(|c| c.label.as_str()).collect();
+        let mut source_radio = RadioGroup::new(
+            FORM.sub("source"),
+            "Credential source",
+            &source_labels,
+            source_idx,
+        );
+        if let Some((at, reason)) = typed_key {
+            source_radio = source_radio.fixed_option(at, reason.clone());
+        }
         let mut fields = vec![
             FormField::input(
                 "name",
@@ -472,15 +487,7 @@ impl AccountsScreen {
                 Select::new(FORM.sub("provider"), "Provider", &labels, provider_idx),
             ),
             FormField::note("link", vec![]),
-            FormField::radio(
-                "source",
-                RadioGroup::new(
-                    FORM.sub("source"),
-                    "Credential source",
-                    &source_labels,
-                    source_idx,
-                ),
-            ),
+            FormField::radio("source", source_radio),
             FormField::chooser(
                 "op",
                 FORM.sub("op"),
@@ -523,6 +530,15 @@ impl AccountsScreen {
             FormField::note("validation", vec![]),
         ];
 
+        if let Some((_, reason)) = typed_key
+            && let Some(at) = fields.iter().position(|f| f.name == "source")
+        {
+            fields.insert(
+                at + 1,
+                FormField::note("typed_key", vec![(reason.text.clone(), Tone::Muted)]),
+            );
+        }
+
         let mut ctx = FormCtx {
             editing: editing.map(|a| a.id.clone()),
             op_ref: None,
@@ -547,16 +563,17 @@ impl AccountsScreen {
             }
         }
         self.form = Some(ctx);
+        let mut plain = Button::subtle(FORM.sub("plain"), "Enter plain text instead");
+        if let Some((_, reason)) = typed_key {
+            plain = plain.fixed(reason.clone());
+        }
         let mut form = FormDialog::new(FORM, &title, fields)
             .meta(if editing.is_some() {
                 "form · edits"
             } else {
                 "form · unsaved"
             })
-            .action(
-                "plain",
-                Button::subtle(FORM.sub("plain"), "Enter plain text instead"),
-            )
+            .action("plain", plain)
             .action(
                 "validate",
                 Button::secondary(FORM.sub("validate"), "Validate"),
@@ -991,6 +1008,10 @@ impl AccountsScreen {
     }
 
     fn toggle_enabled(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
+        if let Some(fixed) = &w.surfaces.fixed {
+            cx.refused(fixed.enable_global.clone());
+            return;
+        }
         let mut registry = w.accounts.clone();
         let Some(a) = registry.get_mut(id) else {
             return;
@@ -1103,19 +1124,31 @@ impl AccountsScreen {
         let mk = |n: &str, l: &str, k: ButtonKind| Button::new(INSPECTOR.sub(n), l, k);
         self.actions = match &self.selected {
             Sel::Account(id) => match w.accounts.get(id) {
-                Some(a) if a.mutations_allowed() => vec![
-                    mk("refresh", "Refresh", ButtonKind::Secondary),
-                    mk("validate", "Validate", ButtonKind::Secondary),
-                    mk("edit", "Edit…", ButtonKind::Secondary).disabled(!a.edit_allowed()),
-                    mk("default", "Set default", ButtonKind::Secondary)
-                        .disabled(a.default_for_provider || !a.enabled),
-                    mk(
+                Some(a) if a.mutations_allowed() => {
+                    let edit = mk("edit", "Edit…", ButtonKind::Secondary);
+                    let edit = match &a.edit_blocked {
+                        Some(why) => edit.fixed(why.reason()),
+                        None => edit.disabled(!a.edit_allowed()),
+                    };
+                    let toggle = mk(
                         "toggle",
                         if a.enabled { "Disable" } else { "Enable" },
                         ButtonKind::Secondary,
-                    ),
-                    mk("remove", "Remove…", ButtonKind::Danger),
-                ],
+                    );
+                    let toggle = match &w.surfaces.fixed {
+                        Some(fixed) => toggle.fixed(fixed.enable_global.clone()),
+                        None => toggle,
+                    };
+                    vec![
+                        mk("refresh", "Refresh", ButtonKind::Secondary),
+                        mk("validate", "Validate", ButtonKind::Secondary),
+                        edit,
+                        mk("default", "Set default", ButtonKind::Secondary)
+                            .disabled(a.default_for_provider || !a.enabled),
+                        toggle,
+                        mk("remove", "Remove…", ButtonKind::Danger),
+                    ]
+                }
                 Some(_) => vec![mk("refresh", "Refresh", ButtonKind::Secondary)],
                 None => vec![],
             },
@@ -1156,7 +1189,7 @@ impl AccountsScreen {
     fn edit_account(&mut self, a: &Account, w: &World, cx: &mut Cx) {
         match (&a.edit_blocked, a.mutations_allowed()) {
             (_, false) => cx.status("Discovered accounts are read-only · register a copy with a"),
-            (Some(why), true) => cx.status(why.text.clone()),
+            (Some(why), true) => cx.refused(why.reason()),
             (None, true) => self.open_form(Some(a), w, cx),
         }
     }
@@ -1180,6 +1213,14 @@ impl AccountsScreen {
                     (Some(why), true) => item("Edit…", "e").reason(&why.short),
                     _ => gate(item("Edit…", "e")),
                 };
+                let toggle = gate(item(if a.enabled { "Disable" } else { "Enable" }, "t"));
+                let toggle = match (&w.surfaces.fixed, a.mutations_allowed()) {
+                    (Some(fixed), true) => match fixed.enable_global.short.as_deref() {
+                        Some(short) => toggle.reason(short),
+                        None => toggle,
+                    },
+                    _ => toggle,
+                };
                 let default = if !a.mutations_allowed() {
                     item("Set default", "Space").reason(read_only)
                 } else if a.default_for_provider {
@@ -1197,11 +1238,7 @@ impl AccountsScreen {
                         (item("Show usage", "m").separator(), "usage"),
                         (edit, "edit"),
                         (default, "default"),
-                        (
-                            gate(item(if a.enabled { "Disable" } else { "Enable" }, "t"))
-                                .separator(),
-                            "toggle",
-                        ),
+                        (toggle.separator(), "toggle"),
                         (gate(item("Remove…", "d")).danger(), "remove"),
                     ],
                 )
@@ -2690,7 +2727,12 @@ impl Page<Jackin> for AccountsScreen {
             ];
         }
         if let Some(b) = self.actions.iter().find(|b| Some(b.id) == focus) {
-            return vec![hint("←→", "Choose"), b.hint(), hint("Esc", "Back")];
+            let mut v = vec![hint("←→", "Choose")];
+            if b.can_activate() {
+                v.push(b.hint());
+            }
+            v.push(hint("Esc", "Back"));
+            return v;
         }
         let mut v = vec![];
         match &self.selected {
@@ -2706,9 +2748,11 @@ impl Page<Jackin> for AccountsScreen {
                 }
                 if reg {
                     v.push(hint("Space", "Default"));
-                    v.push(junie_tui::widgets::keyhint::toggle_hint(
-                        "t", enabled, "Disable", "Enable",
-                    ));
+                    if w.surfaces.fixed.is_none() {
+                        v.push(junie_tui::widgets::keyhint::toggle_hint(
+                            "t", enabled, "Disable", "Enable",
+                        ));
+                    }
                     v.push(hint("v", "Validate"));
                     v.push(hint("d", "Remove…"));
                 }

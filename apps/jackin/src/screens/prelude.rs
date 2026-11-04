@@ -182,12 +182,8 @@ impl PreludeScreen {
                     Some(defaults) => format!("{} {default}", defaults.destination_label),
                     None => same,
                 };
-                let options: &[&str] = if wizard.is_some() {
-                    &[&same]
-                } else {
-                    &[&same, "Edit destination…"]
-                };
-                let c = ChoiceDialog::new(
+                let options: &[&str] = &[&same, "Edit destination…"];
+                let mut c = ChoiceDialog::new(
                     DEST,
                     Self::title(step),
                     &w.surfaces.vocabulary.destination_heading,
@@ -204,6 +200,12 @@ impl PreludeScreen {
                     0,
                 )
                 .width(58);
+                if wizard.is_some() {
+                    c.radio.disabled = true;
+                    if let Some(fixed) = &w.surfaces.fixed {
+                        c = c.line(fixed.destination.text.clone(), Tone::Muted);
+                    }
+                }
                 cx.open(c, LayerTag::new("prelude.dest"));
             }
             Step::Edit => {

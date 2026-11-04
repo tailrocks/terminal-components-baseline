@@ -485,7 +485,7 @@ already end without a baseline (for example
 `tablepro_connect_development_opens_workbench` and
 `jackin_roles_add_role`). The jackin editor key tests `jackin_fixed_*` (P9.3 B4a, one per
 refusal on `Scenario::OpenshellFixed`) read each reason from
-`Fixed::openshell()`, and four of them also freeze a baseline.
+`Fixed::openshell()`, and four of them also freeze a baseline. The B4c key tests (`jackin_fixed_account_*`, `jackin_fixed_browser_*`, `jackin_fixed_wizard_*`, `jackin_fixed_palette_*`, `jackin_fixed_file_menu_*`) follow the same rule and freeze 13 more baselines.
 
 The legacy Tuiscotti 0.2 dependency is removed entirely; nothing in the
 repository uses it.
