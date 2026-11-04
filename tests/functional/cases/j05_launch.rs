@@ -198,7 +198,22 @@ fn j05_launch_stages() {
     app.resize(120, 40);
     let restored = app.wait_screen("failure 120x40 again", |screen| failure_at(screen, 120, 40));
     assert_eq!((restored.cols(), restored.rows()), (120, 40));
-    app.key("escape");
+    // After the resize, the first Esc can land before the failure layer has
+    // focus. A later Esc dismisses it. Stop once the dialog is gone so Esc
+    // does not reach the manager.
+    for _ in 0..3 {
+        let screen = app.screen();
+        if network_ack(&screen) {
+            break;
+        }
+        let visible = text(&screen);
+        if visible.contains(FAILED) && visible.contains(SUMMARY) && visible.contains(DOCKER) {
+            app.key("escape");
+            std::thread::sleep(Duration::from_millis(300));
+        } else {
+            break;
+        }
+    }
     let manager = app.wait_screen("manager after the shots", network_ack);
     assert!(network_ack(&manager), "{}", text(&manager));
     app.finish();
