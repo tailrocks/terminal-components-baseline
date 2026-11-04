@@ -406,3 +406,27 @@ fn native_sink_decides_the_wording() {
     );
     assert!(counted.output.is_empty(), "{:?}", counted.output);
 }
+
+#[test]
+fn a_field_copy_in_the_app_reaches_the_host_clipboard_without_osc52() {
+    let sink = Sink::new(true);
+    let mut app = assemble(
+        world_for(Scenario::AccountsMixed),
+        entry_for(Scenario::AccountsMixed),
+        options(INTRO_END, ClipboardMode::Host(sink.clone())),
+    );
+    screen(&mut app);
+    press(&mut app, "c a enter S p a r e");
+    for c in ['a', 'c'] {
+        Application::handle(
+            &mut app,
+            Input::Key(junie_tui::core::event::Key {
+                code: ratatui::crossterm::event::KeyCode::Char(c),
+                mods: ratatui::crossterm::event::KeyModifiers::SUPER,
+            }),
+        );
+    }
+    let out = Application::take_output(&mut app);
+    assert_eq!(sink.writes(), ["Spare"], "{out:?}");
+    assert!(out.is_empty(), "no OSC 52 after the native write: {out:?}");
+}

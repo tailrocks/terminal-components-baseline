@@ -152,7 +152,7 @@ fn a_field_copy_falls_back_to_one_osc52_when_the_native_write_fails() {
 }
 
 #[test]
-fn a_shell_copy_with_the_hook_installed_writes_once() {
+fn a_shell_copy_with_the_hook_installed_queues_no_osc52_after_a_native_write() {
     queued();
     let native = Arc::new(Counting::default());
     let mut shell = Shell::<()>::new();
