@@ -367,10 +367,19 @@ fn j01_delete_delete() {
     let dialog = open_auth(&app);
     assert!(auth_dialog(&dialog), "{}", text(&dialog));
     app.click(dialog_button(&app, CONFIRM));
+    // Delete sets the status line, then returns focus to Current directory.
+    // Hard-cases replaces that line after five seconds with the refresh
+    // failure, so the workspace leaving the tree is the result that stays.
     let deleted = app.wait_screen("auth deleted", |screen| {
-        text(screen).contains(DELETED_AUTH)
-            && !text(screen).contains(AUTH_TITLE)
-            && !lists_workspace(screen, AUTH)
+        let visible = text(screen);
+        if visible.contains(AUTH_TITLE) || visible.contains(CANCELLED) {
+            return false;
+        }
+        let gone = !lists_workspace(screen, AUTH);
+        (visible.contains(DELETED_AUTH) && gone)
+            || (gone
+                && focused_line(screen).contains(DIRECTORY)
+                && visible.contains("Refresh failed"))
     });
     assert!(lists_workspace(&deleted, PAYMENTS), "{}", text(&deleted));
     assert!(lists_workspace(&deleted, PIPELINE), "{}", text(&deleted));

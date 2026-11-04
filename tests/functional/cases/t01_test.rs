@@ -50,6 +50,18 @@ fn forbid(screen: &TerminalSnapshot, items: &[&str]) {
     }
 }
 
+/// The form title can leave one frame before the name field does. Cancel is
+/// done when the list actions are back and the unsaved name is gone.
+fn form_closed(screen: &TerminalSnapshot, name: &str, host: &str, draft: &str) -> bool {
+    let visible = text(screen);
+    visible.contains(name)
+        && visible.contains(host)
+        && visible.contains("Connect")
+        && !visible.contains(FORM)
+        && !visible.contains(draft)
+        && !visible.contains("Test connection")
+}
+
 fn results_and_workbench() -> &'static [&'static str] {
     &[
         FULL_OK, FULL_ERR, SEEN_OK, SEEN_ERR, SAVED, TUNNEL, WORKBENCH,
@@ -259,7 +271,9 @@ fn testing_paused() {
             && text(screen).contains("Cancel")
     });
     click_action(&app, "Cancel");
-    let returned = app.wait_absent(FORM);
+    let returned = app.wait_screen("devtest discarded", |screen| {
+        form_closed(screen, "Development", "dev-db.internal.acme.io", "Devtest")
+    });
     require(&returned, &["Development", "dev-db.internal.acme.io"]);
     forbid(&returned, &["Devtest"]);
     forbid(&returned, results_and_workbench());
@@ -372,7 +386,9 @@ fn cancelling() {
     open_form(&app, "Staging", "staging-db.acme.io");
     rename(&app, "Nope");
     click_action(&app, "Cancel");
-    let returned = app.wait_absent(FORM);
+    let returned = app.wait_screen("nope discarded", |screen| {
+        form_closed(screen, "Staging", "staging-db.acme.io", "Nope")
+    });
     require(
         &returned,
         &["Staging", "staging-db.acme.io", "Connect", "Edit"],
