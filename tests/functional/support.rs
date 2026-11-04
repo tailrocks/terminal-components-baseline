@@ -315,7 +315,8 @@ impl App {
             self.assert_running("waiting for the application to handle the input");
             assert!(
                 Instant::now() < deadline,
-                "the application did not acknowledge the input within {TIMEOUT:?}\n{}",
+                "the application did not acknowledge the fence within {TIMEOUT:?} (bells {before} -> {})\n{}",
+                self.bells(),
                 text(&self.capture())
             );
             std::thread::sleep(Duration::from_millis(2));
