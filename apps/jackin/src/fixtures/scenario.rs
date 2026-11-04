@@ -6,6 +6,7 @@ use super::world_for;
 use crate::app::{App, AppOptions, ClipboardMode, Entry, EntryPage, assemble};
 use crate::domain::agent::Agent;
 use crate::launch::LaunchTarget;
+use crate::panes::{ClipboardWrite, PanePolicy};
 use crate::world::World;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -41,10 +42,12 @@ pub enum Scenario {
     OpenshellFixed,
 
     LaunchChecks,
+
+    CapsuleTerminal,
 }
 
 impl Scenario {
-    pub const ALL: [Scenario; 16] = [
+    pub const ALL: [Scenario; 17] = [
         Scenario::FirstUse,
         Scenario::Returning,
         Scenario::AccountsMixed,
@@ -61,6 +64,7 @@ impl Scenario {
         Scenario::LaunchOpenshell,
         Scenario::OpenshellFixed,
         Scenario::LaunchChecks,
+        Scenario::CapsuleTerminal,
     ];
 
     pub fn name(self) -> &'static str {
@@ -81,6 +85,7 @@ impl Scenario {
             Scenario::LaunchOpenshell => "launch-openshell",
             Scenario::OpenshellFixed => "openshell-fixed",
             Scenario::LaunchChecks => "launch-checks",
+            Scenario::CapsuleTerminal => "capsule-terminal",
         }
     }
 
@@ -116,10 +121,12 @@ pub fn entry_for(scenario: Scenario) -> Entry {
             agent: Agent::Codex,
             account: Some("acct-codex-primary".into()),
         }),
-        Scenario::CapsuleMulti | Scenario::OutroLast => EntryPage::Attach {
-            instance: "jk-7f3a".into(),
-            pane: None,
-        },
+        Scenario::CapsuleMulti | Scenario::OutroLast | Scenario::CapsuleTerminal => {
+            EntryPage::Attach {
+                instance: "jk-7f3a".into(),
+                pane: None,
+            }
+        }
         Scenario::FirstUse
         | Scenario::Returning
         | Scenario::HardCases
@@ -154,6 +161,10 @@ pub fn app_with_world(
             frame,
             theme,
             clipboard: ClipboardMode::Preview,
+            panes: PanePolicy {
+                clipboard_write: ClipboardWrite::Deny,
+                ..PanePolicy::default()
+            },
         },
     )
 }

@@ -27,7 +27,7 @@ demo = ["dep:clap", "junie-tui/cli"]
 product = []
 
 [dependencies]
-junie-tui = { path = "../..", default-features = false }
+junie-tui = { path = "../..", default-features = false, features = ["terminal"] }
 clap = { workspace = true, optional = true }
 ratatui = { workspace = true }
 

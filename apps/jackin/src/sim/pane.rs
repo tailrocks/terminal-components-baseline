@@ -12,6 +12,7 @@ use ratatui::layout::Rect;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::instance::AgentState;
+use crate::domain::vocabulary::PaneWords;
 use crate::panes::{
     PaneBody, PaneKey, PaneKindTag, PaneNote, PaneRequest, PaneSpawn, PasteOutcome,
 };
@@ -323,7 +324,7 @@ impl PaneBody for ScriptPane {
         None
     }
 
-    fn note(&self) -> Option<PaneNote> {
+    fn note(&self, _words: &PaneWords) -> Option<PaneNote> {
         None
     }
 

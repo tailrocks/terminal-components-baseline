@@ -13,9 +13,10 @@ use crate::domain::role::RoleManifestDoc;
 use crate::domain::usage::AccountUsage;
 use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
-use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
+use crate::panes::{PaneBody, PaneKind, PaneRequest, PaneSpawn, PaneTiming};
 use crate::world::{GlobalConfig, Msg, World};
 
+use junie_tui::core::refusal::Reason;
 pub use junie_tui::widgets::diff::{
     DiffFile as ChangedFile, DiffHunk as Hunk, DiffLine, DiffStatus,
 };
@@ -515,6 +516,23 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
     fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody>;
 
     fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest>;
+
+    /// Whether a pane of `kind` may be started in `instance` now. An `Err` is
+    /// the reason the new-tab picker shows on the disabled row.
+    fn spawnable(
+        &self,
+        _world: &World,
+        _instance: &Instance,
+        _kind: &PaneKind,
+    ) -> Result<(), Reason> {
+        Ok(())
+    }
+
+    /// How long the replay window of an attach stays open. A backend that
+    /// builds `TerminalPane`s passes this to them.
+    fn pane_timing(&self) -> PaneTiming {
+        PaneTiming::default()
+    }
 
     fn file_source(&self, world: &World) -> Box<dyn FileSource> {
         Box::new(

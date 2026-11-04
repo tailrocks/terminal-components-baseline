@@ -7,8 +7,10 @@ use termpane::{DamageGrid, EraseDisplayPolicy, PassthroughEvent, ScrollOp};
 
 use crate::core::event::Key;
 
+mod forward;
 mod viewport;
 
+pub use forward::{ForwardPolicy, Paste};
 pub use viewport::TerminalViewport;
 
 pub const SCROLLBACK_ROWS: usize = 1_000;
@@ -146,6 +148,25 @@ impl TerminalState {
 
     pub fn scrollback(&self) -> usize {
         self.grid.scrollback()
+    }
+
+    /// Whether the program asked to be told when the pane gains or loses
+    /// focus (`CSI ? 1004 h`).
+    pub fn focus_events(&self) -> bool {
+        self.grid.focus_events()
+    }
+
+    /// Whether the program asked for mouse reports (any of `CSI ? 1000 h`,
+    /// `1002` and `1003`).
+    pub fn mouse_reporting(&self) -> bool {
+        self.grid.mouse_protocol_mode() != termpane::MouseProtocolMode::None
+    }
+
+    /// Drops the history and keeps the screen. The count of rows pushed into
+    /// history since the start (`scrolled_off`) is a fact about the past and
+    /// stays.
+    pub fn clear_scrollback(&mut self) {
+        self.grid.clear_scrollback();
     }
 
     pub fn set_scrollback(&mut self, rows: usize) {

@@ -1,4 +1,4 @@
-use crate::domain::vocabulary::{DaemonWords, LifecycleWords, StatusWords, Vocabulary};
+use crate::domain::vocabulary::{DaemonWords, LifecycleWords, PaneWords, StatusWords, Vocabulary};
 
 impl Vocabulary {
     pub fn demo() -> Self {
@@ -150,6 +150,18 @@ impl Vocabulary {
             not_in_roster: "{id} is not in the roster".into(),
             unknown_role: "{role} is not in the registry".into(),
             role_not_loaded: "the role manifest has not loaded yet".into(),
+            pane: PaneWords::demo(),
+        }
+    }
+}
+
+impl PaneWords {
+    pub fn demo() -> Self {
+        Self {
+            viewing: "Read-only · another terminal controls this pane".into(),
+            connection_lost: "Connection to the daemon lost · press Enter to reattach".into(),
+            exited: "{agent} exited (code {code}) · the container keeps running".into(),
+            ..Self::openshell()
         }
     }
 }

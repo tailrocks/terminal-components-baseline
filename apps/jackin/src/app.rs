@@ -35,7 +35,7 @@ use crate::domain::instance::InstanceStatus;
 use crate::domain::vocabulary::fill_in;
 use crate::launch::LaunchTarget;
 use crate::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_ROLES, TAB_USAGE};
-use crate::panes::{Daemon, PaneId};
+use crate::panes::{Daemon, PaneId, PanePolicy};
 use crate::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
 use crate::screens::capsule::CapsuleScreen;
 use crate::screens::cockpit::CockpitScreen;
@@ -139,6 +139,7 @@ pub struct AppOptions {
     pub frame: u64,
     pub theme: Theme,
     pub clipboard: ClipboardMode,
+    pub panes: PanePolicy,
 }
 
 pub fn assemble(world: World, entry: Entry, options: AppOptions) -> App {
@@ -170,6 +171,7 @@ pub struct App {
     pub clipboard_gen: u32,
     exit_after_status: Option<i64>,
     external: Option<ExternalReceiver>,
+    pane_policy: Arc<PanePolicy>,
 }
 
 impl App {
@@ -179,8 +181,13 @@ impl App {
             frame,
             theme,
             clipboard,
+            panes,
         } = options;
         world.clock.running = motion != Motion::Paused;
+        let pane_policy = Arc::new(panes);
+        for daemon in world.daemons.values_mut() {
+            daemon.set_policy(&pane_policy);
+        }
         let mut shell = Shell::new();
         shell.motion = motion;
 
@@ -209,6 +216,7 @@ impl App {
             clipboard_gen: 0,
             exit_after_status: None,
             external: None,
+            pane_policy,
         };
         app.start(entry, frame);
         app
@@ -1328,6 +1336,7 @@ impl App {
         self.shell.pointer.pressed = None;
         if let Some(c) = self.router.capsule_mut() {
             c.dialog_open = true;
+            c.sync_focus(&mut self.world);
         }
     }
 
@@ -1336,6 +1345,7 @@ impl App {
             && let Some(c) = self.router.capsule_mut()
         {
             c.dialog_open = false;
+            c.sync_focus(&mut self.world);
         }
     }
 
@@ -1780,13 +1790,12 @@ impl App {
                     );
                     return;
                 }
-                if !self.world.daemons.contains_key(&instance)
-                    && self.router.cockpit_mut().is_some()
-                {
+                if !self.world.daemons.contains_key(&instance) {
                     self.open_first_session(&instance);
                 }
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
                     d.attached_by = Some("this terminal".into());
+                    d.set_policy(&self.pane_policy);
                 }
                 let page = Page::Capsule(Box::new(CapsuleScreen::new(
                     &instance,
@@ -1840,8 +1849,10 @@ impl App {
                     .capsule()
                     .map(|c| c.instance.clone())
                     .unwrap_or_default();
+                let now = self.world.now_ms();
                 if let Some(d) = self.world.daemons.get_mut(&inst) {
                     d.attached_by = None;
+                    d.blur(now);
                 }
                 self.show_tab(TAB_MANAGER);
                 self.router
@@ -1921,6 +1932,7 @@ impl App {
         let backend = Arc::clone(&self.world.backend);
         let requests = backend.initial_panes(i);
         let mut d = Daemon::new(&self.world.workspace_label(i));
+        d.set_policy(&self.pane_policy);
         let now = self.world.now_ms();
         for request in requests {
             d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));

@@ -321,3 +321,49 @@ fn view_reports_soft_wraps() {
     assert_eq!(view.row_wrap(5), None);
     assert_eq!(view_rows(&view)[2], "UVWXY     ");
 }
+
+#[test]
+fn the_program_turns_focus_events_and_mouse_reporting_on_and_off() {
+    let mut state = TerminalState::new(6, 20);
+    assert!(!state.focus_events());
+    assert!(!state.mouse_reporting());
+
+    state.feed(b"\x1b[?1004h");
+    assert!(state.focus_events());
+    assert!(!state.mouse_reporting(), "focus events are not the mouse");
+    state.feed(b"\x1b[?1004l");
+    assert!(!state.focus_events());
+
+    for mode in ["1000", "1002", "1003"] {
+        state.feed(format!("\x1b[?{mode}h").as_bytes());
+        assert!(state.mouse_reporting(), "mode {mode}");
+        state.feed(format!("\x1b[?{mode}l").as_bytes());
+        assert!(!state.mouse_reporting(), "mode {mode} off");
+    }
+    state.feed(b"\x1b[?1006h");
+    assert!(
+        !state.mouse_reporting(),
+        "an encoding without a protocol mode reports nothing"
+    );
+}
+
+#[test]
+fn clear_scrollback_drops_the_history_and_keeps_the_screen() {
+    let mut state = history_state();
+    assert_eq!(state.scrollback_len(), 24);
+    let pushed = state.scrolled_off();
+    state.set_scrollback(6);
+
+    state.clear_scrollback();
+
+    assert_eq!(state.scrollback_len(), 0);
+    assert_eq!(state.scrollback(), 0, "the view is back at the live rows");
+    assert_eq!(view_rows(&state.view(0)), numbered(25, 30));
+    assert_eq!(
+        state.scrolled_off(),
+        pushed,
+        "rows pushed since the start is a count of the past, not of what is held"
+    );
+    assert_eq!(state.feed(b"\r\nL31"), vec![]);
+    assert_eq!(state.scrollback_len(), 1, "history starts again");
+}

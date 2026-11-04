@@ -33,6 +33,7 @@ use junie_tui::ui::layout::SplitDir;
 
 pub mod scenario;
 pub mod surfaces;
+pub mod terminal;
 pub mod vocabulary;
 
 pub use scenario::{
@@ -1508,6 +1509,11 @@ pub fn world_for(scenario: Scenario) -> World {
         Scenario::LaunchFailure => {
             let mut w = populated(scenario, false);
             w.backend = SimBackend::failing_launch();
+            w
+        }
+        Scenario::CapsuleTerminal => {
+            let mut w = populated(scenario, false);
+            terminal::capsule_terminal(&mut w);
             w
         }
         Scenario::LaunchChecks => {
