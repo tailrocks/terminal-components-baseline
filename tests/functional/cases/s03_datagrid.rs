@@ -599,7 +599,22 @@ fn sections_narrow_then_wide() {
     }
 
     click_tab(&app, "Options");
-    let wide_opt = app.wait_text(CAP_OPT);
+    // The options caption paints before Horizontal bar's "auto", while the
+    // states grid can still cover that row.
+    let wide_opt = app.wait_screen("wide options", |screen| {
+        let visible = text(screen);
+        screen.cols() == 120
+            && screen.rows() == 40
+            && visible.contains(CAP_OPT)
+            && visible.contains("auto")
+            && visible.contains("Page options")
+            && visible.contains("shell")
+            && visible.contains("ctrl-d")
+            && !visible.contains("Northwind")
+            && !visible.contains("Compare levels")
+            && !visible.contains(CAP_STATES)
+            && !visible.contains("never")
+    });
     see(
         &wide_opt,
         &[

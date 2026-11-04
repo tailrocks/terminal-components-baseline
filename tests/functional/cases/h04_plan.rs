@@ -333,10 +333,17 @@ fn h04_plan_plan() {
         screen.cols() == 120 && screen.rows() == 40 && text(screen).contains(DIALOG)
     });
     // Cancel starts focused (`confirm_plan` sets `initial_focus` to `actions[0]`).
+    // The dialog title leaves before "Cancelled" paints, and Start plan can remain.
     app.key("enter");
     let dismissed = app.wait_screen("dialog cancelled", |screen| {
         let visible = text(screen);
-        !visible.contains(DIALOG) && visible.contains(TITLE)
+        visible.contains(CANCELLED_GATE)
+            && visible.contains("8 steps · 8 included")
+            && visible.contains("Confirm plan")
+            && !visible.contains(DIALOG)
+            && !visible.contains("Start plan")
+            && !visible.contains(STARTED)
+            && !visible.contains("gate 2 of 2")
     });
     see(
         &dismissed,
@@ -379,7 +386,8 @@ fn h04_plan_plan() {
     );
     app.key("esc");
     app.wait_screen("second confirm dismissed", |screen| {
-        !text(screen).contains(DIALOG)
+        let visible = text(screen);
+        !visible.contains(DIALOG) && !visible.contains("Start plan")
     });
     app.key("u");
     app.wait_text(RESTORED);
