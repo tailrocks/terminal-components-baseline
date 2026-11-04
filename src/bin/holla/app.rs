@@ -178,7 +178,7 @@ impl App {
         for _ in 0..frame {
             app.on_tick();
         }
-        app.world.clock.running = running && !app.shell.clock_steps;
+        app.world.clock.running = running && !app.shell.test_requests;
         app
     }
 

@@ -165,7 +165,7 @@ impl App {
             history: History::seeded(),
             shell,
             context: ContextConfig::DEFAULT,
-            clock: WallClock::new(),
+            clock: WallClock::for_run(),
             layers: Layers::new(),
             tick: 0,
             keys: shell_keys(),
@@ -2111,6 +2111,15 @@ impl shell::App for App {
     }
     fn tick_interval(&self) -> Duration {
         App::tick_interval(self)
+    }
+    fn advance_clock(&mut self, ms: u64) -> Option<Outcome> {
+        Some(junie_tui::clock::step_wall(
+            self,
+            |a| &mut a.clock,
+            ms,
+            |a| a.tick_interval().as_millis() as u64,
+            Self::on_tick,
+        ))
     }
     fn draw(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
         App::draw(self, area, buf, ctx)
