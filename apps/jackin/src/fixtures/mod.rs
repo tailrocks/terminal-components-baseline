@@ -20,7 +20,7 @@ use crate::domain::workspace::{
     AllowedRoles, EnvVar, Isolation, Mount, MountScope, RoleEntry, RolePolicy, RoleSource,
     Workspace,
 };
-use crate::panes::Daemon;
+use crate::panes::{Daemon, PaneBody, PaneRequest, PaneSpawn, ScriptPane};
 use crate::sim::SimBackend;
 use crate::sim::onepassword::SimOnePassword;
 use crate::sim::scripts::SimScripts;
@@ -1319,80 +1319,60 @@ fn populated(scenario: Scenario, rich: bool) -> World {
     }
 
     let now_ms = w.now_ms();
-    let mut d1 = Daemon::new("payments-platform", SimScripts::shared());
-    d1.new_tab(
+    let mut d1 = Daemon::new("payments-platform");
+    let claude = PaneRequest::new(
+        "jk-7f3a",
         Some(Agent::ClaudeCode),
         Some("acct-claude-work".into()),
-        now_ms - 60_000,
-        true,
+    );
+    d1.new_tab(&claude, now_ms - 60_000, scripted(&claude));
+    let codex = PaneRequest::new(
+        "jk-7f3a",
+        Some(Agent::Codex),
+        Some("acct-codex-primary".into()),
     );
     d1.split(
         SplitDir::Horizontal,
         false,
-        Some(Agent::Codex),
-        Some("acct-codex-primary".into()),
+        &codex,
         now_ms - 50_000,
-        true,
+        scripted(&codex),
     );
-    d1.split(SplitDir::Vertical, false, None, None, now_ms - 40_000, true);
+    let shell = PaneRequest::new("jk-7f3a", None, None);
+    d1.split(
+        SplitDir::Vertical,
+        false,
+        &shell,
+        now_ms - 40_000,
+        |spawn| {
+            let body = ScriptPane::new(&shell, &spawn, SimScripts::shared())
+                .booted()
+                .with_history_above(settlement_history());
+            Box::new(body)
+        },
+    );
     if let Some(t) = d1.active_tab_mut() {
         t.focused = 1;
     }
-    d1.new_tab(None, None, now_ms - 30_000, true);
-    d1.new_tab(Some(Agent::Amp), None, now_ms - 20_000, true);
+    d1.new_tab(&shell, now_ms - 30_000, scripted(&shell));
+    let amp = PaneRequest::new("jk-7f3a", Some(Agent::Amp), None);
+    d1.new_tab(&amp, now_ms - 20_000, scripted(&amp));
     if let Some(t) = d1.tabs.get_mut(2) {
         t.custom_label = Some("docs".into());
     }
     d1.active = 0;
 
-    if let Some(p) = d1.pane_mut(3) {
-        let mut history: Vec<junie_tui::widgets::viewport::Line> = vec![];
-        for n in 0..1_960u32 {
-            let status = match n % 7 {
-                0 => "retrying attempt=2",
-                3 => "retrying attempt=1",
-                _ => "settled",
-            };
-            let items = 9 + (n * 37) % 50;
-            let l = if n % 60 == 0 {
-                vec![junie_tui::widgets::viewport::Span::muted(format!(
-                    "==== settlement.batch.2026-09-03T{:02}:{:02}Z ====",
-                    9 + n / 360,
-                    (n / 6) % 60
-                ))]
-            } else if n % 23 == 0 {
-                vec![junie_tui::widgets::viewport::Span::new(
-                    format!("warn: batch {} backoff 500 ms", 4000 + n),
-                    junie_tui::theme::Tone::Warning,
-                )]
-            } else if n % 97 == 0 {
-                vec![junie_tui::widgets::viewport::Span::new(
-                    format!("error: batch {} gave up after 3 attempts", 4000 + n),
-                    junie_tui::theme::Tone::Error,
-                )]
-            } else {
-                vec![junie_tui::widgets::viewport::Span::plain(format!(
-                    "batch {}  {:>2} items   status={status}",
-                    4000 + n,
-                    items
-                ))]
-            };
-            history.insert(0, l);
-        }
-        history.extend(p.term.lines().cloned());
-        p.term.set_lines(history);
-    }
     w.daemons.insert("jk-7f3a".into(), d1);
-    let mut d3 = Daemon::new("infra-control-plane", SimScripts::shared());
-    d3.new_tab(
+    let mut d3 = Daemon::new("infra-control-plane");
+    let experiments = PaneRequest::new(
+        "jk-9b02",
         Some(Agent::Codex),
         Some("acct-codex-experiments".into()),
-        now_ms - 30_000,
-        true,
     );
+    d3.new_tab(&experiments, now_ms - 30_000, scripted(&experiments));
     w.daemons.insert("jk-9b02".into(), d3);
     if rich {
-        let d10 = Daemon::new("data-pipeline", SimScripts::shared());
+        let d10 = Daemon::new("data-pipeline");
         w.daemons.insert("jk-e0e0".into(), d10);
 
         if let Some(i) = w.instance_mut("jk-e0e0") {
@@ -1428,6 +1408,47 @@ fn populated(scenario: Scenario, rich: bool) -> World {
     refresh_snapshots(&mut w);
     w.sync_arbiter();
     w
+}
+
+fn scripted(request: &PaneRequest) -> impl FnOnce(PaneSpawn) -> Box<dyn PaneBody> + '_ {
+    |spawn| Box::new(ScriptPane::new(request, &spawn, SimScripts::shared()).booted())
+}
+
+fn settlement_history() -> Vec<junie_tui::widgets::viewport::Line> {
+    let mut history: Vec<junie_tui::widgets::viewport::Line> = vec![];
+    for n in 0..1_960u32 {
+        let status = match n % 7 {
+            0 => "retrying attempt=2",
+            3 => "retrying attempt=1",
+            _ => "settled",
+        };
+        let items = 9 + (n * 37) % 50;
+        let l = if n % 60 == 0 {
+            vec![junie_tui::widgets::viewport::Span::muted(format!(
+                "==== settlement.batch.2026-09-03T{:02}:{:02}Z ====",
+                9 + n / 360,
+                (n / 6) % 60
+            ))]
+        } else if n % 23 == 0 {
+            vec![junie_tui::widgets::viewport::Span::new(
+                format!("warn: batch {} backoff 500 ms", 4000 + n),
+                junie_tui::theme::Tone::Warning,
+            )]
+        } else if n % 97 == 0 {
+            vec![junie_tui::widgets::viewport::Span::new(
+                format!("error: batch {} gave up after 3 attempts", 4000 + n),
+                junie_tui::theme::Tone::Error,
+            )]
+        } else {
+            vec![junie_tui::widgets::viewport::Span::plain(format!(
+                "batch {}  {:>2} items   status={status}",
+                4000 + n,
+                items
+            ))]
+        };
+        history.insert(0, l);
+    }
+    history
 }
 
 pub fn world_for(scenario: Scenario) -> World {

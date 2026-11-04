@@ -1,14 +1,18 @@
 use std::collections::VecDeque;
 use std::sync::Arc;
 
+use junie_tui::core::event::Key;
 use junie_tui::core::id::WidgetId;
 use junie_tui::theme::Tone;
 use junie_tui::ui::layout::SplitDir;
 use junie_tui::widgets::viewport::{Line, Span, TextViewport};
+use junie_tui::widgets::viewport_ops::ViewportOps;
+use ratatui::crossterm::event::KeyCode;
+use ratatui::layout::Rect;
 
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
-use crate::domain::instance::AgentState;
+use crate::domain::instance::{AgentState, InstanceId};
 
 pub use junie_tui::ui::pane_tree::PaneId;
 
@@ -192,41 +196,148 @@ impl AgentProcess {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct Pane {
-    pub id: PaneId,
-    pub proc: AgentProcess,
-    pub term: TextViewport,
-    pub input: String,
-    pub received_output: bool,
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PaneKindTag {
+    Agent,
+    Shell,
+    Script,
 }
 
-impl Pane {
-    pub fn new(
-        id: PaneId,
-        agent: Option<Agent>,
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PaneKey {
+    /// The capsule swallowed the key: nothing reached the pane.
+    Consumed,
+    /// The pane took the key.
+    Forwarded,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PaneNote {
+    pub text: String,
+    pub tone: Tone,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PasteOutcome {
+    Sent,
+    NeedsConfirm { lines: usize },
+    TooLarge,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum PaneKind {
+    Agent {
+        agent: Agent,
         account: Option<AccountId>,
-        workspace: &str,
-        start_ms: i64,
-        scripts: Arc<dyn SessionScript>,
-    ) -> Self {
-        let mut term = TextViewport::new(WidgetId::of("capsule.pane").child(id as usize))
-            .max_lines(SCROLLBACK);
-        term.follow = true;
+    },
+    Shell,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PaneRequest {
+    pub instance: InstanceId,
+    pub kind: PaneKind,
+}
+
+impl PaneRequest {
+    pub fn new(instance: &str, agent: Option<Agent>, account: Option<AccountId>) -> Self {
         Self {
-            id,
-            proc: AgentProcess::new(agent, account, workspace, start_ms, scripts),
-            term,
-            input: String::new(),
-            received_output: false,
+            instance: instance.to_owned(),
+            kind: match agent {
+                Some(agent) => PaneKind::Agent { agent, account },
+                None => PaneKind::Shell,
+            },
         }
     }
 
-    pub fn label(&self) -> String {
-        match self.proc.agent {
-            Some(a) => a.label().to_owned(),
-            None => "Shell".into(),
+    pub fn agent(&self) -> Option<Agent> {
+        match self.kind {
+            PaneKind::Agent { agent, .. } => Some(agent),
+            PaneKind::Shell => None,
         }
+    }
+
+    pub fn account(&self) -> Option<&AccountId> {
+        match &self.kind {
+            PaneKind::Agent { account, .. } => account.as_ref(),
+            PaneKind::Shell => None,
+        }
+    }
+}
+
+/// What the daemon decides before a body exists and hands to the backend that
+/// builds it: the id the pane will have, the daemon's workspace name and the
+/// time of the request.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PaneSpawn {
+    pub id: PaneId,
+    pub workspace: String,
+    pub now_ms: i64,
+}
+
+/// The inside of a pane. The capsule draws, sizes, scrolls and types into a
+/// pane only through this trait, so it does not know what runs behind it.
+///
+/// There is no `Send` bound: `TextViewport` holds an `Rc` (the edit menu's
+/// validator), and the `World` that owns the panes is not `Send` either.
+pub trait PaneBody: std::fmt::Debug {
+    fn kind(&self) -> PaneKindTag;
+    fn state(&self) -> AgentState;
+    fn title(&self) -> Option<&str>;
+    fn note(&self) -> Option<PaneNote>;
+    fn viewport(&self) -> &dyn ViewportOps;
+    fn viewport_mut(&mut self) -> &mut dyn ViewportOps;
+    fn key(&mut self, key: &Key, now_ms: i64) -> PaneKey;
+    fn paste(&mut self, text: &str, now_ms: i64) -> PasteOutcome;
+    fn tick(&mut self, now_ms: i64) -> bool;
+    fn sync_size(&mut self, inner: Rect);
+    fn focus_changed(&mut self, focused: bool, now_ms: i64);
+    fn redraw(&mut self);
+    fn clear(&mut self);
+    fn touched(&self) -> &[String];
+    fn sends_prefix(&self) -> bool;
+    fn close_needs_confirm(&self) -> bool;
+}
+
+#[derive(Debug)]
+pub struct ScriptPane {
+    proc: AgentProcess,
+    term: TextViewport,
+    input: String,
+    workspace: String,
+}
+
+impl ScriptPane {
+    pub fn new(request: &PaneRequest, spawn: &PaneSpawn, scripts: Arc<dyn SessionScript>) -> Self {
+        let mut term = TextViewport::new(WidgetId::of("capsule.pane").child(spawn.id as usize))
+            .max_lines(SCROLLBACK);
+        term.follow = true;
+        Self {
+            proc: AgentProcess::new(
+                request.agent(),
+                request.account().cloned(),
+                &spawn.workspace,
+                spawn.now_ms,
+                scripts,
+            ),
+            term,
+            input: String::new(),
+            workspace: spawn.workspace.clone(),
+        }
+    }
+
+    pub fn booted(mut self) -> Self {
+        let mut out = vec![];
+        self.proc.boot_all(&mut out);
+        self.push_lines(out);
+        self.refresh_prompt();
+        self
+    }
+
+    pub fn with_history_above(mut self, mut history: Vec<Line>) -> Self {
+        history.extend(self.term.lines().cloned());
+        self.term.set_lines(history);
+        self
     }
 
     fn prompt_line(&self) -> Line {
@@ -289,41 +400,23 @@ impl Pane {
                 self.term.pop();
             }
             self.term.push(l);
-            self.received_output = true;
         }
         self.refresh_prompt();
     }
 
-    pub fn boot_all(&mut self) {
-        let mut out = vec![];
-        self.proc.boot_all(&mut out);
-        self.push_lines(out);
-        self.refresh_prompt();
-    }
-
-    pub fn tick(&mut self, now_ms: i64) -> bool {
-        let out = self.proc.tick(now_ms);
-        let changed = !out.is_empty();
-        self.push_lines(out);
-        self.refresh_prompt();
-        changed
-    }
-
-    pub fn type_char(&mut self, c: char, now_ms: i64, workspace: &str) {
+    fn type_char(&mut self, c: char) {
         self.term.set_follow(true);
-        let _ = now_ms;
-        let _ = workspace;
         self.input.push(c);
         self.refresh_prompt();
     }
 
-    pub fn backspace(&mut self) {
+    fn backspace(&mut self) {
         self.term.set_follow(true);
         self.input.pop();
         self.refresh_prompt();
     }
 
-    pub fn commit(&mut self, now_ms: i64, workspace: &str) {
+    fn commit(&mut self, now_ms: i64) {
         self.term.set_follow(true);
         let text = std::mem::take(&mut self.input);
         if self
@@ -333,39 +426,119 @@ impl Pane {
         {
             self.term.pop();
         }
-        let out = self.proc.on_input(&text, now_ms, workspace);
+        let out = self.proc.on_input(&text, now_ms, &self.workspace);
         self.push_lines(out);
         self.refresh_prompt();
     }
+}
 
-    pub fn clear(&mut self) {
+impl PaneBody for ScriptPane {
+    fn kind(&self) -> PaneKindTag {
+        PaneKindTag::Script
+    }
+
+    fn state(&self) -> AgentState {
+        self.proc.state
+    }
+
+    fn title(&self) -> Option<&str> {
+        None
+    }
+
+    fn note(&self) -> Option<PaneNote> {
+        None
+    }
+
+    fn viewport(&self) -> &dyn ViewportOps {
+        &self.term
+    }
+
+    fn viewport_mut(&mut self) -> &mut dyn ViewportOps {
+        &mut self.term
+    }
+
+    fn key(&mut self, key: &Key, now_ms: i64) -> PaneKey {
+        match key.code {
+            KeyCode::Char(c) if !key.chord() => {
+                self.term.clear_selection();
+                self.type_char(c);
+            }
+            KeyCode::Backspace => self.backspace(),
+            KeyCode::Enter => self.commit(now_ms),
+            KeyCode::Esc => {
+                self.term.set_follow(true);
+            }
+            _ => return PaneKey::Consumed,
+        }
+        PaneKey::Forwarded
+    }
+
+    fn paste(&mut self, text: &str, _now_ms: i64) -> PasteOutcome {
+        for c in text.chars() {
+            self.type_char(c);
+        }
+        PasteOutcome::Sent
+    }
+
+    fn tick(&mut self, now_ms: i64) -> bool {
+        let out = self.proc.tick(now_ms);
+        let changed = !out.is_empty();
+        self.push_lines(out);
+        self.refresh_prompt();
+        changed
+    }
+
+    fn sync_size(&mut self, inner: Rect) {
+        self.term.set_area(inner);
+    }
+
+    fn focus_changed(&mut self, _focused: bool, _now_ms: i64) {}
+
+    fn redraw(&mut self) {}
+
+    fn clear(&mut self) {
         self.term.clear();
         self.term.set_follow(true);
         self.refresh_prompt();
     }
 
-    pub fn state(&self) -> AgentState {
-        self.proc.state
+    fn touched(&self) -> &[String] {
+        &self.proc.touched
+    }
+
+    fn sends_prefix(&self) -> bool {
+        false
+    }
+
+    fn close_needs_confirm(&self) -> bool {
+        true
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
+pub struct Pane {
+    pub id: PaneId,
+    pub label: String,
+    pub agent: Option<Agent>,
+    pub account: Option<AccountId>,
+    pub body: Box<dyn PaneBody>,
+}
+
+#[derive(Debug)]
 pub struct Daemon {
     pub workspace: String,
     pub tabs: Vec<Tab>,
     pub active: usize,
     pub panes: Vec<Pane>,
     pub next_id: u64,
-    scripts: Arc<dyn SessionScript>,
 
     pub attached_by: Option<String>,
 }
 
 impl Daemon {
-    pub fn new(workspace: &str, scripts: Arc<dyn SessionScript>) -> Self {
+    pub fn new(workspace: &str) -> Self {
         Self {
             workspace: workspace.to_owned(),
-            scripts,
             tabs: vec![],
             active: 0,
             panes: vec![],
@@ -402,35 +575,34 @@ impl Daemon {
 
     pub fn new_pane(
         &mut self,
-        agent: Option<Agent>,
-        account: Option<AccountId>,
+        request: &PaneRequest,
         now_ms: i64,
-        boot: bool,
+        make: impl FnOnce(PaneSpawn) -> Box<dyn PaneBody>,
     ) -> PaneId {
         let id = self.alloc();
-        let mut p = Pane::new(
+        let agent = request.agent();
+        let body = make(PaneSpawn {
             id,
-            agent,
-            account,
-            &self.workspace,
+            workspace: self.workspace.clone(),
             now_ms,
-            self.scripts.clone(),
-        );
-        if boot {
-            p.boot_all();
-        }
-        self.panes.push(p);
+        });
+        self.panes.push(Pane {
+            id,
+            label: agent.map_or_else(|| "Shell".to_owned(), |a| a.label().to_owned()),
+            agent,
+            account: request.account().cloned(),
+            body,
+        });
         id
     }
 
     pub fn new_tab(
         &mut self,
-        agent: Option<Agent>,
-        account: Option<AccountId>,
+        request: &PaneRequest,
         now_ms: i64,
-        boot: bool,
+        make: impl FnOnce(PaneSpawn) -> Box<dyn PaneBody>,
     ) -> usize {
-        let pid = self.new_pane(agent, account, now_ms, boot);
+        let pid = self.new_pane(request, now_ms, make);
         self.tabs.push(Tab {
             custom_label: None,
             root: PaneNode::Leaf(pid),
@@ -445,13 +617,12 @@ impl Daemon {
         &mut self,
         dir: SplitDir,
         new_first: bool,
-        agent: Option<Agent>,
-        account: Option<AccountId>,
+        request: &PaneRequest,
         now_ms: i64,
-        boot: bool,
+        make: impl FnOnce(PaneSpawn) -> Box<dyn PaneBody>,
     ) -> Option<PaneId> {
         let target = self.focused_pane()?;
-        let pid = self.new_pane(agent, account, now_ms, boot);
+        let pid = self.new_pane(request, now_ms, make);
         let tab = self.active_tab_mut()?;
         if tab.root.split_leaf(target, pid, dir, new_first) {
             tab.focused = pid;
@@ -507,7 +678,7 @@ impl Daemon {
         let mut has_shell = false;
         for id in &leaves {
             if let Some(p) = self.pane(*id) {
-                match p.proc.agent {
+                match p.agent {
                     Some(a) => {
                         let mut l = a.label().to_owned();
                         if let Some(s) = account_suffix(p) {
@@ -537,7 +708,7 @@ impl Daemon {
     pub fn tab_state(&self, tab: &Tab) -> AgentState {
         tab.leaves()
             .iter()
-            .filter_map(|id| self.pane(*id).map(|p| p.state()))
+            .filter_map(|id| self.pane(*id).map(|p| p.body.state()))
             .max_by_key(|s| s.rank())
             .unwrap_or(AgentState::Unknown)
     }
@@ -545,7 +716,7 @@ impl Daemon {
     pub fn tick(&mut self, now_ms: i64) -> bool {
         let mut changed = false;
         for p in &mut self.panes {
-            changed |= p.tick(now_ms);
+            changed |= p.body.tick(now_ms);
         }
         changed
     }
@@ -554,7 +725,7 @@ impl Daemon {
         let mut v: Vec<String> = self
             .panes
             .iter()
-            .flat_map(|p| p.proc.touched.clone())
+            .flat_map(|p| p.body.touched().iter().cloned())
             .collect();
         v.sort();
         v.dedup();
@@ -578,9 +749,9 @@ impl Daemon {
                         .iter()
                         .filter_map(|id| self.pane(*id))
                         .map(|p| PaneSnapshot {
-                            label: p.label(),
-                            agent: p.proc.agent,
-                            state: p.state(),
+                            label: p.label.clone(),
+                            agent: p.agent,
+                            state: p.body.state(),
                             focused: t.focused == p.id,
                         })
                         .collect(),

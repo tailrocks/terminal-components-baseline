@@ -353,8 +353,10 @@ impl CockpitScreen {
                         .and_then(|i| w.workspace(i))
                         .map(|x| x.name.clone())
                         .unwrap_or(wsname);
-                    let mut d = crate::panes::Daemon::new(&wsname, w.backend.session_script());
-                    d.new_tab(Some(self.agent), self.account.clone(), now, false);
+                    let mut d = crate::panes::Daemon::new(&wsname);
+                    let request =
+                        crate::panes::PaneRequest::new(&id, Some(self.agent), self.account.clone());
+                    d.new_tab(&request, now, |spawn| w.backend.spawn_pane(&request, spawn));
                     w.daemons.insert(id.clone(), d);
                     crate::world::refresh_snapshots(w);
                     w.sync_arbiter();

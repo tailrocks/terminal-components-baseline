@@ -6,9 +6,10 @@ use crate::backend::{
 };
 use crate::domain::account::CredentialSource;
 use crate::domain::agent::Provider;
+use crate::domain::instance::Instance;
 use crate::domain::launch::LaunchContent;
 use crate::launch::{LaunchPlan, LaunchTarget};
-use crate::panes::SessionScript;
+use crate::panes::{PaneBody, PaneRequest, PaneSpawn, ScriptPane};
 use crate::world::{Msg, World};
 
 pub mod changes;
@@ -247,7 +248,15 @@ impl Backend for SimBackend {
         }
     }
 
-    fn session_script(&self) -> Arc<dyn SessionScript> {
-        scripts::SimScripts::shared()
+    fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody> {
+        Box::new(ScriptPane::new(
+            request,
+            &spawn,
+            scripts::SimScripts::shared(),
+        ))
+    }
+
+    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
+        vec![PaneRequest::new(&instance.id, Some(instance.agent), None)]
     }
 }

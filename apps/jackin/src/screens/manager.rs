@@ -516,15 +516,20 @@ impl ManagerScreen {
             | InstanceStatus::PreservedDirty
             | InstanceStatus::PreservedUnpushed => {
                 let wsname = i.workdir.trim_start_matches("/workspace/").to_owned();
-                let agent = i.agent;
                 let now_secs = w.clock.now_secs();
                 if let Some(inst) = w.instance_mut(id) {
                     inst.status = InstanceStatus::Running;
                     inst.last_seen_secs = now_secs;
                 }
                 let now = w.now_ms();
-                let mut d = crate::panes::Daemon::new(&wsname, w.backend.session_script());
-                d.new_tab(Some(agent), None, now, false);
+                let mut d = crate::panes::Daemon::new(&wsname);
+                let requests = w
+                    .instance(id)
+                    .map(|i| w.backend.initial_panes(i))
+                    .unwrap_or_default();
+                for request in &requests {
+                    d.new_tab(request, now, |spawn| w.backend.spawn_pane(request, spawn));
+                }
                 w.daemons.insert(id.to_owned(), d);
                 crate::world::refresh_snapshots(w);
                 w.sync_arbiter();

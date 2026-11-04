@@ -130,9 +130,8 @@ const PENDING: &[Pending] = &[
         "B7a",
     ),
     ("LaunchPlan", "launch.rs", 10, "B7a"),
-    ("SessionScript", "backend.rs", 2, "B8a"),
     ("AgentProcess", "panes.rs", 5, "B8a"),
-    ("SessionScript", "panes.rs", 6, "B8a"),
+    ("SessionScript", "panes.rs", 4, "B8a"),
 ];
 
 struct Source {
