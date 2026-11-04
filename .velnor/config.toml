@@ -18,6 +18,11 @@ test_runner = "cargo_nextest"
 
 run_ignored = "default"
 
+# Profile ci excludes binary(functional), and that binary is the only
+# one that contains tests. Run 41783685777 then reported 0 tests and
+# nextest exited 4. The suite job owns those tests.
+allow_empty_test_suite = true
+
 [discovery]
 
 exclude = ["docs/**"]

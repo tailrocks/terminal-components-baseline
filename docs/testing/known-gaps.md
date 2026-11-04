@@ -61,7 +61,15 @@ Do not invent a baseline.
 The CI generator limits recorded in `C01` still apply, except the functional suite is sharded.
 Generated CI runs `mbx nextest run --workspace --no-tests warn --partition "hash:$VELNOR_SUITE_SHARD/8" --profile functional` with `NEXTEST_TEST_THREADS=8` and does not pass `--locked`.
 velnor-actions 0.1.73 emits `--no-tests warn` for a partitioned suite.
-The Rust crate job uses `--profile ci`, whose filter is `not binary(functional)`, so it runs library, unit, and integration tests and does not repeat the PTY suite.
+The Rust crate job uses `--profile ci` and `--no-tests warn`.
+The profile filter is `not binary(functional)`.
+On run 41783685777 that filter selected 0 tests across 5 binaries, the functional binary was skipped, and nextest exited 4.
+`allow_empty_test_suite` turns that empty result into a warning.
+Format, clippy, and documentation in the same job passed.
+`g05_candidate_refuses_reference_binary` and `g05_reference_session_receipt_records_identity` fail on ubuntu-26.04 before launch.
+`docs/testing/reference-manifest.json` points at the macOS worktree `/Users/donbeave/Projects/tailrocks/terminal-components-baseline-reference`, and those files are absent on the runner.
+Shard 1 of run 41783685777 failed both in under 10ms.
+The committed baselines do not need those binaries at runtime.
 The inventory script is not a required CI step.
 Branch protection on this branch returned HTTP 404.
 macOS and Windows are unclaimed.

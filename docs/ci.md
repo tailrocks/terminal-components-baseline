@@ -28,9 +28,13 @@ Never hand-edit `.github/workflows/`, `.github/actions/`,
   PTY tests at once. Run 41781135706 cancelled the single unsharded
   job at its 15-minute limit, which is why the suite is sharded.
   `[profile.ci] default-filter = 'not binary(functional)'` keeps those
-  PTY tests out of the Rust crate job. That job still runs library,
-  unit, and integration tests with nextest (`--profile ci`), in
-  parallel with format, clippy, and documentation.
+  PTY tests out of the Rust crate job. That filter matched 0 tests on
+  run 41783685777, because `functional` is the only test binary that
+  contains tests. `[stacks.rust] allow_empty_test_suite = true` makes
+  the crate nextest command `mbx nextest run --profile ci --locked
+  --offline --manifest-path Cargo.toml --package junie-tui --no-tests
+  warn`. Format, clippy, and documentation still run in parallel in
+  that job. The sharded suite is the functional and integration run.
   `required = true` adds `suite-functional` to the generated
   `required` verdict job (`needs` and `VELNOR_NEEDS_EXPECTED`). The
   generator does not call the GitHub branch-protection API.
