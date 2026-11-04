@@ -3,7 +3,7 @@ use std::sync::Arc;
 use junie_tui::widgets::steps::StepState;
 
 use crate::backend::{OnePassword, OpSession};
-use crate::domain::account::AccountId;
+use crate::domain::account::{AccountId, masked};
 use crate::domain::agent::Agent;
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use crate::domain::launch::{
@@ -11,9 +11,12 @@ use crate::domain::launch::{
 };
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
-    FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance, launch_accounts,
+    FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance, TypedKey, launch_accounts,
 };
 use crate::world::World;
+
+/// What one cockpit tick stands for in the stage times the simulator reports.
+const TICK_MS: u64 = 99;
 
 pub const BUILD_LOG: [&str; 44] = [
     "#1 [internal] load build definition from Dockerfile.derived",
@@ -366,6 +369,12 @@ impl SimLaunch {
             _ => StepState::Done,
         };
         ev.push(LaunchEvent::StageChanged(i, final_state));
+        if final_state == StepState::Done {
+            ev.push(LaunchEvent::StageTimed {
+                stage: i,
+                elapsed_ms: spec.ticks * TICK_MS,
+            });
+        }
         if matches!(spec.kind, StageKind::Credentials { .. }) {
             ev.push(LaunchEvent::CredentialsResolved {
                 origin: String::new(),
@@ -413,6 +422,10 @@ impl LaunchFeed for SimLaunch {
         &self.run_id
     }
 
+    fn telemetry(&self) -> Option<&str> {
+        Some("otlp://collector.internal:4317")
+    }
+
     fn poll(&mut self, world: &World) -> Vec<LaunchEvent> {
         self.advance(world)
     }
@@ -422,9 +435,13 @@ impl LaunchFeed for SimLaunch {
         self.resume();
     }
 
-    fn use_plain_text(&mut self) {
+    fn use_plain_text(&mut self) -> Option<TypedKey> {
         self.account = None;
         self.resume();
+        Some(TypedKey {
+            origin: format!("plain text · masked API key · {}", masked("Q1zx")),
+            validation: "typed once for this launch · never stored".into(),
+        })
     }
 
     fn cancel(&mut self, world: &World) -> Option<Instance> {

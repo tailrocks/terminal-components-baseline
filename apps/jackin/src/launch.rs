@@ -34,14 +34,32 @@ pub struct FailedLaunch {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LaunchEvent {
     StageChanged(usize, StepState),
+    /// How long a finished stage took. A backend that does not time its
+    /// stages sends none, and the rail shows none.
+    StageTimed {
+        stage: usize,
+        elapsed_ms: u64,
+    },
     Activity(String),
     BuildLine(String),
     ContainerReady(String),
-    CredentialsResolved { origin: String, validation: String },
+    CredentialsResolved {
+        origin: String,
+        validation: String,
+    },
 
-    CredentialError { message: String },
+    CredentialError {
+        message: String,
+    },
     Failed(Box<FailedLaunch>),
     Ready(Box<ReadyInstance>),
+}
+
+/// What the credentials line says once the operator chose to type the key.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TypedKey {
+    pub origin: String,
+    pub validation: String,
 }
 
 /// What a backend gives the cockpit for one launch. The cockpit polls it on
@@ -51,6 +69,12 @@ pub trait LaunchFeed: std::fmt::Debug + Send {
     /// The id of the run, shown from the first frame.
     fn run_id(&self) -> &str;
 
+    /// The collector the run reports to. A backend that sends no telemetry
+    /// names none, and the debug info shows no telemetry line.
+    fn telemetry(&self) -> Option<&str> {
+        None
+    }
+
     /// The events that happened since the last poll, in order.
     fn poll(&mut self, world: &World) -> Vec<LaunchEvent>;
 
@@ -59,8 +83,9 @@ pub trait LaunchFeed: std::fmt::Debug + Send {
     /// elsewhere leaves it alone.
     fn retry_credentials(&mut self, op: &mut dyn OnePassword);
 
-    /// The operator chose to type the key instead of resolving it.
-    fn use_plain_text(&mut self);
+    /// The operator chose to type the key instead of resolving it. The
+    /// credentials line the backend wants shown for it, if it wants one.
+    fn use_plain_text(&mut self) -> Option<TypedKey>;
 
     /// The operator ended the launch. The record the backend kept of the
     /// launch, if it kept one.

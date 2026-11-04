@@ -631,7 +631,6 @@ impl World {
             return vec![];
         }
         let now = self.clock.now_ms;
-        let mut due: Vec<Msg> = self.take_due().into_iter().collect();
         for (id, d) in self.daemons.iter_mut() {
             if self
                 .instances
@@ -642,8 +641,7 @@ impl World {
             }
         }
         let backend = self.backend.clone();
-        due.extend(backend.due(self));
-        due
+        backend.due(self)
     }
 
     pub fn workspace(&self, id: WorkspaceId) -> Option<&Workspace> {

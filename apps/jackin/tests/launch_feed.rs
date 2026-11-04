@@ -16,7 +16,9 @@ use jackin_console::domain::agent::{Agent, Provider};
 use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use jackin_console::domain::launch::{LaunchContent, LaunchFailure};
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
-use jackin_console::launch::{FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance};
+use jackin_console::launch::{
+    FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance, TypedKey,
+};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::sim::SimBackend;
 use jackin_console::world::{Msg, World};
@@ -215,11 +217,17 @@ struct ScriptedFeed {
     held: bool,
     calls: Arc<Mutex<Calls>>,
     cancel_record: Option<Instance>,
+    collector: Option<String>,
+    typed: Option<TypedKey>,
 }
 
 impl LaunchFeed for ScriptedFeed {
     fn run_id(&self) -> &str {
         &self.run_id
+    }
+
+    fn telemetry(&self) -> Option<&str> {
+        self.collector.as_deref()
     }
 
     fn poll(&mut self, _: &World) -> Vec<LaunchEvent> {
@@ -238,9 +246,10 @@ impl LaunchFeed for ScriptedFeed {
         self.held = false;
     }
 
-    fn use_plain_text(&mut self) {
+    fn use_plain_text(&mut self) -> Option<TypedKey> {
         self.calls.lock().expect("calls").plain_text += 1;
         self.held = false;
+        self.typed.clone()
     }
 
     fn cancel(&mut self, _: &World) -> Option<Instance> {
@@ -388,21 +397,39 @@ fn scripted_panes(
     with_shell: bool,
 ) -> (App, Arc<Mutex<Calls>>) {
     let calls = Arc::new(Mutex::new(Calls::default()));
+    let feed = ScriptedFeed {
+        run_id: "R-7".into(),
+        batches: batches.into(),
+        held: false,
+        calls: calls.clone(),
+        cancel_record,
+        collector: None,
+        typed: None,
+    };
+    (feed_app(feed, &calls, with_shell, Motion::Reduced), calls)
+}
+
+fn feed_app(
+    feed: ScriptedFeed,
+    calls: &Arc<Mutex<Calls>>,
+    with_shell: bool,
+    motion: Motion,
+) -> App {
     let mut world = world_for(Scenario::LaunchRunning);
     world.backend = Arc::new(FeedBackend {
         inner: SimBackend::shared(),
         calls: calls.clone(),
         with_shell,
-        feed: Mutex::new(Some(ScriptedFeed {
-            run_id: "R-7".into(),
-            batches: batches.into(),
-            held: false,
-            calls: calls.clone(),
-            cancel_record,
-        })),
+        feed: Mutex::new(Some(feed)),
     });
     world.op.set_session(OpSession::Locked);
-    (started(world), calls)
+    app_with_world(
+        Scenario::LaunchRunning,
+        world,
+        motion,
+        0,
+        Theme::for_level(ColorLevel::TrueColor),
+    )
 }
 
 #[test]
@@ -646,4 +673,177 @@ fn a_cancel_without_a_record_adds_none() {
         "nothing is made up for a launch the backend never recorded"
     );
     assert_eq!(app.route(), Route::Manager);
+}
+
+fn timing_on(shown: &str) -> Option<String> {
+    shown.lines().find_map(|line| {
+        let cells: Vec<char> = line.chars().collect();
+        cells.windows(5).find_map(|w| {
+            (w[0].is_ascii_digit()
+                && w[1] == '.'
+                && w[2].is_ascii_digit()
+                && w[3] == ' '
+                && w[4] == 's')
+                .then(|| w.iter().collect())
+        })
+    })
+}
+
+#[test]
+fn a_feed_that_gives_no_timing_draws_none() {
+    let (mut app, _) = scripted(
+        vec![
+            running(0),
+            vec![
+                LaunchEvent::StageChanged(0, StepState::Done),
+                LaunchEvent::StageChanged(1, StepState::Running),
+            ],
+        ],
+        None,
+    );
+    tick_until(&mut app, "the second stage", shows("1 done"));
+    tick(&mut app, 3);
+    let shown = screen(&mut app);
+    assert_eq!(
+        timing_on(&shown),
+        None,
+        "no duration is made up for a finished stage:\n{shown}"
+    );
+}
+
+#[test]
+fn a_feed_that_names_no_collector_shows_no_telemetry() {
+    let (mut app, _) = scripted(vec![running(0)], None);
+    tick(&mut app, 2);
+    press(&mut app, "t");
+    press(&mut app, "i");
+    let shown = screen(&mut app);
+    assert!(shown.contains("Debug info"), "{shown}");
+    assert!(shown.contains("R-7"), "{shown}");
+    assert!(!shown.contains("Telemetry"), "{shown}");
+    assert!(!shown.contains("otlp"), "{shown}");
+}
+
+#[test]
+fn a_feed_that_shows_no_key_leaves_the_credentials_line_alone() {
+    let (mut app, calls) = scripted(
+        vec![
+            running(2),
+            vec![LaunchEvent::CredentialError {
+                message: "The vault is sealed".into(),
+            }],
+            vec![LaunchEvent::Activity("Resolved by the backend".into())],
+        ],
+        None,
+    );
+    tick_until(
+        &mut app,
+        "the credential dialog",
+        shows("Credential source unavailable"),
+    );
+    press(&mut app, "right enter");
+    assert_eq!(calls.lock().expect("calls").plain_text, 1);
+    let shown = screen(&mut app);
+    assert!(!shown.contains("masked API key"), "{shown}");
+    assert!(!shown.contains("••••"), "{shown}");
+    assert!(!shown.contains("typed once"), "{shown}");
+}
+
+#[test]
+fn a_reply_due_on_the_handoff_is_delivered() {
+    let mine = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Running);
+    let calls = Arc::new(Mutex::new(Calls::default()));
+    let feed = ScriptedFeed {
+        run_id: "R-7".into(),
+        batches: vec![running(0), vec![ready(mine)]].into(),
+        held: false,
+        calls: calls.clone(),
+        cancel_record: None,
+        collector: None,
+        typed: None,
+    };
+    let mut app = feed_app(feed, &calls, false, Motion::Full);
+    tick_until(&mut app, "the handoff", |a| a.route() == Route::Handoff);
+
+    let mut snapshot = jackin_console::sim::snapshot(&app.world);
+    snapshot.workspaces.truncate(1);
+    app.world.schedule(
+        0,
+        Msg::Refreshed {
+            result: Ok(Box::new(snapshot)),
+        },
+    );
+    tick(&mut app, 1);
+    assert_eq!(
+        app.world.workspaces.len(),
+        1,
+        "the reply that fell due on the handoff was dropped"
+    );
+}
+
+fn feed_with(batches: Vec<Vec<LaunchEvent>>) -> (ScriptedFeed, Arc<Mutex<Calls>>) {
+    let calls = Arc::new(Mutex::new(Calls::default()));
+    let feed = ScriptedFeed {
+        run_id: "R-7".into(),
+        batches: batches.into(),
+        held: false,
+        calls: calls.clone(),
+        cancel_record: None,
+        collector: None,
+        typed: None,
+    };
+    (feed, calls)
+}
+
+#[test]
+fn a_timing_from_the_feed_is_drawn_for_its_stage() {
+    let (feed, calls) = feed_with(vec![
+        running(0),
+        vec![
+            LaunchEvent::StageChanged(0, StepState::Done),
+            LaunchEvent::StageTimed {
+                stage: 0,
+                elapsed_ms: 40_000,
+            },
+            LaunchEvent::StageChanged(1, StepState::Running),
+        ],
+    ]);
+    let mut app = feed_app(feed, &calls, false, Motion::Reduced);
+    tick_until(&mut app, "the timing", shows("40.0 s"));
+}
+
+#[test]
+fn a_collector_from_the_feed_is_shown_in_the_debug_info() {
+    let (mut feed, calls) = feed_with(vec![running(0)]);
+    feed.collector = Some("otlp-test.invalid:1".into());
+    let mut app = feed_app(feed, &calls, false, Motion::Reduced);
+    tick(&mut app, 2);
+    press(&mut app, "t");
+    press(&mut app, "i");
+    let shown = screen(&mut app);
+    assert!(shown.contains("run R-7 -> otlp-test.invalid:1"), "{shown}");
+}
+
+#[test]
+fn the_key_line_of_the_feed_is_what_the_credentials_line_shows() {
+    let (mut feed, calls) = feed_with(vec![
+        running(2),
+        vec![LaunchEvent::CredentialError {
+            message: "The vault is sealed".into(),
+        }],
+    ]);
+    feed.typed = Some(TypedKey {
+        origin: "typed by the operator".into(),
+        validation: "kept by the backend".into(),
+    });
+    let mut app = feed_app(feed, &calls, false, Motion::Reduced);
+    tick_until(
+        &mut app,
+        "the credential dialog",
+        shows("Credential source unavailable"),
+    );
+    press(&mut app, "right enter");
+    let shown = screen(&mut app);
+    assert!(shown.contains("typed by the operator"), "{shown}");
+    assert!(shown.contains("kept by the backend"), "{shown}");
 }

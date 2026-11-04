@@ -257,15 +257,6 @@ impl CockpitScreen {
                         *slot = state;
                     }
                     self.rail.set_state(stage, state);
-                    if state == StepState::Done {
-                        self.rail.set_meta(
-                            stage,
-                            Some(format!(
-                                "{:.1} s",
-                                self.content.stages.get(stage).ticks as f64 * 0.033 * 3.0
-                            )),
-                        );
-                    }
                     if state == StepState::Running
                         && matches!(
                             self.content.stages.get(stage).kind,
@@ -275,6 +266,10 @@ impl CockpitScreen {
                         let (o, v, tone) = self.credential_origin(w);
                         self.credentials = Some((o, v, tone));
                     }
+                }
+                LaunchEvent::StageTimed { stage, elapsed_ms } => {
+                    self.rail
+                        .set_meta(stage, Some(format!("{:.1} s", elapsed_ms as f64 / 1000.0)));
                 }
                 LaunchEvent::Activity(a) => self.activity = a,
                 LaunchEvent::BuildLine(l) => self.log.push(ansi_line(&l)),
@@ -408,13 +403,12 @@ impl CockpitScreen {
         if let Some(c) = &self.container {
             props.insert(0, Prop::new(&self.content.words.unit, c.clone()).copyable());
         }
-        if self.debug {
+        if self.debug
+            && let Some(collector) = self.feed.telemetry()
+        {
             props.push(Prop::new(
                 "Telemetry",
-                format!(
-                    "run {} -> otlp://collector.internal:4317",
-                    self.feed.run_id()
-                ),
+                format!("run {} -> {collector}", self.feed.run_id()),
             ));
         }
         let mut d =
@@ -767,13 +761,11 @@ impl Page<Jackin> for CockpitScreen {
                 Some(1) => {
                     self.credential_hold = false;
                     self.account = None;
-                    self.feed.use_plain_text();
-                    if let Some((o, v, tone)) = self.credentials.as_mut() {
-                        *o = format!(
-                            "plain text · masked API key · {}",
-                            crate::domain::account::masked("Q1zx")
-                        );
-                        *v = "typed once for this launch · never stored".into();
+                    if let Some(typed) = self.feed.use_plain_text()
+                        && let Some((o, v, tone)) = self.credentials.as_mut()
+                    {
+                        *o = typed.origin;
+                        *v = typed.validation;
                         *tone = Tone::Secondary;
                     }
                     cx.status("Using a plain-text key for this launch only");

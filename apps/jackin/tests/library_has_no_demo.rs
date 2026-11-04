@@ -93,10 +93,15 @@ const RULES: &[Rule] = &[
     Rule {
         text: "1Password locked: unlock the app and retry",
         kind: Kind::Literal,
-        scope: Scope::OnlyIn(&["launch.rs", "screens/accounts.rs"]),
+        scope: Scope::OnlyIn(&["launch.rs", "screens/accounts.rs", "screens/cockpit.rs"]),
     },
     literal("tty004"),
     literal("EACCES"),
+    literal("otlp://"),
+    literal("Q1zx"),
+    literal("typed once for this launch"),
+    code("ticks as f64"),
+    code("0 . 0 3 3"),
 ];
 
 /// A token that still sits in the library, the file it sits in, how many times,
@@ -604,6 +609,46 @@ fn demo_literal_in_domain_fails() {
     let found = scan(&scoped, &[]).unexpected;
     let files: Vec<&str> = found.iter().map(|f| f.file.as_str()).collect();
     assert_eq!(files, ["screens/accounts.rs", "launch.rs"]);
+}
+
+#[test]
+fn the_locked_sentence_is_scanned_in_the_cockpit() {
+    let sentence = "const A: &str = \"1Password locked: unlock the app and retry\";";
+    let found = scan(&[src("screens/cockpit.rs", sentence)], &[]).unexpected;
+    assert_eq!(found.len(), 1, "{found:?}");
+    assert_eq!(found[0].token, "1Password locked: unlock the app and retry");
+}
+
+#[test]
+fn the_cockpit_invents_no_telemetry_key_or_timing() {
+    for (token, text) in [
+        (
+            "otlp://",
+            "fn f() -> String { format!(\"run {} -> otlp://collector.internal:4317\", id) }",
+        ),
+        (
+            "Q1zx",
+            "fn f() -> String { crate::domain::account::masked(\"Q1zx\") }",
+        ),
+        (
+            "typed once for this launch",
+            "fn f() { let v = \"typed once for this launch · never stored\"; }",
+        ),
+        (
+            "ticks as f64",
+            "fn f(s: &S) -> f64 { s.stages.get(1).ticks as f64 * 2.0 }",
+        ),
+        ("0 . 0 3 3", "fn f(t: u64) -> f64 { t as f64 * 0.033 }"),
+    ] {
+        for path in ["screens/cockpit.rs", "launch.rs", "domain/launch.rs"] {
+            let found = scan(&[src(path, text)], &[]).unexpected;
+            assert_eq!(found.len(), 1, "{token} in {path}: {found:?}");
+            assert_eq!(found[0].token, token, "{path}");
+        }
+        for path in ["sim/launch.rs", "fixtures/mod.rs"] {
+            assert_eq!(scan(&[src(path, text)], &[]), Report::default(), "{path}");
+        }
+    }
 }
 
 #[test]
