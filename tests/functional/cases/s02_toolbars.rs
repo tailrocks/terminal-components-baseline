@@ -98,6 +98,39 @@ fn checks_ready(screen: &TerminalSnapshot) -> bool {
         && !visible.contains("behind »:")
 }
 
+/// The "Query toolbar" label paints before the gap-2 command rows.
+fn gap_two_ready(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    let lines: Vec<String> = (0..screen.rows())
+        .map(|row| row_text(screen, row))
+        .collect();
+    let Some(query) = lines.iter().find(|line| line.contains("Shift+F5")) else {
+        return false;
+    };
+    let Some(narrow) = lines
+        .iter()
+        .find(|line| line.contains('»') && line.contains("Run F5") && !line.contains("behind"))
+    else {
+        return false;
+    };
+    let Some(behind) = lines.iter().find(|line| line.contains("behind »:")) else {
+        return false;
+    };
+    query.contains("Run F5    Run all")
+        && !query.contains("Run F5   Run all")
+        && narrow.contains("Run F5")
+        && narrow.contains('»')
+        && !narrow.contains("Run all")
+        && !narrow.contains("Shift")
+        && behind.contains("Run all · Stop")
+        && visible.contains(IDLE)
+        && visible.contains("○ Bold    ○ Italic")
+        && visible.contains("● Line numbers")
+        && !visible.contains(NARROW_ROW)
+        && !visible.contains(ACTIVATED_RUN)
+        && !visible.contains("Page options")
+}
+
 fn see(screen: &TerminalSnapshot, present: &[&str], absent: &[&str]) {
     let visible = text(screen);
     for item in present {
@@ -928,7 +961,7 @@ fn option_skip_disabled_off() {
 fn option_gap_two() {
     let args = ["--page", "toolbars", "--opt", "toolbars.gap=2"];
     let app = page("s02-toolbars-gap", Some("toolbars.gap=2"), 120, 40);
-    let play = app.wait_text("Query toolbar");
+    let play = app.wait_screen("gap 2 playground", gap_two_ready);
     let query = row_with(&play, "Shift+F5");
     let narrow_items = (0..play.rows())
         .map(|row| row_text(&play, row))
@@ -969,7 +1002,7 @@ fn option_gap_two() {
         &["Wrap on", "vim", "Skip disabled off"],
     );
     click_tab(&app, "Playground");
-    let again = app.wait_text("Run F5    Run all");
+    let again = app.wait_screen("gap 2 again", gap_two_ready);
     assert!(
         row_with(&again, "Shift+F5").contains("Run F5    Run all"),
         "returning to the playground lost gap 2"
