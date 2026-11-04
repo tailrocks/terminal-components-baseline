@@ -3732,6 +3732,18 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("terminal::TerminalViewport::position_label"),
     Capability::function("terminal::TerminalViewport::on_press_with"),
     Capability::function("terminal::TerminalViewport::on_click_with"),
+    Capability::function("terminal::TerminalViewport::clear_scrollback"),
+    Capability::function("terminal::TerminalState::focus_events"),
+    Capability::function("terminal::TerminalState::mouse_reporting"),
+    Capability::function("terminal::TerminalState::clear_scrollback"),
+    Capability::ty("terminal::ForwardPolicy"),
+    Capability::function("terminal::ForwardPolicy::new"),
+    Capability::function("terminal::ForwardPolicy::key"),
+    Capability::function("terminal::ForwardPolicy::paste"),
+    Capability::ty("terminal::Paste"),
+    Capability::variant("terminal::Paste::Send"),
+    Capability::variant("terminal::Paste::NeedsConfirm"),
+    Capability::variant("terminal::Paste::TooLarge"),
     Capability::function("ui::text::capitalize"),
     Capability::ty("widgets::list_detail::ListDetail"),
     Capability::ty("widgets::list_detail::ListRow"),
@@ -3750,7 +3762,7 @@ pub struct Allowed {
 const PREVIEW: &str =
     "demonstrated by the jackin demo app (apps/jackin) and its approved functional baselines";
 
-const HOST_FED: &str = "used by the host that feeds the terminal state (the jackin Capsule) and pinned by tests/terminal.rs; the terminalpane page keeps its approved baseline";
+const HOST_FED: &str = "used by the host that feeds the terminal state (the jackin Capsule) and pinned by tests/terminal.rs, tests/terminal_viewport.rs and tests/forward_policy.rs; the terminalpane page keeps its approved baseline";
 
 pub static ALLOWLIST: &[Allowed] = &[
     Allowed {
@@ -3839,6 +3851,54 @@ pub static ALLOWLIST: &[Allowed] = &[
     },
     Allowed {
         id: "terminal::RowWrap::Soft",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TerminalViewport::clear_scrollback",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TerminalState::focus_events",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TerminalState::mouse_reporting",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::TerminalState::clear_scrollback",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::ForwardPolicy",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::ForwardPolicy::new",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::ForwardPolicy::key",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::ForwardPolicy::paste",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::Paste",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::Paste::Send",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::Paste::NeedsConfirm",
+        reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::Paste::TooLarge",
         reason: HOST_FED,
     },
 ];

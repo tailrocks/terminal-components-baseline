@@ -116,6 +116,15 @@ impl TerminalViewport {
         self.settle();
     }
 
+    /// Drops the history and returns to the live tail. The screen is kept, a
+    /// selection keeps the part that is on it, and no byte goes to the
+    /// program.
+    pub fn clear_scrollback(&mut self) {
+        self.state.clear_scrollback();
+        self.offset = 0;
+        self.settle();
+    }
+
     pub fn reset(&mut self) {
         self.state.reset();
         self.offset = 0;
@@ -551,6 +560,10 @@ impl ViewportOps for TerminalViewport {
 
     fn keyboard_copy(&self) -> bool {
         false
+    }
+
+    fn draws_track(&self) -> bool {
+        true
     }
 
     fn caret(&self) -> Option<CellPos> {

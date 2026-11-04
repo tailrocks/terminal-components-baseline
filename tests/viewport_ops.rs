@@ -133,6 +133,10 @@ fn the_ops_report_the_caret_and_the_bars_like_the_text_viewport() {
         ops.keyboard_copy(),
         "the text viewport copies with the y key"
     );
+    assert!(
+        !ops.draws_track(),
+        "the host draws the scroll bar of a text viewport"
+    );
 
     let mut resized = viewport();
     let ops: &mut dyn ViewportOps = &mut resized;

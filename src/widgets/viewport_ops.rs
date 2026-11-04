@@ -39,6 +39,9 @@ pub trait ViewportOps {
     /// Whether the `y` key copies the selection. A viewport that copies on
     /// drag release only answers `false`, so a host hides the shortcut.
     fn keyboard_copy(&self) -> bool;
+    /// Whether `draw` paints the vertical scroll track itself. A host draws
+    /// the bar of a view that answers `false`.
+    fn draws_track(&self) -> bool;
 
     fn caret(&self) -> Option<CellPos>;
     fn caret_visible(&self) -> bool;
@@ -134,6 +137,10 @@ impl ViewportOps for TextViewport {
 
     fn keyboard_copy(&self) -> bool {
         true
+    }
+
+    fn draws_track(&self) -> bool {
+        false
     }
 
     fn caret(&self) -> Option<CellPos> {
