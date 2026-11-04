@@ -1,4 +1,7 @@
+use super::docker::EngineEndpoint;
+use super::doctor::DoctorFailure;
 use super::instance::InstanceStatus;
+use crate::arbiter::DiscoveryError;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StatusWords {
@@ -39,6 +42,67 @@ pub struct LifecycleWords {
     pub risk_dirty: String,
     pub risk_clean: String,
     pub purged: String,
+}
+
+/// What a build cannot do yet. A backend that lacks one names it, and the
+/// vocabulary words the refusal.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Unbuilt {
+    SaveWorkspace,
+    SaveSettings,
+    SaveAccounts,
+    DeleteWorkspace,
+    RestoreSandbox,
+    TrustRole,
+    PrewarmImage,
+    StopSandbox,
+    PurgeSandbox,
+    RefreshUsage,
+    ValidateAccount,
+    LoadRole,
+    CheckRole,
+    SaveRole,
+    BindRole,
+    AddRole,
+    RemoveRole,
+    Doctor,
+    Launch,
+    Pane,
+}
+
+impl Unbuilt {
+    fn subject(self, noun: &str) -> String {
+        match self {
+            Unbuilt::SaveWorkspace => "Saving a workspace".to_owned(),
+            Unbuilt::SaveSettings => "Saving settings".to_owned(),
+            Unbuilt::SaveAccounts => "Saving accounts".to_owned(),
+            Unbuilt::DeleteWorkspace => "Deleting a workspace".to_owned(),
+            Unbuilt::RestoreSandbox => format!("Restoring a {noun}"),
+            Unbuilt::TrustRole => "Trusting a role source".to_owned(),
+            Unbuilt::PrewarmImage => "Building an image".to_owned(),
+            Unbuilt::StopSandbox => format!("Stopping a {noun}"),
+            Unbuilt::PurgeSandbox => format!("Purging a {noun}"),
+            Unbuilt::RefreshUsage => "Reading usage".to_owned(),
+            Unbuilt::ValidateAccount => "Validating an account".to_owned(),
+            Unbuilt::LoadRole => "Loading a role".to_owned(),
+            Unbuilt::CheckRole => "Checking a role".to_owned(),
+            Unbuilt::SaveRole => "Saving a role".to_owned(),
+            Unbuilt::BindRole => "Binding a role".to_owned(),
+            Unbuilt::AddRole => "Adding a role".to_owned(),
+            Unbuilt::RemoveRole => "Removing a role".to_owned(),
+            Unbuilt::Doctor => "The doctor".to_owned(),
+            Unbuilt::Launch => format!("Launching a {noun}"),
+            Unbuilt::Pane => "A terminal pane".to_owned(),
+        }
+    }
+}
+
+/// A fact a refresh found that is not an error: something the console lists
+/// but could not read in full.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Notice {
+    GatewayUnreachable { gateway: String, reason: String },
+    UnreadableLabels { count: usize },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -118,6 +182,18 @@ pub struct Vocabulary {
     pub sandbox_id: Option<String>,
     pub invocation_id: Option<String>,
     pub attached_status: String,
+
+    pub not_built: String,
+    pub gateway_unreachable: String,
+    pub labels_unreadable: String,
+    pub about_product: String,
+    pub about_gateway: String,
+    pub about_config: String,
+    pub discovery_unreadable: String,
+    pub engine_tls_port: String,
+    pub doctor_failed: String,
+    pub doctor_timed_out: String,
+    pub doctor_no_gateway: String,
 }
 
 impl Vocabulary {
@@ -241,6 +317,18 @@ impl Vocabulary {
             sandbox_id: None,
             invocation_id: None,
             attached_status: "Attached to {name}".into(),
+
+            not_built: "{what} is not available in this build yet".into(),
+            gateway_unreachable: "Could not list sandboxes on {gateway}: {reason}".into(),
+            labels_unreadable: "{count} sandboxes have labels jackin cannot read".into(),
+            about_product: "Product".into(),
+            about_gateway: "Gateway".into(),
+            about_config: "Config".into(),
+            discovery_unreadable: "sandbox list unreadable".into(),
+            engine_tls_port: "tls port {port}".into(),
+            doctor_failed: "The checks could not run: {reason}".into(),
+            doctor_timed_out: "no answer in time".into(),
+            doctor_no_gateway: "no usable gateway".into(),
         }
     }
 
@@ -357,6 +445,17 @@ impl Vocabulary {
             ("sandbox_id", self.sandbox_id.as_deref().unwrap_or("")),
             ("invocation_id", self.invocation_id.as_deref().unwrap_or("")),
             ("attached_status", &self.attached_status),
+            ("not_built", &self.not_built),
+            ("gateway_unreachable", &self.gateway_unreachable),
+            ("labels_unreadable", &self.labels_unreadable),
+            ("about_product", &self.about_product),
+            ("about_gateway", &self.about_gateway),
+            ("about_config", &self.about_config),
+            ("discovery_unreadable", &self.discovery_unreadable),
+            ("engine_tls_port", &self.engine_tls_port),
+            ("doctor_failed", &self.doctor_failed),
+            ("doctor_timed_out", &self.doctor_timed_out),
+            ("doctor_no_gateway", &self.doctor_no_gateway),
         ]
     }
 
@@ -402,6 +501,55 @@ impl Vocabulary {
 
     pub fn noun_lower(&self) -> String {
         self.container_noun.to_lowercase()
+    }
+
+    pub fn unbuilt(&self, what: Unbuilt) -> String {
+        fill_in(
+            &self.not_built,
+            &[("what", &what.subject(&self.noun_lower()))],
+        )
+    }
+
+    pub fn notice(&self, notice: &Notice) -> String {
+        match notice {
+            Notice::GatewayUnreachable { gateway, reason } => fill_in(
+                &self.gateway_unreachable,
+                &[("gateway", gateway), ("reason", reason)],
+            ),
+            Notice::UnreadableLabels { count } => {
+                fill_in(&self.labels_unreadable, &[("count", &count.to_string())])
+            }
+        }
+    }
+
+    pub fn notices(&self, notices: &[Notice]) -> String {
+        notices
+            .iter()
+            .map(|n| self.notice(n))
+            .collect::<Vec<_>>()
+            .join(" · ")
+    }
+
+    pub fn discovery(&self, error: DiscoveryError) -> &str {
+        match error {
+            DiscoveryError::IndexUnreadable => &self.discovery_unreadable,
+        }
+    }
+
+    pub fn engine_endpoint(&self, endpoint: &EngineEndpoint) -> String {
+        match endpoint {
+            EngineEndpoint::Address(address) => address.clone(),
+            EngineEndpoint::TlsPort(port) => {
+                fill_in(&self.engine_tls_port, &[("port", &port.to_string())])
+            }
+        }
+    }
+
+    pub fn doctor_failure(&self, failure: &DoctorFailure) -> String {
+        match failure {
+            DoctorFailure::TimedOut => self.doctor_timed_out.clone(),
+            DoctorFailure::Failed(reason) => fill_in(&self.doctor_failed, &[("reason", reason)]),
+        }
     }
 }
 

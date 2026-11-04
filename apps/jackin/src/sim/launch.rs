@@ -6,6 +6,7 @@ use crate::backend::{OnePassword, OpSession};
 use crate::domain::account::{AccountId, masked};
 use crate::domain::agent::Agent;
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
+use crate::domain::instance::{ID_PREFIX, instance_id};
 use crate::domain::launch::{
     LaunchContent, LaunchFailure, LaunchWords, StageKind, StageList, StageSpec,
 };
@@ -264,7 +265,7 @@ pub struct SimLaunch {
 
 fn next_instance_id(w: &World) -> String {
     let n = w.instances.len() as u32 + 0x7f3a + 0x1234 * 3;
-    format!("jk-{:04x}", n & 0xffff)
+    instance_id(&format!("{:04x}", n & 0xffff))
 }
 
 fn workspace_name(w: &World, workspace: Option<WorkspaceId>) -> String {
@@ -284,7 +285,7 @@ impl SimLaunch {
     ) -> Self {
         let wsname = workspace_name(w, target.workspace);
         let instance_id = next_instance_id(w);
-        let suffix = instance_id.trim_start_matches("jk-").to_owned();
+        let suffix = instance_id.trim_start_matches(ID_PREFIX).to_owned();
         let container = match content.name_slug {
             Some(n) => {
                 let slug = junie_tui::ui::text::clip(&wsname, n);
@@ -454,7 +455,7 @@ impl SimLaunch {
                 self.ended = true;
                 ev.push(LaunchEvent::Failed(Box::new(FailedLaunch {
                     failure: self.content.network_failure.clone(),
-                    instance: self.record(w, InstanceStatus::FailedSetup),
+                    instance: Some(self.record(w, InstanceStatus::FailedSetup)),
                 })));
                 return ev;
             }

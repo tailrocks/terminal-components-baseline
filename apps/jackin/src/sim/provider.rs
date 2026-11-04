@@ -230,6 +230,7 @@ pub fn validate(
         Err(e) => {
             let code = match &e {
                 OpError::Locked => IssueCode::OpLocked,
+                OpError::NotAvailable => IssueCode::ProviderUnavailable,
                 OpError::AuthorizationRequired { .. } => IssueCode::OpAuthorizationRequired,
                 OpError::PermissionDenied { .. } => IssueCode::OpPermissionDenied,
                 OpError::MissingAccount { .. }
@@ -535,7 +536,12 @@ pub fn refresh_duration_ms(a: &Account) -> i64 {
         Provider::Zai => 1_050,
         Provider::Moonshot => 350,
         Provider::MiniMax => 1_600,
-        Provider::Cursor | Provider::Gemini | Provider::Openrouter => 700,
+        Provider::Cursor
+        | Provider::Gemini
+        | Provider::Openrouter
+        | Provider::Antigravity
+        | Provider::Hermes
+        | Provider::Muse => 700,
     };
     base + (a.id.len() as i64 % 5) * 40
 }

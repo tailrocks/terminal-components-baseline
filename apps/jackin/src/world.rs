@@ -10,7 +10,7 @@ use crate::domain::account::{
     AccountId, AccountRegistry, IssueCode, Recoverability, RecoverableIssue, ValidationState,
 };
 use crate::domain::agent::{Agent, AuthMode, Provider};
-use crate::domain::doctor::{DoctorReport, DoctorState};
+use crate::domain::doctor::{DoctorFailure, DoctorReport};
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
 use crate::domain::role::{
     AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
@@ -88,10 +88,35 @@ pub fn keyed_diff<T: PartialEq>(a: &[T], b: &[T], key: impl Fn(&T) -> String) ->
     n
 }
 
+/// Why a save did not happen: what went wrong, and what the operator can do
+/// about it. A backend that has no advice sends none, and the dialog shows no
+/// `Next` row.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SaveFailure {
+    pub error: String,
+    pub next: Option<String>,
+}
+
+/// Where the roles of a trust row come from.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TrustKind {
+    Git,
+    Path,
+}
+
+impl TrustKind {
+    pub fn label(self) -> &'static str {
+        match self {
+            TrustKind::Git => "git",
+            TrustKind::Path => "path",
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TrustRow {
     pub source: String,
-    pub kind: &'static str,
+    pub kind: TrustKind,
     pub trusted: bool,
     pub roles: usize,
 }
@@ -126,10 +151,10 @@ impl From<&GithubRepo> for RepoRef {
 pub enum Msg {
     WorkspaceSaved {
         id: Option<WorkspaceId>,
-        result: Result<Box<Snapshot>, String>,
+        result: Result<Box<Snapshot>, SaveFailure>,
     },
     GlobalSaved {
-        result: Result<Box<Snapshot>, String>,
+        result: Result<Box<Snapshot>, SaveFailure>,
     },
     AccountsSaved {
         result: Result<Box<Snapshot>, String>,
@@ -200,7 +225,7 @@ pub enum Msg {
         role: RoleName,
         result: Result<Box<Snapshot>, String>,
     },
-    DoctorFinished(DoctorReport),
+    DoctorFinished(Result<DoctorReport, DoctorFailure>),
     SourceChecked {
         ticket: Ticket,
         result: Result<Box<ValidationOutcome>, String>,
@@ -335,6 +360,8 @@ pub struct Snapshot {
     pub surfaces: Surfaces,
     pub github: Vec<GithubRepo>,
     pub index_error: Option<DiscoveryError>,
+    /// How the gateways answered the listing this snapshot comes from.
+    pub daemon_health: DaemonHealth,
 }
 
 pub struct WorldParts {
@@ -503,35 +530,42 @@ impl World {
     }
 
     pub fn health_view(&self) -> HealthView {
-        match self
-            .surfaces
-            .doctor
-            .as_ref()
-            .and_then(|d| d.report().map(|r| (d, r)))
-        {
-            Some((doctor, report)) => HealthView {
-                noun: doctor.noun.clone(),
-                health: if report.failing() > 0 {
-                    Health::Failing
-                } else if report.stale(self.now_secs()) {
-                    Health::Stale
-                } else {
-                    Health::Healthy
-                },
-                at_secs: report.at_secs,
+        let doctor = self.surfaces.doctor.as_ref();
+        let listing = match self.daemon_health {
+            DaemonHealth::Healthy => Health::Healthy,
+            DaemonHealth::Stale => Health::Stale,
+        };
+        let (health, at_secs) = match doctor {
+            Some(d) if d.failure().is_some() => (
+                Health::Failing,
+                d.failure().map_or(self.last_refresh_secs, |(_, at)| at),
+            ),
+            Some(d) => match d.report() {
+                Some(r) if r.failing() > 0 || r.no_gateway() => (Health::Failing, r.at_secs),
+                Some(r) if r.stale(self.now_secs()) => (Health::Stale, r.at_secs),
+                Some(_) if listing == Health::Stale => (Health::Stale, self.last_refresh_secs),
+                Some(r) => (Health::Healthy, r.at_secs),
+                None => (listing, self.last_refresh_secs),
             },
-            None => HealthView {
-                noun: self.surfaces.doctor.as_ref().map_or_else(
-                    || self.surfaces.vocabulary.health_noun.clone(),
-                    |d| d.noun.clone(),
-                ),
-                health: match self.daemon_health {
-                    DaemonHealth::Healthy => Health::Healthy,
-                    DaemonHealth::Stale => Health::Stale,
-                },
-                at_secs: self.last_refresh_secs,
-            },
+            None => (listing, self.last_refresh_secs),
+        };
+        HealthView {
+            noun: doctor.map_or_else(
+                || self.surfaces.vocabulary.health_noun.clone(),
+                |d| d.noun.clone(),
+            ),
+            health,
+            at_secs,
         }
+    }
+
+    /// Starts a doctor run unless one is out.
+    pub fn start_doctor(&mut self) -> bool {
+        let started = self.surfaces.doctor.as_mut().is_some_and(|d| d.start());
+        if started {
+            self.perform(Effect::RunDoctor);
+        }
+        started
     }
 
     pub fn about_props(&self) -> Vec<junie_tui::widgets::props::Prop> {
@@ -562,14 +596,20 @@ impl World {
             surfaces,
             github,
             index_error,
+            daemon_health,
         } = snapshot;
         self.workspaces = workspaces;
         self.roles = roles;
         self.instances = instances;
         self.global = global;
         self.accounts = accounts;
+        let doctor_state = self.surfaces.doctor.take().map(|d| d.state);
         self.surfaces = surfaces;
+        if let (Some(doctor), Some(state)) = (self.surfaces.doctor.as_mut(), doctor_state) {
+            doctor.state = state;
+        }
         self.github = github;
+        self.daemon_health = daemon_health;
         refresh_snapshots(self);
         self.arbiter.discovery = match index_error {
             Some(error) => Err(error),
@@ -581,9 +621,10 @@ impl World {
     /// sees the message.
     pub fn absorb(&mut self, msg: &Msg) {
         match msg {
-            Msg::DoctorFinished(report) => {
+            Msg::DoctorFinished(result) => {
+                let now = self.now_secs();
                 if let Some(d) = self.surfaces.doctor.as_mut() {
-                    d.state = DoctorState::Done(report.clone());
+                    d.finish(result, now);
                 }
             }
             Msg::RoleLoaded {
@@ -665,6 +706,14 @@ impl World {
             return vec![];
         }
         let now = self.clock.now_ms;
+        if self
+            .surfaces
+            .doctor
+            .as_ref()
+            .is_some_and(|d| d.due(self.clock.now_secs()))
+        {
+            self.start_doctor();
+        }
         for (id, d) in self.daemons.iter_mut() {
             if self
                 .instances

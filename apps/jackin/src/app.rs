@@ -29,6 +29,7 @@ use ratatui::layout::{Position, Rect};
 
 use crate::arbiter::{EntryDecision, ExitDecision};
 use crate::backend::Effect;
+use crate::domain::instance::ID_PREFIX;
 use crate::domain::instance::InstanceId;
 use crate::domain::instance::InstanceStatus;
 use crate::domain::vocabulary::fill_in;
@@ -267,7 +268,7 @@ impl App {
                 self.set_status(
                     &format!(
                         "Could not confirm running instances: {} · list may be incomplete",
-                        e.label()
+                        self.world.surfaces.vocabulary.discovery(e)
                     ),
                     Tone::Warning,
                 );
@@ -881,7 +882,13 @@ impl App {
                     .lead(self.theme.glyphs.dot_on, Tone::Active)
                     .priority(5),
             ),
-            Err(e) => right.push(Segment::new(format!("! {}", e.label()), Tone::Error).priority(8)),
+            Err(e) => right.push(
+                Segment::new(
+                    format!("! {}", self.world.surfaces.vocabulary.discovery(e)),
+                    Tone::Error,
+                )
+                .priority(8),
+            ),
         }
         if let Some(s) = self.health_segment() {
             right.push(s);
@@ -1755,7 +1762,7 @@ impl App {
                     self.set_status(
                         &format!(
                             "Cannot attach: {} is not running",
-                            instance.trim_start_matches("jk-")
+                            instance.trim_start_matches(ID_PREFIX)
                         ),
                         Tone::Error,
                     );
@@ -1964,7 +1971,7 @@ impl App {
             ExitDecision::Unknown(e) => {
                 self.show_tab(TAB_MANAGER);
                 self.enter_route();
-                self.set_status(&format!("Could not confirm remaining instances: {} · returning to host without the outro", e.label()), Tone::Warning);
+                self.set_status(&format!("Could not confirm remaining instances: {} · returning to host without the outro", self.world.surfaces.vocabulary.discovery(e)), Tone::Warning);
                 self.exit_after_status = Some(self.world.now_ms() + 2_500);
             }
         }
@@ -2098,7 +2105,13 @@ impl App {
                     .lead(t.glyphs.dot_on, Tone::Active)
                     .priority(8),
             ),
-            Err(e) => left.push(Segment::new(format!("! {}", e.label()), Tone::Error).priority(8)),
+            Err(e) => left.push(
+                Segment::new(
+                    format!("! {}", self.world.surfaces.vocabulary.discovery(e)),
+                    Tone::Error,
+                )
+                .priority(8),
+            ),
         }
         if let Some(s) = self.health_segment() {
             left.push(s);

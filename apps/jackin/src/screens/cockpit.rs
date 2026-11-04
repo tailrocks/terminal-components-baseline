@@ -341,8 +341,10 @@ impl CockpitScreen {
                         format!("{} failed", self.content.stages.get(failure.stage).label);
                     self.log_open = false;
                     self.progress.failure = Some(failure);
-                    self.instance_id = Some(instance.id.clone());
-                    w.admit(instance);
+                    if let Some(record) = instance {
+                        self.instance_id = Some(record.id.clone());
+                        w.admit(record);
+                    }
                     self.open_failure(w, cx);
                 }
                 LaunchEvent::Ready(ready) => {

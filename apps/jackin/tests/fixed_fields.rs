@@ -26,7 +26,7 @@ use jackin_console::domain::workspace::{
     MountSource, RoleEntry, RoleSource, WizardDefaults, Workspace,
 };
 use jackin_console::fixtures::{Scenario, world_for};
-use jackin_console::world::{GlobalConfig, Snapshot, TrustRow};
+use jackin_console::world::{GlobalConfig, Snapshot, TrustKind, TrustRow};
 
 const PROJECT: &str = "/sandbox/project";
 
@@ -117,7 +117,7 @@ fn good_global() -> GlobalConfig {
 fn trust_row(trusted: bool) -> TrustRow {
     TrustRow {
         source: "github.com/acme-labs".into(),
-        kind: "git",
+        kind: TrustKind::Git,
         trusted,
         roles: 2,
     }
@@ -127,6 +127,7 @@ fn good_surfaces() -> Surfaces {
     Surfaces::openshell(LiveFacts {
         version: "1.4.0".into(),
         config_path: "/home/dev/.config/jackin/config.toml".into(),
+        gateway: None,
     })
 }
 
@@ -164,6 +165,7 @@ fn fixed_world_snapshot_and_world_views_agree() {
         surfaces: w.surfaces.clone(),
         github: vec![],
         index_error: Some(DiscoveryError::IndexUnreadable),
+        daemon_health: w.daemon_health,
     };
     let view = world_fixed(&w);
     assert_eq!(view.workspaces.len(), w.workspaces.len());
@@ -568,7 +570,7 @@ fn fixed_world_extractor_sees_every_global_field() {
             g.env = vec![EnvVar::plain("K", "v")];
             g.agent_modes.insert(launchable, AuthMode::Ignore);
             g.trust[0].source = "elsewhere".into();
-            g.trust[0].kind = "local";
+            g.trust[0].kind = TrustKind::Path;
             g.trust[0].roles = 9;
         },
         base(),
@@ -936,6 +938,7 @@ fn probe_surfaces() -> Surfaces {
         doctor: Some(DoctorSurface {
             noun: "probe".into(),
             state: DoctorState::NeverRun,
+            rerun_secs: None,
         }),
         vocabulary: Vocabulary::demo(),
         account_form: AccountForm::default(),
@@ -1004,7 +1007,7 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
     g.env = vec![EnvVar::plain("PROBE", "value")];
     g.agent_modes.insert(launchable, AuthMode::Ignore);
     g.trust[0].source = "probe-source".into();
-    g.trust[0].kind = "probe-kind";
+    g.trust[0].kind = TrustKind::Path;
     g.trust[0].roles = 9;
     let before = g.clone();
     openshell::global(&mut g);
@@ -1028,7 +1031,7 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
     } = &trust[0];
     assert_eq!(
         (source.as_str(), *kind, *roles),
-        ("probe-source", "probe-kind", 9)
+        ("probe-source", TrustKind::Path, 9)
     );
 
     let before = probe_surfaces();

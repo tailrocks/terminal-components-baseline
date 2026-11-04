@@ -1,3 +1,4 @@
+use crate::domain::instance::ID_PREFIX;
 use crate::screens::Jackin;
 use junie_tui::shell::Page;
 use std::collections::HashSet;
@@ -87,7 +88,7 @@ fn instance_line(
         Span::new(
             format!(
                 "{}  {} · {} · ",
-                i.id.trim_start_matches("jk-"),
+                i.id.trim_start_matches(ID_PREFIX),
                 i.role,
                 i.agent.label()
             ),
@@ -306,7 +307,7 @@ impl ManagerScreen {
                         glyph_tone: gt,
                         label: format!(
                             "{}  {} · {}",
-                            i.id.trim_start_matches("jk-"),
+                            i.id.trim_start_matches(ID_PREFIX),
                             i.role,
                             i.agent.label()
                         ),
@@ -469,7 +470,7 @@ impl ManagerScreen {
         p.list.width = (84, 84);
         p.scope = Some(format!(
             "instance {} › {}",
-            i.id.trim_start_matches("jk-"),
+            i.id.trim_start_matches(ID_PREFIX),
             i.role
         ));
         let (mut items, mut targets) = agent_rows(w, i.workspace, Some(&i.role));
@@ -512,7 +513,7 @@ impl ManagerScreen {
         w.sync_arbiter();
         cx.status(fill_in(
             &w.surfaces.vocabulary.lifecycle.restored,
-            &[("id", id.trim_start_matches("jk-"))],
+            &[("id", id.trim_start_matches(ID_PREFIX))],
         ));
         cx.go(Go::Attach {
             instance: id.to_owned(),
@@ -541,20 +542,20 @@ impl ManagerScreen {
             InstanceStatus::Crashed => {
                 cx.error(format!(
                     "Cannot reconnect: {} crashed (exit 137) · inspect or purge it",
-                    id.trim_start_matches("jk-")
+                    id.trim_start_matches(ID_PREFIX)
                 ));
             }
             InstanceStatus::FailedSetup => {
                 cx.error(format!(
                     "Cannot reconnect: {} {} · launch again",
-                    id.trim_start_matches("jk-"),
+                    id.trim_start_matches(ID_PREFIX),
                     w.surfaces.vocabulary.never_reached
                 ));
             }
             InstanceStatus::CleanExited => {
                 cx.status(format!(
                     "{} exited cleanly · launch the Workspace to start a new instance",
-                    id.trim_start_matches("jk-")
+                    id.trim_start_matches(ID_PREFIX)
                 ));
             }
             _ => {}
@@ -634,7 +635,7 @@ impl ManagerScreen {
             &format!(
                 "{} {}",
                 w.surfaces.vocabulary.container_noun,
-                id.trim_start_matches("jk-")
+                id.trim_start_matches(ID_PREFIX)
             ),
             props,
         )
@@ -647,11 +648,11 @@ impl ManagerScreen {
         if !i.status.stoppable() {
             cx.status(format!(
                 "{} is not running · nothing to stop",
-                id.trim_start_matches("jk-")
+                id.trim_start_matches(ID_PREFIX)
             ));
             return;
         }
-        let short = id.trim_start_matches("jk-").to_owned();
+        let short = id.trim_start_matches(ID_PREFIX).to_owned();
         let d = Dialog::destructive(
             WidgetId::of("manager.stop"),
             &format!("Stop instance {short}?"),
@@ -674,7 +675,7 @@ impl ManagerScreen {
 
     fn purge(&mut self, id: &str, w: &World, cx: &mut Cx) {
         let Some(i) = w.instance(id) else { return };
-        let short = id.trim_start_matches("jk-").to_owned();
+        let short = id.trim_start_matches(ID_PREFIX).to_owned();
         let ws = i
             .workspace
             .and_then(|x| w.workspace(x))
@@ -785,7 +786,7 @@ impl ManagerScreen {
                 let Some(i) = w.instance(id) else {
                     return (String::new(), vec![]);
                 };
-                let short = id.trim_start_matches("jk-");
+                let short = id.trim_start_matches(ID_PREFIX);
                 let live = i.status.is_live();
                 let off = "needs a running instance";
                 let reconnect = if live {
@@ -1260,7 +1261,7 @@ impl ManagerScreen {
                 (
                     format!(
                         "{} · {}",
-                        id.trim_start_matches("jk-"),
+                        id.trim_start_matches(ID_PREFIX),
                         i.and_then(|x| x.workspace)
                             .and_then(|x| w.workspace(x))
                             .map(|x| x.name.as_str())
@@ -1733,7 +1734,7 @@ impl ManagerScreen {
                     Rect::new(inner.x, y, inner.width, 1),
                     &format!(
                         "◉ {}  {ws} · {} · {}",
-                        i.id.trim_start_matches("jk-"),
+                        i.id.trim_start_matches(ID_PREFIX),
                         i.role,
                         i.agent.label()
                     ),
@@ -1829,7 +1830,7 @@ impl ManagerScreen {
                         Rect::new(inner.x, y, inner.width, 1),
                         &format!(
                             "◌ {}  {ws} · {} · {}",
-                            i.id.trim_start_matches("jk-"),
+                            i.id.trim_start_matches(ID_PREFIX),
                             i.role,
                             w.surfaces.vocabulary.status_label(i.status)
                         ),
@@ -1990,7 +1991,7 @@ impl Page<Jackin> for ManagerScreen {
                         w.sync_arbiter();
                         cx.status(format!(
                             "Instance {} stopped",
-                            instance.trim_start_matches("jk-")
+                            instance.trim_start_matches(ID_PREFIX)
                         ));
                     }
                     Err(error) => cx.error(error.clone()),
@@ -2006,7 +2007,7 @@ impl Page<Jackin> for ManagerScreen {
                         w.sync_arbiter();
                         cx.status(fill_in(
                             &w.surfaces.vocabulary.lifecycle.purged,
-                            &[("id", instance.trim_start_matches("jk-"))],
+                            &[("id", instance.trim_start_matches(ID_PREFIX))],
                         ));
                     }
                     Err(error) => cx.error(error.clone()),
@@ -2625,7 +2626,7 @@ impl Page<Jackin> for ManagerScreen {
                     .and_then(|x| w.workspace(x))
                     .map(|x| x.name.clone())
                     .unwrap_or("current directory".into());
-                format!("Workspaces › {ws} › {}", id.trim_start_matches("jk-"))
+                format!("Workspaces › {ws} › {}", id.trim_start_matches(ID_PREFIX))
             }
             RowKey::NewWorkspace => "Workspaces › new workspace".into(),
         }
@@ -2671,7 +2672,7 @@ impl ManagerScreen {
         let title = match &self.selected {
             RowKey::CurrentDir => "Current directory".to_owned(),
             RowKey::Workspace(id) => w.workspace(*id).map(|x| x.name.clone()).unwrap_or_default(),
-            RowKey::Instance(id) => format!("Instance {}", id.trim_start_matches("jk-")),
+            RowKey::Instance(id) => format!("Instance {}", id.trim_start_matches(ID_PREFIX)),
             RowKey::NewWorkspace => "New workspace".into(),
         };
         let inner = Panel::card(Some(&title))

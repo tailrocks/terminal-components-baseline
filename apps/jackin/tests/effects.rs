@@ -19,7 +19,7 @@ use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
-use jackin_console::world::{GlobalConfig, Msg, World};
+use jackin_console::world::{GlobalConfig, Msg, SaveFailure, World};
 use junie_tui::core::event::Input;
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
@@ -154,7 +154,10 @@ fn fail_workspace(effect: &Effect, _: &World) -> Option<Msg> {
     };
     Some(Msg::WorkspaceSaved {
         id: *id,
-        result: Err("disk full".into()),
+        result: Err(SaveFailure {
+            error: "disk full".into(),
+            next: None,
+        }),
     })
 }
 
@@ -280,7 +283,10 @@ fn store_global(effect: &Effect, world: &World) -> Option<Msg> {
 
 fn fail_global(effect: &Effect, _: &World) -> Option<Msg> {
     matches!(effect, Effect::SaveGlobal { .. }).then(|| Msg::GlobalSaved {
-        result: Err("disk full".into()),
+        result: Err(SaveFailure {
+            error: "disk full".into(),
+            next: None,
+        }),
     })
 }
 
@@ -324,7 +330,7 @@ fn trust_rows_reach_the_roles_only_through_the_snapshot() {
         .expect("the untrusted role");
     role.source = RoleSource::Git {
         url: "https://github.com/acme-labs/roles-experimental".into(),
-        branch: "next".into(),
+        branch: Some("next".into()),
     };
     let untrusted = |w: &World| {
         w.roles

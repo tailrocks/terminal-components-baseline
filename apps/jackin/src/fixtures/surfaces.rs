@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 
 use crate::domain::account::{AccountForm, CredentialSource, Provenance};
 use crate::domain::agent::{Agent, AuthMode};
-use crate::domain::docker::{DockerRiskText, DockerSetting, EngineState};
+use crate::domain::docker::{DockerRiskText, DockerSetting, EngineEndpoint, EngineState};
 use crate::domain::doctor::{DoctorState, DoctorSurface};
 use crate::domain::fixed::Fixed;
 use crate::domain::openshell;
@@ -72,7 +72,7 @@ pub fn docker(w: &mut World, engine_missing: bool) {
         EngineState::Missing
     } else {
         EngineState::Configured {
-            endpoint: ENDPOINT.into(),
+            endpoint: EngineEndpoint::Address(ENDPOINT.into()),
         }
     };
     w.surfaces.docker = Some(docker_setting(engine));
@@ -105,7 +105,7 @@ fn entry(name: &str, default: Option<&str>, prompt: &str) -> RoleEnvEntry {
 fn git() -> RoleSource {
     RoleSource::Git {
         url: "github.com/chainargos/roles".into(),
-        branch: "main".into(),
+        branch: Some("main".into()),
     }
 }
 
@@ -208,6 +208,7 @@ pub fn doctor(w: &mut World) {
     w.surfaces.doctor = Some(DoctorSurface {
         noun: "gateway".into(),
         state: DoctorState::Done(sim::surfaces::doctor_report(1, at)),
+        rerun_secs: None,
     });
 }
 

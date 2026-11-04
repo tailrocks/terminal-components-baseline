@@ -330,6 +330,10 @@ impl OpFlow {
                 "1Password is locked".to_owned(),
                 Some("Unlock it in the 1Password app, then press r to retry".to_owned()),
             ),
+            OpError::NotAvailable => (
+                "1Password is not available".to_owned(),
+                Some("Install the 1Password CLI and sign in, then press r to retry".to_owned()),
+            ),
             OpError::AuthorizationRequired { account } => (
                 "Jackin is not authorized for 1Password CLI".to_owned(),
                 Some(format!(

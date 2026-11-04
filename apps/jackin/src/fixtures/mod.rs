@@ -26,7 +26,8 @@ use crate::sim::onepassword::SimOnePassword;
 use crate::sim::pane::ScriptPane;
 use crate::sim::scripts::SimScripts;
 use crate::world::{
-    DaemonHealth, FsEntry, GithubRepo, GlobalConfig, TrustRow, World, WorldParts, refresh_snapshots,
+    DaemonHealth, FsEntry, GithubRepo, GlobalConfig, TrustKind, TrustRow, World, WorldParts,
+    refresh_snapshots,
 };
 use junie_tui::ui::layout::SplitDir;
 
@@ -63,7 +64,7 @@ fn roles() -> Vec<RoleEntry> {
         name: name.into(),
         source: RoleSource::Git {
             url: "github.com/chainargos/roles".into(),
-            branch: "main".into(),
+            branch: Some("main".into()),
         },
         trusted,
         in_registry: true,
@@ -89,7 +90,7 @@ fn roles() -> Vec<RoleEntry> {
             name: "data-eng".into(),
             source: RoleSource::Git {
                 url: "github.com/acme-labs/roles-experimental".into(),
-                branch: "next".into(),
+                branch: Some("next".into()),
             },
             trusted: false,
             in_registry: true,
@@ -120,7 +121,7 @@ fn generated_roles(n: usize) -> Vec<RoleEntry> {
             name: format!("svc-{i:03}"),
             source: RoleSource::Git {
                 url: "github.com/chainargos/roles".into(),
-                branch: "main".into(),
+                branch: Some("main".into()),
             },
             trusted: true,
             in_registry: true,
@@ -375,25 +376,25 @@ fn global(rich: bool) -> GlobalConfig {
         trust: vec![
             TrustRow {
                 source: "github.com/chainargos/roles".into(),
-                kind: "git",
+                kind: TrustKind::Git,
                 trusted: true,
                 roles: 4,
             },
             TrustRow {
                 source: "github.com/acme-labs/roles-experimental".into(),
-                kind: "git",
+                kind: TrustKind::Git,
                 trusted: false,
                 roles: 1,
             },
             TrustRow {
                 source: "~/roles".into(),
-                kind: "path",
+                kind: TrustKind::Path,
                 trusted: true,
                 roles: 1,
             },
             TrustRow {
                 source: "git@corp:infra/roles".into(),
-                kind: "git",
+                kind: TrustKind::Git,
                 trusted: true,
                 roles: 2,
             },

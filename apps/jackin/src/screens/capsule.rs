@@ -1,3 +1,4 @@
+use crate::domain::instance::ID_PREFIX;
 use crate::screens::Jackin;
 use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::hit::{Axis, Bar};
@@ -1287,7 +1288,7 @@ impl CapsuleScreen {
             Prop::new("Role", i.role.clone()),
             Prop::new("Agent", agent),
             Prop::new("Workdir", i.workdir.clone()),
-            Prop::new("Instance", i.id.trim_start_matches("jk-").to_owned()),
+            Prop::new("Instance", i.id.trim_start_matches(ID_PREFIX).to_owned()),
             Prop::new(
                 w.surfaces.vocabulary.version_label.as_str(),
                 w.surfaces.version.as_str(),
@@ -2215,7 +2216,7 @@ impl Page<Jackin> for CapsuleScreen {
                             "Target",
                             format!(
                                 "{ws} · instance {}",
-                                self.instance.trim_start_matches("jk-")
+                                self.instance.trim_start_matches(ID_PREFIX)
                             ),
                         ),
                         Prop::new("Reversible", "no").tone(Tone::Secondary),

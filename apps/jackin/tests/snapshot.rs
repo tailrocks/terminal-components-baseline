@@ -16,6 +16,7 @@ fn snapshot_of(w: &World) -> Snapshot {
         surfaces: w.surfaces.clone(),
         github: w.github.clone(),
         index_error: None,
+        daemon_health: w.daemon_health,
     }
 }
 

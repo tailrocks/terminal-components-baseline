@@ -17,8 +17,7 @@ use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
 use super::{Cx, Go, Screen};
-use crate::backend::Effect;
-use crate::domain::doctor::{DoctorCheck, DoctorReport, DoctorState};
+use crate::domain::doctor::{DoctorCheck, DoctorReport};
 use crate::world::{Msg, World, job};
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::list_detail::{Action, Event, Frame, Line, ListDetail, ListRow};
@@ -69,19 +68,9 @@ impl DoctorScreen {
     }
 
     fn run(&mut self, w: &mut World, cx: &mut Cx) {
-        let Some(d) = w.surfaces.doctor.as_mut() else {
-            return;
-        };
-        if d.running() {
-            return;
+        if w.start_doctor() {
+            cx.progress(job::DOCTOR, "Running checks…");
         }
-        d.state = match std::mem::replace(&mut d.state, DoctorState::NeverRun) {
-            DoctorState::Done(r) => DoctorState::Running { previous: Some(r) },
-            DoctorState::Running { previous } => DoctorState::Running { previous },
-            DoctorState::NeverRun => DoctorState::Running { previous: None },
-        };
-        w.perform(Effect::RunDoctor);
-        cx.progress(job::DOCTOR, "Running checks…");
     }
 
     fn copy(&self, w: &World, cx: &mut Cx) {
@@ -136,11 +125,27 @@ impl DoctorScreen {
     }
 
     fn head(&self, w: &World) -> Vec<Span> {
+        let muted = |t: &str| Span::new(t.to_owned(), Tone::Muted);
+        if let Some((failure, at_secs)) = w.surfaces.doctor.as_ref().and_then(|d| d.failure()) {
+            return vec![
+                Span::new(w.surfaces.vocabulary.doctor_failure(failure), Tone::Error).bold(),
+                muted(" · "),
+                muted(&format!("tried {}", w.clock.ago(at_secs))),
+            ];
+        }
         let Some(report) = self.report(w) else {
             return vec![];
         };
         let ago = format!("checked {}", w.clock.ago(report.at_secs));
-        let muted = |t: &str| Span::new(t.to_owned(), Tone::Muted);
+        if report.no_gateway() {
+            return vec![
+                Span::new("degraded", Tone::Error).bold(),
+                muted(" · "),
+                Span::new(w.surfaces.vocabulary.doctor_no_gateway.clone(), Tone::Error),
+                muted(" · "),
+                muted(&ago),
+            ];
+        }
         if report.stale(w.now_secs()) {
             return vec![
                 Span::new("stale", Tone::Warning).bold(),
@@ -179,6 +184,15 @@ impl DoctorScreen {
 
     fn meta(&self, w: &World) -> String {
         match self.report(w) {
+            _ if w
+                .surfaces
+                .doctor
+                .as_ref()
+                .is_some_and(|d| d.failure().is_some()) =>
+            {
+                String::new()
+            }
+            Some(r) if r.no_gateway() => w.surfaces.vocabulary.doctor_no_gateway.clone(),
             Some(r) if r.failing() > 0 => format!("{} failing", r.failing()),
             Some(_) => "all checks pass".into(),
             None => String::new(),
@@ -198,14 +212,16 @@ impl DoctorScreen {
                 c.found.clone().unwrap_or_else(|| "—".into()),
                 Tone::Normal,
             ),
-            Line::Prop(
-                "Expected".into(),
-                c.expected.clone().unwrap_or_else(|| "—".into()),
-                Tone::Normal,
-            ),
-            Line::Prop("Gateway".into(), gateway, Tone::Normal),
-            Line::Blank,
         ];
+        if let Some(expected) = &c.expected {
+            v.push(Line::Prop(
+                "Expected".into(),
+                expected.clone(),
+                Tone::Normal,
+            ));
+        }
+        v.push(Line::Prop("Gateway".into(), gateway, Tone::Normal));
+        v.push(Line::Blank);
         match c.status {
             StatusKind::Fail | StatusKind::Warn => {
                 let mut n = if c.status == StatusKind::Fail {
@@ -224,8 +240,12 @@ impl DoctorScreen {
         v
     }
 
-    fn empty(&self) -> EmptyState {
-        EmptyState::new("Checks have not run yet")
+    fn empty(&self, w: &World) -> EmptyState {
+        let title = match w.surfaces.doctor.as_ref().and_then(|d| d.failure()) {
+            Some((failure, _)) => w.surfaces.vocabulary.doctor_failure(failure),
+            None => "Checks have not run yet".to_owned(),
+        };
+        EmptyState::new(&title)
             .hint("The doctor checks the binaries, the gateway and the Docker engine. It never changes anything.")
             .actions(vec![EmptyAction::primary(RUN, "Run checks")])
     }
@@ -319,7 +339,7 @@ impl Page<Jackin> for DoctorScreen {
         }
         match ev.phase() {
             Some(Phase::Click) => {
-                if self.empty().on_click(ev.id).is_some() {
+                if self.empty(w).on_click(ev.id).is_some() {
                     self.run(w, cx);
                     return Outcome::Changed;
                 }
@@ -339,7 +359,7 @@ impl Page<Jackin> for DoctorScreen {
         let t = ctx.theme;
         let Some(report) = self.report(w) else {
             ctx.control(LIST, Rect::new(area.x, area.y, 1, 1), false);
-            empty::render_ctx(area, buf, ctx, &self.empty(), t.canvas);
+            empty::render_ctx(area, buf, ctx, &self.empty(w), t.canvas);
             return;
         };
         let rows = self.rows(w);

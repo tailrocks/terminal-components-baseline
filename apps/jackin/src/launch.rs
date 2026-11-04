@@ -25,10 +25,11 @@ pub struct ReadyInstance {
 }
 
 /// Why a launch failed, and the `FailedSetup` record the backend kept of it.
+/// A backend that kept none says so, and the roster gets no row.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FailedLaunch {
     pub failure: LaunchFailure,
-    pub instance: Instance,
+    pub instance: Option<Instance>,
 }
 
 /// Why a launch never started, in the backend's words. The cockpit draws the

@@ -278,6 +278,7 @@ pub enum OpListing {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OpError {
     Locked,
+    NotAvailable,
     AuthorizationRequired { account: String },
     PermissionDenied { vault: String },
     MissingAccount { account: String },
@@ -292,6 +293,9 @@ impl OpError {
     pub fn message(&self) -> String {
         match self {
             OpError::Locked => "1Password locked: unlock the app and retry".into(),
+            OpError::NotAvailable => {
+                "1Password not available: the 1Password CLI could not be run".into()
+            }
             OpError::AuthorizationRequired { account } => {
                 format!("1Password authorization required: sign in to {account}")
             }

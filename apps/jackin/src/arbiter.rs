@@ -3,14 +3,6 @@ pub enum DiscoveryError {
     IndexUnreadable,
 }
 
-impl DiscoveryError {
-    pub fn label(self) -> &'static str {
-        match self {
-            DiscoveryError::IndexUnreadable => "instance index unreadable",
-        }
-    }
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EntryDecision {
     PlayIntro,
