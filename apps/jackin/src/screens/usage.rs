@@ -872,25 +872,8 @@ impl Page<Jackin> for UsageScreen {
         }
     }
 
-    fn on_msg(&mut self, msg: &Msg, w: &mut World, _cx: &mut Cx) -> Outcome {
-        if let Msg::AccountRefreshed { account } = msg {
-            let now = w.now_secs();
-            if let Some(a) = w.accounts.get_mut(account)
-                && a.usage.freshness.phase == Freshness::Refreshing
-            {
-                a.usage.freshness = match a.issue.as_ref().map(|i| i.code) {
-                    Some(IssueCode::RateLimited)
-                    | Some(IssueCode::ProviderUnavailable)
-                    | Some(IssueCode::CredentialFileMissing) => {
-                        crate::domain::usage::FreshnessInfo::failed(
-                            a.usage.freshness.last_good_secs,
-                            a.usage.freshness.retry_secs,
-                        )
-                    }
-                    _ => crate::domain::usage::FreshnessInfo::current(now),
-                };
-                a.last_refresh_secs = Some(now);
-            }
+    fn on_msg(&mut self, msg: &Msg, _w: &mut World, _cx: &mut Cx) -> Outcome {
+        if let Msg::AccountRefreshed { .. } = msg {
             return Outcome::Changed;
         }
         Outcome::Ignored

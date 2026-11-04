@@ -34,7 +34,9 @@ use ratatui::style::{Modifier, Style};
 
 use super::modals::{BrowserResult, FormDialog, FormField, FormValues, OpFlow};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::backend::{CheckRow, Effect, FolderProbe, ValidationOutcome, apply_validation};
+use crate::backend::{
+    CheckRow, Effect, FolderProbe, Validation, ValidationOutcome, apply_validation,
+};
 use crate::domain::account::{
     Account, AccountId, AccountOrigin, AccountRegistry, CredentialSource, DetectedKind,
     DuplicateProbe, IssueCode, Lifecycle, SourceKind, ValidationState, fingerprint, masked,
@@ -425,87 +427,6 @@ impl AccountsScreen {
                 plural(started, "account", "accounts")
             ));
         }
-    }
-
-    fn apply_refresh(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
-        let now = w.now_secs();
-        let locked = w.op.session() != crate::backend::OpSession::SignedIn;
-        let broker_down = w.refresh_fails;
-        let Some(a) = w.accounts.get_mut(id) else {
-            return;
-        };
-        let title = a.title();
-        a.last_refresh_secs = Some(now);
-        let outcome: &str;
-        match (&a.source, a.issue.as_ref().map(|i| i.code)) {
-            _ if broker_down => {
-                a.usage.freshness.phase = if a.usage.freshness.last_good_secs.is_some() {
-                    Freshness::Stale
-                } else {
-                    Freshness::Failed
-                };
-                a.issue = Some(crate::domain::account::RecoverableIssue::new(
-                    IssueCode::ProviderUnavailable,
-                    "Usage broker unreachable: last good values kept",
-                    crate::domain::account::Recoverability::Retryable,
-                ));
-                outcome = "broker unreachable · last good kept";
-            }
-            (CredentialSource::OnePassword(_), _) if locked => {
-                a.usage.freshness.phase = Freshness::Failed;
-                a.issue = Some(crate::domain::account::RecoverableIssue::new(
-                    IssueCode::OpLocked,
-                    crate::backend::OpError::Locked.message(),
-                    crate::domain::account::Recoverability::Retryable,
-                ));
-                outcome = "failed · 1Password locked";
-            }
-            (_, Some(IssueCode::RateLimited)) => {
-                let retry = a.issue.as_ref().and_then(|i| i.retry_secs).unwrap_or(now);
-                if now >= retry {
-                    a.usage.freshness = crate::domain::usage::FreshnessInfo::current(now);
-                    a.issue = None;
-                    outcome = "current";
-                } else {
-                    a.usage.freshness.phase = Freshness::Failed;
-                    outcome = "still rate limited";
-                }
-            }
-            (_, Some(IssueCode::ProviderUnavailable)) => {
-                a.usage.freshness.phase = Freshness::Failed;
-                outcome = "provider unavailable";
-            }
-            (_, Some(IssueCode::CredentialFileMissing))
-            | (_, Some(IssueCode::Unauthorized))
-            | (_, Some(IssueCode::ApiKeyInvalid)) => {
-                a.usage.freshness.phase = Freshness::Failed;
-                outcome = "needs attention";
-            }
-            _ => {
-                a.usage.freshness = crate::domain::usage::FreshnessInfo::current(now);
-                if let Some(i) = &a.issue
-                    && i.code == IssueCode::Stale
-                {
-                    a.issue = None;
-                }
-                if let Some(win) = a
-                    .usage
-                    .windows
-                    .iter_mut()
-                    .find(|w| w.used_pct.is_some() && w.status != QuotaStatus::Exhausted)
-                {
-                    let p = (win.used_pct.unwrap_or(0) + 1).min(100);
-                    win.used_pct = Some(p);
-                    win.status = QuotaStatus::from_pct(p);
-                }
-                outcome = "current";
-            }
-        }
-        let n = a.usage.windows.iter().filter(|w| w.has_meter()).count();
-        cx.status(format!(
-            "Refreshed {title} · {outcome} · {}",
-            plural(n, "window", "windows")
-        ));
     }
 
     fn open_form(&mut self, editing: Option<&Account>, w: &World, cx: &mut Cx) {
@@ -1135,54 +1056,46 @@ impl AccountsScreen {
         cx.progress(job::ACCOUNT_VALIDATE, format!("Validating {title}…"));
     }
 
-    fn apply_validation_result(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
-        let now = w.now_secs();
-        let Some(a) = w.accounts.get(id).cloned() else {
-            return;
-        };
-        if let CredentialSource::PlainApiKey { fingerprint, .. } = &a.source {
-            let level = if a.usage.windows.iter().any(|w| w.has_meter()) {
-                crate::domain::account::ValidationLevel::QuotaReadable
-            } else if a.identity.subject.is_some() {
-                crate::domain::account::ValidationLevel::IdentityAuthenticated
-            } else {
-                crate::domain::account::ValidationLevel::MaterialDiscovered
-            };
-            let short = fingerprint.chars().take(8).collect::<String>();
-            if let Some(slot) = w.accounts.get_mut(id) {
-                slot.validation = ValidationState::Valid(level);
-                slot.last_refresh_secs = Some(now);
-            }
-            cx.status(format!(
-                "{} · fingerprint {short} matches · {}",
-                a.title(),
-                level.label()
-            ));
-            return;
-        }
-        let outcome = w
-            .backend
-            .validate(a.provider, &a.source, None, w.op.as_ref(), now);
-        let Some(slot) = w.accounts.get_mut(id) else {
-            return;
-        };
-        let keep_windows = slot.usage.windows.clone();
-        apply_validation(slot, &outcome, now);
-        if slot.usage.windows.is_empty() {
-            slot.usage.windows = keep_windows;
-        }
-        let word = match outcome.level {
-            Some(l) => format!("Source validated · {}", l.label()),
-            None => outcome
-                .issue
-                .as_ref()
-                .map(|i| i.message.clone())
-                .unwrap_or("Validation failed".into()),
-        };
-        if outcome.level.is_some() {
-            cx.status(format!("{} · {word}", slot.title()));
-        } else {
-            cx.error(format!("{}: {word}", slot.title()));
+    fn show_validation(
+        &mut self,
+        id: &str,
+        result: &Result<Validation, String>,
+        w: &World,
+        cx: &mut Cx,
+    ) {
+        let Some(a) = w.accounts.get(id) else { return };
+        match result {
+            Err(error) => cx.error(format!("{}: {error}", a.title())),
+            Ok(validation) => match validation {
+                Validation::Fingerprint { level } => {
+                    let short = match &a.source {
+                        CredentialSource::PlainApiKey { fingerprint, .. } => {
+                            fingerprint.chars().take(8).collect::<String>()
+                        }
+                        _ => String::new(),
+                    };
+                    cx.status(format!(
+                        "{} · fingerprint {short} matches · {}",
+                        a.title(),
+                        level.label()
+                    ));
+                }
+                Validation::Checked(outcome) => {
+                    let word = match outcome.level {
+                        Some(l) => format!("Source validated · {}", l.label()),
+                        None => outcome
+                            .issue
+                            .as_ref()
+                            .map(|i| i.message.clone())
+                            .unwrap_or("Validation failed".into()),
+                    };
+                    if outcome.level.is_some() {
+                        cx.status(format!("{} · {word}", a.title()));
+                    } else {
+                        cx.error(format!("{}: {word}", a.title()));
+                    }
+                }
+            },
         }
     }
 
@@ -2233,13 +2146,26 @@ impl Page<Jackin> for AccountsScreen {
                 self.build_rows(w);
                 Outcome::Changed
             }
-            Msg::AccountRefreshed { account } => {
-                self.apply_refresh(account, w, cx);
+            Msg::AccountRefreshed { account, result } => {
+                if let Some(a) = w.accounts.get(account) {
+                    match result {
+                        Ok(refresh) => {
+                            let n = a.usage.windows.iter().filter(|w| w.has_meter()).count();
+                            cx.status(format!(
+                                "Refreshed {} · {} · {}",
+                                a.title(),
+                                refresh.outcome,
+                                plural(n, "window", "windows")
+                            ));
+                        }
+                        Err(error) => cx.error(error.clone()),
+                    }
+                }
                 self.build_rows(w);
                 Outcome::Changed
             }
-            Msg::AccountValidated { account } => {
-                self.apply_validation_result(account, w, cx);
+            Msg::AccountValidated { account, result } => {
+                self.show_validation(account, result, w, cx);
                 self.build_rows(w);
                 Outcome::Changed
             }

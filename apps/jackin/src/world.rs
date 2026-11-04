@@ -2,8 +2,10 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use crate::arbiter::{Arbiter, DiscoveryError};
-use crate::backend::{Backend, Effect, OnePassword, Reply};
-use crate::domain::account::{AccountId, AccountRegistry};
+use crate::backend::{Backend, Effect, OnePassword, Refresh, Reply, Validation, apply_validation};
+use crate::domain::account::{
+    AccountId, AccountRegistry, IssueCode, Recoverability, RecoverableIssue, ValidationState,
+};
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorReport, DoctorState};
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
@@ -12,6 +14,7 @@ use crate::domain::role::{
     RoleRecord,
 };
 use crate::domain::surfaces::Surfaces;
+use crate::domain::usage::Freshness;
 use crate::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
 };
@@ -141,18 +144,23 @@ pub enum Msg {
     },
     Prewarmed {
         workspace: WorkspaceId,
+        result: Result<(), String>,
     },
     Stopped {
         instance: InstanceId,
+        result: Result<Box<Snapshot>, String>,
     },
     Purged {
         instance: InstanceId,
+        result: Result<Box<Snapshot>, String>,
     },
     AccountRefreshed {
         account: AccountId,
+        result: Result<Box<Refresh>, String>,
     },
     AccountValidated {
         account: AccountId,
+        result: Result<Validation, String>,
     },
     RoleLoaded {
         role: String,
@@ -560,6 +568,59 @@ impl World {
             } => {
                 if let Some(r) = self.roles.iter_mut().find(|r| r.name == *role) {
                     r.load_error = Some(error.clone());
+                }
+            }
+            Msg::AccountRefreshed { account, result } => {
+                let now = self.now_secs();
+                if let Some(a) = self.accounts.get_mut(account) {
+                    match result {
+                        Ok(refresh) => {
+                            a.usage = refresh.usage.clone();
+                            a.issue = refresh.issue.clone();
+                            a.last_refresh_secs = Some(refresh.last_refresh_secs);
+                        }
+                        Err(error) => {
+                            a.usage.freshness.phase = if a.usage.freshness.last_good_secs.is_some()
+                            {
+                                Freshness::Stale
+                            } else {
+                                Freshness::Failed
+                            };
+                            a.issue = Some(RecoverableIssue::new(
+                                IssueCode::ProviderUnavailable,
+                                error.clone(),
+                                Recoverability::Retryable,
+                            ));
+                            a.last_refresh_secs = Some(now);
+                        }
+                    }
+                }
+            }
+            Msg::AccountValidated { account, result } => {
+                let now = self.now_secs();
+                if let Some(a) = self.accounts.get_mut(account) {
+                    match result {
+                        Ok(validation) => match validation {
+                            Validation::Fingerprint { level } => {
+                                a.validation = ValidationState::Valid(*level);
+                                a.last_refresh_secs = Some(now);
+                            }
+                            Validation::Checked(outcome) => {
+                                let windows = a.usage.windows.clone();
+                                apply_validation(a, outcome, now);
+                                if a.usage.windows.is_empty() {
+                                    a.usage.windows = windows;
+                                }
+                            }
+                        },
+                        Err(error) => {
+                            a.validation = ValidationState::Invalid(RecoverableIssue::new(
+                                IssueCode::ProviderUnavailable,
+                                error.clone(),
+                                Recoverability::Retryable,
+                            ));
+                        }
+                    }
                 }
             }
             _ => {}

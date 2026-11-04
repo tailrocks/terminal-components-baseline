@@ -4,6 +4,7 @@ use jackin_console::app::{App, Remote};
 use jackin_console::domain::instance::InstanceStatus;
 use jackin_console::domain::workspace::Workspace;
 use jackin_console::fixtures::{Scenario, app_for};
+use jackin_console::sim;
 use jackin_console::world::{Msg, Snapshot};
 use junie_tui::core::event::{External, Input, Outcome};
 use junie_tui::motion::Motion;
@@ -38,6 +39,18 @@ fn pump(app: &mut App) -> Vec<Outcome> {
         .collect()
 }
 
+/// The reply to a stop: the roster with the instance no longer running.
+fn stopped(app: &App, id: &str) -> Msg {
+    let mut snapshot = sim::snapshot(&app.world);
+    for i in snapshot.instances.iter_mut().filter(|i| i.id == id) {
+        i.status = InstanceStatus::RestoreAvailable;
+    }
+    Msg::Stopped {
+        instance: id.into(),
+        result: Ok(Box::new(snapshot)),
+    }
+}
+
 fn status_of(app: &App, id: &str) -> InstanceStatus {
     app.world.instance(id).expect("fixture instance").status
 }
@@ -68,9 +81,7 @@ fn a_remote_message_reaches_the_screens_like_a_scheduled_one() {
     let (mut app, tx) = linked();
     assert_eq!(status_of(&app, STOPPED), InstanceStatus::Running);
     let running = app.world.running_count();
-    assert!(tx.send(Remote::Msg(Msg::Stopped {
-        instance: STOPPED.into()
-    })));
+    assert!(tx.send(Remote::Msg(stopped(&app, STOPPED))));
     assert_eq!(pump(&mut app), vec![Outcome::Changed]);
     assert_ne!(status_of(&app, STOPPED), InstanceStatus::Running);
     assert_eq!(app.world.running_count(), running - 1);
@@ -80,9 +91,7 @@ fn a_remote_message_reaches_the_screens_like_a_scheduled_one() {
 #[test]
 fn deliver_runs_a_message_without_the_channel() {
     let mut app = app();
-    let msg = Msg::Stopped {
-        instance: STOPPED.into(),
-    };
+    let msg = stopped(&app, STOPPED);
     assert_eq!(app.deliver(&msg), Outcome::Changed);
     assert_ne!(status_of(&app, STOPPED), InstanceStatus::Running);
 }

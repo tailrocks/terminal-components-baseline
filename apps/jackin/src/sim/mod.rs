@@ -2,11 +2,14 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 
 use crate::backend::{
-    Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, OpSession, ValidationOutcome,
+    Backend, ChangeSet, Completion, Effect, FolderProbe, OnePassword, OpSession, Validation,
+    ValidationOutcome,
 };
-use crate::domain::account::{AccountOrigin, AccountRegistry, CredentialSource};
+use crate::domain::account::{
+    Account, AccountOrigin, AccountRegistry, CredentialSource, ValidationLevel,
+};
 use crate::domain::agent::Provider;
-use crate::domain::instance::InstanceStatus;
+use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::LaunchContent;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
@@ -181,20 +184,11 @@ impl Backend for SimBackend {
                 2_400,
                 Msg::Prewarmed {
                     workspace: *workspace,
+                    result: Ok(()),
                 },
             ),
-            Effect::Stop { instance } => (
-                1_800,
-                Msg::Stopped {
-                    instance: instance.clone(),
-                },
-            ),
-            Effect::Purge { instance } => (
-                2_200,
-                Msg::Purged {
-                    instance: instance.clone(),
-                },
-            ),
+            Effect::Stop { .. } => return Some(Completion::settle(1_800)),
+            Effect::Purge { .. } => return Some(Completion::settle(2_200)),
             Effect::Refresh => (0, Msg::Refreshed { ok: false }),
             Effect::RefreshAccount {
                 account,
@@ -204,19 +198,9 @@ impl Backend for SimBackend {
                     .accounts
                     .get(account)
                     .map(provider::refresh_duration_ms)?;
-                (
-                    base + stagger_ms,
-                    Msg::AccountRefreshed {
-                        account: account.clone(),
-                    },
-                )
+                return Some(Completion::settle(base + stagger_ms));
             }
-            Effect::ValidateAccount { account } => (
-                900,
-                Msg::AccountValidated {
-                    account: account.clone(),
-                },
-            ),
+            Effect::ValidateAccount { .. } => return Some(Completion::settle(900)),
             Effect::CheckRole { role, doc } => (
                 600,
                 Msg::RoleChecked {
@@ -276,6 +260,59 @@ impl Backend for SimBackend {
         match effect {
             Effect::SaveWorkspace { id, workspace, .. } => {
                 Some(self.settle_workspace_save(*id, workspace, world))
+            }
+            Effect::Stop { instance } => Some(Msg::Stopped {
+                instance: instance.clone(),
+                result: Ok(Box::new(left_running(world, instance, |i| {
+                    if i.is_dirty() {
+                        InstanceStatus::PreservedDirty
+                    } else {
+                        InstanceStatus::RestoreAvailable
+                    }
+                }))),
+            }),
+            Effect::Purge { instance } => Some(Msg::Purged {
+                instance: instance.clone(),
+                result: Ok(Box::new(left_running(world, instance, |_| {
+                    InstanceStatus::Purged
+                }))),
+            }),
+            Effect::RefreshAccount { account, .. } => {
+                let refreshed = world.accounts.get(account).map(|a| {
+                    provider::refresh(
+                        a,
+                        world.now_secs(),
+                        world.op.session() != OpSession::SignedIn,
+                        world.refresh_fails,
+                    )
+                });
+                Some(Msg::AccountRefreshed {
+                    account: account.clone(),
+                    result: refreshed
+                        .map(Box::new)
+                        .ok_or_else(|| format!("{account} is not in the registry")),
+                })
+            }
+            Effect::ValidateAccount { account } => {
+                let result = match world.accounts.get(account) {
+                    None => Err(format!("{account} is not in the registry")),
+                    Some(a) => Ok(match &a.source {
+                        CredentialSource::PlainApiKey { .. } => Validation::Fingerprint {
+                            level: fingerprint_level(a),
+                        },
+                        source => Validation::Checked(Box::new(self.validate(
+                            a.provider,
+                            source,
+                            None,
+                            world.op.as_ref(),
+                            world.now_secs(),
+                        ))),
+                    }),
+                };
+                Some(Msg::AccountValidated {
+                    account: account.clone(),
+                    result,
+                })
             }
             Effect::TrustRole { role } => {
                 let mut snapshot = snapshot(world);
@@ -421,6 +458,33 @@ fn settle_accounts_save(base: &AccountRegistry, registry: &AccountRegistry, worl
     snapshot.accounts = registry.clone();
     Msg::AccountsSaved {
         result: Ok(Box::new(snapshot)),
+    }
+}
+
+/// The roster after `instance` stopped running: its status, the time it was
+/// last seen, and nothing else.
+fn left_running(
+    world: &World,
+    instance: &str,
+    status: impl Fn(&Instance) -> InstanceStatus,
+) -> Snapshot {
+    let mut snapshot = snapshot(world);
+    let now = world.clock.now_secs();
+    if let Some(i) = snapshot.instances.iter_mut().find(|i| i.id == instance) {
+        i.status = status(i);
+        i.last_seen_secs = now;
+    }
+    snapshot
+}
+
+/// How far a key that is held as a fingerprint can be vouched for.
+fn fingerprint_level(account: &Account) -> ValidationLevel {
+    if account.usage.windows.iter().any(|w| w.has_meter()) {
+        ValidationLevel::QuotaReadable
+    } else if account.identity.subject.is_some() {
+        ValidationLevel::IdentityAuthenticated
+    } else {
+        ValidationLevel::MaterialDiscovered
     }
 }
 

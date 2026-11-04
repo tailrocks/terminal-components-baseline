@@ -7,12 +7,14 @@ use std::sync::{Arc, Mutex};
 use common::*;
 use jackin_console::app::{App, Route};
 use jackin_console::backend::{
-    Backend, ChangeSet, Completion, Effect, FileSource, FolderProbe, OnePassword, ValidationOutcome,
+    Backend, ChangeSet, Completion, Effect, FileSource, FolderProbe, OnePassword, Refresh,
+    ValidationOutcome,
 };
 use jackin_console::domain::account::{AccountRegistry, CredentialSource};
 use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::InstanceStatus;
 use jackin_console::domain::launch::LaunchContent;
+use jackin_console::domain::usage::{Freshness, FreshnessInfo};
 use jackin_console::domain::workspace::RoleSource;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchPlan, LaunchTarget};
@@ -105,14 +107,17 @@ fn backed(scenario: Scenario, answer: Answer) -> (App, Arc<TestBackend>) {
     let backend = TestBackend::new(answer);
     let mut world = world_for(scenario);
     world.backend = backend.clone();
-    let app = app_with_world(
+    (timed(scenario, world), backend)
+}
+
+fn timed(scenario: Scenario, world: World) -> App {
+    app_with_world(
         scenario,
         world,
         Motion::Reduced,
         10_000,
         Theme::for_level(ColorLevel::TrueColor),
-    );
-    (app, backend)
+    )
 }
 
 fn settle(app: &mut App) {
@@ -757,5 +762,142 @@ fn mount_form_saves_a_valid_mount_once() {
     assert!(
         shown.contains("Workspaces › payments-platform › edit"),
         "{shown}"
+    );
+}
+
+const PERSONAL: &str = "acct-claude-personal";
+
+fn first_window_pct(w: &World, id: &str) -> Option<u8> {
+    w.accounts.get(id)?.usage.windows.first()?.used_pct
+}
+
+/// Refreshes the account the way a backend that read the provider would:
+/// the first window reads 40% used, whatever it read before.
+fn refresh_account(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::RefreshAccount { account, .. } = effect else {
+        return None;
+    };
+    let now = world.now_secs();
+    let mut usage = world.accounts.get(account)?.usage.clone();
+    usage.freshness = FreshnessInfo::current(now);
+    usage.windows[0].used_pct = Some(40);
+    Some(Msg::AccountRefreshed {
+        account: account.clone(),
+        result: Ok(Box::new(Refresh {
+            usage,
+            issue: None,
+            last_refresh_secs: now,
+            outcome: "read from the provider".into(),
+        })),
+    })
+}
+
+fn refresh_personal(app: &mut App) {
+    press(app, "c down down r");
+    for _ in 0..40 {
+        Application::handle(app, Input::Tick);
+    }
+}
+
+#[test]
+fn refresh_result_comes_from_the_backend() {
+    let (mut app, backend) = backed(Scenario::AccountsMixed, refresh_account);
+    refresh_personal(&mut app);
+
+    assert!(matches!(
+        backend.seen().as_slice(),
+        [Effect::RefreshAccount { account, .. }] if account == PERSONAL
+    ));
+    assert_eq!(first_window_pct(&app.world, PERSONAL), Some(40));
+    let status = status(&app);
+    assert!(
+        status.starts_with("Refreshed Claude · Personal · read from the provider · "),
+        "{status}"
+    );
+}
+
+#[test]
+fn the_sim_refreshes_as_it_did() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    assert_eq!(first_window_pct(&app.world, PERSONAL), Some(38));
+    refresh_personal(&mut app);
+
+    assert_eq!(first_window_pct(&app.world, PERSONAL), Some(39));
+    assert_eq!(
+        status(&app),
+        "Refreshed Claude · Personal · current · 4 windows"
+    );
+}
+
+fn failure_app() -> App {
+    let mut app = timed(Scenario::Returning, world_for(Scenario::Returning));
+    screen(&mut app);
+    app
+}
+
+#[test]
+fn a_failed_stop_shows_the_reply_error() {
+    let mut app = failure_app();
+    app.deliver(&Msg::Stopped {
+        instance: "jk-7f3a".into(),
+        result: Err("docker is not answering".into()),
+    });
+    assert_eq!(status(&app), "docker is not answering");
+    let kept = app.world.instance("jk-7f3a").expect("the instance");
+    assert_eq!(kept.status, InstanceStatus::Running);
+    assert!(app.world.daemons.contains_key("jk-7f3a"));
+}
+
+#[test]
+fn a_refused_purge_reports_its_reason() {
+    let mut app = failure_app();
+    let reason = "purge refused: 2 unpushed commits would be lost";
+    app.deliver(&Msg::Purged {
+        instance: "jk-c41e".into(),
+        result: Err(reason.into()),
+    });
+    assert_eq!(status(&app), reason);
+    let kept = app.world.instance("jk-c41e").expect("the instance");
+    assert_ne!(kept.status, InstanceStatus::Purged);
+}
+
+#[test]
+fn a_failed_prewarm_shows_the_reply_error() {
+    let mut app = failure_app();
+    app.deliver(&Msg::Prewarmed {
+        workspace: 1,
+        result: Err("the image build failed".into()),
+    });
+    assert_eq!(status(&app), "the image build failed");
+}
+
+#[test]
+fn a_failed_validation_shows_the_reply_error() {
+    let mut app = failure_app();
+    app.deliver(&Msg::AccountValidated {
+        account: PERSONAL.into(),
+        result: Err("the provider did not answer".into()),
+    });
+    assert!(
+        status(&app).contains("the provider did not answer"),
+        "{}",
+        status(&app)
+    );
+}
+
+#[test]
+fn the_sim_keeps_the_last_good_values_when_the_broker_is_down() {
+    let mut app = timed(Scenario::HardCases, world_for(Scenario::HardCases));
+    refresh_personal(&mut app);
+
+    assert_eq!(
+        status(&app),
+        "Refreshed Claude · Personal · broker unreachable · last good kept · 4 windows"
+    );
+    let a = app.world.accounts.get(PERSONAL).expect("the account");
+    assert_eq!(a.usage.freshness.phase, Freshness::Stale);
+    assert_eq!(
+        a.issue.as_ref().map(|i| i.message.as_str()),
+        Some("Usage broker unreachable: last good values kept")
     );
 }

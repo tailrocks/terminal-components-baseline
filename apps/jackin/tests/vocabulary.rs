@@ -9,6 +9,7 @@ use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::MountSource;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::screens::Go;
+use jackin_console::sim;
 use jackin_console::world::{DaemonHealth, Msg};
 use junie_tui::motion::Motion;
 use junie_tui::theme::{ColorLevel, Theme, Tone};
@@ -510,8 +511,13 @@ fn the_purge_status_follows_the_words() {
     let [demo, live] = worlds(Scenario::Returning).map(|world| {
         let mut app = app_with(Scenario::Returning, world);
         screen(&mut app);
+        let mut snapshot = sim::snapshot(&app.world);
+        for i in snapshot.instances.iter_mut().filter(|i| i.id == "jk-c41e") {
+            i.status = InstanceStatus::Purged;
+        }
         app.deliver(&Msg::Purged {
             instance: "jk-c41e".into(),
+            result: Ok(Box::new(snapshot)),
         });
         screen(&mut app)
     });

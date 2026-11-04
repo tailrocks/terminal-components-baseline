@@ -1,6 +1,7 @@
 use super::onepassword::classify_plain;
 use crate::backend::{
-    CheckRow, FolderProbe, KeyOutcome, OnePassword, OpError, SecretClass, ValidationOutcome,
+    CheckRow, FolderProbe, KeyOutcome, OnePassword, OpError, Refresh, SecretClass,
+    ValidationOutcome,
 };
 use crate::domain::account::{
     Account, AccountIdentity, Confidence, CredentialSource, DetectedKind, IdentitySubject,
@@ -8,7 +9,7 @@ use crate::domain::account::{
 };
 use crate::domain::agent::Provider;
 use crate::domain::usage::{
-    AccountUsage, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
+    AccountUsage, Freshness, FreshnessInfo, QuotaStatus, QuotaWindow, WindowCategory, WindowUnit,
 };
 
 pub fn probe_folder(path: &str) -> FolderProbe {
@@ -473,4 +474,82 @@ pub fn refresh_duration_ms(a: &Account) -> i64 {
         Provider::Cursor | Provider::Gemini | Provider::Openrouter => 700,
     };
     base + (a.id.len() as i64 % 5) * 40
+}
+
+/// What refreshing `account` finds. The broker being down keeps the last good
+/// values, a locked 1Password fails the refresh, a rate limit holds until its
+/// retry time, and a healthy account reads one point higher on its first meter.
+pub fn refresh(account: &Account, now: i64, op_locked: bool, broker_down: bool) -> Refresh {
+    let mut a = account.clone();
+    let outcome: &str;
+    match (&a.source, a.issue.as_ref().map(|i| i.code)) {
+        _ if broker_down => {
+            a.usage.freshness.phase = if a.usage.freshness.last_good_secs.is_some() {
+                Freshness::Stale
+            } else {
+                Freshness::Failed
+            };
+            a.issue = Some(issue(
+                IssueCode::ProviderUnavailable,
+                "Usage broker unreachable: last good values kept",
+                Recoverability::Retryable,
+            ));
+            outcome = "broker unreachable · last good kept";
+        }
+        (CredentialSource::OnePassword(_), _) if op_locked => {
+            a.usage.freshness.phase = Freshness::Failed;
+            a.issue = Some(issue(
+                IssueCode::OpLocked,
+                OpError::Locked.message(),
+                Recoverability::Retryable,
+            ));
+            outcome = "failed · 1Password locked";
+        }
+        (_, Some(IssueCode::RateLimited)) => {
+            let retry = a.issue.as_ref().and_then(|i| i.retry_secs).unwrap_or(now);
+            if now >= retry {
+                a.usage.freshness = FreshnessInfo::current(now);
+                a.issue = None;
+                outcome = "current";
+            } else {
+                a.usage.freshness.phase = Freshness::Failed;
+                outcome = "still rate limited";
+            }
+        }
+        (_, Some(IssueCode::ProviderUnavailable)) => {
+            a.usage.freshness.phase = Freshness::Failed;
+            outcome = "provider unavailable";
+        }
+        (_, Some(IssueCode::CredentialFileMissing))
+        | (_, Some(IssueCode::Unauthorized))
+        | (_, Some(IssueCode::ApiKeyInvalid)) => {
+            a.usage.freshness.phase = Freshness::Failed;
+            outcome = "needs attention";
+        }
+        _ => {
+            a.usage.freshness = FreshnessInfo::current(now);
+            if let Some(i) = &a.issue
+                && i.code == IssueCode::Stale
+            {
+                a.issue = None;
+            }
+            if let Some(win) = a
+                .usage
+                .windows
+                .iter_mut()
+                .find(|w| w.used_pct.is_some() && w.status != QuotaStatus::Exhausted)
+            {
+                let p = (win.used_pct.unwrap_or(0) + 1).min(100);
+                win.used_pct = Some(p);
+                win.status = QuotaStatus::from_pct(p);
+            }
+            outcome = "current";
+        }
+    }
+    Refresh {
+        usage: a.usage,
+        issue: a.issue,
+        last_refresh_secs: now,
+        outcome: outcome.to_owned(),
+    }
 }

@@ -37,6 +37,24 @@ pub struct ValidationOutcome {
     pub quota_row: CheckRow,
 }
 
+/// What a refresh of one account found: the usage and the issue the account
+/// has afterwards, when it was refreshed, and a word for the outcome.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Refresh {
+    pub usage: AccountUsage,
+    pub issue: Option<RecoverableIssue>,
+    pub last_refresh_secs: i64,
+    pub outcome: String,
+}
+
+/// What validating one account found. A key that is held as a fingerprint is
+/// checked against that fingerprint alone.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Validation {
+    Fingerprint { level: ValidationLevel },
+    Checked(Box<ValidationOutcome>),
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CheckRow {
     Ok(String),

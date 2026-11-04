@@ -1977,48 +1977,52 @@ impl Page<Jackin> for ManagerScreen {
 
     fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
         match msg {
-            Msg::Prewarmed { workspace } => {
+            Msg::Prewarmed { workspace, result } => {
                 self.busy_rows
                     .retain(|(k, _)| *k != RowKey::Workspace(*workspace));
-                let name = w
-                    .workspace(*workspace)
-                    .map(|x| x.name.clone())
-                    .unwrap_or_default();
-                cx.status(format!("Prewarmed {name} · derived image cached"));
+                match result {
+                    Ok(()) => {
+                        let name = w
+                            .workspace(*workspace)
+                            .map(|x| x.name.clone())
+                            .unwrap_or_default();
+                        cx.status(format!("Prewarmed {name} · derived image cached"));
+                    }
+                    Err(error) => cx.error(error.clone()),
+                }
             }
-            Msg::Stopped { instance } => {
+            Msg::Stopped { instance, result } => {
                 self.busy_rows
                     .retain(|(k, _)| *k != RowKey::Instance(instance.clone()));
-                let dirty = w.instance(instance).is_some_and(|i| i.is_dirty());
-                let now_secs = w.clock.now_secs();
-                if let Some(i) = w.instance_mut(instance) {
-                    i.status = if dirty {
-                        InstanceStatus::PreservedDirty
-                    } else {
-                        InstanceStatus::RestoreAvailable
-                    };
-                    i.last_seen_secs = now_secs;
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        w.daemons.remove(instance);
+                        crate::world::refresh_snapshots(w);
+                        w.sync_arbiter();
+                        cx.status(format!(
+                            "Instance {} stopped",
+                            instance.trim_start_matches("jk-")
+                        ));
+                    }
+                    Err(error) => cx.error(error.clone()),
                 }
-                w.daemons.remove(instance);
-                crate::world::refresh_snapshots(w);
-                w.sync_arbiter();
-                cx.status(format!(
-                    "Instance {} stopped",
-                    instance.trim_start_matches("jk-")
-                ));
             }
-            Msg::Purged { instance } => {
+            Msg::Purged { instance, result } => {
                 self.busy_rows
                     .retain(|(k, _)| *k != RowKey::Instance(instance.clone()));
-                if let Some(i) = w.instance_mut(instance) {
-                    i.status = InstanceStatus::Purged;
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        w.daemons.remove(instance);
+                        w.sync_arbiter();
+                        cx.status(fill_in(
+                            &w.surfaces.vocabulary.lifecycle.purged,
+                            &[("id", instance.trim_start_matches("jk-"))],
+                        ));
+                    }
+                    Err(error) => cx.error(error.clone()),
                 }
-                w.daemons.remove(instance);
-                w.sync_arbiter();
-                cx.status(fill_in(
-                    &w.surfaces.vocabulary.lifecycle.purged,
-                    &[("id", instance.trim_start_matches("jk-"))],
-                ));
             }
             Msg::WorkspaceDeleted { id, result } => match result {
                 Ok(snapshot) => {
