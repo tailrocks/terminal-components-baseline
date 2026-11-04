@@ -403,6 +403,15 @@ fn j02_roles_roles() {
     let manager = reach_manager(&app);
     assert!(text(&manager).contains(DIRECTORY), "{}", text(&manager));
     assert_eq!((manager.cols(), manager.rows()), (120, 40));
+    // The directory header paints before the workspace rows. The first
+    // manager frame lists Current directory and leaves the siblings blank.
+    let manager = app.wait_screen("workspace siblings", |screen| {
+        screen.cols() == 120
+            && screen.rows() == 40
+            && lists_workspace(screen, INFRA)
+            && lists_workspace(screen, RELEASE)
+            && lists_workspace(screen, CUSTOMER)
+    });
     assert_siblings(&manager);
     select_payments(&app);
     let editor = open_editor(&app);

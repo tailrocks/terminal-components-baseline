@@ -414,9 +414,14 @@ fn j04_form_form() {
     });
     assert!(text(&saved).contains(SAVED_DESK), "{}", text(&saved));
     app.key("e");
+    // The detail pane behind the dialog already shows ~/.claude. The folder
+    // field label is what shows the reopened form has painted.
     let edited = app.wait_screen("reopen saved", |screen| {
         let visible = text(screen);
-        visible.contains(EDIT_DESK) && visible.contains(HOME) && visible.contains(EDITS)
+        visible.contains(EDIT_DESK)
+            && visible.contains(FOLDER_LABEL)
+            && visible.contains(HOME)
+            && visible.contains(EDITS)
     });
     assert!(
         text(&edited).contains(DESK) && text(&edited).contains(FOLDER_LABEL),
