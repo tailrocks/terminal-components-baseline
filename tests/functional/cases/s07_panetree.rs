@@ -253,17 +253,6 @@ fn reveal_side(app: &App, label: &str) {
     }
 }
 
-fn reveal_text(app: &App, needle: &str) {
-    let point = Point { x: 70, y: 18 };
-    for _ in 0..80 {
-        if text(&app.settle()).contains(needle) {
-            return;
-        }
-        app.wheel(point, true, 3);
-    }
-    app.wait_text(needle);
-}
-
 fn wheel_until(app: &App, needle: &str) {
     let point = Point { x: 40, y: 12 };
     for _ in 0..80 {
