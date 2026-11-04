@@ -99,6 +99,8 @@ impl Vocabulary {
             trust_hint: "Open source".into(),
             agent_no_credentials: "no credentials handed to the container".into(),
 
+            op_reference_note: "only the reference is saved · the value is resolved at launch".into(),
+
             about_label: "About jackin-preview".into(),
             paste_label: "Paste clipboard".into(),
             paste_empty: "Preview clipboard is empty".into(),

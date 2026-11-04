@@ -2209,6 +2209,65 @@ fn jackin_fixed_account_form_refuses_a_typed_key_and_its_button() {
 }
 
 #[test]
+fn jackin_fixed_account_form_says_what_jackin_does_with_a_reference() {
+    let app = fixed_app("jackin-fixed-account-pending");
+    open_fixed_accounts(&app, 0, "Accounts › Overview");
+    app.key("a");
+    app.wait_text("New account");
+    for _ in 0..3 {
+        app.key("tab");
+    }
+    app.wait_screen("focus reaches the source radio", |s| {
+        row_has(s, "Local agent folder", "▎")
+    });
+    app.key("up");
+    app.wait_screen("1Password is chosen", |s| {
+        row_has(s, "1Password item / field", "(●)")
+    });
+    app.click_text("Choose…");
+    app.wait_text("loading accounts…");
+    app.advance_clock(300);
+    app.wait_text("chainargos.1password.com");
+    app.key("enter");
+    app.wait_text("loading vaults…");
+    app.advance_clock(300);
+    app.wait_text("Engineering");
+    app.key("enter");
+    app.wait_text("loading items from Engineering…");
+    app.advance_clock(300);
+    app.wait_text("Anthropic · Work");
+    app.type_text("Work");
+    app.wait_screen("the item list is narrowed", |s| {
+        !text(s).contains("OpenAI · Codex Primary")
+    });
+    app.key("enter");
+    app.wait_text("loading Anthropic · Work…");
+    app.advance_clock(300);
+    app.wait_text("Choose field");
+    app.key("enter");
+    let chosen = app.wait_text("Reference chosen");
+    let t = text(&chosen);
+    assert!(
+        t.contains("only the reference is saved · read here for usage only"),
+        "{t}"
+    );
+    assert!(!t.contains("resolved at launch"), "{t}");
+
+    app.click(button(&app, "Validate"));
+    let pending = app.wait_text("… material   checking");
+    let t = text(&pending);
+    assert!(t.contains("only the reference is saved"), "{t}");
+    assert!(t.contains("Validating the source…"), "{t}");
+    assert!(t.contains("New account"), "the form stays open:\n{t}");
+    app.visual("functional/jackin_fixed_account_form_pending");
+
+    app.key("esc");
+    app.wait_absent("New account");
+    leave_accounts(&app);
+    app.finish();
+}
+
+#[test]
 fn jackin_fixed_account_edit_refuses_a_host_variable_account() {
     let reason = "reads ZAI_API_KEY · remove it, then add an account";
     let app = fixed_app("jackin-fixed-account-edit");

@@ -17,6 +17,7 @@ use jackin_console::domain::account::{
 use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::Instance;
 use jackin_console::domain::launch::LaunchContent;
+use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
@@ -623,6 +624,26 @@ fn choose_a_reference(app: &mut App) {
     until_loaded(app);
     press(app, "enter");
     assert!(screen(app).contains("Anthropic · Work"));
+}
+
+#[test]
+fn the_reference_note_follows_the_vocabulary() {
+    let mut demo = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    choose_a_reference(&mut demo);
+    assert!(
+        screen(&mut demo).contains("only the reference is saved · the value is resolved at launch")
+    );
+
+    let mut world = world_for(Scenario::AccountsMixed);
+    world.surfaces.vocabulary = Vocabulary::openshell();
+    let mut live = timed(Scenario::AccountsMixed, world);
+    choose_a_reference(&mut live);
+    let shown = screen(&mut live);
+    assert!(
+        shown.contains("only the reference is saved · read here for usage only"),
+        "{shown}"
+    );
+    assert!(!shown.contains("resolved at launch"), "{shown}");
 }
 
 #[test]

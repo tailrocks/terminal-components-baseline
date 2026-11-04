@@ -2763,15 +2763,10 @@ impl Page<Jackin> for AccountsScreen {
                 }
                 let endpoint = w.op.endpoint_of(&r);
                 let caveat = w.surfaces.account_form.op_note.clone();
+                let saved_note = w.surfaces.vocabulary.op_reference_note.clone();
                 cx.with_top::<FormDialog>(move |f| {
                     f.set_chooser("op", &path, None);
-                    let mut lines = vec![
-                        (meta, Tone::Muted),
-                        (
-                            "only the reference is saved · the value is resolved at launch".into(),
-                            Tone::Faint,
-                        ),
-                    ];
+                    let mut lines = vec![(meta, Tone::Muted), (saved_note, Tone::Faint)];
                     lines.extend(caveat.map(|n| (n, Tone::Muted)));
                     f.set_note("op_note", lines);
                     f.set_note("validation", vec![]);
