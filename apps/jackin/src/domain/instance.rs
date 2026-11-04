@@ -3,6 +3,14 @@ use super::workspace::WorkspaceId;
 
 pub type InstanceId = String;
 
+/// What every instance id starts with. The console shows ids without it.
+pub const ID_PREFIX: &str = "jk-";
+
+/// The id of the instance whose sandbox name ends in `suffix`.
+pub fn instance_id(suffix: &str) -> InstanceId {
+    format!("{ID_PREFIX}{suffix}")
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum InstanceStatus {
     Running,
@@ -100,7 +108,11 @@ pub struct Instance {
 
 impl Instance {
     pub fn container_id(&self) -> String {
-        format!("{}-{}", self.container, self.id.trim_start_matches("jk-"))
+        format!(
+            "{}-{}",
+            self.container,
+            self.id.trim_start_matches(ID_PREFIX)
+        )
     }
 
     pub fn is_dirty(&self) -> bool {

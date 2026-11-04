@@ -51,7 +51,7 @@ pub fn add_role(location: &str, taken: impl Fn(&str) -> bool) -> Result<RoleReco
         source: if git {
             RoleSource::Git {
                 url: location.into(),
-                branch: "main".into(),
+                branch: Some("main".into()),
             }
         } else {
             RoleSource::Local {

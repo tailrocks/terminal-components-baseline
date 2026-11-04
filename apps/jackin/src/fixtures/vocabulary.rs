@@ -127,6 +127,18 @@ impl Vocabulary {
             sandbox_id: Some("3f9c{run8}e21a".into()),
             invocation_id: Some("{run}-4f11".into()),
             attached_status: "Attached to {name} · tabs and panes restored".into(),
+
+            not_built: "{what} is not simulated in the preview".into(),
+            gateway_unreachable: "Could not list containers on {gateway}: {reason}".into(),
+            labels_unreadable: "{count} containers have labels the preview cannot read".into(),
+            about_product: "Preview".into(),
+            about_gateway: "Daemon".into(),
+            about_config: "Settings file".into(),
+            discovery_unreadable: "instance index unreadable".into(),
+            engine_tls_port: "TLS {port}".into(),
+            doctor_failed: "The doctor could not run: {reason}".into(),
+            doctor_timed_out: "the daemon did not answer".into(),
+            doctor_no_gateway: "no usable daemon".into(),
         }
     }
 }

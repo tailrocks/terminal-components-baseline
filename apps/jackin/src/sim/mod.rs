@@ -13,7 +13,7 @@ use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
-use crate::world::{GlobalConfig, Msg, Snapshot, World};
+use crate::world::{GlobalConfig, Msg, SaveFailure, Snapshot, World};
 
 use self::launch::{LaunchPlan, Opening, SimLaunch};
 
@@ -154,10 +154,13 @@ impl SimBackend {
     fn settle_global_save(&self, global: &GlobalConfig, world: &World) -> Msg {
         if !self.save_ok() {
             return Msg::GlobalSaved {
-                result: Err(fill_in(
-                    &world.surfaces.vocabulary.save_error_global,
-                    &[("config", &world.config_file())],
-                )),
+                result: Err(SaveFailure {
+                    error: fill_in(
+                        &world.surfaces.vocabulary.save_error_global,
+                        &[("config", &world.config_file())],
+                    ),
+                    next: Some(world.surfaces.vocabulary.save_error_next.clone()),
+                }),
             };
         }
         let mut snapshot = snapshot(world);
@@ -176,10 +179,13 @@ impl SimBackend {
         if !self.save_ok() {
             return Msg::WorkspaceSaved {
                 id,
-                result: Err(fill_in(
-                    &world.surfaces.vocabulary.save_error_workspace,
-                    &[("config", &world.config_file())],
-                )),
+                result: Err(SaveFailure {
+                    error: fill_in(
+                        &world.surfaces.vocabulary.save_error_workspace,
+                        &[("config", &world.config_file())],
+                    ),
+                    next: Some(world.surfaces.vocabulary.save_error_next.clone()),
+                }),
             };
         }
         let mut snapshot = snapshot(world);
@@ -246,7 +252,7 @@ impl Backend for SimBackend {
                 let run = self.doctor_runs.fetch_add(1, Ordering::SeqCst) + 2;
                 (
                     900,
-                    Msg::DoctorFinished(surfaces::doctor_report(run, world.now_secs() + 1)),
+                    Msg::DoctorFinished(Ok(surfaces::doctor_report(run, world.now_secs() + 1))),
                 )
             }
             Effect::LoadRole { .. } => return Some(Completion::settle(1_100)),
@@ -669,5 +675,6 @@ pub fn snapshot(world: &World) -> Snapshot {
         surfaces: world.surfaces.clone(),
         github: world.github.clone(),
         index_error: world.arbiter.discovery.err(),
+        daemon_health: world.daemon_health,
     }
 }

@@ -461,14 +461,18 @@ impl RoleEntry {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RoleSource {
-    Git { url: String, branch: String },
+    Git { url: String, branch: Option<String> },
     Local { path: String },
 }
 
 impl RoleSource {
     pub fn label(&self) -> String {
         match self {
-            RoleSource::Git { url, branch } => format!("{url} @ {branch}"),
+            RoleSource::Git {
+                url,
+                branch: Some(branch),
+            } => format!("{url} @ {branch}"),
+            RoleSource::Git { url, branch: None } => url.clone(),
             RoleSource::Local { path } => path.clone(),
         }
     }

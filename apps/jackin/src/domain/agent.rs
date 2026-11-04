@@ -84,6 +84,9 @@ pub enum Provider {
     Cursor,
     Gemini,
     Openrouter,
+    Antigravity,
+    Hermes,
+    Muse,
 }
 
 impl Provider {
@@ -100,6 +103,9 @@ impl Provider {
             Provider::Cursor => "Cursor",
             Provider::Gemini => "Google Gemini",
             Provider::Openrouter => "OpenRouter",
+            Provider::Antigravity => "Antigravity",
+            Provider::Hermes => "Hermes",
+            Provider::Muse => "Muse",
         }
     }
 
@@ -116,6 +122,9 @@ impl Provider {
             Provider::Cursor => "Cursor",
             Provider::Gemini => "Gemini",
             Provider::Openrouter => "OpenRouter",
+            Provider::Antigravity => "Antigravity",
+            Provider::Hermes => "Hermes",
+            Provider::Muse => "Muse",
         }
     }
 
@@ -129,7 +138,12 @@ impl Provider {
             Provider::Moonshot => UsageSurface::Kimi,
             Provider::Zai => UsageSurface::Zai,
             Provider::MiniMax => UsageSurface::Minimax,
-            Provider::Cursor | Provider::Gemini | Provider::Openrouter => UsageSurface::Unsupported,
+            Provider::Cursor
+            | Provider::Gemini
+            | Provider::Openrouter
+            | Provider::Antigravity
+            | Provider::Hermes
+            | Provider::Muse => UsageSurface::Unsupported,
         }
     }
 
@@ -145,7 +159,10 @@ impl Provider {
             | Provider::MiniMax
             | Provider::Cursor
             | Provider::Gemini
-            | Provider::Openrouter => None,
+            | Provider::Openrouter
+            | Provider::Antigravity
+            | Provider::Hermes
+            | Provider::Muse => None,
         }
     }
 
@@ -166,6 +183,9 @@ impl Provider {
             Provider::Cursor => "Cursor API key",
             Provider::Gemini => "Gemini API key",
             Provider::Openrouter => "OpenRouter API key",
+            Provider::Antigravity => "Antigravity API key",
+            Provider::Hermes => "Hermes API key",
+            Provider::Muse => "Muse API key",
         }
     }
 
@@ -182,6 +202,9 @@ impl Provider {
             Provider::Cursor => "Cursor profile folder",
             Provider::Gemini => "Gemini profile folder",
             Provider::Openrouter => "OpenRouter profile folder",
+            Provider::Antigravity => "Antigravity profile folder",
+            Provider::Hermes => "Hermes profile folder",
+            Provider::Muse => "Muse profile folder",
         }
     }
 }

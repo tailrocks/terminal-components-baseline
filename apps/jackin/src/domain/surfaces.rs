@@ -31,6 +31,8 @@ pub struct Surfaces {
 pub struct LiveFacts {
     pub version: String,
     pub config_path: String,
+    /// The gateway the console talks to, when the config names one.
+    pub gateway: Option<String>,
 }
 
 impl Surfaces {
@@ -38,6 +40,7 @@ impl Surfaces {
         let LiveFacts {
             version,
             config_path,
+            gateway,
         } = facts;
         let SurfaceFixed {
             vocabulary,
@@ -47,6 +50,7 @@ impl Surfaces {
             wizard,
             launch_role,
         } = SurfaceFixed::openshell();
+        let about = about_rows(&vocabulary, &version, gateway, &config_path);
         Self {
             roles: None,
             docker: None,
@@ -60,7 +64,7 @@ impl Surfaces {
             version,
             cockpit_version: None,
             config_path: Some(config_path),
-            about: Vec::new(),
+            about,
         }
     }
 
@@ -78,9 +82,18 @@ impl Surfaces {
         self.doctor = Some(doctor);
         self
     }
+}
 
-    pub fn about(mut self, rows: Vec<(String, String)>) -> Self {
-        self.about = rows;
-        self
+fn about_rows(
+    vocabulary: &Vocabulary,
+    version: &str,
+    gateway: Option<String>,
+    config_path: &str,
+) -> Vec<(String, String)> {
+    let mut rows = vec![(vocabulary.about_product.clone(), version.to_owned())];
+    if let Some(gateway) = gateway {
+        rows.push((vocabulary.about_gateway.clone(), gateway));
     }
+    rows.push((vocabulary.about_config.clone(), config_path.to_owned()));
+    rows
 }

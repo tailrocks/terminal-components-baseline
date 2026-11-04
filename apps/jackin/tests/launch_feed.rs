@@ -350,6 +350,10 @@ fn ready(instance: Instance) -> LaunchEvent {
 }
 
 fn failed(instance: Instance) -> LaunchEvent {
+    failed_with(Some(instance))
+}
+
+fn failed_with(instance: Option<Instance>) -> LaunchEvent {
     LaunchEvent::Failed(Box::new(FailedLaunch {
         failure: LaunchFailure {
             stage: 3,
@@ -542,6 +546,25 @@ fn failed_event_builds_from_the_event() {
     assert!(
         shown.contains("R-7"),
         "the run id comes from the feed:\n{shown}"
+    );
+    press(&mut app, "esc");
+    assert_eq!(app.route(), Route::Manager);
+}
+
+#[test]
+fn a_failed_event_without_a_record_adds_no_instance() {
+    let (mut app, _) = scripted(vec![running(0), vec![failed_with(None)]], None);
+    let others = app.world.instances.len();
+    tick_until(
+        &mut app,
+        "the failure",
+        shows("The sandbox could not be created"),
+    );
+
+    assert_eq!(
+        app.world.instances.len(),
+        others,
+        "the backend kept no record, so the roster gets no row"
     );
     press(&mut app, "esc");
     assert_eq!(app.route(), Route::Manager);

@@ -358,6 +358,7 @@ pub fn snapshot_fixed(s: &Snapshot) -> FixedFields {
         surfaces,
         github: _,
         index_error: _,
+        daemon_health: _,
     } = s;
     collect(workspaces, roles, instances, global, accounts, surfaces)
 }

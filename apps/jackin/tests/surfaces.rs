@@ -11,6 +11,7 @@ fn live() -> Surfaces {
     Surfaces::openshell(LiveFacts {
         version: "1.4.0".into(),
         config_path: "/home/dev/.config/jackin/config.toml".into(),
+        gateway: None,
     })
 }
 
@@ -72,7 +73,17 @@ fn surfaces_openshell_sets_every_field() {
             destination_label: "Project folder".into(),
         })
     );
-    assert!(roles.is_none() && docker.is_none() && doctor.is_none() && about.is_empty());
+    assert!(roles.is_none() && docker.is_none() && doctor.is_none());
+    assert_eq!(
+        about,
+        [
+            ("Product".to_owned(), "1.4.0".to_owned()),
+            (
+                "Config".to_owned(),
+                "/home/dev/.config/jackin/config.toml".to_owned()
+            ),
+        ]
+    );
 
     // The data the host supplies arrives through builders, never as text.
     let roles = RoleAdmin {
@@ -89,17 +100,15 @@ fn surfaces_openshell_sets_every_field() {
     let doctor = DoctorSurface {
         noun: "gateway".into(),
         state: DoctorState::NeverRun,
+        rerun_secs: None,
     };
-    let about = vec![("Product".to_owned(), "jackin 1.4.0".to_owned())];
     let surfaces = live()
         .roles(roles.clone())
         .docker(docker.clone())
-        .doctor(doctor.clone())
-        .about(about.clone());
+        .doctor(doctor.clone());
     assert_eq!(surfaces.roles, Some(roles));
     assert_eq!(surfaces.docker, Some(docker));
     assert_eq!(surfaces.doctor, Some(doctor));
-    assert_eq!(surfaces.about, about);
     assert_eq!(surfaces.vocabulary, live().vocabulary);
 }
 
@@ -143,6 +152,7 @@ mod demo {
         world.surfaces = Surfaces::openshell(LiveFacts {
             version: "1.4.0".into(),
             config_path: "/home/dev/.config/jackin/config.toml".into(),
+            gateway: None,
         });
         let mut app = app_with(Scenario::CapsuleMulti, world);
         press(&mut app, "f10 right right right right enter");

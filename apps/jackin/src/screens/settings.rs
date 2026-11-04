@@ -30,7 +30,7 @@ use crate::backend::Effect;
 use crate::domain::agent::{Agent, AuthMode};
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::RoleName;
-use crate::world::{GlobalConfig, Msg, Snapshot, World, job};
+use crate::world::{GlobalConfig, Msg, SaveFailure, Snapshot, TrustKind, World, job};
 use junie_tui::ui::text::plural;
 
 pub const TABS: WidgetId = WidgetId::of("settings.tabs");
@@ -345,23 +345,27 @@ impl SettingsScreen {
         cx.focus.focus(SAVE);
     }
 
-    fn finish_save(&mut self, result: &Result<Box<Snapshot>, String>, w: &mut World, cx: &mut Cx) {
+    fn finish_save(
+        &mut self,
+        result: &Result<Box<Snapshot>, SaveFailure>,
+        w: &mut World,
+        cx: &mut Cx,
+    ) {
         self.saving = false;
         self.save.busy = false;
         let snapshot = match result {
             Ok(snapshot) => snapshot,
             Err(error) => {
-                let d = InfoDialog::new(
-                    WidgetId::of("settings.savefail"),
-                    "Settings error",
-                    vec![
-                        Prop::new("Error", error.as_str()),
-                        Prop::new("State", "your edits are intact · nothing was written"),
-                        Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
-                    ],
-                )
-                .error()
-                .width(66);
+                let mut props = vec![
+                    Prop::new("Error", error.error.as_str()),
+                    Prop::new("State", "your edits are intact · nothing was written"),
+                ];
+                if let Some(next) = &error.next {
+                    props.push(Prop::new("Next", next.as_str()));
+                }
+                let d = InfoDialog::new(WidgetId::of("settings.savefail"), "Settings error", props)
+                    .error()
+                    .width(66);
                 cx.open(d, LayerTag::new("savefail"));
                 return;
             }
@@ -525,7 +529,7 @@ impl SettingsScreen {
                 },
             );
             let x = rect.x + 7 + src_w as u16;
-            buf.set_string(x, y, fit(row.kind, 5), st.fg(t.text_muted));
+            buf.set_string(x, y, fit(row.kind.label(), 5), st.fg(t.text_muted));
             let mark = if row.trusted {
                 "[✓] trusted"
             } else {
@@ -810,7 +814,7 @@ impl SettingsScreen {
             }
             KeyCode::Char('o') => {
                 let r = &self.pending.trust[self.trust_cursor];
-                let template = if r.kind == "git" && r.source.contains("github.com") {
+                let template = if r.kind == TrustKind::Git && r.source.contains("github.com") {
                     &w.surfaces.vocabulary.trust_browser
                 } else {
                     &w.surfaces.vocabulary.trust_reveal

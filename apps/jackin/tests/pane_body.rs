@@ -251,6 +251,7 @@ fn rig(first: Vec<Line>, touched: &[&str]) -> Rig {
         Surfaces::openshell(LiveFacts {
             version: "1.4.0".into(),
             config_path: "/home/dev/.config/jackin/config.toml".into(),
+            gateway: None,
         }),
     );
     parts.instances.push(instance());

@@ -43,7 +43,7 @@ use crate::domain::workspace::{
     AllowedRoles, DirtyExitPolicy, Effective, RoleEntry, RoleName, RoleSource, Workspace,
     WorkspaceId,
 };
-use crate::world::{Msg, Snapshot, World, job};
+use crate::world::{Msg, SaveFailure, Snapshot, World, job};
 use junie_tui::ui::text::plural;
 
 fn on_off(v: bool) -> &'static str {
@@ -526,7 +526,7 @@ impl EditorScreen {
     fn finish_save(
         &mut self,
         id: Option<WorkspaceId>,
-        result: &Result<Box<Snapshot>, String>,
+        result: &Result<Box<Snapshot>, SaveFailure>,
         w: &mut World,
         cx: &mut Cx,
     ) {
@@ -536,17 +536,16 @@ impl EditorScreen {
             Ok(snapshot) => snapshot,
             Err(error) => {
                 let title = format!("Save failed · {}", self.pending.name);
-                let d = InfoDialog::new(
-                    WidgetId::of("editor.savefail"),
-                    &title,
-                    vec![
-                        Prop::new("Error", error.as_str()),
-                        Prop::new("State", "your edits are intact · nothing was written"),
-                        Prop::new("Next", w.surfaces.vocabulary.save_error_next.as_str()),
-                    ],
-                )
-                .error()
-                .width(66);
+                let mut props = vec![
+                    Prop::new("Error", error.error.as_str()),
+                    Prop::new("State", "your edits are intact · nothing was written"),
+                ];
+                if let Some(next) = &error.next {
+                    props.push(Prop::new("Next", next.as_str()));
+                }
+                let d = InfoDialog::new(WidgetId::of("editor.savefail"), &title, props)
+                    .error()
+                    .width(66);
                 cx.open(d, LayerTag::new("savefail"));
                 return;
             }
@@ -706,7 +705,7 @@ impl EditorScreen {
                 Some(r) => {
                     let r = col(r);
                     self.docker.render(Rect::new(r.x, r.y, 30, 1), buf, ctx, bg);
-                    let hint = self.docker_hint(d);
+                    let hint = self.docker_hint(d, w);
                     let hx = r.x + 30;
                     buf.set_string(
                         hx,
@@ -753,11 +752,15 @@ impl EditorScreen {
         .any(|(id, fixed)| fixed && focus == Some(id))
     }
 
-    fn docker_hint(&self, d: &DockerSetting) -> String {
+    fn docker_hint(&self, d: &DockerSetting, w: &World) -> String {
         if self.docker.checked {
             return match &d.engine {
                 EngineState::Configured { endpoint } => {
-                    format!("On · {} · {endpoint}", d.gateway)
+                    format!(
+                        "On · {} · {}",
+                        d.gateway,
+                        w.surfaces.vocabulary.engine_endpoint(endpoint)
+                    )
                 }
                 EngineState::Missing => format!("On · {} · no engine", d.gateway),
             };

@@ -318,10 +318,7 @@ impl RolesScreen {
                 vec![Action::new("add", "Add role…", ButtonKind::Primary)],
             );
         };
-        let source = match &rec.source {
-            RoleSource::Git { url, branch } => format!("{url} @ {branch}"),
-            RoleSource::Local { path } => path.clone(),
-        };
+        let source = rec.source.label();
         let kind = if rec.writable() { "local" } else { "git" };
         let meta = format!(
             "{kind} · {}",

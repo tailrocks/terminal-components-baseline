@@ -129,6 +129,7 @@ fn a_reloaded_snapshot_shows_on_the_next_frame() {
         surfaces: w.surfaces.clone(),
         github: w.github.clone(),
         index_error: None,
+        daemon_health: w.daemon_health,
     };
     assert!(tx.send(Remote::Reloaded(Box::new(snapshot))));
     assert_eq!(pump(&mut app), vec![Outcome::Changed]);

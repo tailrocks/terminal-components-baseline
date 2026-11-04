@@ -12,8 +12,16 @@ pub struct DockerSetting {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EngineState {
-    Configured { endpoint: String },
+    Configured { endpoint: EngineEndpoint },
     Missing,
+}
+
+/// Where the engine answers: an address a host knows by name, or the port of
+/// a TLS socket that the vocabulary words.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EngineEndpoint {
+    Address(String),
+    TlsPort(std::num::NonZeroU16),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

@@ -27,6 +27,7 @@ fn from_facts(scenario: Scenario) -> World {
     world.surfaces = Surfaces::openshell(LiveFacts {
         version: "1.4.0".into(),
         config_path: format!("{}/.config/jackin/config.toml", world.home),
+        gateway: None,
     });
     world
 }

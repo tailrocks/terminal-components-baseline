@@ -64,6 +64,7 @@ fn empty_world() -> World {
         Surfaces::openshell(LiveFacts {
             version: "1.4.0".into(),
             config_path: "/home/dev/.config/jackin/config.toml".into(),
+            gateway: None,
         }),
     ))
 }
@@ -151,6 +152,7 @@ fn snapshot_of(world: &World, workspaces: Vec<Workspace>) -> Snapshot {
         surfaces: world.surfaces.clone(),
         github: Vec::new(),
         index_error: None,
+        daemon_health: world.daemon_health,
     }
 }
 
