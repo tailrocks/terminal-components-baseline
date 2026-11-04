@@ -74,7 +74,10 @@ fn wheel_to(app: &App, anchor: &str, needle: &str) -> TerminalSnapshot {
     for _ in 0..16 {
         let screen = app.screen();
         if text(&screen).contains(needle) {
-            return screen;
+            let settled = app.settle();
+            if text(&settled).contains(needle) {
+                return settled;
+            }
         }
         app.wheel(point, true, 3);
     }
@@ -116,11 +119,23 @@ fn choose_select(app: &App, current: &str, listed: &str) {
 }
 
 fn brand_ink(screen: &TerminalSnapshot) -> tui_test::SnapshotColor {
-    let point = find(screen, "junie showcase");
-    screen
-        .cell_at(u32::from(point.x), u32::from(point.y))
-        .expect("brand cell")
-        .fg()
+    let points = find_all(screen, "junie showcase");
+    assert!(!points.is_empty(), "brand missing\n{}", text(screen));
+    let colors: Vec<_> = points
+        .iter()
+        .map(|point| {
+            screen
+                .cell_at(u32::from(point.x), u32::from(point.y))
+                .expect("brand cell")
+                .fg()
+        })
+        .collect();
+    assert!(
+        colors.iter().all(|color| *color == colors[0]),
+        "brand ink disagrees across copies: {colors:?}\n{}",
+        text(screen)
+    );
+    colors[0]
 }
 
 #[test]
