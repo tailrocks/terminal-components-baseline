@@ -58,8 +58,10 @@ The Holla secret prompt has no quiet frame.
 `H03.input.prompts` is PASS and has no baseline, because the prompt never sits still.
 Do not invent a baseline.
 
-The CI generator limits stay as recorded in `C01`.
-Generated CI runs `mbx nextest run --workspace --no-tests fail --profile functional` and does not pass `--locked`.
+The CI generator limits recorded in `C01` still apply, except the functional suite is sharded.
+Generated CI runs `mbx nextest run --workspace --no-tests warn --partition "hash:$VELNOR_SUITE_SHARD/8" --profile functional` with `NEXTEST_TEST_THREADS=8` and does not pass `--locked`.
+velnor-actions 0.1.73 emits `--no-tests warn` for a partitioned suite.
+The Rust crate job uses `--profile ci`, whose filter is `not binary(functional)`, so it runs library, unit, and integration tests and does not repeat the PTY suite.
 The inventory script is not a required CI step.
 Branch protection on this branch returned HTTP 404.
 macOS and Windows are unclaimed.

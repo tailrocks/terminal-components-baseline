@@ -11,16 +11,26 @@ Never hand-edit `.github/workflows/`, `.github/actions/`,
   history checkout is large).
 - **Suite (functional)** — the pull_request and push gate, and the
   workflow_dispatch tier on `suites.yml`. Both generated jobs run
-  `mbx nextest run --workspace --no-tests fail --profile functional`.
+  `mbx nextest run --workspace --no-tests warn --partition "hash:$VELNOR_SUITE_SHARD/8" --profile functional`
+  with `VELNOR_SUITE_SHARD` set from the matrix (`1` through `8`).
   That is the exact argv inside the `Run suite (functional)` step in
   `.github/workflows/ci.yml` and `.github/workflows/suites.yml`.
   `--profile functional` selects
   `[profile.functional] default-filter = 'binary(functional)'` in
   `.config/nextest.toml`, so the functional inventory runs without a
-  suite filter. `--no-tests fail` stays because the suite is not
-  sharded and has no filter. `partitions = 1` stays written in
-  `.velnor/config.toml`; velnor-actions then emits one job and does
-  not add `--partition`, so one failure fails that job.
+  suite filter. velnor-actions 0.1.73 emits `--no-tests warn` when
+  `partitions` is greater than 1. A hash bucket of this inventory is
+  not empty. `partitions = 8` emits one matrix job, shards `1` through
+  `8`, with `fail-fast: false`. One shard failure fails the job, and
+  the required verdict still lists `suite-functional`.
+  `test_threads = 8` sets `NEXTEST_TEST_THREADS`. Each functional test
+  takes 2 threads and the `pty` group caps at 8, so a shard runs four
+  PTY tests at once. Run 41781135706 cancelled the single unsharded
+  job at its 15-minute limit, which is why the suite is sharded.
+  `[profile.ci] default-filter = 'not binary(functional)'` keeps those
+  PTY tests out of the Rust crate job. That job still runs library,
+  unit, and integration tests with nextest (`--profile ci`), in
+  parallel with format, clippy, and documentation.
   `required = true` adds `suite-functional` to the generated
   `required` verdict job (`needs` and `VELNOR_NEEDS_EXPECTED`). The
   generator does not call the GitHub branch-protection API.
