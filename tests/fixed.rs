@@ -706,3 +706,67 @@ fn a_form_does_not_offer_a_fixed_action() {
     assert!(!offers("plain"));
     assert!(offers("check"));
 }
+
+#[test]
+fn a_focused_menu_item_with_a_reason_keeps_the_cursor_fill() {
+    use junie_tui::ui::popup::Placement;
+    use junie_tui::widgets::menu::{ContextMenu, MenuItem};
+
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    let cell = |items: Vec<MenuItem>, focus: usize, label: &str| {
+        let items_len = items.len();
+        let mut menu = ContextMenu::new(WidgetId::of("t.menu"), items)
+            .skip_disabled(false)
+            .anchor(Rect::new(2, 1, 1, 1), Placement::Below);
+        for _ in 0..items_len {
+            match menu.highlighted() {
+                Some(at) if at > focus => menu.on_key(&key(KeyCode::Up)),
+                Some(at) if at < focus => menu.on_key(&key(KeyCode::Down)),
+                _ => break,
+            };
+        }
+        assert_eq!(menu.highlighted(), Some(focus));
+        let area = Rect::new(0, 0, 60, 12);
+        let mut buf = Buffer::empty(area);
+        let mut hits = HitRegistry::default();
+        let mut ring = FocusRing::default();
+        {
+            let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+            menu.render(area, &mut buf, &mut ctx);
+            ctx.flush_overlays(&mut buf);
+        }
+        (0..area.height)
+            .find_map(|y| {
+                let cells: Vec<char> = row(&buf, y).chars().collect();
+                let at = cells
+                    .windows(label.chars().count())
+                    .position(|w| w.iter().collect::<String>() == label)?;
+                Some((buf[(at as u16, y)].bg, buf[(at as u16, y)].fg))
+            })
+            .unwrap_or_else(|| panic!("no `{label}` row"))
+    };
+    let items = || {
+        vec![
+            MenuItem::new("Reasoned").reason("no disabled state"),
+            MenuItem::new("Plain").disabled(true),
+            MenuItem::new("Live"),
+        ]
+    };
+    let fill = theme.ladders.highlight.rest;
+
+    let (bg, fg) = cell(items(), 0, "Reasoned");
+    assert_eq!(bg, fill, "the focused reasoned item keeps the cursor fill");
+    assert_eq!(fg, theme.legible(theme.text_muted, fill));
+    assert_ne!(fg, theme.disabled);
+
+    let (bg, fg) = cell(items(), 1, "Reasoned");
+    assert_ne!(bg, fill, "an unfocused reasoned item has no fill");
+    assert_eq!(fg, theme.disabled);
+
+    let (bg, fg) = cell(items(), 1, "Plain");
+    assert_ne!(bg, fill, "an unreasoned disabled item is unchanged");
+    assert_eq!(fg, theme.disabled);
+
+    let (bg, _) = cell(items(), 2, "Live");
+    assert_eq!(bg, fill, "a live item keeps its fill");
+}

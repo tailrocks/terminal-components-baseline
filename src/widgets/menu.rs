@@ -562,6 +562,7 @@ impl ContextMenu {
             let mut s = ctx.child_state(self.id, rid, cursor == Some(i));
             s.focused = cursor == Some(i);
             s.disabled = item.item.disabled;
+            s.fixed = item.item.disabled && item.item.reason.is_some();
             s.error = item.danger;
             let row = Rect::new(rows.x, y, rows.width, 1);
 
@@ -574,6 +575,9 @@ impl ContextMenu {
             )
             .look;
             let mut st = it.style;
+            if s.fixed && s.focused {
+                st = st.fg(t.legible(t.text_muted, st.bg.unwrap_or(bg)));
+            }
             if item.danger && !it.on_fill && !item.item.disabled {
                 st = st.fg(t.legible(t.error_soft, st.bg.unwrap_or(bg)));
             }
