@@ -59,21 +59,11 @@ impl WallClock {
     }
 
     pub fn now_ms(&self) -> u64 {
-        match self.stepped {
-            Some(ms) => ms,
-            None => self.origin.elapsed().as_millis() as u64,
-        }
+        self.origin.elapsed().as_millis() as u64
     }
 
     pub fn elapsed(&self) -> Duration {
-        match self.stepped {
-            Some(ms) => Duration::from_millis(ms),
-            None => self.origin.elapsed(),
-        }
-    }
-
-    pub fn is_stepped(&self) -> bool {
-        self.stepped.is_some()
+        self.origin.elapsed()
     }
 
     pub fn advance(&mut self, ms: u64) {
@@ -91,7 +81,7 @@ impl Default for WallClock {
 
 impl Clock for WallClock {
     fn now(&self) -> Moment {
-        Moment(self.now_ms())
+        Moment(self.stepped.unwrap_or_else(|| self.now_ms()))
     }
 }
 

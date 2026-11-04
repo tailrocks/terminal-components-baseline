@@ -338,6 +338,7 @@ fn close_all_tabs(app: &App) {
 }
 
 fn freeze(app: &App, test_id: &str) {
+    app.advance_clock(5_000);
     app.wait_absent("\u{2713} Connected to");
     app.visual(test_id);
 }
@@ -484,6 +485,7 @@ fn tablepro_history_rerun_and_help_and_layout() {
         text(s).to_lowercase().contains("history")
     });
 
+    app.advance_clock(5_000);
     app.wait_screen("history entry settled", |s| {
         let t = text(s);
 

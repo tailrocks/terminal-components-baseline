@@ -1129,7 +1129,6 @@ fn refused_with(app: &App, reason: &str) -> TerminalSnapshot {
 }
 
 fn status_gone(app: &App, reason: &str) -> TerminalSnapshot {
-    app.advance_clock(5_000);
     app.wait_screen("status expired", |s| !footer_row(s).contains(reason))
 }
 
@@ -1470,7 +1469,6 @@ fn showcase_terminal_viewport_copy_joins_a_wrapped_path() {
 }
 
 #[test]
-#[ignore = "flaky: docs/P9.3-red-green.md#pty-load-flakes double click under load"]
 fn showcase_terminal_viewport_double_click_selects_a_word() {
     let app = terminal_viewport("showcase-terminal-viewport-word", &[]);
     let screen = app.settle();
