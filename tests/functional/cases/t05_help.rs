@@ -178,7 +178,8 @@ fn click_editor(app: &App) {
 fn type_opener(app: &App) {
     click_editor(app);
     app.type_text(SQL);
-    let typed = app.wait_screen("opener sql", |screen| text(screen).contains(MARKER));
+    // The marker is on screen before the closing quote and semicolon.
+    let typed = app.wait_screen("opener sql", |screen| text(screen).contains(SQL));
     see(
         &typed,
         &[SQL, QUERY, CONNECTED],
@@ -283,7 +284,7 @@ fn tablepro_help_scrolls_and_returns_to_the_opener() {
     app.key("ctrl+pageup");
     let opener = app.wait_screen("query 1 opener", |screen| {
         let visible = text(screen);
-        visible.contains(MARKER) && visible.contains(QUERY) && !visible.contains(PLACEHOLDER)
+        visible.contains(SQL) && visible.contains(QUERY) && !visible.contains(PLACEHOLDER)
     });
     assert_query_1_active(&opener);
     see(

@@ -15,7 +15,7 @@ use std::time::{Duration, Instant};
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{App, JACKIN, Launch, row_text, text, try_launch};
+use crate::support::{App, JACKIN, Launch, find_all, row_text, text, try_launch};
 
 const DIRTY_ID: &str = "7f3a";
 const CLEAN_ID: &str = "9b02";
@@ -552,6 +552,40 @@ fn inspect_return() {
     assert!(app.child_running(), "inspect quit the process");
 }
 
+fn cancel_second(app: &App) -> TerminalSnapshot {
+    let started = Instant::now();
+    let mut esc_at: Option<Instant> = None;
+    let mut clicked = false;
+    loop {
+        let screen = app.screen();
+        if dirty_capsule(&screen) {
+            return screen;
+        }
+        let visible = text(&screen);
+        assert!(
+            started.elapsed() < Duration::from_secs(12) && app.child_running(),
+            "cancel kept the capsule\n{visible}"
+        );
+        if esc_at.is_none() {
+            app.key("esc");
+            esc_at = Some(Instant::now());
+        } else if !clicked && esc_at.expect("esc").elapsed() >= Duration::from_millis(400) {
+            let hits: Vec<_> = find_all(&screen, "Cancel")
+                .into_iter()
+                .filter(|hit| {
+                    let row = row_text(&screen, u32::from(hit.y));
+                    row.contains("Discard") && !row.contains("Esc")
+                })
+                .collect();
+            if hits.len() == 1 {
+                app.click(hits[0]);
+                clicked = true;
+            }
+        }
+        std::thread::sleep(Duration::from_millis(25));
+    }
+}
+
 fn status_cleared(screen: &TerminalSnapshot) -> bool {
     dirty_capsule(screen) && !text(screen).contains("tabs and panes restored")
 }
@@ -598,8 +632,10 @@ fn discard_shots_then_cancel() {
     require(&restored, TYPE_TOKEN);
     refuse(&restored, DISCARDED);
 
-    app.key("esc");
-    let capsule = app.wait_screen("cancel kept the capsule", dirty_capsule);
+    // The resize can drop the first Esc while the dialog is still painting.
+    // A second Esc, then the Cancel button on the Discard row, leaves the
+    // capsule up without discarding.
+    let capsule = cancel_second(&app);
     refuse(&capsule, DISCARDED);
     refuse(&capsule, SECOND);
     refuse(&capsule, KEPT);

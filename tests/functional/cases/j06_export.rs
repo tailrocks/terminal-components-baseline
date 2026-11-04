@@ -19,7 +19,7 @@ use std::time::{Duration, Instant};
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{App, JACKIN, Launch, row_text, text, try_launch};
+use crate::support::{App, JACKIN, Launch, find_all, row_text, text, try_launch};
 
 const INSTANCE: &str = "7f3a";
 const OTHER: &str = "9b02";
@@ -250,16 +250,6 @@ fn path_dialog(screen: &TerminalSnapshot, cols: u32, rows: u32) -> bool {
         && !visible.contains(PALETTE)
 }
 
-fn cancel_focused(screen: &TerminalSnapshot) -> bool {
-    let line = focused_line(screen);
-    let Some(at) = line.find('▎') else {
-        return false;
-    };
-    line[at + '▎'.len_utf8()..]
-        .trim_start()
-        .starts_with("Cancel")
-}
-
 fn open_export(app: &App) -> TerminalSnapshot {
     let ready = attach(app);
     require(&ready, "Ctrl+\\");
@@ -292,43 +282,60 @@ fn type_path(app: &App, path: &str) {
     });
 }
 
+fn export_dismissed(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(IDENTITY)
+        && !visible.contains(HELP)
+        && !visible.contains(EXPORTED)
+        && !visible.contains(TITLE)
+        && !visible.contains(OUTRO)
+}
+
 fn cancel_export(app: &App) -> TerminalSnapshot {
-    // The path field owns Tab. A resize drops the first Tab while the
-    // capsule under the dialog is still painting, and the gutter stays on
-    // the path. Tab again until Cancel is the focused control.
+    // Tab from the path field reaches Cancel, then Export. A slow paint of
+    // Cancel can arrive after the next Tab has already moved onto Export,
+    // and Enter then confirms the export. Click the Cancel button, and
+    // press Esc if that click lands while the dialog is still moving.
     let deadline = Instant::now() + Duration::from_secs(8);
-    let mut sent: Option<Instant> = None;
+    let mut acted: Option<Instant> = None;
+    let mut used_esc = false;
     loop {
         let screen = app.screen();
-        if cancel_focused(&screen) {
-            break;
+        if export_dismissed(&screen) {
+            return screen;
         }
+        let visible = text(&screen);
         assert!(
             Instant::now() < deadline && app.child_running(),
-            "Cancel is not the focused control\n{}",
-            focused_line(&screen)
+            "export dismissed\n{visible}"
         );
-        if sent.is_none_or(|at| at.elapsed() >= Duration::from_millis(250)) {
-            app.key("tab");
-            sent = Some(Instant::now());
+        let due = acted.is_none_or(|at| at.elapsed() >= Duration::from_millis(350));
+        if due {
+            let hits: Vec<_> = find_all(&screen, "Cancel")
+                .into_iter()
+                .filter(|hit| {
+                    let row = row_text(&screen, u32::from(hit.y));
+                    row.contains("Export") && !row.contains("Esc")
+                })
+                .collect();
+            if hits.len() == 1 && used_esc {
+                let mut point = hits[0];
+                point.x = point.x.saturating_add(3);
+                app.click(point);
+                acted = Some(Instant::now());
+            } else if hits.len() == 1 && acted.is_none() {
+                let mut point = hits[0];
+                point.x = point.x.saturating_add(3);
+                app.click(point);
+                acted = Some(Instant::now());
+            } else if !used_esc {
+                app.key("esc");
+                used_esc = true;
+                acted = Some(Instant::now());
+            }
         }
         std::thread::sleep(Duration::from_millis(25));
     }
-    let focused = app.screen();
-    assert!(
-        cancel_focused(&focused),
-        "Cancel is not the focused control\n{}",
-        focused_line(&focused)
-    );
-    app.key("enter");
-    app.wait_screen("export dismissed", |screen| {
-        let visible = text(screen);
-        visible.contains(IDENTITY)
-            && !visible.contains(HELP)
-            && !visible.contains(EXPORTED)
-            && !visible.contains(TITLE)
-            && !visible.contains(OUTRO)
-    })
 }
 
 fn shot(app: &App, checkpoint: &str, accept: impl Fn(&TerminalSnapshot) -> bool) {
