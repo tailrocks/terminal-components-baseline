@@ -2671,6 +2671,17 @@ fn jackin_launch_asks_for_the_values_a_role_needs() {
     ] {
         assert!(text(&asked).contains(line), "{line:?}:\n{}", text(&asked));
     }
+    assert!(
+        text(&asked).contains("Codex · OpenAI") && text(&asked).contains("0/7 stages"),
+        "the questions sit over the Codex launch:\n{}",
+        text(&asked)
+    );
+    assert!(row_with(&asked, "Fail the preflight hook on purpose").contains("optional"));
+    let note = row_with(&asked, "Note for the run");
+    assert!(
+        note.contains('*') && !note.contains("optional"),
+        "an entry with no default is required: {note}"
+    );
     app.settle();
     app.visual("functional/jackin_launch_env_prompt");
 
@@ -2680,6 +2691,16 @@ fn jackin_launch_asks_for_the_values_a_role_needs() {
         text(&held).contains("Fail the preflight hook on purpose"),
         "the launch waits for the answers"
     );
+    app.click_text("Start launch");
+    let refused = app.wait_text("Enter a value for SENTINEL_NOTE.");
+    assert!(
+        text(&refused).contains("Values for this launch"),
+        "the form stays open:\n{}",
+        text(&refused)
+    );
+    app.click_text("Note for the run");
+    app.type_text("hello");
+    app.key("enter");
     app.click_text("Start launch");
     app.advance_clock(30_000);
     app.wait_screen("the launch hands off to the capsule", |s| {
