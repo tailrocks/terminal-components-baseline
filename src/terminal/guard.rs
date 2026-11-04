@@ -29,6 +29,7 @@ const ESC: u8 = 0x1b;
 const BEL: u8 = 0x07;
 const CAN: u8 = 0x18;
 const SUB: u8 = 0x1a;
+const ST: u8 = 0x9c;
 const ZWJ: char = '\u{200d}';
 const MAX_DECSET_PARAMS: u8 = 16;
 
@@ -293,6 +294,7 @@ impl FeedGuard {
                 self.held.push(byte);
                 self.release();
             }
+            ST if !osc => {}
             ESC => {
                 self.held.push(byte);
                 self.state = State::Held { osc, esc: true };
