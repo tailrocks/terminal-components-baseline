@@ -819,7 +819,16 @@ fn cell_edit_shows_the_typed_character_before_commit() {
         &["Cell saved", "Edit cancelled", "1 edits"],
     );
     app.type_text("Q");
-    let typed = app.wait_text("endpointsQ");
+    let typed = app.wait_screen("typed Q before commit", |screen| {
+        let visible = text(screen);
+        visible.contains("endpointsQ")
+            && visible.contains("Enter Apply")
+            && visible.contains("0 edits")
+            && visible.contains(RANGE)
+            && visible.contains("#1040")
+            && !visible.contains("Cell saved")
+            && !visible.contains("1 edits")
+    });
     see(
         &typed,
         &[
@@ -839,7 +848,18 @@ fn cell_edit_shows_the_typed_character_before_commit() {
     app.resize(121, 40);
     app.wait_text("121×40");
     app.resize(120, 40);
-    let settled = app.wait_text("120×40");
+    let settled = app.wait_screen("settled typed cell", |screen| {
+        let visible = text(screen);
+        screen.cols() == 120
+            && screen.rows() == 40
+            && visible.contains("endpointsQ")
+            && visible.contains("Enter Apply")
+            && visible.contains("0 edits")
+            && visible.contains(RANGE)
+            && visible.contains("#1040")
+            && !visible.contains("Cell saved")
+            && !visible.contains("1 edits")
+    });
     see(
         &settled,
         &[
