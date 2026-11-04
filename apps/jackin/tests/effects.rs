@@ -566,3 +566,147 @@ fn refused_restore_stays_on_the_row() {
     assert!(!app.world.daemons.contains_key("jk-c41e"));
     assert_eq!(status(&app), "the sandbox was removed");
 }
+
+const LOADED: &str = "loaded by the backend";
+
+fn load_role(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::LoadRole { role } = effect else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    for r in snapshot.roles.iter_mut().filter(|r| r.name == *role) {
+        r.in_registry = true;
+        r.trusted = true;
+        r.load_error = None;
+        r.description = LOADED.into();
+    }
+    Some(Msg::RoleLoaded {
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn fail_role_load(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::LoadRole { role } = effect else {
+        return None;
+    };
+    Some(Msg::RoleLoaded {
+        role: role.clone(),
+        result: Err("manifest not found".into()),
+    })
+}
+
+fn role<'a>(w: &'a World, name: &str) -> &'a jackin_console::domain::workspace::RoleEntry {
+    w.roles.iter().find(|r| r.name == name).expect("the role")
+}
+
+#[test]
+fn role_load_comes_from_the_snapshot() {
+    let (mut app, backend) = backed(Scenario::Returning, load_role);
+    assert!(!role(&app.world, "writer").in_registry);
+    press(&mut app, "down e ] ] down a w r i t e r enter");
+    settle(&mut app);
+
+    assert_eq!(
+        backend.seen(),
+        [Effect::LoadRole {
+            role: "writer".into()
+        }]
+    );
+    assert_eq!(
+        role(&app.world, "writer").description,
+        LOADED,
+        "the role is the reply snapshot's, not the screen's"
+    );
+    assert!(role(&app.world, "writer").in_registry);
+    assert_eq!(status(&app), "Role writer loaded and allowed");
+}
+
+#[test]
+fn failed_role_load_names_the_reply_error() {
+    let (mut app, _) = backed(Scenario::Returning, fail_role_load);
+    press(&mut app, "down e ] ] down a w r i t e r enter");
+    settle(&mut app);
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("Role writer failed to load"), "{shown}");
+    assert!(shown.contains("manifest not found"), "{shown}");
+    assert!(!role(&app.world, "writer").in_registry);
+    assert_eq!(
+        role(&app.world, "writer").load_error.as_deref(),
+        Some("manifest not found"),
+        "the world keeps the error of a failed load"
+    );
+}
+
+/// Trusts the role in its own way: the role, and nothing in the global trust
+/// rows. A screen that finds a trust row itself would flip that row too.
+fn trust_role(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::TrustRole { role } = effect else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    for r in snapshot.roles.iter_mut().filter(|r| r.name == *role) {
+        r.trusted = true;
+    }
+    Some(Msg::RoleTrusted {
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn refuse_trust(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::TrustRole { role } = effect else {
+        return None;
+    };
+    Some(Msg::RoleTrusted {
+        role: role.clone(),
+        result: Err("the trust store is read-only".into()),
+    })
+}
+
+const TRUST_DIALOG: &str = "down e ] ] down down down down down enter";
+
+#[test]
+fn trust_dialog_sends_trust_role() {
+    let (mut app, backend) = backed(Scenario::Returning, trust_role);
+    let rows = app.world.global.trust.clone();
+    press(&mut app, TRUST_DIALOG);
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert_eq!(
+        backend.seen(),
+        [
+            Effect::TrustRole {
+                role: "data-eng".into()
+            },
+            Effect::LoadRole {
+                role: "data-eng".into()
+            },
+        ]
+    );
+    assert!(role(&app.world, "data-eng").trusted);
+    assert_eq!(
+        app.world.global.trust, rows,
+        "the screen must not find a trust row by the name of a source"
+    );
+}
+
+#[test]
+fn refused_trust_leaves_the_role_untrusted() {
+    let (mut app, backend) = backed(Scenario::Returning, refuse_trust);
+    press(&mut app, TRUST_DIALOG);
+    press(&mut app, "right enter");
+    settle(&mut app);
+
+    assert_eq!(
+        backend.seen(),
+        [Effect::TrustRole {
+            role: "data-eng".into()
+        }],
+        "an untrusted role is not loaded"
+    );
+    assert!(!role(&app.world, "data-eng").trusted);
+    assert_eq!(status(&app), "the trust store is read-only");
+}

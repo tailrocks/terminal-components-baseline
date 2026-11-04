@@ -9,7 +9,7 @@ use crate::domain::agent::Provider;
 use crate::domain::instance::InstanceStatus;
 use crate::domain::launch::LaunchContent;
 use crate::domain::vocabulary::fill_in;
-use crate::domain::workspace::{Workspace, WorkspaceId};
+use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchPlan, LaunchTarget};
 use crate::panes::SessionScript;
 use crate::world::{GlobalConfig, Msg, Snapshot, World};
@@ -173,6 +173,7 @@ impl Backend for SimBackend {
             Effect::SaveWorkspace { .. } => return Some(Completion::settle(900)),
             Effect::SaveGlobal { .. } => return Some(Completion::settle(900)),
             Effect::SaveAccounts { .. } => return Some(Completion::settle(0)),
+            Effect::TrustRole { .. } => return Some(Completion::settle(0)),
             Effect::DeleteWorkspace { .. } | Effect::Restore { .. } => {
                 return Some(Completion::settle(0));
             }
@@ -266,21 +267,7 @@ impl Backend for SimBackend {
                     Msg::DoctorFinished(surfaces::doctor_report(run, world.now_secs() + 1)),
                 )
             }
-            Effect::LoadRole { role } => {
-                let error = world
-                    .roles
-                    .iter()
-                    .find(|r| r.name == *role)
-                    .and_then(|r| r.fetch_error.clone());
-                (
-                    1_100,
-                    Msg::RoleLoaded {
-                        role: role.clone(),
-                        ok: error.is_none(),
-                        error,
-                    },
-                )
-            }
+            Effect::LoadRole { .. } => return Some(Completion::settle(1_100)),
         };
         Some(Completion::ready(after_ms, msg))
     }
@@ -289,6 +276,51 @@ impl Backend for SimBackend {
         match effect {
             Effect::SaveWorkspace { id, workspace, .. } => {
                 Some(self.settle_workspace_save(*id, workspace, world))
+            }
+            Effect::TrustRole { role } => {
+                let mut snapshot = snapshot(world);
+                let result = match snapshot.roles.iter_mut().find(|r| r.name == *role) {
+                    Some(r) => {
+                        r.trusted = true;
+                        let source = match &r.source {
+                            RoleSource::Git { url, .. } => url.clone(),
+                            RoleSource::Local { path } => path.clone(),
+                        };
+                        for row in snapshot
+                            .global
+                            .trust
+                            .iter_mut()
+                            .filter(|t| t.source == source)
+                        {
+                            row.trusted = true;
+                        }
+                        Ok(Box::new(snapshot))
+                    }
+                    None => Err(format!("{role} is not in the registry")),
+                };
+                Some(Msg::RoleTrusted {
+                    role: role.clone(),
+                    result,
+                })
+            }
+            Effect::LoadRole { role } => {
+                let found = world.roles.iter().find(|r| r.name == *role);
+                let result = match found.and_then(|r| r.fetch_error.clone()) {
+                    Some(error) => Err(error),
+                    None => {
+                        let mut snapshot = snapshot(world);
+                        if let Some(r) = snapshot.roles.iter_mut().find(|r| r.name == *role) {
+                            r.load_error = None;
+                            r.in_registry = true;
+                            r.trusted = true;
+                        }
+                        Ok(Box::new(snapshot))
+                    }
+                };
+                Some(Msg::RoleLoaded {
+                    role: role.clone(),
+                    result,
+                })
             }
             Effect::DeleteWorkspace { id } => {
                 let mut snapshot = snapshot(world);

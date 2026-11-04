@@ -284,6 +284,9 @@ pub enum Effect {
     Restore {
         instance: InstanceId,
     },
+    TrustRole {
+        role: RoleName,
+    },
     Prewarm {
         workspace: WorkspaceId,
     },

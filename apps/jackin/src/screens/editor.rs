@@ -1609,17 +1609,16 @@ impl EditorScreen {
     fn finish_role_load(
         &mut self,
         name: &str,
-        ok: bool,
-        error: Option<String>,
+        result: &Result<Box<Snapshot>, String>,
         w: &mut World,
         cx: &mut Cx,
     ) {
         self.pending_load = None;
-        match w.roles.iter_mut().find(|r| r.name == name) {
-            Some(r) if ok => {
-                r.load_error = None;
-                r.in_registry = true;
-                r.trusted = true;
+        if let Ok(snapshot) = result {
+            w.apply((**snapshot).clone());
+        }
+        match (w.roles.iter().find(|r| r.name == name), result) {
+            (Some(_), Ok(_)) => {
                 let all: Vec<RoleName> = w.roles.iter().map(|r| r.name.clone()).collect();
                 let mut list = match &self.pending.roles.allowed {
                     AllowedRoles::All => all.clone(),
@@ -1635,13 +1634,12 @@ impl EditorScreen {
                 };
                 cx.status(format!("Role {name} loaded and allowed"));
             }
-            Some(r) => {
-                r.load_error = error.clone();
+            (Some(r), Err(error)) => {
                 let d = InfoDialog::new(
                     WidgetId::of("editor.roleerr"),
                     &format!("Role {name} failed to load"),
                     vec![
-                        Prop::new("Error", error.unwrap_or("unknown".into())),
+                        Prop::new("Error", error.as_str()),
                         Prop::new("Source", r.source.label()),
                         Prop::new("Next", "trust stays granted · retry from the Roles tab"),
                     ],
@@ -1650,7 +1648,7 @@ impl EditorScreen {
                 .width(70);
                 cx.open(d, LayerTag::new("roleerr"));
             }
-            None => cx.error(format!("Role {name} is not in the registry")),
+            (None, _) => cx.error(format!("Role {name} is not in the registry")),
         }
         self.build_roles(w);
     }
@@ -1831,10 +1829,25 @@ impl Page<Jackin> for EditorScreen {
                 self.finish_save(*id, result, w, cx);
                 Outcome::Changed
             }
-            Msg::RoleLoaded { role, ok, error }
+            Msg::RoleLoaded { role, result }
                 if self.pending_load.as_deref() == Some(role.as_str()) =>
             {
-                self.finish_role_load(role, *ok, error.clone(), w, cx);
+                self.finish_role_load(role, result, w, cx);
+                Outcome::Changed
+            }
+            Msg::RoleTrusted { role, result }
+                if self.pending_load.as_deref() == Some(role.as_str()) =>
+            {
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        self.start_role_load(role, w, cx);
+                    }
+                    Err(error) => {
+                        self.pending_load = None;
+                        cx.error(error.clone());
+                    }
+                }
                 Outcome::Changed
             }
             _ => Outcome::Ignored,
@@ -2207,19 +2220,9 @@ impl Page<Jackin> for EditorScreen {
                     action: Some(1), ..
                 },
             ) => {
-                let name = tag.key.clone();
-                if let Some(r) = w.roles.iter_mut().find(|r| r.name == name) {
-                    r.trusted = true;
-                }
-                if let Some(t) = w
-                    .global
-                    .trust
-                    .iter_mut()
-                    .find(|t| t.source.contains("roles-experimental"))
-                {
-                    t.trusted = true;
-                }
-                self.start_role_load(&name, w, cx);
+                w.perform(Effect::TrustRole {
+                    role: tag.key.clone(),
+                });
                 Outcome::Changed
             }
             ("role.trust", _) => {

@@ -108,7 +108,6 @@ const PENDING: &[Pending] = &[
     ("refresh_fails", "domain/fixed_fields.rs", 1, "B6"),
     ("takeover_at_ms", "domain/fixed_fields.rs", 1, "B6"),
     ("refresh_fails", "screens/accounts.rs", 1, "B6"),
-    ("roles-experimental", "screens/editor.rs", 1, "B6"),
     (
         "last_seen_secs = w . clock . now_secs",
         "screens/manager.rs",

@@ -156,8 +156,11 @@ pub enum Msg {
     },
     RoleLoaded {
         role: String,
-        ok: bool,
-        error: Option<String>,
+        result: Result<Box<Snapshot>, String>,
+    },
+    RoleTrusted {
+        role: RoleName,
+        result: Result<Box<Snapshot>, String>,
     },
 
     Takeover {
@@ -204,6 +207,7 @@ impl Msg {
             Msg::AccountsSaved { .. }
             | Msg::WorkspaceDeleted { .. }
             | Msg::Restored { .. }
+            | Msg::RoleTrusted { .. }
             | Msg::Refreshed { .. }
             | Msg::AccountRefreshed { .. }
             | Msg::Takeover { .. } => None,
@@ -541,9 +545,24 @@ impl World {
         };
     }
 
+    /// Takes in what a reply says about the world itself, before any screen
+    /// sees the message.
     pub fn absorb(&mut self, msg: &Msg) {
-        if let (Msg::DoctorFinished(report), Some(d)) = (msg, self.surfaces.doctor.as_mut()) {
-            d.state = DoctorState::Done(report.clone());
+        match msg {
+            Msg::DoctorFinished(report) => {
+                if let Some(d) = self.surfaces.doctor.as_mut() {
+                    d.state = DoctorState::Done(report.clone());
+                }
+            }
+            Msg::RoleLoaded {
+                role,
+                result: Err(error),
+            } => {
+                if let Some(r) = self.roles.iter_mut().find(|r| r.name == *role) {
+                    r.load_error = Some(error.clone());
+                }
+            }
+            _ => {}
         }
     }
 
