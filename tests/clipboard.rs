@@ -129,8 +129,7 @@ fn cmd(c: char) -> Key {
 
 fn copy_selection(sink: Arc<dyn NativeClipboard>) {
     let mut shell = Shell::<()>::new();
-    shell.clipboard = Clipboard::new().native(sink);
-    shell.clipboard.install();
+    shell.set_clipboard(Clipboard::new().native(sink));
     let mut field = TextInput::new(WidgetId::of("t.field"), "Name").value("alpha");
     field.on_key(&cmd('a'));
     field.on_key(&cmd('c'));
@@ -157,8 +156,7 @@ fn a_shell_copy_with_the_hook_installed_queues_no_osc52_after_a_native_write() {
     queued();
     let native = Arc::new(Counting::default());
     let mut shell = Shell::<()>::new();
-    shell.clipboard = Clipboard::new().native(native.clone());
-    shell.clipboard.install();
+    shell.set_clipboard(Clipboard::new().native(native.clone()));
     shell.copy_at(TEXT, None, Moment::ZERO);
     assert_eq!(native.0.load(std::sync::atomic::Ordering::SeqCst), 1);
     assert_eq!(queued(), Vec::<String>::new());
@@ -177,8 +175,7 @@ impl NativeClipboard for Recording {
 fn cmd_on(field: &mut TextInput, keys: &[char]) -> Vec<String> {
     let sink = Arc::new(Recording::default());
     let mut shell = Shell::<()>::new();
-    shell.clipboard = Clipboard::new().native(sink.clone());
-    shell.clipboard.install();
+    shell.set_clipboard(Clipboard::new().native(sink.clone()));
     queued();
     for c in keys {
         field.on_key(&cmd(*c));
@@ -234,8 +231,7 @@ fn ctrl_w_in_a_masked_field_deletes_the_word_before_the_cursor_and_copies_nothin
     }
     let sink = Arc::new(Recording::default());
     let mut shell = Shell::<()>::new();
-    shell.clipboard = Clipboard::new().native(sink.clone());
-    shell.clipboard.install();
+    shell.set_clipboard(Clipboard::new().native(sink.clone()));
     queued();
     field.on_key(&ctrl_w());
     assert_eq!(field.text(), "sk-one ");
@@ -252,8 +248,7 @@ fn ctrl_w_over_a_selection_in_a_masked_field_deletes_it_and_copies_nothing() {
         .masked();
     let sink = Arc::new(Recording::default());
     let mut shell = Shell::<()>::new();
-    shell.clipboard = Clipboard::new().native(sink.clone());
-    shell.clipboard.install();
+    shell.set_clipboard(Clipboard::new().native(sink.clone()));
     queued();
     field.on_key(&cmd('a'));
     field.on_key(&ctrl_w());
@@ -277,8 +272,7 @@ fn ctrl_x_in_a_masked_desktop_field_neither_copies_nor_cuts() {
         .field_keys(FieldKeys::Desktop);
     let sink = Arc::new(Recording::default());
     let mut shell = Shell::<()>::new();
-    shell.clipboard = Clipboard::new().native(sink.clone());
-    shell.clipboard.install();
+    shell.set_clipboard(Clipboard::new().native(sink.clone()));
     queued();
     field.on_key(&ctrl('a'));
     field.on_key(&ctrl('x'));
@@ -294,8 +288,7 @@ fn ctrl_x_in_an_unmasked_desktop_field_cuts_to_the_clipboard() {
         .field_keys(FieldKeys::Desktop);
     let sink = Arc::new(Recording::default());
     let mut shell = Shell::<()>::new();
-    shell.clipboard = Clipboard::new().native(sink.clone());
-    shell.clipboard.install();
+    shell.set_clipboard(Clipboard::new().native(sink.clone()));
     queued();
     field.on_key(&ctrl('a'));
     field.on_key(&ctrl('x'));
@@ -308,8 +301,7 @@ fn a_dropped_shell_leaves_no_clipboard_hook_behind() {
     queued();
     let native = Arc::new(Counting::default());
     let mut shell = Shell::<()>::new();
-    shell.clipboard = Clipboard::new().native(native.clone());
-    shell.clipboard.install();
+    shell.set_clipboard(Clipboard::new().native(native.clone()));
     junie_tui::core::edit::clipboard::copy(TEXT);
     assert_eq!(native.0.load(std::sync::atomic::Ordering::SeqCst), 1);
 
@@ -330,11 +322,9 @@ fn dropping_one_shell_keeps_the_clipboard_hook_of_the_shell_that_replaced_it() {
     let first_sink = Arc::new(Counting::default());
     let second_sink = Arc::new(Counting::default());
     let mut first = Shell::<()>::new();
-    first.clipboard = Clipboard::new().native(first_sink.clone());
-    first.clipboard.install();
+    first.set_clipboard(Clipboard::new().native(first_sink.clone()));
     let mut second = Shell::<()>::new();
-    second.clipboard = Clipboard::new().native(second_sink.clone());
-    second.clipboard.install();
+    second.set_clipboard(Clipboard::new().native(second_sink.clone()));
 
     drop(first);
     junie_tui::core::edit::clipboard::copy(TEXT);
@@ -346,4 +336,20 @@ fn dropping_one_shell_keeps_the_clipboard_hook_of_the_shell_that_replaced_it() {
     drop(second);
     junie_tui::core::edit::clipboard::copy(TEXT);
     assert_eq!(count(&second_sink), 1, "its own drop still removes it");
+}
+
+#[test]
+fn replacing_the_clipboard_of_a_shell_moves_its_hook_with_it() {
+    queued();
+    let old = Arc::new(Counting::default());
+    let new = Arc::new(Counting::default());
+    let mut shell = Shell::<()>::new();
+    shell.set_clipboard(Clipboard::new().native(old.clone()));
+    shell.set_clipboard(Clipboard::new().native(new.clone()));
+
+    junie_tui::core::edit::clipboard::copy(TEXT);
+
+    let count = |sink: &Counting| sink.0.load(std::sync::atomic::Ordering::SeqCst);
+    assert_eq!(count(&new), 1, "the clipboard the shell holds now writes");
+    assert_eq!(count(&old), 0, "the one it let go of does not");
 }

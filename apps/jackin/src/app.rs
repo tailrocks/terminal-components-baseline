@@ -208,11 +208,10 @@ impl App {
         let mut shell = Shell::new();
         shell.motion = motion;
 
-        shell.clipboard = match clipboard {
+        shell.set_clipboard(match clipboard {
             ClipboardMode::Preview => shell::Clipboard::new().write(false),
             ClipboardMode::Host(sink) => shell::Clipboard::new().native(sink),
-        };
-        shell.clipboard.install();
+        });
         let router = crate::pages::router(&world);
         let surface_kinds = SurfaceKinds::of(&world);
         let keys = shell_keys(&world);

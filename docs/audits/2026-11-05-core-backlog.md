@@ -37,9 +37,9 @@ them. The States tab of both pages is empty, because neither widget has a
   nothing. No host in this repository calls it: jackin sets no policy, so
   nothing differs there until it does.
 - Dropping a `Shell` clears the thread-local clipboard hook it installed. The
-  hook still holds a clone of the `Clipboard` from `install`, so a later change
-  to `shell.clipboard` needs another `install`; reading the live clipboard was
-  not done.
+  `clipboard` field is private: `Shell::set_clipboard` lets go of the hook of
+  the clipboard it replaces and installs the new one, and `Shell::clipboard`
+  reads the one in use.
 - `TerminalState::scrolled_off` counts the rows that leave the top of the main
   screen even with a scrollback limit of 0, so a selection follows its text
   (`tests/terminal.rs` pinned `0` for that case, and now pins the count).

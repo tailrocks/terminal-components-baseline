@@ -33,6 +33,8 @@ pub struct StatusLine<P = ()> {
     ttl_ms: u64,
 
     now: Moment,
+
+    revision: u64,
 }
 
 impl<P> Default for StatusLine<P> {
@@ -49,7 +51,12 @@ impl<P> StatusLine<P> {
             message: None,
             ttl_ms: Self::DEFAULT_TTL_MS,
             now: Moment::ZERO,
+            revision: 0,
         }
+    }
+
+    pub const fn revision(&self) -> u64 {
+        self.revision
     }
 
     pub const fn ttl_ms(mut self, ms: u64) -> Self {
@@ -62,8 +69,15 @@ impl<P> StatusLine<P> {
     }
 
     pub fn set_with(&mut self, text: impl Into<String>, tone: Tone, payload: P) {
+        let text = text.into();
+        let carries_state = std::mem::size_of::<P>() > 0;
+        let shown = self
+            .message
+            .as_ref()
+            .is_some_and(|m| m.text == text && m.tone == tone && !carries_state);
+        self.revision += u64::from(!shown);
         self.message = Some(Message {
-            text: text.into(),
+            text,
             tone,
             at: self.now,
             payload,
@@ -87,6 +101,7 @@ impl<P> StatusLine<P> {
         let showing = self.message.as_ref().is_some_and(|m| m.job == Some(job));
         if showing {
             self.message = None;
+            self.revision += 1;
         }
         showing
     }
@@ -101,7 +116,9 @@ impl<P> StatusLine<P> {
     }
 
     pub fn clear(&mut self) -> bool {
-        self.message.take().is_some()
+        let cleared = self.message.take().is_some();
+        self.revision += u64::from(cleared);
+        cleared
     }
 
     pub fn get(&self) -> Option<(&str, Tone)> {
@@ -142,6 +159,7 @@ impl<P> StatusLine<P> {
             .is_some_and(|m| m.tone != Tone::Error && !m.sticky && now.since(m.at) >= self.ttl_ms);
         if due {
             self.message = None;
+            self.revision += 1;
         }
         due
     }
@@ -157,6 +175,7 @@ impl<P> StatusLine<P> {
         };
         if acts && (self.is_error() || self.is_sticky()) {
             self.message = None;
+            self.revision += 1;
             return true;
         }
         false
