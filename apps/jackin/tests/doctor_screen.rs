@@ -30,3 +30,24 @@ fn a_doctor_that_never_ran_offers_the_first_run() {
     assert!(shown.contains("Checks have not run yet"), "{shown}");
     assert!(shown.contains("Run checks"), "{shown}");
 }
+
+#[test]
+fn a_report_with_only_warnings_does_not_say_all_checks_pass() {
+    let mut world = world_for(Scenario::Doctor);
+    let doctor = world.surfaces.doctor.as_mut().expect("doctor");
+    let mut report = doctor.report().expect("a report").clone();
+    for (i, check) in report.checks.iter_mut().enumerate() {
+        check.status = if i == 0 {
+            junie_tui::theme::StatusKind::Warn
+        } else {
+            junie_tui::theme::StatusKind::Ok
+        };
+    }
+    doctor.state = DoctorState::Done(report);
+    let mut app = app_with(Scenario::Doctor, world);
+    press(&mut app, "D");
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("attention"), "{shown}");
+    assert!(!shown.contains("all checks pass"), "{shown}");
+}

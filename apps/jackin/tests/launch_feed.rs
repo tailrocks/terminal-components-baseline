@@ -7,7 +7,9 @@ use std::sync::{Arc, Mutex};
 
 use common::*;
 use jackin_console::app::{App, Route};
-use jackin_console::backend::{Backend, Completion, Effect, FileSource, OnePassword, OpSession};
+use jackin_console::backend::{
+    Backend, Completion, Effect, FileSource, OnePassword, OpSession, PlainKey,
+};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use jackin_console::domain::launch::{LaunchContent, LaunchFailure, NextStep, RefusalReason};
@@ -202,7 +204,7 @@ fn status(app: &App) -> String {
 #[derive(Debug, Default)]
 struct Calls {
     retries: usize,
-    plain_text: usize,
+    plain_text: Vec<String>,
     cancels: usize,
     initial_panes: Vec<String>,
     answers: Vec<Vec<EnvAnswer>>,
@@ -252,8 +254,12 @@ impl LaunchFeed for ScriptedFeed {
         self.held = false;
     }
 
-    fn use_plain_text(&mut self) -> Option<TypedKey> {
-        self.calls.lock().expect("calls").plain_text += 1;
+    fn use_plain_text(&mut self, key: PlainKey) -> Option<TypedKey> {
+        self.calls
+            .lock()
+            .expect("calls")
+            .plain_text
+            .push(key.expose().to_owned());
         self.held = false;
         self.typed.clone()
     }
@@ -520,12 +526,11 @@ fn the_cockpit_builds_no_daemon() {
     let (mut app, _) = scripted(vec![running(0), vec![ready(gone)]], None);
     tick(&mut app, 4);
 
-    assert_eq!(status(&app), "Cannot attach: 5b0x is not running");
     assert_eq!(app.route(), Route::Cockpit);
     assert!(app.world.instance("jk-5b0x").is_some());
     assert!(
         !app.world.daemons.contains_key("jk-5b0x"),
-        "only the attach builds a daemon, and it refused"
+        "only the attach builds a daemon, and none was tried"
     );
 }
 
@@ -602,7 +607,10 @@ fn retry_credentials() {
 
     press(&mut app, "enter");
     assert_eq!(calls.lock().expect("calls").retries, 1);
-    assert_eq!(calls.lock().expect("calls").plain_text, 0);
+    assert_eq!(
+        calls.lock().expect("calls").plain_text,
+        Vec::<String>::new()
+    );
     assert_eq!(
         app.world.op.session(),
         OpSession::Locked,
@@ -630,8 +638,15 @@ fn plain_text_resumes_the_feed() {
         shows("Credential source unavailable"),
     );
     press(&mut app, "right enter");
+    assert_eq!(
+        calls.lock().expect("calls").plain_text,
+        Vec::<String>::new(),
+        "the feed hears nothing before a key is typed"
+    );
+    assert!(screen(&mut app).contains("Plain-text key"));
+    press(&mut app, "s k - t e s t enter");
     assert_eq!(calls.lock().expect("calls").retries, 0);
-    assert_eq!(calls.lock().expect("calls").plain_text, 1);
+    assert_eq!(calls.lock().expect("calls").plain_text, ["sk-test"]);
     assert_eq!(app.world.op.session(), OpSession::Locked);
     tick_until(&mut app, "the next event", shows("Resolved by the backend"));
 }
@@ -745,8 +760,8 @@ fn a_feed_that_shows_no_key_leaves_the_credentials_line_alone() {
         "the credential dialog",
         shows("Credential source unavailable"),
     );
-    press(&mut app, "right enter");
-    assert_eq!(calls.lock().expect("calls").plain_text, 1);
+    press(&mut app, "right enter s k enter");
+    assert_eq!(calls.lock().expect("calls").plain_text, ["sk"]);
     let shown = screen(&mut app);
     assert!(!shown.contains("masked API key"), "{shown}");
     assert!(!shown.contains("••••"), "{shown}");
@@ -847,7 +862,7 @@ fn the_key_line_of_the_feed_is_what_the_credentials_line_shows() {
         "the credential dialog",
         shows("Credential source unavailable"),
     );
-    press(&mut app, "right enter");
+    press(&mut app, "right enter s k enter");
     let shown = screen(&mut app);
     assert!(shown.contains("typed by the operator"), "{shown}");
     assert!(shown.contains("kept by the backend"), "{shown}");
@@ -1034,4 +1049,75 @@ fn a_blocked_stage_keeps_the_cancel_it_offers() {
     assert_eq!(app.world.instances.len(), others + 1);
     assert_eq!(app.world.instance("jk-b10c"), Some(&mine));
     assert_eq!(app.route(), Route::Manager);
+}
+
+#[test]
+fn backing_out_of_the_plain_text_key_returns_to_the_credential_choice() {
+    let (mut app, calls) = scripted(
+        vec![
+            running(2),
+            vec![LaunchEvent::CredentialError {
+                message: "The vault is sealed".into(),
+            }],
+            vec![LaunchEvent::Activity("Resolved by the backend".into())],
+        ],
+        None,
+    );
+    tick_until(
+        &mut app,
+        "the credential dialog",
+        shows("Credential source unavailable"),
+    );
+    press(&mut app, "right enter s k esc");
+    let shown = screen(&mut app);
+    assert!(shown.contains("Credential source unavailable"), "{shown}");
+    assert!(shown.contains("The vault is sealed"), "{shown}");
+    assert_eq!(
+        calls.lock().expect("calls").plain_text,
+        Vec::<String>::new()
+    );
+}
+
+#[test]
+fn the_origin_and_validation_a_feed_resolves_are_what_the_credentials_line_shows() {
+    let (mut app, _) = scripted(
+        vec![
+            running(2),
+            vec![LaunchEvent::CredentialsResolved {
+                origin: "vault ops/codex".into(),
+                validation: "verified by the backend".into(),
+            }],
+        ],
+        None,
+    );
+    tick_until(
+        &mut app,
+        "the resolved line",
+        shows("verified by the backend"),
+    );
+    let shown = screen(&mut app);
+    assert!(shown.contains("vault ops/codex"), "{shown}");
+}
+
+#[test]
+fn a_ready_instance_that_is_not_running_fails_the_launch_with_its_status() {
+    let stopped = launched("jk-5b0x", "sbx-alpha", InstanceStatus::Crashed);
+    let (mut app, _) = scripted(vec![running(0), vec![ready(stopped)]], None);
+    tick_until(
+        &mut app,
+        "the failure",
+        shows("The container is crashed, not running"),
+    );
+
+    assert_eq!(app.route(), Route::Cockpit);
+    assert!(
+        app.world.instance("jk-5b0x").is_some(),
+        "the record the backend made is kept"
+    );
+    assert!(screen(&mut app).contains("Run id     R1"));
+    press(&mut app, "esc x");
+    assert!(
+        !screen(&mut app).contains("Cancel the launch?"),
+        "an ended launch has nothing left to cancel"
+    );
 }

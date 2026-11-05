@@ -197,6 +197,7 @@ impl DoctorScreen {
             }
             Some(r) if r.no_gateway() => w.surfaces.vocabulary.doctor_no_gateway.clone(),
             Some(r) if r.failing() > 0 => format!("{} failing", r.failing()),
+            Some(r) if r.warnings() > 0 => plural(r.warnings(), "warning", "warnings"),
             Some(_) => "all checks pass".into(),
             None => String::new(),
         }

@@ -10,7 +10,7 @@ use std::sync::{Arc, Mutex};
 
 use common::*;
 use jackin_console::app::{App, Route};
-use jackin_console::backend::{Backend, Completion, Effect, FileSource, OnePassword};
+use jackin_console::backend::{Backend, Completion, Effect, FileSource, OnePassword, PlainKey};
 use jackin_console::domain::account::{AccountId, Lifecycle};
 use jackin_console::domain::agent::{Agent, AuthMode, Provider};
 use jackin_console::domain::docker::{DockerCapability, DockerRiskText};
@@ -58,7 +58,7 @@ impl LaunchFeed for Feed {
 
     fn retry_credentials(&mut self, _: &mut dyn OnePassword) {}
 
-    fn use_plain_text(&mut self) -> Option<TypedKey> {
+    fn use_plain_text(&mut self, _: PlainKey) -> Option<TypedKey> {
         None
     }
 
