@@ -17,7 +17,7 @@ use crate::backend::{FieldKind, OnePassword, OpError, OpListing, OpScope, Ticket
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::onepassword::OpReference;
-use crate::domain::workspace::Workspace;
+use crate::domain::workspace::{RoleEntry, Workspace};
 use crate::world::{AgentOffer, World};
 
 use super::ModalResult;
@@ -46,6 +46,24 @@ pub fn unsaved_dialog(id: WidgetId, changes: usize) -> Dialog {
             Button::primary(id.sub("exit_save"), "Save"),
         ],
         Some(0),
+    )
+}
+
+pub fn trust_dialog(id: WidgetId, entry: &RoleEntry, w: &World) -> Dialog {
+    Dialog::facts(
+        id,
+        "Trust role source",
+        vec![
+            Prop::new("Role", entry.full_name()),
+            Prop::new("Repository", entry.source.label()),
+        ],
+        vec![
+            "Trust this role source?".into(),
+            "Dockerfile can run during image builds.".into(),
+            w.surfaces.vocabulary.role_access.clone(),
+        ],
+        None,
+        Button::primary(id.sub("ok"), "Trust & load"),
     )
 }
 

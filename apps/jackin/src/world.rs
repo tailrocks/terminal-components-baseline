@@ -312,6 +312,13 @@ pub enum Work {
     Settle(Effect),
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RoleLoad {
+    Requested,
+    NeedsTrust(Box<RoleEntry>),
+    Unregistered,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Absorbed {
     Current,
@@ -578,6 +585,19 @@ impl World {
 
     pub fn now_ms(&self) -> i64 {
         self.clock.now_ms
+    }
+
+    pub fn load_role(&mut self, name: &str) -> RoleLoad {
+        match self.roles.iter().find(|r| r.name == name) {
+            None => RoleLoad::Unregistered,
+            Some(entry) if !entry.trusted => RoleLoad::NeedsTrust(Box::new(entry.clone())),
+            Some(_) => {
+                self.perform(Effect::LoadRole {
+                    role: name.to_owned(),
+                });
+                RoleLoad::Requested
+            }
+        }
     }
 
     pub fn perform(&mut self, effect: Effect) {

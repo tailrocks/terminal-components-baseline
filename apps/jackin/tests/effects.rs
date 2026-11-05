@@ -2334,7 +2334,7 @@ fn a_failed_save_does_not_write_its_error_into_a_form_opened_after_it() {
     );
 }
 
-fn two_unparsed_manifests(unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBackend>) {
+fn unparsed_manifests(names: &[&str], unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBackend>) {
     let backend = Arc::new(TestBackend {
         inner: SimBackend::shared(),
         seen: Mutex::new(vec![]),
@@ -2345,10 +2345,14 @@ fn two_unparsed_manifests(unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBack
     let mut world = world_for(Scenario::RoleBinding);
     world.backend = backend.clone();
     let admin = world.surfaces.roles.as_mut().expect("roles");
-    for name in ["data-eng", "writer"] {
+    for name in names {
         admin.role_mut(name).expect("role").manifest = Err("no manifest".into());
     }
     (timed(Scenario::RoleBinding, world), backend)
+}
+
+fn two_unparsed_manifests(unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBackend>) {
+    unparsed_manifests(&["the-architect", "writer"], unanswered)
 }
 
 #[test]
@@ -2364,6 +2368,130 @@ fn a_reply_nobody_asked_for_does_not_end_the_reads_of_check_all() {
         result: Err("unreadable".into()),
     });
     assert_eq!(status(&app), "Reading writer again…");
+}
+
+const DATA_ENG: &str = "down down down";
+
+fn is_trust(effect: &Effect) -> bool {
+    matches!(effect, Effect::TrustRole { .. })
+}
+
+fn data_eng_loads(backend: &TestBackend) -> usize {
+    count(
+        backend,
+        |e| matches!(e, Effect::LoadRole { role } if role == "data-eng"),
+    )
+}
+
+fn untrusted_and_unparsed() -> (App, Arc<TestBackend>) {
+    unparsed_manifests(&["data-eng"], |_| false)
+}
+
+fn assert_untrusted(app: &App) {
+    let entry = role(&app.world, "data-eng");
+    assert!(!entry.trusted, "the role was trusted without the operator");
+    assert!(!entry.launchable(), "the role became launchable");
+}
+
+#[test]
+fn v_on_an_untrusted_unparsed_role_asks_for_trust_before_reading_it() {
+    let (mut app, backend) = untrusted_and_unparsed();
+    press(&mut app, DATA_ENG);
+    press(&mut app, "v");
+    settle(&mut app);
+
+    assert_eq!(data_eng_loads(&backend), 0, "{:?}", backend.seen());
+    assert_eq!(count(&backend, is_trust), 0, "{:?}", backend.seen());
+    assert_untrusted(&app);
+    let shown = screen(&mut app);
+    assert!(shown.contains("Trust & load"), "{shown}");
+}
+
+#[test]
+fn check_all_does_not_read_an_untrusted_unparsed_role() {
+    let (mut app, backend) = unparsed_manifests(&["data-eng", "writer"], |_| false);
+    press(&mut app, "f5");
+    settle(&mut app);
+
+    assert_eq!(data_eng_loads(&backend), 0, "{:?}", backend.seen());
+    assert_eq!(count(&backend, is_trust), 0, "{:?}", backend.seen());
+    assert_untrusted(&app);
+    assert_eq!(
+        count(
+            &backend,
+            |e| matches!(e, Effect::LoadRole { role } if role == "writer")
+        ),
+        1,
+        "a trusted unparsed role is still read"
+    );
+}
+
+#[test]
+fn trusting_an_unparsed_role_from_the_roles_screen_reads_it_after_the_trust() {
+    let (mut app, backend) = untrusted_and_unparsed();
+    press(&mut app, DATA_ENG);
+    press(&mut app, "v right enter");
+    settle(&mut app);
+
+    assert_eq!(
+        backend.seen(),
+        [
+            Effect::TrustRole {
+                role: "data-eng".into()
+            },
+            Effect::LoadRole {
+                role: "data-eng".into()
+            },
+        ]
+    );
+    assert!(role(&app.world, "data-eng").trusted);
+}
+
+#[test]
+fn declining_the_trust_leaves_the_unparsed_role_unread() {
+    let (mut app, backend) = untrusted_and_unparsed();
+    press(&mut app, DATA_ENG);
+    press(&mut app, "v esc");
+    settle(&mut app);
+
+    assert_eq!(backend.seen(), []);
+    assert_untrusted(&app);
+    assert_eq!(status(&app), "Not trusted · role not read");
+}
+
+#[test]
+fn a_refused_trust_leaves_the_unparsed_role_unread() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, refuse_trust);
+    app.world
+        .surfaces
+        .roles
+        .as_mut()
+        .expect("roles")
+        .role_mut("data-eng")
+        .expect("role")
+        .manifest = Err("no manifest".into());
+    press(&mut app, DATA_ENG);
+    press(&mut app, "v right enter");
+    settle(&mut app);
+
+    assert_eq!(data_eng_loads(&backend), 0, "{:?}", backend.seen());
+    assert_untrusted(&app);
+    assert_eq!(status(&app), "the trust store is read-only");
+}
+
+#[test]
+fn loading_a_role_does_not_trust_it() {
+    let world = world_for(Scenario::RoleBinding);
+    assert!(!role(&world, "data-eng").trusted);
+    let backend = SimBackend::shared();
+    let effect = Effect::LoadRole {
+        role: "data-eng".into(),
+    };
+    backend.perform(&effect, &world);
+    let Some(Msg::RoleLoaded { result, .. }) = backend.settle(&effect, &world) else {
+        panic!("a load answers with RoleLoaded");
+    };
+    assert!(result.is_err(), "the load of an untrusted role was granted");
 }
 
 #[test]

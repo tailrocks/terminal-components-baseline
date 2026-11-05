@@ -24,15 +24,15 @@ use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
-use super::modals::FormDialog;
+use super::modals::{self, FormDialog};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::{Effect, Ticket};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::role::{RoleCheckState, RoleManifestDoc, RoleRecord};
-use crate::domain::workspace::{AllowedRoles, RoleName, RoleSource, usability_of};
-use crate::world::{Msg, Snapshot, World, job};
+use crate::domain::workspace::{AllowedRoles, RoleEntry, RoleName, RoleSource, usability_of};
+use crate::world::{Msg, RoleLoad, Snapshot, World, job};
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::list_detail::{Action, Event, Frame, Line, ListDetail, ListRow};
 
@@ -68,6 +68,7 @@ pub struct RolesScreen {
     removing: Option<RoleName>,
     checking: BTreeMap<RoleName, Ticket>,
     loading: BTreeSet<RoleName>,
+    trusting: Option<RoleName>,
     adding: Option<String>,
 }
 
@@ -148,6 +149,7 @@ impl RolesScreen {
             removing: None,
             checking: BTreeMap::new(),
             loading: BTreeSet::new(),
+            trusting: None,
             adding: None,
         }
     }
@@ -592,24 +594,38 @@ impl RolesScreen {
             return;
         };
         let name = rec.name.clone();
-        self.check_role(&name, w, cx);
+        match self.check_role(&name, w, cx) {
+            RoleLoad::Requested => {}
+            RoleLoad::NeedsTrust(entry) => self.ask_trust(&entry, w, cx),
+            RoleLoad::Unregistered => cx.error(format!("{name} is not in the role registry")),
+        }
     }
 
-    fn check_role(&mut self, name: &str, w: &mut World, cx: &mut Cx) {
+    fn check_role(&mut self, name: &str, w: &mut World, cx: &mut Cx) -> RoleLoad {
         let Some(rec) = w.surfaces.roles.as_ref().and_then(|a| a.role(name)) else {
-            return;
+            return RoleLoad::Unregistered;
         };
         match rec.manifest.clone() {
-            Ok(doc) => self.start_check(name, doc, w, cx),
+            Ok(doc) => {
+                self.start_check(name, doc, w, cx);
+                RoleLoad::Requested
+            }
+            Err(_) if self.loading.contains(name) => RoleLoad::Requested,
             Err(_) => {
-                if self.loading.insert(name.to_owned()) {
-                    w.perform(Effect::LoadRole {
-                        role: name.to_owned(),
-                    });
+                let load = w.load_role(name);
+                if load == RoleLoad::Requested {
+                    self.loading.insert(name.to_owned());
                     cx.progress(job::ROLE_LOAD, format!("Reading {name} again…"));
                 }
+                load
             }
         }
+    }
+
+    fn ask_trust(&mut self, entry: &RoleEntry, w: &World, cx: &mut Cx) {
+        self.trusting = Some(entry.name.clone());
+        let d = modals::trust_dialog(WidgetId::of("roles.trust"), entry, w);
+        cx.open(d, LayerTag::new("trust").key(&entry.name));
     }
 
     fn start_check(&mut self, name: &str, doc: RoleManifestDoc, w: &mut World, cx: &mut Cx) {
@@ -841,6 +857,23 @@ impl Page<Jackin> for RolesScreen {
                 self.finish_add(location, result, w, cx);
                 Outcome::Changed
             }
+            Msg::RoleTrusted { role, result } if self.trusting.as_ref() == Some(role) => {
+                self.trusting = None;
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        match self.check_role(role, w, cx) {
+                            RoleLoad::Requested => {}
+                            RoleLoad::NeedsTrust(_) | RoleLoad::Unregistered => {
+                                cx.error(format!("{role} is still not trusted · nothing was read"));
+                            }
+                        }
+                        self.build_rows(w);
+                    }
+                    Err(reason) => cx.error(reason.clone()),
+                }
+                Outcome::Changed
+            }
             Msg::RoleLoaded { role, result } if self.loading.remove(role) => {
                 match result {
                     Ok(snapshot) => {
@@ -1059,6 +1092,20 @@ impl Page<Jackin> for RolesScreen {
                 }
             }
             ("remove", _) => self.removing = None,
+            (
+                "trust",
+                ModalResult::Dialog {
+                    action: Some(1), ..
+                },
+            ) => {
+                if let Some(role) = self.trusting.clone() {
+                    w.perform(Effect::TrustRole { role });
+                }
+            }
+            ("trust", _) => {
+                self.trusting = None;
+                cx.status("Not trusted · role not read");
+            }
             ("add", ModalResult::Form(Some(values))) => self.start_add(values, w, cx),
             ("addfail", _) => self.open_add_form(&tag.key, cx),
             (

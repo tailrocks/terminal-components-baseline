@@ -10,7 +10,7 @@ use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::LaunchContent;
 use crate::domain::role::{RoleCheckState, RoleRecord};
 use crate::domain::vocabulary::{Rejection, fill_in};
-use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
+use crate::domain::workspace::{RoleEntry, RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
 use crate::world::{GlobalConfig, Msg, SaveFailure, Snapshot, World};
@@ -440,15 +440,21 @@ impl Backend for SimBackend {
                 })
             }
             Effect::LoadRole { role } => {
-                let found = world.roles.iter().find(|r| r.name == *role);
-                let result = match found.and_then(|r| r.fetch_error.clone()) {
-                    Some(error) => Err(error),
-                    None => {
+                let result = match world.roles.iter().find(|r| r.name == *role) {
+                    None => Err(world
+                        .surfaces
+                        .vocabulary
+                        .rejection(&Rejection::UnknownRole { role: role.clone() })),
+                    Some(r) if !r.trusted => Err("trust required".to_owned()),
+                    Some(RoleEntry {
+                        fetch_error: Some(error),
+                        ..
+                    }) => Err(error.clone()),
+                    Some(_) => {
                         let mut snapshot = snapshot(world);
                         if let Some(r) = snapshot.roles.iter_mut().find(|r| r.name == *role) {
                             r.load_error = None;
                             r.in_registry = true;
-                            r.trusted = true;
                         }
                         Ok(Box::new(snapshot))
                     }
