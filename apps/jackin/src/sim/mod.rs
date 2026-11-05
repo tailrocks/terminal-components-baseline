@@ -2,7 +2,7 @@ use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 
 use self::pane::ScriptPane;
-use crate::backend::{Backend, Completion, Effect, OpSession, PlainKey, Validation};
+use crate::backend::{Backend, Completion, Effect, OpSession, PlainKey, Ticket, Validation};
 use crate::domain::account::{
     Account, AccountId, AccountOrigin, AccountRegistry, CredentialSource, ValidationLevel,
 };
@@ -574,9 +574,11 @@ impl Backend for SimBackend {
                 })
             }
             Effect::SaveGlobal { global, .. } => Some(self.settle_global_save(global, world)),
-            Effect::SaveAccounts { base, registry } => {
-                Some(settle_accounts_save(base, registry, world))
-            }
+            Effect::SaveAccounts {
+                ticket,
+                base,
+                registry,
+            } => Some(settle_accounts_save(*ticket, base, registry, world)),
             Effect::Prewarm { .. }
             | Effect::RunDoctor
             | Effect::ProbeFolder { .. }
@@ -628,7 +630,12 @@ impl Backend for SimBackend {
 /// A removed account also leaves every workspace that named it. A discovered
 /// account that the registry drops (the twin of a folder that was registered)
 /// leaves them as they are.
-fn settle_accounts_save(base: &AccountRegistry, registry: &AccountRegistry, world: &World) -> Msg {
+fn settle_accounts_save(
+    ticket: Ticket,
+    base: &AccountRegistry,
+    registry: &AccountRegistry,
+    world: &World,
+) -> Msg {
     let mut registry = registry.clone();
     let added = give_ids(&mut registry);
     let mut snapshot = snapshot(world);
@@ -646,6 +653,7 @@ fn settle_accounts_save(base: &AccountRegistry, registry: &AccountRegistry, worl
     }
     snapshot.accounts = registry;
     Msg::AccountsSaved {
+        ticket,
         added,
         result: Ok(Box::new(snapshot)),
     }

@@ -189,7 +189,7 @@ pub struct AccountsScreen {
     form: Option<FormCtx>,
     forms_opened: usize,
     pending_remove: Option<AccountId>,
-    saving: Option<Saving>,
+    saving: Option<(Ticket, Saving)>,
     saving_since: i64,
 
     pub menu: RowMenu<Sel, &'static str>,
@@ -1183,9 +1183,11 @@ impl AccountsScreen {
             }
             return;
         }
-        self.saving = Some(saving);
+        let ticket = w.next_ticket();
+        self.saving = Some((ticket, saving));
         self.saving_since = now;
         w.perform(Effect::SaveAccounts {
+            ticket,
             base: Box::new(w.accounts.clone()),
             registry: Box::new(registry),
         });
@@ -2403,12 +2405,22 @@ impl Page<Jackin> for AccountsScreen {
 
     fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
         match msg {
-            Msg::AccountsSaved { added, result } => {
-                let saving = self.saving.take();
-                match (result, saving) {
-                    (Ok(snapshot), saving) => {
+            Msg::AccountsSaved {
+                ticket,
+                added,
+                result,
+            } => {
+                let current = match self.saving.take() {
+                    Some((current, saving)) if current == *ticket => Some(saving),
+                    other => {
+                        self.saving = other;
+                        None
+                    }
+                };
+                match (result, current) {
+                    (Ok(snapshot), current) => {
                         w.apply((**snapshot).clone());
-                        if let Some(saving) = saving {
+                        if let Some(saving) = current {
                             self.finish_saving(saving, added.clone(), cx);
                         }
                     }

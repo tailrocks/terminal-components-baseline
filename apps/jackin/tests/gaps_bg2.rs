@@ -314,7 +314,10 @@ const GIVEN: &str = "backend-given-7";
 /// Stores the registry the way a backend would: the account the form sent
 /// without an id gets one, and the reply names it.
 fn give_an_id(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::SaveAccounts { registry, .. } = effect else {
+    let Effect::SaveAccounts {
+        ticket, registry, ..
+    } = effect
+    else {
         return None;
     };
     let mut snapshot = sim::snapshot(world);
@@ -327,6 +330,7 @@ fn give_an_id(effect: &Effect, world: &World) -> Option<Msg> {
         }
     }
     Some(Msg::AccountsSaved {
+        ticket: *ticket,
         added,
         result: Ok(Box::new(snapshot)),
     })

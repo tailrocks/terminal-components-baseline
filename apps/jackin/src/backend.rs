@@ -396,6 +396,7 @@ pub enum Effect {
         global: Box<GlobalConfig>,
     },
     SaveAccounts {
+        ticket: Ticket,
         base: Box<AccountRegistry>,
         registry: Box<AccountRegistry>,
     },

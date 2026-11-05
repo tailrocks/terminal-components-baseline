@@ -162,6 +162,7 @@ pub enum Msg {
         result: Result<Box<Snapshot>, SaveFailure>,
     },
     AccountsSaved {
+        ticket: Ticket,
         added: Option<AccountId>,
         result: Result<Box<Snapshot>, String>,
     },

@@ -83,6 +83,7 @@ fn samples(world: &World) -> Vec<Effect> {
             global: Box::new(world.global.clone()),
         },
         Effect::SaveAccounts {
+            ticket: 1,
             base: Box::new(world.accounts.clone()),
             registry: Box::new(world.accounts.clone()),
         },

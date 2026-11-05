@@ -398,7 +398,10 @@ fn failed_global_save_keeps_the_input() {
 const NEW_ACCOUNT: &str = "c a enter S p a r e tab tab tab down down tab enter s k - a n t - v a l i d - a b c d e f 1 2 3 4 tab";
 
 fn store_accounts(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::SaveAccounts { registry, .. } = effect else {
+    let Effect::SaveAccounts {
+        ticket, registry, ..
+    } = effect
+    else {
         return None;
     };
     let mut snapshot = sim::snapshot(world);
@@ -409,13 +412,18 @@ fn store_accounts(effect: &Effect, world: &World) -> Option<Msg> {
         }
     }
     Some(Msg::AccountsSaved {
+        ticket: *ticket,
         added: None,
         result: Ok(Box::new(snapshot)),
     })
 }
 
 fn fail_accounts(effect: &Effect, _: &World) -> Option<Msg> {
-    matches!(effect, Effect::SaveAccounts { .. }).then(|| Msg::AccountsSaved {
+    let Effect::SaveAccounts { ticket, .. } = effect else {
+        return None;
+    };
+    Some(Msg::AccountsSaved {
+        ticket: *ticket,
         added: None,
         result: Err("disk full".into()),
     })
@@ -431,7 +439,7 @@ fn save_accounts_stores_the_payload() {
     let seen = backend.seen();
     let [
         Effect::CheckSource { .. },
-        Effect::SaveAccounts { base, registry },
+        Effect::SaveAccounts { base, registry, .. },
     ] = seen.as_slice()
     else {
         panic!("one CheckSource, then one SaveAccounts expected, got {seen:?}");
@@ -2305,9 +2313,13 @@ fn a_saved_account_does_not_close_a_form_opened_after_the_one_it_saved() {
 
 #[test]
 fn a_failed_save_does_not_write_its_error_into_a_form_opened_after_it() {
-    let (mut app, _, _) = a_form_left_during_its_save();
+    let (mut app, _, save) = a_form_left_during_its_save();
+    let Effect::SaveAccounts { ticket, .. } = save else {
+        panic!("a save expected");
+    };
 
     app.deliver(&Msg::AccountsSaved {
+        ticket,
         added: None,
         result: Err("disk full".into()),
     });
@@ -2411,6 +2423,41 @@ fn a_save_nobody_answers_does_not_block_the_next_one_forever() {
     app.world.clock.advance(31_000);
     press(&mut app, "t");
     assert_eq!(saves_asked(&backend), 2, "a save nobody answered gives way");
+}
+
+#[test]
+fn the_late_reply_of_a_save_that_gave_way_does_not_answer_the_next_save() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        store_accounts,
+    );
+    app.go(Go::Accounts {
+        select: Some("acct-claude-personal".into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    let late = store_accounts(first, &app.world).expect("the reply of the first save");
+    app.deliver(&late);
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 2, "the second save is still out");
+    assert!(
+        status(&app).contains("Saving the previous change"),
+        "{}",
+        status(&app)
+    );
+
+    let failure = fail_accounts(second, &app.world).expect("the reply of the second save");
+    app.deliver(&failure);
+    assert_eq!(status(&app), "disk full");
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 3, "the screen is free again");
 }
 
 #[test]
