@@ -351,13 +351,12 @@ impl Page<Jackin> for DoctorScreen {
                     return Outcome::Changed;
                 }
                 let len = self.report(w).map_or(0, |r| r.checks.len());
-                let (o, event) = self.ld.click(ev.id, ev.pos(), cx.focus, len);
+                let (o, event) = self.ld.click(ev.id, cx.focus, len);
                 if let Some(Event::Action(name)) = event {
                     self.fire(name, w, cx);
                 }
                 o
             }
-            Some(Phase::Drag) => self.ld.drag(ev.id, ev.pos()),
             _ => Outcome::Ignored,
         }
     }

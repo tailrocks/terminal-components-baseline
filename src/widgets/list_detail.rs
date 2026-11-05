@@ -17,14 +17,10 @@ use crate::widgets::splitter::Splitter;
 use crate::widgets::viewport::{Span, render_spans};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
-use ratatui::layout::{Position, Rect};
+use ratatui::layout::Rect;
 use ratatui::style::{Modifier, Style};
 
 const COLUMN_GAP: u16 = 2;
-
-fn track_of(bar: Rect) -> Rect {
-    Rect::new(bar.right().saturating_sub(1), bar.y, 1, bar.height)
-}
 
 fn columns(rest: u16, detail: u16, meta: u16) -> (u16, u16) {
     let both = detail > 0 && meta > 0;
@@ -167,8 +163,6 @@ pub struct ListDetail {
     pub item_cursor: usize,
     scroll: ScrollState,
     detail_scroll: ScrollState,
-    list_track: Rect,
-    detail_track: Rect,
     names: Vec<&'static str>,
     buttons: Vec<Button>,
     items: usize,
@@ -193,8 +187,6 @@ impl ListDetail {
             item_cursor: 0,
             scroll: ScrollState::default(),
             detail_scroll: ScrollState::default(),
-            list_track: Rect::ZERO,
-            detail_track: Rect::ZERO,
             names: vec![],
             buttons: vec![],
             items: 0,
@@ -360,7 +352,12 @@ impl ListDetail {
     }
 
     pub fn on_pointer(&mut self, ev: &PointerEvent) -> Option<Outcome> {
-        self.md.on_pointer(ev)
+        self.md
+            .on_pointer(ev)
+            .or_else(|| scrollbar::pointer(ev, self.master, &mut self.scroll, TrackClick::Jump))
+            .or_else(|| {
+                scrollbar::pointer(ev, self.detail, &mut self.detail_scroll, TrackClick::Jump)
+            })
     }
 
     pub fn wheel(&mut self, id: WidgetId, delta: i32) -> Outcome {
@@ -375,38 +372,9 @@ impl ListDetail {
         Outcome::Ignored
     }
 
-    pub fn drag(&mut self, pressed: WidgetId, pos: Position) -> Outcome {
-        match self.track_of(pressed) {
-            Some((scroll, track)) => {
-                scrollbar::drag(track, pos, scroll);
-                Outcome::Changed
-            }
-            None => Outcome::Ignored,
-        }
-    }
-
-    fn track_of(&mut self, id: WidgetId) -> Option<(&mut ScrollState, Rect)> {
-        if id == scrollbar::id_for(self.master) {
-            Some((&mut self.scroll, self.list_track))
-        } else if id == scrollbar::id_for(self.detail) {
-            Some((&mut self.detail_scroll, self.detail_track))
-        } else {
-            None
-        }
-    }
-
-    fn press_track(&mut self, id: WidgetId, pos: Position) -> bool {
-        let Some((scroll, track)) = self.track_of(id) else {
-            return false;
-        };
-        scrollbar::press_with(track, pos, scroll, TrackClick::Jump);
-        true
-    }
-
     pub fn click(
         &mut self,
         id: WidgetId,
-        pos: Position,
         focus: &mut Focus,
         len: usize,
     ) -> (Outcome, Option<Event>) {
@@ -426,9 +394,6 @@ impl ListDetail {
                 focus.focus(self.detail);
                 return (Outcome::Changed, Some(Event::Item(i)));
             }
-        }
-        if self.press_track(id, pos) {
-            return (Outcome::Changed, None);
         }
         if id == self.detail {
             self.md.open_drawer(focus);
@@ -520,7 +485,6 @@ impl ListDetail {
             .focused(focused)
             .meta(&meta)
             .render(framed, buf, t);
-        self.list_track = Rect::ZERO;
         let bg = t.canvas;
         self.scroll.set_content(frame.rows.len());
         self.scroll.set_viewport(inner.height as usize);
@@ -599,7 +563,6 @@ impl ListDetail {
             ctx.clickable(rid, rect);
         }
         if has_sb {
-            self.list_track = track_of(inner);
             scrollbar::render_with_fade(inner, buf, ctx, self.master, &self.scroll, focused);
         }
         for (k, text) in under_lines.iter().take(under as usize).enumerate() {
@@ -673,7 +636,6 @@ impl ListDetail {
                 .meta(&frame.detail_meta)
                 .render(area, buf, t)
         };
-        self.detail_track = Rect::ZERO;
         let bg = if as_drawer { t.canvas } else { t.surface };
         let row = ButtonRow::new().overflow(RowOverflow::Wrap);
         let action_rows = row.rows(inner.width + 1, &self.buttons, t);
@@ -807,7 +769,6 @@ impl ListDetail {
         }
         if self.detail_scroll.overflows() {
             let bar = Rect::new(inner.x, body.y, inner.width, body_h);
-            self.detail_track = track_of(bar);
             scrollbar::render_with_fade(
                 bar,
                 buf,

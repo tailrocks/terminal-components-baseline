@@ -255,11 +255,10 @@ impl Page for ListDetailPage {
                 }
                 match ev.phase() {
                     Some(Phase::Click) => {
-                        let (o, event) = self.ld.click(ev.id, ev.pos(), cx.focus, len);
+                        let (o, event) = self.ld.click(ev.id, cx.focus, len);
                         self.fire(event);
                         o
                     }
-                    Some(Phase::Drag) => self.ld.drag(ev.id, ev.pos()),
                     _ => Outcome::Ignored,
                 }
             }

@@ -1013,7 +1013,7 @@ impl Page<Jackin> for RolesScreen {
                     self.add(cx);
                     return Outcome::Changed;
                 }
-                let (o, event) = self.ld.click(ev.id, ev.pos(), cx.focus, self.rows.len());
+                let (o, event) = self.ld.click(ev.id, cx.focus, self.rows.len());
                 match event {
                     Some(Event::Item(_)) => self.open_pick(w, cx),
                     Some(Event::Action(name)) => self.fire(name, w, cx),
@@ -1022,7 +1022,6 @@ impl Page<Jackin> for RolesScreen {
                 }
                 o
             }
-            Some(Phase::Drag) => self.ld.drag(ev.id, ev.pos()),
             _ => Outcome::Ignored,
         }
     }
