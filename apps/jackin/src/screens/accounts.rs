@@ -157,6 +157,8 @@ fn end_pending(form: &mut FormDialog) {
     form.set_note("validation", vec![]);
 }
 
+const SAVE_TIMEOUT_SECS: i64 = 30;
+
 /// What the screen does when the backend has stored the registry it sent.
 struct Saving {
     status: String,
@@ -188,6 +190,7 @@ pub struct AccountsScreen {
     forms_opened: usize,
     pending_remove: Option<AccountId>,
     saving: Option<Saving>,
+    saving_since: i64,
 
     pub menu: RowMenu<Sel, &'static str>,
 }
@@ -236,6 +239,7 @@ impl AccountsScreen {
             forms_opened: 0,
             pending_remove: None,
             saving: None,
+            saving_since: 0,
             menu: RowMenu::new(MENU),
         }
     }
@@ -1171,7 +1175,8 @@ impl AccountsScreen {
         w: &mut World,
         cx: &mut Cx,
     ) {
-        if self.saving.is_some() {
+        let now = w.now_secs();
+        if self.saving.is_some() && now - self.saving_since < SAVE_TIMEOUT_SECS {
             let msg = "Saving the previous change… try again when it finishes".to_owned();
             if saving.form.is_some() {
                 cx.with_top::<FormDialog>(move |f| f.error = Some(msg));
@@ -1181,6 +1186,7 @@ impl AccountsScreen {
             return;
         }
         self.saving = Some(saving);
+        self.saving_since = now;
         w.perform(Effect::SaveAccounts {
             base: Box::new(w.accounts.clone()),
             registry: Box::new(registry),

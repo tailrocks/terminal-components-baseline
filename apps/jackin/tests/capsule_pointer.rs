@@ -63,3 +63,25 @@ fn a_shift_click_extends_the_selection_from_the_last_click() {
         Some("ne o".to_owned())
     );
 }
+
+#[test]
+fn the_clear_pane_menu_item_drops_the_history_and_says_so() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.bench.output(0, &history());
+    rig.advance(80);
+    let content = |rig: &Rig| rig.daemon().panes[0].body.viewport().scroll().content_len;
+    let before = content(&rig);
+    assert!(before > 100, "the pane keeps its history: {before}");
+
+    let edit = rig.locate("Edit");
+    rig.mouse(MouseKind::Down, (edit.0 + 1, edit.1));
+    rig.mouse(MouseKind::Up, (edit.0 + 1, edit.1));
+    let clear = rig.locate("Clear pane");
+    rig.mouse(MouseKind::Down, (clear.0 + 1, clear.1));
+    rig.mouse(MouseKind::Up, (clear.0 + 1, clear.1));
+
+    rig.screen();
+    assert!(content(&rig) < before, "the history is gone");
+    assert_eq!(rig.status(), "Scrollback cleared");
+}

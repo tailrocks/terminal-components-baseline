@@ -227,3 +227,47 @@ fn the_sim_backend_proposes_the_instance_agent_and_account_as_the_first_pane() {
         )]
     );
 }
+
+fn text_of(body: &mut dyn PaneBody) -> String {
+    use junie_tui::core::focus::FocusRing;
+    use junie_tui::core::hit::HitRegistry;
+    use junie_tui::theme::{ColorLevel, Theme};
+    use junie_tui::ui::ctx::{Interaction, RenderCtx};
+    use ratatui::buffer::Buffer;
+
+    body.sync_size(AREA);
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    let mut buf = Buffer::empty(AREA);
+    let mut hits = HitRegistry::default();
+    let mut ring = FocusRing::default();
+    let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+    body.viewport()
+        .draw(AREA, &mut buf, &mut ctx, theme.canvas, false);
+    (0..AREA.height)
+        .map(|y| {
+            (0..AREA.width)
+                .map(|x| buf[(x, y)].symbol().to_owned())
+                .collect::<String>()
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+#[test]
+fn a_shell_body_answers_pwd_with_the_path_of_its_workspace() {
+    let mut body = spawn(None, 1_000);
+    for at in [1_000, 1_500, 3_000, 10_000] {
+        body.tick(at);
+    }
+    for c in "pwd".chars() {
+        press(body.as_mut(), KeyCode::Char(c), 10_100);
+    }
+    press(body.as_mut(), KeyCode::Enter, 10_200);
+    body.tick(10_300);
+
+    let shown = text_of(body.as_mut());
+    assert!(
+        shown.contains("/workspace/payments-platform"),
+        "the reply names the workspace of the body:\n{shown}"
+    );
+}

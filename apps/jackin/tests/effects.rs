@@ -2382,3 +2382,66 @@ fn removing_an_account_scrubs_it_from_every_workspace() {
     assert!(app.world.accounts.get(id).is_none(), "{}", status(&app));
     assert_eq!(names(&app.world), 0);
 }
+
+fn saves_asked(backend: &TestBackend) -> usize {
+    saves_of(backend).len()
+}
+
+#[test]
+fn a_save_nobody_answers_does_not_block_the_next_one_forever() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some("acct-claude-personal".into()),
+    });
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 1);
+
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 1, "the first save is still out");
+    assert!(
+        status(&app).contains("Saving the previous change"),
+        "{}",
+        status(&app)
+    );
+
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 2, "a save nobody answered gives way");
+}
+
+#[test]
+fn the_usage_screen_refreshes_every_enabled_account_and_shows_the_reply() {
+    let (mut app, backend) = backed(Scenario::AccountsMixed, refresh_account);
+    app.go(Go::Usage {
+        select: Some(PERSONAL.into()),
+    });
+    assert!(screen(&mut app).contains("38%"));
+
+    let idle = app
+        .world
+        .accounts
+        .accounts
+        .iter()
+        .filter(|a| a.enabled && a.usage.freshness.phase != Freshness::Refreshing)
+        .count();
+    press(&mut app, "r");
+    assert!(
+        status(&app).starts_with("Reloading the broker projection"),
+        "{}",
+        status(&app)
+    );
+    settle(&mut app);
+
+    let asked = backend
+        .seen()
+        .iter()
+        .filter(|e| matches!(e, Effect::RefreshAccount { .. }))
+        .count();
+    assert_eq!(asked, idle, "one refresh for each enabled idle account");
+    let shown = screen(&mut app);
+    assert!(shown.contains("40%"), "{shown}");
+}
