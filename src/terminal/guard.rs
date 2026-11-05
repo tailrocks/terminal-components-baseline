@@ -78,6 +78,7 @@ struct Csi {
     params: u8,
     param: u32,
     seven: bool,
+    screen: bool,
 }
 
 impl Csi {
@@ -90,6 +91,7 @@ impl Csi {
             params: 0,
             param: 0,
             seven: false,
+            screen: false,
         }
     }
 
@@ -119,6 +121,7 @@ impl Csi {
 
     fn end_param(&mut self) {
         self.seven |= self.param == 7;
+        self.screen |= matches!(self.param, 47 | 1047 | 1049);
         self.param = 0;
         self.params = self.params.saturating_add(1);
     }
@@ -148,6 +151,12 @@ pub(super) struct FeedGuard {
     joiners: u16,
     after_joiner: bool,
     out: Vec<u8>,
+    switches: Vec<usize>,
+}
+
+pub(super) struct Filtered<'a> {
+    pub(super) bytes: &'a [u8],
+    pub(super) switches: &'a [usize],
 }
 
 impl FeedGuard {
@@ -162,16 +171,21 @@ impl FeedGuard {
             joiners: 0,
             after_joiner: false,
             out: Vec::new(),
+            switches: Vec::new(),
         }
     }
 
     /// The bytes to give the parser for `bytes`.
-    pub(super) fn filter(&mut self, bytes: &[u8]) -> &[u8] {
+    pub(super) fn filter(&mut self, bytes: &[u8]) -> Filtered<'_> {
         self.out.clear();
+        self.switches.clear();
         for &byte in bytes {
             self.step(byte);
         }
-        &self.out
+        Filtered {
+            bytes: &self.out,
+            switches: &self.switches,
+        }
     }
 
     fn step(&mut self, byte: u8) {
@@ -230,10 +244,11 @@ impl FeedGuard {
             }
             _ => {
                 self.detach();
+                self.out.extend_from_slice(&[ESC, byte]);
                 if byte == b'c' {
                     self.no_wrap = false;
+                    self.switches.push(self.out.len());
                 }
-                self.out.extend_from_slice(&[ESC, byte]);
                 self.state = State::Ground;
             }
         }
@@ -279,6 +294,9 @@ impl FeedGuard {
             return;
         }
         self.detach();
+        if self.csi.is_private_mode(fin) && self.csi.screen {
+            self.switches.push(self.out.len());
+        }
         if self.csi.is_private_mode(fin) && self.csi.seven {
             if fin == b'l' {
                 self.no_wrap = true;

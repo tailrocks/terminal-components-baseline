@@ -225,6 +225,41 @@ fn copy_survives_scrolling_away() {
     assert_eq!(v.selected_text(), text, "and so is new output");
 }
 
+#[test]
+fn a_selection_follows_its_text_when_no_history_is_kept() {
+    let mut v = with_state(TerminalState::with_scrollback(10, 10, 0));
+    v.feed(&joined(1, 10));
+    drag(&mut v, (0, 7), (8, 7));
+    assert_eq!(v.selected_text().as_deref(), Some("line 008"));
+
+    v.feed(b"\r\nline 011");
+    assert_eq!(
+        v.selected_text().as_deref(),
+        Some("line 008"),
+        "the selected text moved up a row and the selection moved with it"
+    );
+    assert_eq!(screen(&v)[6], "line 008");
+}
+
+#[test]
+fn a_one_column_area_still_shows_the_program_its_column() {
+    let area = Rect::new(0, 0, 1, 4);
+    let (rows, cols) = TerminalViewport::grid_size(area);
+    assert_eq!((rows, cols), (4, 1));
+    let mut v = TerminalViewport::new(ID, TerminalState::new(rows, cols));
+    v.set_area(area);
+    v.feed(b"x");
+
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    let mut buf = Buffer::empty(area);
+    let mut hits = HitRegistry::default();
+    let mut ring = FocusRing::default();
+    let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+    ViewportOps::draw(&v, area, &mut buf, &mut ctx, theme.canvas, false);
+
+    assert_eq!(buf[(0, 0)].symbol(), "x");
+}
+
 fn wrapped(bytes: &[u8]) -> TerminalViewport {
     let mut v = blank();
     v.feed(bytes);
