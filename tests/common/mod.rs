@@ -95,6 +95,10 @@ impl Host {
             .map(|(text, tone)| (text.to_owned(), tone))
     }
 
+    pub fn accept_test_requests(&mut self) {
+        self.shell.test_requests = true;
+    }
+
     pub fn set_status(&mut self, text: &str, tone: Tone) {
         self.shell.status.set(text, tone);
     }

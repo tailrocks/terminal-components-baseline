@@ -302,3 +302,24 @@ fn ctrl_x_in_an_unmasked_desktop_field_cuts_to_the_clipboard() {
     assert_eq!(field.text(), "");
     assert_eq!(sink.0.lock().expect("writes").clone(), ["alpha"]);
 }
+
+#[test]
+fn a_dropped_shell_leaves_no_clipboard_hook_behind() {
+    queued();
+    let native = Arc::new(Counting::default());
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(native.clone());
+    shell.clipboard.install();
+    junie_tui::core::edit::clipboard::copy(TEXT);
+    assert_eq!(native.0.load(std::sync::atomic::Ordering::SeqCst), 1);
+
+    drop(shell);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+
+    assert_eq!(
+        native.0.load(std::sync::atomic::Ordering::SeqCst),
+        1,
+        "the next owner of this thread does not write through the old app's clipboard"
+    );
+    assert_eq!(queued(), Vec::<String>::new());
+}

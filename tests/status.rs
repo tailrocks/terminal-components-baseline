@@ -1,7 +1,7 @@
 mod common;
 
 use common::*;
-use junie_tui::clock::Moment;
+use junie_tui::clock::{Moment, TestRequest};
 use junie_tui::core::event::{External, Input, Mouse, MouseKind, Outcome};
 use junie_tui::core::focus::{Focus, FocusRing};
 use junie_tui::shell::{Cx, Request, StatusLine, background};
@@ -81,4 +81,35 @@ fn a_page_in_the_background_may_keep_a_sticky_status() {
     cx.sticky("path");
     let requests: Vec<_> = background(cx.take()).collect();
     assert!(matches!(requests.as_slice(), [Request::Sticky(text)] if text == "path"));
+}
+
+#[test]
+fn a_clock_step_request_does_not_clear_an_error_status_like_operator_input() {
+    let mut host = Host::new(Act::Nothing);
+    host.accept_test_requests();
+    host.set_status("save failed", Tone::Error);
+
+    host.input(Input::Paste(TestRequest::advance(250)));
+    assert_eq!(
+        host.status(),
+        Some(("save failed".to_owned(), Tone::Error)),
+        "a step of the test clock is not the operator reading the error"
+    );
+
+    host.input(Input::Paste("typed".into()));
+    assert_eq!(host.status(), None, "a real paste still clears it");
+}
+
+#[test]
+fn a_clock_step_request_does_not_clear_a_sticky_status() {
+    let mut host = Host::new(Act::Nothing);
+    host.accept_test_requests();
+    host.sticky("/Users/me/project");
+
+    host.input(Input::Paste(TestRequest::advance(250)));
+
+    assert_eq!(
+        host.status(),
+        Some(("/Users/me/project".to_owned(), Tone::Secondary))
+    );
 }
