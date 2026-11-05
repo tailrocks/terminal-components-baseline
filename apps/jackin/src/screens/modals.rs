@@ -483,7 +483,10 @@ impl OpFlow {
                 .filter(|f| matches(&f.label))
                 .map(|f| {
                     let item = Item::new(f.label.clone())
-                        .detail(f.kind.label().to_owned())
+                        .detail(match &f.section {
+                            Some(section) => format!("{section} · {}", f.kind.label()),
+                            None => f.kind.label().to_owned(),
+                        })
                         .glyph(if f.kind == FieldKind::Concealed {
                             "•"
                         } else {

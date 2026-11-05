@@ -390,16 +390,19 @@ impl SimOnePassword {
         })
     }
 
-    pub fn describe(&self, r: &OpReference) -> Result<FieldDescriptor, OpError> {
+    fn field_of(&self, r: &OpReference) -> Result<&OpField, OpError> {
         let (_, it) = self.item(&r.account, &r.vault_id, &r.item_id)?;
-        let f = it
-            .fields
+        it.fields
             .iter()
-            .find(|f| f.id == r.field_id)
+            .find(|f| f.id == r.field_id && f.section == r.section)
             .ok_or_else(|| OpError::MissingField {
                 field: r.field_id.clone(),
                 item: it.title.clone(),
-            })?;
+            })
+    }
+
+    pub fn describe(&self, r: &OpReference) -> Result<FieldDescriptor, OpError> {
+        let f = self.field_of(r)?;
         if f.kind != FieldKind::Concealed {
             return Err(OpError::WrongFieldShape {
                 field: f.label.clone(),
@@ -420,17 +423,11 @@ impl SimOnePassword {
         r: &OpReference,
         op: impl FnOnce(&Secret) -> R,
     ) -> Result<R, OpError> {
-        let desc = self.describe(r)?;
-        let (_, it) = self.item(&r.account, &r.vault_id, &r.item_id)?;
-        let f = it
-            .fields
-            .iter()
-            .find(|f| f.id == r.field_id)
-            .expect("described");
+        self.describe(r)?;
+        let f = self.field_of(r)?;
         let secret = Secret {
             bytes: f.material.clone().unwrap_or_default().into_bytes(),
         };
-        let _ = desc;
         Ok(op(&secret))
     }
 

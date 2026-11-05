@@ -11,9 +11,9 @@ use common::*;
 use jackin_console::app::App;
 use jackin_console::backend::{
     Backend, ChangeSet, ChangedFile, CheckRow, Completion, DiffLine, DiffStatus, Effect,
-    FieldDescriptor, FileSource, Hunk, OnePassword, OpAccount, OpAccountRow, OpAccountState,
-    OpError, OpField, OpItem, OpItemRow, OpListing, OpScope, OpSession, OpVault, OpVaultRow,
-    Refresh, SecretClass, UnreadFile, ValidationOutcome, VaultAccess,
+    FieldDescriptor, FileSource, Hunk, KeyOutcome, OnePassword, OpAccount, OpAccountRow,
+    OpAccountState, OpError, OpField, OpItem, OpItemRow, OpListing, OpScope, OpSession, OpVault,
+    OpVaultRow, Refresh, SecretClass, UnreadFile, ValidationOutcome, VaultAccess,
 };
 use jackin_console::domain::account::{
     AccountForm, AccountIdentity, Confidence, CredentialSource, IssueCode, Lifecycle,
@@ -1200,11 +1200,53 @@ fn the_picker_names_the_section_of_the_field_chosen_when_labels_repeat() {
                 .to_vec(),
         ),
     );
+    let rows = screen(&mut app);
+    assert!(rows.contains("Production · concealed"), "{rows}");
+    assert!(rows.contains("Staging · concealed"), "{rows}");
     press(&mut app, "down");
     press(&mut app, "enter");
 
     let shown = screen(&mut app);
     assert!(shown.contains("op://v1/i1/Staging/k"), "{shown}");
+}
+
+#[test]
+fn a_reference_is_described_and_classified_by_its_own_section() {
+    let mut op = SimOnePassword::fixture(0);
+    let mut account = two_sections_account();
+    let [production, staging] = account.vaults[0].items[0].fields.as_mut_slice() else {
+        panic!("two fields expected");
+    };
+    production.material = Some("anthropic:valid-PROD".into());
+    production.tail = "PROD".into();
+    staging.material = Some("anthropic:throttled-STAG".into());
+    staging.tail = "STAG".into();
+    op.accounts = vec![account];
+    let op: &dyn OnePassword = &op;
+    let reference = |section| {
+        op.reference("sections.1password.com", "v1", "i1", "k", Some(section))
+            .expect("a reference")
+    };
+    let (production, staging) = (reference("Production"), reference("Staging"));
+
+    assert!(
+        op.describe(&production)
+            .expect("described")
+            .masked
+            .ends_with("PROD")
+    );
+    assert!(
+        op.describe(&staging)
+            .expect("described")
+            .masked
+            .ends_with("STAG")
+    );
+    let outcome = |reference| match op.classify(reference).expect("classified") {
+        SecretClass::Key { outcome, .. } => outcome,
+        other => panic!("a key expected, got {other:?}"),
+    };
+    assert_eq!(outcome(&production), KeyOutcome::Valid);
+    assert_eq!(outcome(&staging), KeyOutcome::RateLimited);
 }
 
 // Gap 5: a change set says how many files it left out and which it did not
