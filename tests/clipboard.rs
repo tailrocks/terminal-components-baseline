@@ -337,3 +337,41 @@ fn dropping_one_shell_keeps_the_clipboard_hook_of_the_shell_that_replaced_it() {
     junie_tui::core::edit::clipboard::copy(TEXT);
     assert_eq!(count(&second_sink), 1, "its own drop still removes it");
 }
+
+#[test]
+fn dropping_a_shell_keeps_the_hook_of_another_shell_given_a_clone_of_the_same_clipboard() {
+    queued();
+    let sink = Arc::new(Counting::default());
+    let configured = Clipboard::new().native(sink.clone());
+    let mut first = Shell::<()>::new();
+    first.set_clipboard(configured.clone());
+    let mut second = Shell::<()>::new();
+    second.set_clipboard(configured.clone());
+
+    drop(first);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+
+    let count = || sink.0.load(std::sync::atomic::Ordering::SeqCst);
+    assert_eq!(count(), 1, "the live shell still owns the hook");
+
+    drop(second);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+    assert_eq!(count(), 1, "its own drop still removes it");
+}
+
+#[test]
+fn installing_the_same_clipboard_twice_leaves_one_live_hook() {
+    queued();
+    let sink = Arc::new(Counting::default());
+    let configured = Clipboard::new().native(sink.clone());
+    let mut shell = Shell::<()>::new();
+    shell.set_clipboard(configured.clone());
+    shell.set_clipboard(configured.clone());
+
+    junie_tui::core::edit::clipboard::copy(TEXT);
+
+    assert_eq!(sink.0.load(std::sync::atomic::Ordering::SeqCst), 1);
+    drop(shell);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+    assert_eq!(sink.0.load(std::sync::atomic::Ordering::SeqCst), 1);
+}

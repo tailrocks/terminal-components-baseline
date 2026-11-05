@@ -43,8 +43,18 @@ pub struct Clipboard {
     pub write: bool,
 
     pub native: Option<Arc<dyn NativeClipboard>>,
+}
 
+#[derive(Debug)]
+#[must_use = "the hook is removed when this guard is dropped"]
+pub struct ClipboardHook {
     owner: u64,
+}
+
+impl Drop for ClipboardHook {
+    fn drop(&mut self) {
+        clipboard::clear_hook(self.owner);
+    }
 }
 
 impl Default for Clipboard {
@@ -62,7 +72,6 @@ impl Clipboard {
             limit: Self::DEFAULT_LIMIT,
             write: true,
             native: None,
-            owner: NEXT_OWNER.fetch_add(1, Ordering::Relaxed),
         }
     }
 
@@ -122,15 +131,13 @@ impl Clipboard {
         }
     }
 
-    pub fn install(&self) {
+    pub fn install(&self) -> ClipboardHook {
         let this = self.clone();
-        clipboard::set_hook(self.owner, move |t| {
+        let owner = NEXT_OWNER.fetch_add(1, Ordering::Relaxed);
+        clipboard::set_hook(owner, move |t| {
             this.deliver(t);
         });
-    }
-
-    pub(crate) fn release(&self) {
-        clipboard::clear_hook(self.owner);
+        ClipboardHook { owner }
     }
 
     pub fn report(result: &Copied, text: &str, what: Option<&str>) -> (String, Tone) {

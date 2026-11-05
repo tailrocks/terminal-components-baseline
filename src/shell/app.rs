@@ -18,7 +18,7 @@ use crate::widgets::hintbar::HintKeys;
 use crate::widgets::keyhint::Hint;
 use crate::widgets::too_small::TooSmall;
 
-use super::{Clipboard, Copied, Cx, Request, StatusLine, StopHandle};
+use super::{Clipboard, ClipboardHook, Copied, Cx, Request, StatusLine, StopHandle};
 use crate::clock::{Moment, TestRequest};
 use crate::theme::Strings;
 use crate::ui::context::ContextConfig;
@@ -69,6 +69,7 @@ pub struct Shell<P = ()> {
     pub context: ContextConfig,
 
     clipboard: Clipboard,
+    clipboard_hook: Option<ClipboardHook>,
     stop: StopHandle,
     footer: Option<FooterDrawn>,
     page: Option<PageKey>,
@@ -89,12 +90,6 @@ impl<P: Default + PartialEq> Shell<P> {
     }
 }
 
-impl<P> Drop for Shell<P> {
-    fn drop(&mut self) {
-        self.clipboard.release();
-    }
-}
-
 impl<P> Shell<P> {
     pub fn new() -> Self {
         Self {
@@ -112,6 +107,7 @@ impl<P> Shell<P> {
             footer_keys: HintKeys::default(),
             context: ContextConfig::DEFAULT,
             clipboard: Clipboard::new(),
+            clipboard_hook: None,
             stop: StopHandle::default(),
             footer: None,
             page: None,
@@ -128,7 +124,7 @@ impl<P> Shell<P> {
 
     pub fn set_clipboard(&mut self, clipboard: Clipboard) {
         self.clipboard = clipboard;
-        self.clipboard.install();
+        self.clipboard_hook = Some(self.clipboard.install());
     }
 
     pub fn pointer_parts(&mut self) -> PointerParts<'_> {
