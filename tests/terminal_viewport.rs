@@ -478,7 +478,7 @@ fn alt_screen_toggle_resets() {
         !live.has_selection(),
         "the live rows of the primary screen are not the alternate rows"
     );
-    live.feed(b"A1\r\nA2");
+    live.feed(b"\x1b[HA1\r\nA2");
     drag(&mut live, (0, 0), (2, 1));
     assert_eq!(live.selected_text().as_deref(), Some("A1\nA2"));
     live.feed(b"\x1b[?1049l");
