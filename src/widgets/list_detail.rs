@@ -493,12 +493,12 @@ impl ListDetail {
         } else {
             format!("{} · {pos}", frame.meta)
         };
+        let over = u16::from(!frame.head.is_empty());
         let under_lines = frame
             .under
             .map(|u| wrap(u, area.width.saturating_sub(2).max(8) as usize))
             .unwrap_or_default();
-        let under = under_lines.len() as u16;
-        let over = u16::from(!frame.head.is_empty());
+        let under = (under_lines.len() as u16).min(area.height.saturating_sub(over));
         if over > 0 {
             render_spans(
                 buf,
@@ -602,7 +602,7 @@ impl ListDetail {
             self.list_track = track_of(inner);
             scrollbar::render_with_fade(inner, buf, ctx, self.master, &self.scroll, focused);
         }
-        for (k, text) in under_lines.iter().enumerate() {
+        for (k, text) in under_lines.iter().take(under as usize).enumerate() {
             let y = area.bottom() - under + k as u16;
             buf.set_string(area.x + 1, y, text, t.faint().bg(t.canvas));
         }

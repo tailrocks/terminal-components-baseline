@@ -51,6 +51,7 @@ struct Rig {
     hits: HitRegistry,
     area: Rect,
     actions: usize,
+    under: Option<String>,
 }
 
 impl Rig {
@@ -59,6 +60,10 @@ impl Rig {
     }
 
     fn sized(area: Rect, actions: usize) -> Self {
+        Self::build(area, actions, None)
+    }
+
+    fn build(area: Rect, actions: usize, under: Option<String>) -> Self {
         let mut focus = Focus::default();
         focus.focus(DETAIL);
         let mut rig = Self {
@@ -68,6 +73,7 @@ impl Rig {
             hits: HitRegistry::default(),
             area,
             actions,
+            under,
         };
         rig.render();
         rig
@@ -88,7 +94,7 @@ impl Rig {
             meta: String::new(),
             head: vec![],
             rows: &self.rows,
-            under: None,
+            under: self.under.as_deref(),
             detail_title: "Detail".into(),
             detail_meta: String::new(),
             lines: lines(),
@@ -351,4 +357,20 @@ fn a_detail_narrower_than_its_first_column_clamps_the_column_to_the_room_left() 
     for width in 12..=15 {
         assert_columns_inside_the_frame(width);
     }
+}
+
+#[test]
+fn a_text_under_the_list_taller_than_the_area_is_cut_to_the_room() {
+    let area = Rect::new(0, 0, 120, 6);
+    let text = (0..12)
+        .map(|n| format!("rule {n:02} of the order of precedence"))
+        .collect::<Vec<_>>()
+        .join(" ");
+    let mut rig = Rig::build(area, 0, Some(text));
+    let buf = rig.render();
+    let rows: Vec<String> = (0..area.height).map(|y| row(&buf, y)).collect();
+    assert!(
+        rows[0].contains("rule 00"),
+        "the first lines of the text fill the room it has: {rows:?}"
+    );
 }
