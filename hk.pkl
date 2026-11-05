@@ -11,14 +11,15 @@ hooks {
   ["pre-commit"] {
     steps {
       ["generated-workflows"] {
-        check = "preview=$(mktemp -d) && trap 'find \"$preview\" -depth -delete' EXIT && mise exec -- velnor-actions generate --output-dir \"$preview\" && diff -r .github \"$preview/.github\""
+        check = "bash scripts/check-generated-workflows.sh pre-commit"
       }
     }
   }
   ["pre-push"] {
     steps {
       ["generated-workflows"] {
-        check = "preview=$(mktemp -d) && trap 'find \"$preview\" -depth -delete' EXIT && mise exec -- velnor-actions generate --output-dir \"$preview\" && diff -r .github \"$preview/.github\""
+        check = "bash scripts/check-generated-workflows.sh pre-push"
+        stdin = "{{ hook_stdin }}"
       }
     }
   }
