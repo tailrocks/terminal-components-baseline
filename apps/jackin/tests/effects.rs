@@ -1740,3 +1740,195 @@ fn a_refresh_that_lands_after_a_newer_snapshot_is_dropped() {
         "the older refresh did not bring the instance back"
     );
 }
+
+fn held_roles(unanswered: fn(&Effect) -> bool, answer: Answer) -> (App, Arc<TestBackend>) {
+    let backend = Arc::new(TestBackend {
+        inner: SimBackend::shared(),
+        seen: Mutex::new(vec![]),
+        answer,
+        unanswered,
+        files: None,
+    });
+    let mut world = world_for(Scenario::RoleBinding);
+    world.backend = backend.clone();
+    (timed(Scenario::RoleBinding, world), backend)
+}
+
+fn count(backend: &TestBackend, wanted: fn(&Effect) -> bool) -> usize {
+    backend.seen().iter().filter(|e| wanted(e)).count()
+}
+
+static BINDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+fn bind_once_then_refuse(effect: &Effect, world: &World) -> Option<Msg> {
+    if !matches!(effect, Effect::BindRole { .. }) {
+        return None;
+    }
+    match BINDS.fetch_add(1, std::sync::atomic::Ordering::SeqCst) {
+        0 => bind_role(effect, world),
+        _ => refuse_bind(effect, world),
+    }
+}
+
+#[test]
+fn an_undo_that_failed_can_be_tried_again() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, bind_once_then_refuse);
+    press(&mut app, PICK_EXPERIMENTS);
+    settle(&mut app);
+    press(&mut app, "u");
+    settle(&mut app);
+    assert!(
+        status(&app).contains("Could not save the binding"),
+        "{}",
+        status(&app)
+    );
+
+    press(&mut app, "u");
+    settle(&mut app);
+    assert_ne!(status(&app), "Nothing to undo");
+    assert_eq!(count(&backend, |e| matches!(e, Effect::BindRole { .. })), 3);
+}
+
+#[test]
+fn a_second_add_waits_for_the_first_reply() {
+    let (mut app, backend) = held_roles(|e| matches!(e, Effect::AddRole { .. }), add_role);
+    press(&mut app, ADD_NEW_ROLE);
+    press(&mut app, "a");
+
+    assert_eq!(status(&app), "Adding role…");
+    let shown = screen(&mut app);
+    assert!(!shown.contains("register a role"), "{shown}");
+    assert_eq!(count(&backend, |e| matches!(e, Effect::AddRole { .. })), 1);
+}
+
+#[test]
+fn an_add_that_fails_after_the_operator_left_the_roles_says_so() {
+    let (mut app, _) = held_roles(|e| matches!(e, Effect::AddRole { .. }), add_role);
+    press(&mut app, ADD_NEW_ROLE);
+    press(&mut app, "esc");
+    assert_eq!(app.route(), Route::Manager);
+
+    app.deliver(&Msg::RoleAdded {
+        location: "~/roles/new-role".into(),
+        result: Err("the registry is read-only".into()),
+    });
+    let shown = status(&app);
+    assert!(
+        shown.contains("Could not add role") && shown.contains("the registry is read-only"),
+        "{shown}"
+    );
+}
+
+#[test]
+fn a_role_an_allowed_list_names_cannot_be_removed() {
+    let mut world = world_for(Scenario::RoleBinding);
+    for ws in &mut world.workspaces {
+        ws.roles.default = None;
+    }
+    world.workspaces[0].roles.allowed =
+        jackin_console::domain::workspace::AllowedRoles::Custom(vec!["sentinel".into()]);
+    let name = world.workspaces[0].name.clone();
+    let mut app = timed(Scenario::RoleBinding, world);
+    press(&mut app, "d");
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("Cannot remove role sentinel"), "{shown}");
+    assert!(shown.contains(&name), "{shown}");
+    assert!(!shown.contains("Remove role sentinel?"), "{shown}");
+}
+
+const WRITER: &str = "down down down down";
+
+fn reread_manifest(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::LoadRole { role } = effect else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    let admin = snapshot.surfaces.roles.as_mut()?;
+    let doc = admin.role("sentinel")?.manifest.clone();
+    admin.role_mut(role)?.manifest = doc;
+    Some(Msg::RoleLoaded {
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn is_check(effect: &Effect) -> bool {
+    matches!(effect, Effect::CheckRole { .. })
+}
+
+#[test]
+fn a_role_whose_manifest_did_not_parse_is_read_again_before_the_check() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, reread_manifest);
+    press(&mut app, WRITER);
+    press(&mut app, "v");
+    settle(&mut app);
+
+    let seen = backend.seen();
+    assert_eq!(
+        seen.first(),
+        Some(&Effect::LoadRole {
+            role: "writer".into()
+        }),
+        "{seen:?}"
+    );
+    assert!(
+        matches!(seen.get(1), Some(Effect::CheckRole { role, .. }) if role == "writer"),
+        "{seen:?}"
+    );
+}
+
+#[test]
+fn a_manifest_that_still_does_not_parse_is_not_checked() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, |_, _| None);
+    press(&mut app, WRITER);
+    press(&mut app, "v");
+    settle(&mut app);
+
+    assert_eq!(count(&backend, |e| matches!(e, Effect::LoadRole { .. })), 1);
+    assert_eq!(count(&backend, is_check), 0);
+    assert_eq!(
+        status(&app),
+        "writer: jackin.role.toml still does not parse"
+    );
+}
+
+#[test]
+fn a_check_reply_of_another_ticket_does_not_finish_the_roles_check() {
+    let (mut app, backend) = held_roles(is_check, check_role);
+    press(&mut app, "v");
+    let seen = backend.seen();
+    let [Effect::CheckRole { ticket, role, .. }] = seen.as_slice() else {
+        panic!("one CheckRole expected, got {seen:?}");
+    };
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot
+        .surfaces
+        .roles
+        .as_mut()
+        .expect("roles")
+        .role_mut(role)
+        .expect("role")
+        .check = RoleCheckState::Done(vec![finding()]);
+    app.deliver(&Msg::RoleChecked {
+        ticket: ticket + 1_000,
+        role: role.clone(),
+        result: Ok(Box::new(snapshot.clone())),
+    });
+    assert!(
+        screen(&mut app).contains("checking…"),
+        "the screen took the reply of another check"
+    );
+
+    app.deliver(&Msg::RoleChecked {
+        ticket: *ticket,
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    });
+    assert!(
+        status(&app).contains("check") || status(&app).contains("error"),
+        "{}",
+        status(&app)
+    );
+    assert!(!screen(&mut app).contains("checking…"));
+}
