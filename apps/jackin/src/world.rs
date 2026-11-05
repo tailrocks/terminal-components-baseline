@@ -840,18 +840,19 @@ impl World {
         {
             self.start_doctor();
         }
-        let mut changed = false;
+        let mut changed = Vec::new();
         for (id, d) in self.daemons.iter_mut() {
             if self
                 .instances
                 .iter()
                 .any(|i| i.id == *id && i.status == InstanceStatus::Running)
+                && d.tick(now)
             {
-                changed |= d.tick(now);
+                changed.push(id.clone());
             }
         }
-        if changed {
-            refresh_snapshots(self);
+        for id in &changed {
+            refresh_snapshot(self, id);
         }
         let backend = self.backend.clone();
         backend.due(self)
@@ -1223,16 +1224,19 @@ pub fn mask_path(home: &str, path: &str) -> String {
     }
 }
 
+pub fn refresh_snapshot(w: &mut World, id: &str) {
+    let Some(snapshot) = w.daemons.get(id).map(Daemon::snapshot) else {
+        return;
+    };
+    if let Some(i) = w.instance_mut(id) {
+        i.daemon = snapshot;
+    }
+}
+
 pub fn refresh_snapshots(w: &mut World) {
-    let snaps: Vec<(String, DaemonSnapshot)> = w
-        .daemons
-        .iter()
-        .map(|(id, d)| (id.clone(), d.snapshot()))
-        .collect();
-    for (id, s) in snaps {
-        if let Some(i) = w.instance_mut(&id) {
-            i.daemon = s;
-        }
+    let ids: Vec<String> = w.daemons.keys().cloned().collect();
+    for id in &ids {
+        refresh_snapshot(w, id);
     }
     for i in w.instances.iter_mut() {
         if i.status != InstanceStatus::Running {

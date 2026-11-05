@@ -530,6 +530,37 @@ fn a_refresh_asked_for_before_a_new_pane_cannot_hide_the_pane_session() {
 }
 
 #[test]
+fn a_tick_that_changes_one_daemon_leaves_the_snapshots_of_the_others() {
+    const OTHER: &str = "jk-zzz";
+    let mut rig = Rig::with(PanePolicy::default(), |w| {
+        let mut other = instance();
+        other.id = OTHER.into();
+        w.instances.push(other);
+        w.open_first_session(OTHER);
+    });
+    rig.advance(80);
+    assert_eq!(rig.bench.opened(), 1);
+    rig.bench.push(0, LinkEvent::Attached);
+    rig.advance(900);
+
+    rig.app.world.instance_mut(OTHER).expect("instance").daemon = DaemonSnapshot::Unavailable;
+    rig.bench.push(0, LinkEvent::Exited(Some(0)));
+    rig.advance(400);
+
+    let snapshot =
+        |rig: &Rig, id: &str| rig.app.world.instance(id).expect("instance").daemon.clone();
+    assert!(
+        matches!(snapshot(&rig, INSTANCE), DaemonSnapshot::Tabs(_)),
+        "the daemon that changed is read again"
+    );
+    assert_eq!(
+        snapshot(&rig, OTHER),
+        DaemonSnapshot::Unavailable,
+        "a daemon that did not change is not read"
+    );
+}
+
+#[test]
 fn a_new_session_in_a_stopped_instance_is_refused() {
     let mut rig = Rig::new();
     rig.attach();
