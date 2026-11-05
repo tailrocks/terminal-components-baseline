@@ -45,13 +45,6 @@ pub trait ViewportOps {
         false
     }
 
-    /// Takes the app-wide scroll policy of `ctx` (horizontal scrolling and
-    /// the track click) into the view's own state. `draw` runs on a shared
-    /// reference and cannot keep it, so a host that sets a policy calls this
-    /// each frame before it reads input. A view with no such policy keeps the
-    /// default, which does nothing.
-    fn adopt_scroll_policy(&mut self, _ctx: &RenderCtx) {}
-
     fn caret(&self) -> Option<CellPos>;
     fn caret_visible(&self) -> bool;
     fn screen_pos(&self, at: CellPos) -> Option<Position>;
@@ -146,11 +139,6 @@ impl ViewportOps for TextViewport {
 
     fn keyboard_copy(&self) -> bool {
         true
-    }
-
-    fn adopt_scroll_policy(&mut self, ctx: &RenderCtx) {
-        self.adopt_policy(ctx);
-        self.scroll.adopt_click(ctx.track_click);
     }
 
     fn caret(&self) -> Option<CellPos> {

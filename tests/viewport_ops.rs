@@ -266,7 +266,8 @@ fn wide() -> TextViewport {
 }
 
 #[test]
-fn adopting_the_app_scroll_policy_reaches_the_input_of_a_view_drawn_from_a_shared_reference() {
+fn the_app_scroll_policy_of_a_drawn_frame_reaches_the_input_of_a_view_drawn_from_a_shared_reference()
+ {
     let mut v = wide();
     paint(&v, false);
     assert_eq!(
@@ -276,9 +277,9 @@ fn adopting_the_app_scroll_policy_reaches_the_input_of_a_view_drawn_from_a_share
     );
     ViewportOps::wheel(&mut v, Axis::Horizontal, -9);
 
-    draw(None, |_, ctx| {
+    draw(None, |buf, ctx| {
         ctx.hscroll = junie_tui::core::scroll::HScroll::off();
-        ViewportOps::adopt_scroll_policy(&mut v, ctx);
+        v.draw(AREA, buf, ctx, ctx.theme.canvas, false);
     });
 
     assert_eq!(

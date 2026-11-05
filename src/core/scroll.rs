@@ -1,3 +1,5 @@
+use std::cell::Cell;
+
 use ratatui::layout::{Position, Rect};
 
 use crate::core::hit::{Axis, Bar};
@@ -295,6 +297,27 @@ pub enum TrackClick {
     Page,
 }
 
+thread_local! {
+    static APP_CLICK: Cell<TrackClick> = const { Cell::new(TrackClick::Page) };
+    static APP_HSCROLL: Cell<Option<HScroll>> = const { Cell::new(None) };
+}
+
+pub(crate) fn publish_click(click: TrackClick) {
+    APP_CLICK.with(|c| c.set(click));
+}
+
+pub(crate) fn publish_hscroll(policy: HScroll) {
+    APP_HSCROLL.with(|c| c.set(Some(policy)));
+}
+
+pub(crate) fn app_click() -> TrackClick {
+    APP_CLICK.with(Cell::get)
+}
+
+pub(crate) fn app_hscroll() -> HScroll {
+    APP_HSCROLL.with(Cell::get).unwrap_or_default()
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HScroll {
     pub enabled: bool,
@@ -357,8 +380,6 @@ pub struct ScrollPane {
     pub track_click: Option<TrackClick>,
 
     pub columns: bool,
-
-    v_click: TrackClick,
 
     v_track: Rect,
 
@@ -441,18 +462,14 @@ impl ScrollPane {
         self
     }
 
-    pub fn adopt_click(&mut self, app_click: TrackClick) {
-        self.v_click = self.track_click.unwrap_or(app_click);
-    }
-
     pub fn begin(&mut self, app_click: TrackClick) {
-        self.adopt_click(app_click);
+        publish_click(app_click);
         self.v_track = Rect::ZERO;
         self.h_track = Rect::ZERO;
     }
 
     pub fn v_click(&self) -> TrackClick {
-        self.v_click
+        self.track_click.unwrap_or_else(app_click)
     }
 
     pub fn v_track(&self) -> Rect {
@@ -599,7 +616,7 @@ impl ScrollPane {
 
     pub fn press_on(&mut self, axis: Axis, pos: Position) -> Response<()> {
         let (track, click) = match axis {
-            Axis::Vertical => (self.v_track, self.v_click),
+            Axis::Vertical => (self.v_track, self.v_click()),
             Axis::Horizontal => (self.h_track, self.h_cfg.track_click),
         };
         if track.is_empty() {

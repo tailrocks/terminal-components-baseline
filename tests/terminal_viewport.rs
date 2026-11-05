@@ -2,11 +2,13 @@
 
 use junie_tui::core::event::Outcome;
 use junie_tui::core::focus::FocusRing;
-use junie_tui::core::hit::{Axis, HitRegistry};
+use junie_tui::core::hit::{Axis, Bar, HitRegistry};
 use junie_tui::core::id::WidgetId;
+use junie_tui::core::scroll::TrackClick;
 use junie_tui::terminal::{TermEvent, TerminalState, TerminalViewport};
 use junie_tui::theme::{ColorLevel, Theme};
 use junie_tui::ui::ctx::{Interaction, RenderCtx};
+use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::viewport::CellPos;
 use junie_tui::widgets::viewport_ops::ViewportOps;
 use ratatui::buffer::Buffer;
@@ -793,5 +795,42 @@ fn clear_scrollback_returns_to_the_tail_and_drops_the_selection() {
     assert_eq!(
         live.selected_text().as_deref(),
         Some("line 094\nline 095\nline 096")
+    );
+}
+
+fn press_below_the_thumb(app: TrackClick) -> bool {
+    let mut v = viewport(300);
+    v.jump_start();
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    let mut buf = Buffer::empty(Rect::new(0, 0, 30, 12));
+    let mut hits = HitRegistry::default();
+    let mut ring = FocusRing::default();
+    let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+    ctx.track_click = app;
+    ViewportOps::draw(&v, AREA, &mut buf, &mut ctx, theme.canvas, false);
+
+    let bar = Bar {
+        id: scrollbar::id_for(ID),
+        owner: ID,
+        axis: Axis::Vertical,
+        track: Rect::new(AREA.right() - 1, AREA.y, 1, AREA.height),
+    };
+    v.bar_input(
+        &bar,
+        Position::new(AREA.right() - 1, AREA.bottom() - 1),
+        true,
+    );
+    v.follow()
+}
+
+#[test]
+fn the_app_track_click_of_a_drawn_frame_decides_a_press_on_the_track() {
+    assert!(
+        press_below_the_thumb(TrackClick::Jump),
+        "the app asked for jump: a press at the bottom of the track lands at the live tail"
+    );
+    assert!(
+        !press_below_the_thumb(TrackClick::Page),
+        "the app kept paging: the same press moves one page"
     );
 }
