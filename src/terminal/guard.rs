@@ -74,6 +74,7 @@ struct Csi {
     started: bool,
     marker: Option<u8>,
     intermediate: bool,
+    bang: bool,
     plain: bool,
     params: u8,
     param: u32,
@@ -87,6 +88,7 @@ impl Csi {
             started: false,
             marker: None,
             intermediate: false,
+            bang: false,
             plain: true,
             params: 0,
             param: 0,
@@ -112,6 +114,7 @@ impl Csi {
                 self.plain = false;
             }
             0x20..=0x2f => {
+                self.bang = byte == b'!' && !self.intermediate;
                 self.intermediate = true;
                 self.plain = false;
             }
@@ -132,6 +135,10 @@ impl Csi {
 
     fn is_private_mode(&self, fin: u8) -> bool {
         matches!(fin, b'h' | b'l') && self.marker == Some(b'?') && !self.intermediate
+    }
+
+    fn is_soft_reset(&self, fin: u8) -> bool {
+        fin == b'p' && self.marker.is_none() && self.bang
     }
 
     fn certain(&self) -> bool {
@@ -294,6 +301,9 @@ impl FeedGuard {
             return;
         }
         self.detach();
+        if self.csi.is_soft_reset(fin) {
+            self.no_wrap = false;
+        }
         if self.csi.is_private_mode(fin) && self.csi.screen {
             self.switches.push(self.out.len());
         }

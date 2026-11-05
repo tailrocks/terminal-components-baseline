@@ -55,7 +55,7 @@ required-features = ["cli", "terminal"]
 clap = { workspace = true, optional = true }
 termpane = { git = "https://github.com/tailrocks/termpane", rev = "0337acc11a2321f99985e1fae9b670229198d124", optional = true, default-features = false }
 ratatui = { workspace = true }
-unicode-width = "0.2"
+unicode-width = "0.2.3"
 unicode-segmentation = "1"
 
 [target.'cfg(unix)'.dependencies]

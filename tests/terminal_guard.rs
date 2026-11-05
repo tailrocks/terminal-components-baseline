@@ -345,7 +345,11 @@ fn marks_cannot_pile_onto_one_cell_through_a_wide_base_that_does_not_print() {
 
 #[test]
 fn a_wide_base_starts_a_new_run_once_wrapping_is_back_on() {
-    let resets: [(&str, &[u8]); 2] = [("decset_7h", b"\x1b[?7h"), ("ris", b"\x1bc")];
+    let resets: [(&str, &[u8]); 3] = [
+        ("decset_7h", b"\x1b[?7h"),
+        ("ris", b"\x1bc"),
+        ("decstr", b"\x1b[!p"),
+    ];
     let mut broken = Vec::new();
     for (name, reset) in resets {
         let mut state = TerminalState::new(2, 10);
