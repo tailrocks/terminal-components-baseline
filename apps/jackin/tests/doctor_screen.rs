@@ -48,6 +48,6 @@ fn a_report_with_only_warnings_does_not_say_all_checks_pass() {
     press(&mut app, "D");
 
     let shown = screen(&mut app);
-    assert!(shown.contains("attention"), "{shown}");
+    assert!(shown.contains("attention · 1 warning · checked"), "{shown}");
     assert!(!shown.contains("all checks pass"), "{shown}");
 }
