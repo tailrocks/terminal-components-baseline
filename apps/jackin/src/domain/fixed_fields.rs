@@ -1,12 +1,13 @@
 //! The OpenShell constants of the baseline records, and the class of every field.
 //!
-//! Fixed: a field that holds one OpenShell value in every jackin world. The
-//! extractors read it and the tie compares it. Data: a field the host
-//! supplies. The extractors name it `field: _` and the tie does not compare
-//! it. Console: a `World` field the running console owns and fills itself
-//! (`clock`, `backend`, `op` and the like), which projection never produces;
-//! it also appears as `field: _`. Every record is destructured without `..`,
-//! so a new field does not build until it has a class.
+//! Fixed: a field whose value the OpenShell world decides: one constant for
+//! every record, or a function of the record itself (`edit_blocked` follows the
+//! account's source). The extractors read it and the tie compares it. Data: a
+//! field the host supplies. The extractors name it `field: _` and the tie does
+//! not compare it. Console: a `World` field the running console owns and fills
+//! itself (`clock`, `backend`, `op` and the like), which projection never
+//! produces; it also appears as `field: _`. Every record is destructured
+//! without `..`, so a new field does not build until it has a class.
 //!
 //! A field wrong in both the table below and the expected literal of a test
 //! passes every check. Only a review of the table closes that hole.

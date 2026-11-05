@@ -79,6 +79,24 @@ fn expected_account(a: &Account) -> AccountFixed {
     }
 }
 
+#[test]
+fn an_env_account_blocks_its_edit_with_this_text() {
+    assert_eq!(
+        env_edit_block("ZAI_API_KEY"),
+        EditBlocked::new(
+            "reads ZAI_API_KEY · remove it, then add an account",
+            "env account"
+        )
+    );
+    assert_eq!(
+        env_edit_block("A_VARIABLE_WITH_A_LONG_NAME"),
+        EditBlocked::new(
+            "reads A_VARIABLE_WITH_… · remove it, then add an account",
+            "env account"
+        )
+    );
+}
+
 fn plain_ids(registry: &AccountRegistry) -> Vec<String> {
     registry
         .accounts
