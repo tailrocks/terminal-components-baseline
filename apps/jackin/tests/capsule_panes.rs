@@ -7,10 +7,14 @@ mod pane_support;
 mod product_support;
 
 use capsule_support::*;
-use jackin_console::domain::agent::Agent;
+use jackin_console::domain::account::{Account, CredentialSource, Lifecycle};
+use jackin_console::domain::agent::{Agent, Provider};
 use jackin_console::domain::instance::{AgentState, DaemonSnapshot, InstanceStatus};
+use jackin_console::domain::workspace::Workspace;
+use jackin_console::panes::PanePolicy;
 use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneCommand, PaneRequest};
 use jackin_console::screens::Go;
+use jackin_console::world::{Msg, Snapshot, World};
 use pane_support::*;
 
 const FOCUS_OUT: &[u8] = b"\x1b[O";
@@ -448,4 +452,82 @@ fn a_new_session_in_a_stopped_instance_is_refused() {
         "no pane for a stopped instance"
     );
     assert!(rig.status().contains("Cannot attach"), "{}", rig.status());
+}
+
+fn codex_account(id: &str, lifecycle: Lifecycle) -> Account {
+    let mut account = Account::registered(
+        id,
+        id,
+        Provider::OpenAi,
+        CredentialSource::PlainApiKey {
+            fingerprint: format!("fp-{id}"),
+            tail: "abcd".into(),
+        },
+    );
+    account.lifecycle = lifecycle;
+    account
+}
+
+fn snapshot_of(world: &World) -> Snapshot {
+    Snapshot {
+        workspaces: world.workspaces.clone(),
+        roles: world.roles.clone(),
+        instances: world.instances.clone(),
+        global: world.global.clone(),
+        accounts: world.accounts.clone(),
+        surfaces: world.surfaces.clone(),
+        github: world.github.clone(),
+        index_error: None,
+        daemon_health: world.daemon_health,
+    }
+}
+
+#[test]
+fn a_new_pane_is_refused_when_the_chosen_account_became_unusable() {
+    let mut rig = Rig::with(PanePolicy::default(), |w| {
+        w.accounts
+            .accounts
+            .push(codex_account("acct-a", Lifecycle::Available));
+        let mut ws = Workspace::new(1, "dev", "/sandbox/project");
+        ws.accounts.enabled.insert("acct-a".into());
+        ws.accounts
+            .preferred
+            .insert(Provider::OpenAi, "acct-a".into());
+        w.workspaces.push(ws);
+        w.instance_mut(INSTANCE).expect("instance").workspace = Some(1);
+    });
+    rig.attach();
+    let panes = rig.daemon().panes.len();
+    rig.press("ctrl+b c");
+    let picker = rig.flat();
+    assert!(picker.contains("New tab"), "{picker}");
+
+    let mut snapshot = snapshot_of(&rig.app.world);
+    snapshot
+        .accounts
+        .accounts
+        .push(codex_account("acct-b", Lifecycle::Available));
+    snapshot.workspaces[0]
+        .accounts
+        .enabled
+        .insert("acct-b".into());
+    snapshot
+        .accounts
+        .get_mut("acct-a")
+        .expect("account")
+        .lifecycle = Lifecycle::NeedsLogin;
+    rig.app.deliver(&Msg::Refreshed {
+        result: Ok(Box::new(snapshot)),
+    });
+    rig.press("enter");
+
+    let shown = rig.flat();
+    assert!(shown.contains("Codex could not start"), "{shown}");
+    rig.press("enter");
+    rig.advance(160);
+    assert_eq!(
+        rig.daemon().panes.len(),
+        panes,
+        "no pane for the other account"
+    );
 }

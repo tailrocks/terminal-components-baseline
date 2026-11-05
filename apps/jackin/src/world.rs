@@ -27,6 +27,10 @@ use crate::panes::{Daemon, PaneId, PanePolicy};
 use junie_tui::clock::SimClock;
 use junie_tui::shell::JobKey;
 
+/// How long a refresh may stay out before the world asks again: a backend
+/// that never answers must not stop every later refresh.
+pub const REFRESH_TIMEOUT_SECS: i64 = 30;
+
 pub mod job {
     use junie_tui::shell::JobKey;
     pub const WORKSPACE_SAVE: JobKey = JobKey::new("workspace.save");
@@ -368,6 +372,7 @@ pub struct World {
 
     pub snapshots_applied: u64,
     pub refresh_from: Option<u64>,
+    pub refresh_started_secs: i64,
 
     /// What a program may do through a pane; every daemon the world creates
     /// starts with it.
@@ -506,6 +511,7 @@ impl World {
             tickets: 0,
             snapshots_applied: 0,
             refresh_from: None,
+            refresh_started_secs: 0,
             pane_policy: Arc::default(),
         };
         world.sync_arbiter();
@@ -550,10 +556,12 @@ impl World {
     }
 
     pub fn refresh(&mut self) -> bool {
-        if self.refresh_from.is_some() {
+        let now = self.now_secs();
+        if self.refresh_from.is_some() && now - self.refresh_started_secs < REFRESH_TIMEOUT_SECS {
             return false;
         }
         self.refresh_from = Some(self.snapshots_applied);
+        self.refresh_started_secs = now;
         self.perform(Effect::Refresh);
         true
     }

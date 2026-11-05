@@ -678,24 +678,8 @@ impl CapsuleScreen {
         let role = w.instance(&self.instance).map(|i| i.role.clone());
         let offer = w.offer_for(a, ws, role.as_deref());
         match offer.accounts.len() {
-            0 => {
-                let why = offer.blocked.unwrap_or_else(|| {
-                    format!(
-                        "No {} account is active for this Workspace. Enable one in the Workspace's Accounts tab or register one in Account & Usage Center.",
-                        a.provider().short()
-                    )
-                });
-                let mut d = Dialog::confirm(
-                    WidgetId::of("capsule.spawnfail"),
-                    &format!("{} could not start", a.label()),
-                    &why,
-                    "OK",
-                );
-                d.actions.remove(0);
-                d.cancel_index = Some(0);
-                d.initial_focus = d.actions[0].id;
-                cx.open(d, LayerTag::new("spawnfail"));
-            }
+            _ if offer.blocked.is_some() => self.spawn_failed(a, offer.blocked, cx),
+            0 => self.spawn_failed(a, None, cx),
             1 => self.spawn(Some(a), offer.accounts.first().cloned(), w, cx),
             _ => {
                 self.pending_agent = Some(a);
@@ -710,6 +694,25 @@ impl CapsuleScreen {
                 cx.open(p, LayerTag::new("provider"));
             }
         }
+    }
+
+    fn spawn_failed(&mut self, a: Agent, blocked: Option<String>, cx: &mut Cx) {
+        let why = blocked.unwrap_or_else(|| {
+            format!(
+                "No {} account is active for this Workspace. Enable one in the Workspace's Accounts tab or register one in Account & Usage Center.",
+                a.provider().short()
+            )
+        });
+        let mut d = Dialog::confirm(
+            WidgetId::of("capsule.spawnfail"),
+            &format!("{} could not start", a.label()),
+            &why,
+            "OK",
+        );
+        d.actions.remove(0);
+        d.cancel_index = Some(0);
+        d.initial_focus = d.actions[0].id;
+        cx.open(d, LayerTag::new("spawnfail"));
     }
 
     fn spawn(&mut self, agent: Option<Agent>, account: Option<AccountId>, w: &World, cx: &mut Cx) {
@@ -1969,12 +1972,10 @@ impl Page<Jackin> for CapsuleScreen {
         self.run_effects(w, cx);
 
         let touched = self.daemon(w).map(|d| d.touched_files().len()).unwrap_or(0);
-        let now_secs = w.clock.now_secs();
-        if let Some(i) = w.instance_mut(&self.instance) {
-            i.last_seen_secs = now_secs;
-            if touched > 0 {
-                i.uncommitted = i.uncommitted.max(touched);
-            }
+        if touched > 0
+            && let Some(i) = w.instance_mut(&self.instance)
+        {
+            i.uncommitted = i.uncommitted.max(touched);
         }
         Outcome::Changed
     }

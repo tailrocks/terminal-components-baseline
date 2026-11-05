@@ -347,6 +347,7 @@ pub fn world_fixed(w: &World) -> FixedFields {
         tickets: _,
         snapshots_applied: _,
         refresh_from: _,
+        refresh_started_secs: _,
         pane_policy: _,
     } = w;
     collect(workspaces, roles, instances, global, accounts, surfaces)

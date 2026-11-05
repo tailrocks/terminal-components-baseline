@@ -6,8 +6,8 @@ mod pane_support;
 use std::sync::Arc;
 
 use jackin_console::panes::{
-    ClipboardWrite, EndKind, LinkEvent, LinkStatus, PaneBody, PaneEffect, PanePolicy, TerminalPane,
-    sanitize_title,
+    ClipboardWrite, EndKind, Lease, LinkEvent, LinkStatus, PaneBody, PaneEffect, PanePolicy,
+    TerminalPane, sanitize_title,
 };
 use junie_tui::theme::Tone;
 use pane_support::*;
@@ -358,5 +358,38 @@ fn a_reattach_forgets_the_key_before_it() {
         rig.pane.take_effects(&words()),
         [copied("Hello", "from Codex · 5 characters")],
         "a key on the new link opens the window again"
+    );
+}
+
+#[test]
+fn a_lease_change_forgets_the_key_before_it() {
+    let mut rig = Rig::codex();
+    rig.bench.push(0, LinkEvent::Lease(Lease::ReadOnly));
+    rig.bench.push(0, LinkEvent::Lease(Lease::Owner));
+    rig.pane.tick(1_500);
+    assert_eq!(
+        rig.write(2_000, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "the key at 1,000 ms was typed under a lease this client no longer holds"
+    );
+
+    rig.pane.key(&key("b"), 2_100);
+    assert_eq!(
+        rig.write(2_200, HELLO),
+        [copied("Hello", "from Codex · 5 characters")],
+        "a key under the new lease opens the window again"
+    );
+}
+
+#[test]
+fn a_pane_this_client_only_views_never_copies() {
+    let mut rig = Rig::codex();
+    rig.bench.push(0, LinkEvent::Lease(Lease::ReadOnly));
+    rig.pane.tick(1_100);
+    rig.pane.gesture(1_200);
+    assert_eq!(
+        rig.write(1_300, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "a click in a viewing pane is not a gesture to write with"
     );
 }

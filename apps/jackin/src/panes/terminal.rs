@@ -310,6 +310,9 @@ impl TerminalPane {
                 self.replay.open(now_ms);
             }
             LinkEvent::Lease(lease) => {
+                if lease != self.lease {
+                    self.last_gesture_ms = None;
+                }
                 self.lease = lease;
                 if matches!(self.status, LinkStatus::Attached(_)) {
                     self.status = LinkStatus::Attached(lease);
@@ -390,6 +393,7 @@ impl TerminalPane {
     fn clipboard(&mut self, payload: &str, now_ms: i64) {
         let ctx = ClipContext {
             agent: self.agent(),
+            owner: self.lease == Lease::Owner,
             focused: self.focused,
             last_gesture_ms: self.last_gesture_ms,
             now_ms,

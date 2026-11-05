@@ -2101,3 +2101,34 @@ fn a_second_restore_reply_keeps_the_daemon_the_first_built() {
     app.deliver(&second);
     assert_eq!(app.world.daemons[id].workspace, "kept");
 }
+
+#[test]
+fn a_refresh_nobody_answers_does_not_stop_the_next_one() {
+    let (mut app, backend) = held_in(Scenario::Returning, |e| *e == Effect::Refresh, |_, _| None);
+    assert!(app.world.refresh());
+    assert!(!app.world.refresh(), "one is out");
+    assert_eq!(backend.refreshes(), 1);
+
+    app.world.clock.advance(31_000);
+    assert!(app.world.refresh(), "the first one was given up on");
+    assert_eq!(backend.refreshes(), 2);
+}
+
+#[test]
+fn a_backend_owns_last_seen_while_the_capsule_is_attached() {
+    let (mut app, _) = backed(Scenario::HardCases, unchanged_roster);
+    let before = last_seen(&app.world);
+    app.go(Go::Attach {
+        instance: "jk-7f3a".into(),
+        pane: None,
+    });
+    assert_eq!(app.route(), Route::Capsule);
+    run_for(&mut app, 20_000);
+
+    assert_eq!(app.route(), Route::Capsule);
+    assert_eq!(
+        last_seen(&app.world),
+        before,
+        "the capsule kept no heartbeat"
+    );
+}
