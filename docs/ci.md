@@ -29,8 +29,10 @@ change the config and run `velnor-actions generate`.
   (product)** — the same five tasks for the product shape. The second
   configuration in `.velnor/config.toml` selects the feature `product`,
   so `jackin-console` gets `--no-default-features --features product`
-  (no demo data, no `clap`, no `jackin-preview`). `junie-tui` does not
-  declare `product`, so its job repeats the default features.
+  (no demo data, no `clap`, no `jackin-preview`). `junie-tui` declares
+  `product` too, so its job builds the library shape that jackin consumes,
+  without `cli` and `terminal`; the bins and the `functional` target
+  require those features and are skipped there.
 - **Required** — the verdict job. Its `needs` are Plan, the four Rust
   jobs, `suite-functional` and jactionlint, as listed in the generated
   `ci.yml`.

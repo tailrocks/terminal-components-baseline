@@ -23,6 +23,7 @@ tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/
 default = ["cli", "terminal"]
 cli = ["dep:clap"]
 terminal = ["dep:termpane"]
+product = []
 
 [lib]
 name = "junie_tui"
@@ -48,6 +49,7 @@ required-features = ["cli"]
 [[test]]
 name = "functional"
 path = "tests/functional/main.rs"
+required-features = ["cli", "terminal"]
 
 [dependencies]
 clap = { workspace = true, optional = true }
