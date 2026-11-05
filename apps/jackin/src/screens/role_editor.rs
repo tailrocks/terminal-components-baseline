@@ -22,6 +22,7 @@ use junie_tui::widgets::panel::Panel;
 use junie_tui::widgets::picker::Picker;
 use junie_tui::widgets::progress::spinner_frame;
 use junie_tui::widgets::props::Prop;
+use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::segments::Segment;
 use junie_tui::widgets::tabs::{TabAction, TabItem, Tabs};
 use ratatui::buffer::Buffer;
@@ -1108,14 +1109,7 @@ impl RoleEditorScreen {
             }
         }
         if has_sb {
-            junie_tui::widgets::scrollbar::render_with_fade(
-                body,
-                buf,
-                ctx,
-                ENV,
-                &self.env_scroll,
-                focused,
-            );
+            scrollbar::render_with_fade(body, buf, ctx, ENV, &self.env_scroll, focused);
         }
     }
 
@@ -1453,7 +1447,7 @@ impl Page<Jackin> for RoleEditorScreen {
             return o.or(Outcome::Changed);
         }
         if let Some((_, delta)) = ev.wheel() {
-            if ev.id == ENV {
+            if ev.id == ENV || ev.id == scrollbar::id_for(ENV) {
                 self.env_scroll.scroll_by(delta as isize);
                 return Outcome::Changed;
             }
@@ -1481,6 +1475,20 @@ impl Page<Jackin> for RoleEditorScreen {
                 }
                 return r.outcome();
             }
+        }
+        if id == scrollbar::id_for(ENV) && (click || ev.is(Phase::Drag)) {
+            let track = Rect::new(
+                self.env_area.right().saturating_sub(1),
+                self.env_area.y,
+                1,
+                self.env_area.height,
+            );
+            self.env_scroll.scroll_to(scrollbar::offset_for_click(
+                track,
+                ev.pos(),
+                &self.env_scroll,
+            ));
+            return Outcome::Changed;
         }
         if !click {
             return Outcome::Ignored;
@@ -1832,6 +1840,20 @@ impl RoleEditorScreen {
 }
 
 impl Screen for RoleEditorScreen {
+    fn picker_items(&mut self, tag: &LayerTag, query: &str, _w: &World) -> Option<Vec<Item>> {
+        if tag.kind != "choose" {
+            return None;
+        }
+        let q = query.to_lowercase();
+        self.pick_targets = self
+            .files
+            .iter()
+            .filter(|f| q.is_empty() || f.to_lowercase().contains(&q))
+            .cloned()
+            .collect();
+        Some(self.pick_targets.iter().map(Item::new).collect())
+    }
+
     fn strip_right(&self, w: &World) -> Vec<Segment> {
         let mut v = vec![];
         if self.saving {

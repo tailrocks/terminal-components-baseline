@@ -802,19 +802,6 @@ impl CapsuleScreen {
             None => cx.status(format!("Started {label}")),
         }
         crate::world::refresh_snapshots(w);
-        let now_secs = w.clock.now_secs();
-        if let Some(i) = w.instance_mut(&self.instance)
-            && let Ok(s) = i.sessions.as_mut()
-        {
-            let id = format!("s-{:02}", s.len() + 6);
-            s.push(crate::domain::instance::SessionRecord {
-                id,
-                agent,
-                label: label.to_lowercase(),
-                status: crate::domain::instance::SessionStatus::Active,
-                started_secs: now_secs,
-            });
-        }
     }
 
     fn move_focus(&mut self, dir: Direction, w: &mut World, cx: &mut Cx) {

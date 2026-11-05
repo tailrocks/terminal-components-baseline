@@ -2052,6 +2052,15 @@ impl App {
                 }
             }
 
+            Go::CloseTop { kind, then } => {
+                if self.layers.top().is_some_and(|e| e.tag.kind == kind) {
+                    self.layers.pop(&mut self.shell.focus);
+                    self.layer_gone();
+                    if let Some(id) = then {
+                        self.shell.focus.focus(id);
+                    }
+                }
+            }
             Go::Quit => self.quit_now(),
         }
     }

@@ -144,6 +144,12 @@ pub enum Go {
     LaunchFailedAck {
         instance: Option<InstanceId>,
     },
+    /// Closes the top layer only when it is one of `kind`, then gives the
+    /// focus to `then`. A layer that has gone on stays where it is.
+    CloseTop {
+        kind: &'static str,
+        then: Option<junie_tui::core::id::WidgetId>,
+    },
     Quit,
 }
 

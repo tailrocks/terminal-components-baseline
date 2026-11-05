@@ -1187,9 +1187,11 @@ impl AccountsScreen {
     }
 
     fn finish_saving(&mut self, saving: Saving, added: Option<AccountId>, cx: &mut Cx) {
-        if saving.form {
-            self.form = None;
-            cx.close();
+        if saving.form && self.form.take().is_some() {
+            cx.go(Go::CloseTop {
+                kind: "form",
+                then: Some(TREE),
+            });
         }
         match (saving.select, added) {
             (Pick::Row(sel), _) => self.selected = sel,
@@ -1200,9 +1202,6 @@ impl AccountsScreen {
             self.folded.remove(&surface);
         }
         cx.status(saving.status);
-        if saving.form {
-            cx.focus.focus(TREE);
-        }
     }
 
     fn remove(&mut self, id: &str, w: &World, cx: &mut Cx) {

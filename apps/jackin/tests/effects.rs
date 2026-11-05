@@ -2132,3 +2132,35 @@ fn a_backend_owns_last_seen_while_the_capsule_is_attached() {
         "the capsule kept no heartbeat"
     );
 }
+
+#[test]
+fn a_saved_account_does_not_close_the_modal_the_operator_opened_after_leaving_the_form() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        store_accounts,
+    );
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+    let saves: Vec<_> = backend
+        .seen()
+        .into_iter()
+        .filter(|e| matches!(e, Effect::SaveAccounts { .. }))
+        .collect();
+    assert_eq!(saves.len(), 1, "the save is out");
+
+    press(&mut app, "esc");
+    assert!(!screen(&mut app).contains("New account"));
+    press(&mut app, "?");
+    let help = screen(&mut app);
+    assert!(help.contains("Keyboard shortcuts"), "{help}");
+
+    let reply = store_accounts(&saves[0], &app.world).expect("the reply");
+    app.deliver(&reply);
+    let after = screen(&mut app);
+    assert!(
+        after.contains("Keyboard shortcuts"),
+        "the reply closed a modal that is not the form:\n{after}"
+    );
+}

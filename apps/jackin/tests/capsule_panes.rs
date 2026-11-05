@@ -531,3 +531,21 @@ fn a_new_pane_is_refused_when_the_chosen_account_became_unusable() {
         "no pane for the other account"
     );
 }
+
+#[test]
+fn a_new_pane_leaves_the_session_list_to_the_backend() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.press("ctrl+b c");
+    rig.typed("Shell");
+    rig.press("enter");
+    rig.advance(160);
+    assert_eq!(rig.daemon().tabs.len(), 2);
+
+    let record = rig.app.world.instance(INSTANCE).expect("instance");
+    assert_eq!(
+        record.sessions,
+        Ok(Vec::new()),
+        "the Capsule wrote no session record into the world"
+    );
+}
