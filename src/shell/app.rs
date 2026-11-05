@@ -80,7 +80,7 @@ impl<P> Default for Shell<P> {
     }
 }
 
-impl<P: Default> Shell<P> {
+impl<P: Default + PartialEq> Shell<P> {
     pub fn copy_at(&mut self, text: &str, what: Option<&str>, now: Moment) -> Copied {
         let r = self.clipboard.copy(text);
         let (msg, tone) = Clipboard::report(&r, text, what);

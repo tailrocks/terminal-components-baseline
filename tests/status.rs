@@ -204,3 +204,29 @@ fn an_input_that_changes_only_the_payload_of_the_status_redraws() {
 
     assert_eq!(host.input(Input::Tick), Outcome::Ignored);
 }
+
+#[test]
+fn a_reposted_status_with_the_same_payload_is_not_a_change() {
+    let mut host = payload::Host::new();
+    host.show("Copied", Tone::Secondary, 1);
+
+    host.next = Some(("Copied", Tone::Secondary, 1));
+    assert_eq!(host.input(Input::Tick), Outcome::Ignored);
+    assert_eq!(host.payload(), Some(1));
+}
+
+#[test]
+fn two_status_lines_are_equal_when_they_show_the_same_thing() {
+    let fresh = StatusLine::<u8>::new();
+    let mut used = StatusLine::<u8>::new();
+    used.set_with("x", Tone::Secondary, 1);
+    assert!(used.clear());
+    assert_ne!(used.revision(), fresh.revision());
+    assert!(used == fresh, "the revision counts changes, not state");
+
+    let mut a = StatusLine::<u8>::new();
+    let mut b = StatusLine::<u8>::new();
+    a.set_with("x", Tone::Secondary, 1);
+    b.set_with("x", Tone::Secondary, 2);
+    assert!(a != b, "the payload is part of what is shown");
+}

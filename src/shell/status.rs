@@ -30,7 +30,7 @@ impl JobKey {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct StatusLine<P = ()> {
     message: Option<Message<P>>,
     ttl_ms: u64,
@@ -39,6 +39,14 @@ pub struct StatusLine<P = ()> {
 
     revision: u64,
 }
+
+impl<P: PartialEq> PartialEq for StatusLine<P> {
+    fn eq(&self, other: &Self) -> bool {
+        self.message == other.message && self.ttl_ms == other.ttl_ms && self.now == other.now
+    }
+}
+
+impl<P: Eq> Eq for StatusLine<P> {}
 
 impl<P> Default for StatusLine<P> {
     fn default() -> Self {
@@ -71,31 +79,6 @@ impl<P> StatusLine<P> {
         self.now = self.now.max(now);
     }
 
-    pub fn set_with(&mut self, text: impl Into<String>, tone: Tone, payload: P) {
-        let text = text.into();
-        let carries_state = std::mem::size_of::<P>() > 0;
-        let shown = self
-            .message
-            .as_ref()
-            .is_some_and(|m| m.text == text && m.tone == tone && !carries_state);
-        self.revision += u64::from(!shown);
-        self.message = Some(Message {
-            text,
-            tone,
-            at: self.now,
-            payload,
-            job: None,
-            sticky: false,
-        });
-    }
-
-    pub fn set_sticky_with(&mut self, text: impl Into<String>, payload: P) {
-        self.set_with(text, Tone::Secondary, payload);
-        if let Some(m) = self.message.as_mut() {
-            m.sticky = true;
-        }
-    }
-
     pub fn is_sticky(&self) -> bool {
         self.message.as_ref().is_some_and(|m| m.sticky)
     }
@@ -111,11 +94,6 @@ impl<P> StatusLine<P> {
 
     pub fn job(&self) -> Option<JobKey> {
         self.message.as_ref().and_then(|m| m.job)
-    }
-
-    pub fn set_with_at(&mut self, text: impl Into<String>, tone: Tone, payload: P, now: Moment) {
-        self.observe(now);
-        self.set_with(text, tone, payload)
     }
 
     pub fn clear(&mut self) -> bool {
@@ -185,7 +163,38 @@ impl<P> StatusLine<P> {
     }
 }
 
-impl<P: Default> StatusLine<P> {
+impl<P: PartialEq> StatusLine<P> {
+    pub fn set_with(&mut self, text: impl Into<String>, tone: Tone, payload: P) {
+        let text = text.into();
+        let shown = self
+            .message
+            .as_ref()
+            .is_some_and(|m| m.text == text && m.tone == tone && m.payload == payload);
+        self.revision += u64::from(!shown);
+        self.message = Some(Message {
+            text,
+            tone,
+            at: self.now,
+            payload,
+            job: None,
+            sticky: false,
+        });
+    }
+
+    pub fn set_sticky_with(&mut self, text: impl Into<String>, payload: P) {
+        self.set_with(text, Tone::Secondary, payload);
+        if let Some(m) = self.message.as_mut() {
+            m.sticky = true;
+        }
+    }
+
+    pub fn set_with_at(&mut self, text: impl Into<String>, tone: Tone, payload: P, now: Moment) {
+        self.observe(now);
+        self.set_with(text, tone, payload)
+    }
+}
+
+impl<P: Default + PartialEq> StatusLine<P> {
     pub fn set(&mut self, text: impl Into<String>, tone: Tone) {
         self.set_with(text, tone, P::default())
     }
