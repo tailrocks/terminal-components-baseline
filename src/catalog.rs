@@ -3761,38 +3761,11 @@ pub struct Allowed {
     pub reason: &'static str,
 }
 
-const PREVIEW: &str =
-    "demonstrated by the jackin demo app (apps/jackin) and its approved functional baselines";
-
 const HOST_FED: &str = "used by the host that feeds the terminal state (the jackin Capsule) and pinned by tests/terminal.rs, tests/terminal_viewport.rs and tests/forward_policy.rs; the terminalpane page keeps its approved baseline";
 
 const TEXT_FILTER: &str = "used by the feed guard that keeps these characters out of every cell and by the jackin console's title filter, and pinned by tests/terminal_guard.rs";
 
 pub static ALLOWLIST: &[Allowed] = &[
-    Allowed {
-        id: "widgets::list_detail::ListDetail",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::ListRow",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::Line",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::Action",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::Frame",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::Event",
-        reason: PREVIEW,
-    },
     Allowed {
         id: "terminal::TerminalState::with_scrollback",
         reason: HOST_FED,

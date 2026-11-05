@@ -68,7 +68,7 @@ impl ChangeSet {
     }
 
     pub fn summary(&self) -> String {
-        let n = self.files.len();
+        let n = self.files.len() + self.unread.len();
         format!(
             "{n} file{} · +{} −{}",
             if n == 1 { "" } else { "s" },
@@ -142,6 +142,8 @@ pub struct InspectChanges {
     pub area: Rect,
 }
 
+const VIEW_KEY: &str = "v";
+const VIEW_CHAR: char = VIEW_KEY.as_bytes()[0] as char;
 const MIN_W: u16 = 76;
 const MIN_H: u16 = 20;
 
@@ -252,12 +254,16 @@ impl InspectChanges {
         });
     }
 
-    fn leave(&mut self) -> Outcome {
-        self.result = Some(if self.returns_to_exit {
+    fn outcome(&self) -> InspectOutcome {
+        if self.returns_to_exit {
             InspectOutcome::Back
         } else {
             InspectOutcome::Close
-        });
+        }
+    }
+
+    fn leave(&mut self) -> Outcome {
+        self.result = Some(self.outcome());
         Outcome::Changed
     }
 
@@ -422,7 +428,7 @@ impl InspectChanges {
                 crate::ui::reveal::cut(Rect::new(inner.x, inner.y, inner.width, 1), &head),
                 t.secondary().bg(bg),
             );
-            let mode = format!("{} · d switches", self.diff.mode.label());
+            let mode = format!("{} · {VIEW_KEY} switches", self.diff.mode.label());
             let mw = width(&mode) as u16;
             if inner.width > width(&head) as u16 + mw + 3 {
                 buf.set_string(inner.right() - mw, inner.y, &mode, t.faint().bg(bg));
@@ -554,7 +560,7 @@ impl InspectChanges {
         let summary = self.summary_line();
         buf.set_string(inner.x, inner.y, &summary, t.secondary().bg(bg));
         let mode = format!(
-            "{} · {} · d switches · m compact",
+            "{} · {} · {VIEW_KEY} switches · m compact",
             self.mode.label(),
             self.diff.mode.label()
         );
@@ -697,7 +703,7 @@ fn build_tree(
 
 fn view_hint(mode: crate::widgets::diff::DiffMode) -> Hint {
     crate::widgets::keyhint::toggle_hint(
-        "v",
+        VIEW_KEY,
         mode == crate::widgets::diff::DiffMode::Review,
         "Show unified",
         "Show side by side",
@@ -722,13 +728,13 @@ impl<R: From<InspectOutcome> + 'static, W: 'static> Layer<R, W> for InspectChang
     }
 
     fn on_dismiss(&mut self, _: DismissReason) {
-        self.result = Some(InspectOutcome::Close);
+        self.result = Some(self.outcome());
     }
 
     fn on_key(&mut self, key: &Key, cx: &mut LayerCx<'_, W>) -> Outcome {
         let focus = &mut *cx.focus;
         match key.code {
-            KeyCode::Char('v') if key.plain() => {
+            KeyCode::Char(VIEW_CHAR) if key.plain() => {
                 self.diff.toggle_mode();
                 return Outcome::Changed;
             }

@@ -127,7 +127,7 @@ fn with_scrollback_limit_is_honoured() {
 
     let mut none = TerminalState::with_scrollback(6, 3, 0);
     none.feed(&lines(1, 60));
-    assert_eq!((none.scrollback_len(), none.scrolled_off()), (0, 0));
+    assert_eq!((none.scrollback_len(), none.scrolled_off()), (0, 55));
 }
 
 #[test]
@@ -449,4 +449,112 @@ fn encode_key_follows_application_cursor_mode_only_without_modifiers() {
         Some(&b"\x1b[1;5D"[..]),
         "xterm sends the parameter form in application mode too"
     );
+}
+
+#[test]
+fn a_feed_that_enters_and_leaves_the_alternate_screen_adds_nothing_to_a_full_history() {
+    let mut state = TerminalState::with_scrollback(6, 3, 10);
+    state.feed(&lines(1, 40));
+    assert_eq!(state.scrollback_len(), 10);
+    let pushed = state.scrolled_off();
+
+    let mut transient = b"\x1b[?1049h".to_vec();
+    transient.extend(lines(1, 40));
+    transient.extend(b"\x1b[?1049l");
+    state.feed(&transient);
+
+    assert_eq!(state.scrolled_off(), pushed);
+    assert_eq!(state.scrollback_len(), 10);
+}
+
+#[test]
+fn a_screen_switch_split_over_two_feeds_is_still_attributed() {
+    let mut state = TerminalState::with_scrollback(6, 3, 10);
+    state.feed(&lines(1, 40));
+    let pushed = state.scrolled_off();
+
+    state.feed(b"\x1b[?10");
+    let mut entered = b"49h".to_vec();
+    entered.extend(lines(1, 40));
+    state.feed(&entered);
+    state.feed(b"\x1b[?1049");
+    assert_eq!(
+        state.scrolled_off(),
+        pushed,
+        "still on the alternate screen"
+    );
+    let mut left = b"l".to_vec();
+    left.extend(lines(1, 3));
+    state.feed(&left);
+    assert_eq!(
+        state.scrolled_off(),
+        pushed + 3,
+        "the main screen counts again"
+    );
+}
+
+#[test]
+fn rows_scrolled_off_the_main_screen_are_counted_after_a_transient_alternate_screen_in_the_same_feed()
+ {
+    let mut state = TerminalState::with_scrollback(6, 3, 10);
+    state.feed(&lines(1, 40));
+    let pushed = state.scrolled_off();
+
+    let mut mixed = lines(1, 4);
+    mixed.extend(b"\x1b[?1049h");
+    mixed.extend(lines(1, 40));
+    mixed.extend(b"\x1b[?1049l");
+    mixed.extend(lines(1, 2));
+    state.feed(&mixed);
+
+    assert_eq!(state.scrolled_off(), pushed + 6);
+}
+
+#[test]
+fn rows_scroll_off_the_screen_even_when_no_history_is_kept() {
+    let mut state = TerminalState::with_scrollback(6, 3, 0);
+    state.feed(&lines(1, 60));
+    assert_eq!(state.scrollback_len(), 0);
+    assert_eq!(
+        state.scrolled_off(),
+        55,
+        "a row that left the screen counts although no history holds it"
+    );
+
+    state.feed(b"\x1b[?1049h");
+    state.feed(&lines(1, 20));
+    state.feed(b"\x1b[?1049l");
+    assert_eq!(state.scrolled_off(), 55);
+}
+
+#[test]
+fn the_cursor_stays_visible_on_a_cell_that_is_already_inverse() {
+    let mut state = TerminalState::new(3, 5);
+    state.feed(b"\x1b[7mX\x1b[0m\x1b[1D");
+    assert_eq!(state.view(0).cursor(), (0, 0));
+
+    let unfocused = draw(&state, false);
+    assert!(unfocused[(0, 0)].modifier.contains(Modifier::REVERSED));
+
+    let focused = draw(&state, true);
+    assert!(
+        !focused[(0, 0)].modifier.contains(Modifier::REVERSED),
+        "the cursor flips the inverse cell, so it shows apart from the unfocused look"
+    );
+}
+
+#[test]
+fn strikethrough_text_is_drawn_crossed_out() {
+    let mut state = TerminalState::new(2, 8);
+    state.feed(b"\x1b[9mgone\x1b[0m ok");
+
+    let buf = draw(&state, false);
+
+    for x in 0..4 {
+        assert!(
+            buf[(x, 0)].modifier.contains(Modifier::CROSSED_OUT),
+            "col {x}"
+        );
+    }
+    assert!(!buf[(5, 0)].modifier.contains(Modifier::CROSSED_OUT));
 }

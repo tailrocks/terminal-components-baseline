@@ -348,7 +348,11 @@ impl TerminalViewport {
     }
 
     fn grid(&self, area: Rect) -> Rect {
-        let width = area.width.saturating_sub(TRACK_COLUMNS);
+        let width = if area.width > TRACK_COLUMNS {
+            area.width - TRACK_COLUMNS
+        } else {
+            area.width
+        };
         Rect::new(area.x, area.y, width, area.height)
     }
 }
@@ -612,6 +616,7 @@ impl ViewportOps for TerminalViewport {
         let t = ctx.theme;
         let grid = self.grid(area);
         let focused = ctx.interaction.focused(self.id);
+        crate::core::scroll::publish_click(ctx.track_click);
         ctx.control(self.id, area, false);
         ctx.scrollable(self.id, area);
         ctx.autoscroll(grid);

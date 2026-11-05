@@ -302,3 +302,48 @@ fn ctrl_x_in_an_unmasked_desktop_field_cuts_to_the_clipboard() {
     assert_eq!(field.text(), "");
     assert_eq!(sink.0.lock().expect("writes").clone(), ["alpha"]);
 }
+
+#[test]
+fn a_dropped_shell_leaves_no_clipboard_hook_behind() {
+    queued();
+    let native = Arc::new(Counting::default());
+    let mut shell = Shell::<()>::new();
+    shell.clipboard = Clipboard::new().native(native.clone());
+    shell.clipboard.install();
+    junie_tui::core::edit::clipboard::copy(TEXT);
+    assert_eq!(native.0.load(std::sync::atomic::Ordering::SeqCst), 1);
+
+    drop(shell);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+
+    assert_eq!(
+        native.0.load(std::sync::atomic::Ordering::SeqCst),
+        1,
+        "the next owner of this thread does not write through the old app's clipboard"
+    );
+    assert_eq!(queued(), Vec::<String>::new());
+}
+
+#[test]
+fn dropping_one_shell_keeps_the_clipboard_hook_of_the_shell_that_replaced_it() {
+    queued();
+    let first_sink = Arc::new(Counting::default());
+    let second_sink = Arc::new(Counting::default());
+    let mut first = Shell::<()>::new();
+    first.clipboard = Clipboard::new().native(first_sink.clone());
+    first.clipboard.install();
+    let mut second = Shell::<()>::new();
+    second.clipboard = Clipboard::new().native(second_sink.clone());
+    second.clipboard.install();
+
+    drop(first);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+
+    let count = |sink: &Counting| sink.0.load(std::sync::atomic::Ordering::SeqCst);
+    assert_eq!(count(&second_sink), 1, "the live shell still owns the hook");
+    assert_eq!(count(&first_sink), 0);
+
+    drop(second);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+    assert_eq!(count(&second_sink), 1, "its own drop still removes it");
+}

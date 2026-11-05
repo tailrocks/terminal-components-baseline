@@ -281,6 +281,8 @@ pub fn page_options(page: PageId) -> &'static [Opt] {
         PageId::TerminalPane => TERMINAL_PANE,
         PageId::TerminalViewport => TERMINAL_VIEWPORT,
         PageId::FixedControls => FIXED_CONTROLS,
+        PageId::ListDetail => LIST_DETAIL,
+        PageId::FixedDialogs => FIXED_DIALOGS,
         PageId::QueryWorkbench => QUERY_WORKBENCH,
         PageId::Connections => CONNECTIONS,
         PageId::Finder => FINDER,
@@ -1732,6 +1734,17 @@ pub static TERMINAL: &[Opt] = &[
 pub static FIXED_CONTROLS: &[Opt] = &[
     Opt::new("fixedcontrols.state", "Controls", &["fixed", "live"]),
     Opt::new("fixedcontrols.status", "Reason status", &["5 s", "sticky"]),
+];
+
+pub static FIXED_DIALOGS: &[Opt] = &[Opt::new(
+    "fixeddialogs.state",
+    "Choices",
+    &["fixed", "live"],
+)];
+
+pub static LIST_DETAIL: &[Opt] = &[
+    Opt::new("listdetail.data", "Jobs", &["five", "none"]),
+    Opt::new("listdetail.actions", "Actions", &["shown", "hidden"]),
 ];
 
 pub static TERMINAL_PANE: &[Opt] = &[

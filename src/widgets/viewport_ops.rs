@@ -41,7 +41,9 @@ pub trait ViewportOps {
     fn keyboard_copy(&self) -> bool;
     /// Whether `draw` paints the vertical scroll track itself. A host draws
     /// the bar of a view that answers `false`.
-    fn draws_track(&self) -> bool;
+    fn draws_track(&self) -> bool {
+        false
+    }
 
     fn caret(&self) -> Option<CellPos>;
     fn caret_visible(&self) -> bool;
@@ -137,10 +139,6 @@ impl ViewportOps for TextViewport {
 
     fn keyboard_copy(&self) -> bool {
         true
-    }
-
-    fn draws_track(&self) -> bool {
-        false
     }
 
     fn caret(&self) -> Option<CellPos> {

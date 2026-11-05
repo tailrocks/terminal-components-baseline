@@ -95,6 +95,8 @@ pub enum PageId {
     Terminal,
     TerminalPane,
     TerminalViewport,
+    ListDetail,
+    FixedDialogs,
     FixedControls,
     Editor,
     Diff,
@@ -172,6 +174,16 @@ pub const HIDDEN_ENTRIES: &[NavEntry] = &[
         id: PageId::TerminalViewport,
         label: "Terminal viewport",
         group: "Text & code",
+    },
+    NavEntry {
+        id: PageId::ListDetail,
+        label: "List detail",
+        group: "Layout",
+    },
+    NavEntry {
+        id: PageId::FixedDialogs,
+        label: "Fixed dialogs",
+        group: "Overlays",
     },
 ];
 
@@ -732,6 +744,8 @@ impl App {
                         Box::new(terminal_viewport::TerminalViewportPage::new())
                     }
                     PageId::FixedControls => fixed_controls::page(),
+                    PageId::ListDetail => list_detail::page(),
+                    PageId::FixedDialogs => fixed_dialogs::page(),
                     PageId::Editor => Box::new(editor::EditorPage::new()),
                     PageId::Diff => Box::new(diff::DiffPage::new()),
                     PageId::Grid => Box::new(grid::GridPage::new()),

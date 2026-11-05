@@ -88,6 +88,12 @@ impl<P: Default> Shell<P> {
     }
 }
 
+impl<P> Drop for Shell<P> {
+    fn drop(&mut self) {
+        self.clipboard.release();
+    }
+}
+
 impl<P> Shell<P> {
     pub fn new() -> Self {
         Self {
@@ -359,7 +365,7 @@ pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
             .map(|(text, tone)| (text.to_owned(), tone))
     };
     let status_before = shown(app);
-    let seen = app.shell_mut().status.on_input(&input);
+    let seen = request.is_none() && app.shell_mut().status.on_input(&input);
     if let Input::Resize(w, h) = input {
         app.shell_mut().size = (w, h);
     }

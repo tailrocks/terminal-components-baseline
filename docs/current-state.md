@@ -150,7 +150,7 @@ read it against, because each of its reasons names a Fixed control.
 ## Testing today
 
 - `cargo nextest run --locked -p junie-tui --test functional --profile functional`
-  — 108 tests, 0 skipped (the demo journeys of `jackin-console` add 51 with
+  — 117 tests, 0 skipped (the demo journeys of `jackin-console` add 51 with
   `--all-features`): every app end-to-end (launch → operate →
   verify consequence → reopen → clean exit), component families in
   Showcase and in a real consumer, colour matrix
@@ -184,9 +184,13 @@ variant of these enums stays a breaking change and is recorded here.
 ## Known limits
 
 - `TerminalState::scrolled_off` is exact while the history is below its
-  limit (it follows the growth of `scrollback_len`). At the limit it sums
-  the primary-screen scroll operations that start at row 0, so a delete-line
-  at row 0 over-counts. `ESC[2J` discards the visible rows
+  limit (it follows the growth of `scrollback_len`). At the limit, and with
+  a limit of 0, it sums the main-screen scroll operations that start at row
+  0, so a delete-line at row 0 over-counts. The feed is split after every
+  sequence that can switch screens (`CSI ? 47`, `1047` and `1049` with `h`
+  or `l`, and `ESC c`), and each part is counted on the screen it started
+  on, so a program that enters and leaves the alternate screen inside one
+  feed adds nothing. `ESC[2J` discards the visible rows
   (`EraseDisplayPolicy::Discard`), so it changes neither value.
 - `termpane` is a git dependency pinned to commit `0337acc1` (termpane
   `main` after PR #40, the reuse of OSC 8 links, and PR #39: `EraseDisplayPolicy`, the cap on characters per
