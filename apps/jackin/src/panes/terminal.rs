@@ -204,8 +204,8 @@ impl TerminalPane {
             && matches!(self.status, LinkStatus::Attaching | LinkStatus::Attached(_))
     }
 
-    fn viewing(&self) -> bool {
-        self.lease == Some(Lease::ReadOnly)
+    fn owns(&self) -> bool {
+        self.lease == Some(Lease::Owner)
     }
 
     fn say(&mut self, say: Say) {
@@ -309,6 +309,7 @@ impl TerminalPane {
         match event {
             LinkEvent::Attached => {
                 self.attached_once = true;
+                self.lease = None;
                 self.replay.open(now_ms);
             }
             LinkEvent::Lease(lease) => {
@@ -371,8 +372,7 @@ impl TerminalPane {
     fn term_event(&mut self, event: TermEvent, now_ms: i64) {
         match event {
             TermEvent::Reply(bytes) => {
-                if !self.attached_once || self.replay.is_open() || self.lease != Some(Lease::Owner)
-                {
+                if !self.attached_once || self.replay.is_open() || !self.owns() {
                     return;
                 }
                 if self.send(PaneCommand::Reply(bytes)) == Sent::Full {
@@ -400,7 +400,7 @@ impl TerminalPane {
     fn clipboard(&mut self, payload: &str, now_ms: i64) {
         let ctx = ClipContext {
             agent: self.agent(),
-            owner: self.lease == Some(Lease::Owner),
+            owner: self.owns(),
             focused: self.focused,
             last_gesture_ms: self.last_gesture_ms,
             now_ms,
@@ -571,7 +571,7 @@ impl PaneBody for TerminalPane {
         if axis != Axis::Vertical
             || self.view.state().mouse_reporting()
             || delta == 0
-            || self.viewing()
+            || !self.owns()
         {
             return Some(Outcome::Consumed);
         }
@@ -705,7 +705,7 @@ impl PaneBody for TerminalPane {
         if focused {
             self.attention = false;
         }
-        if self.live() && !self.viewing() && self.view.state().focus_events() {
+        if self.live() && self.owns() && self.view.state().focus_events() {
             let report = if focused { FOCUS_IN } else { FOCUS_OUT };
             self.send(PaneCommand::Input(report.to_vec()));
         }
