@@ -308,3 +308,37 @@ fn a_paste_the_link_did_not_take_is_not_reported_sent() {
     assert_eq!(pane.paste("hello", 1_200), PasteOutcome::Sent);
     assert_eq!(bench.commands(0), [input(b"hello")]);
 }
+
+#[test]
+fn a_pane_feeds_its_grid_no_more_output_per_tick_than_its_policy_allows() {
+    let bench = Bench::new();
+    let mut pane = pane_for(
+        codex(),
+        &bench,
+        PanePolicy {
+            feed_budget_bytes: 100,
+            ..PanePolicy::default()
+        },
+    );
+    pane.sync_size(inner(80, 24));
+    bench.push(0, LinkEvent::Attached);
+    pane.tick(0);
+    pane.tick(800);
+
+    for part in ["a", "b", "c"] {
+        bench.output(0, part.repeat(100).as_bytes());
+    }
+    pane.tick(900);
+    assert_eq!(row(&pane, 0), "a".repeat(80), "one chunk fits the budget");
+    assert_eq!(row(&pane, 1), "aaaaaaaaaaaaaaaaaaaa");
+    assert_eq!(
+        row(&pane, 2),
+        "",
+        "the second chunk waits for the next tick"
+    );
+
+    pane.tick(1_000);
+    assert!(row(&pane, 2).starts_with('b'), "{:?}", row(&pane, 2));
+    pane.tick(1_100);
+    assert!(row(&pane, 3).contains('c'));
+}

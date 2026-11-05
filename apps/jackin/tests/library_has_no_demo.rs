@@ -204,6 +204,17 @@ fn lex(text: &str) -> Vec<(usize, Lexeme)> {
             i += if c == 'b' { 2 } else { 1 };
             let mut body = String::new();
             while i < chars.len() && chars[i] != '"' {
+                if chars[i] == '\\' && at(i + 1) == Some('\n') {
+                    line += 1;
+                    i += 2;
+                    while i < chars.len() && chars[i].is_whitespace() {
+                        if chars[i] == '\n' {
+                            line += 1;
+                        }
+                        i += 1;
+                    }
+                    continue;
+                }
                 if chars[i] == '\\' {
                     body.push(chars[i]);
                     i += 1;
@@ -242,6 +253,39 @@ fn lex(text: &str) -> Vec<(usize, Lexeme)> {
             out.push((line, Lexeme::Punct(c.to_string())));
             i += 1;
         }
+    }
+    join_concat(out)
+}
+
+fn join_concat(tokens: Vec<(usize, Lexeme)>) -> Vec<(usize, Lexeme)> {
+    let is = |t: Option<&(usize, Lexeme)>, word: &str| t.is_some_and(|(_, l)| l.word() == word);
+    let mut out = Vec::with_capacity(tokens.len());
+    let mut i = 0;
+    while i < tokens.len() {
+        if is(tokens.get(i), "concat") && is(tokens.get(i + 1), "!") && is(tokens.get(i + 2), "(") {
+            let mut j = i + 3;
+            let mut joined = String::new();
+            let mut closed = false;
+            while let Some((_, lexeme)) = tokens.get(j) {
+                match lexeme {
+                    Lexeme::Str(s) => joined.push_str(s),
+                    Lexeme::Punct(p) if p == "," => {}
+                    Lexeme::Punct(p) if p == ")" => {
+                        closed = true;
+                        break;
+                    }
+                    _ => break,
+                }
+                j += 1;
+            }
+            if closed {
+                out.push((tokens[i].0, Lexeme::Str(joined)));
+                i = j + 1;
+                continue;
+            }
+        }
+        out.push(tokens[i].clone());
+        i += 1;
     }
     out
 }
@@ -731,4 +775,31 @@ fn an_ungated_demo_module_is_reported() {
     assert_eq!(gate_problems(wrong_feature).len(), 1);
     let missing = "#[cfg(feature = \"demo\")]\npub mod fixtures;\n";
     assert!(gate_problems(missing)[0].contains("does not declare `mod sim;`"));
+}
+
+#[test]
+fn a_demo_literal_split_over_concat_or_a_line_continuation_is_still_found() {
+    for (name, text) in [
+        (
+            "concat",
+            "const A: &str = concat!(\"the payments\", \"-platform row\");",
+        ),
+        (
+            "concat over lines",
+            "const A: &str = concat!(\n    \"the payments-\",\n    \"platform row\",\n);",
+        ),
+        (
+            "continuation",
+            "const A: &str = \"the payments-\\\n        platform row\";",
+        ),
+    ] {
+        let found = scan(&[src("domain/workspace.rs", text)], &[]).unexpected;
+        assert_eq!(found.len(), 1, "{name}: {found:?}");
+        assert_eq!(found[0].token, "payments-platform", "{name}");
+    }
+    let apart = [src(
+        "domain/workspace.rs",
+        "const A: &str = concat!(\"the payments\", other(), \"-platform row\");",
+    )];
+    assert_eq!(scan(&apart, &[]), Report::default());
 }

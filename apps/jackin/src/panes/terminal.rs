@@ -327,7 +327,10 @@ impl TerminalPane {
                 }
             }
             LinkEvent::Notice(text) => {
-                let clean: String = text.chars().filter(|c| !c.is_control()).collect();
+                let clean: String = text
+                    .chars()
+                    .filter(|c| !c.is_control() && !is_spoofing_format(*c))
+                    .collect();
                 if !clean.is_empty() {
                     self.say(Say::Notice(clean));
                 }

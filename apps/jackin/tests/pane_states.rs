@@ -337,3 +337,25 @@ fn a_live_pane_asks_before_it_closes() {
     let shell = pane_for(shell(), &shell_bench, Default::default());
     assert_eq!(shell.kind(), jackin_console::panes::PaneKindTag::Shell);
 }
+
+#[test]
+fn a_server_notice_loses_its_bidirectional_controls() {
+    let bench = Bench::new();
+    let mut pane = pane(&bench);
+    pane.sync_size(inner(80, 24));
+    bench.push(0, LinkEvent::Attached);
+    bench.push(
+        0,
+        LinkEvent::Notice("txt\u{202e}gpj.exe \u{2066}\u{200f}\u{61c}ok".into()),
+    );
+    pane.tick(0);
+    pane.tick(800);
+
+    assert_eq!(
+        effects(&mut pane),
+        [PaneEffect::Status {
+            text: "txtgpj.exe ok".into(),
+            tone: Tone::Secondary
+        }]
+    );
+}

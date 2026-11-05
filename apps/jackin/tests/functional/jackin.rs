@@ -1251,6 +1251,33 @@ fn jackin_fixed_working_directory_refuses_the_picker_by_key_and_click() {
 }
 
 #[test]
+fn jackin_fixed_editor_refusals_carry_the_full_reason_at_80_by_24() {
+    let fixed = Fixed::openshell();
+    let app = scenario("jackin-fixed-editor-narrow", "openshell-fixed", 80, 24);
+    let editor = open_fixed_editor(&app, 1);
+
+    for (target, reason) in [
+        ("Choose…", fixed.workdir.text.clone()),
+        ("Keep awake", fixed.keep_awake.text.clone()),
+        ("Git pull before launch", fixed.git_pull.text.clone()),
+        ("ask · show the exit dialog", fixed.dirty_exit.text.clone()),
+    ] {
+        let at = find(&editor, target);
+        app.click(inside(at));
+        let refused = refused_with(&app, &reason);
+        assert!(
+            footer(&refused).contains(&reason),
+            "{target}: the status carries the whole reason:\n{}",
+            text(&refused)
+        );
+        nothing_changed(&refused);
+        status_expired(&app, &reason);
+    }
+    leave_without_a_prompt(&app);
+    app.finish();
+}
+
+#[test]
 fn jackin_fixed_project_row_keeps_its_paint_and_refuses_every_edit() {
     let reason = Fixed::openshell().mounts.text;
     let app = fixed_app("jackin-fixed-project");
@@ -2484,7 +2511,6 @@ fn jackin_fixed_wizard_destination_cannot_change_and_next_advances() {
     assert!(row_with(&step, "Project folder").contains("(●) Project folder /sandbox/project"));
     assert!(row_with(&step, "Edit destination…").contains("( ) Edit destination…"));
     assert!(text(&step).contains(&fixed.destination.text));
-    assert!(text(&step).contains("Edit skipped") || text(&step).contains("Edit"));
     let ratio = contrast(&step, find(&step, &fixed.destination.text));
     assert!(ratio >= 4.5, "the reason is legible, contrast {ratio:.2}");
     assert!(footer(&step).contains("Enter Next"), "{}", footer(&step));
