@@ -1121,3 +1121,128 @@ fn a_ready_instance_that_is_not_running_fails_the_launch_with_its_status() {
         "an ended launch has nothing left to cancel"
     );
 }
+
+fn cells(app: &mut App) -> Vec<String> {
+    use ratatui::Terminal;
+    use ratatui::backend::TestBackend;
+    let mut terminal = Terminal::new(TestBackend::new(140, 40)).expect("test terminal");
+    terminal
+        .draw(|f| Application::render(app, f))
+        .expect("draw");
+    terminal
+        .backend()
+        .buffer()
+        .content()
+        .iter()
+        .map(|c| c.symbol().to_owned())
+        .collect()
+}
+
+fn hidden_cells(app: &mut App) -> Vec<String> {
+    cells(app)
+        .into_iter()
+        .filter(|cell| cell.chars().any(jackin_console::domain::shown::is_hidden))
+        .collect()
+}
+
+#[test]
+fn what_the_feed_resolves_cannot_hide_text_and_leaves_the_origin_the_console_derived() {
+    let (mut app, _) = scripted(
+        vec![
+            running(2),
+            vec![LaunchEvent::CredentialsResolved {
+                origin: "vault \u{202e}ops\u{3164}/codex\x1b[31m".into(),
+                validation: "ok \u{2066}verified\x07\u{202c}\nline\u{2800}2\r".into(),
+            }],
+        ],
+        None,
+    );
+    tick_until(&mut app, "the resolved line", shows("verified"));
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains("credentials  5 accounts"),
+        "the console's own origin stays:\n{shown}"
+    );
+    assert!(
+        shown.contains("vault ops/codex[31m · ok verified line2"),
+        "{shown}"
+    );
+    assert_eq!(hidden_cells(&mut app), Vec::<String>::new());
+}
+
+#[test]
+fn what_the_feed_says_of_a_typed_key_cannot_hide_text_either() {
+    let (mut feed, calls) = feed_with(vec![
+        running(2),
+        vec![LaunchEvent::CredentialError {
+            message: "The vault is sealed".into(),
+        }],
+    ]);
+    feed.typed = Some(TypedKey {
+        origin: "plain\u{202e} te\u{3164}xt".into(),
+        validation: "kept\u{2066} by\u{2800} the backend\x1b[2J".into(),
+    });
+    let mut app = feed_app(feed, &calls, false, Motion::Reduced);
+    tick_until(
+        &mut app,
+        "the credential dialog",
+        shows("Credential source unavailable"),
+    );
+    press(&mut app, "right enter s k enter");
+    let shown = screen(&mut app);
+    assert!(shown.contains("credentials  typed key"), "{shown}");
+    assert!(
+        shown.contains("plain text · kept by the backend[2J"),
+        "{shown}"
+    );
+    assert_eq!(hidden_cells(&mut app), Vec::<String>::new());
+}
+
+#[test]
+fn a_typed_key_of_blanks_or_with_a_direction_mark_asks_again_and_reaches_nobody() {
+    let (mut app, calls) = to_prompt();
+    press(&mut app, "space space enter");
+    assert_eq!(
+        calls.lock().expect("calls").plain_text,
+        Vec::<String>::new()
+    );
+    assert!(screen(&mut app).contains("Plain-text key"));
+    assert_eq!(status(&app), "API key required: the field is empty");
+
+    Application::handle(&mut app, Input::Paste("sk-\u{202e}abc".into()));
+    press(&mut app, "enter");
+    assert_eq!(
+        calls.lock().expect("calls").plain_text,
+        Vec::<String>::new()
+    );
+    assert!(screen(&mut app).contains("Plain-text key"));
+    assert_eq!(
+        status(&app),
+        "The API key holds a control or direction character"
+    );
+
+    press(&mut app, "ctrl+a");
+    Application::handle(&mut app, Input::Paste("  sk-abc \n".into()));
+    press(&mut app, "enter");
+    assert_eq!(calls.lock().expect("calls").plain_text, ["sk-abc"]);
+}
+
+fn to_prompt() -> (App, Arc<Mutex<Calls>>) {
+    let (mut app, calls) = scripted(
+        vec![
+            running(2),
+            vec![LaunchEvent::CredentialError {
+                message: "The vault is sealed".into(),
+            }],
+        ],
+        None,
+    );
+    tick_until(
+        &mut app,
+        "the credential dialog",
+        shows("Credential source unavailable"),
+    );
+    press(&mut app, "right enter");
+    assert!(screen(&mut app).contains("Plain-text key"));
+    (app, calls)
+}

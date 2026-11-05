@@ -34,6 +34,7 @@ use crate::domain::docker::DockerCapability;
 use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::{LaunchContent, LaunchFailure, NextStep, RefusalReason, StageKind};
 use crate::domain::precedence::PrecedenceLevel;
+use crate::domain::shown::shown;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
@@ -48,6 +49,19 @@ pub const LOG: WidgetId = WidgetId::of("cockpit.log");
 pub const CHIP_CONTAINER: WidgetId = WidgetId::of("cockpit.chip.container");
 pub const CHIP_ACTIVITY: WidgetId = WidgetId::of("cockpit.chip.activity");
 pub const CHIP_RUN: WidgetId = WidgetId::of("cockpit.chip.run");
+
+const REPORTED_CHARS: usize = 200;
+const TYPED_ORIGIN: &str = "typed key";
+const TYPED_VALIDATION: &str = "kept for this launch only · never stored";
+
+fn reported_with(origin: &str, validation: String) -> String {
+    let origin = shown(origin, REPORTED_CHARS);
+    if origin.is_empty() {
+        validation
+    } else {
+        format!("{origin} · {validation}")
+    }
+}
 
 pub const CANCEL_BTN: WidgetId = WidgetId::of("cockpit.cancel_btn");
 
@@ -306,15 +320,14 @@ impl CockpitScreen {
                 LaunchEvent::BuildLine(l) => self.log.push(ansi_line(&l)),
                 LaunchEvent::ContainerReady(c) => self.container = Some(c),
                 LaunchEvent::CredentialsResolved { origin, validation } => {
-                    if let Some((o, v, tone)) = self.credentials.as_mut() {
-                        if !origin.is_empty() {
-                            *o = origin;
-                        }
-                        *v = if validation.is_empty() {
+                    if let Some((_, v, tone)) = self.credentials.as_mut() {
+                        let validation = shown(&validation, REPORTED_CHARS);
+                        let reported = if validation.is_empty() {
                             format!("{} · {v}", self.content.words.credentials_resolved)
                         } else {
                             validation
                         };
+                        *v = reported_with(&origin, reported);
                         *tone = Tone::Secondary;
                     }
                 }
@@ -940,15 +953,28 @@ impl Page<Jackin> for CockpitScreen {
                     text,
                 },
             ) => {
+                let key = match PlainKey::new(&text.unwrap_or_default()) {
+                    Ok(key) => key,
+                    Err(refusal) => {
+                        self.open_plain_key(cx);
+                        cx.status(refusal.to_string());
+                        return Outcome::Changed;
+                    }
+                };
                 self.credential_hold = false;
                 self.credential_error = None;
                 self.account = None;
-                let key = PlainKey::new(&text.unwrap_or_default());
                 if let Some(typed) = self.feed.use_plain_text(key)
                     && let Some((o, v, tone)) = self.credentials.as_mut()
                 {
-                    *o = typed.origin;
-                    *v = typed.validation;
+                    TYPED_ORIGIN.clone_into(o);
+                    let validation = shown(&typed.validation, REPORTED_CHARS);
+                    let reported = if validation.is_empty() {
+                        TYPED_VALIDATION.to_owned()
+                    } else {
+                        validation
+                    };
+                    *v = reported_with(&typed.origin, reported);
                     *tone = Tone::Secondary;
                 }
                 cx.status("Using a plain-text key for this launch only");

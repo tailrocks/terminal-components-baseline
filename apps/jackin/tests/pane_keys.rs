@@ -194,7 +194,11 @@ fn a_key_and_a_paste_type_before_the_lease_is_known() {
         pane.paste("hi", 1_100),
         jackin_console::panes::PasteOutcome::Sent
     );
-    assert_eq!(bench.commands(0).len(), 2, "typing is how a viewer takes over");
+    assert_eq!(
+        bench.commands(0).len(),
+        2,
+        "typing is how a viewer takes over"
+    );
 }
 
 #[test]
@@ -209,7 +213,11 @@ fn a_new_attach_forgets_the_lease_of_the_one_before() {
     bench.output(0, b"\x1b[6n");
     pane.tick(2_100);
     assert_eq!(pane.wheel(Axis::Vertical, -3), Some(Outcome::Consumed));
-    assert_eq!(bench.commands(0), [], "the old lease says nothing about this attach");
+    assert_eq!(
+        bench.commands(0),
+        [],
+        "the old lease says nothing about this attach"
+    );
 
     bench.push(0, LinkEvent::Lease(Lease::Owner));
     bench.output(0, b"\x1b[6n");

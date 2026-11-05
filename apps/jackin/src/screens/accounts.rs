@@ -775,17 +775,14 @@ impl AccountsScreen {
                 ))
             }
             SourceKind::PlainApiKey => {
-                let key = text_of(values, "key");
-                if key.trim().is_empty() {
-                    return Err("API key required: the field is empty".into());
-                }
+                let key = PlainKey::new(&text_of(values, "key")).map_err(|e| e.to_string())?;
                 Ok((
                     provider,
                     CredentialSource::PlainApiKey {
-                        fingerprint: fingerprint(&key),
-                        tail: tail_of(&key),
+                        fingerprint: fingerprint(key.expose()),
+                        tail: tail_of(key.expose()),
                     },
-                    Some(PlainKey::new(&key)),
+                    Some(key),
                 ))
             }
         }
@@ -1033,9 +1030,10 @@ impl AccountsScreen {
             },
             SourceKind::PlainApiKey => {
                 let key = get("key");
+                let key = key.trim();
                 CredentialSource::PlainApiKey {
-                    fingerprint: fingerprint(&key),
-                    tail: tail_of(&key),
+                    fingerprint: fingerprint(key),
+                    tail: tail_of(key),
                 }
             }
         };
