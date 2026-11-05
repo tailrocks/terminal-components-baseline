@@ -23,7 +23,7 @@ tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/
 default = ["cli", "terminal"]
 cli = ["dep:clap"]
 terminal = ["dep:termpane"]
-product = []
+product = ["terminal"]
 
 [lib]
 name = "junie_tui"
