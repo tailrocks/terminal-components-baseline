@@ -143,6 +143,7 @@ pub struct InspectChanges {
 }
 
 const VIEW_KEY: &str = "v";
+const VIEW_CHAR: char = VIEW_KEY.as_bytes()[0] as char;
 const MIN_W: u16 = 76;
 const MIN_H: u16 = 20;
 
@@ -733,7 +734,7 @@ impl<R: From<InspectOutcome> + 'static, W: 'static> Layer<R, W> for InspectChang
     fn on_key(&mut self, key: &Key, cx: &mut LayerCx<'_, W>) -> Outcome {
         let focus = &mut *cx.focus;
         match key.code {
-            KeyCode::Char(c) if key.plain() && VIEW_KEY.starts_with(c) => {
+            KeyCode::Char(VIEW_CHAR) if key.plain() => {
                 self.diff.toggle_mode();
                 return Outcome::Changed;
             }
