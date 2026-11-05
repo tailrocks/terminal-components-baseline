@@ -371,6 +371,7 @@ pub struct World {
     pub refresh_from: Option<u64>,
     pub refresh_started_secs: i64,
     pub refresh_ticket: Ticket,
+    pub saved_ticket: Ticket,
 
     /// What a program may do through a pane; every daemon the world creates
     /// starts with it.
@@ -511,6 +512,7 @@ impl World {
             refresh_from: None,
             refresh_started_secs: 0,
             refresh_ticket: 0,
+            saved_ticket: 0,
             pane_policy: Arc::default(),
         };
         world.sync_arbiter();
@@ -739,6 +741,17 @@ impl World {
                     Ok(snapshot) if current => self.apply((**snapshot).clone()),
                     Err(_) if current => self.daemon_health = DaemonHealth::Stale,
                     Ok(_) | Err(_) => absorbed = Absorbed::Stale,
+                }
+            }
+            Msg::AccountsSaved {
+                ticket,
+                result: Ok(_),
+                ..
+            } => {
+                if *ticket <= self.saved_ticket {
+                    absorbed = Absorbed::Stale;
+                } else {
+                    self.saved_ticket = *ticket;
                 }
             }
             Msg::LaunchCancelled { instance } => self.record((**instance).clone()),

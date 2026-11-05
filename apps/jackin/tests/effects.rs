@@ -2460,6 +2460,84 @@ fn the_late_reply_of_a_save_that_gave_way_does_not_answer_the_next_save() {
     assert_eq!(saves_asked(&backend), 3, "the screen is free again");
 }
 
+fn saved_as(effect: &Effect, world: &World, purpose: &str) -> Msg {
+    let Effect::SaveAccounts { ticket, .. } = effect else {
+        panic!("a save expected, got {effect:?}");
+    };
+    let mut snapshot = sim::snapshot(world);
+    for account in &mut snapshot.accounts.accounts {
+        if account.id == PERSONAL {
+            account.purpose = Some(purpose.into());
+        }
+    }
+    Msg::AccountsSaved {
+        ticket: *ticket,
+        added: None,
+        result: Ok(Box::new(snapshot)),
+    }
+}
+
+fn personal_purpose(app: &App) -> Option<String> {
+    app.world
+        .accounts
+        .get(PERSONAL)
+        .and_then(|a| a.purpose.clone())
+}
+
+#[test]
+fn the_late_reply_of_a_save_that_gave_way_does_not_roll_back_the_newer_save() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some(PERSONAL.into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    app.deliver(&saved_as(second, &app.world, "newer"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+
+    app.deliver(&saved_as(first, &app.world, "older"));
+    assert_eq!(
+        personal_purpose(&app).as_deref(),
+        Some("newer"),
+        "the late reply of the first save rolled the registry back"
+    );
+}
+
+#[test]
+fn the_late_reply_of_a_save_that_gave_way_still_lands_while_the_newer_save_is_out() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some(PERSONAL.into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    app.deliver(&saved_as(first, &app.world, "older"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("older"));
+
+    app.deliver(&saved_as(second, &app.world, "newer"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+}
+
 #[test]
 fn the_usage_screen_refreshes_every_enabled_account_and_shows_the_reply() {
     let (mut app, backend) = backed(Scenario::AccountsMixed, refresh_account);
