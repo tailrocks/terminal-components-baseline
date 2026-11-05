@@ -7,9 +7,7 @@ use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::hit::Axis;
 use junie_tui::core::id::WidgetId;
 use junie_tui::terminal::encode_key;
-use junie_tui::terminal::{
-    ForwardPolicy, Paste, TermEvent, TerminalState, TerminalViewport, is_spoofing_format,
-};
+use junie_tui::terminal::{ForwardPolicy, Paste, TermEvent, TerminalState, TerminalViewport};
 use junie_tui::theme::Tone;
 use junie_tui::ui::text::{clip, plural};
 use junie_tui::widgets::viewport_ops::ViewportOps;
@@ -27,24 +25,17 @@ use super::{
     PaneNote, PaneRequest, PasteOutcome, SCROLLBACK,
 };
 use crate::domain::instance::AgentState;
+use crate::domain::shown::shown;
 use crate::domain::vocabulary::{PaneWords, fill_in};
 
 const FOCUS_IN: &[u8] = b"\x1b[I";
 const FOCUS_OUT: &[u8] = b"\x1b[O";
 const TITLE_COLUMNS: usize = 64;
+const NOTICE_CHARS: usize = 240;
 const PENDING_EFFECTS: usize = 16;
 
-/// The title a program set, made safe to show: controls, bidirectional
-/// controls and tag characters are dropped, runs of white space become one
-/// space, and the result is cut at 64 columns.
 pub fn sanitize_title(raw: &str) -> String {
-    let spaced: String = raw
-        .chars()
-        .map(|c| if c.is_whitespace() { ' ' } else { c })
-        .filter(|c| !c.is_control() && !is_spoofing_format(*c))
-        .collect();
-    let collapsed = spaced.split_whitespace().collect::<Vec<_>>().join(" ");
-    clip(&collapsed, TITLE_COLUMNS)
+    clip(&shown(raw, TITLE_COLUMNS), TITLE_COLUMNS)
 }
 
 /// The window after an attach in which the replay of the screen arrives. The
@@ -331,10 +322,7 @@ impl TerminalPane {
                 }
             }
             LinkEvent::Notice(text) => {
-                let clean: String = text
-                    .chars()
-                    .filter(|c| !c.is_control() && !is_spoofing_format(*c))
-                    .collect();
+                let clean = shown(&text, NOTICE_CHARS);
                 if !clean.is_empty() {
                     self.say(Say::Notice(clean));
                 }
