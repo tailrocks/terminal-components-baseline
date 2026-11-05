@@ -887,3 +887,18 @@ fn a_wizard_destination_is_fixed_only_where_a_reason_says_why() {
         "with no reason to give, the radio is not disabled: {free}"
     );
 }
+
+#[test]
+fn enter_on_the_focused_choose_button_of_the_wizard_chooses_like_space() {
+    let step_after = |keys: &str| {
+        let mut app = timed(Scenario::Returning, world_for(Scenario::Returning));
+        press(&mut app, "n tab tab tab tab");
+        press(&mut app, keys);
+        screen(&mut app)
+    };
+
+    let by_space = step_after("space");
+    let by_enter = step_after("enter");
+    assert!(by_space.contains("step 2 of 5"), "{by_space}");
+    assert!(by_enter.contains("step 2 of 5"), "{by_enter}");
+}
