@@ -3,12 +3,15 @@
 mod common;
 
 use common::*;
+use jackin_console::app::{App, Route};
+use jackin_console::domain::account::Lifecycle;
 use jackin_console::domain::role::{
     DEFAULT_ROLE_UNUSABLE, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
 };
 use jackin_console::domain::workspace::{AllowedRoles, Workspace};
 use jackin_console::fixtures::{Scenario, world_for};
-use jackin_console::world::{LaunchSource, World};
+use jackin_console::sim;
+use jackin_console::world::{LaunchSource, Msg, Snapshot, World};
 
 fn world(rule: LaunchRoleRule) -> World {
     let mut world = world_for(Scenario::Returning);
@@ -219,4 +222,68 @@ fn the_configured_rule_skips_a_role_that_cannot_launch_as_the_only_one() {
         world.launch_role(LaunchSource::Row(Some(&ws))),
         LaunchRole::Unavailable(NO_DEFAULT_ROLE.into())
     );
+}
+
+fn snapshot_after(app: &App, change: impl FnOnce(&mut Snapshot)) -> Msg {
+    let mut snapshot = sim::snapshot(&app.world);
+    change(&mut snapshot);
+    Msg::Refreshed {
+        result: Ok(Box::new(snapshot)),
+    }
+}
+
+fn open_picker() -> App {
+    let mut world = world(LaunchRoleRule::Configured);
+    world.workspaces[0].roles.default = Some("the-architect".into());
+    let mut app = app_with(Scenario::Returning, world);
+    press(&mut app, "down enter");
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains("payments-platform › the-architect"),
+        "{shown}"
+    );
+    app
+}
+
+#[test]
+fn a_launch_picked_after_the_role_became_unusable_is_refused() {
+    let mut app = open_picker();
+    let reload = snapshot_after(&app, |s| {
+        s.roles
+            .iter_mut()
+            .find(|r| r.name == "the-architect")
+            .expect("role")
+            .trusted = false;
+    });
+    app.deliver(&reload);
+    press(&mut app, "enter");
+
+    assert_eq!(app.route(), Route::Manager);
+    let shown = app.shell.status.text().unwrap_or_default().to_owned();
+    assert!(shown.contains("launch options changed"), "{shown}");
+}
+
+#[test]
+fn a_launch_picked_after_its_account_became_unusable_is_refused() {
+    let mut app = open_picker();
+    let reload = snapshot_after(&app, |s| {
+        let preselected = s
+            .accounts
+            .accounts
+            .iter_mut()
+            .find(|a| a.id == "acct-claude-personal")
+            .expect("account");
+        preselected.lifecycle = Lifecycle::NeedsLogin;
+    });
+    app.deliver(&reload);
+    press(&mut app, "enter");
+
+    assert_eq!(app.route(), Route::Manager);
+}
+
+#[test]
+fn a_launch_picked_with_nothing_changed_goes_on() {
+    let mut app = open_picker();
+    press(&mut app, "enter");
+    assert_eq!(app.route(), Route::Cockpit);
 }

@@ -426,20 +426,47 @@ impl ManagerScreen {
         }
     }
 
-    fn open_launch_picker(&mut self, w: &World, cx: &mut Cx) {
-        let (ws, launch_role) = match &self.selected {
-            RowKey::Workspace(id) => (
+    fn launch_choice(&self, w: &World) -> Option<(Option<WorkspaceId>, LaunchRole)> {
+        match &self.selected {
+            RowKey::Workspace(id) => Some((
                 Some(*id),
                 w.launch_role(LaunchSource::Row(w.workspace(*id))),
-            ),
+            )),
             RowKey::CurrentDir => {
                 let saved = w.cwd_workspace();
-                (
+                Some((
                     saved.map(|x| x.id),
                     w.launch_role(LaunchSource::CurrentDir(saved)),
-                )
+                ))
             }
-            _ => return,
+            _ => None,
+        }
+    }
+
+    fn launch_still_offered(
+        &self,
+        w: &World,
+        (ws, role): &(Option<WorkspaceId>, String),
+        agent: Agent,
+        account: Option<&AccountId>,
+    ) -> bool {
+        if self.launch_choice(w) != Some((*ws, LaunchRole::Role(role.clone()))) {
+            return false;
+        }
+        let offer = w.offer_for(
+            agent,
+            ws.and_then(|id| w.workspace(id)),
+            Some(role.as_str()),
+        );
+        match account {
+            Some(id) => offer.preselected.as_ref() == Some(id),
+            None => offer.blocked.is_none() && offer.accounts.len() > 1,
+        }
+    }
+
+    fn open_launch_picker(&mut self, w: &World, cx: &mut Cx) {
+        let Some((ws, launch_role)) = self.launch_choice(w) else {
+            return;
         };
         let (role, unavailable) = match launch_role {
             LaunchRole::Role(role) => (role, None),
@@ -544,16 +571,10 @@ impl ManagerScreen {
     }
 
     fn attach_restored(&mut self, id: &str, w: &mut World, cx: &mut Cx) {
-        let Some(i) = w.instance(id) else { return };
-        let wsname = w.workspace_label(i);
-        let now = w.now_ms();
-        let mut d = w.new_daemon(&wsname);
-        for request in &w.backend.initial_panes(i) {
-            d.new_tab(request, now, |spawn| w.backend.spawn_pane(request, spawn));
+        if w.instance(id).is_none() {
+            return;
         }
-        w.daemons.insert(id.to_owned(), d);
-        crate::world::refresh_snapshots(w);
-        w.sync_arbiter();
+        w.open_first_session(id);
         cx.status(fill_in(
             &w.surfaces.vocabulary.lifecycle.restored,
             &[("id", id.trim_start_matches(ID_PREFIX))],
@@ -615,7 +636,12 @@ impl ManagerScreen {
     fn inspect(&mut self, id: &str, w: &World, cx: &mut Cx) {
         let Some(i) = w.instance(id) else { return };
         let ws = i.workspace.and_then(|x| w.workspace(x));
-        let account = w.account_for(i.agent.provider(), ws, Some(&i.role), None);
+        let account = match &i.account {
+            Some(id) => w.accounts.get(id).map_or_else(|| id.clone(), |a| a.title()),
+            None => w
+                .account_for(i.agent.provider(), ws, Some(&i.role), None)
+                .label(&w.accounts),
+        };
         let mut props = vec![
             Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()).copyable(),
             Prop::new(
@@ -636,11 +662,7 @@ impl ManagerScreen {
             ),
             Prop::new(
                 "Agent",
-                format!(
-                    "{} · account {}",
-                    i.agent.label(),
-                    account.label(&w.accounts)
-                ),
+                format!("{} · account {}", i.agent.label(), account),
             ),
             Prop::new(
                 "Target",
@@ -2068,17 +2090,21 @@ impl Page<Jackin> for ManagerScreen {
                     }
                 }
             }
-            Msg::WorkspaceDeleted { id, result } => match result {
-                Ok(snapshot) => {
-                    let name = w.workspace(*id).map(|x| x.name.clone()).unwrap_or_default();
-                    w.apply((**snapshot).clone());
-                    self.selected = RowKey::CurrentDir;
-                    cx.status(format!(
-                        "Deleted workspace {name} · instances and files kept"
-                    ));
+            Msg::WorkspaceDeleted { id, result } => {
+                self.busy_rows.retain(|(k, _)| *k != RowKey::Workspace(*id));
+                match result {
+                    Ok(snapshot) => {
+                        let name = w.workspace(*id).map(|x| x.name.clone()).unwrap_or_default();
+                        w.apply((**snapshot).clone());
+                        self.selected = RowKey::CurrentDir;
+                        cx.status(format!(
+                            "Deleted workspace {name} · instances and files kept"
+                        ));
+                    }
+                    Err(error) if w.workspace(*id).is_some() => cx.error(error.clone()),
+                    Err(_) => {}
                 }
-                Err(error) => cx.error(error.clone()),
-            },
+            }
             Msg::Restored { instance, result } => {
                 self.busy_rows
                     .retain(|(k, _)| *k != RowKey::Instance(instance.clone()));
@@ -2491,9 +2517,14 @@ impl Page<Jackin> for ManagerScreen {
                 let Some((agent, account)) = self.picker_targets.get(i).cloned() else {
                     return Outcome::Changed;
                 };
-                let Some((ws, role)) = self.pending_launch.take() else {
+                let Some(pending) = self.pending_launch.take() else {
                     return Outcome::Changed;
                 };
+                if !self.launch_still_offered(w, &pending, agent, account.as_ref()) {
+                    cx.status("The launch options changed · open Launch again");
+                    return Outcome::Changed;
+                }
+                let (ws, role) = pending;
                 if account.is_none() {
                     let start = Start::Launch {
                         workspace: ws,
@@ -2561,6 +2592,13 @@ impl Page<Jackin> for ManagerScreen {
                 },
             ) => {
                 let id = tag.key.clone();
+                if !w.instance(&id).is_some_and(|i| i.status.stoppable()) {
+                    cx.status(format!(
+                        "{} is not running · nothing to stop",
+                        id.trim_start_matches(ID_PREFIX)
+                    ));
+                    return Outcome::Changed;
+                }
                 self.busy_rows
                     .push((RowKey::Instance(id.clone()), "stopping…"));
                 w.perform(Effect::Stop { instance: id });
@@ -2574,6 +2612,13 @@ impl Page<Jackin> for ManagerScreen {
                 },
             ) => {
                 let id = tag.key.clone();
+                if w.instance(&id).is_none() {
+                    cx.status(format!(
+                        "{} is already gone · nothing to purge",
+                        id.trim_start_matches(ID_PREFIX)
+                    ));
+                    return Outcome::Changed;
+                }
                 self.busy_rows
                     .push((RowKey::Instance(id.clone()), "purging…"));
                 w.perform(Effect::Purge { instance: id });
@@ -2587,6 +2632,16 @@ impl Page<Jackin> for ManagerScreen {
                 },
             ) => {
                 let id = tag.n as WorkspaceId;
+                let row = RowKey::Workspace(id);
+                if w.workspace(id).is_none() {
+                    cx.status("That workspace is already gone · nothing to delete");
+                    return Outcome::Changed;
+                }
+                if let Some((_, what)) = self.busy_rows.iter().find(|(k, _)| *k == row) {
+                    cx.status(format!("Workspace is {what}"));
+                    return Outcome::Changed;
+                }
+                self.busy_rows.push((row, "deleting…"));
                 w.perform(Effect::DeleteWorkspace { id });
                 Outcome::Changed
             }

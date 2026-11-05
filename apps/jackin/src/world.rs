@@ -308,6 +308,15 @@ pub enum Work {
     Settle(Effect),
 }
 
+/// Whether a reply still describes the world. A refresh that an earlier
+/// reply overtook is `Stale`: the world ignored it and no screen should
+/// report it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Absorbed {
+    Current,
+    Stale,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DaemonHealth {
     Healthy,
@@ -513,6 +522,27 @@ impl World {
         daemon
     }
 
+    /// Gives `instance` the daemon and the first panes its backend asks for,
+    /// unless it has a daemon already.
+    pub fn open_first_session(&mut self, instance: &str) {
+        if self.daemons.contains_key(instance) {
+            return;
+        }
+        let Some(i) = self.instance(instance) else {
+            return;
+        };
+        let backend = self.backend.clone();
+        let requests = backend.initial_panes(i);
+        let mut d = self.new_daemon(&self.workspace_label(i));
+        let now = self.now_ms();
+        for request in requests {
+            d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
+        }
+        self.daemons.insert(instance.to_owned(), d);
+        refresh_snapshots(self);
+        self.sync_arbiter();
+    }
+
     /// A number no earlier request of this world carried.
     pub fn next_ticket(&mut self) -> Ticket {
         self.tickets += 1;
@@ -666,7 +696,8 @@ impl World {
 
     /// Takes in what a reply says about the world itself, before any screen
     /// sees the message.
-    pub fn absorb(&mut self, msg: &Msg) {
+    pub fn absorb(&mut self, msg: &Msg) -> Absorbed {
+        let mut absorbed = Absorbed::Current;
         match msg {
             Msg::DoctorFinished(result) => {
                 let now = self.now_secs();
@@ -690,7 +721,7 @@ impl World {
                 match result {
                     Ok(snapshot) if current => self.apply((**snapshot).clone()),
                     Err(_) if current => self.daemon_health = DaemonHealth::Stale,
-                    Ok(_) | Err(_) => {}
+                    Ok(_) | Err(_) => absorbed = Absorbed::Stale,
                 }
             }
             Msg::LaunchCancelled { instance } => self.record((**instance).clone()),
@@ -769,6 +800,7 @@ impl World {
             }
             _ => {}
         }
+        absorbed
     }
 
     pub fn tick(&mut self, interval_ms: i64) -> Vec<Msg> {

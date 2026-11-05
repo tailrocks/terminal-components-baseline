@@ -1741,7 +1741,11 @@ fn a_refresh_that_lands_after_a_newer_snapshot_is_dropped() {
     );
 }
 
-fn held_roles(unanswered: fn(&Effect) -> bool, answer: Answer) -> (App, Arc<TestBackend>) {
+fn held_in(
+    scenario: Scenario,
+    unanswered: fn(&Effect) -> bool,
+    answer: Answer,
+) -> (App, Arc<TestBackend>) {
     let backend = Arc::new(TestBackend {
         inner: SimBackend::shared(),
         seen: Mutex::new(vec![]),
@@ -1749,9 +1753,13 @@ fn held_roles(unanswered: fn(&Effect) -> bool, answer: Answer) -> (App, Arc<Test
         unanswered,
         files: None,
     });
-    let mut world = world_for(Scenario::RoleBinding);
+    let mut world = world_for(scenario);
     world.backend = backend.clone();
-    (timed(Scenario::RoleBinding, world), backend)
+    (timed(scenario, world), backend)
+}
+
+fn held_roles(unanswered: fn(&Effect) -> bool, answer: Answer) -> (App, Arc<TestBackend>) {
+    held_in(Scenario::RoleBinding, unanswered, answer)
 }
 
 fn count(backend: &TestBackend, wanted: fn(&Effect) -> bool) -> usize {
@@ -1931,4 +1939,159 @@ fn a_check_reply_of_another_ticket_does_not_finish_the_roles_check() {
         status(&app)
     );
     assert!(!screen(&mut app).contains("checking…"));
+}
+
+fn without_instances(app: &App) -> Box<jackin_console::world::Snapshot> {
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.instances.clear();
+    Box::new(snapshot)
+}
+
+#[test]
+fn a_stop_confirmed_after_the_instance_left_is_refused() {
+    let (mut app, backend) = backed(Scenario::Returning, |_, _| None);
+    press(&mut app, "down right down t");
+    let asked = screen(&mut app);
+    assert!(asked.contains("Stop instance"), "{asked}");
+
+    let gone = without_instances(&app);
+    app.deliver(&Msg::Refreshed { result: Ok(gone) });
+    press(&mut app, "right enter");
+
+    assert_eq!(count(&backend, |e| matches!(e, Effect::Stop { .. })), 0);
+    assert!(status(&app).contains("nothing to stop"), "{}", status(&app));
+}
+
+#[test]
+fn a_purge_confirmed_after_the_instance_left_is_refused() {
+    let (mut app, backend) = backed(Scenario::Returning, |_, _| None);
+    press(&mut app, "down right down down p");
+    let asked = screen(&mut app);
+    assert!(asked.contains("Purge instance"), "{asked}");
+
+    let gone = without_instances(&app);
+    app.deliver(&Msg::Refreshed { result: Ok(gone) });
+    press(&mut app, "c 4 1 e enter");
+
+    assert_eq!(count(&backend, |e| matches!(e, Effect::Purge { .. })), 0);
+    assert!(
+        status(&app).contains("nothing to purge"),
+        "{}",
+        status(&app)
+    );
+}
+
+#[test]
+fn a_second_delete_waits_for_the_first_reply() {
+    let (mut app, backend) = held_roles(
+        |e| matches!(e, Effect::DeleteWorkspace { .. }),
+        delete_workspace,
+    );
+    app.world.backend = backend.clone();
+    let mut app = timed(
+        Scenario::Returning,
+        std::mem::replace(&mut app.world, world_for(Scenario::Returning)),
+    );
+    press(&mut app, "down d");
+    press(&mut app, "right enter");
+    press(&mut app, "d");
+    press(&mut app, "right enter");
+
+    assert_eq!(
+        count(&backend, |e| matches!(e, Effect::DeleteWorkspace { .. })),
+        1,
+        "one delete for two confirmations"
+    );
+    assert_eq!(status(&app), "Workspace is deleting…");
+}
+
+#[test]
+fn a_delete_error_for_a_workspace_that_is_gone_is_dropped() {
+    let (mut app, _) = backed(Scenario::Returning, delete_workspace);
+    let doomed = app.world.workspaces[0].id;
+    press(&mut app, "down d");
+    press(&mut app, "right enter");
+    settle(&mut app);
+    assert!(app.world.workspace(doomed).is_none());
+
+    app.deliver(&Msg::WorkspaceDeleted {
+        id: doomed,
+        result: Err("no workspace with that id".into()),
+    });
+    assert!(
+        !status(&app).contains("no workspace with that id"),
+        "{}",
+        status(&app)
+    );
+}
+
+#[test]
+fn inspect_names_the_account_the_launch_used() {
+    let mut world = world_for(Scenario::Returning);
+    let (provider, ws, role) = {
+        let i = world.instance("jk-7f3a").expect("instance");
+        (i.agent.provider(), i.workspace, i.role.clone())
+    };
+    let resolved = world
+        .account_for(
+            provider,
+            ws.and_then(|id| world.workspace(id)),
+            Some(&role),
+            None,
+        )
+        .account
+        .expect("an account");
+    let other = world
+        .accounts
+        .by_provider(provider)
+        .find(|a| a.id != resolved)
+        .expect("a second account")
+        .clone();
+    world.instance_mut("jk-7f3a").expect("instance").account = Some(other.id.clone());
+    let mut app = timed(Scenario::Returning, world);
+    press(&mut app, "down right down i");
+
+    let shown = screen(&mut app);
+    let wanted = format!("account {}", other.title());
+    assert!(
+        shown
+            .lines()
+            .any(|l| l.contains("Agent") && l.contains(&wanted)),
+        "{wanted}\n{shown}"
+    );
+}
+
+#[test]
+fn a_refresh_failure_that_a_newer_reply_overtook_is_not_reported() {
+    let (mut app, _) = backed(Scenario::Returning, |_, _| None);
+    app.world.refresh_from = Some(app.world.snapshots_applied);
+    app.world.apply(sim::snapshot(&app.world));
+    app.deliver(&Msg::Refreshed {
+        result: Err("instance index unreadable".into()),
+    });
+    assert!(!status(&app).contains("Refresh failed"), "{}", status(&app));
+
+    app.world.refresh_from = Some(app.world.snapshots_applied);
+    app.deliver(&Msg::Refreshed {
+        result: Err("instance index unreadable".into()),
+    });
+    assert!(status(&app).contains("Refresh failed"), "{}", status(&app));
+}
+
+#[test]
+fn a_second_restore_reply_keeps_the_daemon_the_first_built() {
+    let (mut app, _) = backed(Scenario::Returning, restore);
+    let id = "jk-c41e";
+    let reply = |app: &App| Msg::Restored {
+        instance: id.into(),
+        result: Ok(Box::new(sim::snapshot(&app.world))),
+    };
+    let first = reply(&app);
+    app.deliver(&first);
+    let daemon = app.world.daemons.get_mut(id).expect("the restored daemon");
+    daemon.workspace = "kept".into();
+
+    let second = reply(&app);
+    app.deliver(&second);
+    assert_eq!(app.world.daemons[id].workspace, "kept");
 }

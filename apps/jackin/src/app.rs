@@ -46,7 +46,7 @@ use crate::screens::prelude::PreludeScreen;
 use crate::screens::role_editor::RoleEditorScreen;
 use crate::screens::settings::SettingsScreen;
 use crate::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
-use crate::world::{Health, Msg, Snapshot, World};
+use crate::world::{Absorbed, Health, Msg, Snapshot, World};
 use junie_tui::shell::Page as _;
 use junie_tui::ui::leave::{LeaveGuard, Stakes};
 use junie_tui::widgets::brand::Lockup;
@@ -561,7 +561,9 @@ impl App {
 
     fn dispatch_reply(&mut self, m: &Msg) -> Outcome {
         self.tell_forms_of_reply(m);
-        self.world.absorb(m);
+        if self.world.absorb(m) == Absorbed::Stale {
+            return Outcome::Ignored;
+        }
         let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));
         let route = self.route();
         let (o, reqs) = self
@@ -1852,9 +1854,7 @@ impl App {
                     );
                     return;
                 }
-                if !self.world.daemons.contains_key(&instance) {
-                    self.open_first_session(&instance);
-                }
+                self.world.open_first_session(&instance);
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
                     d.attached_by = Some("this terminal".into());
                     d.set_policy(&self.world.pane_policy);
@@ -1988,24 +1988,6 @@ impl App {
 
             Go::Quit => self.quit_now(),
         }
-    }
-
-    /// The first sessions of an instance a launch just made: the panes its
-    /// backend asks for.
-    fn open_first_session(&mut self, instance: &str) {
-        let Some(i) = self.world.instance(instance) else {
-            return;
-        };
-        let backend = Arc::clone(&self.world.backend);
-        let requests = backend.initial_panes(i);
-        let mut d = self.world.new_daemon(&self.world.workspace_label(i));
-        let now = self.world.now_ms();
-        for request in requests {
-            d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
-        }
-        self.world.daemons.insert(instance.to_owned(), d);
-        crate::world::refresh_snapshots(&mut self.world);
-        self.world.sync_arbiter();
     }
 
     fn leave_construct(&mut self, instance: &str) {
