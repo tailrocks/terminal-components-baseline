@@ -315,9 +315,8 @@ fn the_bottom_of_the_detail_track_reaches_the_end_when_actions_shorten_it() {
     );
 }
 
-#[test]
-fn a_narrow_detail_keeps_its_item_columns_inside_the_frame() {
-    let area = Rect::new(0, 0, 26, 20);
+fn assert_columns_inside_the_frame(width: u16) {
+    let area = Rect::new(0, 0, width, 20);
     let mut rig = Rig::sized(area, 0);
     let buf = rig.render();
     let right = area.width - 1;
@@ -327,7 +326,7 @@ fn a_narrow_detail_keeps_its_item_columns_inside_the_frame() {
     assert_eq!(
         edge.len(),
         1,
-        "only the frame's right border is in the last column, got {edge:?}"
+        "width {width}: only the frame's right border is in the last column, got {edge:?}"
     );
     let bar = scrollbar::id_for(DETAIL);
     for y in 1..area.height - 1 {
@@ -336,8 +335,20 @@ fn a_narrow_detail_keeps_its_item_columns_inside_the_frame() {
             let s = buf[(right - 1, y)].symbol();
             assert!(
                 s == scrollbar::TRACK || s == scrollbar::THUMB,
-                "row {y} wrote {s:?} over the scrollbar"
+                "width {width}: row {y} wrote {s:?} over the scrollbar"
             );
         }
+    }
+}
+
+#[test]
+fn a_narrow_detail_keeps_its_item_columns_inside_the_frame() {
+    assert_columns_inside_the_frame(26);
+}
+
+#[test]
+fn a_detail_narrower_than_its_first_column_clamps_the_column_to_the_room_left() {
+    for width in 12..=15 {
+        assert_columns_inside_the_frame(width);
     }
 }
