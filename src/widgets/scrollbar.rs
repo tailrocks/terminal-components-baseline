@@ -5,8 +5,7 @@ use ratatui::style::Style;
 use crate::core::event::Outcome;
 use crate::core::hit::Axis;
 use crate::core::id::WidgetId;
-use crate::core::intent::Phase;
-use crate::core::pointer::PointerEvent;
+use crate::core::pointer::{BarPhase, PointerEvent};
 use crate::core::scroll::{ScrollPane, ScrollState, ScrollbarVisibility, TrackClick};
 use crate::theme::{Glyphs, Kind, Plane};
 use crate::ui::ctx::{RenderCtx, VisualState};
@@ -253,14 +252,13 @@ pub fn pointer(
     click: TrackClick,
 ) -> Option<Outcome> {
     let bar = ev.bar.filter(|b| is_bar_of(b.id, container))?;
-    let moved = match ev.phase()? {
-        Phase::Press => apply_with(&bar, ev.pos(), true, scroll, click),
-        Phase::Drag | Phase::DragStart => apply_with(&bar, ev.pos(), false, scroll, click),
-        Phase::Click | Phase::Release | Phase::DragEnd => {
+    let moved = match BarPhase::of(ev)? {
+        BarPhase::Press => apply_with(&bar, ev.pos(), true, scroll, click),
+        BarPhase::Drag => apply_with(&bar, ev.pos(), false, scroll, click),
+        BarPhase::Release => {
             scroll.release_track();
             false
         }
-        _ => return None,
     };
     Some(if moved {
         Outcome::Changed
