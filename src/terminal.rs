@@ -12,6 +12,7 @@ mod guard;
 mod viewport;
 
 pub use forward::{ForwardPolicy, Paste};
+pub use guard::is_spoofing_format;
 pub use viewport::TerminalViewport;
 
 pub const SCROLLBACK_ROWS: usize = 1_000;
@@ -90,33 +91,23 @@ impl TerminalState {
     }
 
     pub fn feed(&mut self, bytes: &[u8]) -> Vec<TermEvent> {
-        let before = self.grid.scrollback_len();
-        self.grid.process(self.guard.filter(bytes));
-        self.scrolled_off += self.pushed_since(before);
+        let guard::Filtered { bytes, switches } = self.guard.filter(bytes);
+        let mut start = 0;
+        for end in switches.iter().copied().chain([bytes.len()]) {
+            if end == start {
+                continue;
+            }
+            let before = self.grid.scrollback_len();
+            let alternate = self.grid.alternate_screen();
+            self.grid.process(&bytes[start..end]);
+            self.scrolled_off += pushed_since(&mut self.grid, self.limit, before, alternate);
+            start = end;
+        }
         self.grid
             .drain_passthrough()
             .into_iter()
             .filter_map(TermEvent::from_passthrough)
             .collect()
-    }
-
-    fn pushed_since(&mut self, before: usize) -> u64 {
-        let ops = self.grid.drain_scroll_ops();
-        let len = self.grid.scrollback_len();
-        if self.limit == 0 {
-            0
-        } else if len < self.limit {
-            (len - before.min(len)) as u64
-        } else if self.grid.alternate_screen() {
-            0
-        } else {
-            ops.iter()
-                .map(|op| match op {
-                    ScrollOp::Up { top: 0, rows, .. } => u64::from(*rows),
-                    _ => 0,
-                })
-                .sum()
-        }
     }
 
     pub fn resize(&mut self, rows: u16, cols: u16) {
@@ -145,6 +136,8 @@ impl TerminalState {
         self.grid.scrollback_len()
     }
 
+    /// Rows that left the top of the main screen since the start, counted
+    /// whether or not the history keeps them.
     pub fn scrolled_off(&self) -> u64 {
         self.scrolled_off
     }
@@ -165,8 +158,8 @@ impl TerminalState {
         self.grid.mouse_protocol_mode() != termpane::MouseProtocolMode::None
     }
 
-    /// Drops the history and keeps the screen. The count of rows pushed into
-    /// history since the start (`scrolled_off`) is a fact about the past and
+    /// Drops the history and keeps the screen. The count of rows that left
+    /// the top of the screen (`scrolled_off`) is a fact about the past and
     /// stays.
     pub fn clear_scrollback(&mut self) {
         self.grid.clear_scrollback();
@@ -287,6 +280,23 @@ const TERMINAL_DEFAULTS: Defaults = Defaults {
     bg: Color::Reset,
 };
 
+fn pushed_since(grid: &mut DamageGrid, limit: usize, before: usize, alternate: bool) -> u64 {
+    let ops = grid.drain_scroll_ops();
+    let len = grid.scrollback_len();
+    if alternate {
+        0
+    } else if limit > 0 && len < limit {
+        (len - before.min(len)) as u64
+    } else {
+        ops.iter()
+            .map(|op| match op {
+                ScrollOp::Up { top: 0, rows, .. } => u64::from(*rows),
+                _ => 0,
+            })
+            .sum()
+    }
+}
+
 fn color(value: termpane::Color, default: Color) -> Color {
     match value {
         termpane::Color::Default => default,
@@ -308,6 +318,7 @@ fn style(cell: &termpane::Cell, with_color: bool, defaults: Defaults) -> Style {
         (cell.italic(), Modifier::ITALIC),
         (cell.underline(), Modifier::UNDERLINED),
         (cell.inverse(), Modifier::REVERSED),
+        (cell.strikethrough(), Modifier::CROSSED_OUT),
     ] {
         if on {
             style = style.add_modifier(modifier);
@@ -347,7 +358,7 @@ impl Widget for TerminalView<'_> {
             && let Some(at) = self.state.cursor(area)
         {
             let target = &mut buf[(at.x, at.y)];
-            target.set_style(target.style().add_modifier(Modifier::REVERSED));
+            target.modifier.toggle(Modifier::REVERSED);
         }
     }
 }

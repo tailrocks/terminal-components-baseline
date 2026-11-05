@@ -109,7 +109,6 @@ impl Vocabulary {
             paste_label: "Paste clipboard".into(),
             paste_empty: "Preview clipboard is empty".into(),
             paste_empty_reason: "The clipboard is empty".into(),
-            command_unavailable: "{label}: not available in the preview".into(),
             detail_unavailable: "Not in this preview".into(),
             pane_starting: "spawning".into(),
             pane_cleared: "Pane cleared".into(),

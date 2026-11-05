@@ -144,6 +144,10 @@ pub enum Go {
     LaunchFailedAck {
         instance: Option<InstanceId>,
     },
+    CloseTop {
+        tag: LayerTag,
+        then: Option<junie_tui::core::id::WidgetId>,
+    },
     Quit,
 }
 
@@ -184,6 +188,10 @@ pub trait Screen: junie_tui::shell::Page<Jackin> {
     }
 
     fn layer_open(&self) -> bool {
+        false
+    }
+
+    fn job_continues(&self, _m: &Msg) -> bool {
         false
     }
 

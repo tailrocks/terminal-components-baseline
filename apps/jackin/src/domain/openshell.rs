@@ -4,7 +4,7 @@
 //! these functions, so the two cannot disagree. The class of each field is in
 //! `fixed_fields`.
 
-use super::account::{Account, AccountOrigin, AccountRegistry, EditBlocked};
+use super::account::{Account, AccountOrigin, AccountRegistry, CredentialSource, EditBlocked};
 use super::agent::{Agent, AuthMode};
 use super::fixed::Fixed;
 use super::fixed_fields::SurfaceFixed;
@@ -18,6 +18,9 @@ pub const PROJECT_DIR: &str = "/sandbox/project";
 pub fn account(a: &mut Account) {
     a.enabled = true;
     a.origin = AccountOrigin::Registered;
+    if let CredentialSource::HostEnv { var, .. } = &a.source {
+        a.edit_blocked = Some(env_edit_block(var));
+    }
 }
 
 /// Edit… is refused for an account that reads a host variable: the account

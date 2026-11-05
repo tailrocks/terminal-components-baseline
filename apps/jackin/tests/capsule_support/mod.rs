@@ -23,6 +23,7 @@ use junie_tui::shell::NativeClipboard;
 use junie_tui::theme::{ColorLevel, Theme};
 use ratatui::Terminal;
 use ratatui::backend::TestBackend;
+use ratatui::crossterm::event::KeyModifiers;
 use ratatui::layout::Position;
 
 use crate::pane_support::{Bench, INSTANCE, key};
@@ -35,6 +36,7 @@ pub struct TermBackend {
     pub bench: Arc<Bench>,
     pub requests: Mutex<Vec<PaneRequest>>,
     pub left: Mutex<Vec<String>>,
+    pub effects: Mutex<Vec<Effect>>,
 }
 
 impl TermBackend {
@@ -42,10 +44,24 @@ impl TermBackend {
     pub fn left(&self) -> Vec<String> {
         self.left.lock().expect("left").clone()
     }
+
+    /// The tickets of the refreshes the world asked for, in order.
+    pub fn refreshes(&self) -> Vec<u64> {
+        self.effects
+            .lock()
+            .expect("effects")
+            .iter()
+            .filter_map(|e| match e {
+                Effect::Refresh { ticket } => Some(*ticket),
+                _ => None,
+            })
+            .collect()
+    }
 }
 
 impl Backend for TermBackend {
-    fn perform(&self, _: &Effect, _: &World) -> Option<Completion> {
+    fn perform(&self, effect: &Effect, _: &World) -> Option<Completion> {
+        self.effects.lock().expect("effects").push(effect.clone());
         None
     }
 
@@ -134,6 +150,7 @@ impl Rig {
             bench: bench.clone(),
             requests: Mutex::new(Vec::new()),
             left: Mutex::new(Vec::new()),
+            effects: Mutex::new(Vec::new()),
         });
         let mut parts = WorldParts::new(
             SimClock::new(1_788_401_640, 0),
@@ -235,6 +252,32 @@ impl Rig {
         self.screen();
     }
 
+    pub fn mouse_with(&mut self, kind: MouseKind, at: (u16, u16), mods: KeyModifiers) {
+        let position = Position::new(at.0, at.1);
+        Application::handle(
+            &mut self.app,
+            Input::Mouse(Mouse::new(kind, position).with_mods(mods)),
+        );
+        self.screen();
+    }
+
+    /// The column, first row and length of the first scrollbar thumb on the
+    /// screen.
+    pub fn thumb(&mut self) -> (u16, u16, u16) {
+        const THUMB: char = '┃';
+        let grid: Vec<Vec<char>> = self.screen().lines().map(|l| l.chars().collect()).collect();
+        let width = grid.iter().map(Vec::len).max().unwrap_or(0);
+        for x in 0..width {
+            let rows: Vec<usize> = (0..grid.len())
+                .filter(|&y| grid[y].get(x) == Some(&THUMB))
+                .collect();
+            if rows.len() >= 2 {
+                return (x as u16, rows[0] as u16, rows.len() as u16);
+            }
+        }
+        panic!("no scrollbar thumb on the screen");
+    }
+
     /// Ticks until the clock has moved on by at least `ms`.
     pub fn advance(&mut self, ms: i64) {
         let until = self.app.world.now_ms() + ms;
@@ -258,6 +301,10 @@ impl Rig {
         assert_eq!(self.bench.opened(), 1, "the first tick starts the pane");
         self.bench
             .push(0, jackin_console::panes::LinkEvent::Attached);
+        self.bench.push(
+            0,
+            jackin_console::panes::LinkEvent::Lease(jackin_console::panes::Lease::Owner),
+        );
         self.advance(900);
     }
 

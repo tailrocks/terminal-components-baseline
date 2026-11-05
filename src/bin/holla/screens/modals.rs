@@ -3,7 +3,7 @@ use junie_tui::core::hit::Axis;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::theme::Tone;
 use junie_tui::ui::ctx::RenderCtx;
 use junie_tui::ui::layer::{DismissReason, Layer, LayerCx, LayerOut, LayerSpec};
@@ -58,7 +58,6 @@ pub struct TextModal {
     pub area: Rect,
 
     pub dismiss: junie_tui::ui::popup::Dismiss,
-    scroll_area: Rect,
     wrapped: Vec<(String, String, Tone, bool)>,
     wrapped_for: u16,
 }
@@ -75,7 +74,6 @@ impl TextModal {
             closed: false,
             area: Rect::ZERO,
             dismiss: junie_tui::ui::popup::Dismiss::LIGHT,
-            scroll_area: Rect::ZERO,
             wrapped: vec![],
             wrapped_for: 0,
         }
@@ -206,7 +204,6 @@ impl TextModal {
             inner.width,
             inner.height.saturating_sub(2),
         );
-        self.scroll_area = body;
         self.scroll.set_viewport(body.height as usize);
         ctx.scrollable(self.id, body);
         let kc = self.key_col() as u16;
@@ -284,21 +281,12 @@ impl Layer<ModalResult> for TextModal {
             }
             return Outcome::Consumed;
         }
-        let bar = ev.id == scrollbar::id_for(self.id);
-        let moved = match ev.phase() {
-            Some(Phase::Click) if bar => {
-                scrollbar::press(self.scroll_area, ev.pos(), &mut self.scroll)
-            }
-            Some(Phase::Drag) if bar => {
-                scrollbar::drag(self.scroll_area, ev.pos(), &mut self.scroll)
-            }
-            Some(Phase::Click) => return Outcome::Changed,
-            _ => return Outcome::Ignored,
-        };
-        if moved {
-            Outcome::Changed
-        } else {
-            Outcome::Consumed
+        if let Some(o) = scrollbar::pointer(ev, self.id, &mut self.scroll, TrackClick::default()) {
+            return o;
+        }
+        match ev.phase() {
+            Some(Phase::Click) => Outcome::Changed,
+            _ => Outcome::Ignored,
         }
     }
     fn hints(&self, _: Option<WidgetId>) -> Vec<Hint> {

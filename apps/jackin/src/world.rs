@@ -7,14 +7,16 @@ use crate::backend::{
     Ticket, Validation, ValidationOutcome, apply_validation,
 };
 use crate::domain::account::{
-    AccountId, AccountRegistry, IssueCode, Recoverability, RecoverableIssue, ValidationState,
+    AccountId, AccountRegistry, CredentialSource, IssueCode, Recoverability, RecoverableIssue,
+    ValidationState,
 };
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorFailure, DoctorReport};
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
 use crate::domain::reason::{IssueReason, UsageReason};
 use crate::domain::role::{
-    AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
+    AccountOrder, DEFAULT_ROLE_UNUSABLE, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE,
+    NO_SAVED_WORKSPACE,
 };
 use crate::domain::surfaces::Surfaces;
 use crate::domain::usage::Freshness;
@@ -24,6 +26,8 @@ use crate::domain::workspace::{
 use crate::panes::{Daemon, PaneId, PanePolicy};
 use junie_tui::clock::SimClock;
 use junie_tui::shell::JobKey;
+
+pub const REFRESH_TIMEOUT_SECS: i64 = 30;
 
 pub mod job {
     use junie_tui::shell::JobKey;
@@ -158,6 +162,7 @@ pub enum Msg {
         result: Result<Box<Snapshot>, SaveFailure>,
     },
     AccountsSaved {
+        ticket: Ticket,
         added: Option<AccountId>,
         result: Result<Box<Snapshot>, String>,
     },
@@ -171,6 +176,7 @@ pub enum Msg {
     },
 
     Refreshed {
+        ticket: Ticket,
         result: Result<Box<Snapshot>, String>,
     },
     Prewarmed {
@@ -187,10 +193,12 @@ pub enum Msg {
     },
     AccountRefreshed {
         account: AccountId,
+        source: Box<CredentialSource>,
         result: Result<Box<Refresh>, String>,
     },
     AccountValidated {
         account: AccountId,
+        source: Box<CredentialSource>,
         result: Result<Validation, String>,
     },
     RoleLoaded {
@@ -304,6 +312,19 @@ pub enum Work {
     Settle(Effect),
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RoleLoad {
+    Requested,
+    NeedsTrust(Box<RoleEntry>),
+    Unregistered,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Absorbed {
+    Current,
+    Stale,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DaemonHealth {
     Healthy,
@@ -355,6 +376,9 @@ pub struct World {
 
     pub snapshots_applied: u64,
     pub refresh_from: Option<u64>,
+    pub refresh_started_secs: i64,
+    pub refresh_ticket: Ticket,
+    pub saved_ticket: Ticket,
 
     /// What a program may do through a pane; every daemon the world creates
     /// starts with it.
@@ -493,6 +517,9 @@ impl World {
             tickets: 0,
             snapshots_applied: 0,
             refresh_from: None,
+            refresh_started_secs: 0,
+            refresh_ticket: 0,
+            saved_ticket: 0,
             pane_policy: Arc::default(),
         };
         world.sync_arbiter();
@@ -509,6 +536,25 @@ impl World {
         daemon
     }
 
+    pub fn open_first_session(&mut self, instance: &str) {
+        if self.daemons.contains_key(instance) {
+            return;
+        }
+        let Some(i) = self.instance(instance) else {
+            return;
+        };
+        let backend = self.backend.clone();
+        let requests = backend.initial_panes(i);
+        let mut d = self.new_daemon(&self.workspace_label(i));
+        let now = self.now_ms();
+        for request in requests {
+            d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
+        }
+        self.daemons.insert(instance.to_owned(), d);
+        refresh_snapshots(self);
+        self.sync_arbiter();
+    }
+
     /// A number no earlier request of this world carried.
     pub fn next_ticket(&mut self) -> Ticket {
         self.tickets += 1;
@@ -516,16 +562,42 @@ impl World {
     }
 
     pub fn refresh(&mut self) -> bool {
-        if self.refresh_from.is_some() {
+        let now = self.now_secs();
+        if self.refresh_from.is_some() && now - self.refresh_started_secs < REFRESH_TIMEOUT_SECS {
             return false;
         }
-        self.refresh_from = Some(self.snapshots_applied);
-        self.perform(Effect::Refresh);
+        self.request_refresh(now);
         true
+    }
+
+    pub fn refresh_now(&mut self) {
+        let now = self.now_secs();
+        self.request_refresh(now);
+    }
+
+    fn request_refresh(&mut self, now: i64) {
+        let ticket = self.next_ticket();
+        self.refresh_ticket = ticket;
+        self.refresh_from = Some(self.snapshots_applied);
+        self.refresh_started_secs = now;
+        self.perform(Effect::Refresh { ticket });
     }
 
     pub fn now_ms(&self) -> i64 {
         self.clock.now_ms
+    }
+
+    pub fn load_role(&mut self, name: &str) -> RoleLoad {
+        match self.roles.iter().find(|r| r.name == name) {
+            None => RoleLoad::Unregistered,
+            Some(entry) if !entry.trusted => RoleLoad::NeedsTrust(Box::new(entry.clone())),
+            Some(_) => {
+                self.perform(Effect::LoadRole {
+                    role: name.to_owned(),
+                });
+                RoleLoad::Requested
+            }
+        }
     }
 
     pub fn perform(&mut self, effect: Effect) {
@@ -662,7 +734,8 @@ impl World {
 
     /// Takes in what a reply says about the world itself, before any screen
     /// sees the message.
-    pub fn absorb(&mut self, msg: &Msg) {
+    pub fn absorb(&mut self, msg: &Msg) -> Absorbed {
+        let mut absorbed = Absorbed::Current;
         match msg {
             Msg::DoctorFinished(result) => {
                 let now = self.now_secs();
@@ -678,21 +751,41 @@ impl World {
                     r.load_error = Some(error.clone());
                 }
             }
-            Msg::Refreshed { result } => {
-                let current = self
-                    .refresh_from
-                    .take()
-                    .is_none_or(|from| from == self.snapshots_applied);
+            Msg::Refreshed { ticket, result } => {
+                let current = *ticket == self.refresh_ticket
+                    && self
+                        .refresh_from
+                        .take()
+                        .is_none_or(|from| from == self.snapshots_applied);
                 match result {
                     Ok(snapshot) if current => self.apply((**snapshot).clone()),
                     Err(_) if current => self.daemon_health = DaemonHealth::Stale,
-                    Ok(_) | Err(_) => {}
+                    Ok(_) | Err(_) => absorbed = Absorbed::Stale,
+                }
+            }
+            Msg::AccountsSaved {
+                ticket,
+                result: Ok(_),
+                ..
+            } => {
+                if *ticket <= self.saved_ticket {
+                    absorbed = Absorbed::Stale;
+                } else {
+                    self.saved_ticket = *ticket;
                 }
             }
             Msg::LaunchCancelled { instance } => self.record((**instance).clone()),
-            Msg::AccountRefreshed { account, result } => {
+            Msg::AccountRefreshed {
+                account,
+                source,
+                result,
+            } => {
                 let now = self.now_secs();
-                if let Some(a) = self.accounts.get_mut(account) {
+                if let Some(a) = self
+                    .accounts
+                    .get_mut(account)
+                    .filter(|a| a.source == **source)
+                {
                     match result {
                         Ok(refresh) => {
                             a.usage = refresh.usage.clone();
@@ -718,9 +811,17 @@ impl World {
                     }
                 }
             }
-            Msg::AccountValidated { account, result } => {
+            Msg::AccountValidated {
+                account,
+                source,
+                result,
+            } => {
                 let now = self.now_secs();
-                if let Some(a) = self.accounts.get_mut(account) {
+                if let Some(a) = self
+                    .accounts
+                    .get_mut(account)
+                    .filter(|a| a.source == **source)
+                {
                     match result {
                         Ok(validation) => match validation {
                             Validation::Fingerprint { level } => {
@@ -749,6 +850,7 @@ impl World {
             }
             _ => {}
         }
+        absorbed
     }
 
     pub fn tick(&mut self, interval_ms: i64) -> Vec<Msg> {
@@ -772,14 +874,19 @@ impl World {
         {
             self.start_doctor();
         }
+        let mut changed = Vec::new();
         for (id, d) in self.daemons.iter_mut() {
             if self
                 .instances
                 .iter()
                 .any(|i| i.id == *id && i.status == InstanceStatus::Running)
+                && d.tick(now)
             {
-                d.tick(now);
+                changed.push(id.clone());
             }
+        }
+        for id in &changed {
+            refresh_snapshot(self, id);
         }
         let backend = self.backend.clone();
         backend.due(self)
@@ -884,10 +991,9 @@ impl World {
     }
 
     pub fn tilde(&self, path: &str) -> String {
-        if let Some(rest) = path.strip_prefix(&self.home) {
-            format!("~{rest}")
-        } else {
-            path.to_owned()
+        match under_home(&self.home, path) {
+            Some(rest) => format!("~{rest}"),
+            None => path.to_owned(),
         }
     }
 
@@ -964,19 +1070,12 @@ impl World {
             }
             None => {
                 if let Some(a) = self.accounts.default_for(provider) {
-                    match crate::domain::workspace::usability_of(a) {
-                        Usability::Ready => ready.push(a.id.clone()),
-                        u => blocked.push((
-                            a.id.clone(),
-                            u.label(self.surfaces.fixed.as_ref(), &self.surfaces.vocabulary),
-                        )),
-                    }
+                    self.place(a, &mut ready, &mut blocked);
                 }
                 if ready.is_empty()
                     && let Some(a) = self.accounts.discovered_current(provider)
-                    && !ready.contains(&a.id)
                 {
-                    ready.push(a.id.clone());
+                    self.place(a, &mut ready, &mut blocked);
                 }
             }
         }
@@ -1022,23 +1121,20 @@ impl World {
             let x = ready.remove(i);
             ready.insert(0, x);
         }
-        let block = if preselected.is_none() && ready.len() <= 1 {
-            blocked
-                .iter()
-                .find(|(id, _)| explicit.as_ref() == Some(id))
-                .or(blocked.first())
-                .map(|(id, why)| {
-                    let launch_block = self.accounts.get(id).and_then(|a| a.launch_blocked);
-                    if launch_block.is_some_and(|b| b.text(self.surfaces.fixed.as_ref()) == *why) {
-                        return why.clone();
-                    }
-                    let name = self
-                        .accounts
-                        .get(id)
-                        .map(|a| a.title())
-                        .unwrap_or(id.clone());
-                    format!("{name} · {why}")
-                })
+        let explicit_blocked = blocked.iter().find(|(id, _)| explicit.as_ref() == Some(id));
+        let block = if preselected.is_none() && (ready.len() <= 1 || explicit_blocked.is_some()) {
+            explicit_blocked.or(blocked.first()).map(|(id, why)| {
+                let launch_block = self.accounts.get(id).and_then(|a| a.launch_blocked);
+                if launch_block.is_some_and(|b| b.text(self.surfaces.fixed.as_ref()) == *why) {
+                    return why.clone();
+                }
+                let name = self
+                    .accounts
+                    .get(id)
+                    .map(|a| a.title())
+                    .unwrap_or(id.clone());
+                format!("{name} · {why}")
+            })
         } else {
             None
         };
@@ -1048,6 +1144,28 @@ impl World {
             preselected,
             blocked: block,
         }
+    }
+
+    fn place(
+        &self,
+        a: &crate::domain::account::Account,
+        ready: &mut Vec<AccountId>,
+        blocked: &mut Vec<(AccountId, String)>,
+    ) {
+        if ready.contains(&a.id) || blocked.iter().any(|(id, _)| *id == a.id) {
+            return;
+        }
+        match crate::domain::workspace::usability_of(a) {
+            Usability::Ready => ready.push(a.id.clone()),
+            u => blocked.push((
+                a.id.clone(),
+                u.label(self.surfaces.fixed.as_ref(), &self.surfaces.vocabulary),
+            )),
+        }
+    }
+
+    pub fn role_launchable(&self, name: &str) -> bool {
+        self.roles.iter().any(|r| r.name == name && r.launchable())
     }
 
     pub fn launch_role(&self, from: LaunchSource) -> LaunchRole {
@@ -1061,11 +1179,16 @@ impl World {
             LaunchRoleRule::Configured => {
                 let (LaunchSource::Row(ws) | LaunchSource::CurrentDir(ws)) = from;
                 if let Some(default) = ws.and_then(|x| x.roles.default.clone()) {
-                    return LaunchRole::Role(default);
+                    return if self.role_launchable(&default) {
+                        LaunchRole::Role(default)
+                    } else {
+                        LaunchRole::Unavailable(DEFAULT_ROLE_UNUSABLE.into())
+                    };
                 }
                 let mut allowed = self
                     .roles
                     .iter()
+                    .filter(|r| r.launchable())
                     .filter(|r| ws.is_none_or(|x| x.roles.allows(&r.name)))
                     .map(|r| r.name.clone());
                 match (allowed.next(), allowed.next()) {
@@ -1114,9 +1237,14 @@ pub fn expand(home: &str, path: &str) -> String {
     }
 }
 
+fn under_home<'a>(home: &str, path: &'a str) -> Option<&'a str> {
+    path.strip_prefix(home.trim_end_matches('/'))
+        .filter(|rest| rest.is_empty() || rest.starts_with('/'))
+}
+
 pub fn mask_path(home: &str, path: &str) -> String {
     let last = path.rsplit('/').next().unwrap_or(path);
-    if let Some(rest) = path.strip_prefix(home) {
+    if let Some(rest) = under_home(home, path) {
         let segs: Vec<&str> = rest.split('/').filter(|s| !s.is_empty()).collect();
         match segs.len() {
             0 => "~".into(),
@@ -1130,16 +1258,19 @@ pub fn mask_path(home: &str, path: &str) -> String {
     }
 }
 
+pub fn refresh_snapshot(w: &mut World, id: &str) {
+    let Some(snapshot) = w.daemons.get(id).map(Daemon::snapshot) else {
+        return;
+    };
+    if let Some(i) = w.instance_mut(id) {
+        i.daemon = snapshot;
+    }
+}
+
 pub fn refresh_snapshots(w: &mut World) {
-    let snaps: Vec<(String, DaemonSnapshot)> = w
-        .daemons
-        .iter()
-        .map(|(id, d)| (id.clone(), d.snapshot()))
-        .collect();
-    for (id, s) in snaps {
-        if let Some(i) = w.instance_mut(&id) {
-            i.daemon = s;
-        }
+    let ids: Vec<String> = w.daemons.keys().cloned().collect();
+    for id in &ids {
+        refresh_snapshot(w, id);
     }
     for i in w.instances.iter_mut() {
         if i.status != InstanceStatus::Running {

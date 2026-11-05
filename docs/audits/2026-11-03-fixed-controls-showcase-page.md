@@ -77,4 +77,5 @@ lines in `src/catalog.rs` only.
 - The clock step is delivered as a paste, and `shell::handle` dismisses an error or
   sticky status on a paste before it parses the step. A functional test cannot
   advance the clock while a sticky status shows. If one needs it, parse the step
-  before `status.on_input`.
+  before `status.on_input`. Done 2026-11-05: `shell::handle` takes a test request
+  out of `StatusLine::on_input`.

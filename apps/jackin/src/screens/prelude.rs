@@ -201,11 +201,11 @@ impl PreludeScreen {
                     0,
                 )
                 .width(58);
-                if wizard.is_some() {
+                if wizard.is_some()
+                    && let Some(fixed) = &w.surfaces.fixed
+                {
                     c.radio.disabled = true;
-                    if let Some(fixed) = &w.surfaces.fixed {
-                        c = c.line(fixed.destination.text.clone(), Tone::Muted);
-                    }
+                    c = c.line(fixed.destination.text.clone(), Tone::Muted);
                 }
                 cx.open(c, LayerTag::new("prelude.dest"));
             }

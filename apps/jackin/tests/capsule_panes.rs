@@ -7,8 +7,16 @@ mod pane_support;
 mod product_support;
 
 use capsule_support::*;
-use jackin_console::domain::agent::Agent;
-use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneCommand, PaneRequest};
+use jackin_console::domain::account::{Account, CredentialSource, Lifecycle};
+use jackin_console::domain::agent::{Agent, Provider};
+use jackin_console::domain::instance::{
+    AgentState, DaemonSnapshot, InstanceStatus, SessionRecord, SessionStatus,
+};
+use jackin_console::domain::workspace::Workspace;
+use jackin_console::panes::PanePolicy;
+use jackin_console::panes::{EndKind, Lease, LinkEvent, LinkFault, PaneCommand, PaneRequest};
+use jackin_console::screens::Go;
+use jackin_console::world::{Msg, Snapshot, World};
 use pane_support::*;
 
 const FOCUS_OUT: &[u8] = b"\x1b[O";
@@ -28,6 +36,7 @@ fn split_shell(rig: &mut Rig) {
     rig.advance(80);
     let n = rig.bench.opened() - 1;
     rig.bench.push(n, LinkEvent::Attached);
+    rig.bench.push(n, LinkEvent::Lease(Lease::Owner));
     rig.advance(900);
 }
 
@@ -334,6 +343,7 @@ fn enter_reattaches_a_detached_pane_and_the_replay_shows_once() {
     rig.press("enter");
     assert_eq!(rig.bench.opened(), 2);
     rig.bench.push(1, LinkEvent::Attached);
+    rig.bench.push(1, LinkEvent::Lease(Lease::Owner));
     rig.bench.output(1, b"first screen");
     rig.advance(900);
     let screen = rig.screen();
@@ -406,4 +416,271 @@ fn a_split_whose_focused_pane_vanished_starts_nothing() {
         .sessions
         .clone();
     assert_eq!(sessions, Ok(Vec::new()), "no session was recorded");
+}
+
+#[test]
+fn the_manager_shows_the_state_a_pane_reached_while_detached() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.press("ctrl+b d");
+    let state = |rig: &Rig| match &rig.app.world.instance(INSTANCE).expect("instance").daemon {
+        DaemonSnapshot::Tabs(tabs) => tabs[0].panes[0].state,
+        other => panic!("{other:?}"),
+    };
+    assert_eq!(state(&rig), AgentState::Unknown);
+    rig.bench.push(0, LinkEvent::Exited(Some(0)));
+    rig.advance(400);
+    assert_eq!(state(&rig), AgentState::Done);
+}
+
+fn with_session(rig: &Rig, id: &str) -> Snapshot {
+    let mut snapshot = snapshot_of(&rig.app.world);
+    for i in snapshot.instances.iter_mut().filter(|i| i.id == INSTANCE) {
+        i.sessions = Ok(vec![SessionRecord {
+            id: id.into(),
+            agent: None,
+            label: "Shell".into(),
+            status: SessionStatus::Active,
+            started_secs: 1_788_401_700,
+        }]);
+    }
+    snapshot
+}
+
+fn session_ids(rig: &Rig) -> Vec<String> {
+    rig.app
+        .world
+        .instance(INSTANCE)
+        .expect("instance")
+        .sessions
+        .clone()
+        .expect("sessions")
+        .into_iter()
+        .map(|s| s.id)
+        .collect()
+}
+
+#[test]
+fn a_new_pane_asks_the_backend_for_the_session_list_at_once() {
+    let mut rig = Rig::new();
+    rig.attach();
+    assert!(rig.backend.refreshes().is_empty());
+
+    rig.press("ctrl+b c");
+    rig.typed("Shell");
+    rig.press("enter");
+    rig.advance(160);
+
+    let [ticket] = rig.backend.refreshes()[..] else {
+        panic!("one refresh expected, got {:?}", rig.backend.refreshes());
+    };
+    let snapshot = with_session(&rig, "s-new");
+    rig.app.deliver(&Msg::Refreshed {
+        ticket,
+        result: Ok(Box::new(snapshot)),
+    });
+    assert_eq!(session_ids(&rig), ["s-new"]);
+}
+
+#[test]
+fn a_new_session_asks_the_backend_for_the_session_list_at_once() {
+    let mut rig = Rig::new();
+    rig.attach();
+
+    rig.app.go(Go::NewSession {
+        instance: INSTANCE.into(),
+        agent: Some(Agent::Codex),
+        account: None,
+    });
+
+    let [ticket] = rig.backend.refreshes()[..] else {
+        panic!("one refresh expected, got {:?}", rig.backend.refreshes());
+    };
+    let snapshot = with_session(&rig, "s-new");
+    rig.app.deliver(&Msg::Refreshed {
+        ticket,
+        result: Ok(Box::new(snapshot)),
+    });
+    assert_eq!(session_ids(&rig), ["s-new"]);
+}
+
+#[test]
+fn a_refresh_asked_for_before_a_new_pane_cannot_hide_the_pane_session() {
+    let mut rig = Rig::new();
+    rig.attach();
+    assert!(rig.app.world.refresh());
+
+    rig.press("ctrl+b c");
+    rig.typed("Shell");
+    rig.press("enter");
+    rig.advance(160);
+
+    let [before, after] = rig.backend.refreshes()[..] else {
+        panic!("two refreshes expected, got {:?}", rig.backend.refreshes());
+    };
+    let older = snapshot_of(&rig.app.world);
+    let newer = with_session(&rig, "s-new");
+    rig.app.deliver(&Msg::Refreshed {
+        ticket: after,
+        result: Ok(Box::new(newer)),
+    });
+    rig.app.deliver(&Msg::Refreshed {
+        ticket: before,
+        result: Ok(Box::new(older)),
+    });
+    assert_eq!(session_ids(&rig), ["s-new"]);
+}
+
+#[test]
+fn a_tick_that_changes_one_daemon_leaves_the_snapshots_of_the_others() {
+    const OTHER: &str = "jk-zzz";
+    let mut rig = Rig::with(PanePolicy::default(), |w| {
+        let mut other = instance();
+        other.id = OTHER.into();
+        w.instances.push(other);
+        w.open_first_session(OTHER);
+    });
+    rig.advance(80);
+    assert_eq!(rig.bench.opened(), 1);
+    rig.bench.push(0, LinkEvent::Attached);
+    rig.bench.push(0, LinkEvent::Lease(Lease::Owner));
+    rig.advance(900);
+
+    rig.app.world.instance_mut(OTHER).expect("instance").daemon = DaemonSnapshot::Unavailable;
+    rig.bench.push(0, LinkEvent::Exited(Some(0)));
+    rig.advance(400);
+
+    let snapshot =
+        |rig: &Rig, id: &str| rig.app.world.instance(id).expect("instance").daemon.clone();
+    assert!(
+        matches!(snapshot(&rig, INSTANCE), DaemonSnapshot::Tabs(_)),
+        "the daemon that changed is read again"
+    );
+    assert_eq!(
+        snapshot(&rig, OTHER),
+        DaemonSnapshot::Unavailable,
+        "a daemon that did not change is not read"
+    );
+}
+
+#[test]
+fn a_new_session_in_a_stopped_instance_is_refused() {
+    let mut rig = Rig::new();
+    rig.attach();
+    let panes = rig.daemon().panes.len();
+    rig.app
+        .world
+        .instance_mut(INSTANCE)
+        .expect("instance")
+        .status = InstanceStatus::RestoreAvailable;
+
+    rig.app.go(Go::NewSession {
+        instance: INSTANCE.into(),
+        agent: Some(Agent::Codex),
+        account: None,
+    });
+
+    assert_eq!(
+        rig.daemon().panes.len(),
+        panes,
+        "no pane for a stopped instance"
+    );
+    assert!(rig.status().contains("Cannot attach"), "{}", rig.status());
+}
+
+fn codex_account(id: &str, lifecycle: Lifecycle) -> Account {
+    let mut account = Account::registered(
+        id,
+        id,
+        Provider::OpenAi,
+        CredentialSource::PlainApiKey {
+            fingerprint: format!("fp-{id}"),
+            tail: "abcd".into(),
+        },
+    );
+    account.lifecycle = lifecycle;
+    account
+}
+
+fn snapshot_of(world: &World) -> Snapshot {
+    Snapshot {
+        workspaces: world.workspaces.clone(),
+        roles: world.roles.clone(),
+        instances: world.instances.clone(),
+        global: world.global.clone(),
+        accounts: world.accounts.clone(),
+        surfaces: world.surfaces.clone(),
+        github: world.github.clone(),
+        index_error: None,
+        daemon_health: world.daemon_health,
+    }
+}
+
+#[test]
+fn a_new_pane_is_refused_when_the_chosen_account_became_unusable() {
+    let mut rig = Rig::with(PanePolicy::default(), |w| {
+        w.accounts
+            .accounts
+            .push(codex_account("acct-a", Lifecycle::Available));
+        let mut ws = Workspace::new(1, "dev", "/sandbox/project");
+        ws.accounts.enabled.insert("acct-a".into());
+        ws.accounts
+            .preferred
+            .insert(Provider::OpenAi, "acct-a".into());
+        w.workspaces.push(ws);
+        w.instance_mut(INSTANCE).expect("instance").workspace = Some(1);
+    });
+    rig.attach();
+    let panes = rig.daemon().panes.len();
+    rig.press("ctrl+b c");
+    let picker = rig.flat();
+    assert!(picker.contains("New tab"), "{picker}");
+
+    let mut snapshot = snapshot_of(&rig.app.world);
+    snapshot
+        .accounts
+        .accounts
+        .push(codex_account("acct-b", Lifecycle::Available));
+    snapshot.workspaces[0]
+        .accounts
+        .enabled
+        .insert("acct-b".into());
+    snapshot
+        .accounts
+        .get_mut("acct-a")
+        .expect("account")
+        .lifecycle = Lifecycle::NeedsLogin;
+    rig.app.deliver(&Msg::Refreshed {
+        ticket: rig.app.world.refresh_ticket,
+        result: Ok(Box::new(snapshot)),
+    });
+    rig.press("enter");
+
+    let shown = rig.flat();
+    assert!(shown.contains("Codex could not start"), "{shown}");
+    rig.press("enter");
+    rig.advance(160);
+    assert_eq!(
+        rig.daemon().panes.len(),
+        panes,
+        "no pane for the other account"
+    );
+}
+
+#[test]
+fn a_new_pane_leaves_the_session_list_to_the_backend() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.press("ctrl+b c");
+    rig.typed("Shell");
+    rig.press("enter");
+    rig.advance(160);
+    assert_eq!(rig.daemon().tabs.len(), 2);
+
+    let record = rig.app.world.instance(INSTANCE).expect("instance");
+    assert_eq!(
+        record.sessions,
+        Ok(Vec::new()),
+        "the Capsule wrote no session record into the world"
+    );
 }

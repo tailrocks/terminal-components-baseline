@@ -1,6 +1,6 @@
 use junie_tui::widgets::steps::StepState;
 
-use crate::backend::OnePassword;
+use crate::backend::{OnePassword, PlainKey};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::docker::DockerCapability;
@@ -114,7 +114,7 @@ pub trait LaunchFeed: std::fmt::Debug + Send {
 
     /// The operator chose to type the key instead of resolving it. The
     /// credentials line the backend wants shown for it, if it wants one.
-    fn use_plain_text(&mut self) -> Option<TypedKey>;
+    fn use_plain_text(&mut self, key: PlainKey) -> Option<TypedKey>;
 
     /// The operator answered the questions of `NeedsInput`, one answer for
     /// each, in the order they were asked.

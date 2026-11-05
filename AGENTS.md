@@ -225,7 +225,9 @@ workspaces, Docker, OpenShell, Codex).
 - Every behaviour fix ships with a regression test driven through the real
   app or widget (hit regions, focus and rendered cells), and that test must
   fail on the code before the fix.
-- Run the full `cargo nextest run --all-targets`, `cargo clippy
-  --all-targets` and `cargo fmt --check` before reporting work as done. The
+- Run the full `cargo nextest run --workspace --all-targets --all-features`
+  (the `jackin-console` tests are gated on the `demo` feature and are empty
+  targets without `--all-features`), `cargo clippy --all-targets` and
+  `cargo fmt --check` before reporting work as done. The
   visual baseline test must stay green unless a visual change is intended
   and stated.

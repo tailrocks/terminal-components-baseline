@@ -1,4 +1,4 @@
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::screens::Jackin;
 use junie_tui::core::event::{Key, Outcome};
@@ -24,15 +24,15 @@ use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::Rect;
 
-use super::modals::FormDialog;
+use super::modals::{self, FormDialog};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
-use crate::backend::Effect;
+use crate::backend::{Effect, Ticket};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::precedence::PrecedenceLevel;
-use crate::domain::role::{RoleCheckState, RoleRecord};
-use crate::domain::workspace::{RoleName, RoleSource, usability_of};
-use crate::world::{Msg, Snapshot, World, job};
+use crate::domain::role::{RoleCheckState, RoleManifestDoc, RoleRecord};
+use crate::domain::workspace::{AllowedRoles, RoleEntry, RoleName, RoleSource, usability_of};
+use crate::world::{Msg, RoleLoad, Snapshot, World, job};
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::list_detail::{Action, Event, Frame, Line, ListDetail, ListRow};
 
@@ -66,7 +66,9 @@ pub struct RolesScreen {
     undo: Option<(RoleName, Agent, Option<AccountId>)>,
     pick: Option<(RoleName, Agent, Vec<AccountId>)>,
     removing: Option<RoleName>,
-    checking: BTreeSet<RoleName>,
+    checking: BTreeMap<RoleName, Ticket>,
+    loading: BTreeSet<RoleName>,
+    trusting: Option<RoleName>,
     adding: Option<String>,
 }
 
@@ -145,7 +147,9 @@ impl RolesScreen {
             undo: None,
             pick: None,
             removing: None,
-            checking: BTreeSet::new(),
+            checking: BTreeMap::new(),
+            loading: BTreeSet::new(),
+            trusting: None,
             adding: None,
         }
     }
@@ -226,7 +230,7 @@ impl RolesScreen {
                     };
                     let summary = self.binding_summary(rec, w);
                     let row = ListRow::new(&rec.name)
-                        .mark(check_mark(rec, self.checking.contains(&rec.name)))
+                        .mark(check_mark(rec, self.checking.contains_key(&rec.name)))
                         .detail(chip(rec));
                     if summary.is_empty() {
                         row.meta("no binding", Tone::Faint)
@@ -325,7 +329,7 @@ impl RolesScreen {
         let kind = if rec.writable() { "local" } else { "git" };
         let meta = format!(
             "{kind} · {}",
-            check_word(rec, self.checking.contains(&rec.name))
+            check_word(rec, self.checking.contains_key(&rec.name))
         );
         let mut lines = vec![Line::Prop("Source".into(), source, Tone::Normal)];
         match &rec.manifest {
@@ -383,7 +387,7 @@ impl RolesScreen {
                     },
                     Tone::Normal,
                 ));
-                let (check, tone) = match check_state(rec, self.checking.contains(&rec.name)) {
+                let (check, tone) = match check_state(rec, self.checking.contains_key(&rec.name)) {
                     RoleCheckState::Unchecked => ("not checked".to_owned(), Tone::Muted),
                     RoleCheckState::Running => ("checking…".to_owned(), Tone::Active),
                     RoleCheckState::Done(f) if f.is_empty() => ("passed".to_owned(), Tone::Success),
@@ -426,7 +430,7 @@ impl RolesScreen {
             Action::new("clear", "Clear binding", ButtonKind::Secondary)
                 .disabled(busy || !has_binding),
             Action::new("check", "Check", ButtonKind::Secondary)
-                .disabled(self.checking.contains(&rec.name)),
+                .disabled(self.checking.contains_key(&rec.name)),
             Action::new("remove", "Remove…", ButtonKind::Danger),
         ];
         (format!("Role · {}", rec.name), meta, lines, actions)
@@ -554,6 +558,9 @@ impl RolesScreen {
                 } else {
                     ""
                 };
+                if bind.undo {
+                    self.undo = Some((bind.role, bind.agent, bind.account));
+                }
                 cx.error(format!(
                     "Could not save the binding: {reason}. Nothing changed. Try again.{hint}"
                 ));
@@ -587,19 +594,43 @@ impl RolesScreen {
             return;
         };
         let name = rec.name.clone();
-        self.check_role(&name, w, cx);
+        match self.check_role(&name, w, cx) {
+            RoleLoad::Requested => {}
+            RoleLoad::NeedsTrust(entry) => self.ask_trust(&entry, w, cx),
+            RoleLoad::Unregistered => cx.error(format!("{name} is not in the role registry")),
+        }
     }
 
-    fn check_role(&mut self, name: &str, w: &mut World, cx: &mut Cx) {
+    fn check_role(&mut self, name: &str, w: &mut World, cx: &mut Cx) -> RoleLoad {
         let Some(rec) = w.surfaces.roles.as_ref().and_then(|a| a.role(name)) else {
-            return;
+            return RoleLoad::Unregistered;
         };
-        let Ok(doc) = rec.manifest.clone() else {
-            cx.status(format!("{name}: jackin.role.toml still does not parse"));
-            return;
-        };
-        self.checking.insert(name.to_owned());
+        match rec.manifest.clone() {
+            Ok(doc) => {
+                self.start_check(name, doc, w, cx);
+                RoleLoad::Requested
+            }
+            Err(_) if self.loading.contains(name) => RoleLoad::Requested,
+            Err(_) => {
+                let load = w.load_role(name);
+                if load == RoleLoad::Requested {
+                    self.loading.insert(name.to_owned());
+                    cx.progress(job::ROLE_LOAD, format!("Reading {name} again…"));
+                }
+                load
+            }
+        }
+    }
+
+    fn ask_trust(&mut self, entry: &RoleEntry, w: &World, cx: &mut Cx) {
+        self.trusting = Some(entry.name.clone());
+        let d = modals::trust_dialog(WidgetId::of("roles.trust"), entry, w);
+        cx.open(d, LayerTag::new("trust").key(&entry.name));
+    }
+
+    fn start_check(&mut self, name: &str, doc: RoleManifestDoc, w: &mut World, cx: &mut Cx) {
         let ticket = w.next_ticket();
+        self.checking.insert(name.to_owned(), ticket);
         w.perform(Effect::CheckRole {
             ticket,
             role: name.to_owned(),
@@ -625,11 +656,21 @@ impl RolesScreen {
             return;
         };
         let name = rec.name.clone();
-        if let Some(ws) = w
+        let users: Vec<String> = w
             .workspaces
             .iter()
-            .find(|x| x.roles.default.as_deref() == Some(name.as_str()))
-        {
+            .filter_map(|ws| {
+                let mut uses = vec![];
+                if ws.roles.default.as_deref() == Some(name.as_str()) {
+                    uses.push("default role");
+                }
+                if matches!(&ws.roles.allowed, AllowedRoles::Custom(list) if list.contains(&name)) {
+                    uses.push("allowed role");
+                }
+                (!uses.is_empty()).then(|| format!("{} ({})", ws.name, uses.join(" and ")))
+            })
+            .collect();
+        if !users.is_empty() {
             let d = InfoDialog::new(
                 WidgetId::of("roles.inuse"),
                 &format!("Cannot remove role {name}"),
@@ -638,16 +679,13 @@ impl RolesScreen {
                     Prop::new("State", "nothing was removed"),
                     Prop::new(
                         "Next",
-                        "choose another default role in the workspace, then remove it",
+                        "choose another default role or take it off the allowed roles in those workspaces, then remove it",
                     ),
                 ],
             )
             .error()
             .intro(vec![(
-                format!(
-                    "Role {name} is the default role of {}. Choose another default role, then remove it.",
-                    ws.name
-                ),
+                format!("Role {name} is still used by {}.", users.join(", ")),
                 Tone::Normal,
             )])
             .width(70);
@@ -686,6 +724,10 @@ impl RolesScreen {
     }
 
     fn add(&mut self, cx: &mut Cx) {
+        if self.adding.is_some() {
+            cx.status("Adding role…");
+            return;
+        }
         self.open_add_form("", cx);
     }
 
@@ -735,6 +777,7 @@ impl RolesScreen {
                 cx.status(format!("Role {name} added"));
             }
             Err(reason) => {
+                cx.error(format!("Could not add role {location}: {reason}"));
                 let d = InfoDialog::new(
                     WidgetId::of("roles.addfail"),
                     "Could not add role",
@@ -782,7 +825,10 @@ impl Page<Jackin> for RolesScreen {
     }
 
     fn animating(&self, _w: &World) -> bool {
-        self.pending.is_some() || self.adding.is_some() || !self.checking.is_empty()
+        self.pending.is_some()
+            || self.adding.is_some()
+            || !self.checking.is_empty()
+            || !self.loading.is_empty()
     }
 
     fn on_tick(&mut self, w: &mut World, _cx: &mut Cx) -> Outcome {
@@ -811,16 +857,67 @@ impl Page<Jackin> for RolesScreen {
                 self.finish_add(location, result, w, cx);
                 Outcome::Changed
             }
-            Msg::RoleChecked { role, result, .. } if self.checking.remove(role) => {
+            Msg::RoleTrusted { role, result } if self.trusting.as_ref() == Some(role) => {
+                self.trusting = None;
                 match result {
                     Ok(snapshot) => {
                         w.apply((**snapshot).clone());
-                        let found = w
+                        match self.check_role(role, w, cx) {
+                            RoleLoad::Requested => {}
+                            RoleLoad::NeedsTrust(_) | RoleLoad::Unregistered => {
+                                cx.error(format!("{role} is still not trusted · nothing was read"));
+                            }
+                        }
+                        self.build_rows(w);
+                    }
+                    Err(reason) => cx.error(reason.clone()),
+                }
+                Outcome::Changed
+            }
+            Msg::RoleLoaded { role, result } if self.loading.remove(role) => {
+                match result {
+                    Ok(snapshot) => {
+                        w.apply((**snapshot).clone());
+                        let manifest = w
                             .surfaces
                             .roles
                             .as_ref()
                             .and_then(|a| a.role(role))
-                            .map_or(0, |r| r.findings().len());
+                            .map(|r| r.manifest.clone());
+                        match manifest {
+                            Some(Ok(doc)) => self.start_check(role, doc, w, cx),
+                            _ => {
+                                cx.status(format!("{role}: jackin.role.toml still does not parse"))
+                            }
+                        }
+                    }
+                    Err(reason) => cx.error(format!("Could not read {role}: {reason}")),
+                }
+                self.build_rows(w);
+                Outcome::Changed
+            }
+            Msg::RoleChecked {
+                ticket,
+                role,
+                result,
+            } if self.checking.get(role) == Some(ticket) => {
+                self.checking.remove(role);
+                let checked = match result {
+                    Ok(snapshot) => snapshot
+                        .surfaces
+                        .roles
+                        .as_ref()
+                        .and_then(|a| a.role(role))
+                        .cloned()
+                        .ok_or_else(|| format!("the check of {role} came back empty")),
+                    Err(reason) => Err(reason.clone()),
+                };
+                match checked {
+                    Ok(record) => {
+                        let found = record.findings().len();
+                        if let Some(r) = w.surfaces.roles.as_mut().and_then(|a| a.role_mut(role)) {
+                            r.check = record.check;
+                        }
                         cx.status(if found == 0 {
                             format!("Role {role}: check passed")
                         } else {
@@ -949,7 +1046,7 @@ impl Page<Jackin> for RolesScreen {
                     self.add(cx);
                     return Outcome::Changed;
                 }
-                let (o, event) = self.ld.click(ev.id, ev.pos(), cx.focus, self.rows.len());
+                let (o, event) = self.ld.click(ev.id, cx.focus, self.rows.len());
                 match event {
                     Some(Event::Item(_)) => self.open_pick(w, cx),
                     Some(Event::Action(name)) => self.fire(name, w, cx),
@@ -958,7 +1055,6 @@ impl Page<Jackin> for RolesScreen {
                 }
                 o
             }
-            Some(Phase::Drag) => self.ld.drag(ev.id, ev.pos()),
             _ => Outcome::Ignored,
         }
     }
@@ -996,6 +1092,20 @@ impl Page<Jackin> for RolesScreen {
                 }
             }
             ("remove", _) => self.removing = None,
+            (
+                "trust",
+                ModalResult::Dialog {
+                    action: Some(1), ..
+                },
+            ) => {
+                if let Some(role) = self.trusting.clone() {
+                    w.perform(Effect::TrustRole { role });
+                }
+            }
+            ("trust", _) => {
+                self.trusting = None;
+                cx.status("Not trusted · role not read");
+            }
             ("add", ModalResult::Form(Some(values))) => self.start_add(values, w, cx),
             ("addfail", _) => self.open_add_form(&tag.key, cx),
             (
@@ -1095,5 +1205,15 @@ impl Screen for RolesScreen {
             ];
         }
         vec![]
+    }
+
+    fn job_continues(&self, m: &Msg) -> bool {
+        match m {
+            Msg::RoleLoaded { role, .. } => self.loading.iter().any(|r| r != role),
+            Msg::RoleChecked { ticket, role, .. } => {
+                self.checking.iter().any(|(r, t)| r != role || t != ticket)
+            }
+            _ => false,
+        }
     }
 }

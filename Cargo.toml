@@ -23,6 +23,7 @@ tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/
 default = ["cli", "terminal"]
 cli = ["dep:clap"]
 terminal = ["dep:termpane"]
+product = ["terminal"]
 
 [lib]
 name = "junie_tui"
@@ -48,12 +49,13 @@ required-features = ["cli"]
 [[test]]
 name = "functional"
 path = "tests/functional/main.rs"
+required-features = ["cli", "terminal"]
 
 [dependencies]
 clap = { workspace = true, optional = true }
-termpane = { git = "https://github.com/tailrocks/termpane", rev = "e0c5ee405b38bc62b55005a48f3a7b29196a8b30", optional = true, default-features = false }
+termpane = { git = "https://github.com/tailrocks/termpane", rev = "46cc0977d8ee95d5284f75080d507ca2d116c007", optional = true, default-features = false }
 ratatui = { workspace = true }
-unicode-width = "0.2"
+unicode-width = "0.2.3"
 unicode-segmentation = "1"
 
 [target.'cfg(unix)'.dependencies]

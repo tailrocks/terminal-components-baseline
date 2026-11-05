@@ -6,13 +6,14 @@ use std::sync::{Arc, Mutex};
 
 use jackin_console::app::Route;
 use jackin_console::backend::{Backend, Completion, Effect, FileSource};
-use jackin_console::domain::instance::Instance;
+use jackin_console::domain::agent::Agent;
+use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::sim::SimBackend;
-use jackin_console::world::{DaemonHealth, Msg, World};
+use jackin_console::world::{Msg, World};
 use junie_tui::core::event::Input;
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
@@ -60,13 +61,38 @@ impl Backend for Raising {
     }
 }
 
+fn cancelled_launch() -> Instance {
+    Instance {
+        id: "jk-late".into(),
+        container: "jackin-jk-late".into(),
+        workspace: Some(1),
+        workdir: "/sandbox/project".into(),
+        role: "the-architect".into(),
+        agent: Agent::Codex,
+        status: InstanceStatus::FailedSetup,
+        created_secs: 1_700_000_000,
+        last_seen_secs: 1_700_000_005,
+        run_id: "R-7".into(),
+        sessions: Ok(vec![]),
+        daemon: DaemonSnapshot::Unavailable,
+        branch: None,
+        pr: None,
+        default_branch: "main".into(),
+        github: None,
+        uncommitted: 0,
+        unpushed: 0,
+        account: None,
+        accounts: vec![],
+    }
+}
+
 #[test]
 fn a_message_raised_during_the_intro_is_delivered_when_the_manager_shows() {
     let mut world = world_for(Scenario::FirstUse);
     world.backend = Arc::new(Raising {
         inner: SimBackend::shared(),
-        once: Mutex::new(Some(Msg::Refreshed {
-            result: Err("gateway unreachable".into()),
+        once: Mutex::new(Some(Msg::LaunchCancelled {
+            instance: Box::new(cancelled_launch()),
         })),
     });
     let mut app = app_with_world(
@@ -84,9 +110,8 @@ fn a_message_raised_during_the_intro_is_delivered_when_the_manager_shows() {
         Route::Intro,
         "the first tick is still the intro"
     );
-    assert_eq!(
-        app.world.daemon_health,
-        DaemonHealth::Healthy,
+    assert!(
+        app.world.instance("jk-late").is_none(),
         "the intro cannot deliver it yet"
     );
 
@@ -100,9 +125,8 @@ fn a_message_raised_during_the_intro_is_delivered_when_the_manager_shows() {
     for _ in 0..3 {
         Application::handle(&mut app, Input::Tick);
     }
-    assert_eq!(
-        app.world.daemon_health,
-        DaemonHealth::Stale,
+    assert!(
+        app.world.instance("jk-late").is_some(),
         "the message was held, not dropped"
     );
 }

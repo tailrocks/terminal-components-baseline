@@ -25,6 +25,8 @@ pub enum LaunchRole {
 }
 
 pub const NO_DEFAULT_ROLE: &str = "no default role · set it in Roles";
+pub const DEFAULT_ROLE_UNUSABLE: &str =
+    "the default role is not trusted or not loaded · fix it in Roles";
 pub const NO_SAVED_WORKSPACE: &str = "no saved workspace · press n, then set a default role";
 
 #[derive(Debug, Clone, PartialEq, Eq)]

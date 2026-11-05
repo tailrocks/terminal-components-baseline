@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use junie_tui::widgets::steps::StepState;
 
-use crate::backend::{OnePassword, OpSession};
+use crate::backend::{OnePassword, OpSession, PlainKey};
 use crate::domain::account::{AccountId, masked};
 use crate::domain::agent::Agent;
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
@@ -113,6 +113,7 @@ fn words() -> LaunchWords {
         log_waiting: "(waiting for docker build output…)".into(),
         build_failed: "Docker build failed".into(),
         ready_activity: "Hardline open · handing off to the Capsule".into(),
+        ready_not_running: "The container is {status}, not running".into(),
         credentials_resolved: "resolved in memory · discarded after injection".into(),
         refused_state: "nothing was created".into(),
         role_not_allowed: RefusalWords {
@@ -520,7 +521,7 @@ impl LaunchFeed for SimLaunch {
         self.resume();
     }
 
-    fn use_plain_text(&mut self) -> Option<TypedKey> {
+    fn use_plain_text(&mut self, _key: PlainKey) -> Option<TypedKey> {
         self.account = None;
         self.resume();
         Some(TypedKey {

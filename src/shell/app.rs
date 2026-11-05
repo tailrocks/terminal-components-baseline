@@ -18,7 +18,7 @@ use crate::widgets::hintbar::HintKeys;
 use crate::widgets::keyhint::Hint;
 use crate::widgets::too_small::TooSmall;
 
-use super::{Clipboard, Copied, Cx, Request, StatusLine};
+use super::{Clipboard, ClipboardHook, Copied, Cx, Request, StatusLine, StopHandle};
 use crate::clock::{Moment, TestRequest};
 use crate::theme::Strings;
 use crate::ui::context::ContextConfig;
@@ -68,7 +68,9 @@ pub struct Shell<P = ()> {
 
     pub context: ContextConfig,
 
-    pub clipboard: Clipboard,
+    clipboard: Clipboard,
+    clipboard_hook: Option<ClipboardHook>,
+    stop: StopHandle,
     footer: Option<FooterDrawn>,
     page: Option<PageKey>,
 }
@@ -79,7 +81,7 @@ impl<P> Default for Shell<P> {
     }
 }
 
-impl<P: Default> Shell<P> {
+impl<P: Default + PartialEq> Shell<P> {
     pub fn copy_at(&mut self, text: &str, what: Option<&str>, now: Moment) -> Copied {
         let r = self.clipboard.copy(text);
         let (msg, tone) = Clipboard::report(&r, text, what);
@@ -105,9 +107,24 @@ impl<P> Shell<P> {
             footer_keys: HintKeys::default(),
             context: ContextConfig::DEFAULT,
             clipboard: Clipboard::new(),
+            clipboard_hook: None,
+            stop: StopHandle::default(),
             footer: None,
             page: None,
         }
+    }
+
+    pub fn stop_handle(&self) -> StopHandle {
+        self.stop.clone()
+    }
+
+    pub fn clipboard(&self) -> &Clipboard {
+        &self.clipboard
+    }
+
+    pub fn set_clipboard(&mut self, clipboard: Clipboard) {
+        self.clipboard = clipboard;
+        self.clipboard_hook = Some(self.clipboard.install());
     }
 
     pub fn pointer_parts(&mut self) -> PointerParts<'_> {
@@ -352,14 +369,10 @@ pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
         return Outcome::Ignored;
     }
     crate::core::refusal::clear_refusal();
-    let shown = |app: &A| {
-        app.shell()
-            .status
-            .get()
-            .map(|(text, tone)| (text.to_owned(), tone))
-    };
-    let status_before = shown(app);
-    let seen = app.shell_mut().status.on_input(&input);
+    let status_before = app.shell().status.revision();
+    if request.is_none() {
+        app.shell_mut().status.on_input(&input);
+    }
     if let Input::Resize(w, h) = input {
         app.shell_mut().size = (w, h);
     }
@@ -373,7 +386,7 @@ pub fn handle<A: App + ?Sized>(app: &mut A, input: Input) -> Outcome {
         Some(out) => out,
         None => app.on_input(input),
     };
-    if seen || shown(app) != status_before {
+    if app.shell().status.revision() != status_before {
         out = out.or(Outcome::Changed);
     }
     out = out.or(blur_fan_out(app));
@@ -390,7 +403,7 @@ impl<A: App> Application for A {
         render(self, frame)
     }
     fn should_quit(&self) -> bool {
-        self.shell().quit
+        self.shell().quit || self.shell().stop.is_stopped()
     }
     fn tick_interval(&self) -> Duration {
         App::tick_interval(self)

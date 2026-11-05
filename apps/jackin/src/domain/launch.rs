@@ -95,6 +95,8 @@ pub struct LaunchWords {
     pub log_waiting: String,
     pub build_failed: String,
     pub ready_activity: String,
+    /// Takes `{status}`.
+    pub ready_not_running: String,
     pub credentials_resolved: String,
     /// The `State` row of a refused launch.
     pub refused_state: String,
@@ -223,6 +225,7 @@ impl LaunchWords {
             log_waiting: "(waiting for build output…)".into(),
             build_failed: "Image build failed".into(),
             ready_activity: "Codex is running · opening the session".into(),
+            ready_not_running: "The sandbox is {status}, not running".into(),
             credentials_resolved: "resolved in memory · discarded".into(),
             refused_state: "nothing was created".into(),
             role_not_allowed: RefusalWords {

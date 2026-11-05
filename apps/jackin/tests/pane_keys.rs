@@ -152,3 +152,75 @@ fn kitty_query_answer_is_legacy() {
     assert_eq!(enter, PaneKey::Forwarded);
     assert_eq!(bench.commands(0)[1], input(b"\r"), "Shift+Enter is Enter");
 }
+
+fn attaching(bench: &std::sync::Arc<Bench>) -> jackin_console::panes::TerminalPane {
+    let mut pane = pane(bench);
+    pane.sync_size(inner(80, 24));
+    bench.push(0, LinkEvent::Attached);
+    bench.output(0, b"\x1b[?1049h\x1b[?1004h");
+    pane.tick(0);
+    pane.tick(900);
+    assert_eq!(
+        pane.status(),
+        &jackin_console::panes::LinkStatus::Attaching,
+        "no lease has arrived"
+    );
+    pane
+}
+
+#[test]
+fn a_wheel_and_a_focus_report_wait_for_the_lease() {
+    let bench = Bench::new();
+    let mut pane = attaching(&bench);
+    assert_eq!(pane.wheel(Axis::Vertical, -3), Some(Outcome::Consumed));
+    pane.focus_changed(true, 1_000);
+    assert_eq!(bench.commands(0), [], "not the owner yet");
+
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
+    pane.tick(1_100);
+    assert_eq!(pane.wheel(Axis::Vertical, -3), Some(Outcome::Changed));
+    pane.focus_changed(false, 1_200);
+    let mut sent = arrows(3, b"\x1b[A");
+    sent.push(input(b"\x1b[O"));
+    assert_eq!(bench.commands(0), sent);
+}
+
+#[test]
+fn a_key_and_a_paste_type_before_the_lease_is_known() {
+    let bench = Bench::new();
+    let mut pane = attaching(&bench);
+    assert_eq!(pane.key(&key("x"), 1_000), PaneKey::Forwarded);
+    assert_eq!(
+        pane.paste("hi", 1_100),
+        jackin_console::panes::PasteOutcome::Sent
+    );
+    assert_eq!(
+        bench.commands(0).len(),
+        2,
+        "typing is how a viewer takes over"
+    );
+}
+
+#[test]
+fn a_new_attach_forgets_the_lease_of_the_one_before() {
+    let bench = Bench::new();
+    let mut pane = live(&bench);
+    bench.output(0, b"\x1b[?1049h");
+    pane.tick(900);
+    bench.push(0, LinkEvent::Attached);
+    pane.tick(1_000);
+    pane.tick(2_000);
+    bench.output(0, b"\x1b[6n");
+    pane.tick(2_100);
+    assert_eq!(pane.wheel(Axis::Vertical, -3), Some(Outcome::Consumed));
+    assert_eq!(
+        bench.commands(0),
+        [],
+        "the old lease says nothing about this attach"
+    );
+
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
+    bench.output(0, b"\x1b[6n");
+    pane.tick(2_200);
+    assert_eq!(bench.commands(0).len(), 1, "{:?}", bench.commands(0));
+}

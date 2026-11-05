@@ -1,17 +1,18 @@
 //! The OpenShell constants of the baseline records, and the class of every field.
 //!
-//! Fixed: a field that holds one OpenShell value in every jackin world. The
-//! extractors read it and the tie compares it. Data: a field the host
-//! supplies. The extractors name it `field: _` and the tie does not compare
-//! it. Console: a `World` field the running console owns and fills itself
-//! (`clock`, `backend`, `op` and the like), which projection never produces;
-//! it also appears as `field: _`. Every record is destructured without `..`,
-//! so a new field does not build until it has a class.
+//! Fixed: a field whose value the OpenShell world decides: one constant for
+//! every record, or a function of the record itself (`edit_blocked` follows the
+//! account's source). The extractors read it and the tie compares it. Data: a
+//! field the host supplies. The extractors name it `field: _` and the tie does
+//! not compare it. Console: a `World` field the running console owns and fills
+//! itself (`clock`, `backend`, `op` and the like), which projection never
+//! produces; it also appears as `field: _`. Every record is destructured
+//! without `..`, so a new field does not build until it has a class.
 //!
 //! A field wrong in both the table below and the expected literal of a test
 //! passes every check. Only a review of the table closes that hole.
 
-use super::account::{Account, AccountForm, AccountOrigin, AccountRegistry};
+use super::account::{Account, AccountForm, AccountOrigin, AccountRegistry, EditBlocked};
 use super::agent::{Agent, AgentBlocked, AuthMode};
 use super::fixed::Fixed;
 use super::instance::Instance;
@@ -62,6 +63,7 @@ pub struct GlobalFixed {
 pub struct AccountFixed {
     pub enabled: bool,
     pub origin: AccountOrigin,
+    pub edit_blocked: Option<EditBlocked>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -219,11 +221,12 @@ pub fn account_fixed(a: &Account) -> AccountFixed {
         endpoint: _,
         usage: _,
         launch_blocked: _,
-        edit_blocked: _,
+        edit_blocked,
     } = a;
     AccountFixed {
         enabled: *enabled,
         origin: *origin,
+        edit_blocked: edit_blocked.clone(),
     }
 }
 
@@ -347,6 +350,9 @@ pub fn world_fixed(w: &World) -> FixedFields {
         tickets: _,
         snapshots_applied: _,
         refresh_from: _,
+        refresh_started_secs: _,
+        refresh_ticket: _,
+        saved_ticket: _,
         pane_policy: _,
     } = w;
     collect(workspaces, roles, instances, global, accounts, surfaces)

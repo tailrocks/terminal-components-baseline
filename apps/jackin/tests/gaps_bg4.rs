@@ -11,9 +11,9 @@ use common::*;
 use jackin_console::app::App;
 use jackin_console::backend::{
     Backend, ChangeSet, ChangedFile, CheckRow, Completion, DiffLine, DiffStatus, Effect,
-    FieldDescriptor, FileSource, Hunk, OnePassword, OpAccount, OpAccountRow, OpAccountState,
-    OpError, OpField, OpItem, OpItemRow, OpListing, OpScope, OpSession, OpVault, OpVaultRow,
-    Refresh, SecretClass, UnreadFile, ValidationOutcome, VaultAccess,
+    FieldDescriptor, FileSource, Hunk, KeyOutcome, OnePassword, OpAccount, OpAccountRow,
+    OpAccountState, OpError, OpField, OpItem, OpItemRow, OpListing, OpScope, OpSession, OpVault,
+    OpVaultRow, Refresh, SecretClass, UnreadFile, ValidationOutcome, VaultAccess,
 };
 use jackin_console::domain::account::{
     AccountForm, AccountIdentity, Confidence, CredentialSource, IssueCode, Lifecycle,
@@ -59,7 +59,7 @@ impl Held {
 
     fn seen(&self) -> Vec<Effect> {
         let mut all = self.seen.lock().expect("seen").clone();
-        all.retain(|e| *e != Effect::Refresh);
+        all.retain(|e| !matches!(e, Effect::Refresh { .. }));
         all
     }
 
@@ -314,12 +314,16 @@ fn check_rows_are_worded_by_the_vocabulary() {
 }
 
 fn refresh_still_limited(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::RefreshAccount { account, .. } = effect else {
+    let Effect::RefreshAccount {
+        account, source, ..
+    } = effect
+    else {
         return None;
     };
     let now = world.now_secs();
     Some(Msg::AccountRefreshed {
         account: account.clone(),
+        source: Box::new(source.clone()),
         result: Ok(Box::new(Refresh {
             usage: world.accounts.get(account)?.usage.clone(),
             issue: None,
@@ -964,9 +968,11 @@ impl OnePassword for Cached {
         account: &str,
         vault: &str,
         item: &str,
-        field: &str,
+        field_id: &str,
+        section: Option<&str>,
     ) -> Result<OpReference, OpError> {
-        self.inner.reference(account, vault, item, field)
+        self.inner
+            .reference(account, vault, item, field_id, section)
     }
 
     fn describe(&self, reference: &OpReference) -> Result<FieldDescriptor, OpError> {
@@ -1032,6 +1038,7 @@ fn duplicated_titles_account() -> OpAccount {
     let field = OpField {
         id: "f1".into(),
         label: "key".into(),
+        section: None,
         kind: jackin_console::backend::FieldKind::Concealed,
         material: Some("anthropic:valid".into()),
         tail: "1234".into(),
@@ -1112,12 +1119,134 @@ fn the_picker_keeps_the_id_of_the_row_chosen_when_titles_repeat() {
         OpListing::Fields(vec![jackin_console::backend::OpFieldRow {
             id: "f1".into(),
             label: "key".into(),
+            section: None,
             kind: jackin_console::backend::FieldKind::Concealed,
         }]),
     );
     press(&mut app, "enter");
     let shown = screen(&mut app);
     assert!(shown.contains("op://v2/i2/f1"), "{shown}");
+}
+
+fn two_sections_account() -> OpAccount {
+    let field = |section: &str| OpField {
+        id: "k".into(),
+        label: "key".into(),
+        section: Some(section.into()),
+        kind: jackin_console::backend::FieldKind::Concealed,
+        material: Some("anthropic:valid".into()),
+        tail: "1234".into(),
+    };
+    OpAccount {
+        id: "sections.1password.com".into(),
+        email: "sections@example.test".into(),
+        state: OpAccountState::Available,
+        vaults: vec![OpVault {
+            id: "v1".into(),
+            name: "Shared".into(),
+            access: VaultAccess::ReadWrite,
+            items: vec![OpItem {
+                id: "i1".into(),
+                title: "api".into(),
+                category: "API credential",
+                fields: vec![field("Production"), field("Staging")],
+            }],
+        }],
+    }
+}
+
+#[test]
+fn the_picker_names_the_section_of_the_field_chosen_when_labels_repeat() {
+    let mut world = world_for(Scenario::AccountsMixed);
+    let mut op = SimOnePassword::fixture(0);
+    op.accounts = vec![two_sections_account()];
+    world.op = Box::new(op);
+    let (mut app, backend) = held(world, Scenario::AccountsMixed);
+
+    open_picker(&mut app);
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Vaults(vec![OpVaultRow {
+            id: "v1".into(),
+            name: "Shared".into(),
+            items: 1,
+            access: None,
+        }]),
+    );
+    press(&mut app, "enter");
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Items(vec![OpItemRow {
+            id: "i1".into(),
+            title: "api".into(),
+            category: "API credential".into(),
+            fields: Some(2),
+        }]),
+    );
+    press(&mut app, "enter");
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Fields(
+            ["Production", "Staging"]
+                .map(|section| jackin_console::backend::OpFieldRow {
+                    id: "k".into(),
+                    label: "key".into(),
+                    section: Some(section.into()),
+                    kind: jackin_console::backend::FieldKind::Concealed,
+                })
+                .to_vec(),
+        ),
+    );
+    let rows = screen(&mut app);
+    assert!(rows.contains("Production · concealed"), "{rows}");
+    assert!(rows.contains("Staging · concealed"), "{rows}");
+    press(&mut app, "down");
+    press(&mut app, "enter");
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("op://v1/i1/Staging/k"), "{shown}");
+}
+
+#[test]
+fn a_reference_is_described_and_classified_by_its_own_section() {
+    let mut op = SimOnePassword::fixture(0);
+    let mut account = two_sections_account();
+    let [production, staging] = account.vaults[0].items[0].fields.as_mut_slice() else {
+        panic!("two fields expected");
+    };
+    production.material = Some("anthropic:valid-PROD".into());
+    production.tail = "PROD".into();
+    staging.material = Some("anthropic:throttled-STAG".into());
+    staging.tail = "STAG".into();
+    op.accounts = vec![account];
+    let op: &dyn OnePassword = &op;
+    let reference = |section| {
+        op.reference("sections.1password.com", "v1", "i1", "k", Some(section))
+            .expect("a reference")
+    };
+    let (production, staging) = (reference("Production"), reference("Staging"));
+
+    assert!(
+        op.describe(&production)
+            .expect("described")
+            .masked
+            .ends_with("PROD")
+    );
+    assert!(
+        op.describe(&staging)
+            .expect("described")
+            .masked
+            .ends_with("STAG")
+    );
+    let outcome = |reference| match op.classify(reference).expect("classified") {
+        SecretClass::Key { outcome, .. } => outcome,
+        other => panic!("a key expected, got {other:?}"),
+    };
+    assert_eq!(outcome(&production), KeyOutcome::Valid);
+    assert_eq!(outcome(&staging), KeyOutcome::RateLimited);
 }
 
 // Gap 5: a change set says how many files it left out and which it did not

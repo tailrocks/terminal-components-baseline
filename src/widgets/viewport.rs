@@ -564,7 +564,7 @@ impl TextViewport {
     }
 
     pub fn h_enabled(&self) -> bool {
-        !self.wrap && self.scroll.h_cfg.enabled
+        !self.wrap && self.h_policy().enabled
     }
 
     fn hoff(&self) -> usize {
@@ -1066,6 +1066,7 @@ impl TextViewport {
 
     pub fn set_area(&mut self, area: Rect) {
         self.area = area;
+        self.adopt_policy();
         let h_on = self.h_enabled();
         let size = (area.width, area.height, self.wrap, h_on);
         let dirty = !self.index_valid || self.indexed_lines < self.lines.len();
@@ -1665,6 +1666,18 @@ impl TextViewport {
         self.edit_menu.render(self.area, buf, ctx);
     }
 
+    fn h_policy(&self) -> HScroll {
+        self.horizontal.unwrap_or_else(|| self.scroll.app_hscroll())
+    }
+
+    fn adopt_policy(&mut self) {
+        let h_cfg = self.h_policy();
+        if h_cfg != self.scroll.h_cfg {
+            self.scroll.h_cfg = h_cfg;
+            self.layout_size = None;
+        }
+    }
+
     fn render_view(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, bg: Color) {
         let area = area.intersection(*buf.area());
         if area.is_empty() {
@@ -1675,11 +1688,8 @@ impl TextViewport {
         let focused = ctx
             .interaction
             .focused_under(self.id, self.edit_menu.is_open());
-        let h_cfg = self.horizontal.unwrap_or(ctx.hscroll);
-        if h_cfg != self.scroll.h_cfg {
-            self.scroll.h_cfg = h_cfg;
-            self.layout_size = None;
-        }
+        self.scroll.note_policy(ctx.track_click, ctx.hscroll);
+        self.adopt_policy();
         self.scroll.begin(ctx.track_click);
         self.set_area(area);
         let has_sb = self.scroll.overflows();
@@ -1845,6 +1855,19 @@ impl TextViewport {
     pub fn hbar(&self) -> Rect {
         self.scroll.h_track()
     }
+
+    pub(crate) fn vbar(&self) -> Rect {
+        if self.scroll.v.overflows() && self.area.width >= 2 {
+            Rect::new(
+                self.area.right() - 1,
+                self.area.y,
+                1,
+                self.text_rect().height,
+            )
+        } else {
+            Rect::ZERO
+        }
+    }
 }
 
 impl crate::ui::measure::Measure for TextViewport {
@@ -1866,6 +1889,7 @@ const MIN_W: u16 = 24;
 
 impl Scrollable for TextViewport {
     fn pane(&mut self) -> &mut ScrollPane {
+        self.adopt_policy();
         &mut self.scroll
     }
 

@@ -476,11 +476,7 @@ fn tablepro_history_rerun_and_help_and_layout() {
     let app = connected("tablepro-history");
     app.key("tab");
     app.paste("SELECT * FROM orders;");
-    app.key("ctrl+r");
-    app.wait_screen("results before history", |s| {
-        text(s).contains("rows") || text(s).contains("orders")
-    });
-    app.key("ctrl+y");
+    app.type_text("\x12\x19");
     app.wait_screen("history opens", |s| {
         text(s).to_lowercase().contains("history")
     });

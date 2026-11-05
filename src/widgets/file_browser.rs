@@ -101,6 +101,32 @@ pub trait FileSource {
     }
 }
 
+impl<S: FileSource + ?Sized> FileSource for Box<S> {
+    fn list(&self, dir: &str) -> Result<Vec<FileEntry>, String> {
+        (**self).list(dir)
+    }
+
+    fn is_dir(&self, path: &str) -> bool {
+        (**self).is_dir(path)
+    }
+
+    fn home(&self) -> Option<String> {
+        (**self).home()
+    }
+
+    fn parent(&self, path: &str) -> Option<String> {
+        (**self).parent(path)
+    }
+
+    fn display(&self, path: &str) -> String {
+        (**self).display(path)
+    }
+
+    fn expand(&self, typed: &str) -> String {
+        (**self).expand(typed)
+    }
+}
+
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct MemorySource {
     pub entries: Vec<FileEntry>,

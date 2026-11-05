@@ -4,7 +4,7 @@ use crate::core::hit::Axis;
 use crate::core::id::WidgetId;
 use crate::core::intent::Phase;
 use crate::core::pointer::{MouseTarget, PointerEvent};
-use crate::core::scroll::ScrollState;
+use crate::core::scroll::{ScrollState, TrackClick};
 use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
 use crate::ui::layout::{Split, SplitDir};
 use crate::ui::text::{fit, truncate_middle, width};
@@ -68,7 +68,7 @@ impl ChangeSet {
     }
 
     pub fn summary(&self) -> String {
-        let n = self.files.len();
+        let n = self.files.len() + self.unread.len();
         format!(
             "{n} file{} · +{} −{}",
             if n == 1 { "" } else { "s" },
@@ -123,7 +123,6 @@ pub struct InspectChanges {
 
     open: bool,
     list_scroll: ScrollState,
-    list_area: Rect,
     tree: TreeView,
 
     leaves: Vec<(Vec<usize>, usize)>,
@@ -142,6 +141,8 @@ pub struct InspectChanges {
     pub area: Rect,
 }
 
+const VIEW_KEY: &str = "v";
+const VIEW_CHAR: char = VIEW_KEY.as_bytes()[0] as char;
 const MIN_W: u16 = 76;
 const MIN_H: u16 = 20;
 
@@ -162,7 +163,6 @@ impl InspectChanges {
             cursor: 0,
             open: false,
             list_scroll: ScrollState::default(),
-            list_area: Rect::ZERO,
             tree,
             leaves,
             diff: DiffView::new(id.sub("diff")),
@@ -252,12 +252,16 @@ impl InspectChanges {
         });
     }
 
-    fn leave(&mut self) -> Outcome {
-        self.result = Some(if self.returns_to_exit {
+    fn outcome(&self) -> InspectOutcome {
+        if self.returns_to_exit {
             InspectOutcome::Back
         } else {
             InspectOutcome::Close
-        });
+        }
+    }
+
+    fn leave(&mut self) -> Outcome {
+        self.result = Some(self.outcome());
         Outcome::Changed
     }
 
@@ -422,7 +426,7 @@ impl InspectChanges {
                 crate::ui::reveal::cut(Rect::new(inner.x, inner.y, inner.width, 1), &head),
                 t.secondary().bg(bg),
             );
-            let mode = format!("{} · d switches", self.diff.mode.label());
+            let mode = format!("{} · {VIEW_KEY} switches", self.diff.mode.label());
             let mw = width(&mode) as u16;
             if inner.width > width(&head) as u16 + mw + 3 {
                 buf.set_string(inner.right() - mw, inner.y, &mode, t.faint().bg(bg));
@@ -450,7 +454,6 @@ impl InspectChanges {
             inner.width,
             inner.height.saturating_sub(2),
         );
-        self.list_area = list;
         let n = self.compact_rows();
         self.list_scroll.set_content(n);
         self.list_scroll.set_viewport(list.height as usize);
@@ -554,7 +557,7 @@ impl InspectChanges {
         let summary = self.summary_line();
         buf.set_string(inner.x, inner.y, &summary, t.secondary().bg(bg));
         let mode = format!(
-            "{} · {} · d switches · m compact",
+            "{} · {} · {VIEW_KEY} switches · m compact",
             self.mode.label(),
             self.diff.mode.label()
         );
@@ -697,7 +700,7 @@ fn build_tree(
 
 fn view_hint(mode: crate::widgets::diff::DiffMode) -> Hint {
     crate::widgets::keyhint::toggle_hint(
-        "v",
+        VIEW_KEY,
         mode == crate::widgets::diff::DiffMode::Review,
         "Show unified",
         "Show side by side",
@@ -722,13 +725,13 @@ impl<R: From<InspectOutcome> + 'static, W: 'static> Layer<R, W> for InspectChang
     }
 
     fn on_dismiss(&mut self, _: DismissReason) {
-        self.result = Some(InspectOutcome::Close);
+        self.result = Some(self.outcome());
     }
 
     fn on_key(&mut self, key: &Key, cx: &mut LayerCx<'_, W>) -> Outcome {
         let focus = &mut *cx.focus;
         match key.code {
-            KeyCode::Char('v') if key.plain() => {
+            KeyCode::Char(VIEW_CHAR) if key.plain() => {
                 self.diff.toggle_mode();
                 return Outcome::Changed;
             }
@@ -775,6 +778,13 @@ impl<R: From<InspectOutcome> + 'static, W: 'static> Layer<R, W> for InspectChang
             }
             return if click { o.or(Outcome::Changed) } else { o };
         }
+        if self.mode == InspectMode::Compact
+            && !self.open
+            && let Some(o) =
+                scrollbar::pointer(ev, self.id, &mut self.list_scroll, TrackClick::Jump)
+        {
+            return o;
+        }
         if !click {
             return Outcome::Ignored;
         }
@@ -791,20 +801,6 @@ impl<R: From<InspectOutcome> + 'static, W: 'static> Layer<R, W> for InspectChang
                     }
                     return Outcome::Changed;
                 }
-            }
-            if id == scrollbar::id_for(self.id) {
-                let track = Rect::new(
-                    self.list_area.right() - 1,
-                    self.list_area.y,
-                    1,
-                    self.list_area.height,
-                );
-                self.list_scroll.scroll_to(scrollbar::offset_for_click(
-                    track,
-                    pos,
-                    &self.list_scroll,
-                ));
-                return Outcome::Changed;
             }
         }
         Outcome::Consumed

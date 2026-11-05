@@ -4,7 +4,7 @@ use junie_tui::core::hit::Axis;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::shell::Page;
 use junie_tui::theme::{StatusKind, Tone};
 use junie_tui::ui::columns::{self, Col};
@@ -20,7 +20,7 @@ use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::viewport::{Span, render_spans};
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
-use ratatui::layout::{Position, Rect};
+use ratatui::layout::Rect;
 use ratatui::style::{Modifier, Style};
 
 use super::{Cx, Go, Screen};
@@ -121,8 +121,6 @@ pub struct UsageScreen {
     rows: Vec<Row>,
     scroll: ScrollState,
     detail_scroll: ScrollState,
-    list_area: Rect,
-    detail_area: Rect,
 
     pub show_detail: bool,
     pub refreshing: bool,
@@ -216,8 +214,10 @@ impl UsageScreen {
                 && a.usage.freshness.phase != Freshness::Refreshing
             {
                 a.usage.freshness.phase = Freshness::Refreshing;
+                let source = a.source.clone();
                 w.perform(Effect::RefreshAccount {
                     account: id.clone(),
+                    source,
                     stagger_ms: i as i64 * 120,
                 });
                 n += 1;
@@ -522,7 +522,6 @@ impl UsageScreen {
         let t = ctx.theme;
         let bg = t.canvas;
         let focused = ctx.interaction.focused(LIST);
-        self.list_area = area;
         self.scroll.set_viewport(area.height as usize);
         self.scroll.follow(self.cursor());
         ctx.control(LIST, area, false);
@@ -643,7 +642,6 @@ impl UsageScreen {
         let t = ctx.theme;
         let bg = t.canvas;
         let focused = ctx.interaction.focused(DETAIL);
-        self.detail_area = area;
         ctx.control(DETAIL, area, false);
         ctx.scrollable(DETAIL, area);
         let title_row = area.y;
@@ -867,9 +865,14 @@ impl Page<Jackin> for UsageScreen {
     }
 
     fn pointer(&mut self, ev: &PointerEvent, w: &mut World, cx: &mut Cx) -> Outcome {
+        if let Some(o) = scrollbar::pointer(ev, LIST, &mut self.scroll, TrackClick::Jump)
+            .or_else(|| scrollbar::pointer(ev, DETAIL, &mut self.detail_scroll, TrackClick::Jump))
+        {
+            return o;
+        }
         match (ev.wheel(), ev.phase()) {
             (Some((Axis::Vertical, delta)), _) => self.wheel(ev.id, delta),
-            (None, Some(Phase::Click)) => self.click(ev.id, ev.pos(), w, cx),
+            (None, Some(Phase::Click)) => self.click(ev.id, w, cx),
             _ => Outcome::Ignored,
         }
     }
@@ -958,7 +961,7 @@ impl Page<Jackin> for UsageScreen {
 impl Screen for UsageScreen {}
 
 impl UsageScreen {
-    fn click(&mut self, id: WidgetId, pos: Position, w: &mut World, cx: &mut Cx) -> Outcome {
+    fn click(&mut self, id: WidgetId, w: &mut World, cx: &mut Cx) -> Outcome {
         self.build_rows(w);
         for i in self.scroll.visible_range() {
             if LIST.child(i) == id {
@@ -974,31 +977,6 @@ impl UsageScreen {
         }
         if id == DETAIL {
             cx.focus.focus(DETAIL);
-            return Outcome::Changed;
-        }
-        if id == scrollbar::id_for(LIST) {
-            let track = Rect::new(
-                self.list_area.right() - 1,
-                self.list_area.y,
-                1,
-                self.list_area.height,
-            );
-            self.scroll
-                .scroll_to(scrollbar::offset_for_click(track, pos, &self.scroll));
-            return Outcome::Changed;
-        }
-        if id == scrollbar::id_for(DETAIL) {
-            let track = Rect::new(
-                self.detail_area.right() - 1,
-                self.detail_area.y + 2,
-                1,
-                self.detail_area.height.saturating_sub(2),
-            );
-            self.detail_scroll.scroll_to(scrollbar::offset_for_click(
-                track,
-                pos,
-                &self.detail_scroll,
-            ));
             return Outcome::Changed;
         }
         Outcome::Ignored

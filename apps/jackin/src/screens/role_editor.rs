@@ -3,7 +3,7 @@ use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::{MouseTarget, PointerEvent};
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::shell::Page;
 use junie_tui::theme::{StatusKind, Tone};
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
@@ -22,6 +22,7 @@ use junie_tui::widgets::panel::Panel;
 use junie_tui::widgets::picker::Picker;
 use junie_tui::widgets::progress::spinner_frame;
 use junie_tui::widgets::props::Prop;
+use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::segments::Segment;
 use junie_tui::widgets::tabs::{TabAction, TabItem, Tabs};
 use ratatui::buffer::Buffer;
@@ -146,7 +147,6 @@ pub struct RoleEditorScreen {
     hooks_stack: StackScroll,
     env_cursor: usize,
     env_scroll: ScrollState,
-    env_area: Rect,
     removed: Vec<(usize, RoleEnvEntry)>,
     editing_entry: Option<Option<String>>,
     check_scroll: ScrollState,
@@ -236,7 +236,6 @@ impl RoleEditorScreen {
             hooks_stack: StackScroll::default(),
             env_cursor: 0,
             env_scroll: ScrollState::default(),
-            env_area: Rect::ZERO,
             removed: vec![],
             editing_entry: None,
             check_scroll: ScrollState::default(),
@@ -1016,7 +1015,6 @@ impl RoleEditorScreen {
             area.width,
             area.bottom().saturating_sub(head_y + 1),
         );
-        self.env_area = body;
         ctx.control(ENV, body, false);
         ctx.scrollable(ENV, body);
         let rows = n + 1;
@@ -1108,14 +1106,7 @@ impl RoleEditorScreen {
             }
         }
         if has_sb {
-            junie_tui::widgets::scrollbar::render_with_fade(
-                body,
-                buf,
-                ctx,
-                ENV,
-                &self.env_scroll,
-                focused,
-            );
+            scrollbar::render_with_fade(body, buf, ctx, ENV, &self.env_scroll, focused);
         }
     }
 
@@ -1453,7 +1444,7 @@ impl Page<Jackin> for RoleEditorScreen {
             return o.or(Outcome::Changed);
         }
         if let Some((_, delta)) = ev.wheel() {
-            if ev.id == ENV {
+            if ev.id == ENV || ev.id == scrollbar::id_for(ENV) {
                 self.env_scroll.scroll_by(delta as isize);
                 return Outcome::Changed;
             }
@@ -1481,6 +1472,9 @@ impl Page<Jackin> for RoleEditorScreen {
                 }
                 return r.outcome();
             }
+        }
+        if let Some(o) = scrollbar::pointer(ev, ENV, &mut self.env_scroll, TrackClick::Jump) {
+            return o;
         }
         if !click {
             return Outcome::Ignored;
@@ -1832,6 +1826,20 @@ impl RoleEditorScreen {
 }
 
 impl Screen for RoleEditorScreen {
+    fn picker_items(&mut self, tag: &LayerTag, query: &str, _w: &World) -> Option<Vec<Item>> {
+        if tag.kind != "choose" {
+            return None;
+        }
+        let q = query.to_lowercase();
+        self.pick_targets = self
+            .files
+            .iter()
+            .filter(|f| q.is_empty() || f.to_lowercase().contains(&q))
+            .cloned()
+            .collect();
+        Some(self.pick_targets.iter().map(Item::new).collect())
+    }
+
     fn strip_right(&self, w: &World) -> Vec<Segment> {
         let mut v = vec![];
         if self.saving {

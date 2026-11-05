@@ -348,7 +348,11 @@ impl TerminalViewport {
     }
 
     fn grid(&self, area: Rect) -> Rect {
-        let width = area.width.saturating_sub(TRACK_COLUMNS);
+        let width = if area.width > TRACK_COLUMNS {
+            area.width - TRACK_COLUMNS
+        } else {
+            area.width
+        };
         Rect::new(area.x, area.y, width, area.height)
     }
 }
@@ -389,7 +393,6 @@ impl Scrollable for TerminalViewport {
     }
 
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Response<()> {
-        self.scroll.set_track(bar.owner, bar.axis, bar.track);
         let response = self.scroll.bar(bar, pos, pressed);
         if bar.axis == Axis::Vertical && response.is_changed() {
             self.pull();
@@ -430,6 +433,14 @@ impl ViewportOps for TerminalViewport {
 
     fn hbar(&self) -> Rect {
         Rect::ZERO
+    }
+
+    fn vbar(&self) -> Rect {
+        if self.area.width > TRACK_COLUMNS && self.scroll.v.overflows() {
+            Rect::new(self.area.right() - 1, self.area.y, 1, self.area.height)
+        } else {
+            Rect::ZERO
+        }
     }
 
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Outcome {
@@ -504,6 +515,14 @@ impl ViewportOps for TerminalViewport {
             return Outcome::Consumed;
         }
         self.on_press_with(pos, 1, KeyModifiers::NONE)
+    }
+
+    fn on_press_with(&mut self, pos: Position, count: u8, mods: KeyModifiers) -> Outcome {
+        TerminalViewport::on_press_with(self, pos, count, mods)
+    }
+
+    fn on_click_with(&mut self, pos: Position, count: u8) -> Outcome {
+        TerminalViewport::on_click_with(self, pos, count)
     }
 
     fn on_drag(&mut self, pos: Position) -> Outcome {
@@ -612,6 +631,7 @@ impl ViewportOps for TerminalViewport {
         let t = ctx.theme;
         let grid = self.grid(area);
         let focused = ctx.interaction.focused(self.id);
+        self.scroll.note_policy(ctx.track_click, ctx.hscroll);
         ctx.control(self.id, area, false);
         ctx.scrollable(self.id, area);
         ctx.autoscroll(grid);

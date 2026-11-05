@@ -48,6 +48,9 @@ fn word(kind: StatusKind) -> &'static str {
     }
 }
 
+const EMPTY_HINT: &str =
+    "The doctor checks the binaries, the gateway and the Docker engine. It never changes anything.";
+
 impl DoctorScreen {
     pub fn new() -> Self {
         Self {
@@ -194,6 +197,7 @@ impl DoctorScreen {
             }
             Some(r) if r.no_gateway() => w.surfaces.vocabulary.doctor_no_gateway.clone(),
             Some(r) if r.failing() > 0 => format!("{} failing", r.failing()),
+            Some(r) if r.warnings() > 0 => plural(r.warnings(), "warning", "warnings"),
             Some(_) => "all checks pass".into(),
             None => String::new(),
         }
@@ -241,12 +245,15 @@ impl DoctorScreen {
     }
 
     fn empty(&self, w: &World) -> EmptyState {
+        if self.running(w) {
+            return EmptyState::new("Running checks…").hint(EMPTY_HINT);
+        }
         let title = match w.surfaces.doctor.as_ref().and_then(|d| d.failure()) {
             Some((failure, _)) => w.surfaces.vocabulary.doctor_failure(failure),
             None => "Checks have not run yet".to_owned(),
         };
         EmptyState::new(&title)
-            .hint("The doctor checks the binaries, the gateway and the Docker engine. It never changes anything.")
+            .hint(EMPTY_HINT)
             .actions(vec![EmptyAction::primary(RUN, "Run checks")])
     }
 
@@ -344,13 +351,12 @@ impl Page<Jackin> for DoctorScreen {
                     return Outcome::Changed;
                 }
                 let len = self.report(w).map_or(0, |r| r.checks.len());
-                let (o, event) = self.ld.click(ev.id, ev.pos(), cx.focus, len);
+                let (o, event) = self.ld.click(ev.id, cx.focus, len);
                 if let Some(Event::Action(name)) = event {
                     self.fire(name, w, cx);
                 }
                 o
             }
-            Some(Phase::Drag) => self.ld.drag(ev.id, ev.pos()),
             _ => Outcome::Ignored,
         }
     }
@@ -388,7 +394,11 @@ impl Page<Jackin> for DoctorScreen {
 
     fn hints(&self, focus: Option<WidgetId>, w: &World) -> Vec<Hint> {
         if self.report(w).is_none() {
-            return vec![hint("Enter", "Run checks"), hint("Esc", "Back")];
+            return if self.running(w) {
+                vec![hint("Esc", "Back")]
+            } else {
+                vec![hint("Enter", "Run checks"), hint("Esc", "Back")]
+            };
         }
         if let Some(v) = self.ld.hints(focus, &[]) {
             return v;

@@ -17,7 +17,7 @@ use crate::backend::{FieldKind, OnePassword, OpError, OpListing, OpScope, Ticket
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::onepassword::OpReference;
-use crate::domain::workspace::Workspace;
+use crate::domain::workspace::{RoleEntry, Workspace};
 use crate::world::{AgentOffer, World};
 
 use super::ModalResult;
@@ -46,6 +46,24 @@ pub fn unsaved_dialog(id: WidgetId, changes: usize) -> Dialog {
             Button::primary(id.sub("exit_save"), "Save"),
         ],
         Some(0),
+    )
+}
+
+pub fn trust_dialog(id: WidgetId, entry: &RoleEntry, w: &World) -> Dialog {
+    Dialog::facts(
+        id,
+        "Trust role source",
+        vec![
+            Prop::new("Role", entry.full_name()),
+            Prop::new("Repository", entry.source.label()),
+        ],
+        vec![
+            "Trust this role source?".into(),
+            "Dockerfile can run during image builds.".into(),
+            w.surfaces.vocabulary.role_access.clone(),
+        ],
+        None,
+        Button::primary(id.sub("ok"), "Trust & load"),
     )
 }
 
@@ -139,35 +157,54 @@ pub fn docker_risk_dialog(
     d
 }
 
-use junie_tui::widgets::file_browser::{Choose, FileCmd, FileEntry, FileSource, UrlEntry};
+use junie_tui::widgets::file_browser::{Choose, FileCmd, UrlEntry};
 pub use junie_tui::widgets::file_browser::{FileBrowser, FileBrowserResult as BrowserResult};
 
-struct BackendSource(Box<dyn FileSource>);
+fn plain_token(text: &str) -> bool {
+    !text.is_empty()
+        && text
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'))
+}
 
-impl FileSource for BackendSource {
-    fn list(&self, dir: &str) -> Result<Vec<FileEntry>, String> {
-        self.0.list(dir)
+fn repo_identity(text: &str) -> Option<(String, String)> {
+    if text.starts_with('-') || text.chars().any(|c| c.is_whitespace() || c.is_control()) {
+        return None;
     }
-
-    fn is_dir(&self, path: &str) -> bool {
-        self.0.is_dir(path)
+    let (authority, path) = match text.split_once("://") {
+        Some((scheme, rest)) => {
+            if !["https", "ssh", "git"]
+                .iter()
+                .any(|s| scheme.eq_ignore_ascii_case(s))
+            {
+                return None;
+            }
+            rest.split_once('/')?
+        }
+        None => match text.split_once(':') {
+            Some((head, path)) if head.contains('@') => (head, path),
+            _ => text.split_once('/')?,
+        },
+    };
+    let host = match authority.split_once('@') {
+        Some((user, host)) => plain_token(user).then_some(host)?,
+        None => authority,
+    };
+    if !plain_token(host) {
+        return None;
     }
-
-    fn home(&self) -> Option<String> {
-        self.0.home()
+    let host = host.to_ascii_lowercase();
+    let path = path.trim_matches('/');
+    let path = path.strip_suffix(".git").unwrap_or(path);
+    if path.is_empty() {
+        return None;
     }
-
-    fn parent(&self, path: &str) -> Option<String> {
-        self.0.parent(path)
-    }
-
-    fn display(&self, path: &str) -> String {
-        self.0.display(path)
-    }
-
-    fn expand(&self, typed: &str) -> String {
-        self.0.expand(typed)
-    }
+    let path = if host == "github.com" {
+        path.to_ascii_lowercase()
+    } else {
+        path.to_owned()
+    };
+    Some((host, path))
 }
 
 pub fn file_browser(
@@ -178,8 +215,14 @@ pub fn file_browser(
     dirs_only: bool,
     w: &World,
 ) -> FileBrowser {
-    let source = BackendSource(w.backend.file_source(w));
-    let repos: Vec<String> = w.github.iter().map(|r| r.full_name.clone()).collect();
+    let source = w.backend.file_source(w);
+    let repos: Vec<(String, String)> = w
+        .github
+        .iter()
+        .filter_map(|r| {
+            repo_identity(&r.url).or_else(|| repo_identity(&format!("github.com/{}", r.full_name)))
+        })
+        .collect();
     let git_url = w.surfaces.fixed.as_ref().map(|f| f.git_url.clone());
     let url = UrlEntry::new("Git URL…", "Git URL")
         .back("Browse folders")
@@ -192,7 +235,7 @@ pub fn file_browser(
         .validate(move |url| {
             if let Some(error) = &git_url {
                 Err(error.clone())
-            } else if repos.iter().any(|r| url.contains(r.as_str())) {
+            } else if repo_identity(url).is_some_and(|id| repos.contains(&id)) {
                 Ok(())
             } else {
                 Err(format!("Could not resolve {url}: repository not found"))
@@ -242,6 +285,7 @@ pub struct OpFlow {
     in_flight: Option<Ticket>,
     listing: Option<OpListing>,
     ids: Vec<String>,
+    sections: Vec<Option<String>>,
     pub last_error: Option<OpError>,
 
     pub concealed_only: bool,
@@ -262,6 +306,7 @@ impl OpFlow {
             in_flight: None,
             listing: None,
             ids: vec![],
+            sections: vec![],
             last_error: None,
             concealed_only: true,
         };
@@ -367,6 +412,7 @@ impl OpFlow {
         });
         self.picker.set_items(vec![]);
         self.ids.clear();
+        self.sections.clear();
         self.listing = None;
         self.in_flight = None;
         self.want = Some(self.scope());
@@ -406,7 +452,7 @@ impl OpFlow {
         self.last_error = None;
         let q = self.picker.query().to_lowercase();
         let matches = |s: &str| q.is_empty() || s.to_lowercase().contains(&q);
-        let rows: Vec<(String, Item)> = match &self.listing {
+        let rows: Vec<(String, Option<String>, Item)> = match &self.listing {
             Some(OpListing::Accounts(rows)) => rows
                 .iter()
                 .filter(|a| matches(&a.id) || matches(&a.email))
@@ -419,7 +465,7 @@ impl OpFlow {
                             crate::backend::OpAccountState::Locked => "locked",
                             crate::backend::OpAccountState::AuthorizationRequired => "authorize",
                         });
-                    (a.id.clone(), item)
+                    (a.id.clone(), None, item)
                 })
                 .collect(),
             Some(OpListing::Vaults(rows)) => rows
@@ -434,7 +480,7 @@ impl OpFlow {
                             Some(crate::backend::VaultAccess::ReadOnly) => "read-only",
                             Some(crate::backend::VaultAccess::Denied) => "no access",
                         });
-                    (v.id.clone(), item)
+                    (v.id.clone(), None, item)
                 })
                 .collect(),
             Some(OpListing::Items(rows)) => rows
@@ -447,7 +493,7 @@ impl OpFlow {
                             None => i.category.clone(),
                         })
                         .glyph(" ");
-                    (i.id.clone(), item)
+                    (i.id.clone(), None, item)
                 })
                 .collect(),
             Some(OpListing::Fields(rows)) => rows
@@ -455,14 +501,17 @@ impl OpFlow {
                 .filter(|f| matches(&f.label))
                 .map(|f| {
                     let item = Item::new(f.label.clone())
-                        .detail(f.kind.label().to_owned())
+                        .detail(match &f.section {
+                            Some(section) => format!("{section} · {}", f.kind.label()),
+                            None => f.kind.label().to_owned(),
+                        })
                         .glyph(if f.kind == FieldKind::Concealed {
                             "•"
                         } else {
                             " "
                         })
                         .disabled(self.concealed_only && f.kind != FieldKind::Concealed);
-                    (f.id.clone(), item)
+                    (f.id.clone(), f.section.clone(), item)
                 })
                 .collect(),
             None => return,
@@ -470,8 +519,16 @@ impl OpFlow {
         if rows.is_empty() {
             self.picker.empty_text = "No matches".into();
         }
-        let (ids, items): (Vec<_>, Vec<_>) = rows.into_iter().unzip();
+        let mut ids = Vec::new();
+        let mut sections = Vec::new();
+        let mut items = Vec::new();
+        for (id, section, item) in rows {
+            ids.push(id);
+            sections.push(section);
+            items.push(item);
+        }
         self.ids = ids;
+        self.sections = sections;
         self.picker.set_items(items);
     }
 
@@ -508,6 +565,7 @@ impl OpFlow {
         else {
             return Outcome::Consumed;
         };
+        let section = self.sections.get(i).cloned().flatten();
         match self.step {
             OpStep::Account => {
                 self.account = Some(row.label);
@@ -528,7 +586,8 @@ impl OpFlow {
                     self.account.as_deref().unwrap_or(""),
                     &vid,
                     &iid,
-                    &row.label,
+                    &id,
+                    section.as_deref(),
                 ) {
                     Ok(r) => match op.describe(&r) {
                         Ok(_) => self.result = Some(Some(r)),

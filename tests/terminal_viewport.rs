@@ -2,11 +2,13 @@
 
 use junie_tui::core::event::Outcome;
 use junie_tui::core::focus::FocusRing;
-use junie_tui::core::hit::{Axis, HitRegistry};
+use junie_tui::core::hit::{Axis, Bar, HitRegistry};
 use junie_tui::core::id::WidgetId;
+use junie_tui::core::scroll::TrackClick;
 use junie_tui::terminal::{TermEvent, TerminalState, TerminalViewport};
 use junie_tui::theme::{ColorLevel, Theme};
 use junie_tui::ui::ctx::{Interaction, RenderCtx};
+use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::viewport::CellPos;
 use junie_tui::widgets::viewport_ops::ViewportOps;
 use ratatui::buffer::Buffer;
@@ -225,6 +227,41 @@ fn copy_survives_scrolling_away() {
     assert_eq!(v.selected_text(), text, "and so is new output");
 }
 
+#[test]
+fn a_selection_follows_its_text_when_no_history_is_kept() {
+    let mut v = with_state(TerminalState::with_scrollback(10, 10, 0));
+    v.feed(&joined(1, 10));
+    drag(&mut v, (0, 7), (8, 7));
+    assert_eq!(v.selected_text().as_deref(), Some("line 008"));
+
+    v.feed(b"\r\nline 011");
+    assert_eq!(
+        v.selected_text().as_deref(),
+        Some("line 008"),
+        "the selected text moved up a row and the selection moved with it"
+    );
+    assert_eq!(screen(&v)[6], "line 008");
+}
+
+#[test]
+fn a_one_column_area_still_shows_the_program_its_column() {
+    let area = Rect::new(0, 0, 1, 4);
+    let (rows, cols) = TerminalViewport::grid_size(area);
+    assert_eq!((rows, cols), (4, 1));
+    let mut v = TerminalViewport::new(ID, TerminalState::new(rows, cols));
+    v.set_area(area);
+    v.feed(b"x");
+
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    let mut buf = Buffer::empty(area);
+    let mut hits = HitRegistry::default();
+    let mut ring = FocusRing::default();
+    let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+    ViewportOps::draw(&v, area, &mut buf, &mut ctx, theme.canvas, false);
+
+    assert_eq!(buf[(0, 0)].symbol(), "x");
+}
+
 fn wrapped(bytes: &[u8]) -> TerminalViewport {
     let mut v = blank();
     v.feed(bytes);
@@ -441,7 +478,7 @@ fn alt_screen_toggle_resets() {
         !live.has_selection(),
         "the live rows of the primary screen are not the alternate rows"
     );
-    live.feed(b"A1\r\nA2");
+    live.feed(b"\x1b[HA1\r\nA2");
     drag(&mut live, (0, 0), (2, 1));
     assert_eq!(live.selected_text().as_deref(), Some("A1\nA2"));
     live.feed(b"\x1b[?1049l");
@@ -758,5 +795,78 @@ fn clear_scrollback_returns_to_the_tail_and_drops_the_selection() {
     assert_eq!(
         live.selected_text().as_deref(),
         Some("line 094\nline 095\nline 096")
+    );
+}
+
+fn press_below_the_thumb(app: TrackClick) -> bool {
+    let mut v = viewport(300);
+    v.jump_start();
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    let mut buf = Buffer::empty(Rect::new(0, 0, 30, 12));
+    let mut hits = HitRegistry::default();
+    let mut ring = FocusRing::default();
+    let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+    ctx.track_click = app;
+    ViewportOps::draw(&v, AREA, &mut buf, &mut ctx, theme.canvas, false);
+
+    let bar = Bar {
+        id: scrollbar::id_for(ID),
+        owner: ID,
+        axis: Axis::Vertical,
+        track: Rect::new(AREA.right() - 1, AREA.y, 1, AREA.height),
+    };
+    v.bar_input(
+        &bar,
+        Position::new(AREA.right() - 1, AREA.bottom() - 1),
+        true,
+    );
+    v.follow()
+}
+
+#[test]
+fn the_app_track_click_of_a_drawn_frame_decides_a_press_on_the_track() {
+    assert!(
+        press_below_the_thumb(TrackClick::Jump),
+        "the app asked for jump: a press at the bottom of the track lands at the live tail"
+    );
+    assert!(
+        !press_below_the_thumb(TrackClick::Page),
+        "the app kept paging: the same press moves one page"
+    );
+}
+
+#[test]
+fn the_track_click_each_terminal_was_drawn_with_decides_its_own_press() {
+    let mut first = viewport(300);
+    let mut second = viewport(300);
+    first.jump_start();
+    second.jump_start();
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    for (v, click) in [(&first, TrackClick::Jump), (&second, TrackClick::Page)] {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 30, 12));
+        let mut hits = HitRegistry::default();
+        let mut ring = FocusRing::default();
+        let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+        ctx.track_click = click;
+        ViewportOps::draw(v, AREA, &mut buf, &mut ctx, theme.canvas, false);
+    }
+
+    let bar = Bar {
+        id: scrollbar::id_for(ID),
+        owner: ID,
+        axis: Axis::Vertical,
+        track: Rect::new(AREA.right() - 1, AREA.y, 1, AREA.height),
+    };
+    let press = Position::new(AREA.right() - 1, AREA.bottom() - 1);
+    first.bar_input(&bar, press, true);
+    second.bar_input(&bar, press, true);
+
+    assert!(
+        first.follow(),
+        "the first terminal was drawn with jump: a press at the bottom of the track lands at the live tail"
+    );
+    assert!(
+        !second.follow(),
+        "the second terminal was drawn with page: the same press moves one page"
     );
 }

@@ -1,13 +1,19 @@
 mod common;
 
 use common::*;
+use junie_tui::core::event::{Mouse, MouseKind, Outcome};
 use junie_tui::core::focus::{Focus, FocusRing};
 use junie_tui::core::hit::HitRegistry;
 use junie_tui::core::id::WidgetId;
+use junie_tui::core::intent::Phase;
+use junie_tui::core::pointer::{PointerEvent, PointerHost, PointerParts, PointerRouter};
+use junie_tui::core::response::Response;
+use junie_tui::theme::ButtonKind;
 use junie_tui::theme::{ColorLevel, Theme};
 use junie_tui::ui::ctx::{Interaction, RenderCtx};
 use junie_tui::ui::layout::Split;
-use junie_tui::widgets::list_detail::{Event, Frame, Line, ListDetail, ListRow};
+use junie_tui::widgets::list_detail::{Action, Event, Frame, Line, ListDetail, ListRow};
+use junie_tui::widgets::scrollbar;
 use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
@@ -16,6 +22,7 @@ const MASTER: WidgetId = WidgetId::of("t.ld.master");
 const DETAIL: WidgetId = WidgetId::of("t.ld.detail");
 const AREA: Rect = Rect::new(0, 0, 120, 20);
 const ITEMS: usize = 16;
+const ACTIONS: [&str; 6] = ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot"];
 
 fn rows() -> Vec<ListRow> {
     vec![ListRow::new("first"), ListRow::new("second")]
@@ -46,10 +53,55 @@ struct Rig {
     focus: Focus,
     rows: Vec<ListRow>,
     hits: HitRegistry,
+    area: Rect,
+    actions: usize,
+    under: Option<String>,
+    router: PointerRouter,
+    ring: FocusRing,
+}
+
+impl PointerHost for Rig {
+    fn pointer_parts(&mut self) -> PointerParts<'_> {
+        PointerParts {
+            router: &mut self.router,
+            hits: &self.hits,
+            focus: &mut self.focus,
+            ring: &self.ring,
+        }
+    }
+
+    fn layer_open(&self) -> bool {
+        false
+    }
+
+    fn now_ms(&self) -> u64 {
+        0
+    }
+
+    fn deliver(&mut self, ev: &PointerEvent) -> Response<()> {
+        if let Some(o) = self.ld.on_pointer(ev) {
+            return o.into();
+        }
+        match ev.phase() {
+            Some(Phase::Click) => {
+                let len = self.rows.len();
+                self.ld.click(ev.id, &mut self.focus, len).0.into()
+            }
+            _ => Outcome::Ignored.into(),
+        }
+    }
 }
 
 impl Rig {
     fn new() -> Self {
+        Self::sized(AREA, 0)
+    }
+
+    fn sized(area: Rect, actions: usize) -> Self {
+        Self::build(area, actions, None)
+    }
+
+    fn build(area: Rect, actions: usize, under: Option<String>) -> Self {
         let mut focus = Focus::default();
         focus.focus(DETAIL);
         let mut rig = Self {
@@ -57,6 +109,11 @@ impl Rig {
             focus,
             rows: rows(),
             hits: HitRegistry::default(),
+            area,
+            actions,
+            under,
+            router: PointerRouter::default(),
+            ring: FocusRing::default(),
         };
         rig.render();
         rig
@@ -64,7 +121,7 @@ impl Rig {
 
     fn render(&mut self) -> Buffer {
         let theme = Theme::for_level(ColorLevel::TrueColor);
-        let mut buf = Buffer::empty(AREA);
+        let mut buf = Buffer::empty(self.area);
         self.hits = HitRegistry::default();
         let mut ring = FocusRing::default();
         let interaction = Interaction {
@@ -77,13 +134,22 @@ impl Rig {
             meta: String::new(),
             head: vec![],
             rows: &self.rows,
-            under: None,
+            under: self.under.as_deref(),
             detail_title: "Detail".into(),
             detail_meta: String::new(),
             lines: lines(),
-            actions: vec![],
+            actions: ACTIONS[..self.actions]
+                .iter()
+                .map(|name| {
+                    Action::new(
+                        name,
+                        &format!("{name} the whole selection"),
+                        ButtonKind::Secondary,
+                    )
+                })
+                .collect(),
         };
-        self.ld.render(AREA, &mut buf, &mut ctx, &frame);
+        self.ld.render(self.area, &mut buf, &mut ctx, &frame);
         buf
     }
 
@@ -93,18 +159,22 @@ impl Rig {
         event
     }
 
+    fn mouse(&mut self, kind: MouseKind, pos: Position) -> Outcome {
+        PointerRouter::route(self, Mouse::new(kind, pos))
+    }
+
     fn click(&mut self, pos: Position) -> Option<Event> {
         let id = self
             .hits
             .hit(pos)
             .expect("a clickable region under the pointer");
         let len = self.rows.len();
-        self.ld.click(id, pos, &mut self.focus, len).1
+        self.ld.click(id, &mut self.focus, len).1
     }
 }
 
 fn find(buf: &Buffer, needle: &str) -> Option<u16> {
-    (0..AREA.height).find(|&y| row(buf, y).contains(needle))
+    (0..buf.area.height).find(|&y| row(buf, y).contains(needle))
 }
 
 #[test]
@@ -209,4 +279,172 @@ fn enter_after_the_detail_scrolled_away_reveals_the_cursor_item_first() {
     let y = find(&buf, "item00").expect("Enter brought the cursor item into view");
     assert!(row(&buf, y).contains('▎'));
     assert_eq!(rig.key(KeyCode::Enter), Some(Event::Item(0)));
+}
+
+fn detail_track(rig: &Rig) -> Vec<Position> {
+    bar_track(rig, scrollbar::id_for(DETAIL))
+}
+
+fn bar_track(rig: &Rig, bar: WidgetId) -> Vec<Position> {
+    let mut cells = vec![];
+    for y in 0..rig.area.height {
+        for x in 0..rig.area.width {
+            let pos = Position::new(x, y);
+            if rig.hits.hit(pos) == Some(bar) {
+                cells.push(pos);
+            }
+        }
+    }
+    cells
+}
+
+#[test]
+fn dragging_the_detail_scrollbar_scrolls_the_detail() {
+    let mut rig = Rig::new();
+    assert!(find(&rig.render(), "item15").is_none());
+    let track = detail_track(&rig);
+    assert!(
+        !track.is_empty(),
+        "the overflowing detail draws a scrollbar"
+    );
+
+    let first = track[0];
+    let last = *track.last().expect("a track");
+    rig.mouse(MouseKind::Down, first);
+    rig.mouse(MouseKind::Drag, last);
+    rig.mouse(MouseKind::Up, last);
+
+    assert!(
+        find(&rig.render(), "item15").is_some(),
+        "dragging the thumb to the bottom of the track reaches the end of the detail"
+    );
+}
+
+fn thumb_start(rig: &mut Rig, track: &[Position]) -> (usize, usize) {
+    let buf = rig.render();
+    let cells: Vec<usize> = track
+        .iter()
+        .enumerate()
+        .filter(|(_, p)| buf[(p.x, p.y)].symbol() == scrollbar::THUMB)
+        .map(|(i, _)| i)
+        .collect();
+    (cells[0], cells.len())
+}
+
+#[test]
+fn a_press_off_centre_on_the_detail_thumb_drags_it_cell_for_cell() {
+    let mut rig = Rig::new();
+    let track = detail_track(&rig);
+    let (start, len) = thumb_start(&mut rig, &track);
+    assert!(len >= 4, "the thumb is long enough to grab off-centre");
+    let grab = start + 1;
+
+    rig.mouse(MouseKind::Down, track[grab]);
+    let (pressed, _) = thumb_start(&mut rig, &track);
+    assert_eq!(pressed, start, "pressing the thumb does not move it");
+
+    rig.mouse(MouseKind::Drag, track[grab + 1]);
+    let (dragged, _) = thumb_start(&mut rig, &track);
+    assert_eq!(
+        dragged,
+        start + 1,
+        "one cell of drag moves the thumb one cell"
+    );
+    rig.mouse(MouseKind::Up, track[grab + 1]);
+}
+
+#[test]
+fn a_press_off_centre_on_the_list_thumb_drags_it_cell_for_cell() {
+    let mut rig = Rig::new();
+    rig.rows = (0..60)
+        .map(|n| ListRow::new(format!("row{n:02}")))
+        .collect();
+    rig.render();
+    let track = bar_track(&rig, scrollbar::id_for(MASTER));
+    assert!(!track.is_empty(), "the long list draws a scrollbar");
+    let (start, len) = thumb_start(&mut rig, &track);
+    assert!(len >= 3, "the thumb is long enough to grab off-centre");
+    let grab = start + 1;
+
+    rig.mouse(MouseKind::Down, track[grab]);
+    assert_eq!(thumb_start(&mut rig, &track).0, start);
+    rig.mouse(MouseKind::Drag, track[grab + 1]);
+    assert_eq!(
+        thumb_start(&mut rig, &track).0,
+        start + 1,
+        "one cell of drag moves the thumb one cell"
+    );
+    rig.mouse(MouseKind::Up, track[grab + 1]);
+}
+
+#[test]
+fn the_bottom_of_the_detail_track_reaches_the_end_when_actions_shorten_it() {
+    let mut rig = Rig::sized(AREA, 6);
+    assert!(find(&rig.render(), "item15").is_none());
+    let track = detail_track(&rig);
+    let near_end = track[track.len() - 3];
+
+    rig.mouse(MouseKind::Down, near_end);
+    rig.mouse(MouseKind::Up, near_end);
+
+    let buf = rig.render();
+    assert_eq!(
+        buf[(near_end.x, near_end.y)].symbol(),
+        scrollbar::THUMB,
+        "the thumb lands under the clicked track cell"
+    );
+}
+
+fn assert_columns_inside_the_frame(width: u16) {
+    let area = Rect::new(0, 0, width, 20);
+    let mut rig = Rig::sized(area, 0);
+    let buf = rig.render();
+    let right = area.width - 1;
+    let edge: std::collections::BTreeSet<String> = (1..area.height - 1)
+        .map(|y| buf[(right, y)].symbol().to_owned())
+        .collect();
+    assert_eq!(
+        edge.len(),
+        1,
+        "width {width}: only the frame's right border is in the last column, got {edge:?}"
+    );
+    let bar = scrollbar::id_for(DETAIL);
+    for y in 1..area.height - 1 {
+        let pos = Position::new(right - 1, y);
+        if rig.hits.hit(pos) == Some(bar) {
+            let s = buf[(right - 1, y)].symbol();
+            assert!(
+                s == scrollbar::TRACK || s == scrollbar::THUMB,
+                "width {width}: row {y} wrote {s:?} over the scrollbar"
+            );
+        }
+    }
+}
+
+#[test]
+fn a_narrow_detail_keeps_its_item_columns_inside_the_frame() {
+    assert_columns_inside_the_frame(26);
+}
+
+#[test]
+fn a_detail_narrower_than_its_first_column_clamps_the_column_to_the_room_left() {
+    for width in 12..=15 {
+        assert_columns_inside_the_frame(width);
+    }
+}
+
+#[test]
+fn a_text_under_the_list_taller_than_the_area_is_cut_to_the_room() {
+    let area = Rect::new(0, 0, 120, 6);
+    let text = (0..12)
+        .map(|n| format!("rule {n:02} of the order of precedence"))
+        .collect::<Vec<_>>()
+        .join(" ");
+    let mut rig = Rig::build(area, 0, Some(text));
+    let buf = rig.render();
+    let rows: Vec<String> = (0..area.height).map(|y| row(&buf, y)).collect();
+    assert!(
+        rows[0].contains("rule 00"),
+        "the first lines of the text fill the room it has: {rows:?}"
+    );
 }

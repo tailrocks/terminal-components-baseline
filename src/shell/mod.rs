@@ -13,7 +13,7 @@ pub use crate::ui::layer::LayerTag;
 pub use crate::widgets::breadcrumb::Breadcrumb;
 pub use app::{App, PageKey, Shell, blur_fan_out, handle, render};
 pub use chrome::{Chrome, Menus, Regions};
-pub use clipboard::{Clipboard, Copied, NativeClipboard};
+pub use clipboard::{Clipboard, ClipboardHook, Copied, NativeClipboard};
 pub use cx::{Cx, Request, background};
 pub use footer::{Footer, FooterStatus, deliverable};
 pub use nav::{Nav, Router};
@@ -21,7 +21,7 @@ pub use page::{
     Page, PageCx, PageTypes, open_context, rebuild_on_tick, replay_key, row_anchor, row_choice,
 };
 pub use router::{KeyHost, KeyRouter, ShellAction, ShellKeys};
-pub use status::{JobKey, StatusLine};
+pub use status::{JobKey, StatusLine, StopHandle};
 
 use crate::runtime::Application;
 

@@ -63,6 +63,14 @@ fn cell_text(state: &TerminalState, col: u16) -> String {
         .unwrap_or_default()
 }
 
+fn text_at(state: &TerminalState, row: u16, col: u16) -> String {
+    state
+        .view(0)
+        .cell(row, col)
+        .map(|c| c.text().to_owned())
+        .unwrap_or_default()
+}
+
 fn osc52(payload: &str) -> Vec<u8> {
     format!("\x1b]52;c;{payload}\x07").into_bytes()
 }
@@ -344,26 +352,33 @@ fn marks_cannot_pile_onto_one_cell_through_a_wide_base_that_does_not_print() {
 }
 
 #[test]
-fn a_wide_base_starts_a_new_run_once_wrapping_is_back_on() {
-    let resets: [(&str, &[u8]); 2] = [("decset_7h", b"\x1b[?7h"), ("ris", b"\x1bc")];
+fn a_wide_base_at_the_margin_starts_a_new_run_in_the_cell_the_grid_prints_it_in() {
+    let resets: [(&str, &[u8]); 3] = [
+        ("decset_7h", b"\x1b[?7h"),
+        ("ris", b"\x1bc"),
+        ("decstr", b"\x1b[!p"),
+    ];
     let mut broken = Vec::new();
     for (name, reset) in resets {
         let mut state = TerminalState::new(2, 10);
-        state.feed(b"\x1b[?7l");
-        state.feed(reset);
-        state.feed(b"a");
+        state.feed(b"\x1b[?7l\x1b[1;10Ha");
         state.feed(marks().as_bytes());
+        state.feed(reset);
         state.feed("\u{4e2d}".as_bytes());
         state.feed(marks().as_bytes());
-        let runs = (cell_marks(&state, 0), cell_marks(&state, 1));
-        if runs != (MARKS, MARKS) {
-            broken.push((name, runs));
+        let wide = format!("\u{4e2d}{}", marks());
+        let holders = (0..2)
+            .flat_map(|row| (0..10).map(move |col| (row, col)))
+            .filter(|&(row, col)| text_at(&state, row, col) == wide)
+            .count();
+        if holders != 1 {
+            broken.push((name, holders));
         }
     }
     assert_eq!(
         broken,
         vec![],
-        "each of the two cells must keep {MARKS} marks"
+        "the grid prints the wide base and keeps all {MARKS} marks on it"
     );
 }
 
@@ -506,4 +521,126 @@ fn marks_after_a_wide_glyph_suppressed_by_no_wrap_cannot_grow_the_last_cell() {
         "{}",
         longest_cell(&state)
     );
+}
+
+const SPOOFING: [(char, char); 5] = [
+    ('\u{061c}', '\u{061c}'),
+    ('\u{200e}', '\u{200f}'),
+    ('\u{202a}', '\u{202e}'),
+    ('\u{2066}', '\u{2069}'),
+    ('\u{e0000}', '\u{e007f}'),
+];
+
+fn spoofing_chars() -> Vec<char> {
+    SPOOFING
+        .iter()
+        .flat_map(|&(first, last)| first..=last)
+        .collect()
+}
+
+fn leaked(state: &TerminalState) -> Vec<char> {
+    let view = state.view(0);
+    let mut found: Vec<char> = (0..view.rows())
+        .flat_map(|row| (0..view.cols()).map(move |col| (row, col)))
+        .filter_map(|(row, col)| view.cell(row, col))
+        .flat_map(|cell| cell.text().chars().collect::<Vec<_>>())
+        .filter(|c| spoofing_chars().contains(c))
+        .collect();
+    found.sort_unstable();
+    found.dedup();
+    found
+}
+
+fn fed_in_chunks(bytes: &[u8], chunk: usize) -> TerminalState {
+    let mut state = TerminalState::new(4, 60);
+    for part in bytes.chunks(chunk) {
+        state.feed(part);
+    }
+    state
+}
+
+fn broken_encodings(c: char) -> Vec<Vec<u8>> {
+    let mut utf8 = [0_u8; 4];
+    let bytes = c.encode_utf8(&mut utf8).as_bytes().to_vec();
+    let (lead, rest) = bytes.split_first().expect("a character has bytes");
+    let mut deleted = vec![*lead, 0x7f];
+    deleted.extend_from_slice(rest);
+    let mut doubled = vec![*lead];
+    doubled.extend_from_slice(&bytes);
+    doubled.extend_from_slice(rest);
+    vec![deleted, doubled]
+}
+
+#[test]
+fn a_lead_byte_cut_short_cannot_leave_a_bidi_control_in_a_cell() {
+    for c in spoofing_chars() {
+        for broken in broken_encodings(c) {
+            let mut bytes = b"ab".to_vec();
+            bytes.extend_from_slice(&broken);
+            bytes.extend_from_slice(b"cd");
+            for chunk in [bytes.len(), 1] {
+                let state = fed_in_chunks(&bytes, chunk);
+                assert!(
+                    leaked(&state).is_empty(),
+                    "U+{:04X} leaked from {broken:02x?} in chunks of {chunk}: {:?}",
+                    c as u32,
+                    leaked(&state)
+                );
+                assert!(row(&state, 0).starts_with("ab"), "{broken:02x?}");
+                assert!(row(&state, 0).ends_with("cd"), "{broken:02x?}");
+            }
+        }
+    }
+}
+
+#[test]
+fn the_reviewed_byte_sequences_leave_no_bidi_in_any_cell() {
+    let cases: [&[u8]; 6] = [
+        b"ab\xe2\x7f\x80\xae",
+        b"ab\xe2\xe2\x80\xae\x80\xae",
+        b"ab\xe2\x7f\x81\xa6",
+        b"ab\xe2\x7f\x81\xa9",
+        b"ab\xe2\xe2\x81\xa6\x81\xa6",
+        b"ab\xe2\xe2\x81\xa9\x81\xa9",
+    ];
+    for bytes in cases {
+        for chunk in [bytes.len(), 1] {
+            let state = fed_in_chunks(bytes, chunk);
+            assert!(
+                leaked(&state).is_empty(),
+                "{bytes:02x?} in chunks of {chunk}: {:?}",
+                leaked(&state)
+            );
+            assert!(row(&state, 0).starts_with("ab"), "{bytes:02x?}");
+        }
+    }
+}
+
+#[test]
+fn broken_utf8_prints_as_replacement_characters_and_text_continues() {
+    let mut state = TerminalState::new(2, 20);
+    state.feed(b"a\xe2");
+    state.feed(b"b\x80c\xff\xc3(d");
+    assert_eq!(row(&state, 0), "a\u{fffd}b\u{fffd}c\u{fffd}\u{fffd}(d");
+}
+
+#[test]
+fn invisible_format_characters_are_dropped_from_every_cell() {
+    for c in spoofing_chars() {
+        let mut state = TerminalState::new(2, 20);
+        state.feed(format!("a{c}b").as_bytes());
+        assert_eq!(row(&state, 0), "ab", "U+{:04X}", c as u32);
+    }
+}
+
+#[test]
+fn legitimate_text_is_unchanged() {
+    let text = "h\u{e9}llo w\u{f6}rld \u{65e5}\u{672c}\u{8a9e} \u{1f389} e\u{301} \u{1f468}\u{200d}\u{1f469} \u{5e9}\u{5dc}\u{5d5}\u{5dd} \u{645}\u{631}\u{62d}\u{628}\u{627}";
+    for chunk in [text.len(), 1] {
+        let mut state = TerminalState::new(2, 60);
+        for part in text.as_bytes().chunks(chunk) {
+            state.feed(part);
+        }
+        assert_eq!(row(&state, 0), text, "chunks of {chunk}");
+    }
 }

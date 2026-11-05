@@ -8,7 +8,7 @@ use junie_tui::core::hit::Axis;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::theme::{ButtonKind, StatusKind, Tone};
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
 use junie_tui::ui::layout::{Split, SplitDir};
@@ -83,6 +83,7 @@ struct Row {
 }
 
 struct FormCtx {
+    serial: usize,
     editing: Option<AccountId>,
     op_ref: Option<OpReference>,
     op_masked: Option<String>,
@@ -156,12 +157,14 @@ fn end_pending(form: &mut FormDialog) {
     form.set_note("validation", vec![]);
 }
 
+const SAVE_TIMEOUT_SECS: i64 = 30;
+
 /// What the screen does when the backend has stored the registry it sent.
 struct Saving {
     status: String,
     select: Pick,
     unfold: Option<UsageSurface>,
-    form: bool,
+    form: Option<usize>,
 }
 
 /// What a save selects once the backend has stored it.
@@ -180,13 +183,14 @@ pub struct AccountsScreen {
     scroll: ScrollState,
     inspector_scroll: ScrollState,
     tree_area: Rect,
-    inspector_area: Rect,
 
     md: MasterDetail,
     actions: Vec<Button>,
     form: Option<FormCtx>,
+    forms_opened: usize,
     pending_remove: Option<AccountId>,
-    saving: Option<Saving>,
+    saving: Option<(Ticket, Saving)>,
+    saving_since: i64,
 
     pub menu: RowMenu<Sel, &'static str>,
 }
@@ -225,7 +229,6 @@ impl AccountsScreen {
             scroll: ScrollState::default(),
             inspector_scroll: ScrollState::default(),
             tree_area: Rect::ZERO,
-            inspector_area: Rect::ZERO,
             md: MasterDetail::new(TREE, INSPECTOR)
                 .resizable(Split::new(34, 30, 40))
                 .seam(Splitter::new(SEAM, SplitDir::Horizontal))
@@ -233,8 +236,10 @@ impl AccountsScreen {
                 .summary_rows(6),
             actions: vec![],
             form: None,
+            forms_opened: 0,
             pending_remove: None,
             saving: None,
+            saving_since: 0,
             menu: RowMenu::new(MENU),
         }
     }
@@ -426,9 +431,6 @@ impl AccountsScreen {
             }
         }
         self.scroll.set_content(self.rows.len());
-        if let Some(i) = self.cursor() {
-            self.scroll.ensure_visible(i);
-        }
     }
 
     fn cursor(&self) -> Option<usize> {
@@ -485,8 +487,10 @@ impl AccountsScreen {
                 continue;
             }
             a.usage.freshness.phase = Freshness::Refreshing;
+            let source = a.source.clone();
             w.perform(Effect::RefreshAccount {
                 account: id.clone(),
+                source,
                 stagger_ms: i as i64 * 160,
             });
             started += 1;
@@ -629,7 +633,10 @@ impl AccountsScreen {
             );
         }
 
+        self.forms_opened += 1;
+        let serial = self.forms_opened;
         let mut ctx = FormCtx {
+            serial,
             editing: editing.map(|a| a.id.clone()),
             op_ref: None,
             op_masked: None,
@@ -672,7 +679,7 @@ impl AccountsScreen {
             .width(70)
             .keep_open_on_save();
         Self::reveal(&mut form, w);
-        cx.open(form, LayerTag::new("form"));
+        cx.open(form, LayerTag::new("form").n(serial));
     }
 
     fn reveal(form: &mut FormDialog, w: &World) {
@@ -768,17 +775,14 @@ impl AccountsScreen {
                 ))
             }
             SourceKind::PlainApiKey => {
-                let key = text_of(values, "key");
-                if key.trim().is_empty() {
-                    return Err("API key required: the field is empty".into());
-                }
+                let key = PlainKey::new(&text_of(values, "key")).map_err(|e| e.to_string())?;
                 Ok((
                     provider,
                     CredentialSource::PlainApiKey {
-                        fingerprint: fingerprint(&key),
-                        tail: tail_of(&key),
+                        fingerprint: fingerprint(key.expose()),
+                        tail: tail_of(key.expose()),
                     },
-                    Some(PlainKey::new(&key)),
+                    Some(key),
                 ))
             }
         }
@@ -1026,9 +1030,10 @@ impl AccountsScreen {
             },
             SourceKind::PlainApiKey => {
                 let key = get("key");
+                let key = key.trim();
                 CredentialSource::PlainApiKey {
-                    fingerprint: fingerprint(&key),
-                    tail: tail_of(&key),
+                    fingerprint: fingerprint(key),
+                    tail: tail_of(key),
                 }
             }
         };
@@ -1154,7 +1159,7 @@ impl AccountsScreen {
                     None => Pick::Added,
                 },
                 unfold: Some(provider.usage_surface()),
-                form: true,
+                form: self.form.as_ref().map(|c| c.serial),
             },
             w,
             cx,
@@ -1168,26 +1173,35 @@ impl AccountsScreen {
         w: &mut World,
         cx: &mut Cx,
     ) {
-        if self.saving.is_some() {
+        let now = w.now_secs();
+        if self.saving.is_some() && now - self.saving_since < SAVE_TIMEOUT_SECS {
             let msg = "Saving the previous change… try again when it finishes".to_owned();
-            if saving.form {
+            if saving.form.is_some() {
                 cx.with_top::<FormDialog>(move |f| f.error = Some(msg));
             } else {
                 cx.status(msg);
             }
             return;
         }
-        self.saving = Some(saving);
+        let ticket = w.next_ticket();
+        self.saving = Some((ticket, saving));
+        self.saving_since = now;
         w.perform(Effect::SaveAccounts {
+            ticket,
             base: Box::new(w.accounts.clone()),
             registry: Box::new(registry),
         });
     }
 
     fn finish_saving(&mut self, saving: Saving, added: Option<AccountId>, cx: &mut Cx) {
-        if saving.form {
+        if let Some(serial) = saving.form
+            && self.form.as_ref().is_some_and(|c| c.serial == serial)
+        {
             self.form = None;
-            cx.close();
+            cx.go(Go::CloseTop {
+                tag: LayerTag::new("form").n(serial),
+                then: Some(TREE),
+            });
         }
         match (saving.select, added) {
             (Pick::Row(sel), _) => self.selected = sel,
@@ -1198,9 +1212,6 @@ impl AccountsScreen {
             self.folded.remove(&surface);
         }
         cx.status(saving.status);
-        if saving.form {
-            cx.focus.focus(TREE);
-        }
     }
 
     fn remove(&mut self, id: &str, w: &World, cx: &mut Cx) {
@@ -1265,7 +1276,7 @@ impl AccountsScreen {
                 status,
                 select: Pick::Keep,
                 unfold: None,
-                form: false,
+                form: None,
             },
             w,
             cx,
@@ -1285,7 +1296,7 @@ impl AccountsScreen {
                         status,
                         select: Pick::Keep,
                         unfold: None,
-                        form: false,
+                        form: None,
                     },
                     w,
                     cx,
@@ -1303,8 +1314,10 @@ impl AccountsScreen {
             started_tick: w.clock.now_ms as u64,
         };
         let title = a.title();
+        let source = a.source.clone();
         w.perform(Effect::ValidateAccount {
             account: id.to_owned(),
+            source,
         });
         cx.progress(job::ACCOUNT_VALIDATE, format!("Validating {title}…"));
     }
@@ -1447,10 +1460,7 @@ impl AccountsScreen {
                 };
                 let toggle = gate(item(if a.enabled { "Disable" } else { "Enable" }, "t"));
                 let toggle = match (&w.surfaces.fixed, a.mutations_allowed()) {
-                    (Some(fixed), true) => match fixed.enable_global.short.as_deref() {
-                        Some(short) => toggle.reason(short),
-                        None => toggle,
-                    },
+                    (Some(fixed), true) => toggle.reason(fixed.enable_global.short_or_text()),
                     _ => toggle,
                 };
                 let default = if !a.mutations_allowed() {
@@ -1960,7 +1970,6 @@ impl AccountsScreen {
                 .meta(&scope)
                 .render(area, buf, t)
         };
-        self.inspector_area = inner;
         let bg = if as_drawer { t.canvas } else { t.surface };
 
         let action_row = ButtonRow::new().overflow(RowOverflow::Wrap);
@@ -2396,16 +2405,31 @@ impl Page<Jackin> for AccountsScreen {
 
     fn on_msg(&mut self, msg: &Msg, w: &mut World, cx: &mut Cx) -> Outcome {
         match msg {
-            Msg::AccountsSaved { added, result } => {
-                let saving = self.saving.take();
-                match (result, saving) {
-                    (Ok(snapshot), saving) => {
+            Msg::AccountsSaved {
+                ticket,
+                added,
+                result,
+            } => {
+                let current = match self.saving.take() {
+                    Some((current, saving)) if current == *ticket => Some(saving),
+                    other => {
+                        self.saving = other;
+                        None
+                    }
+                };
+                match (result, current) {
+                    (Ok(snapshot), current) => {
                         w.apply((**snapshot).clone());
-                        if let Some(saving) = saving {
+                        if let Some(saving) = current {
                             self.finish_saving(saving, added.clone(), cx);
                         }
                     }
-                    (Err(error), Some(Saving { form: true, .. })) => {
+                    (
+                        Err(error),
+                        Some(Saving {
+                            form: Some(serial), ..
+                        }),
+                    ) if self.form.as_ref().is_some_and(|c| c.serial == serial) => {
                         let error = error.clone();
                         cx.with_top::<FormDialog>(move |f| f.error = Some(error));
                     }
@@ -2415,8 +2439,12 @@ impl Page<Jackin> for AccountsScreen {
                 self.build_rows(w);
                 Outcome::Changed
             }
-            Msg::AccountRefreshed { account, result } => {
-                if let Some(a) = w.accounts.get(account) {
+            Msg::AccountRefreshed {
+                account,
+                source,
+                result,
+            } => {
+                if let Some(a) = w.accounts.get(account).filter(|a| a.source == **source) {
                     match result {
                         Ok(refresh) => {
                             let n = a.usage.windows.iter().filter(|w| w.has_meter()).count();
@@ -2433,8 +2461,19 @@ impl Page<Jackin> for AccountsScreen {
                 self.build_rows(w);
                 Outcome::Changed
             }
-            Msg::AccountValidated { account, result } => {
-                self.show_validation(account, result, w, cx);
+            Msg::AccountValidated {
+                account,
+                source,
+                result,
+            } => {
+                if w.accounts
+                    .get(account)
+                    .is_some_and(|a| a.source == **source)
+                {
+                    self.show_validation(account, result, w, cx);
+                } else {
+                    cx.status("Validation discarded · the account changed");
+                }
                 self.build_rows(w);
                 Outcome::Changed
             }
@@ -2731,10 +2770,16 @@ impl Page<Jackin> for AccountsScreen {
                 Axis::Horizontal => Outcome::Ignored,
             };
         }
+        if let Some(o) =
+            scrollbar::pointer(ev, TREE, &mut self.scroll, TrackClick::Jump).or_else(|| {
+                scrollbar::pointer(ev, INSPECTOR, &mut self.inspector_scroll, TrackClick::Jump)
+            })
+        {
+            return o;
+        }
         match ev.phase() {
-            Some(Phase::Click) => self.click(id, pos, w, cx),
+            Some(Phase::Click) => self.click(id, w, cx),
             Some(Phase::Secondary) => self.secondary(id, pos, w, cx),
-            Some(Phase::Drag) => self.drag(id, pos),
             _ => Outcome::Ignored,
         }
     }
@@ -2856,7 +2901,7 @@ impl Page<Jackin> for AccountsScreen {
                             status: format!("Removed {}", a.title()),
                             select: Pick::Row(Sel::Provider(a.surface)),
                             unfold: None,
-                            form: false,
+                            form: None,
                         },
                         w,
                         cx,
@@ -3064,7 +3109,7 @@ impl Screen for AccountsScreen {
 }
 
 impl AccountsScreen {
-    fn click(&mut self, id: WidgetId, pos: Position, w: &mut World, cx: &mut Cx) -> Outcome {
+    fn click(&mut self, id: WidgetId, w: &mut World, cx: &mut Cx) -> Outcome {
         self.build_rows(w);
         if self.menu.is_open() {
             let (o, chosen) = self.menu.on_click(id);
@@ -3095,31 +3140,6 @@ impl AccountsScreen {
                 }
                 return Outcome::Changed;
             }
-        }
-        if id == scrollbar::id_for(TREE) {
-            let track = Rect::new(
-                self.tree_area.right() - 1,
-                self.tree_area.y,
-                1,
-                self.tree_area.height,
-            );
-            self.scroll
-                .scroll_to(scrollbar::offset_for_click(track, pos, &self.scroll));
-            return Outcome::Changed;
-        }
-        if id == scrollbar::id_for(INSPECTOR) {
-            let track = Rect::new(
-                self.inspector_area.right() - 1,
-                self.inspector_area.y,
-                1,
-                self.inspector_area.height,
-            );
-            self.inspector_scroll.scroll_to(scrollbar::offset_for_click(
-                track,
-                pos,
-                &self.inspector_scroll,
-            ));
-            return Outcome::Changed;
         }
         if id == INSPECTOR {
             self.md.open_drawer(cx.focus);
@@ -3159,21 +3179,6 @@ impl AccountsScreen {
         self.md.close_drawer(cx.focus);
         self.open_menu(i, ContextAnchor::Pointer(pos), w);
         Outcome::Changed
-    }
-
-    fn drag(&mut self, pressed: WidgetId, pos: Position) -> Outcome {
-        if pressed == scrollbar::id_for(TREE) {
-            let track = Rect::new(
-                self.tree_area.right() - 1,
-                self.tree_area.y,
-                1,
-                self.tree_area.height,
-            );
-            self.scroll
-                .scroll_to(scrollbar::offset_for_click(track, pos, &self.scroll));
-            return Outcome::Changed;
-        }
-        Outcome::Ignored
     }
 
     fn wheel(&mut self, id: WidgetId, delta: i32) -> Outcome {

@@ -42,7 +42,14 @@ impl OnePassword for SignedInOnly {
         unreachable!("{NOT_USED}")
     }
 
-    fn reference(&self, _: &str, _: &str, _: &str, _: &str) -> Result<OpReference, OpError> {
+    fn reference(
+        &self,
+        _: &str,
+        _: &str,
+        _: &str,
+        _: &str,
+        _: Option<&str>,
+    ) -> Result<OpReference, OpError> {
         unreachable!("{NOT_USED}")
     }
 

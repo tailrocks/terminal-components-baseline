@@ -510,6 +510,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("core::pointer::PointerRouter::tick"),
     Capability::ty("core::refusal::Reason"),
     Capability::builder("core::refusal::Reason::short"),
+    Capability::function("core::refusal::Reason::short_or_text"),
     Capability::function("core::refusal::Reason::within_limits"),
     Capability::function("core::refusal::Reason::text_fits"),
     Capability::function("core::refusal::Reason::short_fits"),
@@ -2660,7 +2661,6 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("widgets::scrollbar::render_horizontal_with"),
     Capability::function("widgets::scrollbar::reserve"),
     Capability::function("widgets::scrollbar::split"),
-    Capability::function("widgets::scrollbar::offset_for_click"),
     Capability::function("widgets::scrollbar::press"),
     Capability::function("widgets::scrollbar::press_with"),
     Capability::function("widgets::scrollbar::drag"),
@@ -2668,6 +2668,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("widgets::scrollbar::drag_h"),
     Capability::function("widgets::scrollbar::apply"),
     Capability::function("widgets::scrollbar::apply_with"),
+    Capability::function("widgets::scrollbar::pointer"),
     Capability::function("widgets::scrollbar::render_with_fade"),
     Capability::function("widgets::scrollbar::render_with_fade_except"),
     Capability::function("widgets::scrollbar::position_label"),
@@ -3492,6 +3493,12 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::ty("shell::PageKey"),
     Capability::ty("shell::Shell"),
     Capability::function("shell::Shell::copy_at"),
+    Capability::function("shell::Shell::clipboard"),
+    Capability::function("shell::Shell::stop_handle"),
+    Capability::ty("shell::StopHandle"),
+    Capability::function("shell::StopHandle::stop"),
+    Capability::function("shell::StopHandle::is_stopped"),
+    Capability::function("shell::Shell::set_clipboard"),
     Capability::function("shell::Shell::pointer_parts"),
     Capability::function("shell::Shell::cx"),
     Capability::function("shell::Shell::deliver"),
@@ -3644,6 +3651,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("shell::JobKey::name"),
     Capability::ty("shell::StatusLine"),
     Capability::builder("shell::StatusLine::ttl_ms"),
+    Capability::function("shell::StatusLine::revision"),
     Capability::function("shell::StatusLine::observe"),
     Capability::function("shell::StatusLine::set_with"),
     Capability::function("shell::StatusLine::set_sticky_with"),
@@ -3745,6 +3753,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::variant("terminal::Paste::Send"),
     Capability::variant("terminal::Paste::NeedsConfirm"),
     Capability::variant("terminal::Paste::TooLarge"),
+    Capability::function("terminal::is_spoofing_format"),
     Capability::function("ui::text::capitalize"),
     Capability::ty("widgets::list_detail::ListDetail"),
     Capability::ty("widgets::list_detail::ListRow"),
@@ -3760,36 +3769,11 @@ pub struct Allowed {
     pub reason: &'static str,
 }
 
-const PREVIEW: &str =
-    "demonstrated by the jackin demo app (apps/jackin) and its approved functional baselines";
-
 const HOST_FED: &str = "used by the host that feeds the terminal state (the jackin Capsule) and pinned by tests/terminal.rs, tests/terminal_viewport.rs and tests/forward_policy.rs; the terminalpane page keeps its approved baseline";
 
+const TEXT_FILTER: &str = "used by the feed guard that keeps these characters out of every cell and by the jackin console's title filter, and pinned by tests/terminal_guard.rs";
+
 pub static ALLOWLIST: &[Allowed] = &[
-    Allowed {
-        id: "widgets::list_detail::ListDetail",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::ListRow",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::Line",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::Action",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::Frame",
-        reason: PREVIEW,
-    },
-    Allowed {
-        id: "widgets::list_detail::Event",
-        reason: PREVIEW,
-    },
     Allowed {
         id: "terminal::TerminalState::with_scrollback",
         reason: HOST_FED,
@@ -3905,5 +3889,9 @@ pub static ALLOWLIST: &[Allowed] = &[
     Allowed {
         id: "terminal::Paste::TooLarge",
         reason: HOST_FED,
+    },
+    Allowed {
+        id: "terminal::is_spoofing_format",
+        reason: TEXT_FILTER,
     },
 ];

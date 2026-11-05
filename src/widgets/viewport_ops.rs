@@ -1,4 +1,5 @@
 use ratatui::buffer::Buffer;
+use ratatui::crossterm::event::KeyModifiers;
 use ratatui::layout::{Position, Rect};
 use ratatui::style::Color;
 
@@ -12,12 +13,14 @@ use crate::widgets::viewport::{CellPos, TextViewport};
 /// What a host needs from a scrolling, selectable text view, without knowing
 /// whether the text is a list of styled lines or a terminal grid.
 ///
-/// The Capsule drives every pane through this trait. `TextViewport`
-/// implements it by delegation, so the trait adds no behaviour of its own.
+/// A host that shows several views drives each of them through this trait.
+/// `TextViewport` implements it by delegation, so the trait adds no behaviour
+/// of its own.
 pub trait ViewportOps {
     fn id(&self) -> WidgetId;
     fn set_area(&mut self, area: Rect);
     fn hbar(&self) -> Rect;
+    fn vbar(&self) -> Rect;
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Outcome;
     fn scroll(&self) -> &ScrollPane;
 
@@ -34,6 +37,14 @@ pub trait ViewportOps {
     fn clear_selection(&mut self) -> Outcome;
     fn select_word_at(&mut self, pos: Position) -> Outcome;
     fn on_click(&mut self, pos: Position) -> Outcome;
+    fn on_press_with(&mut self, pos: Position, count: u8, mods: KeyModifiers) -> Outcome {
+        let _ = (count, mods);
+        self.on_click(pos)
+    }
+    fn on_click_with(&mut self, pos: Position, count: u8) -> Outcome {
+        let _ = count;
+        self.on_click(pos)
+    }
     fn on_drag(&mut self, pos: Position) -> Outcome;
     fn context_point(&self) -> Position;
     /// Whether the `y` key copies the selection. A viewport that copies on
@@ -41,7 +52,9 @@ pub trait ViewportOps {
     fn keyboard_copy(&self) -> bool;
     /// Whether `draw` paints the vertical scroll track itself. A host draws
     /// the bar of a view that answers `false`.
-    fn draws_track(&self) -> bool;
+    fn draws_track(&self) -> bool {
+        false
+    }
 
     fn caret(&self) -> Option<CellPos>;
     fn caret_visible(&self) -> bool;
@@ -74,6 +87,10 @@ impl ViewportOps for TextViewport {
         TextViewport::hbar(self)
     }
 
+    fn vbar(&self) -> Rect {
+        TextViewport::vbar(self)
+    }
+
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Outcome {
         Scrollable::bar_input(self, bar, pos, pressed).outcome()
     }
@@ -95,16 +112,18 @@ impl ViewportOps for TextViewport {
     }
 
     fn page_up(&mut self) {
-        self.scroll.page_up();
+        let moved = self.scroll.page_up();
+        Scrollable::after_scroll(self, Axis::Vertical, moved);
     }
 
     fn page_down(&mut self) {
         self.scroll.page_down();
-        self.follow = self.is_at_tail();
+        Scrollable::after_scroll(self, Axis::Vertical, true);
     }
 
     fn jump_start(&mut self) {
-        self.scroll.jump_start();
+        let moved = self.scroll.jump_start();
+        Scrollable::after_scroll(self, Axis::Vertical, moved);
     }
 
     fn has_selection(&self) -> bool {
@@ -127,6 +146,14 @@ impl ViewportOps for TextViewport {
         TextViewport::on_click(self, pos)
     }
 
+    fn on_press_with(&mut self, pos: Position, count: u8, mods: KeyModifiers) -> Outcome {
+        TextViewport::on_press_with(self, pos, count, mods)
+    }
+
+    fn on_click_with(&mut self, pos: Position, count: u8) -> Outcome {
+        TextViewport::on_click_with(self, pos, count)
+    }
+
     fn on_drag(&mut self, pos: Position) -> Outcome {
         TextViewport::on_drag(self, pos)
     }
@@ -137,10 +164,6 @@ impl ViewportOps for TextViewport {
 
     fn keyboard_copy(&self) -> bool {
         true
-    }
-
-    fn draws_track(&self) -> bool {
-        false
     }
 
     fn caret(&self) -> Option<CellPos> {
@@ -163,6 +186,7 @@ impl ViewportOps for TextViewport {
         bg: Color,
         caret_allowed: bool,
     ) -> Option<Position> {
+        self.scroll.note_policy(ctx.track_click, ctx.hscroll);
         let mut view = self.clone();
         view.caret_visible = self.caret_visible && caret_allowed;
         view.render(area, buf, ctx, bg);

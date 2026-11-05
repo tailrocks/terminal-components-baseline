@@ -10,7 +10,7 @@ use std::sync::{Arc, Mutex};
 
 use common::*;
 use jackin_console::app::{App, Route};
-use jackin_console::backend::{Backend, Completion, Effect, FileSource, OnePassword};
+use jackin_console::backend::{Backend, Completion, Effect, FileSource, OnePassword, PlainKey};
 use jackin_console::domain::account::{AccountId, Lifecycle};
 use jackin_console::domain::agent::{Agent, AuthMode, Provider};
 use jackin_console::domain::docker::{DockerCapability, DockerRiskText};
@@ -58,7 +58,7 @@ impl LaunchFeed for Feed {
 
     fn retry_credentials(&mut self, _: &mut dyn OnePassword) {}
 
-    fn use_plain_text(&mut self) -> Option<TypedKey> {
+    fn use_plain_text(&mut self, _: PlainKey) -> Option<TypedKey> {
         None
     }
 
@@ -416,6 +416,28 @@ fn the_only_ready_account_is_offered_to_a_directory_with_no_default() {
         "a default that cannot be used is not replaced by another account"
     );
     assert!(offer.blocked.is_some());
+}
+
+#[test]
+fn a_launch_blocked_account_found_on_the_host_is_not_offered() {
+    let mut world = without_default(&[]);
+    let account = world
+        .accounts
+        .get_mut("acct-codex-primary")
+        .expect("primary");
+    account.enabled = true;
+    account.origin = jackin_console::domain::account::AccountOrigin::Discovered;
+    account.launch_blocked = Some(jackin_console::domain::account::LaunchBlock::UsageOnlySource);
+    assert!(
+        world
+            .accounts
+            .discovered_current(Provider::OpenAi)
+            .is_some()
+    );
+    let offer = world.offer_for(Agent::Codex, None, None);
+    assert_eq!(offer.accounts, Vec::<AccountId>::new());
+    assert_eq!(offer.preselected, None);
+    assert!(offer.blocked.is_some(), "the block is said, not skipped");
 }
 
 #[test]

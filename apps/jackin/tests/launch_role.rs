@@ -3,12 +3,15 @@
 mod common;
 
 use common::*;
+use jackin_console::app::{App, Route};
+use jackin_console::domain::account::Lifecycle;
 use jackin_console::domain::role::{
-    LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
+    DEFAULT_ROLE_UNUSABLE, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
 };
 use jackin_console::domain::workspace::{AllowedRoles, Workspace};
 use jackin_console::fixtures::{Scenario, world_for};
-use jackin_console::world::{LaunchSource, World};
+use jackin_console::sim;
+use jackin_console::world::{LaunchSource, Msg, Snapshot, World};
 
 fn world(rule: LaunchRoleRule) -> World {
     let mut world = world_for(Scenario::Returning);
@@ -68,14 +71,15 @@ fn the_demo_rule_keeps_the_fixture_roles() {
 fn the_configured_rule_takes_the_default_role() {
     let world = world(LaunchRoleRule::Configured);
     let mut ws = workspace(&world);
-    ws.roles.default = Some("data-eng".into());
+    let default = world.roles[0].name.clone();
+    ws.roles.default = Some(default.clone());
     assert_eq!(
         world.launch_role(LaunchSource::Row(Some(&ws))),
-        role("data-eng")
+        role(&default)
     );
     assert_eq!(
         world.launch_role(LaunchSource::CurrentDir(Some(&ws))),
-        role("data-eng")
+        role(&default)
     );
 }
 
@@ -171,4 +175,116 @@ fn the_picker_keeps_its_rows_while_a_role_resolves() {
         "{screen}"
     );
     assert!(!screen.contains(NO_DEFAULT_ROLE) && !screen.contains("unavailable"));
+}
+
+#[test]
+fn the_configured_rule_refuses_a_default_role_that_cannot_launch() {
+    let mut world = world(LaunchRoleRule::Configured);
+    let mut ws = workspace(&world);
+    let name = world.roles[0].name.clone();
+    ws.roles.default = Some(name.clone());
+    let unusable = LaunchRole::Unavailable(DEFAULT_ROLE_UNUSABLE.into());
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), role(&name));
+
+    world.roles[0].trusted = false;
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+    world.roles[0].trusted = true;
+
+    world.roles[0].in_registry = false;
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+    world.roles[0].in_registry = true;
+
+    world.roles[0].load_error = Some("manifest does not parse".into());
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+
+    world.roles[0].load_error = None;
+    ws.roles.default = Some("data-eng".into());
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+
+    ws.roles.default = Some("not-registered".into());
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+}
+
+#[test]
+fn the_configured_rule_skips_a_role_that_cannot_launch_as_the_only_one() {
+    let mut world = world(LaunchRoleRule::Configured);
+    let mut ws = workspace(&world);
+    let only = names(&world, 3)[1].clone();
+    ws.roles.allowed = AllowedRoles::Custom(vec![only.clone()]);
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), role(&only));
+    world
+        .roles
+        .iter_mut()
+        .find(|r| r.name == only)
+        .expect("role")
+        .trusted = false;
+    assert_eq!(
+        world.launch_role(LaunchSource::Row(Some(&ws))),
+        LaunchRole::Unavailable(NO_DEFAULT_ROLE.into())
+    );
+}
+
+fn snapshot_after(app: &App, change: impl FnOnce(&mut Snapshot)) -> Msg {
+    let mut snapshot = sim::snapshot(&app.world);
+    change(&mut snapshot);
+    Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Ok(Box::new(snapshot)),
+    }
+}
+
+fn open_picker() -> App {
+    let mut world = world(LaunchRoleRule::Configured);
+    world.workspaces[0].roles.default = Some("the-architect".into());
+    let mut app = app_with(Scenario::Returning, world);
+    press(&mut app, "down enter");
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains("payments-platform › the-architect"),
+        "{shown}"
+    );
+    app
+}
+
+#[test]
+fn a_launch_picked_after_the_role_became_unusable_is_refused() {
+    let mut app = open_picker();
+    let reload = snapshot_after(&app, |s| {
+        s.roles
+            .iter_mut()
+            .find(|r| r.name == "the-architect")
+            .expect("role")
+            .trusted = false;
+    });
+    app.deliver(&reload);
+    press(&mut app, "enter");
+
+    assert_eq!(app.route(), Route::Manager);
+    let shown = app.shell.status.text().unwrap_or_default().to_owned();
+    assert!(shown.contains("launch options changed"), "{shown}");
+}
+
+#[test]
+fn a_launch_picked_after_its_account_became_unusable_is_refused() {
+    let mut app = open_picker();
+    let reload = snapshot_after(&app, |s| {
+        let preselected = s
+            .accounts
+            .accounts
+            .iter_mut()
+            .find(|a| a.id == "acct-claude-personal")
+            .expect("account");
+        preselected.lifecycle = Lifecycle::NeedsLogin;
+    });
+    app.deliver(&reload);
+    press(&mut app, "enter");
+
+    assert_eq!(app.route(), Route::Manager);
+}
+
+#[test]
+fn a_launch_picked_with_nothing_changed_goes_on() {
+    let mut app = open_picker();
+    press(&mut app, "enter");
+    assert_eq!(app.route(), Route::Cockpit);
 }

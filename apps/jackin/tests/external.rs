@@ -1,17 +1,19 @@
 #![cfg(feature = "demo")]
 
-use jackin_console::app::{App, Remote};
+use jackin_console::app::{App, Remote, Route};
 use jackin_console::domain::instance::InstanceStatus;
 use jackin_console::domain::workspace::Workspace;
-use jackin_console::fixtures::{Scenario, app_for};
+use jackin_console::fixtures::{Scenario, app_for, world_for};
+use jackin_console::screens::Go;
 use jackin_console::sim;
 use jackin_console::world::{Msg, Snapshot};
-use junie_tui::core::event::{External, Input, Outcome};
+use junie_tui::core::event::{External, Input, Key, Outcome};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::{Application, ExternalSender, external_channel};
 use junie_tui::theme::{ColorLevel, Theme};
 use ratatui::Terminal;
 use ratatui::backend::TestBackend;
+use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
 const STOPPED: &str = "jk-7f3a";
 
@@ -135,4 +137,249 @@ fn a_reloaded_snapshot_shows_on_the_next_frame() {
     assert_eq!(pump(&mut app), vec![Outcome::Changed]);
     assert!(app.world.workspaces.iter().any(|w| w.name == name));
     assert!(screen(&mut app).contains(name));
+}
+
+fn without(app: &App, id: &str) -> Snapshot {
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.instances.retain(|i| i.id != id);
+    snapshot
+}
+
+#[test]
+fn a_reload_that_removes_the_open_instance_leaves_its_capsule() {
+    let (mut app, tx) = linked();
+    app.go(Go::Attach {
+        instance: STOPPED.into(),
+        pane: None,
+    });
+    assert_eq!(app.route(), Route::Capsule);
+    assert!(app.world.daemons.contains_key(STOPPED));
+
+    assert!(tx.send(Remote::Reloaded(Box::new(without(&app, STOPPED)))));
+    assert_eq!(pump(&mut app), vec![Outcome::Changed]);
+
+    assert_ne!(app.route(), Route::Capsule);
+    assert!(app.world.instance(STOPPED).is_none());
+    assert!(!app.world.daemons.contains_key(STOPPED));
+}
+
+#[test]
+fn a_reload_that_removes_an_unopened_instance_drops_its_daemon() {
+    let (mut app, tx) = linked();
+    let other = "jk-9b02";
+    assert!(app.world.daemons.contains_key(other));
+
+    assert!(tx.send(Remote::Reloaded(Box::new(without(&app, other)))));
+    pump(&mut app);
+
+    assert!(!app.world.daemons.contains_key(other));
+    assert!(app.world.daemons.contains_key(STOPPED));
+}
+
+#[test]
+fn a_periodic_refresh_that_removes_the_open_instance_leaves_its_capsule() {
+    let mut app = app();
+    app.go(Go::Attach {
+        instance: STOPPED.into(),
+        pane: None,
+    });
+    assert_eq!(app.route(), Route::Capsule);
+
+    let refreshed = Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Ok(Box::new(without(&app, STOPPED))),
+    };
+    assert_eq!(app.deliver(&refreshed), Outcome::Changed);
+
+    assert_ne!(app.route(), Route::Capsule);
+    assert!(app.world.instance(STOPPED).is_none());
+    assert!(!app.world.daemons.contains_key(STOPPED));
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains(&format!("Instance {STOPPED} was removed elsewhere")),
+        "{shown}"
+    );
+}
+
+#[test]
+fn a_periodic_refresh_that_removes_an_unopened_instance_drops_its_daemon() {
+    let mut app = app();
+    let other = "jk-9b02";
+    assert!(app.world.daemons.contains_key(other));
+
+    let refreshed = Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Ok(Box::new(without(&app, other))),
+    };
+    app.deliver(&refreshed);
+
+    assert!(!app.world.daemons.contains_key(other));
+    assert!(app.world.daemons.contains_key(STOPPED));
+}
+
+fn restorable(app: &App, id: &str) -> Snapshot {
+    let mut snapshot = sim::snapshot(&app.world);
+    for i in snapshot.instances.iter_mut().filter(|i| i.id == id) {
+        i.status = InstanceStatus::RestoreAvailable;
+    }
+    snapshot
+}
+
+#[test]
+fn a_reload_that_stops_the_open_instance_leaves_its_capsule() {
+    let (mut app, tx) = linked();
+    app.go(Go::Attach {
+        instance: STOPPED.into(),
+        pane: None,
+    });
+    assert_eq!(app.route(), Route::Capsule);
+
+    assert!(tx.send(Remote::Reloaded(Box::new(restorable(&app, STOPPED)))));
+    pump(&mut app);
+
+    assert_ne!(app.route(), Route::Capsule);
+    assert_eq!(
+        status_of(&app, STOPPED),
+        InstanceStatus::RestoreAvailable,
+        "the backend's status stands"
+    );
+    assert!(!app.world.daemons.contains_key(STOPPED));
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains(&format!("Instance {STOPPED} stopped elsewhere")),
+        "{shown}"
+    );
+}
+
+#[test]
+fn a_periodic_refresh_that_stops_an_unopened_instance_drops_its_daemon() {
+    let mut app = app();
+    let other = "jk-9b02";
+    assert!(app.world.daemons.contains_key(other));
+
+    let refreshed = Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Ok(Box::new(restorable(&app, other))),
+    };
+    app.deliver(&refreshed);
+
+    assert!(!app.world.daemons.contains_key(other));
+    assert!(app.world.daemons.contains_key(STOPPED));
+}
+
+fn with_roles(app: &App, roles: bool) -> Snapshot {
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.surfaces.roles = roles
+        .then(|| world_for(Scenario::RoleBinding).surfaces.roles)
+        .flatten();
+    snapshot
+}
+
+fn key(app: &mut App, c: char) {
+    Application::handle(
+        app,
+        Input::Key(Key {
+            code: KeyCode::Char(c),
+            mods: KeyModifiers::NONE,
+        }),
+    );
+    screen(app);
+}
+
+#[test]
+fn a_reload_that_adds_the_roles_surface_opens_the_roles_tab() {
+    let (mut app, tx) = linked();
+    assert!(app.world.surfaces.roles.is_none());
+    key(&mut app, 'R');
+    assert_eq!(app.route(), Route::Manager, "no Roles tab yet");
+
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, true)))));
+    pump(&mut app);
+    assert_eq!(app.route(), Route::Manager, "the tab in use stays");
+    key(&mut app, 'R');
+    assert_eq!(app.route(), Route::Roles);
+}
+
+#[test]
+fn a_reload_that_removes_the_roles_surface_closes_the_roles_tab() {
+    let (mut app, tx) = linked();
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, true)))));
+    pump(&mut app);
+    key(&mut app, 'R');
+    assert_eq!(app.route(), Route::Roles);
+
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, false)))));
+    pump(&mut app);
+    assert_eq!(app.route(), Route::Manager);
+    key(&mut app, 'R');
+    assert_eq!(app.route(), Route::Manager, "the key is gone with the tab");
+    let shown = screen(&mut app);
+    assert!(!shown.contains("R Roles"), "{shown}");
+}
+
+#[test]
+fn a_reload_that_adds_the_doctor_surface_binds_its_key() {
+    let (mut app, tx) = linked();
+    assert!(app.world.surfaces.doctor.is_none());
+    key(&mut app, 'D');
+    assert_ne!(app.route(), Route::Doctor, "no Doctor yet");
+
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.surfaces.doctor = world_for(Scenario::Doctor).surfaces.doctor;
+    assert!(tx.send(Remote::Reloaded(Box::new(snapshot))));
+    pump(&mut app);
+    key(&mut app, 'D');
+    assert_eq!(app.route(), Route::Doctor);
+}
+
+fn down(app: &mut App) {
+    Application::handle(
+        app,
+        Input::Key(Key {
+            code: KeyCode::Down,
+            mods: KeyModifiers::NONE,
+        }),
+    );
+    screen(app);
+}
+
+#[test]
+fn a_reload_that_removes_the_roles_surface_closes_the_modals_the_roles_page_opened() {
+    let (mut app, tx) = linked();
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, true)))));
+    pump(&mut app);
+    key(&mut app, 'R');
+    key(&mut app, 'a');
+    let asked = screen(&mut app);
+    assert!(asked.contains("register a role"), "{asked}");
+
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, false)))));
+    pump(&mut app);
+
+    assert_eq!(app.route(), Route::Manager);
+    let shown = screen(&mut app);
+    assert!(!shown.contains("register a role"), "{shown}");
+    down(&mut app);
+    let moved = screen(&mut app);
+    assert!(
+        moved.contains("▎ ▸ payments-platform"),
+        "the manager takes the keys:\n{moved}"
+    );
+}
+
+#[test]
+fn a_reload_that_removes_the_roles_surface_leaves_a_role_editor_in_use() {
+    let (mut app, tx) = linked();
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, true)))));
+    pump(&mut app);
+    key(&mut app, 'R');
+    key(&mut app, 'e');
+    assert_eq!(app.route(), Route::RoleEditor);
+
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, false)))));
+    pump(&mut app);
+
+    assert_eq!(app.route(), Route::RoleEditor);
+    let shown = screen(&mut app);
+    assert!(shown.contains("Roles › sentinel › edit"), "{shown}");
 }

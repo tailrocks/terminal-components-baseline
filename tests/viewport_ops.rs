@@ -1,9 +1,10 @@
 mod common;
 
 use common::*;
-use junie_tui::core::hit::Axis;
+use junie_tui::core::hit::{Axis, Bar};
 use junie_tui::core::id::WidgetId;
-use junie_tui::core::scroll::Scrollable;
+use junie_tui::core::scroll::{HScroll, Scrollable, TrackClick};
+use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::viewport::{CellPos, Line, Span, TextViewport};
 use junie_tui::widgets::viewport_ops::ViewportOps;
 use ratatui::buffer::Buffer;
@@ -256,4 +257,150 @@ fn a_text_viewport_drag_after_the_area_collapsed_is_ignored() {
         "the press ended with the area: a later drag selects nothing"
     );
     assert!(!v.has_selection());
+}
+
+fn wide() -> TextViewport {
+    let long = "x".repeat(120);
+    let mut v = TextViewport::with_lines(ID, (0..20).map(|_| vec![Span::plain(&long)]).collect());
+    v.set_area(AREA);
+    v
+}
+
+#[test]
+fn the_app_scroll_policy_of_a_drawn_frame_reaches_the_input_of_a_view_drawn_from_a_shared_reference()
+ {
+    let mut v = wide();
+    paint(&v, false);
+    assert_eq!(
+        ViewportOps::wheel(&mut v, Axis::Horizontal, 3),
+        junie_tui::core::event::Outcome::Changed,
+        "the default policy scrolls sideways"
+    );
+    ViewportOps::wheel(&mut v, Axis::Horizontal, -9);
+
+    draw(None, |buf, ctx| {
+        ctx.hscroll = junie_tui::core::scroll::HScroll::off();
+        v.draw(AREA, buf, ctx, ctx.theme.canvas, false);
+    });
+
+    assert_eq!(
+        ViewportOps::wheel(&mut v, Axis::Horizontal, 3),
+        junie_tui::core::event::Outcome::Ignored,
+        "the policy of the frame turned sideways scrolling off for the input too"
+    );
+}
+
+#[test]
+fn paging_up_or_jumping_to_the_start_from_the_live_tail_stops_following() {
+    for leave in [
+        |ops: &mut dyn ViewportOps| ops.page_up(),
+        |ops: &mut dyn ViewportOps| ops.jump_start(),
+    ] {
+        let mut v = viewport();
+        let ops: &mut dyn ViewportOps = &mut v;
+        assert!(ops.follow());
+        assert!(ops.scroll().at_end(), "the view starts on the live tail");
+
+        leave(ops);
+
+        assert!(!ops.follow(), "a view that left the tail stops following");
+        for _ in 0..8 {
+            ops.page_down();
+        }
+        assert!(ops.follow(), "paging back to the tail follows it again");
+    }
+}
+
+fn vertical_bar(v: &dyn ViewportOps) -> Bar {
+    Bar {
+        id: scrollbar::id_for(ID),
+        owner: ID,
+        axis: Axis::Vertical,
+        track: v.vbar(),
+    }
+}
+
+fn drawn_with(v: &TextViewport, click: TrackClick) {
+    draw(None, |buf, ctx| {
+        ctx.track_click = click;
+        v.draw(AREA, buf, ctx, ctx.theme.canvas, false);
+    });
+}
+
+#[test]
+fn a_text_view_drawn_from_a_shared_reference_reports_the_track_along_its_area() {
+    let mut v = viewport();
+    paint(&v, false);
+    let track = Rect::new(AREA.right() - 1, AREA.y, 1, AREA.height);
+    assert_eq!(ViewportOps::vbar(&v), track);
+
+    let wide = wide();
+    paint(&wide, false);
+    assert_eq!(
+        ViewportOps::vbar(&wide),
+        Rect::new(AREA.right() - 1, AREA.y, 1, AREA.height - 1),
+        "the bottom row belongs to the horizontal bar"
+    );
+
+    let mut short = TextViewport::with_lines(ID, lines().into_iter().take(3).collect());
+    short.set_area(AREA);
+    paint(&short, false);
+    assert_eq!(ViewportOps::vbar(&short), Rect::ZERO, "nothing to scroll");
+
+    let bar = vertical_bar(&v);
+    let before = v.scroll().offset;
+    ViewportOps::bar_input(&mut v, &bar, Position::new(track.x, track.y), true);
+    assert!(
+        v.scroll().offset < before,
+        "a press above the thumb of the host-drawn track pages up"
+    );
+    assert!(!v.follow());
+}
+
+#[test]
+fn the_track_click_each_text_view_was_drawn_with_decides_its_own_press() {
+    let mut first = viewport();
+    let mut second = viewport();
+    drawn_with(&first, TrackClick::Jump);
+    drawn_with(&second, TrackClick::Page);
+
+    let top = Position::new(AREA.right() - 1, AREA.y);
+    let end = first.scroll().offset;
+    let bar = vertical_bar(&first);
+    ViewportOps::bar_input(&mut first, &bar, top, true);
+    let bar = vertical_bar(&second);
+    ViewportOps::bar_input(&mut second, &bar, top, true);
+
+    assert_eq!(
+        first.scroll().offset,
+        0,
+        "the first view was drawn with jump: a press at the top of the track lands at the start"
+    );
+    assert_eq!(
+        second.scroll().offset,
+        end - AREA.height as usize,
+        "the second view was drawn with page: the same press moves one page"
+    );
+}
+
+#[test]
+fn the_horizontal_policy_each_text_view_was_drawn_with_decides_its_own_wheel() {
+    let mut off = wide();
+    let mut on = wide();
+    draw(None, |buf, ctx| {
+        ctx.hscroll = HScroll::off();
+        off.draw(AREA, buf, ctx, ctx.theme.canvas, false);
+    });
+    paint(&on, false);
+
+    assert_eq!(
+        ViewportOps::wheel(&mut off, Axis::Horizontal, 3),
+        junie_tui::core::event::Outcome::Ignored,
+        "the first view was drawn with sideways scrolling off"
+    );
+    assert_eq!(
+        ViewportOps::wheel(&mut on, Axis::Horizontal, 3),
+        junie_tui::core::event::Outcome::Changed,
+        "the view drawn after it kept the default policy"
+    );
 }

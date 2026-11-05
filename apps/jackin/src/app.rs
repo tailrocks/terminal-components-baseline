@@ -46,7 +46,7 @@ use crate::screens::prelude::PreludeScreen;
 use crate::screens::role_editor::RoleEditorScreen;
 use crate::screens::settings::SettingsScreen;
 use crate::screens::{AppLayer, Cx, Go, LayerTag, ModalResult, Request, Screen};
-use crate::world::{Health, Msg, Snapshot, World};
+use crate::world::{Absorbed, Health, Msg, Snapshot, World};
 use junie_tui::shell::Page as _;
 use junie_tui::ui::leave::{LeaveGuard, Stakes};
 use junie_tui::widgets::brand::Lockup;
@@ -173,6 +173,22 @@ pub struct App {
     exit_after_status: Option<i64>,
     external: Option<ExternalReceiver>,
     held: Vec<Msg>,
+    surface_kinds: SurfaceKinds,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct SurfaceKinds {
+    roles: bool,
+    doctor: bool,
+}
+
+impl SurfaceKinds {
+    fn of(world: &World) -> Self {
+        Self {
+            roles: world.surfaces.roles.is_some(),
+            doctor: world.surfaces.doctor.is_some(),
+        }
+    }
 }
 
 impl App {
@@ -192,12 +208,12 @@ impl App {
         let mut shell = Shell::new();
         shell.motion = motion;
 
-        shell.clipboard = match clipboard {
+        shell.set_clipboard(match clipboard {
             ClipboardMode::Preview => shell::Clipboard::new().write(false),
             ClipboardMode::Host(sink) => shell::Clipboard::new().native(sink),
-        };
-        shell.clipboard.install();
+        });
         let router = crate::pages::router(&world);
+        let surface_kinds = SurfaceKinds::of(&world);
         let keys = shell_keys(&world);
         let host_menus = Self::build_host_menu(Route::Manager, &world);
         let mut app = Self {
@@ -219,6 +235,7 @@ impl App {
             exit_after_status: None,
             external: None,
             held: Vec::new(),
+            surface_kinds,
         };
         app.start(entry, frame);
         app
@@ -238,9 +255,77 @@ impl App {
             Some(Remote::Msg(msg)) => self.dispatch_msg(msg),
             Some(Remote::Reloaded(snapshot)) => {
                 self.world.apply((**snapshot).clone());
+                self.after_snapshot();
                 Outcome::Changed
             }
             None => Outcome::Ignored,
+        }
+    }
+
+    fn after_snapshot(&mut self) {
+        self.reconcile_surfaces();
+        self.drop_orphaned_daemons();
+    }
+
+    fn reconcile_surfaces(&mut self) {
+        let wanted = SurfaceKinds::of(&self.world);
+        if wanted == self.surface_kinds {
+            return;
+        }
+        self.surface_kinds = wanted;
+        self.keys = shell_keys(&self.world);
+        let active = self.router.active();
+        let has_roles_tab = self.router.tab_count() > TAB_ROLES;
+        match (has_roles_tab, wanted.roles) {
+            (false, true) => {
+                self.router.open_tab(Page::Roles(Box::default()));
+                self.router.select(active);
+            }
+            (true, false) => {
+                self.drop_layers_of(Route::Roles);
+                if active == TAB_ROLES {
+                    self.show_tab(TAB_MANAGER);
+                    self.enter_route();
+                }
+                self.router.close_tab(TAB_ROLES);
+            }
+            _ => {}
+        }
+        self.host_menus = Self::build_host_menu(self.host_menu_route, &self.world);
+        self.host_menu = Self::host_bar(&self.host_menus);
+    }
+
+    fn drop_layers_of(&mut self, owner: Route) {
+        while self.layers.iter().any(|e| e.owner == owner) {
+            self.layers.pop(&mut self.shell.focus);
+        }
+        self.layer_gone();
+    }
+
+    fn drop_orphaned_daemons(&mut self) {
+        let gone: Vec<(InstanceId, &'static str)> = self
+            .world
+            .daemons
+            .keys()
+            .filter_map(|id| match self.world.instance(id) {
+                None => Some((id.clone(), "was removed elsewhere")),
+                Some(i) if i.status != InstanceStatus::Running => {
+                    Some((id.clone(), "stopped elsewhere"))
+                }
+                Some(_) => None,
+            })
+            .collect();
+        let open = self.open_capsule();
+        for (instance, why) in gone {
+            if open.as_ref() == Some(&instance) {
+                self.go(Go::InstanceEnded {
+                    instance: instance.clone(),
+                    purge: false,
+                });
+                self.set_status(&format!("Instance {instance} {why}"), Tone::Secondary);
+            } else {
+                self.world.daemons.remove(&instance);
+            }
         }
     }
 
@@ -525,9 +610,22 @@ impl App {
                 Outcome::Ignored
             };
         }
+        let applied = self.world.snapshots_applied;
+        let out = self.dispatch_reply(m);
+        if self.world.snapshots_applied != applied {
+            self.after_snapshot();
+        }
+        out
+    }
+
+    fn dispatch_reply(&mut self, m: &Msg) -> Outcome {
         self.tell_forms_of_reply(m);
-        self.world.absorb(m);
-        let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));
+        if self.world.absorb(m) == Absorbed::Stale {
+            return Outcome::Ignored;
+        }
+        let ended = m
+            .job()
+            .is_some_and(|job| !self.job_continues(m) && self.shell.status.end_job(job));
         let route = self.route();
         let (o, reqs) = self
             .shell
@@ -555,6 +653,10 @@ impl App {
         let o = o.or(self.apply_requests(reqs, route));
         let o = o.or(self.apply_requests(behind, route));
         if ended { o.or(Outcome::Changed) } else { o }
+    }
+
+    fn job_continues(&self, m: &Msg) -> bool {
+        self.router.pages().any(|p| p.screen().job_continues(m))
     }
 
     fn finish_intro(&mut self) {
@@ -1721,6 +1823,22 @@ impl App {
             .flatten()
     }
 
+    fn attachable(&self, instance: &str) -> bool {
+        self.world
+            .instance(instance)
+            .is_some_and(|i| i.status == InstanceStatus::Running)
+    }
+
+    fn refuse_attach(&mut self, instance: &str) {
+        self.set_status(
+            &format!(
+                "Cannot attach: {} is not running",
+                instance.trim_start_matches(ID_PREFIX)
+            ),
+            Tone::Error,
+        );
+    }
+
     pub fn go(&mut self, g: Go) {
         let from = self.open_capsule();
         self.navigate(g);
@@ -1803,23 +1921,11 @@ impl App {
                 self.open_page(page);
             }
             Go::Attach { instance, pane } => {
-                if self
-                    .world
-                    .instance(&instance)
-                    .is_none_or(|i| i.status != InstanceStatus::Running)
-                {
-                    self.set_status(
-                        &format!(
-                            "Cannot attach: {} is not running",
-                            instance.trim_start_matches(ID_PREFIX)
-                        ),
-                        Tone::Error,
-                    );
+                if !self.attachable(&instance) {
+                    self.refuse_attach(&instance);
                     return;
                 }
-                if !self.world.daemons.contains_key(&instance) {
-                    self.open_first_session(&instance);
-                }
+                self.world.open_first_session(&instance);
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
                     d.attached_by = Some("this terminal".into());
                     d.set_policy(&self.world.pane_policy);
@@ -1855,12 +1961,18 @@ impl App {
                 agent,
                 account,
             } => {
+                if !self.attachable(&instance) {
+                    self.refuse_attach(&instance);
+                    return;
+                }
+                self.world.open_first_session(&instance);
                 let backend = Arc::clone(&self.world.backend);
                 let request = crate::panes::PaneRequest::new(&instance, agent, account.clone());
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
                     d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
                 }
                 crate::world::refresh_snapshots(&mut self.world);
+                self.world.refresh_now();
                 self.go(Go::Attach {
                     instance,
                     pane: None,
@@ -1905,7 +2017,11 @@ impl App {
             Go::InstanceEnded { instance, purge } => {
                 let dirty = self.world.instance(&instance).is_some_and(|i| i.is_dirty());
                 let now_secs = self.world.clock.now_secs();
-                if let Some(i) = self.world.instance_mut(&instance) {
+                if let Some(i) = self
+                    .world
+                    .instance_mut(&instance)
+                    .filter(|i| i.status.is_live())
+                {
                     i.status = if purge {
                         InstanceStatus::Purged
                     } else if dirty {
@@ -1951,26 +2067,17 @@ impl App {
                 }
             }
 
+            Go::CloseTop { tag, then } => {
+                if self.layers.top().is_some_and(|e| e.tag == tag) {
+                    self.layers.pop(&mut self.shell.focus);
+                    self.layer_gone();
+                    if let Some(id) = then {
+                        self.shell.focus.focus(id);
+                    }
+                }
+            }
             Go::Quit => self.quit_now(),
         }
-    }
-
-    /// The first sessions of an instance a launch just made: the panes its
-    /// backend asks for.
-    fn open_first_session(&mut self, instance: &str) {
-        let Some(i) = self.world.instance(instance) else {
-            return;
-        };
-        let backend = Arc::clone(&self.world.backend);
-        let requests = backend.initial_panes(i);
-        let mut d = self.world.new_daemon(&self.world.workspace_label(i));
-        let now = self.world.now_ms();
-        for request in requests {
-            d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
-        }
-        self.world.daemons.insert(instance.to_owned(), d);
-        crate::world::refresh_snapshots(&mut self.world);
-        self.world.sync_arbiter();
     }
 
     fn leave_construct(&mut self, instance: &str) {

@@ -11,6 +11,7 @@ use crate::domain::launch::LaunchContent;
 use crate::domain::onepassword::OpReference;
 use crate::domain::reason::{Found, IssueReason, RefreshOutcome};
 use crate::domain::role::RoleManifestDoc;
+use crate::domain::shown::is_hidden;
 use crate::domain::usage::AccountUsage;
 use crate::domain::vocabulary::ReasonWords;
 use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
@@ -86,13 +87,43 @@ pub type Ticket = u64;
 #[derive(Clone, PartialEq, Eq)]
 pub struct PlainKey(String);
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum KeyRefusal {
+    Empty,
+    Unprintable,
+}
+
+impl std::fmt::Display for KeyRefusal {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            KeyRefusal::Empty => "API key required: the field is empty",
+            KeyRefusal::Unprintable => "The API key holds a control or direction character",
+        })
+    }
+}
+
 impl PlainKey {
-    pub fn new(key: &str) -> Self {
-        Self(key.to_owned())
+    pub fn new(key: &str) -> Result<Self, KeyRefusal> {
+        let key = key.trim();
+        if key.is_empty() {
+            return Err(KeyRefusal::Empty);
+        }
+        if key.chars().any(is_hidden) {
+            return Err(KeyRefusal::Unprintable);
+        }
+        Ok(Self(key.to_owned()))
     }
 
     pub fn expose(&self) -> &str {
         &self.0
+    }
+}
+
+impl Drop for PlainKey {
+    fn drop(&mut self) {
+        let mut bytes = std::mem::take(&mut self.0).into_bytes();
+        bytes.fill(0);
+        std::hint::black_box(&bytes);
     }
 }
 
@@ -188,6 +219,7 @@ impl FieldKind {
 pub struct OpField {
     pub id: String,
     pub label: String,
+    pub section: Option<String>,
     pub kind: FieldKind,
 
     pub material: Option<String>,
@@ -266,6 +298,7 @@ pub struct OpItemRow {
 pub struct OpFieldRow {
     pub id: String,
     pub label: String,
+    pub section: Option<String>,
     pub kind: FieldKind,
 }
 
@@ -332,7 +365,8 @@ pub trait OnePassword: std::fmt::Debug {
         account: &str,
         vault: &str,
         item: &str,
-        field: &str,
+        field_id: &str,
+        section: Option<&str>,
     ) -> Result<OpReference, OpError>;
 
     fn describe(&self, reference: &OpReference) -> Result<FieldDescriptor, OpError>;
@@ -362,6 +396,7 @@ pub enum Effect {
         global: Box<GlobalConfig>,
     },
     SaveAccounts {
+        ticket: Ticket,
         base: Box<AccountRegistry>,
         registry: Box<AccountRegistry>,
     },
@@ -383,13 +418,17 @@ pub enum Effect {
     Purge {
         instance: InstanceId,
     },
-    Refresh,
+    Refresh {
+        ticket: Ticket,
+    },
     RefreshAccount {
         account: AccountId,
+        source: CredentialSource,
         stagger_ms: i64,
     },
     ValidateAccount {
         account: AccountId,
+        source: CredentialSource,
     },
     LoadRole {
         role: String,

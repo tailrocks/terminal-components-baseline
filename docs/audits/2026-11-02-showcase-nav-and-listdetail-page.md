@@ -19,6 +19,10 @@ sidebar in the same change.
 
 ## ListDetail has no showcase page
 
+Update 2026-11-05: the hidden page `listdetail` exists; see
+[2026-11-05-core-backlog.md](2026-11-05-core-backlog.md). The text below is the
+original record.
+
 `ListDetail` is a generic list and detail block (`widgets::list_detail`;
 the jackin Doctor and Roles screens use it). Its catalog lines sit in the
 `ALLOWLIST` of `src/catalog.rs` with the reason `PREVIEW`. The reason text says "approved baselines", which becomes true

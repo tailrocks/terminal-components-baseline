@@ -6,8 +6,8 @@ mod pane_support;
 use std::sync::Arc;
 
 use jackin_console::panes::{
-    ClipboardWrite, EndKind, LinkEvent, LinkStatus, PaneBody, PaneEffect, PanePolicy, TerminalPane,
-    sanitize_title,
+    ClipboardWrite, EndKind, Lease, LinkEvent, LinkStatus, PaneBody, PaneEffect, PanePolicy,
+    TerminalPane, sanitize_title,
 };
 use junie_tui::theme::Tone;
 use pane_support::*;
@@ -48,6 +48,7 @@ fn rig(request: jackin_console::panes::PaneRequest, policy: PanePolicy) -> Rig {
     let mut pane = pane_for(request, &bench, policy);
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane.tick(800);
     pane.focus_changed(true, 800);
@@ -140,6 +141,7 @@ fn rig_without_gesture() -> Rig {
     let mut pane = pane(&bench);
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane.tick(800);
     pane.focus_changed(true, 800);
@@ -272,6 +274,16 @@ fn title_is_sanitised_and_shown() {
     assert_eq!(rig.pane.title(), Some("second"));
 }
 
+#[test]
+fn title_drops_marks_that_reorder_or_hide_text() {
+    let spoofed = "a\u{200e}b\u{200f}c\u{61c}d\u{e0041}\u{e0042}e\u{e007f}";
+    assert_eq!(sanitize_title(spoofed), "abcde");
+
+    let mut rig = Rig::codex();
+    rig.write(1_100, format!("\x1b]2;{spoofed}\x07").as_bytes());
+    assert_eq!(rig.pane.title(), Some("abcde"));
+}
+
 /// A fresh Codex pane with the focus, attached at 0 ms, still in its replay
 /// window: the link is `Attaching`.
 fn replaying() -> Rig {
@@ -280,6 +292,7 @@ fn replaying() -> Rig {
     pane.sync_size(inner(80, 24));
     pane.focus_changed(true, 0);
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     Rig { bench, pane }
 }
@@ -310,6 +323,7 @@ fn reattached() -> Rig {
     rig.pane.key(&key("enter"), 1_500);
     assert_eq!(rig.bench.opened(), 2, "Enter reattaches");
     rig.bench.push(1, LinkEvent::Attached);
+    rig.bench.push(1, LinkEvent::Lease(Lease::Owner));
     rig.pane.tick(1_600);
     rig
 }
@@ -349,4 +363,52 @@ fn a_reattach_forgets_the_key_before_it() {
         [copied("Hello", "from Codex · 5 characters")],
         "a key on the new link opens the window again"
     );
+}
+
+#[test]
+fn a_lease_change_forgets_the_key_before_it() {
+    let mut rig = Rig::codex();
+    rig.bench.push(0, LinkEvent::Lease(Lease::ReadOnly));
+    rig.bench.push(0, LinkEvent::Lease(Lease::Owner));
+    rig.pane.tick(1_500);
+    assert_eq!(
+        rig.write(2_000, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "the key at 1,000 ms was typed under a lease this client no longer holds"
+    );
+
+    rig.pane.key(&key("b"), 2_100);
+    assert_eq!(
+        rig.write(2_200, HELLO),
+        [copied("Hello", "from Codex · 5 characters")],
+        "a key under the new lease opens the window again"
+    );
+}
+
+#[test]
+fn a_pane_this_client_only_views_never_copies() {
+    let mut rig = Rig::codex();
+    rig.bench.push(0, LinkEvent::Lease(Lease::ReadOnly));
+    rig.pane.tick(1_100);
+    rig.pane.gesture(1_200);
+    assert_eq!(
+        rig.write(1_300, HELLO),
+        [blocked(WRITE_BLOCKED)],
+        "a click in a viewing pane is not a gesture to write with"
+    );
+}
+
+#[test]
+fn a_title_loses_every_bidirectional_control() {
+    for c in [
+        '\u{61c}', '\u{200e}', '\u{200f}', '\u{202a}', '\u{202b}', '\u{202c}', '\u{202d}',
+        '\u{202e}', '\u{2066}', '\u{2067}', '\u{2068}', '\u{2069}',
+    ] {
+        assert_eq!(
+            sanitize_title(&format!("a{c}b")),
+            "ab",
+            "U+{:04X} survived in the title",
+            c as u32
+        );
+    }
 }

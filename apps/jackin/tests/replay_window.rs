@@ -4,7 +4,8 @@
 mod pane_support;
 
 use jackin_console::panes::{
-    DetachCause, EndKind, LinkEvent, LinkStatus, PaneBody, PaneCommand, PaneFace, TerminalPane,
+    DetachCause, EndKind, Lease, LinkEvent, LinkStatus, PaneBody, PaneCommand, PaneFace,
+    TerminalPane,
 };
 use pane_support::*;
 
@@ -12,6 +13,7 @@ fn attached(bench: &std::sync::Arc<Bench>) -> TerminalPane {
     let mut pane = pane(bench);
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane
 }
@@ -126,6 +128,7 @@ fn a_reattach_opens_a_new_window() {
 
     pane.key(&key("enter"), 1_000);
     bench.push(1, LinkEvent::Attached);
+    bench.push(1, LinkEvent::Lease(Lease::Owner));
     pane.tick(1_000);
     assert_eq!(pane.status(), &LinkStatus::Attaching);
     bench.output(1, b"\x1b[c");

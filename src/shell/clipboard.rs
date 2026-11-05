@@ -1,9 +1,12 @@
 use std::cell::RefCell;
 use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering};
 
 use crate::core::edit::clipboard;
 use crate::theme::Tone;
 use crate::ui::text::{plural, truncate};
+
+static NEXT_OWNER: AtomicU64 = AtomicU64::new(1);
 
 thread_local! {
 
@@ -42,6 +45,18 @@ pub struct Clipboard {
     pub native: Option<Arc<dyn NativeClipboard>>,
 }
 
+#[derive(Debug)]
+#[must_use = "the hook is removed when this guard is dropped"]
+pub struct ClipboardHook {
+    owner: u64,
+}
+
+impl Drop for ClipboardHook {
+    fn drop(&mut self) {
+        clipboard::clear_hook(self.owner);
+    }
+}
+
 impl Default for Clipboard {
     fn default() -> Self {
         Self::new()
@@ -51,7 +66,7 @@ impl Default for Clipboard {
 impl Clipboard {
     pub const DEFAULT_LIMIT: usize = 100_000;
 
-    pub const fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             osc52: true,
             limit: Self::DEFAULT_LIMIT,
@@ -116,11 +131,13 @@ impl Clipboard {
         }
     }
 
-    pub fn install(&self) {
+    pub fn install(&self) -> ClipboardHook {
         let this = self.clone();
-        clipboard::set_hook(move |t| {
+        let owner = NEXT_OWNER.fetch_add(1, Ordering::Relaxed);
+        clipboard::set_hook(owner, move |t| {
             this.deliver(t);
         });
+        ClipboardHook { owner }
     }
 
     pub fn report(result: &Copied, text: &str, what: Option<&str>) -> (String, Tone) {

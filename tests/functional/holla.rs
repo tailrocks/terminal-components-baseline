@@ -259,9 +259,8 @@ fn holla_first_use_idle_and_no_results() {
     app.wait_text("Search actions and resources");
     app.type_text("zzzzqq");
     let none = app.wait_screen("no results for nonsense query", |s| {
-        text(s).contains("Nothing to preview") && !text(s).contains("cargo check")
+        text(s).contains("No matches for “zzzzqq”") && !text(s).contains("cargo check")
     });
-    assert!(text(&none).contains("zzzzqq"));
     assert!(!text(&none).contains("Search actions and resources"));
     app.key("escape");
     app.wait_text("Search actions and resources");

@@ -11,6 +11,7 @@ pub mod openshell;
 pub mod precedence;
 pub mod reason;
 pub mod role;
+pub mod shown;
 pub mod surfaces;
 pub mod usage;
 pub mod vocabulary;

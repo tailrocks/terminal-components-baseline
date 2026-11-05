@@ -53,7 +53,7 @@ impl Recording {
 
     fn seen(&self) -> Vec<Effect> {
         let mut all = self.seen.lock().expect("seen").clone();
-        all.retain(|e| *e != Effect::Refresh);
+        all.retain(|e| !matches!(e, Effect::Refresh { .. }));
         all
     }
 
@@ -314,7 +314,10 @@ const GIVEN: &str = "backend-given-7";
 /// Stores the registry the way a backend would: the account the form sent
 /// without an id gets one, and the reply names it.
 fn give_an_id(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::SaveAccounts { registry, .. } = effect else {
+    let Effect::SaveAccounts {
+        ticket, registry, ..
+    } = effect
+    else {
         return None;
     };
     let mut snapshot = sim::snapshot(world);
@@ -327,6 +330,7 @@ fn give_an_id(effect: &Effect, world: &World) -> Option<Msg> {
         }
     }
     Some(Msg::AccountsSaved {
+        ticket: *ticket,
         added,
         result: Ok(Box::new(snapshot)),
     })
@@ -473,6 +477,52 @@ fn an_unusable_explicit_account_is_not_replaced_by_the_one_ready_account() {
     let why = offer
         .blocked
         .expect("the chosen account is shown as blocked");
+    let work = world
+        .accounts
+        .get("acct-claude-work")
+        .expect("work")
+        .title();
+    assert!(why.starts_with(&work), "{why}");
+}
+
+#[test]
+fn an_unusable_explicit_account_is_named_when_two_others_are_ready() {
+    let mut world = two_ready_claude_accounts();
+    world.workspaces[0]
+        .accounts
+        .enabled
+        .insert("acct-claude-extra".into());
+    let mut extra = world
+        .accounts
+        .get("acct-claude-work")
+        .expect("work")
+        .clone();
+    extra.id = "acct-claude-extra".into();
+    extra.display_name = "Extra".into();
+    extra.default_for_provider = false;
+    world.accounts.accounts.push(extra);
+    world.workspaces[0].accounts.preferred.insert(
+        jackin_console::domain::agent::Provider::Anthropic,
+        "acct-claude-work".into(),
+    );
+    world
+        .accounts
+        .accounts
+        .iter_mut()
+        .find(|a| a.id == "acct-claude-work")
+        .expect("work")
+        .lifecycle = Lifecycle::NeedsLogin;
+    let ws = &world.workspaces[0];
+    let offer = world.offer_for(Agent::ClaudeCode, Some(ws), Some("the-architect"));
+
+    assert_eq!(
+        offer.accounts,
+        ["acct-claude-personal", "acct-claude-extra"]
+    );
+    assert_eq!(offer.preselected, None);
+    let why = offer
+        .blocked
+        .expect("the chosen account is shown as blocked beside two ready ones");
     let work = world
         .accounts
         .get("acct-claude-work")
@@ -819,4 +869,40 @@ fn the_demo_purge_refusal_is_the_reason_alone() {
         refused_purge(world_for(Scenario::Returning)),
         "2 unpushed commits would be lost"
     );
+}
+
+#[test]
+fn a_wizard_destination_is_fixed_only_where_a_reason_says_why() {
+    let reaches = |fixed: bool| {
+        let mut app = timed(Scenario::Returning, wizard_world(fixed));
+        press(&mut app, "n down space");
+        let step = screen(&mut app);
+        assert!(step.contains("step 2 of 5"), "{step}");
+        press(&mut app, "down enter");
+        screen(&mut app)
+    };
+
+    let fixed = reaches(true);
+    assert!(fixed.contains("step 4 of 5"), "the radio refuses: {fixed}");
+
+    let free = reaches(false);
+    assert!(
+        free.contains("step 3 of 5"),
+        "with no reason to give, the radio is not disabled: {free}"
+    );
+}
+
+#[test]
+fn enter_on_the_focused_choose_button_of_the_wizard_chooses_like_space() {
+    let step_after = |keys: &str| {
+        let mut app = timed(Scenario::Returning, world_for(Scenario::Returning));
+        press(&mut app, "n tab tab tab tab");
+        press(&mut app, keys);
+        screen(&mut app)
+    };
+
+    let by_space = step_after("space");
+    let by_enter = step_after("enter");
+    assert!(by_space.contains("step 2 of 5"), "{by_space}");
+    assert!(by_enter.contains("step 2 of 5"), "{by_enter}");
 }

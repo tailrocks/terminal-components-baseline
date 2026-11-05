@@ -25,6 +25,10 @@ impl Reason {
         self
     }
 
+    pub fn short_or_text(&self) -> &str {
+        self.short.as_deref().unwrap_or(&self.text)
+    }
+
     pub fn within_limits(&self) -> bool {
         width(&self.text) <= Self::TEXT_MAX
             && self

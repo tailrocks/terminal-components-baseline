@@ -5,9 +5,11 @@ mod common;
 use std::sync::{Arc, Mutex};
 
 use common::*;
-use jackin_console::app::{App, Route};
+use jackin_console::app::{App, Remote, Route};
 use jackin_console::backend::{Backend, Completion, Effect, FileSource, Refresh};
-use jackin_console::domain::account::AccountRegistry;
+use jackin_console::domain::account::{
+    AccountRegistry, CredentialSource, DetectedKind, ValidationState,
+};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{Instance, InstanceStatus};
 use jackin_console::domain::launch::LaunchContent;
@@ -20,8 +22,8 @@ use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
-use jackin_console::world::{GlobalConfig, Msg, SaveFailure, World};
-use junie_tui::core::event::Input;
+use jackin_console::world::{DaemonHealth, GlobalConfig, Msg, SaveFailure, World};
+use junie_tui::core::event::{External, Input, Outcome};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
@@ -55,13 +57,25 @@ impl TestBackend {
     /// Every effect received except the manager's periodic refresh.
     fn seen(&self) -> Vec<Effect> {
         let mut all = self.seen.lock().expect("seen").clone();
-        all.retain(|e| *e != Effect::Refresh);
+        all.retain(|e| !matches!(e, Effect::Refresh { .. }));
         all
+    }
+
+    fn refresh_tickets(&self) -> Vec<u64> {
+        let all = self.seen.lock().expect("seen");
+        all.iter()
+            .filter_map(|e| match e {
+                Effect::Refresh { ticket } => Some(*ticket),
+                _ => None,
+            })
+            .collect()
     }
 
     fn refreshes(&self) -> usize {
         let all = self.seen.lock().expect("seen");
-        all.iter().filter(|e| **e == Effect::Refresh).count()
+        all.iter()
+            .filter(|e| matches!(e, Effect::Refresh { .. }))
+            .count()
     }
 }
 
@@ -384,7 +398,10 @@ fn failed_global_save_keeps_the_input() {
 const NEW_ACCOUNT: &str = "c a enter S p a r e tab tab tab down down tab enter s k - a n t - v a l i d - a b c d e f 1 2 3 4 tab";
 
 fn store_accounts(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::SaveAccounts { registry, .. } = effect else {
+    let Effect::SaveAccounts {
+        ticket, registry, ..
+    } = effect
+    else {
         return None;
     };
     let mut snapshot = sim::snapshot(world);
@@ -395,13 +412,18 @@ fn store_accounts(effect: &Effect, world: &World) -> Option<Msg> {
         }
     }
     Some(Msg::AccountsSaved {
+        ticket: *ticket,
         added: None,
         result: Ok(Box::new(snapshot)),
     })
 }
 
 fn fail_accounts(effect: &Effect, _: &World) -> Option<Msg> {
-    matches!(effect, Effect::SaveAccounts { .. }).then(|| Msg::AccountsSaved {
+    let Effect::SaveAccounts { ticket, .. } = effect else {
+        return None;
+    };
+    Some(Msg::AccountsSaved {
+        ticket: *ticket,
         added: None,
         result: Err("disk full".into()),
     })
@@ -417,7 +439,7 @@ fn save_accounts_stores_the_payload() {
     let seen = backend.seen();
     let [
         Effect::CheckSource { .. },
-        Effect::SaveAccounts { base, registry },
+        Effect::SaveAccounts { base, registry, .. },
     ] = seen.as_slice()
     else {
         panic!("one CheckSource, then one SaveAccounts expected, got {seen:?}");
@@ -788,7 +810,10 @@ fn first_window_pct(w: &World, id: &str) -> Option<u8> {
 /// Refreshes the account the way a backend that read the provider would:
 /// the first window reads 40% used, whatever it read before.
 fn refresh_account(effect: &Effect, world: &World) -> Option<Msg> {
-    let Effect::RefreshAccount { account, .. } = effect else {
+    let Effect::RefreshAccount {
+        account, source, ..
+    } = effect
+    else {
         return None;
     };
     let now = world.now_secs();
@@ -797,6 +822,7 @@ fn refresh_account(effect: &Effect, world: &World) -> Option<Msg> {
     usage.windows[0].used_pct = Some(40);
     Some(Msg::AccountRefreshed {
         account: account.clone(),
+        source: Box::new(source.clone()),
         result: Ok(Box::new(Refresh {
             usage,
             issue: None,
@@ -841,6 +867,91 @@ fn the_sim_refreshes_as_it_did() {
         status(&app),
         "Refreshed Claude · Personal · current · 4 windows"
     );
+}
+
+#[test]
+fn a_validation_reply_for_a_replaced_source_does_not_touch_the_edited_account() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    let old = app
+        .world
+        .accounts
+        .get(PERSONAL)
+        .expect("account")
+        .source
+        .clone();
+    press(&mut app, "c down down v");
+    assert!(matches!(
+        app.world
+            .accounts
+            .get(PERSONAL)
+            .expect("account")
+            .validation,
+        ValidationState::Validating { .. }
+    ));
+
+    let mut snapshot = sim::snapshot(&app.world);
+    let edited = snapshot.accounts.get_mut(PERSONAL).expect("account");
+    edited.source = CredentialSource::HostEnv {
+        var: "REPLACEMENT_KEY".into(),
+        detected: DetectedKind::ClaudeApiKeyEnv,
+    };
+    edited.validation = ValidationState::NeverValidated;
+    let edited = edited.clone();
+    Application::handle(
+        &mut app,
+        Input::External(External::new(Remote::Reloaded(Box::new(snapshot)))),
+    );
+    settle(&mut app);
+
+    let kept = app.world.accounts.get(PERSONAL).expect("account");
+    assert_ne!(kept.source, old);
+    assert_eq!(kept.validation, ValidationState::NeverValidated);
+    assert_eq!(*kept, edited);
+    let shown = status(&app);
+    assert!(!shown.contains(&kept.title()), "{shown}");
+    assert_eq!(shown, "Validation discarded · the account changed");
+}
+
+#[test]
+fn a_refresh_reply_for_a_replaced_source_does_not_touch_the_edited_account() {
+    let mut app = timed(Scenario::AccountsMixed, world_for(Scenario::AccountsMixed));
+    let old = app
+        .world
+        .accounts
+        .get(PERSONAL)
+        .expect("account")
+        .source
+        .clone();
+    press(&mut app, "c down down r");
+    assert_eq!(
+        app.world
+            .accounts
+            .get(PERSONAL)
+            .expect("account")
+            .usage
+            .freshness
+            .phase,
+        Freshness::Refreshing
+    );
+
+    let mut snapshot = sim::snapshot(&app.world);
+    let edited = snapshot.accounts.get_mut(PERSONAL).expect("account");
+    edited.source = CredentialSource::HostEnv {
+        var: "REPLACEMENT_KEY".into(),
+        detected: DetectedKind::ClaudeApiKeyEnv,
+    };
+    let edited = edited.clone();
+    Application::handle(
+        &mut app,
+        Input::External(External::new(Remote::Reloaded(Box::new(snapshot)))),
+    );
+    settle(&mut app);
+
+    let kept = app.world.accounts.get(PERSONAL).expect("account");
+    assert_ne!(kept.source, old);
+    assert_eq!(*kept, edited);
+    let shown = status(&app);
+    assert!(!shown.starts_with("Refreshed"), "{shown}");
 }
 
 fn failure_app() -> App {
@@ -888,8 +999,16 @@ fn a_failed_prewarm_shows_the_reply_error() {
 #[test]
 fn a_failed_validation_shows_the_reply_error() {
     let mut app = failure_app();
+    let source = app
+        .world
+        .accounts
+        .get(PERSONAL)
+        .expect("account")
+        .source
+        .clone();
     app.deliver(&Msg::AccountValidated {
         account: PERSONAL.into(),
+        source: Box::new(source),
         result: Err("the provider did not answer".into()),
     });
     assert!(
@@ -919,9 +1038,13 @@ fn the_sim_keeps_the_last_good_values_when_the_broker_is_down() {
 /// Answers a refresh with the roster it already has: a backend that keeps
 /// no heartbeat of its own and never fails the index.
 fn unchanged_roster(effect: &Effect, world: &World) -> Option<Msg> {
-    matches!(effect, Effect::Refresh).then(|| Msg::Refreshed {
-        result: Ok(Box::new(sim::snapshot(world))),
-    })
+    match effect {
+        Effect::Refresh { ticket } => Some(Msg::Refreshed {
+            ticket: *ticket,
+            result: Ok(Box::new(sim::snapshot(world))),
+        }),
+        _ => None,
+    }
 }
 
 /// Ticks the app for `ms` of world time and returns the status line after
@@ -1324,11 +1447,9 @@ fn role_check_comes_from_the_snapshot() {
         "the check is the reply snapshot's"
     );
     assert_eq!(
-        admin(&app.world)
-            .binding("sentinel", Agent::ClaudeCode)
-            .map(String::as_str),
-        Some(MARKER),
-        "the role is the reply snapshot's, not the screen's"
+        admin(&app.world).binding("sentinel", Agent::ClaudeCode),
+        None,
+        "a check reply changes the check only, never the bindings"
     );
     assert_eq!(status(&app), "Role sentinel: 1 error");
 }
@@ -1609,11 +1730,12 @@ fn a_second_enter_on_a_restoring_instance_does_not_restore_it_again() {
 
 #[test]
 fn a_refresh_waits_for_the_one_in_flight() {
-    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh));
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh { .. }));
     run_for(&mut app, 30_000);
     assert_eq!(backend.refreshes(), 1, "no second refresh while one is out");
 
     app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(sim::snapshot(&app.world))),
     });
     run_for(&mut app, 6_000);
@@ -1622,7 +1744,7 @@ fn a_refresh_waits_for_the_one_in_flight() {
 
 #[test]
 fn a_refresh_that_lands_after_a_newer_snapshot_is_dropped() {
-    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh));
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh { .. }));
     run_for(&mut app, 6_000);
     assert_eq!(backend.refreshes(), 1);
 
@@ -1636,10 +1758,943 @@ fn a_refresh_that_lands_after_a_newer_snapshot_is_dropped() {
     assert!(app.world.instance("jk-c41e").is_none());
 
     app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(old)),
     });
     assert!(
         app.world.instance("jk-c41e").is_none(),
         "the older refresh did not bring the instance back"
     );
+}
+
+fn held_in(
+    scenario: Scenario,
+    unanswered: fn(&Effect) -> bool,
+    answer: Answer,
+) -> (App, Arc<TestBackend>) {
+    let backend = Arc::new(TestBackend {
+        inner: SimBackend::shared(),
+        seen: Mutex::new(vec![]),
+        answer,
+        unanswered,
+        files: None,
+    });
+    let mut world = world_for(scenario);
+    world.backend = backend.clone();
+    (timed(scenario, world), backend)
+}
+
+fn held_roles(unanswered: fn(&Effect) -> bool, answer: Answer) -> (App, Arc<TestBackend>) {
+    held_in(Scenario::RoleBinding, unanswered, answer)
+}
+
+fn count(backend: &TestBackend, wanted: fn(&Effect) -> bool) -> usize {
+    backend.seen().iter().filter(|e| wanted(e)).count()
+}
+
+static BINDS: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+fn bind_once_then_refuse(effect: &Effect, world: &World) -> Option<Msg> {
+    if !matches!(effect, Effect::BindRole { .. }) {
+        return None;
+    }
+    match BINDS.fetch_add(1, std::sync::atomic::Ordering::SeqCst) {
+        0 => bind_role(effect, world),
+        _ => refuse_bind(effect, world),
+    }
+}
+
+#[test]
+fn an_undo_that_failed_can_be_tried_again() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, bind_once_then_refuse);
+    press(&mut app, PICK_EXPERIMENTS);
+    settle(&mut app);
+    press(&mut app, "u");
+    settle(&mut app);
+    assert!(
+        status(&app).contains("Could not save the binding"),
+        "{}",
+        status(&app)
+    );
+
+    press(&mut app, "u");
+    settle(&mut app);
+    assert_ne!(status(&app), "Nothing to undo");
+    assert_eq!(count(&backend, |e| matches!(e, Effect::BindRole { .. })), 3);
+}
+
+#[test]
+fn a_second_add_waits_for_the_first_reply() {
+    let (mut app, backend) = held_roles(|e| matches!(e, Effect::AddRole { .. }), add_role);
+    press(&mut app, ADD_NEW_ROLE);
+    press(&mut app, "a");
+
+    assert_eq!(status(&app), "Adding role…");
+    let shown = screen(&mut app);
+    assert!(!shown.contains("register a role"), "{shown}");
+    assert_eq!(count(&backend, |e| matches!(e, Effect::AddRole { .. })), 1);
+}
+
+#[test]
+fn an_add_that_fails_after_the_operator_left_the_roles_says_so() {
+    let (mut app, _) = held_roles(|e| matches!(e, Effect::AddRole { .. }), add_role);
+    press(&mut app, ADD_NEW_ROLE);
+    press(&mut app, "esc");
+    assert_eq!(app.route(), Route::Manager);
+
+    app.deliver(&Msg::RoleAdded {
+        location: "~/roles/new-role".into(),
+        result: Err("the registry is read-only".into()),
+    });
+    let shown = status(&app);
+    assert!(
+        shown.contains("Could not add role") && shown.contains("the registry is read-only"),
+        "{shown}"
+    );
+}
+
+#[test]
+fn a_role_an_allowed_list_names_cannot_be_removed() {
+    let mut world = world_for(Scenario::RoleBinding);
+    for ws in &mut world.workspaces {
+        ws.roles.default = None;
+    }
+    world.workspaces[0].roles.allowed =
+        jackin_console::domain::workspace::AllowedRoles::Custom(vec!["sentinel".into()]);
+    let name = world.workspaces[0].name.clone();
+    let mut app = timed(Scenario::RoleBinding, world);
+    press(&mut app, "d");
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("Cannot remove role sentinel"), "{shown}");
+    assert!(shown.contains(&name), "{shown}");
+    assert!(!shown.contains("Remove role sentinel?"), "{shown}");
+}
+
+const WRITER: &str = "down down down down";
+
+fn reread_manifest(effect: &Effect, world: &World) -> Option<Msg> {
+    let Effect::LoadRole { role } = effect else {
+        return None;
+    };
+    let mut snapshot = sim::snapshot(world);
+    let admin = snapshot.surfaces.roles.as_mut()?;
+    let doc = admin.role("sentinel")?.manifest.clone();
+    admin.role_mut(role)?.manifest = doc;
+    Some(Msg::RoleLoaded {
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    })
+}
+
+fn is_check(effect: &Effect) -> bool {
+    matches!(effect, Effect::CheckRole { .. })
+}
+
+#[test]
+fn a_role_whose_manifest_did_not_parse_is_read_again_before_the_check() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, reread_manifest);
+    press(&mut app, WRITER);
+    press(&mut app, "v");
+    settle(&mut app);
+
+    let seen = backend.seen();
+    assert_eq!(
+        seen.first(),
+        Some(&Effect::LoadRole {
+            role: "writer".into()
+        }),
+        "{seen:?}"
+    );
+    assert!(
+        matches!(seen.get(1), Some(Effect::CheckRole { role, .. }) if role == "writer"),
+        "{seen:?}"
+    );
+}
+
+#[test]
+fn a_manifest_that_still_does_not_parse_is_not_checked() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, |_, _| None);
+    press(&mut app, WRITER);
+    press(&mut app, "v");
+    settle(&mut app);
+
+    assert_eq!(count(&backend, |e| matches!(e, Effect::LoadRole { .. })), 1);
+    assert_eq!(count(&backend, is_check), 0);
+    assert_eq!(
+        status(&app),
+        "writer: jackin.role.toml still does not parse"
+    );
+}
+
+#[test]
+fn a_check_reply_of_another_ticket_does_not_finish_the_roles_check() {
+    let (mut app, backend) = held_roles(is_check, check_role);
+    press(&mut app, "v");
+    let seen = backend.seen();
+    let [Effect::CheckRole { ticket, role, .. }] = seen.as_slice() else {
+        panic!("one CheckRole expected, got {seen:?}");
+    };
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot
+        .surfaces
+        .roles
+        .as_mut()
+        .expect("roles")
+        .role_mut(role)
+        .expect("role")
+        .check = RoleCheckState::Done(vec![finding()]);
+    app.deliver(&Msg::RoleChecked {
+        ticket: ticket + 1_000,
+        role: role.clone(),
+        result: Ok(Box::new(snapshot.clone())),
+    });
+    assert!(
+        screen(&mut app).contains("checking…"),
+        "the screen took the reply of another check"
+    );
+    assert_eq!(
+        status(&app),
+        format!("Checking {role}…"),
+        "the reply of another check ended this one"
+    );
+
+    app.deliver(&Msg::RoleChecked {
+        ticket: *ticket,
+        role: role.clone(),
+        result: Ok(Box::new(snapshot)),
+    });
+    assert_eq!(status(&app), format!("Role {role}: 1 error"));
+    assert!(!screen(&mut app).contains("checking…"));
+}
+
+fn without_instances(app: &App) -> Box<jackin_console::world::Snapshot> {
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.instances.clear();
+    Box::new(snapshot)
+}
+
+#[test]
+fn a_stop_confirmed_after_the_instance_left_is_refused() {
+    let (mut app, backend) = backed(Scenario::Returning, |_, _| None);
+    press(&mut app, "down right down t");
+    let asked = screen(&mut app);
+    assert!(asked.contains("Stop instance"), "{asked}");
+
+    let gone = without_instances(&app);
+    app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Ok(gone),
+    });
+    press(&mut app, "right enter");
+
+    assert_eq!(count(&backend, |e| matches!(e, Effect::Stop { .. })), 0);
+    assert!(status(&app).contains("nothing to stop"), "{}", status(&app));
+}
+
+#[test]
+fn a_purge_confirmed_after_the_instance_left_is_refused() {
+    let (mut app, backend) = backed(Scenario::Returning, |_, _| None);
+    press(&mut app, "down right down down p");
+    let asked = screen(&mut app);
+    assert!(asked.contains("Purge instance"), "{asked}");
+
+    let gone = without_instances(&app);
+    app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Ok(gone),
+    });
+    press(&mut app, "c 4 1 e enter");
+
+    assert_eq!(count(&backend, |e| matches!(e, Effect::Purge { .. })), 0);
+    assert!(
+        status(&app).contains("nothing to purge"),
+        "{}",
+        status(&app)
+    );
+}
+
+#[test]
+fn a_second_delete_waits_for_the_first_reply() {
+    let (mut app, backend) = held_in(
+        Scenario::Returning,
+        |e| matches!(e, Effect::DeleteWorkspace { .. }),
+        delete_workspace,
+    );
+    press(&mut app, "down d");
+    press(&mut app, "right enter");
+    press(&mut app, "d");
+    press(&mut app, "right enter");
+
+    assert_eq!(
+        count(&backend, |e| matches!(e, Effect::DeleteWorkspace { .. })),
+        1,
+        "one delete for two confirmations"
+    );
+    assert_eq!(status(&app), "Workspace is deleting…");
+}
+
+#[test]
+fn a_delete_error_for_a_workspace_that_is_gone_is_dropped() {
+    let (mut app, _) = backed(Scenario::Returning, delete_workspace);
+    let doomed = app.world.workspaces[0].id;
+    press(&mut app, "down d");
+    press(&mut app, "right enter");
+    settle(&mut app);
+    assert!(app.world.workspace(doomed).is_none());
+
+    app.deliver(&Msg::WorkspaceDeleted {
+        id: doomed,
+        result: Err("no workspace with that id".into()),
+    });
+    assert!(
+        !status(&app).contains("no workspace with that id"),
+        "{}",
+        status(&app)
+    );
+}
+
+#[test]
+fn inspect_names_the_account_the_launch_used() {
+    let mut world = world_for(Scenario::Returning);
+    let (provider, ws, role) = {
+        let i = world.instance("jk-7f3a").expect("instance");
+        (i.agent.provider(), i.workspace, i.role.clone())
+    };
+    let resolved = world
+        .account_for(
+            provider,
+            ws.and_then(|id| world.workspace(id)),
+            Some(&role),
+            None,
+        )
+        .account
+        .expect("an account");
+    let other = world
+        .accounts
+        .by_provider(provider)
+        .find(|a| a.id != resolved)
+        .expect("a second account")
+        .clone();
+    world.instance_mut("jk-7f3a").expect("instance").account = Some(other.id.clone());
+    let mut app = timed(Scenario::Returning, world);
+    press(&mut app, "down right down i");
+
+    let shown = screen(&mut app);
+    let wanted = format!("account {}", other.title());
+    assert!(
+        shown
+            .lines()
+            .any(|l| l.contains("Agent") && l.contains(&wanted)),
+        "{wanted}\n{shown}"
+    );
+}
+
+#[test]
+fn a_refresh_failure_that_a_newer_reply_overtook_is_not_reported() {
+    let (mut app, _) = backed(Scenario::Returning, |_, _| None);
+    app.world.refresh_from = Some(app.world.snapshots_applied);
+    app.world.apply(sim::snapshot(&app.world));
+    app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Err("instance index unreadable".into()),
+    });
+    assert!(!status(&app).contains("Refresh failed"), "{}", status(&app));
+
+    app.world.refresh_from = Some(app.world.snapshots_applied);
+    app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Err("instance index unreadable".into()),
+    });
+    assert!(status(&app).contains("Refresh failed"), "{}", status(&app));
+}
+
+#[test]
+fn a_second_restore_reply_keeps_the_daemon_the_first_built() {
+    let (mut app, _) = backed(Scenario::Returning, restore);
+    let id = "jk-c41e";
+    let reply = |app: &App| {
+        let mut snapshot = sim::snapshot(&app.world);
+        for i in snapshot.instances.iter_mut().filter(|i| i.id == id) {
+            i.status = InstanceStatus::Running;
+        }
+        Msg::Restored {
+            instance: id.into(),
+            result: Ok(Box::new(snapshot)),
+        }
+    };
+    let first = reply(&app);
+    app.deliver(&first);
+    let daemon = app.world.daemons.get_mut(id).expect("the restored daemon");
+    daemon.workspace = "kept".into();
+
+    let second = reply(&app);
+    app.deliver(&second);
+    assert_eq!(app.world.daemons[id].workspace, "kept");
+}
+
+#[test]
+fn a_refresh_nobody_answers_does_not_stop_the_next_one() {
+    let (mut app, backend) = held_in(
+        Scenario::Returning,
+        |e| matches!(e, Effect::Refresh { .. }),
+        |_, _| None,
+    );
+    assert!(app.world.refresh());
+    assert!(!app.world.refresh(), "one is out");
+    assert_eq!(backend.refreshes(), 1);
+
+    app.world.clock.advance(31_000);
+    assert!(app.world.refresh(), "the first one was given up on");
+    assert_eq!(backend.refreshes(), 2);
+}
+
+#[test]
+fn a_backend_owns_last_seen_while_the_capsule_is_attached() {
+    let (mut app, _) = backed(Scenario::HardCases, unchanged_roster);
+    let before = last_seen(&app.world);
+    app.go(Go::Attach {
+        instance: "jk-7f3a".into(),
+        pane: None,
+    });
+    assert_eq!(app.route(), Route::Capsule);
+    run_for(&mut app, 20_000);
+
+    assert_eq!(app.route(), Route::Capsule);
+    assert_eq!(
+        last_seen(&app.world),
+        before,
+        "the capsule kept no heartbeat"
+    );
+}
+
+#[test]
+fn a_saved_account_does_not_close_the_modal_the_operator_opened_after_leaving_the_form() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        store_accounts,
+    );
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+    let saves: Vec<_> = backend
+        .seen()
+        .into_iter()
+        .filter(|e| matches!(e, Effect::SaveAccounts { .. }))
+        .collect();
+    assert_eq!(saves.len(), 1, "the save is out");
+
+    press(&mut app, "esc");
+    assert!(!screen(&mut app).contains("New account"));
+    press(&mut app, "?");
+    let help = screen(&mut app);
+    assert!(help.contains("Keyboard shortcuts"), "{help}");
+
+    let reply = store_accounts(&saves[0], &app.world).expect("the reply");
+    app.deliver(&reply);
+    let after = screen(&mut app);
+    assert!(
+        after.contains("Keyboard shortcuts"),
+        "the reply closed a modal that is not the form:\n{after}"
+    );
+}
+
+#[test]
+fn a_refresh_that_a_newer_one_overtook_is_dropped_when_it_lands() {
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh { .. }));
+    assert!(app.world.refresh());
+    app.world.clock.advance(31_000);
+    assert!(app.world.refresh(), "the first one was given up on");
+    let [first, second] = backend.refresh_tickets()[..] else {
+        panic!(
+            "two refreshes expected, got {:?}",
+            backend.refresh_tickets()
+        );
+    };
+
+    let named = |app: &App, name: &str| {
+        let mut snapshot = sim::snapshot(&app.world);
+        snapshot.workspaces[0].name = name.into();
+        Box::new(snapshot)
+    };
+    let newer = named(&app, "from-the-second-refresh");
+    app.deliver(&Msg::Refreshed {
+        ticket: second,
+        result: Ok(newer),
+    });
+    assert_eq!(app.world.workspaces[0].name, "from-the-second-refresh");
+
+    let older = named(&app, "from-the-first-refresh");
+    let late = app.deliver(&Msg::Refreshed {
+        ticket: first,
+        result: Ok(older),
+    });
+    assert_eq!(late, Outcome::Ignored);
+    assert_eq!(app.world.workspaces[0].name, "from-the-second-refresh");
+
+    app.deliver(&Msg::Refreshed {
+        ticket: first,
+        result: Err("instance index unreadable".into()),
+    });
+    assert!(!status(&app).contains("Refresh failed"), "{}", status(&app));
+    assert_eq!(app.world.daemon_health, DaemonHealth::Healthy);
+}
+
+#[test]
+fn a_late_reply_of_an_earlier_refresh_does_not_answer_the_one_in_flight() {
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh { .. }));
+    assert!(app.world.refresh());
+    app.world.clock.advance(31_000);
+    assert!(app.world.refresh());
+    let [first, second] = backend.refresh_tickets()[..] else {
+        panic!(
+            "two refreshes expected, got {:?}",
+            backend.refresh_tickets()
+        );
+    };
+
+    app.deliver(&Msg::Refreshed {
+        ticket: first,
+        result: Ok(Box::new(sim::snapshot(&app.world))),
+    });
+    assert!(!app.world.refresh(), "the second refresh is still out");
+
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.workspaces[0].name = "from-the-second-refresh".into();
+    app.deliver(&Msg::Refreshed {
+        ticket: second,
+        result: Ok(Box::new(snapshot)),
+    });
+    assert_eq!(app.world.workspaces[0].name, "from-the-second-refresh");
+}
+
+fn saves_of(backend: &TestBackend) -> Vec<Effect> {
+    backend
+        .seen()
+        .into_iter()
+        .filter(|e| matches!(e, Effect::SaveAccounts { .. }))
+        .collect()
+}
+
+fn a_form_left_during_its_save() -> (App, Arc<TestBackend>, Effect) {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        store_accounts,
+    );
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+    let saves = saves_of(&backend);
+    assert_eq!(saves.len(), 1, "the save is out");
+
+    press(&mut app, "esc");
+    assert!(!screen(&mut app).contains("New account"));
+    press(&mut app, "a");
+    let reopened = screen(&mut app);
+    assert!(reopened.contains("New account"), "{reopened}");
+    (app, backend, saves[0].clone())
+}
+
+#[test]
+fn a_saved_account_does_not_close_a_form_opened_after_the_one_it_saved() {
+    let (mut app, _, save) = a_form_left_during_its_save();
+
+    let reply = store_accounts(&save, &app.world).expect("the reply");
+    app.deliver(&reply);
+
+    let after = screen(&mut app);
+    assert!(
+        after.contains("New account"),
+        "the reply closed the new form:\n{after}"
+    );
+}
+
+#[test]
+fn a_failed_save_does_not_write_its_error_into_a_form_opened_after_it() {
+    let (mut app, _, save) = a_form_left_during_its_save();
+    let Effect::SaveAccounts { ticket, .. } = save else {
+        panic!("a save expected");
+    };
+
+    app.deliver(&Msg::AccountsSaved {
+        ticket,
+        added: None,
+        result: Err("disk full".into()),
+    });
+
+    let after = screen(&mut app);
+    assert!(after.contains("New account"), "{after}");
+    assert_eq!(status(&app), "disk full");
+    assert_eq!(
+        after.matches("disk full").count(),
+        1,
+        "the error went into the new form too:\n{after}"
+    );
+}
+
+fn unparsed_manifests(names: &[&str], unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBackend>) {
+    let backend = Arc::new(TestBackend {
+        inner: SimBackend::shared(),
+        seen: Mutex::new(vec![]),
+        answer: |_, _| None,
+        unanswered,
+        files: None,
+    });
+    let mut world = world_for(Scenario::RoleBinding);
+    world.backend = backend.clone();
+    let admin = world.surfaces.roles.as_mut().expect("roles");
+    for name in names {
+        admin.role_mut(name).expect("role").manifest = Err("no manifest".into());
+    }
+    (timed(Scenario::RoleBinding, world), backend)
+}
+
+fn two_unparsed_manifests(unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBackend>) {
+    unparsed_manifests(&["the-architect", "writer"], unanswered)
+}
+
+#[test]
+fn a_reply_nobody_asked_for_does_not_end_the_reads_of_check_all() {
+    let (mut app, backend) =
+        two_unparsed_manifests(|e| matches!(e, Effect::LoadRole { .. } | Effect::CheckRole { .. }));
+    press(&mut app, "f5");
+    assert_eq!(count(&backend, |e| matches!(e, Effect::LoadRole { .. })), 2);
+    assert_eq!(status(&app), "Reading writer again…");
+
+    app.deliver(&Msg::RoleLoaded {
+        role: "ghost".into(),
+        result: Err("unreadable".into()),
+    });
+    assert_eq!(status(&app), "Reading writer again…");
+}
+
+const DATA_ENG: &str = "down down down";
+
+fn is_trust(effect: &Effect) -> bool {
+    matches!(effect, Effect::TrustRole { .. })
+}
+
+fn data_eng_loads(backend: &TestBackend) -> usize {
+    count(
+        backend,
+        |e| matches!(e, Effect::LoadRole { role } if role == "data-eng"),
+    )
+}
+
+fn untrusted_and_unparsed() -> (App, Arc<TestBackend>) {
+    unparsed_manifests(&["data-eng"], |_| false)
+}
+
+fn assert_untrusted(app: &App) {
+    let entry = role(&app.world, "data-eng");
+    assert!(!entry.trusted, "the role was trusted without the operator");
+    assert!(!entry.launchable(), "the role became launchable");
+}
+
+#[test]
+fn v_on_an_untrusted_unparsed_role_asks_for_trust_before_reading_it() {
+    let (mut app, backend) = untrusted_and_unparsed();
+    press(&mut app, DATA_ENG);
+    press(&mut app, "v");
+    settle(&mut app);
+
+    assert_eq!(data_eng_loads(&backend), 0, "{:?}", backend.seen());
+    assert_eq!(count(&backend, is_trust), 0, "{:?}", backend.seen());
+    assert_untrusted(&app);
+    let shown = screen(&mut app);
+    assert!(shown.contains("Trust & load"), "{shown}");
+}
+
+#[test]
+fn check_all_does_not_read_an_untrusted_unparsed_role() {
+    let (mut app, backend) = unparsed_manifests(&["data-eng", "writer"], |_| false);
+    press(&mut app, "f5");
+    settle(&mut app);
+
+    assert_eq!(data_eng_loads(&backend), 0, "{:?}", backend.seen());
+    assert_eq!(count(&backend, is_trust), 0, "{:?}", backend.seen());
+    assert_untrusted(&app);
+    assert_eq!(
+        count(
+            &backend,
+            |e| matches!(e, Effect::LoadRole { role } if role == "writer")
+        ),
+        1,
+        "a trusted unparsed role is still read"
+    );
+}
+
+#[test]
+fn trusting_an_unparsed_role_from_the_roles_screen_reads_it_after_the_trust() {
+    let (mut app, backend) = untrusted_and_unparsed();
+    press(&mut app, DATA_ENG);
+    press(&mut app, "v right enter");
+    settle(&mut app);
+
+    assert_eq!(
+        backend.seen(),
+        [
+            Effect::TrustRole {
+                role: "data-eng".into()
+            },
+            Effect::LoadRole {
+                role: "data-eng".into()
+            },
+        ]
+    );
+    assert!(role(&app.world, "data-eng").trusted);
+}
+
+#[test]
+fn declining_the_trust_leaves_the_unparsed_role_unread() {
+    let (mut app, backend) = untrusted_and_unparsed();
+    press(&mut app, DATA_ENG);
+    press(&mut app, "v esc");
+    settle(&mut app);
+
+    assert_eq!(backend.seen(), []);
+    assert_untrusted(&app);
+    assert_eq!(status(&app), "Not trusted · role not read");
+}
+
+#[test]
+fn a_refused_trust_leaves_the_unparsed_role_unread() {
+    let (mut app, backend) = backed(Scenario::RoleBinding, refuse_trust);
+    app.world
+        .surfaces
+        .roles
+        .as_mut()
+        .expect("roles")
+        .role_mut("data-eng")
+        .expect("role")
+        .manifest = Err("no manifest".into());
+    press(&mut app, DATA_ENG);
+    press(&mut app, "v right enter");
+    settle(&mut app);
+
+    assert_eq!(data_eng_loads(&backend), 0, "{:?}", backend.seen());
+    assert_untrusted(&app);
+    assert_eq!(status(&app), "the trust store is read-only");
+}
+
+#[test]
+fn loading_a_role_does_not_trust_it() {
+    let world = world_for(Scenario::RoleBinding);
+    assert!(!role(&world, "data-eng").trusted);
+    let backend = SimBackend::shared();
+    let effect = Effect::LoadRole {
+        role: "data-eng".into(),
+    };
+    backend.perform(&effect, &world);
+    let Some(Msg::RoleLoaded { result, .. }) = backend.settle(&effect, &world) else {
+        panic!("a load answers with RoleLoaded");
+    };
+    assert!(result.is_err(), "the load of an untrusted role was granted");
+}
+
+#[test]
+fn removing_an_account_scrubs_it_from_every_workspace() {
+    let id = "acct-claude-work";
+    let world = world_for(Scenario::Returning);
+    let names = |world: &World| {
+        world
+            .workspaces
+            .iter()
+            .filter(|ws| {
+                ws.accounts.enabled.contains(id)
+                    || ws.accounts.disabled_defaults.contains(id)
+                    || ws.accounts.preferred.values().any(|v| v == id)
+                    || ws.accounts.role_preferred.values().any(|v| v == id)
+            })
+            .count()
+    };
+    assert!(names(&world) > 0, "a workspace names the account to remove");
+
+    let mut app = timed(Scenario::Returning, world);
+    app.go(Go::Accounts {
+        select: Some(id.into()),
+    });
+    press(&mut app, "d right enter");
+    settle(&mut app);
+
+    assert!(app.world.accounts.get(id).is_none(), "{}", status(&app));
+    assert_eq!(names(&app.world), 0);
+}
+
+fn saves_asked(backend: &TestBackend) -> usize {
+    saves_of(backend).len()
+}
+
+#[test]
+fn a_save_nobody_answers_does_not_block_the_next_one_forever() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some("acct-claude-personal".into()),
+    });
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 1);
+
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 1, "the first save is still out");
+    assert!(
+        status(&app).contains("Saving the previous change"),
+        "{}",
+        status(&app)
+    );
+
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 2, "a save nobody answered gives way");
+}
+
+#[test]
+fn the_late_reply_of_a_save_that_gave_way_does_not_answer_the_next_save() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        store_accounts,
+    );
+    app.go(Go::Accounts {
+        select: Some("acct-claude-personal".into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    let late = store_accounts(first, &app.world).expect("the reply of the first save");
+    app.deliver(&late);
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 2, "the second save is still out");
+    assert!(
+        status(&app).contains("Saving the previous change"),
+        "{}",
+        status(&app)
+    );
+
+    let failure = fail_accounts(second, &app.world).expect("the reply of the second save");
+    app.deliver(&failure);
+    assert_eq!(status(&app), "disk full");
+    press(&mut app, "t");
+    assert_eq!(saves_asked(&backend), 3, "the screen is free again");
+}
+
+fn saved_as(effect: &Effect, world: &World, purpose: &str) -> Msg {
+    let Effect::SaveAccounts { ticket, .. } = effect else {
+        panic!("a save expected, got {effect:?}");
+    };
+    let mut snapshot = sim::snapshot(world);
+    for account in &mut snapshot.accounts.accounts {
+        if account.id == PERSONAL {
+            account.purpose = Some(purpose.into());
+        }
+    }
+    Msg::AccountsSaved {
+        ticket: *ticket,
+        added: None,
+        result: Ok(Box::new(snapshot)),
+    }
+}
+
+fn personal_purpose(app: &App) -> Option<String> {
+    app.world
+        .accounts
+        .get(PERSONAL)
+        .and_then(|a| a.purpose.clone())
+}
+
+#[test]
+fn the_late_reply_of_a_save_that_gave_way_does_not_roll_back_the_newer_save() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some(PERSONAL.into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    app.deliver(&saved_as(second, &app.world, "newer"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+
+    app.deliver(&saved_as(first, &app.world, "older"));
+    assert_eq!(
+        personal_purpose(&app).as_deref(),
+        Some("newer"),
+        "the late reply of the first save rolled the registry back"
+    );
+}
+
+#[test]
+fn the_late_reply_of_a_save_that_gave_way_still_lands_while_the_newer_save_is_out() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        |_, _| None,
+    );
+    app.go(Go::Accounts {
+        select: Some(PERSONAL.into()),
+    });
+    press(&mut app, "t");
+    app.world.clock.advance(31_000);
+    press(&mut app, "t");
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two saves expected, got {saves:?}");
+    };
+
+    app.deliver(&saved_as(first, &app.world, "older"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("older"));
+
+    app.deliver(&saved_as(second, &app.world, "newer"));
+    assert_eq!(personal_purpose(&app).as_deref(), Some("newer"));
+}
+
+#[test]
+fn the_usage_screen_refreshes_every_enabled_account_and_shows_the_reply() {
+    let (mut app, backend) = backed(Scenario::AccountsMixed, refresh_account);
+    app.go(Go::Usage {
+        select: Some(PERSONAL.into()),
+    });
+    assert!(screen(&mut app).contains("38%"));
+
+    let idle = app
+        .world
+        .accounts
+        .accounts
+        .iter()
+        .filter(|a| a.enabled && a.usage.freshness.phase != Freshness::Refreshing)
+        .count();
+    press(&mut app, "r");
+    assert!(
+        status(&app).starts_with("Reloading the broker projection"),
+        "{}",
+        status(&app)
+    );
+    settle(&mut app);
+
+    let asked = backend
+        .seen()
+        .iter()
+        .filter(|e| matches!(e, Effect::RefreshAccount { .. }))
+        .count();
+    assert_eq!(asked, idle, "one refresh for each enabled idle account");
+    let shown = screen(&mut app);
+    assert!(shown.contains("40%"), "{shown}");
 }

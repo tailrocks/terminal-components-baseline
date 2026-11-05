@@ -5,9 +5,12 @@
 //! or never stops sending marks costs the host memory or time without bound.
 //! The guard bounds both, in a streaming way: its state survives across
 //! `feed` calls, and a sequence split over several calls is judged as a whole.
-//! It also keeps two kinds of character out of every cell: DEL, which the
-//! renderer cannot draw, and the bidirectional controls, which reorder the
-//! text around them.
+//! It also keeps three kinds of character out of every cell: DEL, which the
+//! renderer cannot draw, the bidirectional controls, which reorder the text
+//! around them, and the tag characters, which are invisible. Bytes that are not
+//! valid UTF-8 never pass on as they are: each broken sequence becomes one
+//! U+FFFD, so a neighbour the guard drops cannot join the bytes around it into
+//! a character the guard never saw.
 //!
 //! A combining mark joins the cell left of the cursor, so the guard lets one
 //! through only while it is sure which cell that is: after a base character it
@@ -31,7 +34,19 @@ const CAN: u8 = 0x18;
 const SUB: u8 = 0x1a;
 const ST: u8 = 0x9c;
 const ZWJ: char = '\u{200d}';
+const REPLACEMENT: &[u8] = "\u{fffd}".as_bytes();
 const MAX_DECSET_PARAMS: u8 = 16;
+
+pub fn is_spoofing_format(c: char) -> bool {
+    matches!(
+        c,
+        '\u{061c}'
+            | '\u{200e}'..='\u{200f}'
+            | '\u{202a}'..='\u{202e}'
+            | '\u{2066}'..='\u{2069}'
+            | '\u{e0000}'..='\u{e007f}'
+    )
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum State {
@@ -59,10 +74,12 @@ struct Csi {
     started: bool,
     marker: Option<u8>,
     intermediate: bool,
+    bang: bool,
     plain: bool,
     params: u8,
     param: u32,
     seven: bool,
+    screen: bool,
 }
 
 impl Csi {
@@ -71,10 +88,12 @@ impl Csi {
             started: false,
             marker: None,
             intermediate: false,
+            bang: false,
             plain: true,
             params: 0,
             param: 0,
             seven: false,
+            screen: false,
         }
     }
 
@@ -95,6 +114,7 @@ impl Csi {
                 self.plain = false;
             }
             0x20..=0x2f => {
+                self.bang = byte == b'!' && !self.intermediate;
                 self.intermediate = true;
                 self.plain = false;
             }
@@ -104,6 +124,7 @@ impl Csi {
 
     fn end_param(&mut self) {
         self.seven |= self.param == 7;
+        self.screen |= matches!(self.param, 47 | 1047 | 1049);
         self.param = 0;
         self.params = self.params.saturating_add(1);
     }
@@ -114,6 +135,10 @@ impl Csi {
 
     fn is_private_mode(&self, fin: u8) -> bool {
         matches!(fin, b'h' | b'l') && self.marker == Some(b'?') && !self.intermediate
+    }
+
+    fn is_soft_reset(&self, fin: u8) -> bool {
+        fin == b'p' && self.marker.is_none() && self.bang
     }
 
     fn certain(&self) -> bool {
@@ -133,6 +158,12 @@ pub(super) struct FeedGuard {
     joiners: u16,
     after_joiner: bool,
     out: Vec<u8>,
+    switches: Vec<usize>,
+}
+
+pub(super) struct Filtered<'a> {
+    pub(super) bytes: &'a [u8],
+    pub(super) switches: &'a [usize],
 }
 
 impl FeedGuard {
@@ -147,16 +178,21 @@ impl FeedGuard {
             joiners: 0,
             after_joiner: false,
             out: Vec::new(),
+            switches: Vec::new(),
         }
     }
 
     /// The bytes to give the parser for `bytes`.
-    pub(super) fn filter(&mut self, bytes: &[u8]) -> &[u8] {
+    pub(super) fn filter(&mut self, bytes: &[u8]) -> Filtered<'_> {
         self.out.clear();
+        self.switches.clear();
         for &byte in bytes {
             self.step(byte);
         }
-        &self.out
+        Filtered {
+            bytes: &self.out,
+            switches: &self.switches,
+        }
     }
 
     fn step(&mut self, byte: u8) {
@@ -215,10 +251,11 @@ impl FeedGuard {
             }
             _ => {
                 self.detach();
+                self.out.extend_from_slice(&[ESC, byte]);
                 if byte == b'c' {
                     self.no_wrap = false;
+                    self.switches.push(self.out.len());
                 }
-                self.out.extend_from_slice(&[ESC, byte]);
                 self.state = State::Ground;
             }
         }
@@ -264,6 +301,12 @@ impl FeedGuard {
             return;
         }
         self.detach();
+        if self.csi.is_soft_reset(fin) {
+            self.no_wrap = false;
+        }
+        if self.csi.is_private_mode(fin) && self.csi.screen {
+            self.switches.push(self.out.len());
+        }
         if self.csi.is_private_mode(fin) && self.csi.seven {
             if fin == b'l' {
                 self.no_wrap = true;
@@ -373,8 +416,8 @@ impl FeedGuard {
         };
         let continues = (0x80..=0xbf).contains(&byte) && !self.partial.is_empty();
         if !self.partial.is_empty() && !continues {
-            self.detach();
-            self.out.append(&mut self.partial);
+            self.partial.clear();
+            self.replace();
             return self.ground(byte);
         }
         self.partial.push(byte);
@@ -387,15 +430,17 @@ impl FeedGuard {
             .and_then(|s| s.chars().next())
         {
             Some(c) => self.character(c, &bytes),
-            None => {
-                self.detach();
-                self.out.extend_from_slice(&bytes);
-            }
+            None => self.replace(),
         }
     }
 
+    fn replace(&mut self) {
+        self.detach();
+        self.out.extend_from_slice(REPLACEMENT);
+    }
+
     fn character(&mut self, c: char, bytes: &[u8]) {
-        if matches!(c, '\u{202a}'..='\u{202e}' | '\u{2066}'..='\u{2069}') {
+        if is_spoofing_format(c) {
             return;
         }
         if matches!(c, '\u{80}'..='\u{9f}') {

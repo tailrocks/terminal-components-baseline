@@ -278,6 +278,7 @@ fn refresh_keeps_open_panes() {
         "the snapshot says nothing about daemons"
     );
     let outcome = app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(snapshot.clone())),
     });
     assert_ne!(outcome, Outcome::Ignored);

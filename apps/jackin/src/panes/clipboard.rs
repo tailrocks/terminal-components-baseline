@@ -6,6 +6,7 @@ use super::policy::{ClipboardWrite, PanePolicy};
 #[derive(Debug, Clone, Copy)]
 pub struct ClipContext {
     pub agent: bool,
+    pub owner: bool,
     pub focused: bool,
     pub last_gesture_ms: Option<i64>,
     pub now_ms: i64,
@@ -62,7 +63,7 @@ pub fn decide(policy: &PanePolicy, ctx: &ClipContext, payload: &str) -> ClipDeci
     let in_window = ctx
         .last_gesture_ms
         .is_some_and(|at| ctx.now_ms.saturating_sub(at) <= i64::from(policy.gesture_window_ms));
-    if !ctx.focused || !in_window {
+    if !ctx.owner || !ctx.focused || !in_window {
         return ClipDecision::Refuse(ClipRefusal::Write);
     }
     ClipDecision::Allow(text)

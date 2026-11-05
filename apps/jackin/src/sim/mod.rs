@@ -2,7 +2,7 @@ use std::sync::atomic::{AtomicBool, AtomicU32, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
 
 use self::pane::ScriptPane;
-use crate::backend::{Backend, Completion, Effect, OpSession, PlainKey, Validation};
+use crate::backend::{Backend, Completion, Effect, OpSession, PlainKey, Ticket, Validation};
 use crate::domain::account::{
     Account, AccountId, AccountOrigin, AccountRegistry, CredentialSource, ValidationLevel,
 };
@@ -10,7 +10,7 @@ use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::LaunchContent;
 use crate::domain::role::{RoleCheckState, RoleRecord};
 use crate::domain::vocabulary::{Rejection, fill_in};
-use crate::domain::workspace::{RoleSource, Workspace, WorkspaceId};
+use crate::domain::workspace::{RoleEntry, RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
 use crate::panes::{PaneBody, PaneRequest, PaneSpawn};
 use crate::world::{GlobalConfig, Msg, SaveFailure, Snapshot, World};
@@ -234,10 +234,11 @@ impl Backend for SimBackend {
             ),
             Effect::Stop { .. } => return Some(Completion::settle(1_800)),
             Effect::Purge { .. } => return Some(Completion::settle(2_200)),
-            Effect::Refresh => return Some(Completion::settle(0)),
+            Effect::Refresh { .. } => return Some(Completion::settle(0)),
             Effect::RefreshAccount {
                 account,
                 stagger_ms,
+                ..
             } => {
                 let base = world
                     .accounts
@@ -317,7 +318,7 @@ impl Backend for SimBackend {
             Effect::SaveWorkspace { id, workspace, .. } => {
                 Some(self.settle_workspace_save(*id, workspace, world))
             }
-            Effect::Refresh => {
+            Effect::Refresh { ticket } => {
                 let result = if self.index_fails_once.swap(false, Ordering::SeqCst) {
                     Err("instance index unreadable".to_owned())
                 } else {
@@ -328,7 +329,10 @@ impl Backend for SimBackend {
                     }
                     Ok(Box::new(snapshot))
                 };
-                Some(Msg::Refreshed { result })
+                Some(Msg::Refreshed {
+                    ticket: *ticket,
+                    result,
+                })
             }
             Effect::Stop { instance } => Some(Msg::Stopped {
                 instance: instance.clone(),
@@ -346,7 +350,9 @@ impl Backend for SimBackend {
                     InstanceStatus::Purged
                 }))),
             }),
-            Effect::RefreshAccount { account, .. } => {
+            Effect::RefreshAccount {
+                account, source, ..
+            } => {
                 let refreshed = world.accounts.get(account).map(|a| {
                     provider::refresh(
                         a,
@@ -357,15 +363,16 @@ impl Backend for SimBackend {
                 });
                 Some(Msg::AccountRefreshed {
                     account: account.clone(),
+                    source: Box::new(source.clone()),
                     result: refreshed
                         .map(Box::new)
                         .ok_or_else(|| format!("{account} is not in the registry")),
                 })
             }
-            Effect::ValidateAccount { account } => {
+            Effect::ValidateAccount { account, source } => {
                 let result = match world.accounts.get(account) {
                     None => Err(format!("{account} is not in the registry")),
-                    Some(a) => Ok(match &a.source {
+                    Some(a) => Ok(match source {
                         CredentialSource::PlainApiKey { .. } => Validation::Fingerprint {
                             level: fingerprint_level(a),
                         },
@@ -380,6 +387,7 @@ impl Backend for SimBackend {
                 };
                 Some(Msg::AccountValidated {
                     account: account.clone(),
+                    source: Box::new(source.clone()),
                     result,
                 })
             }
@@ -432,15 +440,21 @@ impl Backend for SimBackend {
                 })
             }
             Effect::LoadRole { role } => {
-                let found = world.roles.iter().find(|r| r.name == *role);
-                let result = match found.and_then(|r| r.fetch_error.clone()) {
-                    Some(error) => Err(error),
-                    None => {
+                let result = match world.roles.iter().find(|r| r.name == *role) {
+                    None => Err(world
+                        .surfaces
+                        .vocabulary
+                        .rejection(&Rejection::UnknownRole { role: role.clone() })),
+                    Some(r) if !r.trusted => Err("trust required".to_owned()),
+                    Some(RoleEntry {
+                        fetch_error: Some(error),
+                        ..
+                    }) => Err(error.clone()),
+                    Some(_) => {
                         let mut snapshot = snapshot(world);
                         if let Some(r) = snapshot.roles.iter_mut().find(|r| r.name == *role) {
                             r.load_error = None;
                             r.in_registry = true;
-                            r.trusted = true;
                         }
                         Ok(Box::new(snapshot))
                     }
@@ -566,10 +580,15 @@ impl Backend for SimBackend {
                 })
             }
             Effect::SaveGlobal { global, .. } => Some(self.settle_global_save(global, world)),
-            Effect::SaveAccounts { base, registry } => {
-                Some(settle_accounts_save(base, registry, world))
-            }
-            _ => None,
+            Effect::SaveAccounts {
+                ticket,
+                base,
+                registry,
+            } => Some(settle_accounts_save(*ticket, base, registry, world)),
+            Effect::Prewarm { .. }
+            | Effect::RunDoctor
+            | Effect::ProbeFolder { .. }
+            | Effect::ReadChanges { .. } => None,
         }
     }
 
@@ -617,7 +636,12 @@ impl Backend for SimBackend {
 /// A removed account also leaves every workspace that named it. A discovered
 /// account that the registry drops (the twin of a folder that was registered)
 /// leaves them as they are.
-fn settle_accounts_save(base: &AccountRegistry, registry: &AccountRegistry, world: &World) -> Msg {
+fn settle_accounts_save(
+    ticket: Ticket,
+    base: &AccountRegistry,
+    registry: &AccountRegistry,
+    world: &World,
+) -> Msg {
     let mut registry = registry.clone();
     let added = give_ids(&mut registry);
     let mut snapshot = snapshot(world);
@@ -635,6 +659,7 @@ fn settle_accounts_save(base: &AccountRegistry, registry: &AccountRegistry, worl
     }
     snapshot.accounts = registry;
     Msg::AccountsSaved {
+        ticket,
         added,
         result: Ok(Box::new(snapshot)),
     }

@@ -251,7 +251,7 @@ fn paste_last_copy_takes_the_same_path() {
 
 #[test]
 fn a_drag_selects_in_a_pane_whose_id_is_past_sixty_four() {
-    use jackin_console::panes::{EndKind, LinkEvent};
+    use jackin_console::panes::{EndKind, Lease, LinkEvent};
 
     let mut rig = Rig::new();
     rig.attach();
@@ -273,6 +273,7 @@ fn a_drag_selects_in_a_pane_whose_id_is_past_sixty_four() {
     rig.advance(80);
     let n = rig.bench.opened() - 1;
     rig.bench.push(n, LinkEvent::Attached);
+    rig.bench.push(n, LinkEvent::Lease(Lease::Owner));
     rig.advance(900);
     let pid = rig
         .daemon()

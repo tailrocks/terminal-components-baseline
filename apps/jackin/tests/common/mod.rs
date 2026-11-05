@@ -56,6 +56,7 @@ pub fn press(app: &mut App, keys: &str) {
             _ => (KeyModifiers::NONE, name),
         };
         let code = match name {
+            "f5" => KeyCode::F(5),
             "f10" => KeyCode::F(10),
             "enter" => KeyCode::Enter,
             "esc" => KeyCode::Esc,
@@ -110,4 +111,91 @@ pub fn hover_text(app: &mut App, text: &str) {
         )),
     );
     screen_at(app, 140, 40);
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Thumb {
+    pub x: u16,
+    pub start: u16,
+    pub len: u16,
+}
+
+pub fn thumbs(shown: &str) -> Vec<Thumb> {
+    const THUMB: char = '┃';
+    let grid: Vec<Vec<char>> = shown.lines().map(|l| l.chars().collect()).collect();
+    let width = grid.iter().map(Vec::len).max().unwrap_or(0);
+    let mut found = Vec::new();
+    for x in 0..width {
+        let mut y = 0;
+        while y < grid.len() {
+            if grid[y].get(x) != Some(&THUMB) {
+                y += 1;
+                continue;
+            }
+            let start = y;
+            while y < grid.len() && grid[y].get(x) == Some(&THUMB) {
+                y += 1;
+            }
+            if y - start >= 2 {
+                found.push(Thumb {
+                    x: x as u16,
+                    start: start as u16,
+                    len: (y - start) as u16,
+                });
+            }
+        }
+    }
+    found
+}
+
+fn mouse(app: &mut App, kind: MouseKind, size: (u16, u16), x: u16, y: u16) {
+    Application::handle(
+        app,
+        Input::Mouse(Mouse::new(kind, ratatui::layout::Position::new(x, y))),
+    );
+    screen_at(app, size.0, size.1);
+}
+
+pub fn the_thumb_follows_the_mouse_cell_for_cell(app: &mut App, size: (u16, u16), which: usize) {
+    let at = |app: &mut App| {
+        *thumbs(&screen_at(app, size.0, size.1))
+            .get(which)
+            .unwrap_or_else(|| panic!("no scrollbar thumb number {which}"))
+    };
+    let rest = at(app);
+    assert!(
+        rest.len >= 4,
+        "the thumb is long enough to grab off-centre: {rest:?}"
+    );
+    let grab = rest.start + 1;
+
+    mouse(app, MouseKind::Down, size, rest.x, grab);
+    assert_eq!(
+        at(app).start,
+        rest.start,
+        "pressing the thumb does not move it"
+    );
+
+    mouse(app, MouseKind::Drag, size, rest.x, grab + 1);
+    assert_eq!(
+        at(app).start,
+        rest.start + 1,
+        "one cell of drag moves the thumb one cell"
+    );
+
+    mouse(app, MouseKind::Up, size, rest.x, grab + 1);
+    assert_eq!(
+        at(app).start,
+        rest.start + 1,
+        "letting go leaves the thumb where the drag put it"
+    );
+
+    let dragged = at(app);
+    let below = dragged.start + dragged.len + 1;
+    mouse(app, MouseKind::Down, size, rest.x, below);
+    mouse(app, MouseKind::Up, size, rest.x, below);
+    assert!(
+        at(app).start > dragged.start,
+        "a press on the bare track below the thumb moves it down"
+    );
 }

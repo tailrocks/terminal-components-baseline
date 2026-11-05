@@ -27,11 +27,15 @@ use ratatui::style::{Modifier, Style};
 
 use super::modals::{InfoDialog, InfoResult};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
+use crate::backend::PlainKey;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::docker::DockerCapability;
-use crate::domain::launch::{LaunchContent, LaunchFailure, RefusalReason, StageKind};
+use crate::domain::instance::{Instance, InstanceStatus};
+use crate::domain::launch::{LaunchContent, LaunchFailure, NextStep, RefusalReason, StageKind};
 use crate::domain::precedence::PrecedenceLevel;
+use crate::domain::shown::shown;
+use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
     EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
@@ -45,6 +49,19 @@ pub const LOG: WidgetId = WidgetId::of("cockpit.log");
 pub const CHIP_CONTAINER: WidgetId = WidgetId::of("cockpit.chip.container");
 pub const CHIP_ACTIVITY: WidgetId = WidgetId::of("cockpit.chip.activity");
 pub const CHIP_RUN: WidgetId = WidgetId::of("cockpit.chip.run");
+
+const REPORTED_CHARS: usize = 200;
+const TYPED_ORIGIN: &str = "typed key";
+const TYPED_VALIDATION: &str = "kept for this launch only · never stored";
+
+fn reported_with(origin: &str, validation: String) -> String {
+    let origin = shown(origin, REPORTED_CHARS);
+    if origin.is_empty() {
+        validation
+    } else {
+        format!("{origin} · {validation}")
+    }
+}
 
 pub const CANCEL_BTN: WidgetId = WidgetId::of("cockpit.cancel_btn");
 
@@ -119,6 +136,8 @@ pub struct CockpitScreen {
     log_area: Rect,
     pub debug: bool,
     pub credential_hold: bool,
+    credential_error: Option<String>,
+    ready_run_id: Option<String>,
     pub target_label: String,
     docker: bool,
     docker_warning: Option<DockerCapability>,
@@ -168,6 +187,8 @@ impl CockpitScreen {
             log_area: Rect::ZERO,
             debug: false,
             credential_hold: false,
+            credential_error: None,
+            ready_run_id: None,
             target_label,
             docker,
             docker_warning: None,
@@ -298,9 +319,15 @@ impl CockpitScreen {
                 LaunchEvent::Activity(a) => self.activity = a,
                 LaunchEvent::BuildLine(l) => self.log.push(ansi_line(&l)),
                 LaunchEvent::ContainerReady(c) => self.container = Some(c),
-                LaunchEvent::CredentialsResolved { .. } => {
+                LaunchEvent::CredentialsResolved { origin, validation } => {
                     if let Some((_, v, tone)) = self.credentials.as_mut() {
-                        *v = format!("{} · {v}", self.content.words.credentials_resolved);
+                        let validation = shown(&validation, REPORTED_CHARS);
+                        let reported = if validation.is_empty() {
+                            format!("{} · {v}", self.content.words.credentials_resolved)
+                        } else {
+                            validation
+                        };
+                        *v = reported_with(&origin, reported);
                         *tone = Tone::Secondary;
                     }
                 }
@@ -310,27 +337,8 @@ impl CockpitScreen {
                         *v = message.clone();
                         *tone = Tone::Error;
                     }
-                    let mut d = Dialog::destructive(
-                        WidgetId::of("cockpit.cred"),
-                        "Credential source unavailable",
-                        &format!(
-                            "{message}. The launch is paused at the {} stage; nothing was injected.",
-                            self.credentials_label()
-                        ),
-                        "Cancel launch",
-                    );
-                    d.actions = vec![
-                        Button::secondary(WidgetId::of("cockpit.cred").sub("retry"), "Retry"),
-                        Button::secondary(
-                            WidgetId::of("cockpit.cred").sub("plain"),
-                            "Enter plain text instead",
-                        ),
-                        Button::danger(WidgetId::of("cockpit.cred").sub("cancel"), "Cancel launch"),
-                    ];
-                    d.cancel_index = Some(2);
-                    d.initial_focus = d.actions[0].id;
-                    d.width = 70;
-                    cx.open(d, LayerTag::new("cred"));
+                    self.open_credential_error(&message, cx);
+                    self.credential_error = Some(message);
                 }
                 LaunchEvent::Refused(reason) => {
                     self.frozen_at = Some(self.tick);
@@ -343,33 +351,101 @@ impl CockpitScreen {
                 LaunchEvent::NeedsInput(questions) => self.open_questions(questions, cx),
                 LaunchEvent::Failed(failed) => {
                     let FailedLaunch { failure, instance } = *failed;
-                    self.frozen_at = Some(self.tick);
-                    self.activity =
-                        format!("{} failed", self.content.stages.get(failure.stage).label);
-                    self.log_open = false;
-                    self.progress.failure = Some(failure);
-                    if let Some(record) = instance {
-                        self.instance_id = Some(record.id.clone());
-                        w.admit(record);
-                    }
-                    self.open_failure(w, cx);
+                    self.fail(failure, instance, w, cx);
                 }
                 LaunchEvent::Ready(ready) => {
-                    let ReadyInstance { instance, .. } = *ready;
-                    self.progress.done = true;
-                    self.activity = self.content.words.ready_activity.clone();
-                    let id = instance.id.clone();
-                    w.admit(instance);
-                    self.handoff_requested = true;
-                    cx.go(Go::Attach {
-                        instance: id,
-                        pane: None,
-                    });
+                    let ReadyInstance { instance, run_id } = *ready;
+                    self.ready_run_id = Some(run_id);
+                    if instance.status == InstanceStatus::Running {
+                        self.progress.done = true;
+                        self.activity = self.content.words.ready_activity.clone();
+                        let id = instance.id.clone();
+                        w.admit(instance);
+                        self.handoff_requested = true;
+                        cx.go(Go::Attach {
+                            instance: id,
+                            pane: None,
+                        });
+                    } else {
+                        let failure = LaunchFailure {
+                            stage: self.content.stages.len().saturating_sub(1),
+                            summary: fill_in(
+                                &self.content.words.ready_not_running,
+                                &[("status", instance.status.label())],
+                            ),
+                            next_step: NextStep::RunDoctor,
+                            detail: Vec::new(),
+                        };
+                        self.fail(failure, Some(instance), w, cx);
+                    }
                 }
             }
             changed = true;
         }
         changed
+    }
+
+    fn fail(
+        &mut self,
+        failure: LaunchFailure,
+        instance: Option<Instance>,
+        w: &mut World,
+        cx: &mut Cx,
+    ) {
+        self.frozen_at = Some(self.tick);
+        self.activity = format!("{} failed", self.content.stages.get(failure.stage).label);
+        self.log_open = false;
+        self.progress.failure = Some(failure);
+        if let Some(record) = instance {
+            self.instance_id = Some(record.id.clone());
+            w.admit(record);
+        }
+        self.open_failure(w, cx);
+    }
+
+    fn run_id(&self) -> &str {
+        self.ready_run_id
+            .as_deref()
+            .unwrap_or_else(|| self.feed.run_id())
+    }
+
+    fn open_credential_error(&self, message: &str, cx: &mut Cx) {
+        let mut d = Dialog::destructive(
+            WidgetId::of("cockpit.cred"),
+            "Credential source unavailable",
+            &format!(
+                "{message}. The launch is paused at the {} stage; nothing was injected.",
+                self.credentials_label()
+            ),
+            "Cancel launch",
+        );
+        d.actions = vec![
+            Button::secondary(WidgetId::of("cockpit.cred").sub("retry"), "Retry"),
+            Button::secondary(
+                WidgetId::of("cockpit.cred").sub("plain"),
+                "Enter plain text instead",
+            ),
+            Button::danger(WidgetId::of("cockpit.cred").sub("cancel"), "Cancel launch"),
+        ];
+        d.cancel_index = Some(2);
+        d.initial_focus = d.actions[0].id;
+        d.width = 70;
+        cx.open(d, LayerTag::new("cred"));
+    }
+
+    fn open_plain_key(&self, cx: &mut Cx) {
+        let input = TextInput::new(WidgetId::of("cockpit.credkey.input"), "API key")
+            .masked()
+            .required(true)
+            .required_message("Enter the key, or cancel to go back.")
+            .help("used for this launch only · never stored");
+        let d = Dialog::prompt(
+            WidgetId::of("cockpit.credkey"),
+            "Plain-text key",
+            input,
+            "Use for this launch",
+        );
+        cx.open(d, LayerTag::new("credkey"));
     }
 
     fn open_failure(&mut self, w: &World, cx: &mut Cx) {
@@ -380,7 +456,7 @@ impl CockpitScreen {
         let words = &self.content.words;
         let mut props = vec![
             Prop::new("Stage", self.content.stages.get(f.stage).label.clone()).tone(Tone::Error),
-            Prop::new("Run id", self.feed.run_id().to_owned()).copyable(),
+            Prop::new("Run id", self.run_id().to_owned()).copyable(),
         ];
         if let Some(next) = words.next_step(&f.next_step) {
             props.push(Prop::new("Next step", next).wrap());
@@ -501,7 +577,7 @@ impl CockpitScreen {
                         .unwrap_or("host profile".into())
                 ),
             ),
-            Prop::new("Run id", self.feed.run_id().to_owned()).copyable(),
+            Prop::new("Run id", self.run_id().to_owned()).copyable(),
             Prop::new(
                 "jackin",
                 w.surfaces
@@ -518,7 +594,7 @@ impl CockpitScreen {
         {
             props.push(Prop::new(
                 "Telemetry",
-                format!("run {} -> {collector}", self.feed.run_id()),
+                format!("run {} -> {collector}", self.run_id()),
             ));
         }
         let mut d =
@@ -870,6 +946,46 @@ impl Page<Jackin> for CockpitScreen {
                 self.cancel(w, cx);
                 Outcome::Changed
             }
+            (
+                "credkey",
+                ModalResult::Dialog {
+                    action: Some(1),
+                    text,
+                },
+            ) => {
+                let key = match PlainKey::new(&text.unwrap_or_default()) {
+                    Ok(key) => key,
+                    Err(refusal) => {
+                        self.open_plain_key(cx);
+                        cx.status(refusal.to_string());
+                        return Outcome::Changed;
+                    }
+                };
+                self.credential_hold = false;
+                self.credential_error = None;
+                self.account = None;
+                if let Some(typed) = self.feed.use_plain_text(key)
+                    && let Some((o, v, tone)) = self.credentials.as_mut()
+                {
+                    TYPED_ORIGIN.clone_into(o);
+                    let validation = shown(&typed.validation, REPORTED_CHARS);
+                    let reported = if validation.is_empty() {
+                        TYPED_VALIDATION.to_owned()
+                    } else {
+                        validation
+                    };
+                    *v = reported_with(&typed.origin, reported);
+                    *tone = Tone::Secondary;
+                }
+                cx.status("Using a plain-text key for this launch only");
+                Outcome::Changed
+            }
+            ("credkey", _) => {
+                if let Some(message) = self.credential_error.clone() {
+                    self.open_credential_error(&message, cx);
+                }
+                Outcome::Changed
+            }
             ("cred", ModalResult::Dialog { action, .. }) => match action {
                 Some(0) => {
                     self.credential_hold = false;
@@ -882,16 +998,7 @@ impl Page<Jackin> for CockpitScreen {
                     Outcome::Changed
                 }
                 Some(1) => {
-                    self.credential_hold = false;
-                    self.account = None;
-                    if let Some(typed) = self.feed.use_plain_text()
-                        && let Some((o, v, tone)) = self.credentials.as_mut()
-                    {
-                        *o = typed.origin;
-                        *v = typed.validation;
-                        *tone = Tone::Secondary;
-                    }
-                    cx.status("Using a plain-text key for this launch only");
+                    self.open_plain_key(cx);
                     Outcome::Changed
                 }
                 _ => {
@@ -1110,7 +1217,7 @@ impl Page<Jackin> for CockpitScreen {
         }
         let mut rx = area.right().saturating_sub(1);
         if self.debug {
-            let chip = format!(" {} ", self.feed.run_id());
+            let chip = format!(" {} ", self.run_id());
             let cw = width(&chip) as u16;
             rx = rx.saturating_sub(cw);
 

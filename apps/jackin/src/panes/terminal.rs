@@ -25,28 +25,17 @@ use super::{
     PaneNote, PaneRequest, PasteOutcome, SCROLLBACK,
 };
 use crate::domain::instance::AgentState;
+use crate::domain::shown::shown;
 use crate::domain::vocabulary::{PaneWords, fill_in};
 
 const FOCUS_IN: &[u8] = b"\x1b[I";
 const FOCUS_OUT: &[u8] = b"\x1b[O";
 const TITLE_COLUMNS: usize = 64;
+const NOTICE_CHARS: usize = 240;
 const PENDING_EFFECTS: usize = 16;
-const BIDI: [char; 9] = [
-    '\u{202a}', '\u{202b}', '\u{202c}', '\u{202d}', '\u{202e}', '\u{2066}', '\u{2067}', '\u{2068}',
-    '\u{2069}',
-];
 
-/// The title a program set, made safe to show: controls and bidirectional
-/// controls are dropped, runs of white space become one space, and the result
-/// is cut at 64 columns.
 pub fn sanitize_title(raw: &str) -> String {
-    let spaced: String = raw
-        .chars()
-        .map(|c| if c.is_whitespace() { ' ' } else { c })
-        .filter(|c| !c.is_control() && !BIDI.contains(c))
-        .collect();
-    let collapsed = spaced.split_whitespace().collect::<Vec<_>>().join(" ");
-    clip(&collapsed, TITLE_COLUMNS)
+    clip(&shown(raw, TITLE_COLUMNS), TITLE_COLUMNS)
 }
 
 /// The window after an attach in which the replay of the screen arrives. The
@@ -114,7 +103,7 @@ pub struct TerminalPane {
     source: Arc<dyn LinkSource>,
     link: Option<Box<dyn PaneLink>>,
     status: LinkStatus,
-    lease: Lease,
+    lease: Option<Lease>,
     view: TerminalViewport,
     area: Rect,
     wanted: Option<PaneSize>,
@@ -153,7 +142,7 @@ impl TerminalPane {
             source,
             link: None,
             status: LinkStatus::Pending,
-            lease: Lease::Owner,
+            lease: None,
             view,
             area: Rect::ZERO,
             wanted: None,
@@ -206,8 +195,8 @@ impl TerminalPane {
             && matches!(self.status, LinkStatus::Attaching | LinkStatus::Attached(_))
     }
 
-    fn viewing(&self) -> bool {
-        self.lease == Lease::ReadOnly
+    fn owns(&self) -> bool {
+        self.lease == Some(Lease::Owner)
     }
 
     fn say(&mut self, say: Say) {
@@ -255,7 +244,7 @@ impl TerminalPane {
         self.link = None;
         self.fresh_grid(size);
         self.attached_once = false;
-        self.lease = Lease::Owner;
+        self.lease = None;
         self.replay = Replay::Idle;
         self.last_gesture_ms = None;
         let opened = match attempt {
@@ -299,7 +288,9 @@ impl TerminalPane {
             self.handle(event, now_ms);
         }
         if self.link.is_some() && self.replay.tick(now_ms, &self.timing) {
-            self.status = LinkStatus::Attached(self.lease);
+            if let Some(lease) = self.lease {
+                self.status = LinkStatus::Attached(lease);
+            }
             changed = true;
         }
         changed
@@ -309,11 +300,16 @@ impl TerminalPane {
         match event {
             LinkEvent::Attached => {
                 self.attached_once = true;
+                self.lease = None;
                 self.replay.open(now_ms);
             }
             LinkEvent::Lease(lease) => {
-                self.lease = lease;
-                if matches!(self.status, LinkStatus::Attached(_)) {
+                if self.lease != Some(lease) {
+                    self.last_gesture_ms = None;
+                }
+                self.lease = Some(lease);
+                let settled = self.replay == Replay::Closed && self.status == LinkStatus::Attaching;
+                if settled || matches!(self.status, LinkStatus::Attached(_)) {
                     self.status = LinkStatus::Attached(lease);
                 }
             }
@@ -326,7 +322,7 @@ impl TerminalPane {
                 }
             }
             LinkEvent::Notice(text) => {
-                let clean: String = text.chars().filter(|c| !c.is_control()).collect();
+                let clean = shown(&text, NOTICE_CHARS);
                 if !clean.is_empty() {
                     self.say(Say::Notice(clean));
                 }
@@ -364,7 +360,7 @@ impl TerminalPane {
     fn term_event(&mut self, event: TermEvent, now_ms: i64) {
         match event {
             TermEvent::Reply(bytes) => {
-                if self.replay.is_open() || self.viewing() {
+                if !self.attached_once || self.replay.is_open() || !self.owns() {
                     return;
                 }
                 if self.send(PaneCommand::Reply(bytes)) == Sent::Full {
@@ -392,6 +388,7 @@ impl TerminalPane {
     fn clipboard(&mut self, payload: &str, now_ms: i64) {
         let ctx = ClipContext {
             agent: self.agent(),
+            owner: self.owns(),
             focused: self.focused,
             last_gesture_ms: self.last_gesture_ms,
             now_ms,
@@ -562,7 +559,7 @@ impl PaneBody for TerminalPane {
         if axis != Axis::Vertical
             || self.view.state().mouse_reporting()
             || delta == 0
-            || self.viewing()
+            || !self.owns()
         {
             return Some(Outcome::Consumed);
         }
@@ -696,7 +693,7 @@ impl PaneBody for TerminalPane {
         if focused {
             self.attention = false;
         }
-        if self.live() && !self.viewing() && self.view.state().focus_events() {
+        if self.live() && self.owns() && self.view.state().focus_events() {
             let report = if focused { FOCUS_IN } else { FOCUS_OUT };
             self.send(PaneCommand::Input(report.to_vec()));
         }

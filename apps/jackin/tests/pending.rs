@@ -59,7 +59,7 @@ impl Held {
 
     fn seen(&self) -> Vec<Effect> {
         let mut all = self.seen.lock().expect("seen").clone();
-        all.retain(|e| *e != Effect::Refresh);
+        all.retain(|e| !matches!(e, Effect::Refresh { .. }));
         all
     }
 
@@ -1139,4 +1139,54 @@ fn registering_a_copy_of_a_discovered_folder_replaces_the_discovered_account() {
         .map(|a| (a.display_name.as_str(), a.origin))
         .collect();
     assert_eq!(at_folder, vec![("Spare", AccountOrigin::Registered)]);
+}
+
+const KEY_FIELD: &str = "c a enter S p a r e tab tab tab down down tab enter s k - a n t";
+
+#[test]
+fn a_key_with_a_direction_mark_is_refused_before_the_backend_sees_it() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(&mut app, KEY_FIELD);
+    Application::handle(&mut app, Input::Paste("\u{202e}-abc".into()));
+    press(&mut app, "tab");
+    click_text(&mut app, "Validate");
+    ticks(&mut app, 4);
+
+    assert_eq!(backend.checks(), [], "{:?}", backend.seen());
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains("The API key holds a control or direction character"),
+        "{shown}"
+    );
+}
+
+#[test]
+fn a_key_of_blanks_is_refused() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(
+        &mut app,
+        "c a enter S p a r e tab tab tab down down tab enter space space tab",
+    );
+    click_text(&mut app, "Validate");
+    ticks(&mut app, 4);
+    assert_eq!(backend.checks(), []);
+    assert!(
+        screen(&mut app).contains("API key required: the field is empty"),
+        "blanks are no key"
+    );
+}
+
+#[test]
+fn a_key_with_blanks_around_it_is_trimmed() {
+    let (mut app, backend) = held(Scenario::AccountsMixed);
+    press(
+        &mut app,
+        "c a enter S p a r e tab tab tab down down tab enter space s k - a n t space tab",
+    );
+    click_text(&mut app, "Validate");
+    let checks = backend.checks();
+    let [Effect::CheckSource { key: Some(key), .. }] = checks.as_slice() else {
+        panic!("one check with a key expected, got {:?}", backend.seen());
+    };
+    assert_eq!(key.expose(), "sk-ant");
 }
