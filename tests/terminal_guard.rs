@@ -63,6 +63,14 @@ fn cell_text(state: &TerminalState, col: u16) -> String {
         .unwrap_or_default()
 }
 
+fn text_at(state: &TerminalState, row: u16, col: u16) -> String {
+    state
+        .view(0)
+        .cell(row, col)
+        .map(|c| c.text().to_owned())
+        .unwrap_or_default()
+}
+
 fn osc52(payload: &str) -> Vec<u8> {
     format!("\x1b]52;c;{payload}\x07").into_bytes()
 }
@@ -344,7 +352,7 @@ fn marks_cannot_pile_onto_one_cell_through_a_wide_base_that_does_not_print() {
 }
 
 #[test]
-fn a_wide_base_starts_a_new_run_once_wrapping_is_back_on() {
+fn a_wide_base_at_the_margin_starts_a_new_run_in_the_cell_the_grid_prints_it_in() {
     let resets: [(&str, &[u8]); 3] = [
         ("decset_7h", b"\x1b[?7h"),
         ("ris", b"\x1bc"),
@@ -353,21 +361,24 @@ fn a_wide_base_starts_a_new_run_once_wrapping_is_back_on() {
     let mut broken = Vec::new();
     for (name, reset) in resets {
         let mut state = TerminalState::new(2, 10);
-        state.feed(b"\x1b[?7l");
-        state.feed(reset);
-        state.feed(b"a");
+        state.feed(b"\x1b[?7l\x1b[1;10Ha");
         state.feed(marks().as_bytes());
+        state.feed(reset);
         state.feed("\u{4e2d}".as_bytes());
         state.feed(marks().as_bytes());
-        let runs = (cell_marks(&state, 0), cell_marks(&state, 1));
-        if runs != (MARKS, MARKS) {
-            broken.push((name, runs));
+        let wide = format!("\u{4e2d}{}", marks());
+        let holders = (0..2)
+            .flat_map(|row| (0..10).map(move |col| (row, col)))
+            .filter(|&(row, col)| text_at(&state, row, col) == wide)
+            .count();
+        if holders != 1 {
+            broken.push((name, holders));
         }
     }
     assert_eq!(
         broken,
         vec![],
-        "each of the two cells must keep {MARKS} marks"
+        "the grid prints the wide base and keeps all {MARKS} marks on it"
     );
 }
 
