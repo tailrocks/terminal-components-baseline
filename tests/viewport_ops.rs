@@ -257,3 +257,33 @@ fn a_text_viewport_drag_after_the_area_collapsed_is_ignored() {
     );
     assert!(!v.has_selection());
 }
+
+fn wide() -> TextViewport {
+    let long = "x".repeat(120);
+    let mut v = TextViewport::with_lines(ID, (0..20).map(|_| vec![Span::plain(&long)]).collect());
+    v.set_area(AREA);
+    v
+}
+
+#[test]
+fn adopting_the_app_scroll_policy_reaches_the_input_of_a_view_drawn_from_a_shared_reference() {
+    let mut v = wide();
+    paint(&v, false);
+    assert_eq!(
+        ViewportOps::wheel(&mut v, Axis::Horizontal, 3),
+        junie_tui::core::event::Outcome::Changed,
+        "the default policy scrolls sideways"
+    );
+    ViewportOps::wheel(&mut v, Axis::Horizontal, -9);
+
+    draw(None, |_, ctx| {
+        ctx.hscroll = junie_tui::core::scroll::HScroll::off();
+        ViewportOps::adopt_scroll_policy(&mut v, ctx);
+    });
+
+    assert_eq!(
+        ViewportOps::wheel(&mut v, Axis::Horizontal, 3),
+        junie_tui::core::event::Outcome::Ignored,
+        "the policy of the frame turned sideways scrolling off for the input too"
+    );
+}

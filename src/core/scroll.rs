@@ -441,8 +441,12 @@ impl ScrollPane {
         self
     }
 
-    pub fn begin(&mut self, app_click: TrackClick) {
+    pub fn adopt_click(&mut self, app_click: TrackClick) {
         self.v_click = self.track_click.unwrap_or(app_click);
+    }
+
+    pub fn begin(&mut self, app_click: TrackClick) {
+        self.adopt_click(app_click);
         self.v_track = Rect::ZERO;
         self.h_track = Rect::ZERO;
     }

@@ -1665,6 +1665,14 @@ impl TextViewport {
         self.edit_menu.render(self.area, buf, ctx);
     }
 
+    pub(crate) fn adopt_policy(&mut self, ctx: &RenderCtx) {
+        let h_cfg = self.horizontal.unwrap_or(ctx.hscroll);
+        if h_cfg != self.scroll.h_cfg {
+            self.scroll.h_cfg = h_cfg;
+            self.layout_size = None;
+        }
+    }
+
     fn render_view(&mut self, area: Rect, buf: &mut Buffer, ctx: &mut RenderCtx, bg: Color) {
         let area = area.intersection(*buf.area());
         if area.is_empty() {
@@ -1675,11 +1683,7 @@ impl TextViewport {
         let focused = ctx
             .interaction
             .focused_under(self.id, self.edit_menu.is_open());
-        let h_cfg = self.horizontal.unwrap_or(ctx.hscroll);
-        if h_cfg != self.scroll.h_cfg {
-            self.scroll.h_cfg = h_cfg;
-            self.layout_size = None;
-        }
+        self.adopt_policy(ctx);
         self.scroll.begin(ctx.track_click);
         self.set_area(area);
         let has_sb = self.scroll.overflows();
