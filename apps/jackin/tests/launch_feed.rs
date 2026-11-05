@@ -774,6 +774,7 @@ fn a_reply_due_on_the_handoff_is_delivered() {
     app.world.schedule(
         0,
         Msg::Refreshed {
+            ticket: app.world.refresh_ticket,
             result: Ok(Box::new(snapshot)),
         },
     );

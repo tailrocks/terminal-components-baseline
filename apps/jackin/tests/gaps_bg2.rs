@@ -53,7 +53,7 @@ impl Recording {
 
     fn seen(&self) -> Vec<Effect> {
         let mut all = self.seen.lock().expect("seen").clone();
-        all.retain(|e| *e != Effect::Refresh);
+        all.retain(|e| !matches!(e, Effect::Refresh { .. }));
         all
     }
 

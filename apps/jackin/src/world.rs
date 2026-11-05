@@ -175,6 +175,7 @@ pub enum Msg {
     },
 
     Refreshed {
+        ticket: Ticket,
         result: Result<Box<Snapshot>, String>,
     },
     Prewarmed {
@@ -368,6 +369,7 @@ pub struct World {
     pub snapshots_applied: u64,
     pub refresh_from: Option<u64>,
     pub refresh_started_secs: i64,
+    pub refresh_ticket: Ticket,
 
     /// What a program may do through a pane; every daemon the world creates
     /// starts with it.
@@ -507,6 +509,7 @@ impl World {
             snapshots_applied: 0,
             refresh_from: None,
             refresh_started_secs: 0,
+            refresh_ticket: 0,
             pane_policy: Arc::default(),
         };
         world.sync_arbiter();
@@ -553,10 +556,16 @@ impl World {
         if self.refresh_from.is_some() && now - self.refresh_started_secs < REFRESH_TIMEOUT_SECS {
             return false;
         }
+        self.request_refresh(now);
+        true
+    }
+
+    fn request_refresh(&mut self, now: i64) {
+        let ticket = self.next_ticket();
+        self.refresh_ticket = ticket;
         self.refresh_from = Some(self.snapshots_applied);
         self.refresh_started_secs = now;
-        self.perform(Effect::Refresh);
-        true
+        self.perform(Effect::Refresh { ticket });
     }
 
     pub fn now_ms(&self) -> i64 {
@@ -714,11 +723,12 @@ impl World {
                     r.load_error = Some(error.clone());
                 }
             }
-            Msg::Refreshed { result } => {
-                let current = self
-                    .refresh_from
-                    .take()
-                    .is_none_or(|from| from == self.snapshots_applied);
+            Msg::Refreshed { ticket, result } => {
+                let current = *ticket == self.refresh_ticket
+                    && self
+                        .refresh_from
+                        .take()
+                        .is_none_or(|from| from == self.snapshots_applied);
                 match result {
                     Ok(snapshot) if current => self.apply((**snapshot).clone()),
                     Err(_) if current => self.daemon_health = DaemonHealth::Stale,

@@ -22,8 +22,8 @@ use jackin_console::launch::{LaunchFeed, LaunchTarget};
 use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
-use jackin_console::world::{GlobalConfig, Msg, SaveFailure, World};
-use junie_tui::core::event::{External, Input};
+use jackin_console::world::{DaemonHealth, GlobalConfig, Msg, SaveFailure, World};
+use junie_tui::core::event::{External, Input, Outcome};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
@@ -57,13 +57,25 @@ impl TestBackend {
     /// Every effect received except the manager's periodic refresh.
     fn seen(&self) -> Vec<Effect> {
         let mut all = self.seen.lock().expect("seen").clone();
-        all.retain(|e| *e != Effect::Refresh);
+        all.retain(|e| !matches!(e, Effect::Refresh { .. }));
         all
+    }
+
+    fn refresh_tickets(&self) -> Vec<u64> {
+        let all = self.seen.lock().expect("seen");
+        all.iter()
+            .filter_map(|e| match e {
+                Effect::Refresh { ticket } => Some(*ticket),
+                _ => None,
+            })
+            .collect()
     }
 
     fn refreshes(&self) -> usize {
         let all = self.seen.lock().expect("seen");
-        all.iter().filter(|e| **e == Effect::Refresh).count()
+        all.iter()
+            .filter(|e| matches!(e, Effect::Refresh { .. }))
+            .count()
     }
 }
 
@@ -1018,9 +1030,13 @@ fn the_sim_keeps_the_last_good_values_when_the_broker_is_down() {
 /// Answers a refresh with the roster it already has: a backend that keeps
 /// no heartbeat of its own and never fails the index.
 fn unchanged_roster(effect: &Effect, world: &World) -> Option<Msg> {
-    matches!(effect, Effect::Refresh).then(|| Msg::Refreshed {
-        result: Ok(Box::new(sim::snapshot(world))),
-    })
+    match effect {
+        Effect::Refresh { ticket } => Some(Msg::Refreshed {
+            ticket: *ticket,
+            result: Ok(Box::new(sim::snapshot(world))),
+        }),
+        _ => None,
+    }
 }
 
 /// Ticks the app for `ms` of world time and returns the status line after
@@ -1706,11 +1722,12 @@ fn a_second_enter_on_a_restoring_instance_does_not_restore_it_again() {
 
 #[test]
 fn a_refresh_waits_for_the_one_in_flight() {
-    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh));
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh { .. }));
     run_for(&mut app, 30_000);
     assert_eq!(backend.refreshes(), 1, "no second refresh while one is out");
 
     app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(sim::snapshot(&app.world))),
     });
     run_for(&mut app, 6_000);
@@ -1719,7 +1736,7 @@ fn a_refresh_waits_for_the_one_in_flight() {
 
 #[test]
 fn a_refresh_that_lands_after_a_newer_snapshot_is_dropped() {
-    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh));
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh { .. }));
     run_for(&mut app, 6_000);
     assert_eq!(backend.refreshes(), 1);
 
@@ -1733,6 +1750,7 @@ fn a_refresh_that_lands_after_a_newer_snapshot_is_dropped() {
     assert!(app.world.instance("jk-c41e").is_none());
 
     app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(old)),
     });
     assert!(
@@ -1955,7 +1973,10 @@ fn a_stop_confirmed_after_the_instance_left_is_refused() {
     assert!(asked.contains("Stop instance"), "{asked}");
 
     let gone = without_instances(&app);
-    app.deliver(&Msg::Refreshed { result: Ok(gone) });
+    app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Ok(gone),
+    });
     press(&mut app, "right enter");
 
     assert_eq!(count(&backend, |e| matches!(e, Effect::Stop { .. })), 0);
@@ -1970,7 +1991,10 @@ fn a_purge_confirmed_after_the_instance_left_is_refused() {
     assert!(asked.contains("Purge instance"), "{asked}");
 
     let gone = without_instances(&app);
-    app.deliver(&Msg::Refreshed { result: Ok(gone) });
+    app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
+        result: Ok(gone),
+    });
     press(&mut app, "c 4 1 e enter");
 
     assert_eq!(count(&backend, |e| matches!(e, Effect::Purge { .. })), 0);
@@ -2067,12 +2091,14 @@ fn a_refresh_failure_that_a_newer_reply_overtook_is_not_reported() {
     app.world.refresh_from = Some(app.world.snapshots_applied);
     app.world.apply(sim::snapshot(&app.world));
     app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Err("instance index unreadable".into()),
     });
     assert!(!status(&app).contains("Refresh failed"), "{}", status(&app));
 
     app.world.refresh_from = Some(app.world.snapshots_applied);
     app.deliver(&Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Err("instance index unreadable".into()),
     });
     assert!(status(&app).contains("Refresh failed"), "{}", status(&app));
@@ -2104,7 +2130,11 @@ fn a_second_restore_reply_keeps_the_daemon_the_first_built() {
 
 #[test]
 fn a_refresh_nobody_answers_does_not_stop_the_next_one() {
-    let (mut app, backend) = held_in(Scenario::Returning, |e| *e == Effect::Refresh, |_, _| None);
+    let (mut app, backend) = held_in(
+        Scenario::Returning,
+        |e| matches!(e, Effect::Refresh { .. }),
+        |_, _| None,
+    );
     assert!(app.world.refresh());
     assert!(!app.world.refresh(), "one is out");
     assert_eq!(backend.refreshes(), 1);
@@ -2163,4 +2193,76 @@ fn a_saved_account_does_not_close_the_modal_the_operator_opened_after_leaving_th
         after.contains("Keyboard shortcuts"),
         "the reply closed a modal that is not the form:\n{after}"
     );
+}
+
+#[test]
+fn a_refresh_that_a_newer_one_overtook_is_dropped_when_it_lands() {
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh { .. }));
+    assert!(app.world.refresh());
+    app.world.clock.advance(31_000);
+    assert!(app.world.refresh(), "the first one was given up on");
+    let [first, second] = backend.refresh_tickets()[..] else {
+        panic!(
+            "two refreshes expected, got {:?}",
+            backend.refresh_tickets()
+        );
+    };
+
+    let named = |app: &App, name: &str| {
+        let mut snapshot = sim::snapshot(&app.world);
+        snapshot.workspaces[0].name = name.into();
+        Box::new(snapshot)
+    };
+    let newer = named(&app, "from-the-second-refresh");
+    app.deliver(&Msg::Refreshed {
+        ticket: second,
+        result: Ok(newer),
+    });
+    assert_eq!(app.world.workspaces[0].name, "from-the-second-refresh");
+
+    let older = named(&app, "from-the-first-refresh");
+    let late = app.deliver(&Msg::Refreshed {
+        ticket: first,
+        result: Ok(older),
+    });
+    assert_eq!(late, Outcome::Ignored);
+    assert_eq!(app.world.workspaces[0].name, "from-the-second-refresh");
+
+    app.deliver(&Msg::Refreshed {
+        ticket: first,
+        result: Err("instance index unreadable".into()),
+    });
+    assert!(!status(&app).contains("Refresh failed"), "{}", status(&app));
+    assert_eq!(app.world.daemon_health, DaemonHealth::Healthy);
+}
+
+#[test]
+fn a_late_reply_of_an_earlier_refresh_does_not_answer_the_one_in_flight() {
+    let (mut app, backend) = held(|e| matches!(e, Effect::Refresh { .. }));
+    assert!(app.world.refresh());
+    app.world.clock.advance(31_000);
+    assert!(app.world.refresh());
+    let [first, second] = backend.refresh_tickets()[..] else {
+        panic!(
+            "two refreshes expected, got {:?}",
+            backend.refresh_tickets()
+        );
+    };
+
+    app.deliver(&Msg::Refreshed {
+        ticket: first,
+        result: Ok(Box::new(sim::snapshot(&app.world))),
+    });
+    assert!(
+        app.world.refresh_from.is_some(),
+        "the second refresh is still out"
+    );
+
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.workspaces[0].name = "from-the-second-refresh".into();
+    app.deliver(&Msg::Refreshed {
+        ticket: second,
+        result: Ok(Box::new(snapshot)),
+    });
+    assert_eq!(app.world.workspaces[0].name, "from-the-second-refresh");
 }

@@ -2117,7 +2117,7 @@ impl Page<Jackin> for ManagerScreen {
                 }
             }
             Msg::LaunchCancelled { .. } => {}
-            Msg::Refreshed { result } => {
+            Msg::Refreshed { result, .. } => {
                 if let Err(error) = result {
                     cx.error(format!("Refresh failed: {error} · showing last-good rows"));
                 }

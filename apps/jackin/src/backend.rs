@@ -383,7 +383,9 @@ pub enum Effect {
     Purge {
         instance: InstanceId,
     },
-    Refresh,
+    Refresh {
+        ticket: Ticket,
+    },
     RefreshAccount {
         account: AccountId,
         source: CredentialSource,

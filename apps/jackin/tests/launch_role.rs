@@ -228,6 +228,7 @@ fn snapshot_after(app: &App, change: impl FnOnce(&mut Snapshot)) -> Msg {
     let mut snapshot = sim::snapshot(&app.world);
     change(&mut snapshot);
     Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(snapshot)),
     }
 }

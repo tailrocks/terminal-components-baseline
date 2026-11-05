@@ -234,7 +234,7 @@ impl Backend for SimBackend {
             ),
             Effect::Stop { .. } => return Some(Completion::settle(1_800)),
             Effect::Purge { .. } => return Some(Completion::settle(2_200)),
-            Effect::Refresh => return Some(Completion::settle(0)),
+            Effect::Refresh { .. } => return Some(Completion::settle(0)),
             Effect::RefreshAccount {
                 account,
                 stagger_ms,
@@ -318,7 +318,7 @@ impl Backend for SimBackend {
             Effect::SaveWorkspace { id, workspace, .. } => {
                 Some(self.settle_workspace_save(*id, workspace, world))
             }
-            Effect::Refresh => {
+            Effect::Refresh { ticket } => {
                 let result = if self.index_fails_once.swap(false, Ordering::SeqCst) {
                     Err("instance index unreadable".to_owned())
                 } else {
@@ -329,7 +329,10 @@ impl Backend for SimBackend {
                     }
                     Ok(Box::new(snapshot))
                 };
-                Some(Msg::Refreshed { result })
+                Some(Msg::Refreshed {
+                    ticket: *ticket,
+                    result,
+                })
             }
             Effect::Stop { instance } => Some(Msg::Stopped {
                 instance: instance.clone(),

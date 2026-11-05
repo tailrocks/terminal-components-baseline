@@ -186,6 +186,7 @@ fn a_periodic_refresh_that_removes_the_open_instance_leaves_its_capsule() {
     assert_eq!(app.route(), Route::Capsule);
 
     let refreshed = Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(without(&app, STOPPED))),
     };
     assert_eq!(app.deliver(&refreshed), Outcome::Changed);
@@ -207,6 +208,7 @@ fn a_periodic_refresh_that_removes_an_unopened_instance_drops_its_daemon() {
     assert!(app.world.daemons.contains_key(other));
 
     let refreshed = Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(without(&app, other))),
     };
     app.deliver(&refreshed);
@@ -256,6 +258,7 @@ fn a_periodic_refresh_that_stops_an_unopened_instance_drops_its_daemon() {
     assert!(app.world.daemons.contains_key(other));
 
     let refreshed = Msg::Refreshed {
+        ticket: app.world.refresh_ticket,
         result: Ok(Box::new(restorable(&app, other))),
     };
     app.deliver(&refreshed);
