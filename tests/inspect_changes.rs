@@ -112,22 +112,37 @@ fn the_advanced_header_names_the_key_that_switches_the_diff() {
     assert!(text.contains("review · v switches"), "{text}");
 }
 
+fn opened(returns_to_exit: bool) -> InspectChanges {
+    let mut ic = InspectChanges::new(
+        ID,
+        "Changes",
+        changes(vec![file("a.rs")], vec![]),
+        InspectMode::Compact,
+    )
+    .returns_to_exit(returns_to_exit);
+    render(&mut ic);
+    ic
+}
+
 #[test]
 fn a_dismissal_resolves_like_leaving_with_escape() {
     for (returns_to_exit, expected) in
         [(true, InspectOutcome::Back), (false, InspectOutcome::Close)]
     {
-        let mut ic = InspectChanges::new(
-            ID,
-            "Changes",
-            changes(vec![file("a.rs")], vec![]),
-            InspectMode::Compact,
-        )
-        .returns_to_exit(returns_to_exit);
-        render(&mut ic);
+        let mut dismissed = opened(returns_to_exit);
+        Layer::<Out, ()>::on_dismiss(&mut dismissed, DismissReason::OutsideClick);
 
-        Layer::<Out, ()>::on_dismiss(&mut ic, DismissReason::OutsideClick);
+        let mut escaped = opened(returns_to_exit);
+        let mut focus = Focus::default();
+        let ring = FocusRing::default();
+        let mut cx = LayerCx {
+            focus: &mut focus,
+            ring: &ring,
+            app: &(),
+        };
+        Layer::<Out, ()>::on_key(&mut escaped, &key(KeyCode::Esc), &mut cx);
 
-        assert_eq!(closed_with(&mut ic), Some(expected));
+        assert_eq!(closed_with(&mut dismissed), Some(expected));
+        assert_eq!(closed_with(&mut escaped), Some(expected));
     }
 }
