@@ -2,7 +2,7 @@
 
 use std::collections::BTreeSet;
 
-use jackin_console::backend::{Backend, Effect, OpScope, Reply};
+use jackin_console::backend::{Effect, OpScope, Reply};
 use jackin_console::fixtures::{Scenario, world_for};
 use jackin_console::sim::SimBackend;
 use jackin_console::world::World;

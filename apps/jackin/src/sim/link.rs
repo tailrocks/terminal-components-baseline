@@ -131,6 +131,7 @@ fn at(after_ms: i64, event: LinkEvent) -> Timed {
 fn attach(stream: Stream) -> Vec<Timed> {
     vec![
         at(0, LinkEvent::Attached),
+        at(0, LinkEvent::Lease(Lease::Owner)),
         at(0, LinkEvent::Output(stream.bytes())),
     ]
 }

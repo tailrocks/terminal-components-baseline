@@ -80,6 +80,7 @@ fn state_after(
     let mut pane = pane_for(request, &bench, Default::default());
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane.tick(800);
     pane.focus_changed(focused, 900);
@@ -160,6 +161,7 @@ fn a_bell_in_the_replay_marks_nothing() {
         let mut pane = pane(&bench);
         pane.sync_size(inner(80, 24));
         bench.push(0, LinkEvent::Attached);
+        bench.push(0, LinkEvent::Lease(Lease::Owner));
         pane.tick(0);
         pane.focus_changed(false, 50);
         bench.output(0, event);

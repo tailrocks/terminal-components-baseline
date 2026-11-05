@@ -70,6 +70,7 @@ pub fn list_op(op: &dyn OnePassword, scope: &OpScope) -> Result<OpListing, OpErr
                 .map(|f| OpFieldRow {
                     id: f.id.clone(),
                     label: f.label.clone(),
+                    section: f.section.clone(),
                     kind: f.kind,
                 })
                 .collect(),

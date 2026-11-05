@@ -301,6 +301,10 @@ impl Rig {
         assert_eq!(self.bench.opened(), 1, "the first tick starts the pane");
         self.bench
             .push(0, jackin_console::panes::LinkEvent::Attached);
+        self.bench.push(
+            0,
+            jackin_console::panes::LinkEvent::Lease(jackin_console::panes::Lease::Owner),
+        );
         self.advance(900);
     }
 

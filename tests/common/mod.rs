@@ -99,6 +99,10 @@ impl Host {
             .map(|(text, tone)| (text.to_owned(), tone))
     }
 
+    pub fn stop_handle(&self) -> junie_tui::shell::StopHandle {
+        self.shell.stop_handle()
+    }
+
     pub fn test_requests(&mut self, on: bool) {
         self.shell.test_requests = on;
     }

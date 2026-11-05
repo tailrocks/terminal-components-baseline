@@ -3,7 +3,7 @@ mod pane_support;
 use std::sync::Arc;
 
 use jackin_console::domain::instance::AgentState;
-use jackin_console::panes::{Daemon, LinkEvent, PaneId, PaneTiming, TerminalPane};
+use jackin_console::panes::{Daemon, Lease, LinkEvent, PaneId, PaneTiming, TerminalPane};
 use junie_tui::ui::layout::SplitDir;
 use pane_support::*;
 
@@ -38,6 +38,7 @@ fn start(daemon: &mut Daemon, bench: &Arc<Bench>, pane: PaneId, event: Option<Li
     let body = &mut daemon.pane_mut(pane).expect("pane").body;
     body.sync_size(inner(80, 24));
     bench.push(n, LinkEvent::Attached);
+    bench.push(n, LinkEvent::Lease(Lease::Owner));
     body.tick(0);
     body.tick(800);
     if let Some(event) = event {

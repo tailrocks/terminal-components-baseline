@@ -263,6 +263,7 @@ fn failed_note_and_retry() {
     assert_eq!(pane.status(), &LinkStatus::Attaching, "Enter retries");
 
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     bench.output(0, b"half");
     bench.push(
         0,
@@ -309,6 +310,7 @@ fn only_a_pane_with_a_program_takes_the_cursor() {
     pane.sync_size(inner(80, 24));
     assert!(pane.accepts_input(), "attaching: the link is up");
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane.tick(800);
     assert!(pane.accepts_input());
@@ -344,6 +346,7 @@ fn a_server_notice_loses_its_bidirectional_controls() {
     let mut pane = pane(&bench);
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     bench.push(
         0,
         LinkEvent::Notice("txt\u{202e}gpj.exe \u{2066}\u{200f}\u{61c}ok".into()),

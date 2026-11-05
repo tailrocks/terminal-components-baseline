@@ -1,3 +1,6 @@
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+
 use crate::clock::Moment;
 use crate::core::event::{Input, MouseKind};
 use crate::theme::Tone;
@@ -215,5 +218,18 @@ impl<P: Default> StatusLine<P> {
     pub fn progress_at(&mut self, job: JobKey, text: impl Into<String>, now: Moment) {
         self.observe(now);
         self.progress(job, text)
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct StopHandle(Arc<AtomicBool>);
+
+impl StopHandle {
+    pub fn stop(&self) {
+        self.0.store(true, Ordering::SeqCst);
+    }
+
+    pub fn is_stopped(&self) -> bool {
+        self.0.load(Ordering::SeqCst)
     }
 }

@@ -62,6 +62,7 @@ fn field(id: &str, label: &str, kind: FieldKind, material: Option<&str>, tail: &
     OpField {
         id: id.into(),
         label: label.into(),
+        section: None,
         kind,
         material: material.map(str::to_owned),
         tail: tail.into(),
@@ -365,15 +366,16 @@ impl SimOnePassword {
         account: &str,
         vault: &str,
         item: &str,
-        field: &str,
+        field_id: &str,
+        section: Option<&str>,
     ) -> Result<OpReference, OpError> {
         let (v, it) = self.item(account, vault, item)?;
         let f = it
             .fields
             .iter()
-            .find(|f| f.id == field || f.label == field)
+            .find(|f| f.id == field_id && f.section.as_deref() == section)
             .ok_or_else(|| OpError::MissingField {
-                field: field.to_owned(),
+                field: field_id.to_owned(),
                 item: it.title.clone(),
             })?;
         Ok(OpReference {
@@ -382,7 +384,7 @@ impl SimOnePassword {
             vault_name: v.name.clone(),
             item_id: it.id.clone(),
             item_title: it.title.clone(),
-            section: None,
+            section: f.section.clone(),
             field_id: f.id.clone(),
             field_label: f.label.clone(),
         })
@@ -515,9 +517,10 @@ impl OnePassword for SimOnePassword {
         account: &str,
         vault: &str,
         item: &str,
-        field: &str,
+        field_id: &str,
+        section: Option<&str>,
     ) -> Result<OpReference, OpError> {
-        SimOnePassword::reference(self, account, vault, item, field)
+        SimOnePassword::reference(self, account, vault, item, field_id, section)
     }
 
     fn describe(&self, reference: &OpReference) -> Result<FieldDescriptor, OpError> {

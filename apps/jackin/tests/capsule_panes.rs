@@ -14,7 +14,7 @@ use jackin_console::domain::instance::{
 };
 use jackin_console::domain::workspace::Workspace;
 use jackin_console::panes::PanePolicy;
-use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneCommand, PaneRequest};
+use jackin_console::panes::{EndKind, Lease, LinkEvent, LinkFault, PaneCommand, PaneRequest};
 use jackin_console::screens::Go;
 use jackin_console::world::{Msg, Snapshot, World};
 use pane_support::*;
@@ -36,6 +36,7 @@ fn split_shell(rig: &mut Rig) {
     rig.advance(80);
     let n = rig.bench.opened() - 1;
     rig.bench.push(n, LinkEvent::Attached);
+    rig.bench.push(n, LinkEvent::Lease(Lease::Owner));
     rig.advance(900);
 }
 
@@ -342,6 +343,7 @@ fn enter_reattaches_a_detached_pane_and_the_replay_shows_once() {
     rig.press("enter");
     assert_eq!(rig.bench.opened(), 2);
     rig.bench.push(1, LinkEvent::Attached);
+    rig.bench.push(1, LinkEvent::Lease(Lease::Owner));
     rig.bench.output(1, b"first screen");
     rig.advance(900);
     let screen = rig.screen();
@@ -541,6 +543,7 @@ fn a_tick_that_changes_one_daemon_leaves_the_snapshots_of_the_others() {
     rig.advance(80);
     assert_eq!(rig.bench.opened(), 1);
     rig.bench.push(0, LinkEvent::Attached);
+    rig.bench.push(0, LinkEvent::Lease(Lease::Owner));
     rig.advance(900);
 
     rig.app.world.instance_mut(OTHER).expect("instance").daemon = DaemonSnapshot::Unavailable;

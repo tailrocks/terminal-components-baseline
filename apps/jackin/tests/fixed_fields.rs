@@ -16,7 +16,7 @@ use jackin_console::domain::fixed_fields::*;
 use jackin_console::domain::instance::{
     DaemonSnapshot, Instance, InstanceStatus, ManifestError, RepoRef,
 };
-use jackin_console::domain::openshell;
+use jackin_console::domain::openshell::{self, env_edit_block};
 use jackin_console::domain::reason::{IssueReason, UsageReason};
 use jackin_console::domain::role::{AccountOrder, LaunchRoleRule, RoleAdmin};
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
@@ -68,10 +68,14 @@ fn expected_global() -> GlobalFixed {
     }
 }
 
-fn expected_account() -> AccountFixed {
+fn expected_account(a: &Account) -> AccountFixed {
     AccountFixed {
         enabled: true,
         origin: AccountOrigin::Registered,
+        edit_blocked: match &a.source {
+            CredentialSource::HostEnv { var, .. } => Some(env_edit_block(var)),
+            _ => None,
+        },
     }
 }
 
@@ -181,7 +185,7 @@ fn fixed_world_accounts() {
     let w = world_for(Scenario::OpenshellFixed);
     assert_eq!(w.accounts.accounts.len(), 12);
     for a in &w.accounts.accounts {
-        assert_eq!(account_fixed(a), expected_account(), "{}", a.id);
+        assert_eq!(account_fixed(a), expected_account(a), "{}", a.id);
         assert_eq!(
             a.provenance,
             vec![Provenance::ConfiguredSource],
@@ -244,7 +248,15 @@ fn fixed_world_view_is_the_openshell_constants() {
     let w = world_for(Scenario::OpenshellFixed);
     let view = world_fixed(&w);
     assert_eq!(view.workspaces, vec![expected_workspace(); 4]);
-    assert_eq!(view.accounts, vec![expected_account(); 12]);
+    assert_eq!(w.accounts.accounts.len(), 12);
+    assert_eq!(
+        view.accounts,
+        w.accounts
+            .accounts
+            .iter()
+            .map(expected_account)
+            .collect::<Vec<_>>()
+    );
     assert_eq!(view.global, expected_global());
     assert_eq!(view.roles, vec![RoleFixed { trusted: true }; w.roles.len()]);
     assert_eq!(
@@ -584,14 +596,14 @@ fn fixed_world_extractor_sees_every_account_field() {
     let mut good: Account = w.accounts.accounts[0].clone();
     good.enabled = true;
     good.origin = AccountOrigin::Registered;
-    assert_eq!(account_fixed(&good), expected_account());
+    assert_eq!(account_fixed(&good), expected_account(&good));
     let mut a = good.clone();
     a.enabled = false;
     assert_eq!(
         account_fixed(&a),
         AccountFixed {
             enabled: false,
-            ..expected_account()
+            ..expected_account(&good)
         },
         "enabled"
     );
@@ -601,14 +613,14 @@ fn fixed_world_extractor_sees_every_account_field() {
         account_fixed(&a),
         AccountFixed {
             origin: AccountOrigin::Discovered,
-            ..expected_account()
+            ..expected_account(&good)
         },
         "origin"
     );
-    let mut a = good;
+    let mut a = good.clone();
     a.display_name = "another".into();
     a.default_for_provider = !a.default_for_provider;
-    assert_eq!(account_fixed(&a), expected_account(), "Data fields");
+    assert_eq!(account_fixed(&a), expected_account(&good), "Data fields");
 }
 
 #[test]
@@ -741,9 +753,9 @@ fn fixed_world_normalizer_sets_every_fixed_account_field() {
     let mut a: Account = w.accounts.accounts[0].clone();
     a.enabled = false;
     a.origin = AccountOrigin::Discovered;
-    assert_ne!(account_fixed(&a), expected_account());
+    assert_ne!(account_fixed(&a), expected_account(&a));
     openshell::account(&mut a);
-    assert_eq!(account_fixed(&a), expected_account());
+    assert_eq!(account_fixed(&a), expected_account(&a));
 }
 
 #[test]
@@ -968,6 +980,7 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
         Account {
             enabled: true,
             origin: AccountOrigin::Registered,
+            edit_blocked: Some(env_edit_block("PROBE_KEY")),
             ..before
         }
     );

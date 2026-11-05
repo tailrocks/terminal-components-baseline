@@ -267,6 +267,7 @@ pub struct OpFlow {
     in_flight: Option<Ticket>,
     listing: Option<OpListing>,
     ids: Vec<String>,
+    sections: Vec<Option<String>>,
     pub last_error: Option<OpError>,
 
     pub concealed_only: bool,
@@ -287,6 +288,7 @@ impl OpFlow {
             in_flight: None,
             listing: None,
             ids: vec![],
+            sections: vec![],
             last_error: None,
             concealed_only: true,
         };
@@ -392,6 +394,7 @@ impl OpFlow {
         });
         self.picker.set_items(vec![]);
         self.ids.clear();
+        self.sections.clear();
         self.listing = None;
         self.in_flight = None;
         self.want = Some(self.scope());
@@ -431,7 +434,7 @@ impl OpFlow {
         self.last_error = None;
         let q = self.picker.query().to_lowercase();
         let matches = |s: &str| q.is_empty() || s.to_lowercase().contains(&q);
-        let rows: Vec<(String, Item)> = match &self.listing {
+        let rows: Vec<(String, Option<String>, Item)> = match &self.listing {
             Some(OpListing::Accounts(rows)) => rows
                 .iter()
                 .filter(|a| matches(&a.id) || matches(&a.email))
@@ -444,7 +447,7 @@ impl OpFlow {
                             crate::backend::OpAccountState::Locked => "locked",
                             crate::backend::OpAccountState::AuthorizationRequired => "authorize",
                         });
-                    (a.id.clone(), item)
+                    (a.id.clone(), None, item)
                 })
                 .collect(),
             Some(OpListing::Vaults(rows)) => rows
@@ -459,7 +462,7 @@ impl OpFlow {
                             Some(crate::backend::VaultAccess::ReadOnly) => "read-only",
                             Some(crate::backend::VaultAccess::Denied) => "no access",
                         });
-                    (v.id.clone(), item)
+                    (v.id.clone(), None, item)
                 })
                 .collect(),
             Some(OpListing::Items(rows)) => rows
@@ -472,7 +475,7 @@ impl OpFlow {
                             None => i.category.clone(),
                         })
                         .glyph(" ");
-                    (i.id.clone(), item)
+                    (i.id.clone(), None, item)
                 })
                 .collect(),
             Some(OpListing::Fields(rows)) => rows
@@ -487,7 +490,7 @@ impl OpFlow {
                             " "
                         })
                         .disabled(self.concealed_only && f.kind != FieldKind::Concealed);
-                    (f.id.clone(), item)
+                    (f.id.clone(), f.section.clone(), item)
                 })
                 .collect(),
             None => return,
@@ -495,8 +498,16 @@ impl OpFlow {
         if rows.is_empty() {
             self.picker.empty_text = "No matches".into();
         }
-        let (ids, items): (Vec<_>, Vec<_>) = rows.into_iter().unzip();
+        let mut ids = Vec::new();
+        let mut sections = Vec::new();
+        let mut items = Vec::new();
+        for (id, section, item) in rows {
+            ids.push(id);
+            sections.push(section);
+            items.push(item);
+        }
         self.ids = ids;
+        self.sections = sections;
         self.picker.set_items(items);
     }
 
@@ -533,6 +544,7 @@ impl OpFlow {
         else {
             return Outcome::Consumed;
         };
+        let section = self.sections.get(i).cloned().flatten();
         match self.step {
             OpStep::Account => {
                 self.account = Some(row.label);
@@ -553,7 +565,8 @@ impl OpFlow {
                     self.account.as_deref().unwrap_or(""),
                     &vid,
                     &iid,
-                    &row.label,
+                    &id,
+                    section.as_deref(),
                 ) {
                     Ok(r) => match op.describe(&r) {
                         Ok(_) => self.result = Some(Some(r)),

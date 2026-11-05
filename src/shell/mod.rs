@@ -21,7 +21,7 @@ pub use page::{
     Page, PageCx, PageTypes, open_context, rebuild_on_tick, replay_key, row_anchor, row_choice,
 };
 pub use router::{KeyHost, KeyRouter, ShellAction, ShellKeys};
-pub use status::{JobKey, StatusLine};
+pub use status::{JobKey, StatusLine, StopHandle};
 
 use crate::runtime::Application;
 

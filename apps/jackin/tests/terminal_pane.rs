@@ -5,7 +5,8 @@
 mod pane_support;
 
 use jackin_console::panes::{
-    LinkEvent, LinkFault, LinkStatus, PaneBody, PaneCommand, PaneKey, PanePolicy, PasteOutcome,
+    Lease, LinkEvent, LinkFault, LinkStatus, PaneBody, PaneCommand, PaneKey, PanePolicy,
+    PasteOutcome,
 };
 use junie_tui::core::hit::Axis;
 use pane_support::*;
@@ -151,6 +152,7 @@ fn reattach_builds_a_fresh_grid() {
     assert_eq!(bench.opened(), 2);
     assert!(bench.dropped(0), "the old link is dropped, not reused");
     bench.push(1, LinkEvent::Attached);
+    bench.push(1, LinkEvent::Lease(Lease::Owner));
     bench.output(1, b"hello");
     pane.tick(1_000);
     pane.tick(1_800);
@@ -322,6 +324,7 @@ fn a_pane_feeds_its_grid_no_more_output_per_tick_than_its_policy_allows() {
     );
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane.tick(800);
 
@@ -341,4 +344,30 @@ fn a_pane_feeds_its_grid_no_more_output_per_tick_than_its_policy_allows() {
     assert!(row(&pane, 2).starts_with('b'), "{:?}", row(&pane, 2));
     pane.tick(1_100);
     assert!(row(&pane, 3).contains('c'));
+}
+
+#[test]
+fn a_link_that_has_not_sent_its_lease_is_not_taken_for_the_owner() {
+    let bench = Bench::new();
+    let mut pane = pane(&bench);
+    pane.sync_size(inner(80, 24));
+    bench.push(0, LinkEvent::Attached);
+    pane.tick(0);
+    pane.tick(800);
+    assert_eq!(pane.status(), &LinkStatus::Attaching, "no lease yet");
+
+    bench.output(0, b"\x1b[5n");
+    pane.tick(900);
+    assert_eq!(
+        bench.commands(0),
+        [],
+        "no reply before the lease says owner"
+    );
+
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
+    pane.tick(1_000);
+    assert_eq!(pane.status(), &LinkStatus::Attached(Lease::Owner));
+    bench.output(0, b"\x1b[5n");
+    pane.tick(1_100);
+    assert_eq!(bench.commands(0), [PaneCommand::Reply(b"\x1b[0n".to_vec())]);
 }

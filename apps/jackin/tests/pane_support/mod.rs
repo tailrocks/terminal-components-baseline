@@ -10,8 +10,8 @@ use std::sync::{Arc, Mutex};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::vocabulary::{PaneWords, Vocabulary};
 use jackin_console::panes::{
-    LinkEvent, LinkFault, LinkSource, PaneBody, PaneCommand, PaneLink, PanePolicy, PaneRequest,
-    PaneSize, PaneTiming, Sent, TerminalPane,
+    Lease, LinkEvent, LinkFault, LinkSource, PaneBody, PaneCommand, PaneLink, PanePolicy,
+    PaneRequest, PaneSize, PaneTiming, Sent, TerminalPane,
 };
 use junie_tui::core::event::Key;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
@@ -216,6 +216,7 @@ pub fn live(bench: &Arc<Bench>) -> TerminalPane {
     let mut pane = pane(bench);
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane.tick(800);
     pane

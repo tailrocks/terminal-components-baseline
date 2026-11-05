@@ -18,7 +18,7 @@ use crate::widgets::hintbar::HintKeys;
 use crate::widgets::keyhint::Hint;
 use crate::widgets::too_small::TooSmall;
 
-use super::{Clipboard, Copied, Cx, Request, StatusLine};
+use super::{Clipboard, Copied, Cx, Request, StatusLine, StopHandle};
 use crate::clock::{Moment, TestRequest};
 use crate::theme::Strings;
 use crate::ui::context::ContextConfig;
@@ -69,6 +69,7 @@ pub struct Shell<P = ()> {
     pub context: ContextConfig,
 
     clipboard: Clipboard,
+    stop: StopHandle,
     footer: Option<FooterDrawn>,
     page: Option<PageKey>,
 }
@@ -111,9 +112,14 @@ impl<P> Shell<P> {
             footer_keys: HintKeys::default(),
             context: ContextConfig::DEFAULT,
             clipboard: Clipboard::new(),
+            stop: StopHandle::default(),
             footer: None,
             page: None,
         }
+    }
+
+    pub fn stop_handle(&self) -> StopHandle {
+        self.stop.clone()
     }
 
     pub fn clipboard(&self) -> &Clipboard {
@@ -402,7 +408,7 @@ impl<A: App> Application for A {
         render(self, frame)
     }
     fn should_quit(&self) -> bool {
-        self.shell().quit
+        self.shell().quit || self.shell().stop.is_stopped()
     }
     fn tick_interval(&self) -> Duration {
         App::tick_interval(self)

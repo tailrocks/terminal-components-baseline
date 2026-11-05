@@ -11,7 +11,7 @@
 //! A field wrong in both the table below and the expected literal of a test
 //! passes every check. Only a review of the table closes that hole.
 
-use super::account::{Account, AccountForm, AccountOrigin, AccountRegistry};
+use super::account::{Account, AccountForm, AccountOrigin, AccountRegistry, EditBlocked};
 use super::agent::{Agent, AgentBlocked, AuthMode};
 use super::fixed::Fixed;
 use super::instance::Instance;
@@ -62,6 +62,7 @@ pub struct GlobalFixed {
 pub struct AccountFixed {
     pub enabled: bool,
     pub origin: AccountOrigin,
+    pub edit_blocked: Option<EditBlocked>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -219,11 +220,12 @@ pub fn account_fixed(a: &Account) -> AccountFixed {
         endpoint: _,
         usage: _,
         launch_blocked: _,
-        edit_blocked: _,
+        edit_blocked,
     } = a;
     AccountFixed {
         enabled: *enabled,
         origin: *origin,
+        edit_blocked: edit_blocked.clone(),
     }
 }
 

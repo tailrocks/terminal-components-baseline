@@ -968,9 +968,11 @@ impl OnePassword for Cached {
         account: &str,
         vault: &str,
         item: &str,
-        field: &str,
+        field_id: &str,
+        section: Option<&str>,
     ) -> Result<OpReference, OpError> {
-        self.inner.reference(account, vault, item, field)
+        self.inner
+            .reference(account, vault, item, field_id, section)
     }
 
     fn describe(&self, reference: &OpReference) -> Result<FieldDescriptor, OpError> {
@@ -1036,6 +1038,7 @@ fn duplicated_titles_account() -> OpAccount {
     let field = OpField {
         id: "f1".into(),
         label: "key".into(),
+        section: None,
         kind: jackin_console::backend::FieldKind::Concealed,
         material: Some("anthropic:valid".into()),
         tail: "1234".into(),
@@ -1116,12 +1119,92 @@ fn the_picker_keeps_the_id_of_the_row_chosen_when_titles_repeat() {
         OpListing::Fields(vec![jackin_console::backend::OpFieldRow {
             id: "f1".into(),
             label: "key".into(),
+            section: None,
             kind: jackin_console::backend::FieldKind::Concealed,
         }]),
     );
     press(&mut app, "enter");
     let shown = screen(&mut app);
     assert!(shown.contains("op://v2/i2/f1"), "{shown}");
+}
+
+fn two_sections_account() -> OpAccount {
+    let field = |section: &str| OpField {
+        id: "k".into(),
+        label: "key".into(),
+        section: Some(section.into()),
+        kind: jackin_console::backend::FieldKind::Concealed,
+        material: Some("anthropic:valid".into()),
+        tail: "1234".into(),
+    };
+    OpAccount {
+        id: "sections.1password.com".into(),
+        email: "sections@example.test".into(),
+        state: OpAccountState::Available,
+        vaults: vec![OpVault {
+            id: "v1".into(),
+            name: "Shared".into(),
+            access: VaultAccess::ReadWrite,
+            items: vec![OpItem {
+                id: "i1".into(),
+                title: "api".into(),
+                category: "API credential",
+                fields: vec![field("Production"), field("Staging")],
+            }],
+        }],
+    }
+}
+
+#[test]
+fn the_picker_names_the_section_of_the_field_chosen_when_labels_repeat() {
+    let mut world = world_for(Scenario::AccountsMixed);
+    let mut op = SimOnePassword::fixture(0);
+    op.accounts = vec![two_sections_account()];
+    world.op = Box::new(op);
+    let (mut app, backend) = held(world, Scenario::AccountsMixed);
+
+    open_picker(&mut app);
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Vaults(vec![OpVaultRow {
+            id: "v1".into(),
+            name: "Shared".into(),
+            items: 1,
+            access: None,
+        }]),
+    );
+    press(&mut app, "enter");
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Items(vec![OpItemRow {
+            id: "i1".into(),
+            title: "api".into(),
+            category: "API credential".into(),
+            fields: Some(2),
+        }]),
+    );
+    press(&mut app, "enter");
+    deliver(
+        &mut app,
+        &backend,
+        OpListing::Fields(
+            ["Production", "Staging"]
+                .map(|section| jackin_console::backend::OpFieldRow {
+                    id: "k".into(),
+                    label: "key".into(),
+                    section: Some(section.into()),
+                    kind: jackin_console::backend::FieldKind::Concealed,
+                })
+                .to_vec(),
+        ),
+    );
+    press(&mut app, "down");
+    press(&mut app, "enter");
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("op://v1/i1/Staging/k"), "{shown}");
 }
 
 // Gap 5: a change set says how many files it left out and which it did not

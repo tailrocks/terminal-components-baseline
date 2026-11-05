@@ -118,3 +118,21 @@ fn test_requests_are_plain_pastes_unless_the_shell_accepts_them() {
         Vec::<String>::new()
     );
 }
+
+#[test]
+fn a_stop_handle_ends_the_loop_from_another_thread() {
+    use junie_tui::runtime::Application;
+
+    let host = Host::new(Act::Nothing);
+    assert!(!host.should_quit());
+
+    let stop = host.stop_handle();
+    std::thread::spawn(move || stop.stop())
+        .join()
+        .expect("the stopping thread");
+
+    assert!(
+        host.should_quit(),
+        "the loop reads should_quit after a stop"
+    );
+}

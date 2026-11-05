@@ -112,7 +112,7 @@ pub struct TerminalPane {
     source: Arc<dyn LinkSource>,
     link: Option<Box<dyn PaneLink>>,
     status: LinkStatus,
-    lease: Lease,
+    lease: Option<Lease>,
     view: TerminalViewport,
     area: Rect,
     wanted: Option<PaneSize>,
@@ -151,7 +151,7 @@ impl TerminalPane {
             source,
             link: None,
             status: LinkStatus::Pending,
-            lease: Lease::Owner,
+            lease: None,
             view,
             area: Rect::ZERO,
             wanted: None,
@@ -205,7 +205,7 @@ impl TerminalPane {
     }
 
     fn viewing(&self) -> bool {
-        self.lease == Lease::ReadOnly
+        self.lease == Some(Lease::ReadOnly)
     }
 
     fn say(&mut self, say: Say) {
@@ -253,7 +253,7 @@ impl TerminalPane {
         self.link = None;
         self.fresh_grid(size);
         self.attached_once = false;
-        self.lease = Lease::Owner;
+        self.lease = None;
         self.replay = Replay::Idle;
         self.last_gesture_ms = None;
         let opened = match attempt {
@@ -297,7 +297,9 @@ impl TerminalPane {
             self.handle(event, now_ms);
         }
         if self.link.is_some() && self.replay.tick(now_ms, &self.timing) {
-            self.status = LinkStatus::Attached(self.lease);
+            if let Some(lease) = self.lease {
+                self.status = LinkStatus::Attached(lease);
+            }
             changed = true;
         }
         changed
@@ -310,11 +312,12 @@ impl TerminalPane {
                 self.replay.open(now_ms);
             }
             LinkEvent::Lease(lease) => {
-                if lease != self.lease {
+                if self.lease != Some(lease) {
                     self.last_gesture_ms = None;
                 }
-                self.lease = lease;
-                if matches!(self.status, LinkStatus::Attached(_)) {
+                self.lease = Some(lease);
+                let settled = self.replay == Replay::Closed && self.status == LinkStatus::Attaching;
+                if settled || matches!(self.status, LinkStatus::Attached(_)) {
                     self.status = LinkStatus::Attached(lease);
                 }
             }
@@ -368,7 +371,8 @@ impl TerminalPane {
     fn term_event(&mut self, event: TermEvent, now_ms: i64) {
         match event {
             TermEvent::Reply(bytes) => {
-                if !self.attached_once || self.replay.is_open() || self.viewing() {
+                if !self.attached_once || self.replay.is_open() || self.lease != Some(Lease::Owner)
+                {
                     return;
                 }
                 if self.send(PaneCommand::Reply(bytes)) == Sent::Full {
@@ -396,7 +400,7 @@ impl TerminalPane {
     fn clipboard(&mut self, payload: &str, now_ms: i64) {
         let ctx = ClipContext {
             agent: self.agent(),
-            owner: self.lease == Lease::Owner,
+            owner: self.lease == Some(Lease::Owner),
             focused: self.focused,
             last_gesture_ms: self.last_gesture_ms,
             now_ms,

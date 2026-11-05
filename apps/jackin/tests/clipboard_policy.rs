@@ -48,6 +48,7 @@ fn rig(request: jackin_console::panes::PaneRequest, policy: PanePolicy) -> Rig {
     let mut pane = pane_for(request, &bench, policy);
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane.tick(800);
     pane.focus_changed(true, 800);
@@ -140,6 +141,7 @@ fn rig_without_gesture() -> Rig {
     let mut pane = pane(&bench);
     pane.sync_size(inner(80, 24));
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     pane.tick(800);
     pane.focus_changed(true, 800);
@@ -290,6 +292,7 @@ fn replaying() -> Rig {
     pane.sync_size(inner(80, 24));
     pane.focus_changed(true, 0);
     bench.push(0, LinkEvent::Attached);
+    bench.push(0, LinkEvent::Lease(Lease::Owner));
     pane.tick(0);
     Rig { bench, pane }
 }
@@ -320,6 +323,7 @@ fn reattached() -> Rig {
     rig.pane.key(&key("enter"), 1_500);
     assert_eq!(rig.bench.opened(), 2, "Enter reattaches");
     rig.bench.push(1, LinkEvent::Attached);
+    rig.bench.push(1, LinkEvent::Lease(Lease::Owner));
     rig.pane.tick(1_600);
     rig
 }

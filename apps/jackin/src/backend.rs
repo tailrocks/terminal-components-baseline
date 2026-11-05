@@ -188,6 +188,7 @@ impl FieldKind {
 pub struct OpField {
     pub id: String,
     pub label: String,
+    pub section: Option<String>,
     pub kind: FieldKind,
 
     pub material: Option<String>,
@@ -266,6 +267,7 @@ pub struct OpItemRow {
 pub struct OpFieldRow {
     pub id: String,
     pub label: String,
+    pub section: Option<String>,
     pub kind: FieldKind,
 }
 
@@ -332,7 +334,8 @@ pub trait OnePassword: std::fmt::Debug {
         account: &str,
         vault: &str,
         item: &str,
-        field: &str,
+        field_id: &str,
+        section: Option<&str>,
     ) -> Result<OpReference, OpError>;
 
     fn describe(&self, reference: &OpReference) -> Result<FieldDescriptor, OpError>;
