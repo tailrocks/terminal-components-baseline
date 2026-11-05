@@ -1032,43 +1032,24 @@ impl FileBrowser {
         self.list.id
     }
 
-    pub fn hints(&self, focused: Option<WidgetId>) -> Vec<Hint> {
+    pub fn hints(&self, _focused: Option<WidgetId>) -> Vec<Hint> {
         let mut v = Vec::new();
-        let boxes = [self.checkbox.as_ref(), self.hidden_box.as_ref()];
-        let url_button = self.url.as_ref().map(|_| &self.url_button);
-        let buttons = [Some(&self.cancel), Some(&self.choose), url_button];
-        if let Some(c) = boxes.into_iter().flatten().find(|c| Some(c.id) == focused) {
-            if !c.disabled && !c.control.is_fixed() {
-                v.push(hint("Space", "Toggle"));
+        let mut push = |cmd: FileCmd, action: &str| {
+            if let Some(k) = hint_key(&self.keys, cmd) {
+                v.push(Hint::new(k, action.to_owned()));
             }
-        } else if focused == Some(self.path.id) {
-            v.extend(self.path.hints());
-        } else if let Some(f) = self.filter.as_ref().filter(|f| Some(f.id) == focused) {
-            v.extend(f.hints());
-        } else if let Some(b) = buttons
-            .into_iter()
-            .flatten()
-            .find(|b| Some(b.id) == focused)
-        {
-            v.push(b.hint());
-        } else {
-            let mut push = |cmd: FileCmd, action: &str| {
-                if let Some(k) = hint_key(&self.keys, cmd) {
-                    v.push(Hint::new(k, action.to_owned()));
-                }
-            };
-            push(FileCmd::Open, "Open");
-            push(FileCmd::Choose, "Choose");
-            if self.filter.is_some() {
-                push(FileCmd::Filter, "Filter");
-            }
-            if self.hidden_box.is_some() {
-                push(FileCmd::ToggleHidden, "Hidden files");
-            }
-            if let Some(u) = &self.url {
-                let action = u.hint.clone();
-                push(FileCmd::Url, &action);
-            }
+        };
+        push(FileCmd::Open, "Open");
+        push(FileCmd::Choose, "Choose");
+        if self.filter.is_some() {
+            push(FileCmd::Filter, "Filter");
+        }
+        if self.hidden_box.is_some() {
+            push(FileCmd::ToggleHidden, "Hidden files");
+        }
+        if let Some(u) = &self.url {
+            let action = u.hint.clone();
+            push(FileCmd::Url, &action);
         }
         v.push(hint("Tab", "Next"));
         if self.dismiss.escape {

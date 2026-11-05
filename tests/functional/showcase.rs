@@ -1753,23 +1753,23 @@ fn showcase_fixeddialogs_form_does_not_offer_its_fixed_action() {
 }
 
 #[test]
-fn showcase_fixeddialogs_browser_box_refuses_and_offers_no_toggle() {
+fn showcase_fixeddialogs_browser_box_refuses_and_shows_its_reason() {
     let app = fixed_dialogs("showcase-fixeddialogs-browser", &[]);
     app.click_text("File browser");
     let open = app.wait_text("Read-only");
-    assert!(status_row(&open).contains("Space Choose"));
+    assert!(text(&open).contains("[ ] Read-only"));
+    assert!(text(&open).contains("Always read-only · the host decides"));
     app.click_text("Read-only");
     let on_box = app.wait_screen("the fixed box takes focus", |s| {
         row_with(s, "[ ] Read-only").contains('▎')
     });
-    assert!(text(&on_box).contains("[ ] Read-only"));
     assert!(
-        !status_row(&on_box).contains("Space") && !status_row(&on_box).contains("Open"),
-        "the list keys are not offered on the box: {}",
-        status_row(&on_box)
+        text(&on_box).contains("[ ] Read-only"),
+        "a click on a fixed box leaves it unchecked"
     );
-    app.settle();
-    app.visual("functional/showcase_fixeddialogs_browser_box");
+    app.key("space");
+    let refused = app.settle();
+    assert!(text(&refused).contains("[ ] Read-only"));
     app.key("escape");
     app.wait_absent("Read-only");
     app.finish();

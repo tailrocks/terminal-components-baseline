@@ -642,40 +642,6 @@ fn a_fixed_checkbox_in_the_file_browser_shows_its_reason_and_refuses() {
     }
 }
 
-#[test]
-fn the_file_browser_footer_follows_the_focused_box() {
-    let actions = |browser: &FileBrowser, focus: Option<WidgetId>| {
-        browser
-            .hints(focus)
-            .into_iter()
-            .map(|h| h.action.to_string())
-            .collect::<Vec<_>>()
-    };
-
-    let live = browser(false);
-    let list = live.list.id;
-    let box_id = live.checkbox.as_ref().expect("a checkbox").id;
-    assert!(actions(&live, Some(list)).contains(&"Choose".to_owned()));
-    assert_eq!(
-        actions(&live, Some(live.choose.id)),
-        ["Choose", "Next", "Cancel"],
-        "a focused button offers its own label, not the list keys"
-    );
-    assert_eq!(
-        actions(&live, Some(box_id)),
-        ["Toggle", "Next", "Cancel"],
-        "on a live box Space toggles it, so the list's Choose is not offered"
-    );
-
-    let fixed = browser(true);
-    assert_eq!(
-        actions(&fixed, Some(box_id)),
-        ["Next", "Cancel"],
-        "a fixed box offers no toggle"
-    );
-    assert!(actions(&fixed, Some(list)).contains(&"Choose".to_owned()));
-}
-
 fn choice(disabled: bool) -> ChoiceDialog {
     let mut dialog = ChoiceDialog::new(
         WidgetId::of("t.choice"),

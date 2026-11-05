@@ -14,8 +14,8 @@ Cost: both open only with `--page listdetail` or `--page fixeddialogs`, and the
 `/` filter does not find them.
 
 New baselines (first approvals, no existing baseline moved):
-`showcase_page_listdetail`, `showcase_listdetail_drawer`,
-`showcase_page_fixeddialogs` and `showcase_fixeddialogs_browser_box`.
+`showcase_page_listdetail`, `showcase_listdetail_drawer` and
+`showcase_page_fixeddialogs`.
 
 Next step: at the next intended showcase re-baseline, move the five hidden
 entries to `NAV_ENTRIES` and accept every showcase baseline that shows the
@@ -46,14 +46,21 @@ them. The States tab of both pages is empty, because neither widget has a
 - The terminal grid maps strikethrough to `CROSSED_OUT`. Conceal and blink are
   not mapped: a program must not be able to hide output from the operator, and
   blink is a motion request that `Motion` governs.
-- `FileBrowser::hints` follows the focused control: a live box offers
-  `Space Toggle`, a fixed or disabled box nothing for Space, a button its own
-  label, a text field its edit hints, and the list the list keys.
 - A clock-step request no longer clears an error or sticky status; the step is
   taken out of `StatusLine::on_input` as the fence is. This closes the open
   note in [2026-11-03-fixed-controls-showcase-page.md](2026-11-03-fixed-controls-showcase-page.md).
 
 ## Still open
+
+- BLOCKED: visual. `FileBrowser::hints` ignores the focus it is given, so the
+  footer offers `Enter Open  Space Choose` while the fixed Read-only box or a
+  text field has focus. A fix (a box offers `Space Toggle` or nothing, a button
+  its label, a field its edit hints) was written and passed, and it changed
+  row 39 of two approved jackin baselines
+  (`jackin_fixed_browser_read_only`, `jackin_fixed_browser_url`). It was
+  reverted. Land it together with a deliberate re-approval of those two
+  baselines, then add the hints test to `tests/fixed.rs` and a footer assertion
+  to `showcase_fixeddialogs_browser_box_refuses_and_shows_its_reason`.
 
 - Pointer timers (double-click interval, press flash, hover dwell) run on wall
   time. Freezing them broke 15 journeys (docs/P9.3-red-green.md, "What was
