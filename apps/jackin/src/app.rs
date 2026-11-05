@@ -173,6 +173,22 @@ pub struct App {
     exit_after_status: Option<i64>,
     external: Option<ExternalReceiver>,
     held: Vec<Msg>,
+    surface_kinds: SurfaceKinds,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct SurfaceKinds {
+    roles: bool,
+    doctor: bool,
+}
+
+impl SurfaceKinds {
+    fn of(world: &World) -> Self {
+        Self {
+            roles: world.surfaces.roles.is_some(),
+            doctor: world.surfaces.doctor.is_some(),
+        }
+    }
 }
 
 impl App {
@@ -198,6 +214,7 @@ impl App {
         };
         shell.clipboard.install();
         let router = crate::pages::router(&world);
+        let surface_kinds = SurfaceKinds::of(&world);
         let keys = shell_keys(&world);
         let host_menus = Self::build_host_menu(Route::Manager, &world);
         let mut app = Self {
@@ -219,6 +236,7 @@ impl App {
             exit_after_status: None,
             external: None,
             held: Vec::new(),
+            surface_kinds,
         };
         app.start(entry, frame);
         app
@@ -238,32 +256,65 @@ impl App {
             Some(Remote::Msg(msg)) => self.dispatch_msg(msg),
             Some(Remote::Reloaded(snapshot)) => {
                 self.world.apply((**snapshot).clone());
-                self.drop_orphaned_daemons();
+                self.after_snapshot();
                 Outcome::Changed
             }
             None => Outcome::Ignored,
         }
     }
 
+    fn after_snapshot(&mut self) {
+        self.reconcile_surfaces();
+        self.drop_orphaned_daemons();
+    }
+
+    fn reconcile_surfaces(&mut self) {
+        let wanted = SurfaceKinds::of(&self.world);
+        if wanted == self.surface_kinds {
+            return;
+        }
+        self.surface_kinds = wanted;
+        self.keys = shell_keys(&self.world);
+        let active = self.router.active();
+        let has_roles_tab = self.router.tab_count() > TAB_ROLES;
+        match (has_roles_tab, wanted.roles) {
+            (false, true) => {
+                self.router.open_tab(Page::Roles(Box::default()));
+                self.router.select(active);
+            }
+            (true, false) => {
+                if active == TAB_ROLES {
+                    self.router.select(TAB_MANAGER);
+                }
+                self.router.close_tab(TAB_ROLES);
+            }
+            _ => {}
+        }
+        self.host_menus = Self::build_host_menu(self.host_menu_route, &self.world);
+        self.host_menu = Self::host_bar(&self.host_menus);
+    }
+
     fn drop_orphaned_daemons(&mut self) {
-        let orphans: Vec<InstanceId> = self
+        let gone: Vec<(InstanceId, &'static str)> = self
             .world
             .daemons
             .keys()
-            .filter(|id| self.world.instance(id).is_none())
-            .cloned()
+            .filter_map(|id| match self.world.instance(id) {
+                None => Some((id.clone(), "was removed elsewhere")),
+                Some(i) if i.status != InstanceStatus::Running => {
+                    Some((id.clone(), "stopped elsewhere"))
+                }
+                Some(_) => None,
+            })
             .collect();
         let open = self.open_capsule();
-        for instance in orphans {
+        for (instance, why) in gone {
             if open.as_ref() == Some(&instance) {
                 self.go(Go::InstanceEnded {
                     instance: instance.clone(),
                     purge: false,
                 });
-                self.set_status(
-                    &format!("Instance {instance} was removed elsewhere"),
-                    Tone::Secondary,
-                );
+                self.set_status(&format!("Instance {instance} {why}"), Tone::Secondary);
             } else {
                 self.world.daemons.remove(&instance);
             }
@@ -554,7 +605,7 @@ impl App {
         let applied = self.world.snapshots_applied;
         let out = self.dispatch_reply(m);
         if self.world.snapshots_applied != applied {
-            self.drop_orphaned_daemons();
+            self.after_snapshot();
         }
         out
     }
@@ -1758,6 +1809,22 @@ impl App {
             .flatten()
     }
 
+    fn attachable(&self, instance: &str) -> bool {
+        self.world
+            .instance(instance)
+            .is_some_and(|i| i.status == InstanceStatus::Running)
+    }
+
+    fn refuse_attach(&mut self, instance: &str) {
+        self.set_status(
+            &format!(
+                "Cannot attach: {} is not running",
+                instance.trim_start_matches(ID_PREFIX)
+            ),
+            Tone::Error,
+        );
+    }
+
     pub fn go(&mut self, g: Go) {
         let from = self.open_capsule();
         self.navigate(g);
@@ -1840,18 +1907,8 @@ impl App {
                 self.open_page(page);
             }
             Go::Attach { instance, pane } => {
-                if self
-                    .world
-                    .instance(&instance)
-                    .is_none_or(|i| i.status != InstanceStatus::Running)
-                {
-                    self.set_status(
-                        &format!(
-                            "Cannot attach: {} is not running",
-                            instance.trim_start_matches(ID_PREFIX)
-                        ),
-                        Tone::Error,
-                    );
+                if !self.attachable(&instance) {
+                    self.refuse_attach(&instance);
                     return;
                 }
                 self.world.open_first_session(&instance);
@@ -1890,6 +1947,11 @@ impl App {
                 agent,
                 account,
             } => {
+                if !self.attachable(&instance) {
+                    self.refuse_attach(&instance);
+                    return;
+                }
+                self.world.open_first_session(&instance);
                 let backend = Arc::clone(&self.world.backend);
                 let request = crate::panes::PaneRequest::new(&instance, agent, account.clone());
                 if let Some(d) = self.world.daemons.get_mut(&instance) {
@@ -1940,7 +2002,11 @@ impl App {
             Go::InstanceEnded { instance, purge } => {
                 let dirty = self.world.instance(&instance).is_some_and(|i| i.is_dirty());
                 let now_secs = self.world.clock.now_secs();
-                if let Some(i) = self.world.instance_mut(&instance) {
+                if let Some(i) = self
+                    .world
+                    .instance_mut(&instance)
+                    .filter(|i| i.status.is_live())
+                {
                     i.status = if purge {
                         InstanceStatus::Purged
                     } else if dirty {

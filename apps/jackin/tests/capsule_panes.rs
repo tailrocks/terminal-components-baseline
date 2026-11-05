@@ -8,8 +8,9 @@ mod product_support;
 
 use capsule_support::*;
 use jackin_console::domain::agent::Agent;
-use jackin_console::domain::instance::{AgentState, DaemonSnapshot};
+use jackin_console::domain::instance::{AgentState, DaemonSnapshot, InstanceStatus};
 use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneCommand, PaneRequest};
+use jackin_console::screens::Go;
 use pane_support::*;
 
 const FOCUS_OUT: &[u8] = b"\x1b[O";
@@ -422,4 +423,29 @@ fn the_manager_shows_the_state_a_pane_reached_while_detached() {
     rig.bench.push(0, LinkEvent::Exited(Some(0)));
     rig.advance(400);
     assert_eq!(state(&rig), AgentState::Done);
+}
+
+#[test]
+fn a_new_session_in_a_stopped_instance_is_refused() {
+    let mut rig = Rig::new();
+    rig.attach();
+    let panes = rig.daemon().panes.len();
+    rig.app
+        .world
+        .instance_mut(INSTANCE)
+        .expect("instance")
+        .status = InstanceStatus::RestoreAvailable;
+
+    rig.app.go(Go::NewSession {
+        instance: INSTANCE.into(),
+        agent: Some(Agent::Codex),
+        account: None,
+    });
+
+    assert_eq!(
+        rig.daemon().panes.len(),
+        panes,
+        "no pane for a stopped instance"
+    );
+    assert!(rig.status().contains("Cannot attach"), "{}", rig.status());
 }

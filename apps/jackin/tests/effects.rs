@@ -2082,9 +2082,15 @@ fn a_refresh_failure_that_a_newer_reply_overtook_is_not_reported() {
 fn a_second_restore_reply_keeps_the_daemon_the_first_built() {
     let (mut app, _) = backed(Scenario::Returning, restore);
     let id = "jk-c41e";
-    let reply = |app: &App| Msg::Restored {
-        instance: id.into(),
-        result: Ok(Box::new(sim::snapshot(&app.world))),
+    let reply = |app: &App| {
+        let mut snapshot = sim::snapshot(&app.world);
+        for i in snapshot.instances.iter_mut().filter(|i| i.id == id) {
+            i.status = InstanceStatus::Running;
+        }
+        Msg::Restored {
+            instance: id.into(),
+            result: Ok(Box::new(snapshot)),
+        }
     };
     let first = reply(&app);
     app.deliver(&first);

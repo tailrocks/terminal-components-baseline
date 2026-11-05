@@ -368,10 +368,7 @@ impl Daemon {
         self.panes.retain(|p| p.id != id);
         let tab = &mut self.tabs[ti];
         if tab.leaves().len() <= 1 {
-            self.tabs.remove(ti);
-            if self.active >= self.tabs.len() {
-                self.active = self.tabs.len().saturating_sub(1);
-            }
+            self.remove_tab(ti);
             return true;
         }
         tab.root.remove_leaf(id);
@@ -390,8 +387,14 @@ impl Daemon {
         }
         let leaves = self.tabs[i].leaves();
         self.panes.retain(|p| !leaves.contains(&p.id));
+        self.remove_tab(i);
+    }
+
+    fn remove_tab(&mut self, i: usize) {
         self.tabs.remove(i);
-        if self.active >= self.tabs.len() {
+        if i < self.active {
+            self.active -= 1;
+        } else if self.active >= self.tabs.len() {
             self.active = self.tabs.len().saturating_sub(1);
         }
     }
@@ -433,10 +436,20 @@ impl Daemon {
     }
 
     pub fn tab_state(&self, tab: &Tab) -> AgentState {
-        tab.leaves()
+        let states: Vec<AgentState> = tab
+            .leaves()
             .iter()
             .filter_map(|id| self.pane(*id).map(|p| p.body.state()))
+            .collect();
+        if states.contains(&AgentState::Blocked) {
+            return AgentState::Blocked;
+        }
+        states
+            .iter()
+            .copied()
+            .filter(|s| *s != AgentState::Done)
             .max_by_key(|s| s.rank())
+            .or(states.first().copied())
             .unwrap_or(AgentState::Unknown)
     }
 
