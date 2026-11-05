@@ -37,9 +37,9 @@ them. The States tab of both pages is empty, because neither widget has a
   nothing. No host in this repository calls it: jackin sets no policy, so
   nothing differs there until it does.
 - Dropping a `Shell` clears the thread-local clipboard hook it installed. The
-  `clipboard` field is private: `Shell::set_clipboard` lets go of the hook of
-  the clipboard it replaces and installs the new one, and `Shell::clipboard`
-  reads the one in use.
+  `clipboard` field is private: `Shell::set_clipboard` installs the new
+  clipboard (the hook slot holds one hook, so installing replaces the old
+  one), and `Shell::clipboard` reads the one in use.
 - `TerminalState::scrolled_off` counts the rows that leave the top of the main
   screen even with a scrollback limit of 0, so a selection follows its text
   (`tests/terminal.rs` pinned `0` for that case, and now pins the count).
@@ -71,3 +71,50 @@ them. The States tab of both pages is empty, because neither widget has a
 - Tuiscotti candidates are keyed by a digest that includes a capture time, so
   two runs of one journey give two digests for identical cells. Approve a
   candidate by the digest of the run that was reviewed.
+
+## Rows that stay with the owner or with the jackin repository
+
+Rows from the app and jackin backlogs that this repository cannot close in a
+way that keeps every approved baseline. BLOCKED: visual rows name the baseline
+that the change would move. JACKIN rows need a change in the jackin repository.
+
+- BLOCKED: visual. B4c: the footer of the file browser follows the focus. Same
+  change as the first open item above; moves `jackin_fixed_browser_read_only`
+  and `jackin_fixed_browser_url` (row 39).
+- BLOCKED: visual. B8b UX L1: the attaching hint text moves
+  `jackin_pane_attaching`.
+- BLOCKED: visual. B8b UX L2: the viewing note wording, the hidden cursor and
+  the missing status move `jackin_pane_viewing`.
+- BLOCKED: visual. B8b UX L3: the ink of the detached note moves
+  `jackin_pane_detached`.
+- BLOCKED: visual. B8b UX L4 and L5: the body text of the close-pane dialog
+  (and, for the agent pane, a box that grows by a row) moves
+  `jackin_close_pane_codex` and `jackin_close_pane_shell`.
+- BLOCKED: visual. B8b UX L6: the label `Program title` moves
+  `jackin_pane_info_title`.
+- BLOCKED: visual. PR 21: the focus bar plus the gutter moves
+  `jackin_role_binding`.
+- BLOCKED: visual. The launch dialog takes the focus and is easy to miss. Any
+  visible cue (an activity text behind the backdrop, a stage state) moves
+  `jackin_launch_env_prompt`.
+- BLOCKED: visual. The "no typed keys" note is a form field under the source
+  radio. Hiding or rewording it moves `jackin_fixed_account_form`,
+  `jackin_fixed_account_form_env`, `jackin_fixed_account_form_1password`,
+  `jackin_fixed_account_form_pending`, `jackin_fixed_account_form_refused` and
+  `jackin_fixed_account_edit_env`.
+- BLOCKED: visual. The tab strip of the tablepro workbench syncs its busy
+  spinner only when something rebuilds the strip, so a tab whose query has
+  finished keeps its spinner until then. The approved `tablepro_history`
+  baseline shows that stale spinner on `Query 1`; syncing the strip after the
+  query finishes removes it and moves that baseline. The functional test
+  now opens the history in the same input batch that runs the query, so the
+  baseline no longer depends on how fast the host is.
+- JACKIN. `PaneCommand::Detach` is built only by the jackin link. Sending it
+  when the Capsule is left changes what an operator who returns sees (the panes
+  would need a reattach), which is a design call for the jackin side.
+- JACKIN. The stop hook of the console shell: `Shell::stop_handle` and
+  `StopHandle` exist here, and the token in `ConsoleDeps` and its watcher are
+  in `commands/console.rs` and `jackin-tui/src/console.rs` of the jackin
+  repository.
+- JACKIN. `LaunchEvent::Ready` needs an `Instance`. The fallback needs
+  `AttachTarget` in `crates/jackin-session` to carry the summary.
