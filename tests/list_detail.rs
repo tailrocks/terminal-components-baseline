@@ -266,6 +266,38 @@ fn dragging_the_detail_scrollbar_scrolls_the_detail() {
     );
 }
 
+fn thumb_start(rig: &mut Rig, track: &[Position]) -> (usize, usize) {
+    let buf = rig.render();
+    let cells: Vec<usize> = track
+        .iter()
+        .enumerate()
+        .filter(|(_, p)| buf[(p.x, p.y)].symbol() == scrollbar::THUMB)
+        .map(|(i, _)| i)
+        .collect();
+    (cells[0], cells.len())
+}
+
+#[test]
+fn a_press_off_centre_on_the_detail_thumb_drags_it_cell_for_cell() {
+    let mut rig = Rig::new();
+    let track = detail_track(&rig);
+    let (start, len) = thumb_start(&mut rig, &track);
+    assert!(len >= 4, "the thumb is long enough to grab off-centre");
+    let grab = start + 1;
+
+    rig.click(track[grab]);
+    let (pressed, _) = thumb_start(&mut rig, &track);
+    assert_eq!(pressed, start, "pressing the thumb does not move it");
+
+    rig.ld.drag(scrollbar::id_for(DETAIL), track[grab + 1]);
+    let (dragged, _) = thumb_start(&mut rig, &track);
+    assert_eq!(
+        dragged,
+        start + 1,
+        "one cell of drag moves the thumb one cell"
+    );
+}
+
 #[test]
 fn the_bottom_of_the_detail_track_reaches_the_end_when_actions_shorten_it() {
     let mut rig = Rig::sized(AREA, 6);

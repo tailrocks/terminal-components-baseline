@@ -2,7 +2,7 @@ use crate::core::event::{Key, Outcome};
 use crate::core::focus::Focus;
 use crate::core::id::WidgetId;
 use crate::core::pointer::PointerEvent;
-use crate::core::scroll::ScrollState;
+use crate::core::scroll::{ScrollState, TrackClick};
 use crate::theme::{ButtonKind, StatusKind, Tone};
 use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
 use crate::ui::layout::Split;
@@ -376,22 +376,30 @@ impl ListDetail {
     }
 
     pub fn drag(&mut self, pressed: WidgetId, pos: Position) -> Outcome {
-        if self.scroll_to_track(pressed, pos) {
-            Outcome::Changed
-        } else {
-            Outcome::Ignored
+        match self.track_of(pressed) {
+            Some((scroll, track)) => {
+                scrollbar::drag(track, pos, scroll);
+                Outcome::Changed
+            }
+            None => Outcome::Ignored,
         }
     }
 
-    fn scroll_to_track(&mut self, id: WidgetId, pos: Position) -> bool {
-        let (scroll, track) = if id == scrollbar::id_for(self.master) {
-            (&mut self.scroll, self.list_track)
+    fn track_of(&mut self, id: WidgetId) -> Option<(&mut ScrollState, Rect)> {
+        if id == scrollbar::id_for(self.master) {
+            Some((&mut self.scroll, self.list_track))
         } else if id == scrollbar::id_for(self.detail) {
-            (&mut self.detail_scroll, self.detail_track)
+            Some((&mut self.detail_scroll, self.detail_track))
         } else {
+            None
+        }
+    }
+
+    fn press_track(&mut self, id: WidgetId, pos: Position) -> bool {
+        let Some((scroll, track)) = self.track_of(id) else {
             return false;
         };
-        scroll.scroll_to(scrollbar::offset_for_click(track, pos, scroll));
+        scrollbar::press_with(track, pos, scroll, TrackClick::Jump);
         true
     }
 
@@ -419,7 +427,7 @@ impl ListDetail {
                 return (Outcome::Changed, Some(Event::Item(i)));
             }
         }
-        if self.scroll_to_track(id, pos) {
+        if self.press_track(id, pos) {
             return (Outcome::Changed, None);
         }
         if id == self.detail {
