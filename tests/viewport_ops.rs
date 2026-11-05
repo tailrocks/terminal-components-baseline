@@ -1,9 +1,10 @@
 mod common;
 
 use common::*;
-use junie_tui::core::hit::Axis;
+use junie_tui::core::hit::{Axis, Bar};
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::scroll::Scrollable;
+use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::viewport::{CellPos, Line, Span, TextViewport};
 use junie_tui::widgets::viewport_ops::ViewportOps;
 use ratatui::buffer::Buffer;
@@ -310,16 +311,41 @@ fn paging_up_or_jumping_to_the_start_from_the_live_tail_stops_following() {
     }
 }
 
+fn vertical_bar(v: &dyn ViewportOps) -> Bar {
+    Bar {
+        id: scrollbar::id_for(ID),
+        owner: ID,
+        axis: Axis::Vertical,
+        track: v.vbar(),
+    }
+}
+
 #[test]
-fn a_text_view_reports_the_track_its_host_drew() {
+fn a_text_view_drawn_from_a_shared_reference_reports_the_track_along_its_area() {
     let mut v = viewport();
+    paint(&v, false);
+    let track = Rect::new(AREA.right() - 1, AREA.y, 1, AREA.height);
+    assert_eq!(ViewportOps::vbar(&v), track);
+
+    let wide = wide();
+    paint(&wide, false);
     assert_eq!(
-        ViewportOps::vbar(&v),
-        Rect::ZERO,
-        "no host has drawn a track yet"
+        ViewportOps::vbar(&wide),
+        Rect::new(AREA.right() - 1, AREA.y, 1, AREA.height - 1),
+        "the bottom row belongs to the horizontal bar"
     );
 
-    let track = Rect::new(AREA.right() - 1, 0, 1, AREA.height);
-    v.scroll.set_track(ID, Axis::Vertical, track);
-    assert_eq!(ViewportOps::vbar(&v), track);
+    let mut short = TextViewport::with_lines(ID, lines().into_iter().take(3).collect());
+    short.set_area(AREA);
+    paint(&short, false);
+    assert_eq!(ViewportOps::vbar(&short), Rect::ZERO, "nothing to scroll");
+
+    let bar = vertical_bar(&v);
+    let before = v.scroll().offset;
+    ViewportOps::bar_input(&mut v, &bar, Position::new(track.x, track.y), true);
+    assert!(
+        v.scroll().offset < before,
+        "a press above the thumb of the host-drawn track pages up"
+    );
+    assert!(!v.follow());
 }

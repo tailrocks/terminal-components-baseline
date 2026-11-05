@@ -393,7 +393,6 @@ impl Scrollable for TerminalViewport {
     }
 
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Response<()> {
-        self.scroll.set_track(bar.owner, bar.axis, bar.track);
         let response = self.scroll.bar(bar, pos, pressed);
         if bar.axis == Axis::Vertical && response.is_changed() {
             self.pull();

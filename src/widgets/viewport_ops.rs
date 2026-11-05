@@ -88,7 +88,7 @@ impl ViewportOps for TextViewport {
     }
 
     fn vbar(&self) -> Rect {
-        self.scroll.v_track()
+        TextViewport::vbar(self)
     }
 
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Outcome {

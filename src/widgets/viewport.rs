@@ -1855,6 +1855,19 @@ impl TextViewport {
     pub fn hbar(&self) -> Rect {
         self.scroll.h_track()
     }
+
+    pub(crate) fn vbar(&self) -> Rect {
+        if self.scroll.v.overflows() && self.area.width >= 2 {
+            Rect::new(
+                self.area.right() - 1,
+                self.area.y,
+                1,
+                self.text_rect().height,
+            )
+        } else {
+            Rect::ZERO
+        }
+    }
 }
 
 impl crate::ui::measure::Measure for TextViewport {

@@ -684,6 +684,7 @@ impl ScrollPane {
     }
 
     pub fn bar(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Response<()> {
+        self.set_track(bar.owner, bar.axis, bar.track);
         if pressed {
             self.press_on(bar.axis, pos)
         } else {
