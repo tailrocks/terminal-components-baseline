@@ -150,7 +150,7 @@ read it against, because each of its reasons names a Fixed control.
 ## Testing today
 
 - `cargo nextest run --locked -p junie-tui --test functional --profile functional`
-  — 108 tests, 0 skipped (the demo journeys of `jackin-console` add 51 with
+  — 117 tests, 0 skipped (the demo journeys of `jackin-console` add 51 with
   `--all-features`): every app end-to-end (launch → operate →
   verify consequence → reopen → clean exit), component families in
   Showcase and in a real consumer, colour matrix

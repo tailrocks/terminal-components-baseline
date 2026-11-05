@@ -1586,3 +1586,191 @@ fn showcase_terminal_viewport_pointer_policy_is_an_option() {
     );
     app.finish();
 }
+
+fn list_detail(name: &str, cols: u16, rows: u16) -> App {
+    let app = App::new(
+        name,
+        SHOWCASE,
+        &["--page", "listdetail", "--motion", "paused"],
+        cols,
+        rows,
+        "truecolor",
+    );
+    app.wait_text("nightly-backup");
+    app.settle();
+    app
+}
+
+#[test]
+fn showcase_page_listdetail() {
+    let app = list_detail("showcase-page-listdetail", 140, 40);
+    app.advance_clock(100);
+    app.settle();
+    app.visual("functional/showcase_page_listdetail");
+    app.finish();
+}
+
+#[test]
+fn showcase_listdetail_selecting_a_row_shows_its_detail_and_an_action_reports() {
+    let app = list_detail("showcase-listdetail-select", 140, 40);
+    let initial = app.screen();
+    assert!(text(&initial).contains("volume"));
+    assert!(!text(&initial).contains("CDN_KEY"));
+
+    app.click(inside(find(&initial, "image-resize")));
+    let failing = app.wait_screen("the failing job's detail shows", |s| {
+        text(s).contains("CDN_KEY")
+    });
+    assert!(text(&failing).contains("failing"));
+
+    app.click_text("Run now");
+    let ran = app.wait_screen("the action reports", |s| text(s).contains("action run"));
+    assert!(text(&ran).contains("image-resize"));
+    app.finish();
+}
+
+#[test]
+fn showcase_listdetail_dragging_the_detail_scrollbar_scrolls_the_detail() {
+    let app = list_detail("showcase-listdetail-drag", 140, 22);
+    let screen = app.settle();
+    assert!(
+        !text(&screen).contains("port 443 only"),
+        "the last binding starts below the fold"
+    );
+    let thumb = find_all(&screen, "┃");
+    let track = find_all(&screen, "┆");
+    assert!(!thumb.is_empty(), "the overflowing detail draws a thumb");
+    let top = thumb[0];
+    let bottom = *track
+        .iter()
+        .chain(thumb.iter())
+        .max_by_key(|p| p.y)
+        .expect("a track");
+
+    app.down(top);
+    app.drag_to(bottom);
+    app.wait_screen(
+        "dragging to the bottom of the track reaches the end before the release",
+        |s| text(s).contains("port 443 only"),
+    );
+    app.up(bottom);
+    app.finish();
+}
+
+#[test]
+fn showcase_listdetail_narrow_terminal_shows_the_detail_as_a_drawer() {
+    let app = list_detail("showcase-listdetail-drawer", 90, 30);
+    let list = app.screen();
+    assert!(
+        !text(&list).contains("archive.internal"),
+        "below 100 columns the detail is not beside the list"
+    );
+    app.key("tab");
+    app.key("tab");
+    app.key("enter");
+    let drawer = app.wait_screen("Enter opens the detail as a drawer", |s| {
+        text(s).contains("archive.internal")
+    });
+    assert!(!text(&drawer).contains("report-mailer"));
+    app.settle();
+    app.visual("functional/showcase_listdetail_drawer");
+    app.key("escape");
+    app.wait_text("report-mailer");
+    app.finish();
+}
+
+fn fixed_dialogs(name: &str, opts: &[&str]) -> App {
+    let mut args = vec!["--page", "fixeddialogs", "--motion", "paused"];
+    for opt in opts {
+        args.extend(["--opt", opt]);
+    }
+    let app = App::new(name, SHOWCASE, &args, 120, 40, "truecolor");
+    app.wait_text("Choice dialog");
+    app.settle();
+    app
+}
+
+page_test!(showcase_page_fixeddialogs, "fixeddialogs", "Fixed dialogs");
+
+#[test]
+fn showcase_fixeddialogs_choice_starts_on_its_button_when_the_radio_is_disabled() {
+    let app = fixed_dialogs("showcase-fixeddialogs-choice", &[]);
+    app.click_text("Choice dialog");
+    let open = app.wait_text("Where the output goes");
+    assert!(
+        text(&open).contains("▎Next"),
+        "focus starts on the primary button"
+    );
+    app.key("down");
+    let after = app.settle();
+    assert!(
+        text(&after).contains("(●) Project folder"),
+        "a disabled radio keeps its option"
+    );
+    app.key("escape");
+    app.wait_absent("Where the output goes");
+    app.finish();
+}
+
+#[test]
+fn showcase_fixeddialogs_live_choice_starts_on_its_radio() {
+    let app = fixed_dialogs(
+        "showcase-fixeddialogs-choice-live",
+        &["fixeddialogs.state=live"],
+    );
+    app.click_text("Choice dialog");
+    let open = app.wait_text("Where the output goes");
+    assert!(row_with(&open, "(●) Project folder").contains('▎'));
+    app.key("down");
+    app.wait_screen("the live radio moves", |s| {
+        text(s).contains("(●) Edit destination")
+    });
+    app.key("escape");
+    app.wait_absent("Where the output goes");
+    app.finish();
+}
+
+#[test]
+fn showcase_fixeddialogs_form_does_not_offer_its_fixed_action() {
+    let app = fixed_dialogs("showcase-fixeddialogs-form", &[]);
+    app.click_text("Form dialog");
+    app.wait_text("Plain text");
+    app.key("tab");
+    let on_fixed = app.settle();
+    assert!(text(&on_fixed).contains("▎Plain text"));
+    assert!(
+        !status_row(&on_fixed).contains("Enter"),
+        "no Enter hint on a fixed action: {}",
+        status_row(&on_fixed)
+    );
+    app.key("tab");
+    let on_live = app.settle();
+    assert!(text(&on_live).contains("▎Check"));
+    assert!(status_row(&on_live).contains("Enter Check"));
+    app.key("escape");
+    app.wait_absent("Plain text");
+    app.finish();
+}
+
+#[test]
+fn showcase_fixeddialogs_browser_box_refuses_and_offers_no_toggle() {
+    let app = fixed_dialogs("showcase-fixeddialogs-browser", &[]);
+    app.click_text("File browser");
+    let open = app.wait_text("Read-only");
+    assert!(status_row(&open).contains("Space Choose"));
+    app.click_text("Read-only");
+    let on_box = app.wait_screen("the fixed box takes focus", |s| {
+        row_with(s, "[ ] Read-only").contains('▎')
+    });
+    assert!(text(&on_box).contains("[ ] Read-only"));
+    assert!(
+        !status_row(&on_box).contains("Space") && !status_row(&on_box).contains("Open"),
+        "the list keys are not offered on the box: {}",
+        status_row(&on_box)
+    );
+    app.settle();
+    app.visual("functional/showcase_fixeddialogs_browser_box");
+    app.key("escape");
+    app.wait_absent("Read-only");
+    app.finish();
+}
