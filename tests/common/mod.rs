@@ -77,6 +77,8 @@ pub struct Host {
     shell: Shell<()>,
     pub act: Act,
     pub seen_at_entry: Option<Option<Reason>>,
+    pub inputs: usize,
+    pub stepped: Vec<u64>,
 }
 
 impl Host {
@@ -85,6 +87,8 @@ impl Host {
             shell: Shell::new(),
             act,
             seen_at_entry: None,
+            inputs: 0,
+            stepped: Vec::new(),
         }
     }
 
@@ -95,8 +99,8 @@ impl Host {
             .map(|(text, tone)| (text.to_owned(), tone))
     }
 
-    pub fn accept_test_requests(&mut self) {
-        self.shell.test_requests = true;
+    pub fn test_requests(&mut self, on: bool) {
+        self.shell.test_requests = on;
     }
 
     pub fn set_status(&mut self, text: &str, tone: Tone) {
@@ -163,7 +167,13 @@ impl App for Host {
 
     fn draw(&mut self, _area: Rect, _buf: &mut Buffer, _ctx: &mut RenderCtx) {}
 
+    fn advance_clock(&mut self, ms: u64) -> Option<Outcome> {
+        self.stepped.push(ms);
+        Some(Outcome::Changed)
+    }
+
     fn on_input(&mut self, _input: Input) -> Outcome {
+        self.inputs += 1;
         self.seen_at_entry = Some(take_refusal());
         match &self.act {
             Act::Nothing => Outcome::Ignored,

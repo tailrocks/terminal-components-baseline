@@ -1,7 +1,8 @@
 mod common;
 
 use common::*;
-use junie_tui::core::event::Outcome;
+use junie_tui::clock::TestRequest;
+use junie_tui::core::event::{Input, Outcome};
 use junie_tui::core::refusal::{clear_refusal, raise, take_refusal};
 use junie_tui::theme::Tone;
 use ratatui::crossterm::event::KeyCode;
@@ -69,4 +70,51 @@ fn the_same_tone_with_other_text_is_a_change() {
     host.set_status("first", Tone::Secondary);
     assert_eq!(host.press(KeyCode::Char('x')), Outcome::Changed);
     assert_eq!(host.status(), Some(("second".to_owned(), Tone::Secondary)));
+}
+
+#[test]
+fn a_fence_is_acknowledged_once_and_never_reaches_the_app() {
+    junie_tui::shell::clipboard::take_output();
+    let mut host = Host::new(Act::Nothing);
+    host.test_requests(true);
+
+    let out = host.input(Input::Paste(TestRequest::FENCE.to_owned()));
+
+    assert_eq!(out, Outcome::Ignored);
+    assert_eq!(host.inputs, 0, "the app never sees a fence");
+    assert_eq!(
+        junie_tui::shell::clipboard::take_output(),
+        [TestRequest::FENCE_ACK],
+        "one acknowledgement per fence"
+    );
+}
+
+#[test]
+fn a_clock_step_reaches_the_app_as_a_step_and_not_as_a_paste() {
+    junie_tui::shell::clipboard::take_output();
+    let mut host = Host::new(Act::Nothing);
+    host.test_requests(true);
+
+    host.input(Input::Paste(TestRequest::advance(250)));
+    host.input(Input::Paste(TestRequest::advance(40)));
+
+    assert_eq!(host.stepped, [250, 40]);
+    assert_eq!(host.inputs, 0);
+}
+
+#[test]
+fn test_requests_are_plain_pastes_unless_the_shell_accepts_them() {
+    junie_tui::shell::clipboard::take_output();
+    let mut host = Host::new(Act::Nothing);
+    host.test_requests(false);
+
+    host.input(Input::Paste(TestRequest::FENCE.to_owned()));
+    host.input(Input::Paste(TestRequest::advance(250)));
+
+    assert_eq!(host.inputs, 2, "both reach the app as text");
+    assert!(host.stepped.is_empty());
+    assert_eq!(
+        junie_tui::shell::clipboard::take_output(),
+        Vec::<String>::new()
+    );
 }

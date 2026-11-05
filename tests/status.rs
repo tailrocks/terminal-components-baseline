@@ -86,7 +86,7 @@ fn a_page_in_the_background_may_keep_a_sticky_status() {
 #[test]
 fn a_clock_step_request_does_not_clear_an_error_status_like_operator_input() {
     let mut host = Host::new(Act::Nothing);
-    host.accept_test_requests();
+    host.test_requests(true);
     host.set_status("save failed", Tone::Error);
 
     host.input(Input::Paste(TestRequest::advance(250)));
@@ -103,7 +103,7 @@ fn a_clock_step_request_does_not_clear_an_error_status_like_operator_input() {
 #[test]
 fn a_clock_step_request_does_not_clear_a_sticky_status() {
     let mut host = Host::new(Act::Nothing);
-    host.accept_test_requests();
+    host.test_requests(true);
     host.sticky("/Users/me/project");
 
     host.input(Input::Paste(TestRequest::advance(250)));
