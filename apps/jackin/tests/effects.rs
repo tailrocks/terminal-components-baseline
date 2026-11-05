@@ -1945,6 +1945,11 @@ fn a_check_reply_of_another_ticket_does_not_finish_the_roles_check() {
         screen(&mut app).contains("checking…"),
         "the screen took the reply of another check"
     );
+    assert_eq!(
+        status(&app),
+        format!("Checking {role}…"),
+        "the reply of another check ended this one"
+    );
 
     app.deliver(&Msg::RoleChecked {
         ticket: *ticket,
@@ -2326,4 +2331,36 @@ fn a_failed_save_does_not_write_its_error_into_a_form_opened_after_it() {
         1,
         "the error went into the new form too:\n{after}"
     );
+}
+
+fn two_unparsed_manifests(unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBackend>) {
+    let backend = Arc::new(TestBackend {
+        inner: SimBackend::shared(),
+        seen: Mutex::new(vec![]),
+        answer: |_, _| None,
+        unanswered,
+        files: None,
+    });
+    let mut world = world_for(Scenario::RoleBinding);
+    world.backend = backend.clone();
+    let admin = world.surfaces.roles.as_mut().expect("roles");
+    for name in ["data-eng", "writer"] {
+        admin.role_mut(name).expect("role").manifest = Err("no manifest".into());
+    }
+    (timed(Scenario::RoleBinding, world), backend)
+}
+
+#[test]
+fn a_reply_nobody_asked_for_does_not_end_the_reads_of_check_all() {
+    let (mut app, backend) =
+        two_unparsed_manifests(|e| matches!(e, Effect::LoadRole { .. } | Effect::CheckRole { .. }));
+    press(&mut app, "f5");
+    assert_eq!(count(&backend, |e| matches!(e, Effect::LoadRole { .. })), 2);
+    assert_eq!(status(&app), "Reading writer again…");
+
+    app.deliver(&Msg::RoleLoaded {
+        role: "ghost".into(),
+        result: Err("unreadable".into()),
+    });
+    assert_eq!(status(&app), "Reading writer again…");
 }

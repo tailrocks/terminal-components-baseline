@@ -191,6 +191,10 @@ pub trait Screen: junie_tui::shell::Page<Jackin> {
         false
     }
 
+    fn job_continues(&self, _m: &Msg) -> bool {
+        false
+    }
+
     fn request_leave(&mut self, _w: &mut World, cx: &mut Cx) -> Outcome {
         cx.go(Go::Manager);
         Outcome::Changed

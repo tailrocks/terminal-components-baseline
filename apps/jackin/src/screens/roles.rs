@@ -1160,4 +1160,14 @@ impl Screen for RolesScreen {
         }
         vec![]
     }
+
+    fn job_continues(&self, m: &Msg) -> bool {
+        match m {
+            Msg::RoleLoaded { role, .. } => self.loading.iter().any(|r| r != role),
+            Msg::RoleChecked { ticket, role, .. } => {
+                self.checking.iter().any(|(r, t)| r != role || t != ticket)
+            }
+            _ => false,
+        }
+    }
 }

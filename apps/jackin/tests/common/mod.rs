@@ -56,6 +56,7 @@ pub fn press(app: &mut App, keys: &str) {
             _ => (KeyModifiers::NONE, name),
         };
         let code = match name {
+            "f5" => KeyCode::F(5),
             "f10" => KeyCode::F(10),
             "enter" => KeyCode::Enter,
             "esc" => KeyCode::Esc,

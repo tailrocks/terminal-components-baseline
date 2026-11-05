@@ -624,7 +624,9 @@ impl App {
         if self.world.absorb(m) == Absorbed::Stale {
             return Outcome::Ignored;
         }
-        let ended = m.job().is_some_and(|job| self.shell.status.end_job(job));
+        let ended = m
+            .job()
+            .is_some_and(|job| !self.job_continues(m) && self.shell.status.end_job(job));
         let route = self.route();
         let (o, reqs) = self
             .shell
@@ -652,6 +654,10 @@ impl App {
         let o = o.or(self.apply_requests(reqs, route));
         let o = o.or(self.apply_requests(behind, route));
         if ended { o.or(Outcome::Changed) } else { o }
+    }
+
+    fn job_continues(&self, m: &Msg) -> bool {
+        self.router.pages().any(|p| p.screen().job_continues(m))
     }
 
     fn finish_intro(&mut self) {
