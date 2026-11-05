@@ -283,8 +283,10 @@ impl App {
                 self.router.select(active);
             }
             (true, false) => {
+                self.drop_layers_of(Route::Roles);
                 if active == TAB_ROLES {
-                    self.router.select(TAB_MANAGER);
+                    self.show_tab(TAB_MANAGER);
+                    self.enter_route();
                 }
                 self.router.close_tab(TAB_ROLES);
             }
@@ -292,6 +294,13 @@ impl App {
         }
         self.host_menus = Self::build_host_menu(self.host_menu_route, &self.world);
         self.host_menu = Self::host_bar(&self.host_menus);
+    }
+
+    fn drop_layers_of(&mut self, owner: Route) {
+        while self.layers.iter().any(|e| e.owner == owner) {
+            self.layers.pop(&mut self.shell.focus);
+        }
+        self.layer_gone();
     }
 
     fn drop_orphaned_daemons(&mut self) {

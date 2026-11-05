@@ -331,3 +331,55 @@ fn a_reload_that_adds_the_doctor_surface_binds_its_key() {
     key(&mut app, 'D');
     assert_eq!(app.route(), Route::Doctor);
 }
+
+fn down(app: &mut App) {
+    Application::handle(
+        app,
+        Input::Key(Key {
+            code: KeyCode::Down,
+            mods: KeyModifiers::NONE,
+        }),
+    );
+    screen(app);
+}
+
+#[test]
+fn a_reload_that_removes_the_roles_surface_closes_the_modals_the_roles_page_opened() {
+    let (mut app, tx) = linked();
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, true)))));
+    pump(&mut app);
+    key(&mut app, 'R');
+    key(&mut app, 'a');
+    let asked = screen(&mut app);
+    assert!(asked.contains("register a role"), "{asked}");
+
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, false)))));
+    pump(&mut app);
+
+    assert_eq!(app.route(), Route::Manager);
+    let shown = screen(&mut app);
+    assert!(!shown.contains("register a role"), "{shown}");
+    down(&mut app);
+    let moved = screen(&mut app);
+    assert!(
+        moved.contains("▎ ▸ payments-platform"),
+        "the manager takes the keys:\n{moved}"
+    );
+}
+
+#[test]
+fn a_reload_that_removes_the_roles_surface_leaves_a_role_editor_in_use() {
+    let (mut app, tx) = linked();
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, true)))));
+    pump(&mut app);
+    key(&mut app, 'R');
+    key(&mut app, 'e');
+    assert_eq!(app.route(), Route::RoleEditor);
+
+    assert!(tx.send(Remote::Reloaded(Box::new(with_roles(&app, false)))));
+    pump(&mut app);
+
+    assert_eq!(app.route(), Route::RoleEditor);
+    let shown = screen(&mut app);
+    assert!(shown.contains("Roles › sentinel › edit"), "{shown}");
+}
