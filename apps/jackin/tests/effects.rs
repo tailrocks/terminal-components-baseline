@@ -2266,3 +2266,64 @@ fn a_late_reply_of_an_earlier_refresh_does_not_answer_the_one_in_flight() {
     });
     assert_eq!(app.world.workspaces[0].name, "from-the-second-refresh");
 }
+
+fn saves_of(backend: &TestBackend) -> Vec<Effect> {
+    backend
+        .seen()
+        .into_iter()
+        .filter(|e| matches!(e, Effect::SaveAccounts { .. }))
+        .collect()
+}
+
+fn a_form_left_during_its_save() -> (App, Arc<TestBackend>, Effect) {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |e| matches!(e, Effect::SaveAccounts { .. }),
+        store_accounts,
+    );
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+    let saves = saves_of(&backend);
+    assert_eq!(saves.len(), 1, "the save is out");
+
+    press(&mut app, "esc");
+    assert!(!screen(&mut app).contains("New account"));
+    press(&mut app, "a");
+    let reopened = screen(&mut app);
+    assert!(reopened.contains("New account"), "{reopened}");
+    (app, backend, saves[0].clone())
+}
+
+#[test]
+fn a_saved_account_does_not_close_a_form_opened_after_the_one_it_saved() {
+    let (mut app, _, save) = a_form_left_during_its_save();
+
+    let reply = store_accounts(&save, &app.world).expect("the reply");
+    app.deliver(&reply);
+
+    let after = screen(&mut app);
+    assert!(
+        after.contains("New account"),
+        "the reply closed the new form:\n{after}"
+    );
+}
+
+#[test]
+fn a_failed_save_does_not_write_its_error_into_a_form_opened_after_it() {
+    let (mut app, _, _) = a_form_left_during_its_save();
+
+    app.deliver(&Msg::AccountsSaved {
+        added: None,
+        result: Err("disk full".into()),
+    });
+
+    let after = screen(&mut app);
+    assert!(after.contains("New account"), "{after}");
+    assert_eq!(status(&app), "disk full");
+    assert_eq!(
+        after.matches("disk full").count(),
+        1,
+        "the error went into the new form too:\n{after}"
+    );
+}

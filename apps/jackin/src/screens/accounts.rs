@@ -83,6 +83,7 @@ struct Row {
 }
 
 struct FormCtx {
+    serial: usize,
     editing: Option<AccountId>,
     op_ref: Option<OpReference>,
     op_masked: Option<String>,
@@ -161,7 +162,7 @@ struct Saving {
     status: String,
     select: Pick,
     unfold: Option<UsageSurface>,
-    form: bool,
+    form: Option<usize>,
 }
 
 /// What a save selects once the backend has stored it.
@@ -185,6 +186,7 @@ pub struct AccountsScreen {
     md: MasterDetail,
     actions: Vec<Button>,
     form: Option<FormCtx>,
+    forms_opened: usize,
     pending_remove: Option<AccountId>,
     saving: Option<Saving>,
 
@@ -233,6 +235,7 @@ impl AccountsScreen {
                 .summary_rows(6),
             actions: vec![],
             form: None,
+            forms_opened: 0,
             pending_remove: None,
             saving: None,
             menu: RowMenu::new(MENU),
@@ -631,7 +634,10 @@ impl AccountsScreen {
             );
         }
 
+        self.forms_opened += 1;
+        let serial = self.forms_opened;
         let mut ctx = FormCtx {
+            serial,
             editing: editing.map(|a| a.id.clone()),
             op_ref: None,
             op_masked: None,
@@ -674,7 +680,7 @@ impl AccountsScreen {
             .width(70)
             .keep_open_on_save();
         Self::reveal(&mut form, w);
-        cx.open(form, LayerTag::new("form"));
+        cx.open(form, LayerTag::new("form").n(serial));
     }
 
     fn reveal(form: &mut FormDialog, w: &World) {
@@ -1156,7 +1162,7 @@ impl AccountsScreen {
                     None => Pick::Added,
                 },
                 unfold: Some(provider.usage_surface()),
-                form: true,
+                form: self.form.as_ref().map(|c| c.serial),
             },
             w,
             cx,
@@ -1172,7 +1178,7 @@ impl AccountsScreen {
     ) {
         if self.saving.is_some() {
             let msg = "Saving the previous change… try again when it finishes".to_owned();
-            if saving.form {
+            if saving.form.is_some() {
                 cx.with_top::<FormDialog>(move |f| f.error = Some(msg));
             } else {
                 cx.status(msg);
@@ -1187,9 +1193,12 @@ impl AccountsScreen {
     }
 
     fn finish_saving(&mut self, saving: Saving, added: Option<AccountId>, cx: &mut Cx) {
-        if saving.form && self.form.take().is_some() {
+        if let Some(serial) = saving.form
+            && self.form.as_ref().is_some_and(|c| c.serial == serial)
+        {
+            self.form = None;
             cx.go(Go::CloseTop {
-                kind: "form",
+                tag: LayerTag::new("form").n(serial),
                 then: Some(TREE),
             });
         }
@@ -1266,7 +1275,7 @@ impl AccountsScreen {
                 status,
                 select: Pick::Keep,
                 unfold: None,
-                form: false,
+                form: None,
             },
             w,
             cx,
@@ -1286,7 +1295,7 @@ impl AccountsScreen {
                         status,
                         select: Pick::Keep,
                         unfold: None,
-                        form: false,
+                        form: None,
                     },
                     w,
                     cx,
@@ -2408,7 +2417,12 @@ impl Page<Jackin> for AccountsScreen {
                             self.finish_saving(saving, added.clone(), cx);
                         }
                     }
-                    (Err(error), Some(Saving { form: true, .. })) => {
+                    (
+                        Err(error),
+                        Some(Saving {
+                            form: Some(serial), ..
+                        }),
+                    ) if self.form.as_ref().is_some_and(|c| c.serial == serial) => {
                         let error = error.clone();
                         cx.with_top::<FormDialog>(move |f| f.error = Some(error));
                     }
@@ -2874,7 +2888,7 @@ impl Page<Jackin> for AccountsScreen {
                             status: format!("Removed {}", a.title()),
                             select: Pick::Row(Sel::Provider(a.surface)),
                             unfold: None,
-                            form: false,
+                            form: None,
                         },
                         w,
                         cx,

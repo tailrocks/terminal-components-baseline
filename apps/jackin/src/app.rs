@@ -2062,8 +2062,8 @@ impl App {
                 }
             }
 
-            Go::CloseTop { kind, then } => {
-                if self.layers.top().is_some_and(|e| e.tag.kind == kind) {
+            Go::CloseTop { tag, then } => {
+                if self.layers.top().is_some_and(|e| e.tag == tag) {
                     self.layers.pop(&mut self.shell.focus);
                     self.layer_gone();
                     if let Some(id) = then {

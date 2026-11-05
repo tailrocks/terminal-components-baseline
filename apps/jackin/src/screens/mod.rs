@@ -145,7 +145,7 @@ pub enum Go {
         instance: Option<InstanceId>,
     },
     CloseTop {
-        kind: &'static str,
+        tag: LayerTag,
         then: Option<junie_tui::core::id::WidgetId>,
     },
     Quit,
