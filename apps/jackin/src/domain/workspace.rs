@@ -462,6 +462,10 @@ impl RoleEntry {
     pub fn full_name(&self) -> String {
         format!("{}/{}", self.namespace, self.name)
     }
+
+    pub fn launchable(&self) -> bool {
+        self.trusted && self.in_registry && self.load_error.is_none()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]

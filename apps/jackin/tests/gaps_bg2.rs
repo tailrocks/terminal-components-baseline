@@ -482,6 +482,52 @@ fn an_unusable_explicit_account_is_not_replaced_by_the_one_ready_account() {
 }
 
 #[test]
+fn an_unusable_explicit_account_is_named_when_two_others_are_ready() {
+    let mut world = two_ready_claude_accounts();
+    world.workspaces[0]
+        .accounts
+        .enabled
+        .insert("acct-claude-extra".into());
+    let mut extra = world
+        .accounts
+        .get("acct-claude-work")
+        .expect("work")
+        .clone();
+    extra.id = "acct-claude-extra".into();
+    extra.display_name = "Extra".into();
+    extra.default_for_provider = false;
+    world.accounts.accounts.push(extra);
+    world.workspaces[0].accounts.preferred.insert(
+        jackin_console::domain::agent::Provider::Anthropic,
+        "acct-claude-work".into(),
+    );
+    world
+        .accounts
+        .accounts
+        .iter_mut()
+        .find(|a| a.id == "acct-claude-work")
+        .expect("work")
+        .lifecycle = Lifecycle::NeedsLogin;
+    let ws = &world.workspaces[0];
+    let offer = world.offer_for(Agent::ClaudeCode, Some(ws), Some("the-architect"));
+
+    assert_eq!(
+        offer.accounts,
+        ["acct-claude-personal", "acct-claude-extra"]
+    );
+    assert_eq!(offer.preselected, None);
+    let why = offer
+        .blocked
+        .expect("the chosen account is shown as blocked beside two ready ones");
+    let work = world
+        .accounts
+        .get("acct-claude-work")
+        .expect("work")
+        .title();
+    assert!(why.starts_with(&work), "{why}");
+}
+
+#[test]
 fn no_demo_world_offers_several_accounts_without_a_choice() {
     for scenario in Scenario::ALL {
         let world = world_for(scenario);

@@ -15,7 +15,8 @@ use crate::domain::doctor::{DoctorFailure, DoctorReport};
 use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
 use crate::domain::reason::{IssueReason, UsageReason};
 use crate::domain::role::{
-    AccountOrder, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
+    AccountOrder, DEFAULT_ROLE_UNUSABLE, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE,
+    NO_SAVED_WORKSPACE,
 };
 use crate::domain::surfaces::Surfaces;
 use crate::domain::usage::Freshness;
@@ -791,14 +792,18 @@ impl World {
         {
             self.start_doctor();
         }
+        let mut changed = false;
         for (id, d) in self.daemons.iter_mut() {
             if self
                 .instances
                 .iter()
                 .any(|i| i.id == *id && i.status == InstanceStatus::Running)
             {
-                d.tick(now);
+                changed |= d.tick(now);
             }
+        }
+        if changed {
+            refresh_snapshots(self);
         }
         let backend = self.backend.clone();
         backend.due(self)
@@ -903,10 +908,9 @@ impl World {
     }
 
     pub fn tilde(&self, path: &str) -> String {
-        if let Some(rest) = path.strip_prefix(&self.home) {
-            format!("~{rest}")
-        } else {
-            path.to_owned()
+        match under_home(&self.home, path) {
+            Some(rest) => format!("~{rest}"),
+            None => path.to_owned(),
         }
     }
 
@@ -983,19 +987,12 @@ impl World {
             }
             None => {
                 if let Some(a) = self.accounts.default_for(provider) {
-                    match crate::domain::workspace::usability_of(a) {
-                        Usability::Ready => ready.push(a.id.clone()),
-                        u => blocked.push((
-                            a.id.clone(),
-                            u.label(self.surfaces.fixed.as_ref(), &self.surfaces.vocabulary),
-                        )),
-                    }
+                    self.place(a, &mut ready, &mut blocked);
                 }
                 if ready.is_empty()
                     && let Some(a) = self.accounts.discovered_current(provider)
-                    && !ready.contains(&a.id)
                 {
-                    ready.push(a.id.clone());
+                    self.place(a, &mut ready, &mut blocked);
                 }
             }
         }
@@ -1041,23 +1038,20 @@ impl World {
             let x = ready.remove(i);
             ready.insert(0, x);
         }
-        let block = if preselected.is_none() && ready.len() <= 1 {
-            blocked
-                .iter()
-                .find(|(id, _)| explicit.as_ref() == Some(id))
-                .or(blocked.first())
-                .map(|(id, why)| {
-                    let launch_block = self.accounts.get(id).and_then(|a| a.launch_blocked);
-                    if launch_block.is_some_and(|b| b.text(self.surfaces.fixed.as_ref()) == *why) {
-                        return why.clone();
-                    }
-                    let name = self
-                        .accounts
-                        .get(id)
-                        .map(|a| a.title())
-                        .unwrap_or(id.clone());
-                    format!("{name} · {why}")
-                })
+        let explicit_blocked = blocked.iter().find(|(id, _)| explicit.as_ref() == Some(id));
+        let block = if preselected.is_none() && (ready.len() <= 1 || explicit_blocked.is_some()) {
+            explicit_blocked.or(blocked.first()).map(|(id, why)| {
+                let launch_block = self.accounts.get(id).and_then(|a| a.launch_blocked);
+                if launch_block.is_some_and(|b| b.text(self.surfaces.fixed.as_ref()) == *why) {
+                    return why.clone();
+                }
+                let name = self
+                    .accounts
+                    .get(id)
+                    .map(|a| a.title())
+                    .unwrap_or(id.clone());
+                format!("{name} · {why}")
+            })
         } else {
             None
         };
@@ -1067,6 +1061,28 @@ impl World {
             preselected,
             blocked: block,
         }
+    }
+
+    fn place(
+        &self,
+        a: &crate::domain::account::Account,
+        ready: &mut Vec<AccountId>,
+        blocked: &mut Vec<(AccountId, String)>,
+    ) {
+        if ready.contains(&a.id) || blocked.iter().any(|(id, _)| *id == a.id) {
+            return;
+        }
+        match crate::domain::workspace::usability_of(a) {
+            Usability::Ready => ready.push(a.id.clone()),
+            u => blocked.push((
+                a.id.clone(),
+                u.label(self.surfaces.fixed.as_ref(), &self.surfaces.vocabulary),
+            )),
+        }
+    }
+
+    pub fn role_launchable(&self, name: &str) -> bool {
+        self.roles.iter().any(|r| r.name == name && r.launchable())
     }
 
     pub fn launch_role(&self, from: LaunchSource) -> LaunchRole {
@@ -1080,11 +1096,16 @@ impl World {
             LaunchRoleRule::Configured => {
                 let (LaunchSource::Row(ws) | LaunchSource::CurrentDir(ws)) = from;
                 if let Some(default) = ws.and_then(|x| x.roles.default.clone()) {
-                    return LaunchRole::Role(default);
+                    return if self.role_launchable(&default) {
+                        LaunchRole::Role(default)
+                    } else {
+                        LaunchRole::Unavailable(DEFAULT_ROLE_UNUSABLE.into())
+                    };
                 }
                 let mut allowed = self
                     .roles
                     .iter()
+                    .filter(|r| r.launchable())
                     .filter(|r| ws.is_none_or(|x| x.roles.allows(&r.name)))
                     .map(|r| r.name.clone());
                 match (allowed.next(), allowed.next()) {
@@ -1133,9 +1154,14 @@ pub fn expand(home: &str, path: &str) -> String {
     }
 }
 
+fn under_home<'a>(home: &str, path: &'a str) -> Option<&'a str> {
+    path.strip_prefix(home.trim_end_matches('/'))
+        .filter(|rest| rest.is_empty() || rest.starts_with('/'))
+}
+
 pub fn mask_path(home: &str, path: &str) -> String {
     let last = path.rsplit('/').next().unwrap_or(path);
-    if let Some(rest) = path.strip_prefix(home) {
+    if let Some(rest) = under_home(home, path) {
         let segs: Vec<&str> = rest.split('/').filter(|s| !s.is_empty()).collect();
         match segs.len() {
             0 => "~".into(),

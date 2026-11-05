@@ -8,6 +8,7 @@ mod product_support;
 
 use capsule_support::*;
 use jackin_console::domain::agent::Agent;
+use jackin_console::domain::instance::{AgentState, DaemonSnapshot};
 use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneCommand, PaneRequest};
 use pane_support::*;
 
@@ -406,4 +407,19 @@ fn a_split_whose_focused_pane_vanished_starts_nothing() {
         .sessions
         .clone();
     assert_eq!(sessions, Ok(Vec::new()), "no session was recorded");
+}
+
+#[test]
+fn the_manager_shows_the_state_a_pane_reached_while_detached() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.press("ctrl+b d");
+    let state = |rig: &Rig| match &rig.app.world.instance(INSTANCE).expect("instance").daemon {
+        DaemonSnapshot::Tabs(tabs) => tabs[0].panes[0].state,
+        other => panic!("{other:?}"),
+    };
+    assert_eq!(state(&rig), AgentState::Unknown);
+    rig.bench.push(0, LinkEvent::Exited(Some(0)));
+    rig.advance(400);
+    assert_eq!(state(&rig), AgentState::Done);
 }

@@ -87,3 +87,18 @@ fn world_new_keeps_an_unreadable_instance_index() {
         Err(DiscoveryError::IndexUnreadable)
     );
 }
+
+#[test]
+fn a_path_under_a_longer_home_name_is_not_abbreviated() {
+    let mut world = World::new(parts());
+    world.home = "/home/dev".into();
+    assert_eq!(
+        world.tilde("/home/developer/project"),
+        "/home/developer/project"
+    );
+    assert_eq!(world.tilde("/home/dev/project"), "~/project");
+    assert_eq!(world.tilde("/home/dev"), "~");
+    assert_eq!(world.mask_path("/home/developer/project/src"), "…/src");
+    assert_eq!(world.mask_path("/home/dev/project/src"), "~/…/src");
+    assert_eq!(world.mask_path("/home/dev"), "~");
+}

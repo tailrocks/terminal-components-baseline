@@ -4,7 +4,7 @@ mod common;
 
 use common::*;
 use jackin_console::domain::role::{
-    LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
+    DEFAULT_ROLE_UNUSABLE, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE, NO_SAVED_WORKSPACE,
 };
 use jackin_console::domain::workspace::{AllowedRoles, Workspace};
 use jackin_console::fixtures::{Scenario, world_for};
@@ -68,14 +68,15 @@ fn the_demo_rule_keeps_the_fixture_roles() {
 fn the_configured_rule_takes_the_default_role() {
     let world = world(LaunchRoleRule::Configured);
     let mut ws = workspace(&world);
-    ws.roles.default = Some("data-eng".into());
+    let default = world.roles[0].name.clone();
+    ws.roles.default = Some(default.clone());
     assert_eq!(
         world.launch_role(LaunchSource::Row(Some(&ws))),
-        role("data-eng")
+        role(&default)
     );
     assert_eq!(
         world.launch_role(LaunchSource::CurrentDir(Some(&ws))),
-        role("data-eng")
+        role(&default)
     );
 }
 
@@ -171,4 +172,51 @@ fn the_picker_keeps_its_rows_while_a_role_resolves() {
         "{screen}"
     );
     assert!(!screen.contains(NO_DEFAULT_ROLE) && !screen.contains("unavailable"));
+}
+
+#[test]
+fn the_configured_rule_refuses_a_default_role_that_cannot_launch() {
+    let mut world = world(LaunchRoleRule::Configured);
+    let mut ws = workspace(&world);
+    let name = world.roles[0].name.clone();
+    ws.roles.default = Some(name.clone());
+    let unusable = LaunchRole::Unavailable(DEFAULT_ROLE_UNUSABLE.into());
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), role(&name));
+
+    world.roles[0].trusted = false;
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+    world.roles[0].trusted = true;
+
+    world.roles[0].in_registry = false;
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+    world.roles[0].in_registry = true;
+
+    world.roles[0].load_error = Some("manifest does not parse".into());
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+
+    world.roles[0].load_error = None;
+    ws.roles.default = Some("data-eng".into());
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+
+    ws.roles.default = Some("not-registered".into());
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), unusable);
+}
+
+#[test]
+fn the_configured_rule_skips_a_role_that_cannot_launch_as_the_only_one() {
+    let mut world = world(LaunchRoleRule::Configured);
+    let mut ws = workspace(&world);
+    let only = names(&world, 3)[1].clone();
+    ws.roles.allowed = AllowedRoles::Custom(vec![only.clone()]);
+    assert_eq!(world.launch_role(LaunchSource::Row(Some(&ws))), role(&only));
+    world
+        .roles
+        .iter_mut()
+        .find(|r| r.name == only)
+        .expect("role")
+        .trusted = false;
+    assert_eq!(
+        world.launch_role(LaunchSource::Row(Some(&ws))),
+        LaunchRole::Unavailable(NO_DEFAULT_ROLE.into())
+    );
 }

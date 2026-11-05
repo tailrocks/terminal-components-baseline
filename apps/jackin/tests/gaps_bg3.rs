@@ -419,6 +419,28 @@ fn the_only_ready_account_is_offered_to_a_directory_with_no_default() {
 }
 
 #[test]
+fn a_launch_blocked_account_found_on_the_host_is_not_offered() {
+    let mut world = without_default(&[]);
+    let account = world
+        .accounts
+        .get_mut("acct-codex-primary")
+        .expect("primary");
+    account.enabled = true;
+    account.origin = jackin_console::domain::account::AccountOrigin::Discovered;
+    account.launch_blocked = Some(jackin_console::domain::account::LaunchBlock::UsageOnlySource);
+    assert!(
+        world
+            .accounts
+            .discovered_current(Provider::OpenAi)
+            .is_some()
+    );
+    let offer = world.offer_for(Agent::Codex, None, None);
+    assert_eq!(offer.accounts, Vec::<AccountId>::new());
+    assert_eq!(offer.preselected, None);
+    assert!(offer.blocked.is_some(), "the block is said, not skipped");
+}
+
+#[test]
 fn no_demo_world_gains_an_account_from_the_only_rule() {
     for scenario in Scenario::ALL {
         let world = world_for(scenario);
