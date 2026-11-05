@@ -2250,10 +2250,7 @@ fn a_late_reply_of_an_earlier_refresh_does_not_answer_the_one_in_flight() {
         ticket: first,
         result: Ok(Box::new(sim::snapshot(&app.world))),
     });
-    assert!(
-        app.world.refresh_from.is_some(),
-        "the second refresh is still out"
-    );
+    assert!(!app.world.refresh(), "the second refresh is still out");
 
     let mut snapshot = sim::snapshot(&app.world);
     snapshot.workspaces[0].name = "from-the-second-refresh".into();
