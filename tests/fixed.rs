@@ -657,6 +657,11 @@ fn the_file_browser_footer_follows_the_focused_box() {
     let box_id = live.checkbox.as_ref().expect("a checkbox").id;
     assert!(actions(&live, Some(list)).contains(&"Choose".to_owned()));
     assert_eq!(
+        actions(&live, Some(live.choose.id)),
+        ["Choose", "Next", "Cancel"],
+        "a focused button offers its own label, not the list keys"
+    );
+    assert_eq!(
         actions(&live, Some(box_id)),
         ["Toggle", "Next", "Cancel"],
         "on a live box Space toggles it, so the list's Choose is not offered"
