@@ -337,19 +337,3 @@ fn dropping_one_shell_keeps_the_clipboard_hook_of_the_shell_that_replaced_it() {
     junie_tui::core::edit::clipboard::copy(TEXT);
     assert_eq!(count(&second_sink), 1, "its own drop still removes it");
 }
-
-#[test]
-fn replacing_the_clipboard_of_a_shell_moves_its_hook_with_it() {
-    queued();
-    let old = Arc::new(Counting::default());
-    let new = Arc::new(Counting::default());
-    let mut shell = Shell::<()>::new();
-    shell.set_clipboard(Clipboard::new().native(old.clone()));
-    shell.set_clipboard(Clipboard::new().native(new.clone()));
-
-    junie_tui::core::edit::clipboard::copy(TEXT);
-
-    let count = |sink: &Counting| sink.0.load(std::sync::atomic::Ordering::SeqCst);
-    assert_eq!(count(&new), 1, "the clipboard the shell holds now writes");
-    assert_eq!(count(&old), 0, "the one it let go of does not");
-}

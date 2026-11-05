@@ -127,7 +127,6 @@ impl<P> Shell<P> {
     }
 
     pub fn set_clipboard(&mut self, clipboard: Clipboard) {
-        self.clipboard.release();
         self.clipboard = clipboard;
         self.clipboard.install();
     }
