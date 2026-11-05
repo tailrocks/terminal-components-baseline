@@ -802,6 +802,7 @@ impl CapsuleScreen {
             None => cx.status(format!("Started {label}")),
         }
         crate::world::refresh_snapshots(w);
+        w.refresh_now();
     }
 
     fn move_focus(&mut self, dir: Direction, w: &mut World, cx: &mut Cx) {

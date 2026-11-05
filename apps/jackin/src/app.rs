@@ -1958,6 +1958,7 @@ impl App {
                     d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
                 }
                 crate::world::refresh_snapshots(&mut self.world);
+                self.world.refresh_now();
                 self.go(Go::Attach {
                     instance,
                     pane: None,

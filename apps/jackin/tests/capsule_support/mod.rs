@@ -35,6 +35,7 @@ pub struct TermBackend {
     pub bench: Arc<Bench>,
     pub requests: Mutex<Vec<PaneRequest>>,
     pub left: Mutex<Vec<String>>,
+    pub effects: Mutex<Vec<Effect>>,
 }
 
 impl TermBackend {
@@ -42,10 +43,24 @@ impl TermBackend {
     pub fn left(&self) -> Vec<String> {
         self.left.lock().expect("left").clone()
     }
+
+    /// The tickets of the refreshes the world asked for, in order.
+    pub fn refreshes(&self) -> Vec<u64> {
+        self.effects
+            .lock()
+            .expect("effects")
+            .iter()
+            .filter_map(|e| match e {
+                Effect::Refresh { ticket } => Some(*ticket),
+                _ => None,
+            })
+            .collect()
+    }
 }
 
 impl Backend for TermBackend {
-    fn perform(&self, _: &Effect, _: &World) -> Option<Completion> {
+    fn perform(&self, effect: &Effect, _: &World) -> Option<Completion> {
+        self.effects.lock().expect("effects").push(effect.clone());
         None
     }
 
@@ -134,6 +149,7 @@ impl Rig {
             bench: bench.clone(),
             requests: Mutex::new(Vec::new()),
             left: Mutex::new(Vec::new()),
+            effects: Mutex::new(Vec::new()),
         });
         let mut parts = WorldParts::new(
             SimClock::new(1_788_401_640, 0),

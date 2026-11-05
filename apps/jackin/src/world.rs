@@ -560,6 +560,11 @@ impl World {
         true
     }
 
+    pub fn refresh_now(&mut self) {
+        let now = self.now_secs();
+        self.request_refresh(now);
+    }
+
     fn request_refresh(&mut self, now: i64) {
         let ticket = self.next_ticket();
         self.refresh_ticket = ticket;

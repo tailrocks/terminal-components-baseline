@@ -9,7 +9,9 @@ mod product_support;
 use capsule_support::*;
 use jackin_console::domain::account::{Account, CredentialSource, Lifecycle};
 use jackin_console::domain::agent::{Agent, Provider};
-use jackin_console::domain::instance::{AgentState, DaemonSnapshot, InstanceStatus};
+use jackin_console::domain::instance::{
+    AgentState, DaemonSnapshot, InstanceStatus, SessionRecord, SessionStatus,
+};
 use jackin_console::domain::workspace::Workspace;
 use jackin_console::panes::PanePolicy;
 use jackin_console::panes::{EndKind, LinkEvent, LinkFault, PaneCommand, PaneRequest};
@@ -427,6 +429,104 @@ fn the_manager_shows_the_state_a_pane_reached_while_detached() {
     rig.bench.push(0, LinkEvent::Exited(Some(0)));
     rig.advance(400);
     assert_eq!(state(&rig), AgentState::Done);
+}
+
+fn with_session(rig: &Rig, id: &str) -> Snapshot {
+    let mut snapshot = snapshot_of(&rig.app.world);
+    for i in snapshot.instances.iter_mut().filter(|i| i.id == INSTANCE) {
+        i.sessions = Ok(vec![SessionRecord {
+            id: id.into(),
+            agent: None,
+            label: "Shell".into(),
+            status: SessionStatus::Active,
+            started_secs: 1_788_401_700,
+        }]);
+    }
+    snapshot
+}
+
+fn session_ids(rig: &Rig) -> Vec<String> {
+    rig.app
+        .world
+        .instance(INSTANCE)
+        .expect("instance")
+        .sessions
+        .clone()
+        .expect("sessions")
+        .into_iter()
+        .map(|s| s.id)
+        .collect()
+}
+
+#[test]
+fn a_new_pane_asks_the_backend_for_the_session_list_at_once() {
+    let mut rig = Rig::new();
+    rig.attach();
+    assert!(rig.backend.refreshes().is_empty());
+
+    rig.press("ctrl+b c");
+    rig.typed("Shell");
+    rig.press("enter");
+    rig.advance(160);
+
+    let [ticket] = rig.backend.refreshes()[..] else {
+        panic!("one refresh expected, got {:?}", rig.backend.refreshes());
+    };
+    let snapshot = with_session(&rig, "s-new");
+    rig.app.deliver(&Msg::Refreshed {
+        ticket,
+        result: Ok(Box::new(snapshot)),
+    });
+    assert_eq!(session_ids(&rig), ["s-new"]);
+}
+
+#[test]
+fn a_new_session_asks_the_backend_for_the_session_list_at_once() {
+    let mut rig = Rig::new();
+    rig.attach();
+
+    rig.app.go(Go::NewSession {
+        instance: INSTANCE.into(),
+        agent: Some(Agent::Codex),
+        account: None,
+    });
+
+    let [ticket] = rig.backend.refreshes()[..] else {
+        panic!("one refresh expected, got {:?}", rig.backend.refreshes());
+    };
+    let snapshot = with_session(&rig, "s-new");
+    rig.app.deliver(&Msg::Refreshed {
+        ticket,
+        result: Ok(Box::new(snapshot)),
+    });
+    assert_eq!(session_ids(&rig), ["s-new"]);
+}
+
+#[test]
+fn a_refresh_asked_for_before_a_new_pane_cannot_hide_the_pane_session() {
+    let mut rig = Rig::new();
+    rig.attach();
+    assert!(rig.app.world.refresh());
+
+    rig.press("ctrl+b c");
+    rig.typed("Shell");
+    rig.press("enter");
+    rig.advance(160);
+
+    let [before, after] = rig.backend.refreshes()[..] else {
+        panic!("two refreshes expected, got {:?}", rig.backend.refreshes());
+    };
+    let older = snapshot_of(&rig.app.world);
+    let newer = with_session(&rig, "s-new");
+    rig.app.deliver(&Msg::Refreshed {
+        ticket: after,
+        result: Ok(Box::new(newer)),
+    });
+    rig.app.deliver(&Msg::Refreshed {
+        ticket: before,
+        result: Ok(Box::new(older)),
+    });
+    assert_eq!(session_ids(&rig), ["s-new"]);
 }
 
 #[test]
