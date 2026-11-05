@@ -309,3 +309,17 @@ fn paging_up_or_jumping_to_the_start_from_the_live_tail_stops_following() {
         assert!(ops.follow(), "paging back to the tail follows it again");
     }
 }
+
+#[test]
+fn a_text_view_reports_the_track_its_host_drew() {
+    let mut v = viewport();
+    assert_eq!(
+        ViewportOps::vbar(&v),
+        Rect::ZERO,
+        "no host has drawn a track yet"
+    );
+
+    let track = Rect::new(AREA.right() - 1, 0, 1, AREA.height);
+    v.scroll.set_track(ID, Axis::Vertical, track);
+    assert_eq!(ViewportOps::vbar(&v), track);
+}

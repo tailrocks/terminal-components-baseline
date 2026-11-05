@@ -85,3 +85,30 @@ fn the_clear_pane_menu_item_drops_the_history_and_says_so() {
     assert!(content(&rig) < before, "the history is gone");
     assert_eq!(rig.status(), "Scrollback cleared");
 }
+
+fn full_rows(width: u16) -> Vec<u8> {
+    (1..=100)
+        .flat_map(|_| format!("{}\r\n", "x".repeat(usize::from(width))).into_bytes())
+        .collect()
+}
+
+#[test]
+fn a_double_click_on_the_scroll_track_selects_and_copies_nothing() {
+    let mut rig = Rig::new();
+    rig.attach();
+    rig.bench.output(0, &history());
+    rig.advance(80);
+    let (track, _, _) = rig.thumb();
+    rig.bench.output(0, &full_rows(track));
+    rig.advance(80);
+    let (x, start, len) = rig.thumb();
+    let on_thumb = (x, start + len / 2);
+
+    for _ in 0..2 {
+        rig.mouse(MouseKind::Down, on_thumb);
+        rig.mouse(MouseKind::Up, on_thumb);
+    }
+
+    assert_eq!(rig.daemon().panes[0].body.viewport().selected_text(), None);
+    assert_eq!(*rig.copied.0.lock().expect("sink"), Vec::<String>::new());
+}

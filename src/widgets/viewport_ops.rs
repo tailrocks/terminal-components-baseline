@@ -20,9 +20,7 @@ pub trait ViewportOps {
     fn id(&self) -> WidgetId;
     fn set_area(&mut self, area: Rect);
     fn hbar(&self) -> Rect;
-    fn vbar(&self) -> Rect {
-        Rect::ZERO
-    }
+    fn vbar(&self) -> Rect;
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Outcome;
     fn scroll(&self) -> &ScrollPane;
 
@@ -87,6 +85,10 @@ impl ViewportOps for TextViewport {
 
     fn hbar(&self) -> Rect {
         TextViewport::hbar(self)
+    }
+
+    fn vbar(&self) -> Rect {
+        self.scroll.v_track()
     }
 
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Outcome {

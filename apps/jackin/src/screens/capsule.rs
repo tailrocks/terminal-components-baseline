@@ -3432,6 +3432,10 @@ impl CapsuleScreen {
         if let Some(pid) = self.pane_at(pos)
             && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid))
         {
+            let view = pane.body.viewport();
+            if view.hbar().contains(pos) || view.vbar().contains(pos) {
+                return Outcome::Ignored;
+            }
             let o = pane.body.viewport_mut().select_word_at(pos);
             if let Some(text) = pane.body.viewport().selected_text() {
                 cx.copy_as(text, "selection");
