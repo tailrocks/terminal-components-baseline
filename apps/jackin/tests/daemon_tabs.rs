@@ -106,7 +106,10 @@ fn a_tab_with_a_live_pane_does_not_show_done() {
         daemon.pane(exited).expect("pane").body.state(),
         AgentState::Done
     );
-    assert_ne!(daemon.tab_state(&tab), AgentState::Done);
+    assert_eq!(
+        daemon.tab_state(&tab),
+        daemon.pane(live).expect("pane").body.state()
+    );
 }
 
 #[test]
@@ -138,9 +141,15 @@ fn a_blocked_pane_wins_over_every_other_state() {
         failed,
         Some(LinkEvent::Exited(Some(1))),
     );
+    let done = split(&mut daemon, &bench);
+    start(&mut daemon, &bench, done, Some(LinkEvent::Exited(Some(0))));
     let live = split(&mut daemon, &bench);
     start(&mut daemon, &bench, live, None);
 
     let tab = daemon.active_tab().expect("tab").clone();
+    assert_eq!(
+        daemon.pane(done).expect("pane").body.state(),
+        AgentState::Done
+    );
     assert_eq!(daemon.tab_state(&tab), AgentState::Blocked);
 }

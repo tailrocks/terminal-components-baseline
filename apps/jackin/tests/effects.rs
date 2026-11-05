@@ -1956,11 +1956,7 @@ fn a_check_reply_of_another_ticket_does_not_finish_the_roles_check() {
         role: role.clone(),
         result: Ok(Box::new(snapshot)),
     });
-    assert!(
-        status(&app).contains("check") || status(&app).contains("error"),
-        "{}",
-        status(&app)
-    );
+    assert_eq!(status(&app), format!("Role {role}: 1 error"));
     assert!(!screen(&mut app).contains("checking…"));
 }
 
@@ -2012,14 +2008,10 @@ fn a_purge_confirmed_after_the_instance_left_is_refused() {
 
 #[test]
 fn a_second_delete_waits_for_the_first_reply() {
-    let (mut app, backend) = held_roles(
+    let (mut app, backend) = held_in(
+        Scenario::Returning,
         |e| matches!(e, Effect::DeleteWorkspace { .. }),
         delete_workspace,
-    );
-    app.world.backend = backend.clone();
-    let mut app = timed(
-        Scenario::Returning,
-        std::mem::replace(&mut app.world, world_for(Scenario::Returning)),
     );
     press(&mut app, "down d");
     press(&mut app, "right enter");

@@ -71,6 +71,24 @@ fn a_drag_on_the_environment_track_scrolls_it() {
     assert!(shown.contains("VAR_39"), "{shown}");
 }
 
+#[test]
+fn the_wheel_over_the_environment_track_scrolls_it() {
+    let mut app = many_variables();
+    assert!(screen(&mut app).contains("SENTINEL_FAIL_PREFLIGHT"));
+    let (x, y) = track_end(&mut app);
+    for _ in 0..60 {
+        Application::handle(
+            &mut app,
+            Input::Mouse(Mouse::new(MouseKind::WheelDown, Position::new(x, y))),
+        );
+        screen(&mut app);
+    }
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("VAR_39"), "{shown}");
+    assert!(!shown.contains("SENTINEL_FAIL_PREFLIGHT"), "{shown}");
+}
+
 fn shown_thumb_row(app: &mut jackin_console::app::App, x: u16) -> u16 {
     let shown = screen(app);
     shown

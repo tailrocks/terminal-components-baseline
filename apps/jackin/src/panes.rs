@@ -441,9 +441,6 @@ impl Daemon {
             .iter()
             .filter_map(|id| self.pane(*id).map(|p| p.body.state()))
             .collect();
-        if states.contains(&AgentState::Blocked) {
-            return AgentState::Blocked;
-        }
         states
             .iter()
             .copied()
