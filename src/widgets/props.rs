@@ -279,6 +279,8 @@ pub struct PropsList {
     /// Whether a prop marked `Prop::wrap` shows on as many rows as its value
     /// needs. Off, the value stays on its row and the reveal shows the rest.
     wrapping: bool,
+
+    reveal_cursor: bool,
 }
 
 impl std::ops::Deref for PropsList {
@@ -351,6 +353,7 @@ impl PropsList {
             sheet: Sheet::default(),
             keymap: PropsCmd::default_keymap(),
             wrapping: false,
+            reveal_cursor: false,
         }
     }
 
@@ -400,6 +403,7 @@ impl PropsList {
     fn set_cursor(&mut self, i: usize) {
         self.core.cursor = i.min(self.props.len().saturating_sub(1));
         self.core.scroll.ensure_visible(self.core.cursor);
+        self.reveal_cursor = true;
     }
 
     pub fn on_key(&mut self, key: &Key) -> (Outcome, Option<PropsAction>) {
@@ -505,15 +509,18 @@ impl PropsList {
             .sum()
     }
 
+    fn rows_of(&self, geo: Geometry, x: u16, i: usize) -> usize {
+        self.wrapped_lines(&self.props[i], geo, x)
+            .map_or(1, |lines| lines.len().max(1))
+    }
+
     /// How many props from `offset` fit in `height` rows, each at the rows it
     /// takes. Props scrolled out of the window cost nothing.
     fn props_fitting(&self, geo: Geometry, x: u16, offset: usize, height: usize) -> usize {
         let mut rows = 0;
         let mut fitting = 0;
-        for p in self.props.iter().skip(offset) {
-            let h = self
-                .wrapped_lines(p, geo, x)
-                .map_or(1, |lines| lines.len().max(1));
+        for i in offset..self.props.len() {
+            let h = self.rows_of(geo, x, i);
             if fitting > 0 && rows + h > height {
                 break;
             }
@@ -523,8 +530,25 @@ impl PropsList {
         fitting.max(1)
     }
 
-    fn fit_viewport(&mut self, geo: Geometry, area: Rect, reserved: usize) {
+    fn first_showing(&self, geo: Geometry, x: u16, cursor: usize, height: usize) -> usize {
+        let mut rows = 0;
+        let mut first = cursor;
+        for i in (0..=cursor).rev() {
+            rows += self.rows_of(geo, x, i);
+            if i != cursor && rows > height {
+                break;
+            }
+            first = i;
+        }
+        first
+    }
+
+    fn fit_viewport(&mut self, geo: Geometry, area: Rect, reserved: usize, reveal: bool) {
         let height = (area.height as usize).saturating_sub(reserved).max(1);
+        if reveal && self.core.cursor < self.props.len() {
+            let first = self.first_showing(geo, area.x, self.core.cursor, height);
+            self.core.scroll.offset = self.core.scroll.offset.max(first);
+        }
         let fitting = self.props_fitting(geo, area.x, self.core.scroll.offset, height);
         self.core.scroll.set_viewport(fitting);
     }
@@ -566,6 +590,7 @@ impl PropsList {
         let focused = ctx.interaction.focused(self.id);
         self.core.reveal.begin(ctx);
         self.core.scroll.set_content(self.props.len());
+        let offset = self.core.scroll.offset;
         self.core.scroll.set_viewport(area.height as usize);
         let n = self.props.len();
 
@@ -578,17 +603,19 @@ impl PropsList {
         {
             return;
         }
+        let reveal = std::mem::take(&mut self.reveal_cursor);
         let mut has_sb = self.core.scroll.overflows();
         let mut sp = scrollbar::split(area, has_sb, self.scrollbar_gap);
         let mut geo = self.geometry(sp.body, sp.content);
         let wraps = self.wrap_extra(geo, area.x) > 0;
         if wraps {
-            self.fit_viewport(geo, area, 0);
+            self.core.scroll.offset = offset;
+            self.fit_viewport(geo, area, 0, reveal);
             if self.core.scroll.overflows() != has_sb {
                 has_sb = self.core.scroll.overflows();
                 sp = scrollbar::split(area, has_sb, self.scrollbar_gap);
                 geo = self.geometry(sp.body, sp.content);
-                self.fit_viewport(geo, area, 0);
+                self.fit_viewport(geo, area, 0, reveal);
             }
         }
 
@@ -598,7 +625,7 @@ impl PropsList {
             if let Some(rows) = &expanded {
                 let extra = rows.len().saturating_sub(1);
                 if wraps {
-                    self.fit_viewport(geo, area, extra);
+                    self.fit_viewport(geo, area, extra, reveal);
                 } else {
                     self.core
                         .scroll
