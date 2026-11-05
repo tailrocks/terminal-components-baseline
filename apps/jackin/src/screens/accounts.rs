@@ -1454,10 +1454,7 @@ impl AccountsScreen {
                 };
                 let toggle = gate(item(if a.enabled { "Disable" } else { "Enable" }, "t"));
                 let toggle = match (&w.surfaces.fixed, a.mutations_allowed()) {
-                    (Some(fixed), true) => match fixed.enable_global.short.as_deref() {
-                        Some(short) => toggle.reason(short),
-                        None => toggle,
-                    },
+                    (Some(fixed), true) => toggle.reason(fixed.enable_global.short_or_text()),
                     _ => toggle,
                 };
                 let default = if !a.mutations_allowed() {

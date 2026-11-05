@@ -263,8 +263,8 @@ impl CapsuleScreen {
     fn build_menubar(words: &Vocabulary, fixed: Option<&Fixed>) -> MenuBar {
         let info_label = words.info_label();
         let reveal = MenuItem::new("Export selected file and reveal…").separator();
-        let reveal = match fixed.and_then(|f| f.reveal_open.short.as_deref()) {
-            Some(short) => reveal.reason(short),
+        let reveal = match fixed {
+            Some(f) => reveal.reason(f.reveal_open.short_or_text()),
             None => reveal,
         };
         let entries: Vec<(&str, Vec<MenuItem>)> = vec![
@@ -937,7 +937,7 @@ impl CapsuleScreen {
                 .surfaces
                 .fixed
                 .as_ref()
-                .and_then(|f| f.reveal_open.short.as_deref())
+                .map(|f| f.reveal_open.short_or_text())
                 .filter(|_| c.ends_with("and reveal") || c.ends_with("and open"));
             let (detail, disabled) = match c {
                 "New tab" => ("Ctrl+B c", false),

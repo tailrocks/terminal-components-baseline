@@ -109,3 +109,17 @@ fn a_scrolling_menu_keeps_its_marker_clear_of_the_reason() {
     );
     assert!(!cut.contains(&long), "{cut}");
 }
+
+#[test]
+fn a_narrow_place_shows_the_short_text_or_the_whole_reason() {
+    assert_eq!(
+        Reason::new("Always off · the host decides")
+            .short("managed")
+            .short_or_text(),
+        "managed"
+    );
+    assert_eq!(
+        Reason::new("Always off · the host decides").short_or_text(),
+        "Always off · the host decides"
+    );
+}

@@ -866,3 +866,24 @@ fn the_demo_purge_refusal_is_the_reason_alone() {
         "2 unpushed commits would be lost"
     );
 }
+
+#[test]
+fn a_wizard_destination_is_fixed_only_where_a_reason_says_why() {
+    let reaches = |fixed: bool| {
+        let mut app = timed(Scenario::Returning, wizard_world(fixed));
+        press(&mut app, "n down space");
+        let step = screen(&mut app);
+        assert!(step.contains("step 2 of 5"), "{step}");
+        press(&mut app, "down enter");
+        screen(&mut app)
+    };
+
+    let fixed = reaches(true);
+    assert!(fixed.contains("step 4 of 5"), "the radio refuses: {fixed}");
+
+    let free = reaches(false);
+    assert!(
+        free.contains("step 3 of 5"),
+        "with no reason to give, the radio is not disabled: {free}"
+    );
+}

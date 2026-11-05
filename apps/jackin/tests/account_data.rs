@@ -3,13 +3,13 @@
 mod common;
 
 use common::*;
-use jackin_console::domain::account::CredentialSource;
 use jackin_console::domain::account::{
     Account, AccountForm, EditBlocked, LaunchBlock, ProviderChoice, SourceChoice, SourceKind,
 };
+use jackin_console::domain::account::{CredentialSource, DetectedKind};
 use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider, UsageSurface};
 use jackin_console::domain::fixed::Fixed;
-use jackin_console::domain::openshell::env_edit_block;
+use jackin_console::domain::openshell::{self, env_edit_block};
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::domain::workspace::{Usability, usability_of};
 use jackin_console::fixtures::{Scenario, world_for};
@@ -320,4 +320,50 @@ fn the_edit_block_names_the_variable_and_cuts_a_long_name() {
     );
     assert!(long.reason().within_limits(), "{}", long.text);
     assert!(env_edit_block("MINIMAX_API_TOKEN").reason().within_limits());
+}
+
+#[test]
+fn the_openshell_projection_of_an_account_blocks_the_edit_of_a_host_variable() {
+    let world = world_for(Scenario::Returning);
+    let mut account = world.accounts.accounts[0].clone();
+    account.edit_blocked = None;
+    account.source = CredentialSource::HostEnv {
+        var: "ZAI_API_KEY".into(),
+        detected: DetectedKind::ZaiApiKeyEnv,
+    };
+
+    openshell::account(&mut account);
+
+    assert_eq!(account.edit_blocked, Some(env_edit_block("ZAI_API_KEY")));
+    assert!(!account.edit_allowed());
+}
+
+#[test]
+fn the_enable_toggle_stays_fixed_when_its_reason_has_no_short_text() {
+    use junie_tui::core::event::{Input, Mouse, MouseKind};
+    use junie_tui::runtime::Application;
+    use ratatui::layout::Position;
+
+    let mut world = world_for(Scenario::AccountsMixed);
+    let mut fixed = Fixed::openshell();
+    fixed.enable_global.short = None;
+    world.surfaces.fixed = Some(fixed);
+    let mut app = app_with(Scenario::AccountsMixed, world);
+    let shown = screen(&mut app);
+    let (y, line) = shown
+        .lines()
+        .enumerate()
+        .find(|(_, l)| l.contains("Personal"))
+        .expect("the account row");
+    let x = line.find("Personal").expect("its column") as u16;
+    Application::handle(
+        &mut app,
+        Input::Mouse(Mouse::new(MouseKind::Secondary, Position::new(x, y as u16))),
+    );
+    screen(&mut app);
+
+    press(&mut app, "down down down down down");
+
+    let menu = screen(&mut app);
+    assert!(menu.contains("Every account stay"), "{menu}");
 }

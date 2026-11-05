@@ -510,6 +510,7 @@ pub static CAPABILITIES: &[Capability] = &[
     Capability::function("core::pointer::PointerRouter::tick"),
     Capability::ty("core::refusal::Reason"),
     Capability::builder("core::refusal::Reason::short"),
+    Capability::function("core::refusal::Reason::short_or_text"),
     Capability::function("core::refusal::Reason::within_limits"),
     Capability::function("core::refusal::Reason::text_fits"),
     Capability::function("core::refusal::Reason::short_fits"),
