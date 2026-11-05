@@ -139,36 +139,8 @@ pub fn docker_risk_dialog(
     d
 }
 
-use junie_tui::widgets::file_browser::{Choose, FileCmd, FileEntry, FileSource, UrlEntry};
+use junie_tui::widgets::file_browser::{Choose, FileCmd, UrlEntry};
 pub use junie_tui::widgets::file_browser::{FileBrowser, FileBrowserResult as BrowserResult};
-
-struct BackendSource(Box<dyn FileSource>);
-
-impl FileSource for BackendSource {
-    fn list(&self, dir: &str) -> Result<Vec<FileEntry>, String> {
-        self.0.list(dir)
-    }
-
-    fn is_dir(&self, path: &str) -> bool {
-        self.0.is_dir(path)
-    }
-
-    fn home(&self) -> Option<String> {
-        self.0.home()
-    }
-
-    fn parent(&self, path: &str) -> Option<String> {
-        self.0.parent(path)
-    }
-
-    fn display(&self, path: &str) -> String {
-        self.0.display(path)
-    }
-
-    fn expand(&self, typed: &str) -> String {
-        self.0.expand(typed)
-    }
-}
 
 fn plain_token(text: &str) -> bool {
     !text.is_empty()
@@ -225,7 +197,7 @@ pub fn file_browser(
     dirs_only: bool,
     w: &World,
 ) -> FileBrowser {
-    let source = BackendSource(w.backend.file_source(w));
+    let source = w.backend.file_source(w);
     let repos: Vec<(String, String)> = w
         .github
         .iter()
