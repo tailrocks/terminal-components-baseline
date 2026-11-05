@@ -505,6 +505,30 @@ impl PropsList {
             .sum()
     }
 
+    /// How many props from `offset` fit in `height` rows, each at the rows it
+    /// takes. Props scrolled out of the window cost nothing.
+    fn props_fitting(&self, geo: Geometry, x: u16, offset: usize, height: usize) -> usize {
+        let mut rows = 0;
+        let mut fitting = 0;
+        for p in self.props.iter().skip(offset) {
+            let h = self
+                .wrapped_lines(p, geo, x)
+                .map_or(1, |lines| lines.len().max(1));
+            if fitting > 0 && rows + h > height {
+                break;
+            }
+            rows += h;
+            fitting += 1;
+        }
+        fitting.max(1)
+    }
+
+    fn fit_viewport(&mut self, geo: Geometry, area: Rect, reserved: usize) {
+        let height = (area.height as usize).saturating_sub(reserved).max(1);
+        let fitting = self.props_fitting(geo, area.x, self.core.scroll.offset, height);
+        self.core.scroll.set_viewport(fitting);
+    }
+
     /// The height that shows every prop whole in a list `width` columns wide.
     pub(crate) fn height_at(&self, width: u16) -> u16 {
         let area = Rect::new(0, 0, width, 1);
@@ -557,19 +581,14 @@ impl PropsList {
         let mut has_sb = self.core.scroll.overflows();
         let mut sp = scrollbar::split(area, has_sb, self.scrollbar_gap);
         let mut geo = self.geometry(sp.body, sp.content);
-        let mut wrap_extra = self.wrap_extra(geo, area.x);
-        if wrap_extra > 0 {
-            self.core
-                .scroll
-                .set_viewport((area.height as usize).saturating_sub(wrap_extra).max(1));
+        let wraps = self.wrap_extra(geo, area.x) > 0;
+        if wraps {
+            self.fit_viewport(geo, area, 0);
             if self.core.scroll.overflows() != has_sb {
                 has_sb = self.core.scroll.overflows();
                 sp = scrollbar::split(area, has_sb, self.scrollbar_gap);
                 geo = self.geometry(sp.body, sp.content);
-                wrap_extra = self.wrap_extra(geo, area.x);
-                self.core
-                    .scroll
-                    .set_viewport((area.height as usize).saturating_sub(wrap_extra).max(1));
+                self.fit_viewport(geo, area, 0);
             }
         }
 
@@ -578,11 +597,13 @@ impl PropsList {
             expanded = self.inline_rows(ctx, geo, area.height);
             if let Some(rows) = &expanded {
                 let extra = rows.len().saturating_sub(1);
-                self.core.scroll.set_viewport(
-                    (area.height as usize)
-                        .saturating_sub(wrap_extra + extra)
-                        .max(1),
-                );
+                if wraps {
+                    self.fit_viewport(geo, area, extra);
+                } else {
+                    self.core
+                        .scroll
+                        .set_viewport((area.height as usize).saturating_sub(extra).max(1));
+                }
                 self.core.scroll.ensure_visible(self.core.cursor);
                 if self.core.scroll.overflows() != has_sb {
                     has_sb = self.core.scroll.overflows();
