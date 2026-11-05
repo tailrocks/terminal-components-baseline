@@ -436,6 +436,14 @@ impl ViewportOps for TerminalViewport {
         Rect::ZERO
     }
 
+    fn vbar(&self) -> Rect {
+        if self.area.width > TRACK_COLUMNS && self.scroll.v.overflows() {
+            Rect::new(self.area.right() - 1, self.area.y, 1, self.area.height)
+        } else {
+            Rect::ZERO
+        }
+    }
+
     fn bar_input(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Outcome {
         Scrollable::bar_input(self, bar, pos, pressed).outcome()
     }
@@ -508,6 +516,14 @@ impl ViewportOps for TerminalViewport {
             return Outcome::Consumed;
         }
         self.on_press_with(pos, 1, KeyModifiers::NONE)
+    }
+
+    fn on_press_with(&mut self, pos: Position, count: u8, mods: KeyModifiers) -> Outcome {
+        TerminalViewport::on_press_with(self, pos, count, mods)
+    }
+
+    fn on_click_with(&mut self, pos: Position, count: u8) -> Outcome {
+        TerminalViewport::on_click_with(self, pos, count)
     }
 
     fn on_drag(&mut self, pos: Position) -> Outcome {

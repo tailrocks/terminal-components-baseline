@@ -95,6 +95,7 @@ pub struct CapsuleScreen {
     selecting: Option<PaneId>,
 
     hbar_held: Option<PaneId>,
+    vbar_held: Option<(PaneId, Bar)>,
     pub pane_rects: Vec<(PaneId, Rect)>,
     seams: Vec<Seam>,
 
@@ -169,6 +170,7 @@ impl CapsuleScreen {
             drag: None,
             selecting: None,
             hbar_held: None,
+            vbar_held: None,
             pane_rects: vec![],
             seams: vec![],
             tabs: Tabs::with_items(STRIP, vec![]),
@@ -3167,6 +3169,15 @@ impl Layer<ModalResult, World> for UsageDialog {
 }
 
 impl CapsuleScreen {
+    fn vbar_of(term: &dyn ViewportOps) -> Bar {
+        Bar {
+            id: scrollbar::id_for(term.id()),
+            owner: term.id(),
+            axis: Axis::Vertical,
+            track: term.vbar(),
+        }
+    }
+
     fn hbar_of(term: &dyn ViewportOps) -> Bar {
         Bar {
             id: scrollbar::h_id_for(term.id()),
@@ -3270,9 +3281,10 @@ impl CapsuleScreen {
             let now = w.now_ms();
             if let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid))
                 && !pane.body.viewport().hbar().contains(pos)
+                && !pane.body.viewport().vbar().contains(pos)
             {
                 pane.body.gesture(now);
-                pane.body.viewport_mut().on_click(pos);
+                pane.body.viewport_mut().on_click_with(pos, ev.count());
             }
             return Outcome::Changed;
         }
@@ -3305,7 +3317,18 @@ impl CapsuleScreen {
                         .bar_input(&bar, pos, true)
                         .or(Outcome::Changed);
                 }
-                pane.body.viewport_mut().on_click(pos);
+                if pane.body.viewport().vbar().contains(pos) {
+                    let bar = Self::vbar_of(pane.body.viewport());
+                    self.vbar_held = Some((pid, bar));
+                    return pane
+                        .body
+                        .viewport_mut()
+                        .bar_input(&bar, pos, true)
+                        .or(Outcome::Changed);
+                }
+                pane.body
+                    .viewport_mut()
+                    .on_press_with(pos, ev.count(), ev.mods());
             }
             return Outcome::Changed;
         }
@@ -3371,6 +3394,13 @@ impl CapsuleScreen {
             }
         }
 
+        if let Some((pid, bar)) = self.vbar_held {
+            self.prime(pid, w);
+            if let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid)) {
+                return pane.body.viewport_mut().bar_input(&bar, pos, false);
+            }
+        }
+
         if let Some(pid) = self.hbar_held {
             self.prime(pid, w);
             if let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(pid)) {
@@ -3393,7 +3423,7 @@ impl CapsuleScreen {
     }
 
     fn drag_end(&mut self, w: &mut World, cx: &mut Cx) -> Outcome {
-        if self.hbar_held.take().is_some() {
+        if self.hbar_held.take().is_some() || self.vbar_held.take().is_some() {
             return Outcome::Changed;
         }
         if self.drag.take().is_some() {

@@ -288,3 +288,24 @@ fn the_app_scroll_policy_of_a_drawn_frame_reaches_the_input_of_a_view_drawn_from
         "the policy of the frame turned sideways scrolling off for the input too"
     );
 }
+
+#[test]
+fn paging_up_or_jumping_to_the_start_from_the_live_tail_stops_following() {
+    for leave in [
+        |ops: &mut dyn ViewportOps| ops.page_up(),
+        |ops: &mut dyn ViewportOps| ops.jump_start(),
+    ] {
+        let mut v = viewport();
+        let ops: &mut dyn ViewportOps = &mut v;
+        assert!(ops.follow());
+        assert!(ops.scroll().at_end(), "the view starts on the live tail");
+
+        leave(ops);
+
+        assert!(!ops.follow(), "a view that left the tail stops following");
+        for _ in 0..8 {
+            ops.page_down();
+        }
+        assert!(ops.follow(), "paging back to the tail follows it again");
+    }
+}

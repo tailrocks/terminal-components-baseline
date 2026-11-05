@@ -23,6 +23,7 @@ use junie_tui::shell::NativeClipboard;
 use junie_tui::theme::{ColorLevel, Theme};
 use ratatui::Terminal;
 use ratatui::backend::TestBackend;
+use ratatui::crossterm::event::KeyModifiers;
 use ratatui::layout::Position;
 
 use crate::pane_support::{Bench, INSTANCE, key};
@@ -249,6 +250,32 @@ impl Rig {
         let position = Position::new(at.0, at.1);
         Application::handle(&mut self.app, Input::Mouse(Mouse::new(kind, position)));
         self.screen();
+    }
+
+    pub fn mouse_with(&mut self, kind: MouseKind, at: (u16, u16), mods: KeyModifiers) {
+        let position = Position::new(at.0, at.1);
+        Application::handle(
+            &mut self.app,
+            Input::Mouse(Mouse::new(kind, position).with_mods(mods)),
+        );
+        self.screen();
+    }
+
+    /// The column, first row and length of the first scrollbar thumb on the
+    /// screen.
+    pub fn thumb(&mut self) -> (u16, u16, u16) {
+        const THUMB: char = '┃';
+        let grid: Vec<Vec<char>> = self.screen().lines().map(|l| l.chars().collect()).collect();
+        let width = grid.iter().map(Vec::len).max().unwrap_or(0);
+        for x in 0..width {
+            let rows: Vec<usize> = (0..grid.len())
+                .filter(|&y| grid[y].get(x) == Some(&THUMB))
+                .collect();
+            if rows.len() >= 2 {
+                return (x as u16, rows[0] as u16, rows.len() as u16);
+            }
+        }
+        panic!("no scrollbar thumb on the screen");
     }
 
     /// Ticks until the clock has moved on by at least `ms`.
