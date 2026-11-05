@@ -68,3 +68,22 @@ select the product shape, and no code may test it.
 
 Local equivalents are in [development](development.md). Tool pins
 live in `mise.toml`; install with `mise install`.
+
+## Generated workflow check
+
+The pre-commit check validates the staged index. The pre-push check validates
+updates to `refs/heads/*` and commit-valued tags under `refs/tags/*`. It skips
+deletions, tags that point to trees or blobs, and destinations outside those
+namespaces, including notes. Malformed records and unresolved branch or
+commit-tag objects fail.
+
+Snapshot files are materialized from Git blobs without checkout filters or
+replacement refs. Source Git reads promised objects through its own partial
+clone configuration. The generator uses the Velnor pin and executable name
+from the snapshot `mise.toml`, with the snapshot's Rust toolchain and
+jactionlint; mise trust and config state live under the temporary directory.
+
+Run the public checker regression matrix with
+`bash tests/check-generated-workflows.sh all`. It uses real Git for snapshot
+and ref behavior, deterministic tool fixtures for boundary cases, and the
+real pinned mise/Velnor pair for a paranoid-mode end-to-end check.
