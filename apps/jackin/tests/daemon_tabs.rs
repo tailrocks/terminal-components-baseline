@@ -1,7 +1,3 @@
-//! The tabs of a daemon over terminal panes whose links are the test links of
-//! `pane_support`: which tab stays active when another closes, and what state
-//! a tab shows for the panes in it. No `demo` feature is needed.
-
 mod pane_support;
 
 use std::sync::Arc;

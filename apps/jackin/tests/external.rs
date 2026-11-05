@@ -313,3 +313,18 @@ fn a_reload_that_removes_the_roles_surface_closes_the_roles_tab() {
     let shown = screen(&mut app);
     assert!(!shown.contains("R Roles"), "{shown}");
 }
+
+#[test]
+fn a_reload_that_adds_the_doctor_surface_binds_its_key() {
+    let (mut app, tx) = linked();
+    assert!(app.world.surfaces.doctor.is_none());
+    key(&mut app, 'D');
+    assert_ne!(app.route(), Route::Doctor, "no Doctor yet");
+
+    let mut snapshot = sim::snapshot(&app.world);
+    snapshot.surfaces.doctor = world_for(Scenario::Doctor).surfaces.doctor;
+    assert!(tx.send(Remote::Reloaded(Box::new(snapshot))));
+    pump(&mut app);
+    key(&mut app, 'D');
+    assert_eq!(app.route(), Route::Doctor);
+}

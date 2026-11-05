@@ -27,8 +27,6 @@ use crate::panes::{Daemon, PaneId, PanePolicy};
 use junie_tui::clock::SimClock;
 use junie_tui::shell::JobKey;
 
-/// How long a refresh may stay out before the world asks again: a backend
-/// that never answers must not stop every later refresh.
 pub const REFRESH_TIMEOUT_SECS: i64 = 30;
 
 pub mod job {
@@ -312,9 +310,6 @@ pub enum Work {
     Settle(Effect),
 }
 
-/// Whether a reply still describes the world. A refresh that an earlier
-/// reply overtook is `Stale`: the world ignored it and no screen should
-/// report it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Absorbed {
     Current,
@@ -528,8 +523,6 @@ impl World {
         daemon
     }
 
-    /// Gives `instance` the daemon and the first panes its backend asks for,
-    /// unless it has a daemon already.
     pub fn open_first_session(&mut self, instance: &str) {
         if self.daemons.contains_key(instance) {
             return;
