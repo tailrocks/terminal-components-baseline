@@ -2,8 +2,11 @@ use ratatui::buffer::Buffer;
 use ratatui::layout::{Position, Rect};
 use ratatui::style::Style;
 
+use crate::core::event::Outcome;
 use crate::core::hit::Axis;
 use crate::core::id::WidgetId;
+use crate::core::intent::Phase;
+use crate::core::pointer::PointerEvent;
 use crate::core::scroll::{ScrollPane, ScrollState, ScrollbarVisibility, TrackClick};
 use crate::theme::{Glyphs, Kind, Plane};
 use crate::ui::ctx::{RenderCtx, VisualState};
@@ -186,11 +189,6 @@ pub fn split(area: Rect, overflows: bool, gap: u16) -> VSplit {
     }
 }
 
-pub fn offset_for_click(track: Rect, pos: Position, scroll: &ScrollState) -> usize {
-    let rel = pos.y.saturating_sub(track.y) as usize;
-    scroll.offset_for_track_pos(rel, track.height as usize)
-}
-
 fn track_row(track: Rect, pos: Position) -> usize {
     pos.y
         .saturating_sub(track.y)
@@ -246,6 +244,29 @@ pub fn apply_with(
         (Axis::Horizontal, true) => press_h(bar.track, pos, scroll, click),
         (Axis::Horizontal, false) => drag_h(bar.track, pos, scroll),
     }
+}
+
+pub fn pointer(
+    ev: &PointerEvent,
+    container: WidgetId,
+    scroll: &mut ScrollState,
+    click: TrackClick,
+) -> Option<Outcome> {
+    let bar = ev.bar.filter(|b| is_bar_of(b.id, container))?;
+    let moved = match ev.phase()? {
+        Phase::Press => apply_with(&bar, ev.pos(), true, scroll, click),
+        Phase::Drag | Phase::DragStart => apply_with(&bar, ev.pos(), false, scroll, click),
+        Phase::Click | Phase::Release | Phase::DragEnd => {
+            scroll.release_track();
+            false
+        }
+        _ => return None,
+    };
+    Some(if moved {
+        Outcome::Changed
+    } else {
+        Outcome::Consumed
+    })
 }
 
 pub fn render_with_fade(

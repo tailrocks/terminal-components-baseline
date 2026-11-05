@@ -8,7 +8,7 @@ use junie_tui::core::hit::Axis;
 use junie_tui::core::id::{ItemKey, Part, PartRef, WidgetId};
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::core::selection::ClickPolicy;
 use junie_tui::theme::{ButtonKind, Tone};
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
@@ -368,9 +368,6 @@ impl ManagerScreen {
             };
         }
         self.scroll.set_content(self.rows.len());
-        if let Some(i) = self.cursor() {
-            self.scroll.ensure_visible(i);
-        }
     }
 
     fn cursor(&self) -> Option<usize> {
@@ -2489,6 +2486,11 @@ impl Page<Jackin> for ManagerScreen {
                 Axis::Horizontal => Outcome::Ignored,
             };
         }
+        if let Some(o) = scrollbar::pointer(ev, TREE, &mut self.scroll, TrackClick::Jump)
+            .or_else(|| scrollbar::pointer(ev, DETAIL, &mut self.detail_scroll, TrackClick::Jump))
+        {
+            return o;
+        }
         match ev.phase() {
             Some(Phase::Click) => {
                 if ClickPolicy::DATA.activates(ev.count(), false) {
@@ -2497,10 +2499,9 @@ impl Page<Jackin> for ManagerScreen {
                         return d;
                     }
                 }
-                self.click(id, pos, w, cx)
+                self.click(id, w, cx)
             }
             Some(Phase::Secondary) => self.secondary(id, pos, w, cx),
-            Some(Phase::Drag) => self.drag(id, pos),
             _ => Outcome::Ignored,
         }
     }
@@ -2947,7 +2948,7 @@ impl ManagerScreen {
 }
 
 impl ManagerScreen {
-    fn click(&mut self, id: WidgetId, pos: Position, w: &mut World, cx: &mut Cx) -> Outcome {
+    fn click(&mut self, id: WidgetId, w: &mut World, cx: &mut Cx) -> Outcome {
         self.build_rows(w);
         if self.menu.is_open() {
             let (o, chosen) = self.menu.on_click(id);
@@ -2976,31 +2977,6 @@ impl ManagerScreen {
                 }
                 return Outcome::Changed;
             }
-        }
-        if id == scrollbar::id_for(TREE) {
-            let track = Rect::new(
-                self.tree_area.right() - 1,
-                self.tree_area.y,
-                1,
-                self.tree_area.height,
-            );
-            self.scroll
-                .scroll_to(scrollbar::offset_for_click(track, pos, &self.scroll));
-            return Outcome::Changed;
-        }
-        if id == scrollbar::id_for(DETAIL) {
-            let track = Rect::new(
-                self.detail_area.right() - 1,
-                self.detail_area.y,
-                1,
-                self.detail_area.height,
-            );
-            self.detail_scroll.scroll_to(scrollbar::offset_for_click(
-                track,
-                pos,
-                &self.detail_scroll,
-            ));
-            return Outcome::Changed;
         }
         if id == DETAIL {
             self.md.open_drawer(cx.focus);
@@ -3109,21 +3085,6 @@ impl ManagerScreen {
                 self.selected = self.rows[i].key.clone();
                 return self.activate(w, cx);
             }
-        }
-        Outcome::Ignored
-    }
-
-    fn drag(&mut self, pressed: WidgetId, pos: Position) -> Outcome {
-        if pressed == scrollbar::id_for(TREE) {
-            let track = Rect::new(
-                self.tree_area.right() - 1,
-                self.tree_area.y,
-                1,
-                self.tree_area.height,
-            );
-            self.scroll
-                .scroll_to(scrollbar::offset_for_click(track, pos, &self.scroll));
-            return Outcome::Changed;
         }
         Outcome::Ignored
     }

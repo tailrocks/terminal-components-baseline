@@ -6,7 +6,7 @@ use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::PointerEvent;
 use junie_tui::core::refusal::raise;
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::theme::Tone;
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
 use junie_tui::ui::master_detail::{MasterDetail, Mode};
@@ -1806,8 +1806,13 @@ impl ConfigTabs {
                 Axis::Horizontal => Outcome::Ignored,
             };
         }
+        let list = self.list_id(tab);
+        if let Some(o) = scrollbar::pointer(ev, list, &mut self.state(tab).scroll, TrackClick::Jump)
+        {
+            return o;
+        }
         match ev.phase() {
-            Some(Phase::Click) => self.click(tab, id, pos, w, cx),
+            Some(Phase::Click) => self.click(tab, id, w, cx),
             Some(Phase::Secondary) => self.secondary(tab, id, pos, w, cx),
             _ => Outcome::Ignored,
         }
@@ -1898,14 +1903,7 @@ impl ConfigTabs {
         }
     }
 
-    fn click(
-        &mut self,
-        tab: Tab,
-        id: WidgetId,
-        pos: Position,
-        w: &mut World,
-        cx: &mut Cx,
-    ) -> Outcome {
+    fn click(&mut self, tab: Tab, id: WidgetId, w: &mut World, cx: &mut Cx) -> Outcome {
         if id == self.ids.card {
             cx.focus.focus(id);
             return Outcome::Changed;
@@ -1938,13 +1936,6 @@ impl ConfigTabs {
                 }
                 return Outcome::Changed;
             }
-        }
-        if id == scrollbar::id_for(list) {
-            let st = self.state(tab);
-            let track = Rect::new(st.area.right() - 1, st.area.y, 1, st.area.height);
-            st.scroll
-                .scroll_to(scrollbar::offset_for_click(track, pos, &st.scroll));
-            return Outcome::Changed;
         }
         Outcome::Ignored
     }

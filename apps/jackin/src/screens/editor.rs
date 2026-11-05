@@ -5,7 +5,7 @@ use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::{MouseTarget, PointerEvent};
 use junie_tui::core::refusal::{Control, Reason, raise};
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::shell::Page;
 use junie_tui::theme::Tone;
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
@@ -116,7 +116,6 @@ struct AcctState {
     cursor: usize,
     scroll: ScrollState,
     filter: Option<String>,
-    area: Rect,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -140,7 +139,6 @@ pub struct EditorScreen {
     dirty_policy: Select,
     role_rows: Vec<RoleRow>,
     role_cursor: usize,
-    role_area: Rect,
     role_scroll: ScrollState,
     general_stack: StackScroll,
     role_filter: Option<String>,
@@ -235,7 +233,6 @@ impl EditorScreen {
             tab: EdTab::General,
             role_rows: vec![],
             role_cursor: 0,
-            role_area: Rect::ZERO,
             role_scroll: ScrollState::default(),
             general_stack: StackScroll::default(),
             role_filter: None,
@@ -888,7 +885,6 @@ impl EditorScreen {
             area.width,
             area.height.saturating_sub(1),
         );
-        self.role_area = body;
         ctx.control(ROLES, body, false);
         ctx.scrollable(ROLES, body);
         self.role_scroll.set_content(self.role_rows.len());
@@ -1151,7 +1147,6 @@ impl EditorScreen {
             area.width,
             area.height.saturating_sub(1),
         );
-        self.acct.area = body;
         ctx.control(ACCOUNTS, body, false);
         ctx.scrollable(ACCOUNTS, body);
         self.acct.scroll.set_viewport(body.height as usize);
@@ -2056,6 +2051,15 @@ impl Page<Jackin> for EditorScreen {
                 return o;
             }
         }
+        if let Some(o) = match self.tab {
+            EdTab::Accounts => {
+                scrollbar::pointer(ev, ACCOUNTS, &mut self.acct.scroll, TrackClick::Jump)
+            }
+            EdTab::Roles => scrollbar::pointer(ev, ROLES, &mut self.role_scroll, TrackClick::Jump),
+            _ => None,
+        } {
+            return o;
+        }
         if click {
             return self.click(ev, w, cx);
         }
@@ -2494,7 +2498,7 @@ impl Screen for EditorScreen {
 
 impl EditorScreen {
     fn click(&mut self, ev: &PointerEvent, w: &mut World, cx: &mut Cx) -> Outcome {
-        let (id, pos) = (ev.id, ev.pos());
+        let id = ev.id;
         if id == CANCEL {
             cx.focus.focus(CANCEL);
             if self.cancel.on_click() {
@@ -2552,29 +2556,9 @@ impl EditorScreen {
                         return Outcome::Changed;
                     }
                 }
-                if id == scrollbar::id_for(ACCOUNTS) {
-                    let a = self.acct.area;
-                    let track = Rect::new(a.right() - 1, a.y, 1, a.height);
-                    self.acct.scroll.scroll_to(scrollbar::offset_for_click(
-                        track,
-                        pos,
-                        &self.acct.scroll,
-                    ));
-                    return Outcome::Changed;
-                }
                 Outcome::Ignored
             }
             EdTab::Roles => {
-                if id == scrollbar::id_for(ROLES) {
-                    let a = self.role_area;
-                    let track = Rect::new(a.right() - 1, a.y, 1, a.height);
-                    self.role_scroll.scroll_to(scrollbar::offset_for_click(
-                        track,
-                        pos,
-                        &self.role_scroll,
-                    ));
-                    return Outcome::Changed;
-                }
                 for i in 0..self.role_rows.len() {
                     if ROLES.child(i) == id {
                         let same = self.role_cursor == i;

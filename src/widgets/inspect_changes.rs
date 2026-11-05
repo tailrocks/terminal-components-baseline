@@ -4,7 +4,7 @@ use crate::core::hit::Axis;
 use crate::core::id::WidgetId;
 use crate::core::intent::Phase;
 use crate::core::pointer::{MouseTarget, PointerEvent};
-use crate::core::scroll::ScrollState;
+use crate::core::scroll::{ScrollState, TrackClick};
 use crate::ui::ctx::{RenderCtx, fill, legible_on_fill};
 use crate::ui::layout::{Split, SplitDir};
 use crate::ui::text::{fit, truncate_middle, width};
@@ -123,7 +123,6 @@ pub struct InspectChanges {
 
     open: bool,
     list_scroll: ScrollState,
-    list_area: Rect,
     tree: TreeView,
 
     leaves: Vec<(Vec<usize>, usize)>,
@@ -164,7 +163,6 @@ impl InspectChanges {
             cursor: 0,
             open: false,
             list_scroll: ScrollState::default(),
-            list_area: Rect::ZERO,
             tree,
             leaves,
             diff: DiffView::new(id.sub("diff")),
@@ -456,7 +454,6 @@ impl InspectChanges {
             inner.width,
             inner.height.saturating_sub(2),
         );
-        self.list_area = list;
         let n = self.compact_rows();
         self.list_scroll.set_content(n);
         self.list_scroll.set_viewport(list.height as usize);
@@ -781,6 +778,13 @@ impl<R: From<InspectOutcome> + 'static, W: 'static> Layer<R, W> for InspectChang
             }
             return if click { o.or(Outcome::Changed) } else { o };
         }
+        if self.mode == InspectMode::Compact
+            && !self.open
+            && let Some(o) =
+                scrollbar::pointer(ev, self.id, &mut self.list_scroll, TrackClick::Jump)
+        {
+            return o;
+        }
         if !click {
             return Outcome::Ignored;
         }
@@ -797,20 +801,6 @@ impl<R: From<InspectOutcome> + 'static, W: 'static> Layer<R, W> for InspectChang
                     }
                     return Outcome::Changed;
                 }
-            }
-            if id == scrollbar::id_for(self.id) {
-                let track = Rect::new(
-                    self.list_area.right() - 1,
-                    self.list_area.y,
-                    1,
-                    self.list_area.height,
-                );
-                self.list_scroll.scroll_to(scrollbar::offset_for_click(
-                    track,
-                    pos,
-                    &self.list_scroll,
-                ));
-                return Outcome::Changed;
             }
         }
         Outcome::Consumed

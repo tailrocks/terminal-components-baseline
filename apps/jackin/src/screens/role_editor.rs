@@ -3,7 +3,7 @@ use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::{MouseTarget, PointerEvent};
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::shell::Page;
 use junie_tui::theme::{StatusKind, Tone};
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
@@ -147,7 +147,6 @@ pub struct RoleEditorScreen {
     hooks_stack: StackScroll,
     env_cursor: usize,
     env_scroll: ScrollState,
-    env_area: Rect,
     removed: Vec<(usize, RoleEnvEntry)>,
     editing_entry: Option<Option<String>>,
     check_scroll: ScrollState,
@@ -237,7 +236,6 @@ impl RoleEditorScreen {
             hooks_stack: StackScroll::default(),
             env_cursor: 0,
             env_scroll: ScrollState::default(),
-            env_area: Rect::ZERO,
             removed: vec![],
             editing_entry: None,
             check_scroll: ScrollState::default(),
@@ -1017,7 +1015,6 @@ impl RoleEditorScreen {
             area.width,
             area.bottom().saturating_sub(head_y + 1),
         );
-        self.env_area = body;
         ctx.control(ENV, body, false);
         ctx.scrollable(ENV, body);
         let rows = n + 1;
@@ -1476,19 +1473,8 @@ impl Page<Jackin> for RoleEditorScreen {
                 return r.outcome();
             }
         }
-        if id == scrollbar::id_for(ENV) && (click || ev.is(Phase::Drag)) {
-            let track = Rect::new(
-                self.env_area.right().saturating_sub(1),
-                self.env_area.y,
-                1,
-                self.env_area.height,
-            );
-            self.env_scroll.scroll_to(scrollbar::offset_for_click(
-                track,
-                ev.pos(),
-                &self.env_scroll,
-            ));
-            return Outcome::Changed;
+        if let Some(o) = scrollbar::pointer(ev, ENV, &mut self.env_scroll, TrackClick::Jump) {
+            return o;
         }
         if !click {
             return Outcome::Ignored;

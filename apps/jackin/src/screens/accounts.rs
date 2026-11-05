@@ -8,7 +8,7 @@ use junie_tui::core::hit::Axis;
 use junie_tui::core::id::WidgetId;
 use junie_tui::core::intent::Phase;
 use junie_tui::core::pointer::PointerEvent;
-use junie_tui::core::scroll::ScrollState;
+use junie_tui::core::scroll::{ScrollState, TrackClick};
 use junie_tui::theme::{ButtonKind, StatusKind, Tone};
 use junie_tui::ui::ctx::{RenderCtx, fill, legible_on_fill};
 use junie_tui::ui::layout::{Split, SplitDir};
@@ -181,7 +181,6 @@ pub struct AccountsScreen {
     scroll: ScrollState,
     inspector_scroll: ScrollState,
     tree_area: Rect,
-    inspector_area: Rect,
 
     md: MasterDetail,
     actions: Vec<Button>,
@@ -227,7 +226,6 @@ impl AccountsScreen {
             scroll: ScrollState::default(),
             inspector_scroll: ScrollState::default(),
             tree_area: Rect::ZERO,
-            inspector_area: Rect::ZERO,
             md: MasterDetail::new(TREE, INSPECTOR)
                 .resizable(Split::new(34, 30, 40))
                 .seam(Splitter::new(SEAM, SplitDir::Horizontal))
@@ -429,9 +427,6 @@ impl AccountsScreen {
             }
         }
         self.scroll.set_content(self.rows.len());
-        if let Some(i) = self.cursor() {
-            self.scroll.ensure_visible(i);
-        }
     }
 
     fn cursor(&self) -> Option<usize> {
@@ -1972,7 +1967,6 @@ impl AccountsScreen {
                 .meta(&scope)
                 .render(area, buf, t)
         };
-        self.inspector_area = inner;
         let bg = if as_drawer { t.canvas } else { t.surface };
 
         let action_row = ButtonRow::new().overflow(RowOverflow::Wrap);
@@ -2763,10 +2757,16 @@ impl Page<Jackin> for AccountsScreen {
                 Axis::Horizontal => Outcome::Ignored,
             };
         }
+        if let Some(o) =
+            scrollbar::pointer(ev, TREE, &mut self.scroll, TrackClick::Jump).or_else(|| {
+                scrollbar::pointer(ev, INSPECTOR, &mut self.inspector_scroll, TrackClick::Jump)
+            })
+        {
+            return o;
+        }
         match ev.phase() {
-            Some(Phase::Click) => self.click(id, pos, w, cx),
+            Some(Phase::Click) => self.click(id, w, cx),
             Some(Phase::Secondary) => self.secondary(id, pos, w, cx),
-            Some(Phase::Drag) => self.drag(id, pos),
             _ => Outcome::Ignored,
         }
     }
@@ -3096,7 +3096,7 @@ impl Screen for AccountsScreen {
 }
 
 impl AccountsScreen {
-    fn click(&mut self, id: WidgetId, pos: Position, w: &mut World, cx: &mut Cx) -> Outcome {
+    fn click(&mut self, id: WidgetId, w: &mut World, cx: &mut Cx) -> Outcome {
         self.build_rows(w);
         if self.menu.is_open() {
             let (o, chosen) = self.menu.on_click(id);
@@ -3127,31 +3127,6 @@ impl AccountsScreen {
                 }
                 return Outcome::Changed;
             }
-        }
-        if id == scrollbar::id_for(TREE) {
-            let track = Rect::new(
-                self.tree_area.right() - 1,
-                self.tree_area.y,
-                1,
-                self.tree_area.height,
-            );
-            self.scroll
-                .scroll_to(scrollbar::offset_for_click(track, pos, &self.scroll));
-            return Outcome::Changed;
-        }
-        if id == scrollbar::id_for(INSPECTOR) {
-            let track = Rect::new(
-                self.inspector_area.right() - 1,
-                self.inspector_area.y,
-                1,
-                self.inspector_area.height,
-            );
-            self.inspector_scroll.scroll_to(scrollbar::offset_for_click(
-                track,
-                pos,
-                &self.inspector_scroll,
-            ));
-            return Outcome::Changed;
         }
         if id == INSPECTOR {
             self.md.open_drawer(cx.focus);
@@ -3191,21 +3166,6 @@ impl AccountsScreen {
         self.md.close_drawer(cx.focus);
         self.open_menu(i, ContextAnchor::Pointer(pos), w);
         Outcome::Changed
-    }
-
-    fn drag(&mut self, pressed: WidgetId, pos: Position) -> Outcome {
-        if pressed == scrollbar::id_for(TREE) {
-            let track = Rect::new(
-                self.tree_area.right() - 1,
-                self.tree_area.y,
-                1,
-                self.tree_area.height,
-            );
-            self.scroll
-                .scroll_to(scrollbar::offset_for_click(track, pos, &self.scroll));
-            return Outcome::Changed;
-        }
-        Outcome::Ignored
     }
 
     fn wheel(&mut self, id: WidgetId, delta: i32) -> Outcome {

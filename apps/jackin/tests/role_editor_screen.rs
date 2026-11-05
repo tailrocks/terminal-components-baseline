@@ -122,3 +122,9 @@ fn typing_in_the_file_chooser_filters_the_files() {
         .expect("the field value");
     assert!(field.contains("policy.yaml"), "{chosen}");
 }
+
+#[test]
+fn a_press_off_centre_on_the_environment_thumb_drags_it_cell_for_cell() {
+    let mut app = many_variables();
+    the_thumb_follows_the_mouse_cell_for_cell(&mut app, (140, 40), 0);
+}
