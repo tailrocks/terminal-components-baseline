@@ -112,7 +112,7 @@ pub struct CapsuleScreen {
     picker_accounts: Vec<AccountId>,
 
     picker_agents: Vec<Option<Agent>>,
-    palette_cmds: Vec<&'static str>,
+    palette_cmds: Vec<Command>,
     pub dialog_open: bool,
     pub takeover: Option<String>,
     export_kind: Option<(bool, bool)>,
@@ -131,28 +131,95 @@ struct Reading {
 
 type PendingSpawn = (Intent, Option<Agent>, Option<AccountId>, String, i64);
 
-const PALETTE: [&str; 20] = [
-    "New tab",
-    "Split pane",
-    "Zoom / unzoom pane",
-    "Export file",
-    "Export file and reveal",
-    "Export file and open",
-    "Export file under cursor",
-    "Export file under cursor and reveal",
-    "Export file under cursor and open",
-    "Export selected file",
-    "Export selected file and reveal",
-    "Export selected file and open",
-    "Stage image from clipboard path",
-    "Paste image from host clipboard",
-    "Stage image without pasting",
-    "Open link under cursor",
-    "Clear pane",
-    "Usage",
-    "Close",
-    "Quit",
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Command {
+    NewTab,
+    SplitPane,
+    ZoomPane,
+    ExportFile,
+    ExportFileReveal,
+    ExportFileOpen,
+    ExportUnderCursor,
+    ExportUnderCursorReveal,
+    ExportUnderCursorOpen,
+    ExportSelected,
+    ExportSelectedReveal,
+    ExportSelectedOpen,
+    StageClipboardPath,
+    PasteHostImage,
+    StageWithoutPasting,
+    OpenLink,
+    ClearPane,
+    Usage,
+    Close,
+    Quit,
+}
+
+const PALETTE: [Command; 20] = [
+    Command::NewTab,
+    Command::SplitPane,
+    Command::ZoomPane,
+    Command::ExportFile,
+    Command::ExportFileReveal,
+    Command::ExportFileOpen,
+    Command::ExportUnderCursor,
+    Command::ExportUnderCursorReveal,
+    Command::ExportUnderCursorOpen,
+    Command::ExportSelected,
+    Command::ExportSelectedReveal,
+    Command::ExportSelectedOpen,
+    Command::StageClipboardPath,
+    Command::PasteHostImage,
+    Command::StageWithoutPasting,
+    Command::OpenLink,
+    Command::ClearPane,
+    Command::Usage,
+    Command::Close,
+    Command::Quit,
 ];
+
+impl Command {
+    fn label(self) -> &'static str {
+        match self {
+            Command::NewTab => "New tab",
+            Command::SplitPane => "Split pane",
+            Command::ZoomPane => "Zoom / unzoom pane",
+            Command::ExportFile => "Export file",
+            Command::ExportFileReveal => "Export file and reveal",
+            Command::ExportFileOpen => "Export file and open",
+            Command::ExportUnderCursor => "Export file under cursor",
+            Command::ExportUnderCursorReveal => "Export file under cursor and reveal",
+            Command::ExportUnderCursorOpen => "Export file under cursor and open",
+            Command::ExportSelected => "Export selected file",
+            Command::ExportSelectedReveal => "Export selected file and reveal",
+            Command::ExportSelectedOpen => "Export selected file and open",
+            Command::StageClipboardPath => "Stage image from clipboard path",
+            Command::PasteHostImage => "Paste image from host clipboard",
+            Command::StageWithoutPasting => "Stage image without pasting",
+            Command::OpenLink => "Open link under cursor",
+            Command::ClearPane => "Clear pane",
+            Command::Usage => "Usage",
+            Command::Close => "Close",
+            Command::Quit => "Quit",
+        }
+    }
+
+    fn reveals(self) -> bool {
+        matches!(
+            self,
+            Command::ExportFileReveal
+                | Command::ExportUnderCursorReveal
+                | Command::ExportSelectedReveal
+        )
+    }
+
+    fn opens(self) -> bool {
+        matches!(
+            self,
+            Command::ExportFileOpen | Command::ExportUnderCursorOpen | Command::ExportSelectedOpen
+        )
+    }
+}
 
 impl CapsuleScreen {
     pub fn new(instance: &str, w: &mut World, pane: Option<u64>) -> Self {
@@ -490,14 +557,7 @@ impl CapsuleScreen {
                     pane.body.viewport_mut().clear_selection();
                 }
             }
-            "Clear pane" => {
-                if let Some(p) = self.focused_pane(w)
-                    && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
-                {
-                    pane.body.clear();
-                    cx.status(w.surfaces.vocabulary.pane_cleared.as_str());
-                }
-            }
+            "Clear pane" => self.clear_pane(w, cx),
             "Zoom pane" | "Unzoom pane" => self.toggle_zoom(w, cx),
             "Redraw" => self.redraw(w, cx),
             "Usage" => self.open_usage(w, cx),
@@ -521,7 +581,16 @@ impl CapsuleScreen {
             "Key reference" => cx.help(),
             "Command palette" => self.open_palette(w, cx),
             l if l == w.surfaces.vocabulary.about_label => self.open_about(w, cx),
-            _ => {}
+            unknown => cx.error(format!("No command is bound to {unknown}")),
+        }
+    }
+
+    fn clear_pane(&mut self, w: &mut World, cx: &mut Cx) {
+        if let Some(p) = self.focused_pane(w)
+            && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
+        {
+            pane.body.clear();
+            cx.status(w.surfaces.vocabulary.pane_cleared.as_str());
         }
     }
 
@@ -922,10 +991,10 @@ impl CapsuleScreen {
         let mut out = vec![];
         self.palette_cmds.clear();
         for c in PALETTE {
-            let label = if c == "Close" && single {
+            let label = if c == Command::Close && single {
                 "Close tab"
             } else {
-                c
+                c.label()
             };
             if !q.is_empty() && !label.to_lowercase().contains(&q) {
                 continue;
@@ -935,35 +1004,36 @@ impl CapsuleScreen {
                 .fixed
                 .as_ref()
                 .map(|f| f.reveal_open.short_or_text())
-                .filter(|_| c.ends_with("and reveal") || c.ends_with("and open"));
+                .filter(|_| c.reveals() || c.opens());
             let (detail, disabled) = match c {
-                "New tab" => ("Ctrl+B c", false),
-                "Split pane" => ("Ctrl+B \" %", false),
-                "Zoom / unzoom pane" => ("Ctrl+B z", false),
-                "Export file under cursor"
-                | "Export file under cursor and reveal"
-                | "Export file under cursor and open" => ("no file under cursor", true),
-                "Export selected file"
-                | "Export selected file and reveal"
-                | "Export selected file and open" => {
+                Command::NewTab => ("Ctrl+B c", false),
+                Command::SplitPane => ("Ctrl+B \" %", false),
+                Command::ZoomPane => ("Ctrl+B z", false),
+                Command::ExportFile | Command::ExportFileReveal | Command::ExportFileOpen => {
+                    ("host", false)
+                }
+                Command::ExportUnderCursor
+                | Command::ExportUnderCursorReveal
+                | Command::ExportUnderCursorOpen => ("no file under cursor", true),
+                Command::ExportSelected
+                | Command::ExportSelectedReveal
+                | Command::ExportSelectedOpen => {
                     if has_sel {
                         ("selection", false)
                     } else {
                         ("no selection", true)
                     }
                 }
-                "Open link under cursor" => ("no link under cursor", true),
-                "Clear pane" => ("Ctrl+B Ctrl+L", false),
-                "Usage" => ("Ctrl+B u", false),
-                "Close" => ("Ctrl+B x", false),
-                "Quit" => ("Ctrl+Q", false),
-
-                "Stage image from clipboard path"
-                | "Paste image from host clipboard"
-                | "Stage image without pasting" => {
+                Command::StageClipboardPath
+                | Command::PasteHostImage
+                | Command::StageWithoutPasting => {
                     (w.surfaces.vocabulary.detail_unavailable.as_str(), true)
                 }
-                _ => ("host", false),
+                Command::OpenLink => ("no link under cursor", true),
+                Command::ClearPane => ("Ctrl+B Ctrl+L", false),
+                Command::Usage => ("Ctrl+B u", false),
+                Command::Close => ("Ctrl+B x", false),
+                Command::Quit => ("Ctrl+Q", false),
             };
             let (detail, disabled) = match reveal_open {
                 Some(short) => (short, true),
@@ -990,10 +1060,10 @@ impl CapsuleScreen {
         out
     }
 
-    fn run_palette(&mut self, cmd: &str, w: &mut World, cx: &mut Cx) {
+    fn run_palette(&mut self, cmd: Command, w: &mut World, cx: &mut Cx) {
         match cmd {
-            "New tab" => self.spawn_flow(Intent::NewTab, w, cx),
-            "Split pane" => {
+            Command::NewTab => self.spawn_flow(Intent::NewTab, w, cx),
+            Command::SplitPane => {
                 let mut p = Picker::new(WidgetId::of("capsule.split"), "Split pane");
                 p.set_searchable(false);
                 p.list.width = (40, 40);
@@ -1005,46 +1075,44 @@ impl CapsuleScreen {
                 );
                 cx.open(p, LayerTag::new("split"));
             }
-            "Zoom / unzoom pane" => self.toggle_zoom(w, cx),
-            "Export file" | "Export file and reveal" | "Export file and open" => {
-                let reveal = cmd.ends_with("reveal");
-                let open = cmd.ends_with("open");
-                self.export_kind = Some((reveal, open));
+            Command::ZoomPane => self.toggle_zoom(w, cx),
+            Command::ExportFile | Command::ExportFileReveal | Command::ExportFileOpen => {
+                self.export_kind = Some((cmd.reveals(), cmd.opens()));
                 let input = TextInput::new(WidgetId::of("capsule.export.path"), "Path")
                     .placeholder(&w.surfaces.vocabulary.export_placeholder)
                     .help("Copies to ~/Downloads/jackin/ on the host")
                     .plain_label();
-                let d = Dialog::prompt(WidgetId::of("capsule.export"), cmd, input, "Export");
+                let d =
+                    Dialog::prompt(WidgetId::of("capsule.export"), cmd.label(), input, "Export");
                 cx.open(d, LayerTag::new("export"));
             }
-            "Export selected file"
-            | "Export selected file and reveal"
-            | "Export selected file and open" => {
+            Command::ExportSelected
+            | Command::ExportSelectedReveal
+            | Command::ExportSelectedOpen => {
                 let text = self
                     .focused_pane(w)
                     .and_then(|p| self.daemon(w).and_then(|d| d.pane(p)))
                     .and_then(|p| p.body.viewport().selected_text())
                     .unwrap_or_default();
                 let path = text.lines().next().unwrap_or("").trim().to_owned();
-                self.export_kind = Some((cmd.ends_with("reveal"), cmd.ends_with("open")));
+                self.export_kind = Some((cmd.reveals(), cmd.opens()));
                 self.finish_export(&path, w, cx);
             }
-            "Stage image from clipboard path"
-            | "Paste image from host clipboard"
-            | "Stage image without pasting" => {
+            Command::ExportUnderCursor
+            | Command::ExportUnderCursorReveal
+            | Command::ExportUnderCursorOpen
+            | Command::OpenLink => {}
+            Command::StageClipboardPath
+            | Command::PasteHostImage
+            | Command::StageWithoutPasting => {
                 cx.status(format!(
-                    "{cmd}: host clipboard has no image · nothing staged"
+                    "{}: host clipboard has no image · nothing staged",
+                    cmd.label()
                 ));
             }
-            "Clear pane" => {
-                if let Some(p) = self.focused_pane(w)
-                    && let Some(pane) = self.daemon_mut(w).and_then(|d| d.pane_mut(p))
-                {
-                    pane.body.clear();
-                }
-            }
-            "Usage" => self.open_usage(w, cx),
-            "Close" | "Close tab" => {
+            Command::ClearPane => self.clear_pane(w, cx),
+            Command::Usage => self.open_usage(w, cx),
+            Command::Close => {
                 let single = self
                     .daemon(w)
                     .and_then(|d| d.active_tab())
@@ -1064,8 +1132,7 @@ impl CapsuleScreen {
                     cx.open(p, LayerTag::new("closetarget"));
                 }
             }
-            "Quit" => self.request_exit(w, cx),
-            _ => {}
+            Command::Quit => self.request_exit(w, cx),
         }
     }
 
