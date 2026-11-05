@@ -393,3 +393,18 @@ fn a_pane_this_client_only_views_never_copies() {
         "a click in a viewing pane is not a gesture to write with"
     );
 }
+
+#[test]
+fn a_title_loses_every_bidirectional_control() {
+    for c in [
+        '\u{61c}', '\u{200e}', '\u{200f}', '\u{202a}', '\u{202b}', '\u{202c}', '\u{202d}',
+        '\u{202e}', '\u{2066}', '\u{2067}', '\u{2068}', '\u{2069}',
+    ] {
+        assert_eq!(
+            sanitize_title(&format!("a{c}b")),
+            "ab",
+            "U+{:04X} survived in the title",
+            c as u32
+        );
+    }
+}
