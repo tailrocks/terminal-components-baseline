@@ -297,25 +297,10 @@ pub enum TrackClick {
     Page,
 }
 
-thread_local! {
-    static APP_CLICK: Cell<TrackClick> = const { Cell::new(TrackClick::Page) };
-    static APP_HSCROLL: Cell<Option<HScroll>> = const { Cell::new(None) };
-}
-
-pub(crate) fn publish_click(click: TrackClick) {
-    APP_CLICK.with(|c| c.set(click));
-}
-
-pub(crate) fn publish_hscroll(policy: HScroll) {
-    APP_HSCROLL.with(|c| c.set(Some(policy)));
-}
-
-pub(crate) fn app_click() -> TrackClick {
-    APP_CLICK.with(Cell::get)
-}
-
-pub(crate) fn app_hscroll() -> HScroll {
-    APP_HSCROLL.with(Cell::get).unwrap_or_default()
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+struct AppPolicy {
+    click: TrackClick,
+    hscroll: HScroll,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -394,6 +379,8 @@ pub struct ScrollPane {
     col_avail: u16,
 
     col_reveal: Option<(usize, usize)>,
+
+    app: Cell<AppPolicy>,
 }
 
 impl std::ops::Deref for ScrollPane {
@@ -463,13 +450,21 @@ impl ScrollPane {
     }
 
     pub fn begin(&mut self, app_click: TrackClick) {
-        publish_click(app_click);
+        self.note_policy(app_click, self.app_hscroll());
         self.v_track = Rect::ZERO;
         self.h_track = Rect::ZERO;
     }
 
+    pub fn note_policy(&self, click: TrackClick, hscroll: HScroll) {
+        self.app.set(AppPolicy { click, hscroll });
+    }
+
+    pub fn app_hscroll(&self) -> HScroll {
+        self.app.get().hscroll
+    }
+
     pub fn v_click(&self) -> TrackClick {
-        self.track_click.unwrap_or_else(app_click)
+        self.track_click.unwrap_or(self.app.get().click)
     }
 
     pub fn v_track(&self) -> Rect {

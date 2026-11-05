@@ -631,7 +631,7 @@ impl ViewportOps for TerminalViewport {
         let t = ctx.theme;
         let grid = self.grid(area);
         let focused = ctx.interaction.focused(self.id);
-        crate::core::scroll::publish_click(ctx.track_click);
+        self.scroll.note_policy(ctx.track_click, ctx.hscroll);
         ctx.control(self.id, area, false);
         ctx.scrollable(self.id, area);
         ctx.autoscroll(grid);

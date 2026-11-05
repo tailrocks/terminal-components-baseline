@@ -834,3 +834,39 @@ fn the_app_track_click_of_a_drawn_frame_decides_a_press_on_the_track() {
         "the app kept paging: the same press moves one page"
     );
 }
+
+#[test]
+fn the_track_click_each_terminal_was_drawn_with_decides_its_own_press() {
+    let mut first = viewport(300);
+    let mut second = viewport(300);
+    first.jump_start();
+    second.jump_start();
+    let theme = Theme::for_level(ColorLevel::TrueColor);
+    for (v, click) in [(&first, TrackClick::Jump), (&second, TrackClick::Page)] {
+        let mut buf = Buffer::empty(Rect::new(0, 0, 30, 12));
+        let mut hits = HitRegistry::default();
+        let mut ring = FocusRing::default();
+        let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut ring);
+        ctx.track_click = click;
+        ViewportOps::draw(v, AREA, &mut buf, &mut ctx, theme.canvas, false);
+    }
+
+    let bar = Bar {
+        id: scrollbar::id_for(ID),
+        owner: ID,
+        axis: Axis::Vertical,
+        track: Rect::new(AREA.right() - 1, AREA.y, 1, AREA.height),
+    };
+    let press = Position::new(AREA.right() - 1, AREA.bottom() - 1);
+    first.bar_input(&bar, press, true);
+    second.bar_input(&bar, press, true);
+
+    assert!(
+        first.follow(),
+        "the first terminal was drawn with jump: a press at the bottom of the track lands at the live tail"
+    );
+    assert!(
+        !second.follow(),
+        "the second terminal was drawn with page: the same press moves one page"
+    );
+}

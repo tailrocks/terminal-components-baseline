@@ -3,7 +3,7 @@ mod common;
 use common::*;
 use junie_tui::core::hit::{Axis, Bar};
 use junie_tui::core::id::WidgetId;
-use junie_tui::core::scroll::Scrollable;
+use junie_tui::core::scroll::{HScroll, Scrollable, TrackClick};
 use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::viewport::{CellPos, Line, Span, TextViewport};
 use junie_tui::widgets::viewport_ops::ViewportOps;
@@ -320,6 +320,13 @@ fn vertical_bar(v: &dyn ViewportOps) -> Bar {
     }
 }
 
+fn drawn_with(v: &TextViewport, click: TrackClick) {
+    draw(None, |buf, ctx| {
+        ctx.track_click = click;
+        v.draw(AREA, buf, ctx, ctx.theme.canvas, false);
+    });
+}
+
 #[test]
 fn a_text_view_drawn_from_a_shared_reference_reports_the_track_along_its_area() {
     let mut v = viewport();
@@ -348,4 +355,52 @@ fn a_text_view_drawn_from_a_shared_reference_reports_the_track_along_its_area() 
         "a press above the thumb of the host-drawn track pages up"
     );
     assert!(!v.follow());
+}
+
+#[test]
+fn the_track_click_each_text_view_was_drawn_with_decides_its_own_press() {
+    let mut first = viewport();
+    let mut second = viewport();
+    drawn_with(&first, TrackClick::Jump);
+    drawn_with(&second, TrackClick::Page);
+
+    let top = Position::new(AREA.right() - 1, AREA.y);
+    let end = first.scroll().offset;
+    let bar = vertical_bar(&first);
+    ViewportOps::bar_input(&mut first, &bar, top, true);
+    let bar = vertical_bar(&second);
+    ViewportOps::bar_input(&mut second, &bar, top, true);
+
+    assert_eq!(
+        first.scroll().offset,
+        0,
+        "the first view was drawn with jump: a press at the top of the track lands at the start"
+    );
+    assert_eq!(
+        second.scroll().offset,
+        end - AREA.height as usize,
+        "the second view was drawn with page: the same press moves one page"
+    );
+}
+
+#[test]
+fn the_horizontal_policy_each_text_view_was_drawn_with_decides_its_own_wheel() {
+    let mut off = wide();
+    let mut on = wide();
+    draw(None, |buf, ctx| {
+        ctx.hscroll = HScroll::off();
+        off.draw(AREA, buf, ctx, ctx.theme.canvas, false);
+    });
+    paint(&on, false);
+
+    assert_eq!(
+        ViewportOps::wheel(&mut off, Axis::Horizontal, 3),
+        junie_tui::core::event::Outcome::Ignored,
+        "the first view was drawn with sideways scrolling off"
+    );
+    assert_eq!(
+        ViewportOps::wheel(&mut on, Axis::Horizontal, 3),
+        junie_tui::core::event::Outcome::Changed,
+        "the view drawn after it kept the default policy"
+    );
 }

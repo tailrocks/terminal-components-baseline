@@ -186,6 +186,7 @@ impl ViewportOps for TextViewport {
         bg: Color,
         caret_allowed: bool,
     ) -> Option<Position> {
+        self.scroll.note_policy(ctx.track_click, ctx.hscroll);
         let mut view = self.clone();
         view.caret_visible = self.caret_visible && caret_allowed;
         view.render(area, buf, ctx, bg);

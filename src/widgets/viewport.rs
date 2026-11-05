@@ -12,7 +12,7 @@ use crate::core::hit::Axis;
 use crate::core::id::WidgetId;
 use crate::core::keymap::{Actions, KeyBinding, KeyMap, Nav, NavKeys, lookup};
 use crate::core::response::Response;
-use crate::core::scroll::{self, HScroll, ScrollPane, ScrollState, Scrollable, TrackClick};
+use crate::core::scroll::{HScroll, ScrollPane, ScrollState, Scrollable, TrackClick};
 use crate::theme::Tone;
 use crate::ui::ctx::{RenderCtx, fill};
 use crate::ui::edit_menu::{
@@ -1667,7 +1667,7 @@ impl TextViewport {
     }
 
     fn h_policy(&self) -> HScroll {
-        self.horizontal.unwrap_or_else(scroll::app_hscroll)
+        self.horizontal.unwrap_or_else(|| self.scroll.app_hscroll())
     }
 
     fn adopt_policy(&mut self) {
@@ -1688,7 +1688,7 @@ impl TextViewport {
         let focused = ctx
             .interaction
             .focused_under(self.id, self.edit_menu.is_open());
-        scroll::publish_hscroll(ctx.hscroll);
+        self.scroll.note_policy(ctx.track_click, ctx.hscroll);
         self.adopt_policy();
         self.scroll.begin(ctx.track_click);
         self.set_area(area);
