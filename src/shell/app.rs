@@ -90,7 +90,7 @@ impl<P: Default> Shell<P> {
 
 impl<P> Drop for Shell<P> {
     fn drop(&mut self) {
-        crate::core::edit::clipboard::clear_hook();
+        self.clipboard.release();
     }
 }
 

@@ -323,3 +323,27 @@ fn a_dropped_shell_leaves_no_clipboard_hook_behind() {
     );
     assert_eq!(queued(), Vec::<String>::new());
 }
+
+#[test]
+fn dropping_one_shell_keeps_the_clipboard_hook_of_the_shell_that_replaced_it() {
+    queued();
+    let first_sink = Arc::new(Counting::default());
+    let second_sink = Arc::new(Counting::default());
+    let mut first = Shell::<()>::new();
+    first.clipboard = Clipboard::new().native(first_sink.clone());
+    first.clipboard.install();
+    let mut second = Shell::<()>::new();
+    second.clipboard = Clipboard::new().native(second_sink.clone());
+    second.clipboard.install();
+
+    drop(first);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+
+    let count = |sink: &Counting| sink.0.load(std::sync::atomic::Ordering::SeqCst);
+    assert_eq!(count(&second_sink), 1, "the live shell still owns the hook");
+    assert_eq!(count(&first_sink), 0);
+
+    drop(second);
+    junie_tui::core::edit::clipboard::copy(TEXT);
+    assert_eq!(count(&second_sink), 1, "its own drop still removes it");
+}
