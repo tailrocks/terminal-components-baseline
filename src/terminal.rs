@@ -136,6 +136,8 @@ impl TerminalState {
         self.grid.scrollback_len()
     }
 
+    /// Rows that left the top of the main screen since the start, counted
+    /// whether or not the history keeps them.
     pub fn scrolled_off(&self) -> u64 {
         self.scrolled_off
     }
@@ -156,8 +158,8 @@ impl TerminalState {
         self.grid.mouse_protocol_mode() != termpane::MouseProtocolMode::None
     }
 
-    /// Drops the history and keeps the screen. The count of rows pushed into
-    /// history since the start (`scrolled_off`) is a fact about the past and
+    /// Drops the history and keeps the screen. The count of rows that left
+    /// the top of the screen (`scrolled_off`) is a fact about the past and
     /// stays.
     pub fn clear_scrollback(&mut self) {
         self.grid.clear_scrollback();

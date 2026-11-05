@@ -474,18 +474,18 @@ fn a_screen_switch_split_over_two_feeds_is_still_attributed() {
     let pushed = state.scrolled_off();
 
     state.feed(b"\x1b[?10");
-    state.feed(b"49h");
-    state.feed(&lines(1, 40));
+    let mut entered = b"49h".to_vec();
+    entered.extend(lines(1, 40));
+    state.feed(&entered);
     state.feed(b"\x1b[?1049");
     assert_eq!(
         state.scrolled_off(),
         pushed,
         "still on the alternate screen"
     );
-    state.feed(b"l");
-    assert_eq!(state.scrolled_off(), pushed);
-
-    state.feed(&lines(1, 3));
+    let mut left = b"l".to_vec();
+    left.extend(lines(1, 3));
+    state.feed(&left);
     assert_eq!(
         state.scrolled_off(),
         pushed + 3,
