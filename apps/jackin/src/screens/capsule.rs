@@ -521,10 +521,7 @@ impl CapsuleScreen {
             "Key reference" => cx.help(),
             "Command palette" => self.open_palette(w, cx),
             l if l == w.surfaces.vocabulary.about_label => self.open_about(w, cx),
-            _ => cx.status(fill_in(
-                &w.surfaces.vocabulary.command_unavailable,
-                &[("label", label)],
-            )),
+            _ => {}
         }
     }
 
@@ -1068,10 +1065,7 @@ impl CapsuleScreen {
                 }
             }
             "Quit" => self.request_exit(w, cx),
-            _ => cx.status(fill_in(
-                &w.surfaces.vocabulary.command_unavailable,
-                &[("label", cmd)],
-            )),
+            _ => {}
         }
     }
 

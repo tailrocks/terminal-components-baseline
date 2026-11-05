@@ -223,10 +223,6 @@ fn unsupported_rows_say_not_supported() {
     assert!(demo.contains("Not in this preview"), "{demo}");
     assert!(live.contains("Not supported"), "{live}");
     assert!(!live.contains("Not available"), "{live}");
-    assert_eq!(
-        Vocabulary::openshell().command_unavailable,
-        "{label}: not supported"
-    );
 }
 
 #[test]

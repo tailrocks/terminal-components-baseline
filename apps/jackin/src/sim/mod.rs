@@ -577,7 +577,10 @@ impl Backend for SimBackend {
             Effect::SaveAccounts { base, registry } => {
                 Some(settle_accounts_save(base, registry, world))
             }
-            _ => None,
+            Effect::Prewarm { .. }
+            | Effect::RunDoctor
+            | Effect::ProbeFolder { .. }
+            | Effect::ReadChanges { .. } => None,
         }
     }
 

@@ -2353,3 +2353,32 @@ fn a_reply_nobody_asked_for_does_not_end_the_reads_of_check_all() {
     });
     assert_eq!(status(&app), "Reading writer again…");
 }
+
+#[test]
+fn removing_an_account_scrubs_it_from_every_workspace() {
+    let id = "acct-claude-work";
+    let world = world_for(Scenario::Returning);
+    let names = |world: &World| {
+        world
+            .workspaces
+            .iter()
+            .filter(|ws| {
+                ws.accounts.enabled.contains(id)
+                    || ws.accounts.disabled_defaults.contains(id)
+                    || ws.accounts.preferred.values().any(|v| v == id)
+                    || ws.accounts.role_preferred.values().any(|v| v == id)
+            })
+            .count()
+    };
+    assert!(names(&world) > 0, "a workspace names the account to remove");
+
+    let mut app = timed(Scenario::Returning, world);
+    app.go(Go::Accounts {
+        select: Some(id.into()),
+    });
+    press(&mut app, "d right enter");
+    settle(&mut app);
+
+    assert!(app.world.accounts.get(id).is_none(), "{}", status(&app));
+    assert_eq!(names(&app.world), 0);
+}

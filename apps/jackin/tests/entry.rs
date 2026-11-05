@@ -430,3 +430,88 @@ fn a_field_copy_in_the_app_reaches_the_host_clipboard_without_osc52() {
     assert_eq!(sink.writes(), ["Spare"], "{out:?}");
     assert!(out.is_empty(), "no OSC 52 after the native write: {out:?}");
 }
+
+fn manager_with(motion: Motion, theme: Theme) -> App {
+    assemble(
+        world_for(Scenario::Returning),
+        manager_entry(),
+        AppOptions {
+            motion,
+            frame: INTRO_END,
+            theme,
+            clipboard: ClipboardMode::Preview,
+            panes: PanePolicy::default(),
+        },
+    )
+}
+
+fn ticks(app: &mut App, n: usize) {
+    for _ in 0..n {
+        Application::handle(app, Input::Tick);
+    }
+}
+
+#[test]
+fn motion_decides_whether_the_clock_of_the_world_runs() {
+    for (motion, runs) in [
+        (Motion::Paused, false),
+        (Motion::Reduced, true),
+        (Motion::Full, true),
+    ] {
+        let mut app = manager_with(motion, theme());
+        let before = app.world.clock.now_ms;
+        ticks(&mut app, 10);
+        assert_eq!(
+            app.world.clock.now_ms != before,
+            runs,
+            "{motion:?}: the clock after ten ticks"
+        );
+    }
+}
+
+#[test]
+fn reduced_motion_never_skips_the_intro_by_frame() {
+    let options = |motion| AppOptions {
+        motion,
+        frame: INTRO_END,
+        theme: theme(),
+        clipboard: ClipboardMode::Preview,
+        panes: PanePolicy::default(),
+    };
+    let route = |motion| {
+        assemble(
+            world_for(Scenario::FirstUse),
+            manager_entry(),
+            options(motion),
+        )
+        .route()
+    };
+    assert_eq!(route(Motion::Full), Route::Manager);
+    assert_eq!(route(Motion::Reduced), Route::Intro);
+}
+
+fn colors(app: &mut App) -> std::collections::BTreeSet<String> {
+    let mut terminal =
+        ratatui::Terminal::new(ratatui::backend::TestBackend::new(140, 40)).expect("test terminal");
+    terminal
+        .draw(|f| Application::render(app, f))
+        .expect("draw");
+    terminal
+        .backend()
+        .buffer()
+        .content()
+        .iter()
+        .flat_map(|c| [c.fg, c.bg])
+        .map(|c| format!("{c:?}"))
+        .collect()
+}
+
+#[test]
+fn the_theme_of_the_options_sets_the_colour_depth_of_the_frame() {
+    let mut full = manager_with(Motion::Paused, theme());
+    let mut mono = manager_with(Motion::Paused, Theme::for_level(ColorLevel::Mono));
+    let rgb = |set: &std::collections::BTreeSet<String>| set.iter().any(|c| c.starts_with("Rgb"));
+
+    assert!(rgb(&colors(&mut full)), "true colour draws RGB cells");
+    assert!(!rgb(&colors(&mut mono)), "mono draws none");
+}
