@@ -22,7 +22,14 @@ fn holla_paused(name: &str) -> App {
     App::new(
         name,
         HOLLA,
-        &["--scenario", "first-use", "--motion", "paused", "--frame", "40"],
+        &[
+            "--scenario",
+            "first-use",
+            "--motion",
+            "paused",
+            "--frame",
+            "40",
+        ],
         120,
         40,
         "truecolor",
