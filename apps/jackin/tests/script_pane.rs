@@ -228,6 +228,39 @@ fn the_sim_backend_proposes_the_instance_agent_and_account_as_the_first_pane() {
     );
 }
 
+#[test]
+fn the_new_agent_scripts_reach_a_prompt_and_leave_working_state() {
+    for agent in [
+        Agent::MuseCode,
+        Agent::Antigravity,
+        Agent::MinimaxCode,
+        Agent::MimoCode,
+        Agent::Omp,
+    ] {
+        let mut body = spawn(Some(agent), 1_000);
+        assert_eq!(body.state(), AgentState::Working);
+        assert!(body.viewport().caret().is_none(), "{agent:?}");
+        assert!(body.tick(1_000));
+        assert_eq!(body.state(), AgentState::Done, "{agent:?}");
+        let prompt = body.viewport().caret().expect("the Await prompt");
+        assert_eq!(
+            press(body.as_mut(), KeyCode::Char('h'), 1_001),
+            PaneKey::Forwarded
+        );
+        assert_eq!(
+            body.viewport().caret().map(|caret| caret.col),
+            Some(prompt.col + 1),
+            "{agent:?} accepts input at Await"
+        );
+        assert_eq!(
+            press(body.as_mut(), KeyCode::Enter, 1_002),
+            PaneKey::Forwarded
+        );
+        assert_eq!(body.state(), AgentState::Working, "{agent:?}");
+        assert!(rows(body.as_mut()) > 1, "{agent:?}");
+    }
+}
+
 fn text_of(body: &mut dyn PaneBody) -> String {
     use junie_tui::core::focus::FocusRing;
     use junie_tui::core::hit::HitRegistry;

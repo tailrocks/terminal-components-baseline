@@ -283,6 +283,77 @@ fn a_launch_picked_after_its_account_became_unusable_is_refused() {
 }
 
 #[test]
+fn an_account_invalidated_while_its_picker_is_open_is_refused() {
+    let mut world = world(LaunchRoleRule::Configured);
+    world.workspaces[0].roles.default = Some("the-architect".into());
+    for account in &mut world.accounts.accounts {
+        account.default_for_provider = false;
+    }
+    world.workspaces[0]
+        .accounts
+        .enabled
+        .insert("acct-claude-work".into());
+    world.workspaces[0]
+        .accounts
+        .enabled
+        .insert("acct-claude-personal".into());
+    world.workspaces[0].accounts.role_preferred.clear();
+    let mut app = app_with(Scenario::Returning, world);
+    press(&mut app, "down enter space enter");
+    assert!(screen(&mut app).contains("Account for Claude Code"));
+    let launches_before = app.world.instances.len();
+    let reload = snapshot_after(&app, |snapshot| {
+        snapshot
+            .accounts
+            .accounts
+            .iter_mut()
+            .find(|account| account.id == "acct-claude-work")
+            .expect("work account")
+            .lifecycle = Lifecycle::NeedsLogin;
+    });
+    app.deliver(&reload);
+    press(&mut app, "down enter");
+
+    assert_eq!(app.route(), Route::Manager);
+    assert_eq!(app.world.instances.len(), launches_before);
+    assert!(
+        app.shell
+            .status
+            .text()
+            .unwrap_or_default()
+            .contains("launch options changed")
+    );
+}
+
+#[test]
+fn cancelling_an_account_picker_leaves_no_launch_or_pending_choice() {
+    let mut world = world(LaunchRoleRule::Configured);
+    world.workspaces[0].roles.default = Some("the-architect".into());
+    for account in &mut world.accounts.accounts {
+        account.default_for_provider = false;
+    }
+    world.workspaces[0]
+        .accounts
+        .enabled
+        .insert("acct-claude-work".into());
+    world.workspaces[0]
+        .accounts
+        .enabled
+        .insert("acct-claude-personal".into());
+    world.workspaces[0].accounts.role_preferred.clear();
+    let mut app = app_with(Scenario::Returning, world);
+    press(&mut app, "down enter space enter");
+    assert!(screen(&mut app).contains("Account for Claude Code"));
+    let launches_before = app.world.instances.len();
+    press(&mut app, "esc");
+    assert_eq!(app.route(), Route::Manager);
+    assert_eq!(app.world.instances.len(), launches_before);
+    let shown = screen(&mut app);
+    assert!(shown.contains("Current directory"));
+    assert!(!shown.contains("Account for Claude Code"), "{shown}");
+}
+
+#[test]
 fn a_launch_picked_with_nothing_changed_goes_on() {
     let mut app = open_picker();
     press(&mut app, "space enter");

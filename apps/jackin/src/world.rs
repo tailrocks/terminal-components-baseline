@@ -1050,7 +1050,16 @@ impl World {
         ws: Option<&Workspace>,
         role: Option<&str>,
     ) -> AgentOffer {
-        let provider = agent.provider();
+        self.offer_for_provider(agent, agent.provider(), ws, role)
+    }
+
+    pub fn offer_for_provider(
+        &self,
+        agent: Agent,
+        provider: crate::domain::agent::Provider,
+        ws: Option<&Workspace>,
+        role: Option<&str>,
+    ) -> AgentOffer {
         let mut ready: Vec<AccountId> = vec![];
         let mut blocked: Vec<(AccountId, String)> = vec![];
         match ws {
@@ -1227,6 +1236,12 @@ pub struct AgentOffer {
     pub blocked: Option<String>,
 
     pub configured: bool,
+}
+
+impl AgentOffer {
+    pub fn has_usable_account(&self) -> bool {
+        self.blocked.is_none() && !self.accounts.is_empty()
+    }
 }
 
 pub fn expand(home: &str, path: &str) -> String {

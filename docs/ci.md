@@ -78,12 +78,59 @@ namespaces, including notes. Malformed records and unresolved branch or
 commit-tag objects fail.
 
 Snapshot files are materialized from Git blobs without checkout filters or
-replacement refs. Source Git reads promised objects through its own partial
-clone configuration. The generator uses the Velnor pin and executable name
-from the snapshot `mise.toml`, with the snapshot's Rust toolchain and
-jactionlint; mise trust and config state live under the temporary directory.
+replacement refs. Missing SHA-1 blobs may be hydrated only from the fixed
+official GitHub blob API and are checked against their Git object identities.
+The generator reads the Velnor, Rust, jactionlint, and ShellCheck pins from the
+snapshot, then resolves those tools through the private qualified lock and
+cache. It does not run Mise with checkout configuration or trust state.
 
 Run the public checker regression matrix with
 `bash tests/check-generated-workflows.sh all`. It uses real Git for snapshot
-and ref behavior, deterministic tool fixtures for boundary cases, and the
-real pinned mise/Velnor pair for a paranoid-mode end-to-end check.
+and ref behavior and controls the external network boundary with deterministic
+fixtures. Its valid-snapshot cases stop at the expected bootstrap response; the
+matrix does not run private Mise lock/install, Cargo qualification, Velnor, or
+the final generated-workflow comparison.
+
+Run `bash tests/check-python-inventory.sh` for the Python runtime inventory's
+filesystem checks.
+
+Qualify the actual pinned toolchain and generator by explicitly running
+`bash scripts/install-generated-workflow-guard.sh` from reviewed checkout
+code. Setup installs and invokes the digest-pinned checker, privately resolves
+Mise tools and Cargo dependencies, and runs the real Velnor generator against
+the approved seed before it registers hooks. Cold setup requires network
+access to the pinned Mise and standalone Python artifacts, GitHub attestation
+and API endpoints, the Rust distribution, and locked Cargo sources. Warm
+checks select the qualified cache and configure Cargo offline; a selected
+snapshot with missing blobs can still use the bounded fixed GitHub API path.
+On macOS the real-toolchain harness runs two warm public hooks under
+`sandbox-exec` with networking denied and first confirms that a curl control
+request is denied. On other hosts, the caller must enforce or observe a
+no-egress boundary to qualify offline behavior.
+
+After setup, run `bash tests/check-installed-generated-workflow-guard.sh` to
+exercise real installed hooks with the qualified Mise/Velnor artifacts. It
+uses a shallow source without the approved seed commit, checks `git commit
+--only`, linked and split indexes, matching commit and push cases, and confirms
+that staged workflow drift is rejected by the real Velnor comparison. It also
+checks installed-cache integrity and refuses a foreign hook. The harness
+preserves logs and manifests when `BASELINE_GUARD_EVIDENCE_DIR` names an output
+directory; its evidence records whether network isolation was enforced by the
+harness.
+
+The redirect regression uses a deterministic curl boundary. The HTTP downgrade
+URL appears only in a synthetic HTTPS response's `Location` header; the test
+asserts that the URL never appears in the request log and that only the
+initial HTTPS request occurred. It does not send cleartext HTTP traffic.
+
+## Workflow policy boundary
+
+The generated CI workflow runs the Velnor generation and diff check for the
+workflow files present in the branch. That check establishes reproducibility;
+it does not authorize changes to `.velnor/config.toml` or to the generated CI
+policy. Local hooks can be absent or bypassed, and a branch can change its own
+workflow before CI evaluates it. GitHub settings inspection on 2026-11-06
+found no branch-protection rule and no repository ruleset requiring a trusted
+workflow. The repository owner must configure a required trusted workflow or
+ruleset for server-side enforcement. Until then, workflow-source and policy
+changes need trusted review.

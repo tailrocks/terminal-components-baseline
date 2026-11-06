@@ -11,8 +11,10 @@ use jackin_console::backend::{
     Backend, Completion, Effect, FileSource, OnePassword, OpSession, PlainKey,
 };
 use jackin_console::domain::agent::Agent;
+use jackin_console::domain::agent::Provider;
 use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use jackin_console::domain::launch::{LaunchContent, LaunchFailure, NextStep, RefusalReason};
+use jackin_console::domain::tuple::InstanceChoice;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{
     EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
@@ -116,6 +118,72 @@ fn the_sim_launch_ends_as_it_did() {
     };
     assert_eq!(pane.agent, Some(Agent::ClaudeCode));
     assert_eq!(pane.account.as_deref(), Some(WORK));
+}
+
+#[test]
+fn the_sim_launch_records_every_selected_agent_and_default_panes_follow_them() {
+    let world = world_for(Scenario::LaunchRunning);
+    let target = LaunchTarget {
+        workspace: Some(1),
+        role: "the-architect".into(),
+        instances: vec![
+            InstanceChoice {
+                agent: Agent::Codex,
+                provider: Provider::OpenAi,
+                account: Some("acct-codex-primary".into()),
+                model: "gpt-5-codex".into(),
+            },
+            InstanceChoice {
+                agent: Agent::Omp,
+                provider: Provider::OpenCode,
+                account: Some("acct-opencode-go".into()),
+                model: "omp-default".into(),
+            },
+        ],
+        task: None,
+    };
+    let mut feed = SimBackend::shared().launch(&world, &target);
+    let instance = (0..1_000)
+        .flat_map(|_| feed.poll(&world))
+        .find_map(|event| match event {
+            LaunchEvent::Ready(ready) => Some(ready.instance),
+            _ => None,
+        })
+        .expect("simulation finishes the launch");
+
+    assert_eq!(
+        instance
+            .agents
+            .iter()
+            .map(|agent| agent.agent)
+            .collect::<Vec<_>>(),
+        [Agent::Codex, Agent::Omp]
+    );
+    assert_eq!(instance.agents[0].provider, Provider::OpenAi);
+    assert_eq!(
+        instance.agents[0].account.as_deref(),
+        Some("acct-codex-primary")
+    );
+    assert_eq!(instance.agents[0].model, "gpt-5-codex");
+    assert_eq!(instance.agents[1].provider, Provider::OpenCode);
+    assert_eq!(
+        instance.agents[1].account.as_deref(),
+        Some("acct-opencode-go")
+    );
+    assert_eq!(instance.agents[1].model, "omp-default");
+
+    let panes = SimBackend::shared().initial_panes(&instance);
+    assert_eq!(panes.len(), 2);
+    assert_eq!(panes[0].agent(), Some(Agent::Codex));
+    assert_eq!(
+        panes[0].account().map(String::as_str),
+        Some("acct-codex-primary")
+    );
+    assert_eq!(panes[1].agent(), Some(Agent::Omp));
+    assert_eq!(
+        panes[1].account().map(String::as_str),
+        Some("acct-opencode-go")
+    );
 }
 
 #[test]

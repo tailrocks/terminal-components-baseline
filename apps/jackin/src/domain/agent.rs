@@ -209,8 +209,8 @@ impl Provider {
             | Provider::Openrouter
             | Provider::Antigravity
             | Provider::Hermes
-            | Provider::Mimo
             | Provider::Muse => None,
+            Provider::Mimo => Some(Agent::MimoCode),
         }
     }
 

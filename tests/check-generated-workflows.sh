@@ -17,6 +17,7 @@ temporary_root="$test_root/tmp"
 repository_template="$test_root/repository template"
 trusted_seed_commit=a7413118476128a1c9b4f290277eb91ddf64ea7a
 response_plan="$test_root/curl responses"
+header_fixture="$test_root/curl custom headers"
 request_log="$test_root/curl requests"
 environment_trace="$test_root/curl environment"
 runtime_tmp_trace="$test_root/curl runtime TMPDIR"
@@ -57,10 +58,10 @@ git -C "$repository_template" fetch --quiet --no-tags --no-write-fetch-head "$re
 git -C "$repository_template" update-ref refs/heads/trusted-seed "$trusted_seed_commit"
 
 {
-  printf '#!/bin/bash\ncontrol=%q\nrequest_log=%q\nenvironment_trace=%q\nruntime_tmp_trace=%q\nobserver_plan=%q\n' "$response_plan" "$request_log" "$environment_trace" "$runtime_tmp_trace" "$observer_plan"
+  printf '#!/bin/bash\ncontrol=%q\nrequest_log=%q\nenvironment_trace=%q\nruntime_tmp_trace=%q\nobserver_plan=%q\nheader_fixture=%q\n' "$response_plan" "$request_log" "$environment_trace" "$runtime_tmp_trace" "$observer_plan" "$header_fixture"
   cat <<'EOF'
 set -eu
-[ "${1-}" = "--disable" ] || exit 91
+[[ "${1-}" == "--disable" ]] || exit 91
 for name in http_proxy https_proxy all_proxy no_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY NO_PROXY CURL_HOME CURL_CA_BUNDLE SSL_CERT_FILE SSL_CERT_DIR; do
   if printenv "$name" >/dev/null 2>&1; then
     printf 'leaked %s\n' "$name" > "$environment_trace"
@@ -104,7 +105,7 @@ from pathlib import Path
 
 plan_path, runtime_tmp = sys.argv[1:]
 plan = json.loads(Path(plan_path).read_text())
-checker_root = Path(runtime_tmp).parent.parent
+checker_root = Path(runtime_tmp).parent
 snapshot = checker_root / plan["snapshot"] / plan["path"]
 if not snapshot.is_file() or snapshot.is_symlink():
     Path(plan["status"]).write_text("error: materialized snapshot file is unavailable\n")
@@ -121,11 +122,15 @@ if [[ "$status" == SLOW ]]; then
   exec python3 -c 'import time; time.sleep(35)'
 fi
 [[ -n "$status" ]] || status=502
-printf 'HTTP/1.1 %s Fixture\r\n' "$status" > "$header_file"
-if [[ -n "$location" && "$location" != '-' ]]; then
-  printf 'Location: %s\r\n' "$location" >> "$header_file"
+if [[ "$request_number" -eq 1 && -f "$header_fixture" ]]; then
+  cat "$header_fixture" > "$header_file"
+else
+  printf 'HTTP/1.1 %s Fixture\r\n' "$status" > "$header_file"
+  if [[ -n "$location" && "$location" != '-' ]]; then
+    printf 'Location: %s\r\n' "$location" >> "$header_file"
+  fi
+  printf '\r\n' >> "$header_file"
 fi
-printf '\r\n' >> "$header_file"
 if [[ -n "$body_file" && "$body_file" != '-' ]]; then
   cat "$body_file"
 fi
@@ -133,11 +138,11 @@ EOF
 } > "$fixture_bin/curl"
 chmod 755 "$fixture_bin/curl"
 
-host_target=$(case "$(uname -s):$(uname -m)" in
-  Darwin:arm64|Darwin:aarch64) printf 'aarch64-apple-darwin' ;;
-  Linux:x86_64|Linux:amd64) printf 'x86_64-unknown-linux-gnu' ;;
-  *) printf 'unsupported' ;;
-esac)
+case "$(uname -s):$(uname -m)" in
+  Darwin:arm64|Darwin:aarch64) host_target=aarch64-apple-darwin ;;
+  Linux:x86_64|Linux:amd64) host_target=x86_64-unknown-linux-gnu ;;
+  *) printf 'generated-workflows: unsupported test host\n' >&2; exit 2 ;;
+esac
 bootstrap_path="/rustup/dist/$host_target/rustup-init"
 checksum_path="$bootstrap_path.sha256"
 
@@ -639,7 +644,7 @@ test_trusted_seed_missing_objects() {
   assert_request_count 0
   assert_equal "missing trusted seed $kind preserves the source index" "$index_before" "$(file_sha256 "$index_file")"
   assert_equal "missing trusted seed $kind preserves local Git config" "$config_before" "$(file_sha256 "$config_file")"
-  assert_equal "missing trusted seed $kind does not invoke the promisor credential helper" false "$(test -e "$marker" && printf true || printf false)"
+  assert_equal "missing trusted seed $kind does not invoke the promisor credential helper" false "$( [[ -e "$marker" ]] && printf true || printf false)"
   assert_no_temporary_snapshot
 }
 
@@ -691,7 +696,7 @@ test_trusted_seed_blob_hydration() {
     assert_equal "$mode requests the fixed GitHub blob URL" "$endpoint" "$(sed -n '1p' "$request_log")"
     assert_equal "$mode proceeds only to the fixed Rustup checksum URL" "https://static.rust-lang.org$checksum_path" "$(sed -n '2p' "$request_log")"
     assert_equal "$mode transport has no inherited proxy or CA settings" clean "$(cat "$environment_trace")"
-    assert_equal "$mode does not execute the source promisor credential helper" false "$(test -e "$marker" && printf true || printf false)"
+    assert_equal "$mode does not execute the source promisor credential helper" false "$( [[ -e "$marker" ]] && printf true || printf false)"
     assert_equal "$mode preserves source Git objects" "$objects_before" "$(source_object_inventory "$directory")"
     assert_equal "$mode preserves source index" "$index_before" "$(file_sha256 "$index_file")"
     assert_equal "$mode preserves source Git config" "$config_before" "$(file_sha256 "$config_file")"
@@ -752,7 +757,7 @@ PY
     printf 'FAIL synthetic trusted seed fixture still contains the empty blob\n' >&2
     return 1
   fi
-  python3 - "$root_checker" "$mutation" "$trusted_seed_commit" "$synthetic_commit" <<'PY'
+  python3 - "$checker" "$mutation" "$trusted_seed_commit" "$synthetic_commit" <<'PY'
 import sys
 from pathlib import Path
 
@@ -806,6 +811,43 @@ assert_blob_hydration_rejected() {
   assert_contains "$label reports the hydration boundary" "$expected"
   assert_request_not_contains "$label never requests the redirect target or Rustup" 'https://static.rust-lang.org/'
   assert_no_temporary_snapshot
+}
+
+test_blob_http_headers() {
+  local object_id
+  local body="$test_root/seed header response.json"
+  local raw="$test_root/seed header blob.raw"
+  local directory
+  local objects_before
+  local template_head template_tree template_commit
+  object_id=$(seed_blob_oid Cargo.lock)
+  write_blob_response_variant "$object_id" "$raw" "$body" wrapped-base64
+  template_head=$(git -C "$repository_template" rev-parse HEAD)
+  printf 'fixture lock distinct from seed\n' > "$repository_template/Cargo.lock"
+  git -C "$repository_template" add Cargo.lock
+  template_tree=$(git -C "$repository_template" write-tree)
+  template_commit=$(GIT_AUTHOR_NAME='Baseline Checker Test' GIT_AUTHOR_EMAIL=baseline-checker@example.invalid GIT_COMMITTER_NAME='Baseline Checker Test' GIT_COMMITTER_EMAIL=baseline-checker@example.invalid git -C "$repository_template" commit-tree "$template_tree" -m distinct-lock)
+  git -C "$repository_template" update-ref refs/heads/main "$template_commit"
+  directory=$(new_repo_with_missing_seed_object missing-seed-header-blob blob Cargo.lock)
+  git -C "$repository_template" update-ref refs/heads/main "$template_head"
+  git -C "$repository_template" reset --hard --quiet "$template_head"
+  git -C "$directory" update-index --add --info-only --cacheinfo "100644,$object_id,Cargo.lock"
+  objects_before=$(source_object_inventory "$directory")
+  printf 'HTTP/2 200\r\ndate: Fri, 06 Nov 2026 00:00:00 GMT\r\ncontent-type: application/json\r\nx-ratelimit-remaining: 58\r\n\r\n' > "$header_fixture"
+  set_response_plan 200 - "$body" 502 - -
+  run_checker "$directory" pre-commit
+  assert_failed 'HTTP/2 blob hydration reaches the downstream boundary'
+  assert_contains 'ordinary HTTP/2 headers accept the verified Cargo.lock blob' 'rustup bootstrap response has an unexpected status'
+  assert_request_count 2
+  assert_equal 'Cargo.lock hydration requests the fixed blob OID' "https://api.github.com/repos/tailrocks/terminal-components-baseline/git/blobs/$object_id" "$(sed -n '1p' "$request_log")"
+  assert_equal 'successful blob hydration preserves source objects' "$objects_before" "$(source_object_inventory "$directory")"
+  assert_no_temporary_snapshot
+  printf 'HTTP/2 200\r\ninvalid name: value\r\n\r\n' > "$header_fixture"
+  assert_blob_hydration_rejected "$directory" "$object_id" 'invalid HTTP header name' 200 - "$body" 'response headers are ambiguous'
+  printf 'HTTP/2 302\r\nLocation: https://example.invalid/a\r\nlocation: https://example.invalid/b\r\n\r\n' > "$header_fixture"
+  assert_blob_hydration_rejected "$directory" "$object_id" 'duplicate HTTP location' 302 - "$body" 'response headers are ambiguous'
+  assert_equal 'rejected HTTP headers preserve source objects' "$objects_before" "$(source_object_inventory "$directory")"
+  rm "$header_fixture"
 }
 
 test_trusted_seed_blob_response_validation() {
@@ -937,7 +979,7 @@ test_trusted_seed_ignores_replacement_and_shallow_state() {
   assert_request_count 1
   assert_equal 'replacement and shallow input preserves the source index' "$index_before" "$(file_sha256 "$index_file")"
   assert_equal 'replacement and shallow input preserves local Git config' "$config_before" "$(file_sha256 "$config_file")"
-  assert_equal 'replacement and shallow input does not invoke a credential helper' false "$(test -e "$test_root/promisor credential helper" && printf true || printf false)"
+  assert_equal 'replacement and shallow input does not invoke a credential helper' false "$( [[ -e "$test_root/promisor credential helper" ]] && printf true || printf false)"
   assert_no_temporary_snapshot
 }
 
@@ -1074,6 +1116,25 @@ test_pushed_snapshot_ignores_replacement_refs() {
   assert_no_temporary_snapshot
 }
 
+test_snapshot_uses_resolved_git_binary() {
+  local directory
+  local marker="$test_root/snapshot git canary"
+  directory=$(new_repo snapshot-git-path)
+  {
+    printf '#!/bin/bash\n/bin/touch %q\nexit 97\n' "$marker"
+  } > "$directory/git"
+  chmod 755 "$directory/git"
+  git -C "$directory" add -- git
+  mv "$directory/git" "$test_root/staged git sentinel"
+  set_denied_response
+  run_checker "$directory" pre-commit '' "PATH=.:$fixture_bin:$caller_path"
+  assert_failed 'relative PATH component cannot select a staged git executable'
+  assert_contains 'snapshot Git reads use the resolved Git executable' 'rustup bootstrap response has an unexpected status'
+  assert_equal 'staged git executable is not invoked' false "$( [[ -e "$marker" ]] && printf true || printf false)"
+  assert_request_count 1
+  assert_no_temporary_snapshot
+}
+
 test_materialization_preserves_raw_git_blob_bytes() {
   local directory
   local raw="$test_root/raw git blob"
@@ -1108,13 +1169,14 @@ test_materialization_preserves_raw_git_blob_bytes() {
   assert_failed 'materialized raw blob case reaches the deterministic network boundary'
   assert_contains 'raw blob observer reaches the external boundary' 'rustup bootstrap response has an unexpected status'
   assert_request_count 1
+  assert_equal 'raw blob observer finds the materialized file' absent "$(cat "$status")"
   if cmp -s "$raw" "$observed"; then
     assert_equal 'snapshot materialization preserves exact Git blob bytes including LF' true true
   else
     assert_equal 'snapshot materialization preserves exact Git blob bytes including LF' true false
   fi
   assert_equal 'smudge filter was not invoked while materializing' absent "$(cat "$status")"
-  assert_equal 'smudge filter canary remains absent' false "$(test -e "$canary" && printf true || printf false)"
+  assert_equal 'smudge filter canary remains absent' false "$( [[ -e "$canary" ]] && printf true || printf false)"
   assert_equal 'raw blob case preserves source index' "$index_before" "$(file_sha256 "$index_file")"
   assert_equal 'raw blob case preserves source Git config' "$config_before" "$(file_sha256 "$config_file")"
   assert_equal 'raw blob case preserves source Git objects' "$objects_before" "$(source_object_inventory "$directory")"
@@ -1216,7 +1278,7 @@ test_pushed_missing_objects() {
     else
       assert_request_count 0
     fi
-    assert_equal "missing pushed $kind does not invoke the Git transport or credential helper" false "$(test -e "$marker" && printf true || printf false)"
+    assert_equal "missing pushed $kind does not invoke the Git transport or credential helper" false "$( [[ -e "$marker" ]] && printf true || printf false)"
     assert_equal "missing pushed $kind preserves source objects" "$objects_before" "$(source_object_inventory "$missing_push_repo")"
     assert_equal "missing pushed $kind preserves the source index" "$index_before" "$(file_sha256 "$index_file")"
     assert_equal "missing pushed $kind preserves local Git config" "$config_before" "$(file_sha256 "$config_file")"
@@ -1283,7 +1345,7 @@ test_staged_missing_blob() {
     assert_equal 'staged snapshot preserves exact hydrated Git blob bytes' true false
   fi
   assert_equal 'staged blob hydration does not invoke source filters' absent "$(cat "$status")"
-  assert_equal 'staged blob hydration does not execute the source credential helper' false "$(test -e "$marker" && printf true || printf false)"
+  assert_equal 'staged blob hydration does not execute the source credential helper' false "$( [[ -e "$marker" ]] && printf true || printf false)"
   assert_equal 'staged blob hydration preserves source objects' "$objects_before" "$(source_object_inventory "$directory")"
   assert_equal 'staged blob hydration preserves source index' "$index_before" "$(file_sha256 "$index_file")"
   assert_equal 'staged blob hydration preserves local Git config' "$config_before" "$(file_sha256 "$config_file")"
@@ -1308,7 +1370,7 @@ test_staged_missing_blob() {
     assert_equal "staged $variant preserves local Git config" "$config_before" "$(file_sha256 "$config_file")"
     assert_equal "staged $variant preserves source checkout" "$checkout_before" "$(source_checkout_inventory "$directory")"
     assert_equal "staged $variant preserves source refs" "$refs_before" "$(source_ref_inventory "$directory")"
-    assert_equal "staged $variant does not execute the source credential helper" false "$(test -e "$marker" && printf true || printf false)"
+    assert_equal "staged $variant does not execute the source credential helper" false "$( [[ -e "$marker" ]] && printf true || printf false)"
     assert_no_temporary_snapshot
   done
 
@@ -1323,7 +1385,7 @@ test_staged_missing_blob() {
   assert_equal 'unavailable staged blob preserves local Git config' "$config_before" "$(file_sha256 "$config_file")"
   assert_equal 'unavailable staged blob preserves source checkout' "$checkout_before" "$(source_checkout_inventory "$directory")"
   assert_equal 'unavailable staged blob preserves source refs' "$refs_before" "$(source_ref_inventory "$directory")"
-  assert_equal 'missing staged blob does not invoke the Git transport or credential helper' false "$(test -e "$marker" && printf true || printf false)"
+  assert_equal 'missing staged blob does not invoke the Git transport or credential helper' false "$( [[ -e "$marker" ]] && printf true || printf false)"
   assert_no_temporary_snapshot
 }
 
@@ -1390,7 +1452,7 @@ test_pushed_missing_blob_hydration() {
     assert_equal 'pushed snapshot preserves exact hydrated Git blob bytes' true false
   fi
   assert_equal 'pushed blob hydration does not invoke source filters' absent "$(cat "$status")"
-  assert_equal 'pushed blob hydration does not execute the source credential helper' false "$(test -e "$marker" && printf true || printf false)"
+  assert_equal 'pushed blob hydration does not execute the source credential helper' false "$( [[ -e "$marker" ]] && printf true || printf false)"
   assert_equal 'pushed blob hydration preserves source objects' "$objects_before" "$(source_object_inventory "$directory")"
   assert_equal 'pushed blob hydration preserves source index' "$index_before" "$(file_sha256 "$index_file")"
   assert_equal 'pushed blob hydration preserves local Git config' "$config_before" "$(file_sha256 "$config_file")"
@@ -1445,7 +1507,7 @@ test_shared_blob_reuse_across_readers() {
     assert_equal 'shared selected blob preserves exact Git bytes' true false
   fi
   assert_equal 'shared blob hydration does not invoke source filters' absent "$(cat "$status")"
-  assert_equal 'shared blob hydration does not execute the source credential helper' false "$(test -e "$marker" && printf true || printf false)"
+  assert_equal 'shared blob hydration does not execute the source credential helper' false "$( [[ -e "$marker" ]] && printf true || printf false)"
   assert_equal 'shared blob hydration preserves source objects' "$objects_before" "$(source_object_inventory "$directory")"
   assert_equal 'shared blob hydration preserves source index' "$index_before" "$(file_sha256 "$index_file")"
   assert_equal 'shared blob hydration preserves local Git config' "$config_before" "$(file_sha256 "$config_file")"
@@ -1531,7 +1593,7 @@ test_distinct_blob_budget_across_readers() {
     assert_equal 'distinct selected blob preserves exact Git bytes' true false
   fi
   assert_equal 'distinct blob hydration does not invoke source filters' absent "$(cat "$status")"
-  assert_equal 'distinct blob hydration does not execute the source credential helper' false "$(test -e "$marker" && printf true || printf false)"
+  assert_equal 'distinct blob hydration does not execute the source credential helper' false "$( [[ -e "$marker" ]] && printf true || printf false)"
   assert_equal 'distinct blob hydration preserves source objects' "$objects_before" "$(source_object_inventory "$directory")"
   assert_equal 'distinct blob hydration preserves source index' "$index_before" "$(file_sha256 "$index_file")"
   assert_equal 'distinct blob hydration preserves local Git config' "$config_before" "$(file_sha256 "$config_file")"
@@ -1582,13 +1644,14 @@ test_pushed_raw_original_blob() {
   assert_failed 'complete pushed tree reaches the deterministic network boundary'
   assert_contains 'pushed raw object observer reaches the external boundary' 'rustup bootstrap response has an unexpected status'
   assert_request_count 1
+  assert_equal 'pushed raw observer finds the materialized file' absent "$(cat "$status")"
   if cmp -s "$raw" "$observed"; then
     assert_equal 'pushed snapshot uses original raw Git blob bytes despite a replacement ref' true true
   else
     assert_equal 'pushed snapshot uses original raw Git blob bytes despite a replacement ref' true false
   fi
   assert_equal 'pushed snapshot materialization does not invoke smudge filters' absent "$(cat "$status")"
-  assert_equal 'pushed snapshot leaves the smudge filter canary absent' false "$(test -e "$canary" && printf true || printf false)"
+  assert_equal 'pushed snapshot leaves the smudge filter canary absent' false "$( [[ -e "$canary" ]] && printf true || printf false)"
   assert_equal 'pushed raw case preserves source index' "$index_before" "$(file_sha256 "$index_file")"
   assert_equal 'pushed raw case preserves source Git config' "$config_before" "$(file_sha256 "$config_file")"
   assert_equal 'pushed raw case preserves source objects' "$objects_before" "$(source_object_inventory "$directory")"
@@ -1780,7 +1843,7 @@ test_hydrated_repeated_blob_occurrence_limit() {
   assert_equal 'repeated-blob hydration preserves local Git config' "$config_before" "$(file_sha256 "$config_file")"
   assert_equal 'repeated-blob hydration preserves source checkout' "$checkout_before" "$(source_checkout_inventory "$directory")"
   assert_equal 'repeated-blob hydration preserves source refs' "$refs_before" "$(source_ref_inventory "$directory")"
-  assert_equal 'repeated-blob hydration does not execute source helpers' false "$(test -e "$marker" && printf true || printf false)"
+  assert_equal 'repeated-blob hydration does not execute source helpers' false "$( [[ -e "$marker" ]] && printf true || printf false)"
   assert_no_temporary_snapshot
 }
 
@@ -1916,7 +1979,7 @@ test_cargo_config_vectors() {
   run_cargo_config_case "$directory" 'registry replacement config' '.cargo/config' $'[source.crates-io]\nreplace-with = "untrusted"'
   run_cargo_config_case "$directory" 'compiler flags and output path config' 'crates/nested/.cargo/config.toml' $'[build]\nrustflags = ["--test"]\ntarget-dir = "'"$test_root"$'"'
   run_cargo_config_case "$directory" 'links override config' 'crates/nested/.cargo/config' $'[target.x86_64-unknown-linux-gnu.links.native]\nrustc-link-search = "'"$test_root"$'"'
-  assert_equal 'Cargo execution canary is not created' 'false' "$(test -e "$test_root/canary output" && printf true || printf false)"
+  assert_equal 'Cargo execution canary is not created' 'false' "$( [[ -e "$test_root/canary output" ]] && printf true || printf false)"
 }
 
 test_toolchain_and_symlink() {
@@ -1948,8 +2011,25 @@ test_toolchain_and_symlink() {
   set_denied_response
   run_checker "$directory" pre-commit
   assert_failed 'symlinked mise.toml fails closed before fetch'
-  assert_contains 'symlinked mise.toml is rejected by the snapshot parser' 'missing regular snapshot config mise.toml'
+  assert_contains 'symlinked mise.toml is rejected by the snapshot parser' 'snapshot mise config is not a regular file'
   assert_request_count 0
+
+  reset_repo "$directory"
+  printf 'protected caller file\n' > "$directory/dash-link"
+  printf 'internal target\n' > "$directory/docs/-f"
+  python3 -I -S - "$directory/docs/dash-link" <<'PY'
+import os
+import sys
+
+os.symlink("-f", sys.argv[1])
+PY
+  git -C "$directory" add -- dash-link docs/-f docs/dash-link
+  set_denied_response
+  run_checker "$directory" pre-commit
+  assert_failed 'option-like symlink target reaches the deterministic network boundary'
+  assert_contains 'option-like symlink target is materialized inside the private snapshot' 'rustup bootstrap response has an unexpected status'
+  assert_equal 'option-like symlink cannot replace the same-named caller file' 'protected caller file' "$(cat "$directory/dash-link")"
+  assert_request_count 1
 
   reset_repo "$directory"
   ln -s /etc/passwd "$directory/docs/escape"
@@ -2061,7 +2141,7 @@ test_response_bounds() {
   assert_failed 'mismatched bootstrap bytes fail closed'
   assert_contains 'bootstrap checksum mismatch is reported' 'rustup bootstrap checksum does not match the official manifest'
   assert_request_count 2
-  assert_equal 'unverified bootstrap is not executed' 'false' "$(test -e "$test_root/bootstrap canary" && printf true || printf false)"
+  assert_equal 'unverified bootstrap is not executed' 'false' "$( [[ -e "$test_root/bootstrap canary" ]] && printf true || printf false)"
   assert_no_temporary_snapshot
 }
 
@@ -2091,6 +2171,7 @@ run_case() {
       test_snapshot_selection
       test_push_record_selection
       test_pushed_snapshot_ignores_replacement_refs
+      test_snapshot_uses_resolved_git_binary
       test_materialization_preserves_raw_git_blob_bytes
       test_pushed_raw_original_blob
       test_pushed_missing_objects
@@ -2108,6 +2189,7 @@ run_case() {
       test_trusted_seed_missing_objects
       test_trusted_seed_blob_hydration
       test_trusted_seed_empty_blob_hydration
+      test_blob_http_headers
       test_trusted_seed_blob_response_validation
       test_trusted_seed_excluded_baseline_blob_is_not_hydrated
       test_trusted_seed_ignores_replacement_and_shallow_state
@@ -2123,6 +2205,7 @@ run_case() {
     snapshots) test_snapshot_selection ;;
     push-records) test_push_record_selection ;;
     replacement) test_pushed_snapshot_ignores_replacement_refs ;;
+    absolute-git) test_snapshot_uses_resolved_git_binary ;;
     raw-blob) test_materialization_preserves_raw_git_blob_bytes; test_pushed_raw_original_blob ;;
     selected-hydration) test_staged_missing_blob; test_pushed_missing_blob_hydration; test_pushed_missing_objects; test_shared_blob_reuse_across_readers; test_distinct_blob_budget_across_readers ;;
     shared-blob-reuse) test_shared_blob_reuse_across_readers ;;
@@ -2135,9 +2218,10 @@ run_case() {
     listing-limit) test_snapshot_listing_limit ;;
     gitlink) test_snapshot_rejects_gitlinks ;;
     relative-tmpdir) test_relative_tmpdir_public_hooks ;;
-    trusted-seed) test_trusted_seed_missing_commit; test_trusted_seed_missing_objects; test_trusted_seed_blob_hydration; test_trusted_seed_empty_blob_hydration; test_trusted_seed_blob_response_validation; test_trusted_seed_excluded_baseline_blob_is_not_hydrated; test_trusted_seed_ignores_replacement_and_shallow_state; test_trusted_seed_rejects_object_alternates ;;
+    trusted-seed) test_trusted_seed_missing_commit; test_trusted_seed_missing_objects; test_trusted_seed_blob_hydration; test_trusted_seed_empty_blob_hydration; test_blob_http_headers; test_trusted_seed_blob_response_validation; test_trusted_seed_excluded_baseline_blob_is_not_hydrated; test_trusted_seed_ignores_replacement_and_shallow_state; test_trusted_seed_rejects_object_alternates ;;
     hydration) test_trusted_seed_blob_hydration ;;
     empty-blob) test_trusted_seed_empty_blob_hydration ;;
+    hydration-headers) test_blob_http_headers ;;
     hydration-boundaries) test_trusted_seed_blob_response_validation ;;
     missing-metadata) test_trusted_seed_missing_commit; test_trusted_seed_missing_objects ;;
     projection) test_trusted_seed_excluded_baseline_blob_is_not_hydrated ;;
@@ -2148,7 +2232,7 @@ run_case() {
     responses) test_response_bounds ;;
     environment) test_curl_environment_isolation ;;
     *)
-      printf 'usage: %s [all|boundary|snapshots|push-records|replacement|raw-blob|selected-hydration|shared-blob-reuse|distinct-blob-budget|pushed-blob-hydration|hydrated-occurrences|pushed-missing|snapshot-limits|gitlink|relative-tmpdir|trusted-seed|hydration|empty-blob|hydration-boundaries|missing-metadata|projection|lock-source|cargo|toolchain|redirects|responses|environment]\n' "$0" >&2
+      printf 'usage: %s [all|boundary|snapshots|push-records|replacement|absolute-git|raw-blob|selected-hydration|shared-blob-reuse|distinct-blob-budget|pushed-blob-hydration|hydrated-occurrences|pushed-missing|snapshot-limits|gitlink|relative-tmpdir|trusted-seed|hydration|empty-blob|hydration-headers|hydration-boundaries|missing-metadata|projection|lock-source|cargo|toolchain|redirects|responses|environment]\n' "$0" >&2
       return 2
       ;;
   esac

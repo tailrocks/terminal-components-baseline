@@ -1,26 +1,210 @@
 #!/usr/bin/env bash
 # SPDX-FileCopyrightText: 2026 Alexey Zhokhov
 # SPDX-License-Identifier: Apache-2.0
+set +x +a
 set -euo pipefail
+LC_ALL=C
+export LC_ALL
+unset trusted_setup_token
+trusted_setup_token=
+if [[ "${1-}" == prepare-cache ]]; then
+  trusted_setup_token=${GITHUB_COM_TOKEN-}
+fi
+unset GITHUB_COM_TOKEN
+if [[ -n "$trusted_setup_token" && ( ! "$trusted_setup_token" =~ ^[A-Za-z0-9_]+$ || ${#trusted_setup_token} -gt 512 ) ]]; then
+  printf 'generated-workflows: invalid setup credential format\n' >&2
+  exit 1
+fi
+
+entry_index_present=0
+entry_index=
+if [[ ${GIT_INDEX_FILE+x} ]]; then
+  entry_index_present=1
+  entry_index=$GIT_INDEX_FILE
+fi
+caller_directory=$(pwd -P) || {
+  printf 'generated-workflows: cannot resolve the caller directory\n' >&2
+  exit 1
+}
+if [[ "$entry_index_present" -eq 1 && "$entry_index" != /* ]]; then
+  entry_index="$caller_directory/$entry_index"
+fi
+git_candidate=$(command -v git) || {
+  printf 'generated-workflows: Git is unavailable in the caller PATH\n' >&2
+  exit 127
+}
+if [[ "$git_candidate" == /* ]]; then
+  git_command=$git_candidate
+elif [[ "$git_candidate" == */* ]]; then
+  git_command="$caller_directory/$git_candidate"
+else
+  git_command=
+  path_remainder="$PATH:"
+  while [[ "$path_remainder" == *:* ]]; do
+    path_entry=${path_remainder%%:*}
+    path_remainder=${path_remainder#*:}
+    if [[ -z "$path_entry" ]]; then
+      path_entry=.
+    fi
+    if [[ "$path_entry" != /* ]]; then
+      path_entry="$caller_directory/$path_entry"
+    fi
+    if [[ -f "$path_entry/git" && -x "$path_entry/git" ]]; then
+      git_command="$path_entry/git"
+      break
+    fi
+  done
+fi
+if [[ -z "$git_command" || ! -x "$git_command" || -d "$git_command" ]]; then
+  printf 'generated-workflows: caller PATH Git is not an absolute executable file\n' >&2
+  exit 127
+fi
+
+checker_directory=$(cd "$(dirname "$0")" && pwd -P)
+install_manifest="$checker_directory/manifest"
+installed_checker=0
+if [[ -f "$install_manifest" || -L "$install_manifest" ]]; then
+  installed_checker=1
+fi
+if [[ "$installed_checker" -eq 1 ]]; then
+  TMPDIR=/tmp
+  export TMPDIR
+fi
 
 export GIT_NO_REPLACE_OBJECTS=1
 
-repo_root=$(cd "$(dirname "$0")/.." && pwd -P)
-mise_command=$(command -v mise) || {
-  printf 'generated-workflows: mise is unavailable\n' >&2
-  exit 127
+case "$(uname -s):$(uname -m)" in
+  Darwin:arm64|Darwin:aarch64)
+    hash_tool=/usr/bin/shasum
+    platform=macos-arm64
+    mise_sha256=6d39119ab914c54ab865204dee9337c71b83a7ed1e730f663c2fc3453e38fe9c
+    python_artifact_sha256=1b1b03fca8aa351698403f3d100ee83db7a5d99748fc7707681ac31a6a846ad9
+    python_lock_sha256=b8653eea3067e6714f12ceead39b1e613700a5d9567d491320ea255bb6d79e4b
+    python_relative_path=bin/python3.15
+    ;;
+  Linux:x86_64|Linux:amd64)
+    hash_tool=/usr/bin/sha256sum
+    platform=linux-x64
+    mise_sha256=c2f7e814cb39f60b7f67a0ff36cb805e94128bf2dff09d175309d0f095b8cc3b
+    python_artifact_sha256=7b03163a980c607ba8194709d4a4086735a7a9c488cc475b098157306927b36b
+    python_lock_sha256=99a7f2363dbff0fe43632c78bfb3c043d96763632af7a8162f1767505e9719e5
+    python_relative_path=bin/python3.15
+    ;;
+  *) printf 'generated-workflows: unsupported host platform\n' >&2; exit 2 ;;
+esac
+expected_config_sha256=2a628986b760cb9563ea6bec758269c36d2c56f8875aafc91e14da7ed039146d
+expected_python_mise_sha256=44598b7976484ccee3703b7d23367d2e2181457370f36790b4f04306098952a9
+expected_inventory_helper_sha256=0541173812097cd6ac4deb065a7e45b6960ddcf26369eb3fd32805a0b66f33eb
+trusted_seed_commit=a7413118476128a1c9b4f290277eb91ddf64ea7a
+trusted_seed_tree=5d842e61ade8e6bdbdcdc4081b219ddf968d7f0c
+trusted_lock_sha256=54035a5337e01cd95129b464ffbd0db45e4b0c989a699742efa1f0ab6329046d
+trusted_metadata_pack_sha256=b1451815278c3ca19a9b06908a99d65a9dd42066fae94a46a2ab457a5e1603d0
+trusted_metadata_object_list_sha256=4f811c3e207c19028e9664b5c3e9afa91ed427d1d58b4849c0f742381b006a9f
+
+sha256_file() {
+  if [[ "$hash_tool" == /usr/bin/shasum ]]; then
+    "$hash_tool" -a 256 "$1" | awk '{print $1}'
+  else
+    "$hash_tool" "$1" | awk '{print $1}'
+  fi
 }
-git_command=$(command -v git) || {
-  printf 'generated-workflows: git is unavailable\n' >&2
-  exit 127
-}
+
+if [[ "$installed_checker" -eq 1 ]]; then
+  if [[ "$hash_tool" == /usr/bin/shasum ]]; then
+    python_generation=$(printf '%s\n' "$platform" '3.15.2' "$python_artifact_sha256" "$python_lock_sha256" "$expected_python_mise_sha256" "$expected_inventory_helper_sha256" '2026.11.3' "$mise_sha256" | "$hash_tool" -a 256 | /usr/bin/awk '{print $1}')
+  else
+    python_generation=$(printf '%s\n' "$platform" '3.15.2' "$python_artifact_sha256" "$python_lock_sha256" "$expected_python_mise_sha256" "$expected_inventory_helper_sha256" '2026.11.3' "$mise_sha256" | "$hash_tool" | /usr/bin/awk '{print $1}')
+  fi
+  checker_digest=${checker_directory##*/}
+  install_root="$checker_directory/../.."
+  artifact_root="$install_root/artifacts"
+  if [[ ! "$checker_digest" =~ ^[0-9a-f]{64}$ || -L "$checker_directory" || -L "$install_manifest" || ! -f "$checker_directory/check-generated-workflows.sh" || -L "$checker_directory/check-generated-workflows.sh" || ! -f "$checker_directory/config.toml" || -L "$checker_directory/config.toml" || ! -f "$checker_directory/trusted-seed.commit" || -L "$checker_directory/trusted-seed.commit" || ! -f "$checker_directory/trusted-seed-metadata.pack" || -L "$checker_directory/trusted-seed-metadata.pack" || ! -f "$checker_directory/trusted-seed-metadata.objects" || -L "$checker_directory/trusted-seed-metadata.objects" ]]; then
+    printf 'generated-workflows: installed checker artifacts are unsafe\n' >&2
+    exit 1
+  fi
+  if [[ "$(sha256_file "$checker_directory/check-generated-workflows.sh")" != "$checker_digest" || "$(sha256_file "$checker_directory/config.toml")" != "$expected_config_sha256" || "$(sha256_file "$checker_directory/python-inventory.sh")" != "$expected_inventory_helper_sha256" || "$(sha256_file "$checker_directory/trusted-seed-metadata.pack")" != "$trusted_metadata_pack_sha256" || "$(sha256_file "$checker_directory/trusted-seed-metadata.objects")" != "$trusted_metadata_object_list_sha256" || "$("$git_command" hash-object -t commit --stdin < "$checker_directory/trusted-seed.commit")" != "$trusted_seed_commit" ]]; then
+    printf 'generated-workflows: installed checker artifacts failed integrity validation\n' >&2
+    exit 1
+  fi
+  if ! /usr/bin/grep -F -x -q 'version=1' "$install_manifest" || ! /usr/bin/grep -F -x -q 'checker_version=1' "$install_manifest" || ! /usr/bin/grep -F -x -q "checker_sha256=$checker_digest" "$install_manifest" || ! /usr/bin/grep -F -x -q "config_sha256=$expected_config_sha256" "$install_manifest" || ! /usr/bin/grep -F -x -q "inventory_helper_sha256=$expected_inventory_helper_sha256" "$install_manifest" || ! /usr/bin/grep -F -x -q "seed_commit=$trusted_seed_commit" "$install_manifest" || ! /usr/bin/grep -F -x -q "seed_tree=$trusted_seed_tree" "$install_manifest" || ! /usr/bin/grep -F -x -q "metadata_pack_sha256=$trusted_metadata_pack_sha256" "$install_manifest" || ! /usr/bin/grep -F -x -q "metadata_object_list_sha256=$trusted_metadata_object_list_sha256" "$install_manifest" || ! /usr/bin/grep -F -x -q "mise_version=2026.11.3" "$install_manifest" || ! /usr/bin/grep -F -x -q "mise_sha256=$mise_sha256" "$install_manifest" || ! /usr/bin/grep -F -x -q "python_version=3.15.2" "$install_manifest" || ! /usr/bin/grep -F -x -q "python_artifact_sha256=$python_artifact_sha256" "$install_manifest" || ! /usr/bin/grep -F -x -q "python_lock_sha256=$python_lock_sha256" "$install_manifest" || ! /usr/bin/grep -F -x -q "python_mise_sha256=$expected_python_mise_sha256" "$install_manifest"; then
+    printf 'generated-workflows: installed checker manifest does not match its artifacts\n' >&2
+    exit 1
+  fi
+  mise_command="$artifact_root/mise/2026.11.3/$platform/mise"
+  python_command="$artifact_root/python/3.15.2/$platform-$python_generation/runtime/$python_relative_path"
+  python_inventory="$artifact_root/python/3.15.2/$platform-$python_generation/inventory"
+  python_artifact_manifest="$artifact_root/python/3.15.2/$platform-$python_generation/manifest"
+  python_mise_config="$artifact_root/python/3.15.2/$platform-$python_generation/mise.toml"
+  python_mise_lock="$artifact_root/python/3.15.2/$platform-$python_generation/mise.lock"
+  if [[ ! -f "$mise_command" || -L "$mise_command" || "$(sha256_file "$mise_command")" != "$mise_sha256" ]]; then
+    printf 'generated-workflows: approved mise binary is missing or changed; run bash scripts/install-generated-workflow-guard.sh from reviewed code\n' >&2
+    exit 127
+  fi
+  if [[ ! -x "$python_command" || -L "$python_command" || ! -f "$python_inventory" || -L "$python_inventory" || ! -f "$python_artifact_manifest" || -L "$python_artifact_manifest" || ! -f "$python_mise_config" || -L "$python_mise_config" || ! -f "$python_mise_lock" || -L "$python_mise_lock" || "$(sha256_file "$python_inventory")" != "$(/usr/bin/grep '^inventory_sha256=' "$install_manifest" | /usr/bin/cut -d= -f2-)" ]]; then
+    printf 'generated-workflows: pinned Python 3.15.2 or its inventory is missing or changed; run bash scripts/install-generated-workflow-guard.sh from reviewed code\n' >&2
+    exit 127
+  fi
+  if [[ "$(sha256_file "$python_mise_config")" != "$expected_python_mise_sha256" || "$(sha256_file "$python_mise_lock")" != "$python_lock_sha256" ]]; then
+    printf 'generated-workflows: private Python Mise configuration or lock changed\n' >&2
+    exit 1
+  fi
+  if [[ "$(sha256_file "$python_inventory")" != "$(/usr/bin/grep '^inventory_sha256=' "$install_manifest" | /usr/bin/cut -d= -f2-)" ]]; then
+    printf 'generated-workflows: pinned Python inventory manifest changed\n' >&2
+    exit 1
+  fi
+  if ! /usr/bin/grep -F -x -q "python_version=3.15.2" "$python_artifact_manifest" || ! /usr/bin/grep -F -x -q "backend=core:python" "$python_artifact_manifest" || ! /usr/bin/grep -F -x -q "archive_sha256=$python_artifact_sha256" "$python_artifact_manifest" || ! /usr/bin/grep -F -x -q "lock_sha256=$python_lock_sha256" "$python_artifact_manifest" || ! /usr/bin/grep -F -x -q "mise_config_sha256=$expected_python_mise_sha256" "$python_artifact_manifest" || ! /usr/bin/grep -F -x -q "inventory_helper_sha256=$expected_inventory_helper_sha256" "$python_artifact_manifest" || ! /usr/bin/grep -F -x -q "inventory_sha256=$(sha256_file "$python_inventory")" "$python_artifact_manifest"; then
+    printf 'generated-workflows: pinned Python artifact manifest does not match its archive or inventory\n' >&2
+    exit 1
+  fi
+  "$checker_directory/python-inventory.sh" check "$artifact_root/python/3.15.2/$platform-$python_generation/runtime" "$python_inventory" || exit $?
+else
+  python_command=
+  for candidate in /opt/homebrew/bin/python3 /usr/local/bin/python3 /usr/bin/python3 /opt/local/bin/python3; do
+    if [[ -x "$candidate" ]] && "$candidate" -I -S -c 'import sys, tomllib; sys.exit(sys.version_info < (3, 11))' >/dev/null 2>&1; then
+      python_command=$candidate
+      break
+    fi
+  done
+  if [[ -z "$python_command" ]]; then
+    python_command=$(command -v python3 || true)
+  fi
+  if [[ -z "$python_command" ]]; then
+    printf 'generated-workflows: isolated test Python is unavailable\n' >&2
+    exit 127
+  fi
+fi
+
 caller_path=$PATH
+if [[ "$installed_checker" -eq 1 ]]; then
+  caller_path=/usr/bin:/bin:/usr/sbin:/sbin
+  curl_candidate=/usr/bin/curl
+else
+  mise_command=$(command -v mise) || {
+    printf 'generated-workflows: mise is unavailable\n' >&2
+    exit 127
+  }
+  curl_candidate=$(command -v curl) || {
+    printf 'generated-workflows: curl is unavailable in the test PATH\n' >&2
+    exit 127
+  }
+fi
 clean_git_environment=("PATH=$caller_path" "HOME=${TMPDIR:-/tmp}" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1)
-repo_root=$(env -i "${clean_git_environment[@]}" "$git_command" -C "$repo_root" rev-parse --show-toplevel) || {
+if [[ "$entry_index_present" -eq 1 ]]; then
+  clean_git_environment+=("GIT_INDEX_FILE=$entry_index")
+fi
+repo_root=$(env -i "${clean_git_environment[@]}" "$git_command" -C "$(pwd -P)" rev-parse --show-toplevel) || {
   printf 'generated-workflows: cannot resolve the checker repository\n' >&2
   exit 1
 }
 repo_root=$(cd "$repo_root" && pwd -P)
+source_git_directory=$(env -i "${clean_git_environment[@]}" "$git_command" -C "$repo_root" rev-parse --path-format=absolute --git-dir) || {
+  printf 'generated-workflows: cannot resolve the source Git directory\n' >&2
+  exit 1
+}
+source_git_directory=$(cd "$source_git_directory" && pwd -P) || {
+  printf 'generated-workflows: cannot resolve the source Git directory\n' >&2
+  exit 1
+}
 objects=$(env -i "${clean_git_environment[@]}" "$git_command" -C "$repo_root" rev-parse --path-format=absolute --git-path objects) || {
   printf 'generated-workflows: cannot resolve the source object directory\n' >&2
   exit 1
@@ -34,21 +218,6 @@ object_format=$(env -i "${clean_git_environment[@]}" "$git_command" -C "$repo_ro
   exit 1
 }
 effective_index=$(env -i "${clean_git_environment[@]}" "$git_command" -C "$repo_root" rev-parse --path-format=absolute --git-path index)
-python_command=
-for candidate in /opt/homebrew/bin/python3 /usr/local/bin/python3 /usr/bin/python3 /opt/local/bin/python3; do
-  if [[ -x "$candidate" ]] && "$candidate" -I -S -c 'import sys, tomllib; sys.exit(sys.version_info < (3, 11))' >/dev/null 2>&1; then
-    python_command=$candidate
-    break
-  fi
-done
-if [[ -z "$python_command" ]]; then
-  printf 'generated-workflows: isolated Python 3.11 or newer with tomllib is unavailable\n' >&2
-  exit 127
-fi
-curl_candidate=$(command -v curl) || {
-  printf 'generated-workflows: curl is unavailable in the caller PATH\n' >&2
-  exit 127
-}
 curl_command=$("$python_command" -I -S - "$curl_candidate" <<'PY'
 import os
 import sys
@@ -79,6 +248,15 @@ temporary_root=$(mktemp -d "$temporary_base/jackin-generated-workflows.XXXXXX") 
   exit 1
 }
 cleanup_temporary_root() {
+  unset trusted_setup_token
+  if [[ -n "${trusted_seed_stage_dir:-}" && -d "$trusted_seed_stage_dir" && ! -L "$trusted_seed_stage_dir" ]]; then
+    chmod -R u+w "$trusted_seed_stage_dir" 2>/dev/null || true
+    find "$trusted_seed_stage_dir" -depth -delete 2>/dev/null || true
+  fi
+  if [[ -n "${tool_cache_stage_dir:-}" && -d "$tool_cache_stage_dir" && ! -L "$tool_cache_stage_dir" ]]; then
+    chmod -R u+w "$tool_cache_stage_dir" 2>/dev/null || true
+    find "$tool_cache_stage_dir" -depth -delete 2>/dev/null || true
+  fi
   chmod u+w "$temporary_root" 2>/dev/null || true
   find "$temporary_root" -type d -exec chmod u+w {} + 2>/dev/null || true
   find "$temporary_root" -type f -exec chmod u+w {} + 2>/dev/null || true
@@ -94,11 +272,21 @@ env -i "${clean_git_environment[@]}" "$git_command" -C "$repo_root" count-object
   printf 'generated-workflows: cannot resolve source alternate object directories\n' >&2
   exit 1
 }
-trusted_private_objects="$temporary_root/trusted-seed-objects"
+trusted_metadata_cache=
+if [[ "$installed_checker" -eq 1 ]]; then
+  trusted_metadata_cache="$install_root/cache/seed/$trusted_seed_commit"
+  trusted_private_objects="$trusted_metadata_cache/objects"
+else
+  trusted_metadata_cache="$temporary_root/trusted-seed-cache"
+  trusted_private_objects="$trusted_metadata_cache/objects"
+fi
+trusted_cache_validated=0
+trusted_cache_provisioning=0
 index_tree_objects="$temporary_root/index-tree-objects"
 verified_blob_objects="$temporary_root/verified-blob-objects"
 snapshot_reader="$temporary_root/snapshot-reader.git"
 maximum_snapshot_entries=8192
+maximum_trusted_seed_metadata_entries=$((maximum_snapshot_entries * 2))
 maximum_snapshot_blob_bytes=$((16 * 1024 * 1024))
 maximum_snapshot_total_bytes=$((512 * 1024 * 1024))
 maximum_snapshot_listing_bytes=$((8 * 1024 * 1024))
@@ -107,8 +295,6 @@ maximum_hydration_total_bytes=$((256 * 1024 * 1024))
 hydration_budget_file="$temporary_root/blob-hydration-budget"
 hydration_deadline_file="$temporary_root/blob-hydration-deadline"
 
-trusted_seed_commit=a7413118476128a1c9b4f290277eb91ddf64ea7a
-trusted_lock_sha256=54035a5337e01cd95129b464ffbd0db45e4b0c989a699742efa1f0ab6329046d
 
 fail_materialization() {
   printf 'generated-workflows: cannot materialize snapshot: %s\n' "$1" >&2
@@ -151,7 +337,7 @@ git_in_private_snapshot_reader() {
     "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" \
     "GIT_DIR=$snapshot_reader" \
     "GIT_OBJECT_DIRECTORY=$index_tree_objects" \
-    "GIT_ALTERNATE_OBJECT_DIRECTORIES=$verified_blob_objects:$objects" \
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES=$verified_blob_objects:$trusted_private_objects:$objects" \
     GIT_CONFIG_NOSYSTEM=1 \
     GIT_CONFIG_GLOBAL=/dev/null \
     GIT_CONFIG_SYSTEM=/dev/null \
@@ -163,25 +349,45 @@ git_in_private_snapshot_reader() {
 
 git_with_private_tree_objects() {
   local private_index=${1-}
-  local -a index_environment=()
+  local -a index_environment=(
+    "HOME=$temporary_root/private-git-home"
+    "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin"
+    "GIT_DIR=$snapshot_reader"
+    "GIT_OBJECT_DIRECTORY=$index_tree_objects"
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES=$verified_blob_objects:$trusted_private_objects:$objects"
+    GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null
+    GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0
+  )
   shift || true
   if [[ -n "$private_index" ]]; then
     index_environment+=("GIT_INDEX_FILE=$private_index")
   fi
-  env -i \
-    "HOME=$temporary_root/private-git-home" \
-    "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" \
-    "GIT_DIR=$snapshot_reader" \
-    "GIT_OBJECT_DIRECTORY=$index_tree_objects" \
-    "GIT_ALTERNATE_OBJECT_DIRECTORIES=$verified_blob_objects:$objects" \
-    GIT_CONFIG_NOSYSTEM=1 \
-    GIT_CONFIG_GLOBAL=/dev/null \
-    GIT_CONFIG_SYSTEM=/dev/null \
-    GIT_NO_REPLACE_OBJECTS=1 \
-    GIT_NO_LAZY_FETCH=1 \
-    GIT_OPTIONAL_LOCKS=0 \
-    "${index_environment[@]}" \
-    "$git_command" -c core.hooksPath=/dev/null "$@"
+  env -i "${index_environment[@]}" "$git_command" -c core.hooksPath=/dev/null "$@"
+}
+
+git_in_source_context() {
+  env -i "${clean_git_environment[@]}" "$git_command" -C "$repo_root" "$@"
+}
+
+copy_unchanged_regular_file() {
+  local source=$1
+  local destination=$2
+  local label=$3
+  local before
+  local after
+  local copied
+  if [[ -L "$source" || ! -f "$source" ]]; then
+    printf 'generated-workflows: %s is not a regular file\n' "$label" >&2
+    return 1
+  fi
+  before=$(sha256_file "$source") || return $?
+  cp -p "$source" "$destination" || return $?
+  after=$(sha256_file "$source") || return $?
+  copied=$(sha256_file "$destination") || return $?
+  if [[ "$before" != "$after" || "$before" != "$copied" ]]; then
+    printf 'generated-workflows: %s changed while the private copy was made\n' "$label" >&2
+    return 1
+  fi
 }
 
 validate_source_object_store() {
@@ -212,6 +418,9 @@ validate_source_object_store() {
     return 1
   fi
   (umask 077 && mkdir -p "$index_tree_objects/info" "$index_tree_objects/pack" "$verified_blob_objects/info" "$verified_blob_objects/pack") || return $?
+  if [[ "$installed_checker" -ne 1 ]]; then
+    (umask 077 && mkdir -p "$trusted_private_objects/info" "$trusted_private_objects/pack") || return $?
+  fi
 }
 
 initialize_snapshot_reader() {
@@ -236,13 +445,26 @@ initialize_snapshot_reader() {
 
 initialize_trusted_reader() {
   local reader=$1
+  local seed_commit_object
+  local seed_tree_object
   validate_source_object_store || return $?
   if [[ "$trusted_private_objects" == "$objects" || -L "$trusted_private_objects" ]]; then
     printf 'generated-workflows: private trusted seed object directory is unsafe\n' >&2
     return 1
   fi
   mkdir -p "$temporary_root/trusted-reader-home" || return $?
-  (umask 077 && mkdir -p "$trusted_private_objects/info" "$trusted_private_objects/pack") || return $?
+  if [[ "$installed_checker" -eq 1 && "$trusted_cache_provisioning" -ne 1 ]]; then
+    if [[ ! -d "$trusted_metadata_cache" || -L "$trusted_metadata_cache" || ! -d "$trusted_private_objects" || -L "$trusted_private_objects" || ! -f "$trusted_metadata_cache/objects.txt" || -L "$trusted_metadata_cache/objects.txt" || ! -f "$trusted_metadata_cache/manifest" || -L "$trusted_metadata_cache/manifest" ]]; then
+      printf 'generated-workflows: approved seed metadata cache is unavailable; run trusted setup from reviewed code\n' >&2
+      return 1
+    fi
+    if [[ "$trusted_cache_validated" -eq 0 ]]; then
+      validate_trusted_metadata_cache || return $?
+      trusted_cache_validated=1
+    fi
+  elif [[ "$installed_checker" -ne 1 ]]; then
+    (umask 077 && mkdir -p "$trusted_private_objects/info" "$trusted_private_objects/pack") || return $?
+  fi
   env -i \
     "HOME=$temporary_root/trusted-reader-home" \
     "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" \
@@ -254,6 +476,335 @@ initialize_trusted_reader() {
       printf 'generated-workflows: cannot create the isolated trusted source reader\n' >&2
       return 1
     }
+}
+
+validate_trusted_metadata_cache() {
+  local reader="$temporary_root/trusted-metadata-validator.git"
+  local listing="$temporary_root/trusted-metadata-cache-objects"
+  local actual="$temporary_root/trusted-metadata-cache-actual"
+  local expected_tree="$temporary_root/trusted-metadata-cache-expected-tree"
+  local listed_hash
+  local listed_count
+  local seed_type
+  local tree
+  local tree_type
+  if [[ -L "$trusted_metadata_cache/objects.txt" || -L "$trusted_metadata_cache/manifest" ]]; then
+    printf 'generated-workflows: approved seed metadata cache contains a symlink\n' >&2
+    return 1
+  fi
+  if [[ -e "$trusted_private_objects/info/alternates" || -L "$trusted_private_objects/info/alternates" ]]; then
+    printf 'generated-workflows: approved seed metadata cache depends on a source object alternate\n' >&2
+    return 1
+  fi
+  listed_hash=$(sha256_file "$trusted_metadata_cache/objects.txt") || return $?
+  if ! /usr/bin/grep -F -x -q "objects_sha256=$listed_hash" "$trusted_metadata_cache/manifest" || ! /usr/bin/grep -F -x -q "seed_commit=$trusted_seed_commit" "$trusted_metadata_cache/manifest" || ! /usr/bin/grep -F -x -q "root_tree=$trusted_seed_tree" "$trusted_metadata_cache/manifest" || ! /usr/bin/grep -F -x -q "metadata_pack_sha256=$trusted_metadata_pack_sha256" "$trusted_metadata_cache/manifest" || ! /usr/bin/grep -F -x -q "metadata_object_list_sha256=$trusted_metadata_object_list_sha256" "$trusted_metadata_cache/manifest"; then
+    printf 'generated-workflows: approved seed metadata cache manifest does not match its object list\n' >&2
+    return 1
+  fi
+  listed_count=$(wc -l < "$trusted_metadata_cache/objects.txt" | tr -d ' ') || return $?
+  if [[ ! "$listed_count" =~ ^[1-9][0-9]*$ || "$listed_count" -gt "$((maximum_trusted_seed_metadata_entries + 2))" ]]; then
+    printf 'generated-workflows: approved seed metadata cache object count is invalid\n' >&2
+    return 1
+  fi
+  env -i \
+    "HOME=$temporary_root/trusted-reader-home" \
+    "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" \
+    "GIT_OBJECT_DIRECTORY=$trusted_private_objects" \
+    GIT_CONFIG_NOSYSTEM=1 \
+    GIT_CONFIG_GLOBAL=/dev/null \
+    GIT_CONFIG_SYSTEM=/dev/null \
+    GIT_NO_REPLACE_OBJECTS=1 \
+    GIT_NO_LAZY_FETCH=1 \
+    "$git_command" init --bare --quiet --object-format=sha1 "$reader" || {
+      printf 'generated-workflows: cannot validate the approved seed metadata cache\n' >&2
+      return 1
+    }
+  seed_type=$(env -i "HOME=$temporary_root/trusted-reader-home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" "GIT_OBJECT_DIRECTORY=$trusted_private_objects" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 "$git_command" --git-dir="$reader" cat-file -t "$trusted_seed_commit" 2>/dev/null) || {
+    printf 'generated-workflows: approved seed commit is missing from its private metadata cache\n' >&2
+    return 1
+  }
+  if [[ "$seed_type" != commit ]]; then
+    printf 'generated-workflows: approved seed object is not a commit\n' >&2
+    return 1
+  fi
+  tree=$(env -i "HOME=$temporary_root/trusted-reader-home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" "GIT_OBJECT_DIRECTORY=$trusted_private_objects" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 "$git_command" --git-dir="$reader" rev-parse --verify "$trusted_seed_commit^{tree}") || {
+    printf 'generated-workflows: approved seed tree is missing from its private metadata cache\n' >&2
+    return 1
+  }
+  tree_type=$(env -i "HOME=$temporary_root/trusted-reader-home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" "GIT_OBJECT_DIRECTORY=$trusted_private_objects" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 "$git_command" --git-dir="$reader" cat-file -t "$tree") || return $?
+  if [[ "$tree_type" != tree ]]; then
+    printf 'generated-workflows: approved seed root object is not a tree\n' >&2
+    return 1
+  fi
+  if ! /usr/bin/grep -F -x -q "root_tree=$tree" "$trusted_metadata_cache/manifest" || ! /usr/bin/grep -F -x -q "object_count=$listed_count" "$trusted_metadata_cache/manifest"; then
+    printf 'generated-workflows: approved seed metadata cache manifest does not match its tree inventory\n' >&2
+    return 1
+  fi
+  env -i \
+    "HOME=$temporary_root/trusted-reader-home" \
+    "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" \
+    "GIT_OBJECT_DIRECTORY=$trusted_private_objects" \
+    GIT_CONFIG_NOSYSTEM=1 \
+    GIT_CONFIG_GLOBAL=/dev/null \
+    GIT_CONFIG_SYSTEM=/dev/null \
+    GIT_NO_REPLACE_OBJECTS=1 \
+    GIT_NO_LAZY_FETCH=1 \
+    "$git_command" --git-dir="$reader" cat-file --batch-all-objects --batch-check > "$actual" || return $?
+  env -i \
+    "HOME=$temporary_root/trusted-reader-home" \
+    "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" \
+    "GIT_OBJECT_DIRECTORY=$trusted_private_objects" \
+    GIT_CONFIG_NOSYSTEM=1 \
+    GIT_CONFIG_GLOBAL=/dev/null \
+    GIT_CONFIG_SYSTEM=/dev/null \
+    GIT_NO_REPLACE_OBJECTS=1 \
+    GIT_NO_LAZY_FETCH=1 \
+    "$git_command" --git-dir="$reader" ls-tree -r -t -z --full-tree "$tree" > "$listing" || return $?
+  "$python_command" -I -S - "$trusted_metadata_cache" "$trusted_metadata_cache/objects.txt" "$actual" "$listing" "$trusted_seed_commit" "$tree" "$maximum_trusted_seed_metadata_entries" "$maximum_snapshot_listing_bytes" "$maximum_snapshot_blob_bytes" "$maximum_snapshot_total_bytes" <<'PY'
+import os
+import re
+import stat
+import sys
+from pathlib import Path
+from pathlib import PurePosixPath
+
+cache, expected_path, actual_path, listing_path, commit, root_tree, maximum_entries, maximum_listing, maximum_blob, maximum_total = sys.argv[1:]
+maximum_entries = int(maximum_entries)
+maximum_listing = int(maximum_listing)
+maximum_blob = int(maximum_blob)
+maximum_total = int(maximum_total)
+cache = Path(cache)
+owner = os.getuid()
+for directory in (cache, cache.parent, cache.parent.parent, cache.parent.parent.parent):
+    info = directory.lstat()
+    if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode) or info.st_uid != owner or info.st_mode & 0o077:
+        raise SystemExit("generated-workflows: approved seed metadata cache directory chain is unsafe")
+for directory, names, filenames in os.walk(cache, followlinks=False):
+    for name in names + filenames:
+        path = Path(directory) / name
+        info = path.lstat()
+        if info.st_uid != owner or (stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)) and info.st_mode & 0o222:
+            raise SystemExit("generated-workflows: approved seed metadata cache has unsafe owner or writable contents")
+        if stat.S_ISLNK(info.st_mode) or not (stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)):
+            raise SystemExit("generated-workflows: approved seed metadata cache contains an unsafe filesystem entry")
+expected = Path(expected_path).read_text().splitlines()
+if expected != sorted(set(expected)) or any(re.fullmatch(r"[0-9a-f]{40}", oid) is None for oid in expected):
+    raise SystemExit("generated-workflows: approved seed metadata object list is malformed")
+actual = {}
+for line in Path(actual_path).read_text().splitlines():
+    fields = line.split()
+    if len(fields) != 3 or re.fullmatch(r"[0-9a-f]{40}", fields[0]) is None or fields[1] not in {"commit", "tree", "blob"} or not fields[2].isdigit() or fields[0] in actual:
+        raise SystemExit("generated-workflows: approved seed metadata cache contains an invalid Git object")
+    actual[fields[0]] = (fields[1], int(fields[2]))
+raw = Path(listing_path).read_bytes()
+if len(raw) > maximum_listing or not raw.endswith(b"\0"):
+    raise SystemExit("generated-workflows: approved seed metadata listing exceeds its reviewed bound")
+entries = raw[:-1].split(b"\0") if raw != b"\0" else []
+if len(entries) > maximum_entries:
+    raise SystemExit("generated-workflows: approved seed metadata exceeds its reviewed entry bound")
+expected_objects = {commit, root_tree}
+for entry in entries:
+    try:
+        header, path_bytes = entry.split(b"\t", 1)
+        mode, kind, oid = header.decode("ascii").split(" ")
+        path = path_bytes.decode("utf-8", "strict")
+    except (ValueError, UnicodeError):
+        raise SystemExit("generated-workflows: approved seed metadata tree entry is malformed")
+    parts = PurePosixPath(path).parts
+    if not path or path.startswith("/") or "\\" in path or any(part in {"", ".", "..", ".git"} for part in parts) or any(ord(character) < 32 or ord(character) == 127 for character in path):
+        raise SystemExit("generated-workflows: approved seed metadata tree has an unsafe path")
+    if re.fullmatch(r"[0-9a-f]{40}", oid) is None:
+        raise SystemExit("generated-workflows: approved seed metadata tree has an invalid object identity")
+    if mode == "040000" and kind == "tree":
+        expected_objects.add(oid)
+    elif (mode, kind) in {("100644", "blob"), ("100755", "blob"), ("120000", "blob")}:
+        excluded = any(path.startswith(prefix) and "/" not in path[len(prefix):] and path[len(prefix):].endswith(".tui.json") for prefix in ("tests/functional/baselines/functional/", "apps/jackin/tests/functional/baselines/functional/"))
+        if not excluded:
+            expected_objects.add(oid)
+    else:
+        raise SystemExit("generated-workflows: approved seed metadata tree contains an unsupported entry")
+if set(expected) != expected_objects or set(actual) != expected_objects or commit not in actual or root_tree not in actual:
+    raise SystemExit("generated-workflows: approved seed metadata cache object inventory is inconsistent")
+if actual[commit][0] != "commit" or actual[root_tree][0] != "tree":
+    raise SystemExit("generated-workflows: approved seed metadata cache has an invalid root object type")
+total = 0
+for oid, (kind, size) in actual.items():
+    if oid == commit or kind == "tree":
+        continue
+    if size > maximum_blob:
+        raise SystemExit("generated-workflows: approved seed metadata cache contains an oversized blob")
+    total += size
+if total > maximum_total:
+    raise SystemExit("generated-workflows: approved seed metadata cache exceeds its reviewed object byte bound")
+PY
+}
+
+provision_trusted_metadata_cache() {
+  local stage="$trusted_metadata_cache.stage.$$"
+  local reader="$temporary_root/trusted-metadata-provisioner.git"
+  local final_cache=$trusted_metadata_cache
+  local tree
+  local listing="$temporary_root/trusted-seed-metadata-listing"
+  local object_list="$temporary_root/trusted-seed-metadata-oids"
+  local pack="$temporary_root/trusted-seed-metadata.pack"
+  local object_count
+  local list_hash
+  local seed_directory="$temporary_root/trusted-seed-provision"
+  local cargo_home="$temporary_root/trusted-seed-provision-cargo"
+  local metadata_pack="$checker_directory/trusted-seed-metadata.pack"
+  local metadata_oids="$checker_directory/trusted-seed-metadata.objects"
+  local metadata_actual="$temporary_root/trusted-seed-metadata-actual"
+  local metadata_object_count
+  local pack_bytes
+  local embedded_commit
+  local object_environment=("HOME=$temporary_root/trusted-reader-home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" "GIT_OBJECT_DIRECTORY=$stage/objects" "GIT_ALTERNATE_OBJECT_DIRECTORIES=$verified_blob_objects:$objects" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0)
+  validate_source_object_store || return $?
+  if [[ -e "$trusted_metadata_cache" || -L "$trusted_metadata_cache" ]]; then
+    validate_trusted_metadata_cache || return $?
+    return 0
+  fi
+  mkdir -p "${trusted_metadata_cache%/*}" || return $?
+  if [[ -L "${trusted_metadata_cache%/*}" || -L "$trusted_metadata_cache" ]]; then
+    printf 'generated-workflows: approved seed metadata cache parent is unsafe\n' >&2
+    return 1
+  fi
+  mkdir "$stage" || return $?
+  trusted_seed_stage_dir=$stage
+  mkdir "$stage/objects" "$stage/objects/info" "$stage/objects/pack" || return $?
+  trusted_private_objects="$stage/objects"
+  trusted_cache_provisioning=1
+  mkdir -p "$temporary_root/trusted-reader-home" || return $?
+  embedded_commit=$(env -i "HOME=$temporary_root/trusted-reader-home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 "$git_command" hash-object -t commit --stdin < "$checker_directory/trusted-seed.commit") || return $?
+  if [[ "$embedded_commit" != "$trusted_seed_commit" || "$(sha256_file "$metadata_pack")" != "$trusted_metadata_pack_sha256" || "$(sha256_file "$metadata_oids")" != "$trusted_metadata_object_list_sha256" ]]; then
+    printf 'generated-workflows: embedded approved seed commit failed Git object verification\n' >&2
+    return 1
+  fi
+  pack_bytes=$(wc -c < "$metadata_pack" | tr -d ' ') || return $?
+  metadata_object_count=$(wc -l < "$metadata_oids" | tr -d ' ') || return $?
+  if [[ ! "$pack_bytes" =~ ^[0-9]+$ || "$pack_bytes" -gt "$((maximum_snapshot_total_bytes))" || ! "$metadata_object_count" =~ ^[1-9][0-9]*$ || "$metadata_object_count" -gt "$((maximum_trusted_seed_metadata_entries + 2))" ]]; then
+    printf 'generated-workflows: reviewed seed metadata pack or object list exceeds its bound\n' >&2
+    return 1
+  fi
+  "$python_command" -I -S - "$metadata_oids" "$trusted_seed_commit" "$trusted_seed_tree" "$metadata_object_count" <<'PY' || return $?
+import re
+import sys
+from pathlib import Path
+
+path, commit, root_tree, expected_count = sys.argv[1:]
+objects = Path(path).read_text().splitlines()
+if objects != sorted(set(objects)) or len(objects) != int(expected_count) or commit not in objects or root_tree not in objects or any(re.fullmatch(r"[0-9a-f]{40}", item) is None for item in objects):
+    raise SystemExit("generated-workflows: reviewed seed metadata object list is malformed")
+PY
+  env -i HOME="$temporary_root/trusted-reader-home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 "$git_command" init --bare --quiet --object-format=sha1 "$reader" || return $?
+  local metadata_index_environment=("HOME=$temporary_root/trusted-reader-home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" "GIT_DIR=$reader" "GIT_OBJECT_DIRECTORY=$stage/objects" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0)
+  env -i "${metadata_index_environment[@]}" "$git_command" index-pack --stdin < "$metadata_pack" > "$temporary_root/trusted-seed-metadata-pack-index" || {
+    printf 'generated-workflows: reviewed seed metadata pack failed Git object verification\n' >&2
+    return 1
+  }
+  env -i "${metadata_index_environment[@]}" "$git_command" cat-file --batch-all-objects --batch-check > "$metadata_actual" || return $?
+  "$python_command" -I -S - "$metadata_oids" "$metadata_actual" "$trusted_seed_commit" "$trusted_seed_tree" <<'PY' || return $?
+import sys
+from pathlib import Path
+
+objects_path, actual_path, commit, root_tree = sys.argv[1:]
+expected = Path(objects_path).read_text().splitlines()
+actual = {}
+for line in Path(actual_path).read_text().splitlines():
+    fields = line.split()
+    if len(fields) != 3 or fields[0] in actual or fields[1] not in {"commit", "tree"} or not fields[2].isdigit():
+        raise SystemExit("generated-workflows: reviewed seed metadata pack contains an invalid object")
+    actual[fields[0]] = fields[1]
+if sorted(actual) != expected or actual.get(commit) != "commit" or any(kind != "tree" for oid, kind in actual.items() if oid != commit) or root_tree not in actual:
+    raise SystemExit("generated-workflows: reviewed seed metadata pack object inventory does not match its fixed object list")
+PY
+  if [[ "$(env -i "${metadata_index_environment[@]}" "$git_command" cat-file -t "$trusted_seed_commit")" != commit ]]; then
+    printf 'generated-workflows: reviewed seed metadata pack commit type is invalid\n' >&2
+    return 1
+  fi
+  tree=$(env -i "${metadata_index_environment[@]}" "$git_command" rev-parse --verify "$trusted_seed_commit^{tree}") || {
+    printf 'generated-workflows: reviewed seed metadata pack has no approved root tree\n' >&2
+    return 1
+  }
+  if [[ "$tree" != "$trusted_seed_tree" ]]; then
+    printf 'generated-workflows: reviewed seed metadata root tree does not match its fixed identity\n' >&2
+    return 1
+  fi
+  env -i "${object_environment[@]}" "$git_command" --git-dir="$reader" ls-tree -r -t -z --full-tree "$tree" > "$listing" || {
+    printf 'generated-workflows: approved seed tree metadata is incomplete; setup fails closed\n' >&2
+    return 1
+  }
+  "$python_command" -I -S - "$listing" "$trusted_seed_commit" "$tree" "$object_list" "$maximum_trusted_seed_metadata_entries" "$maximum_snapshot_listing_bytes" <<'PY' || return $?
+import re
+import sys
+from pathlib import Path
+
+listing_path, commit, root_tree, output_path, maximum_entries, maximum_bytes = sys.argv[1:]
+maximum_entries = int(maximum_entries)
+maximum_bytes = int(maximum_bytes)
+raw = Path(listing_path).read_bytes()
+if len(raw) > maximum_bytes or not raw.endswith(b"\0"):
+    raise SystemExit("generated-workflows: approved seed metadata listing exceeds its reviewed bounds")
+entries = raw[:-1].split(b"\0") if raw != b"\0" else []
+if len(entries) > maximum_entries:
+    raise SystemExit("generated-workflows: approved seed metadata exceeds its reviewed entry bound")
+objects = {commit, root_tree}
+for entry in entries:
+    header, path_bytes = entry.split(b"\t", 1)
+    mode, kind, oid = header.decode("ascii").split(" ")
+    path = path_bytes.decode("utf-8", "strict")
+    parts = path.split("/")
+    if not path or path.startswith("/") or "\\" in path or any(part in {"", ".", "..", ".git"} for part in parts) or any(ord(character) < 32 or ord(character) == 127 for character in path):
+        raise SystemExit("generated-workflows: approved seed metadata contains an unsafe path")
+    if re.fullmatch(r"[0-9a-f]{40}", oid) is None:
+        raise SystemExit("generated-workflows: approved seed tree has an invalid object identity")
+    if mode == "040000" and kind == "tree":
+        objects.add(oid)
+    elif mode in {"100644", "100755", "120000"} and kind == "blob":
+        excluded = any(path.startswith(prefix) and "/" not in path[len(prefix):] and path[len(prefix):].endswith(".tui.json") for prefix in ("tests/functional/baselines/functional/", "apps/jackin/tests/functional/baselines/functional/"))
+        if not excluded:
+            objects.add(oid)
+    else:
+        raise SystemExit("generated-workflows: approved seed metadata includes an unsupported tree entry")
+Path(output_path).write_text("".join(f"{oid}\n" for oid in sorted(objects)))
+PY
+  mkdir -p "$cargo_home" || return $?
+  prepare_trusted_seed "$seed_directory" "$reader" "$temporary_root/trusted-seed-provision-files" '' "$cargo_home" || return $?
+  object_count=$(wc -l < "$object_list" | tr -d ' ') || return $?
+  if [[ ! "$object_count" =~ ^[1-9][0-9]*$ || "$object_count" -gt "$((maximum_trusted_seed_metadata_entries + 2))" ]]; then
+    printf 'generated-workflows: approved seed metadata object count exceeds its bound\n' >&2
+    return 1
+  fi
+  env -i "${object_environment[@]}" "$git_command" pack-objects --stdout < "$object_list" > "$pack" || {
+    printf 'generated-workflows: cannot package the approved seed metadata objects\n' >&2
+    return 1
+  }
+  pack_bytes=$(wc -c < "$pack" | tr -d ' ') || return $?
+  if [[ ! "$pack_bytes" =~ ^[0-9]+$ ]] || (( pack_bytes > maximum_snapshot_total_bytes )); then
+    printf 'generated-workflows: approved seed metadata pack exceeds its reviewed byte bound\n' >&2
+    return 1
+  fi
+  env -i "${object_environment[@]}" "$git_command" index-pack --stdin < "$pack" >/dev/null || return $?
+  if [[ -e "$stage/objects/info/alternates" || -L "$stage/objects/info/alternates" ]]; then
+    printf 'generated-workflows: approved seed cache attempted to retain a source object alternate\n' >&2
+    return 1
+  fi
+  list_hash=$(sha256_file "$object_list") || return $?
+  cp "$object_list" "$stage/objects.txt" || return $?
+  printf 'seed_commit=%s\nroot_tree=%s\nobject_count=%s\nobjects_sha256=%s\nmetadata_pack_sha256=%s\nmetadata_object_list_sha256=%s\n' "$trusted_seed_commit" "$tree" "$object_count" "$list_hash" "$trusted_metadata_pack_sha256" "$trusted_metadata_object_list_sha256" > "$stage/manifest"
+  chmod 400 "$stage/objects.txt" "$stage/manifest"
+  find "$stage/objects" -type f -exec chmod a-w {} + || return $?
+  find "$stage/objects" -type d -exec chmod a-w {} + || return $?
+  chmod 500 "$stage/objects" "$stage"
+  trusted_metadata_cache="$stage"
+  validate_trusted_metadata_cache || return $?
+  trusted_metadata_cache=$final_cache
+  trusted_cache_provisioning=0
+  mv "$stage" "$final_cache" || return $?
+  trusted_seed_stage_dir=
+  trusted_metadata_cache=$final_cache
+  trusted_private_objects="$trusted_metadata_cache/objects"
+  trusted_cache_validated=1
+  validate_trusted_metadata_cache || return $?
 }
 
 validate_trusted_tree_entries() {
@@ -500,7 +1051,7 @@ hydrate_blobs() {
   local all_oids="$temporary_root/$scope-blob-oids"
   local object_status="$temporary_root/$scope-blob-object-status"
   local missing_oids="$temporary_root/$scope-missing-blob-oids"
-  local response_dir="$temporary_root/$scope-blob-responses"
+  local response_dir
   local object_id
   local written_oid
   local verified_oid
@@ -510,7 +1061,9 @@ hydrate_blobs() {
   local downloaded_bytes
   local writer
   local writer_home
-  local -a writer_environment
+  local -a writer_environment hydration_environment
+  local hydration_token=
+  export -n hydration_token
   local used_count
   local used_bytes
   local extra_budget_field
@@ -600,9 +1153,14 @@ with Path(sys.argv[1]).open("x") as deadline:
 PY
     chmod 600 "$hydration_deadline_file" || return $?
   fi
-  mkdir -m 700 "$response_dir" || return $?
+  response_dir=$(mktemp -d "$temporary_root/$scope-blob-responses.XXXXXX") || return $?
+  hydration_environment=(/usr/bin/env -i)
+  if [[ "$installed_checker" -eq 1 && "${prepare_cache_mode:-0}" -eq 1 && ( "$kind" == trusted || "${trusted_snapshot_auth:-0}" -eq 1 ) && -n "$trusted_setup_token" ]]; then
+    hydration_token=$trusted_setup_token
+    hydration_environment+=(-S 'GITHUB_COM_TOKEN=${GITHUB_COM_TOKEN}')
+  fi
   downloaded_bytes=$(
-    env -i \
+    GITHUB_COM_TOKEN="$hydration_token" "${hydration_environment[@]}" \
     "HOME=$temporary_root/trusted-reader-home" \
     "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" \
     "TMPDIR=$temporary_root" \
@@ -622,6 +1180,7 @@ import time
 from pathlib import Path
 
 oids_path, response_dir, curl, temporary_root, description, maximum_missing_blobs, maximum_total_bytes, deadline_path = sys.argv[1:]
+token = os.environ.pop("GITHUB_COM_TOKEN", None) or None
 maximum_missing_blobs = int(maximum_missing_blobs)
 maximum_total_bytes = int(maximum_total_bytes)
 maximum_blob_bytes = 4 * 1024 * 1024
@@ -649,8 +1208,7 @@ def terminate(process):
             process.kill()
             process.wait(timeout=1)
 
-def response_headers(path):
-    raw = path.read_bytes()
+def response_headers(raw):
     if not raw:
         reject("response headers have an invalid size")
     if len(raw) > maximum_header_bytes:
@@ -674,7 +1232,8 @@ def response_headers(path):
             reject("response headers are malformed")
         name, value = line.split(":", 1)
         lowered = name.lower()
-        if not name or re.fullmatch(r"[!#$%&'*+.^_`|~0-9A-Za-z-]+", name) is None or lowered in seen:
+        token_punctuation = "!#$%&" + chr(39) + "*+-.^_" + chr(96) + "|~"
+        if re.fullmatch("[0-9A-Za-z" + re.escape(token_punctuation) + "]+", name) is None or lowered in seen:
             reject("response headers are ambiguous")
         seen.add(lowered)
         if lowered == "location":
@@ -705,14 +1264,16 @@ def fetch(oid):
             "30",
             "--max-filesize",
             str(maximum_json_bytes),
-            "--dump-header",
-            str(header_path),
             "--header",
             "Accept: application/vnd.github+json",
             "--header",
             "X-GitHub-Api-Version: 2022-11-28",
             current_url,
         ]
+        if token:
+            command[2:2] = ["--include", "--variable", "%GITHUB_COM_TOKEN", "--expand-header", "Authorization: Bearer {{GITHUB_COM_TOKEN}}"]
+        else:
+            command[2:2] = ["--dump-header", str(header_path)]
         environment = {
             "HOME": os.environ["HOME"],
             "PATH": os.environ["PATH"],
@@ -720,6 +1281,8 @@ def fetch(oid):
             "LANG": "C",
             "LC_ALL": "C",
         }
+        if token:
+            environment["GITHUB_COM_TOKEN"] = token
         try:
             process = subprocess.Popen(command, env=environment, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
         except OSError:
@@ -730,7 +1293,7 @@ def fetch(oid):
         request_deadline = min(time.monotonic() + 32, phase_deadline)
         try:
             while True:
-                if header_path.exists() and header_path.stat().st_size > maximum_header_bytes:
+                if not token and header_path.exists() and header_path.stat().st_size > maximum_header_bytes:
                     terminate(process)
                     reject("response headers exceed the size limit")
                 remaining = request_deadline - time.monotonic()
@@ -739,11 +1302,19 @@ def fetch(oid):
                     reject("request exceeded the time limit")
                 ready = selector.select(min(remaining, 0.1))
                 if ready:
-                    chunk = os.read(process.stdout.fileno(), min(65536, maximum_json_bytes + 1 - len(payload)))
+                    limit = maximum_json_bytes + (maximum_header_bytes if token else 0)
+                    chunk = os.read(process.stdout.fileno(), min(65536, limit + 1 - len(payload)))
                     if not chunk:
                         break
                     payload.extend(chunk)
-                    if len(payload) > maximum_json_bytes:
+                    if token:
+                        boundary = payload.find(b"\r\n\r\n")
+                        if boundary < 0:
+                            boundary = payload.find(b"\n\n")
+                        if boundary < 0 and len(payload) > maximum_header_bytes:
+                            terminate(process)
+                            reject("response headers exceed the size limit")
+                    if len(payload) > limit:
                         terminate(process)
                         reject("response exceeds the encoded size limit")
             try:
@@ -759,11 +1330,27 @@ def fetch(oid):
             if process.returncode == 63 or len(payload) > maximum_json_bytes:
                 reject("response exceeds the encoded size limit")
             reject("cannot retrieve the fixed official blob endpoint")
-        if not header_path.is_file():
-            reject("response headers have an invalid size")
-        if header_path.stat().st_size > maximum_header_bytes:
-            reject("response headers exceed the size limit")
-        status, locations = response_headers(header_path)
+        if token:
+            if token.encode("ascii") in payload:
+                reject("response contains the setup credential")
+            boundary = payload.find(b"\r\n\r\n")
+            separator_size = 4
+            if boundary < 0:
+                boundary = payload.find(b"\n\n")
+                separator_size = 2
+            if boundary < 0 or boundary + separator_size > maximum_header_bytes:
+                reject("response headers have an invalid size")
+            header_bytes = bytes(payload[:boundary + separator_size])
+            payload = payload[boundary + separator_size:]
+            if len(payload) > maximum_json_bytes:
+                reject("response exceeds the encoded size limit")
+        else:
+            if not header_path.is_file():
+                reject("response headers have an invalid size")
+            if header_path.stat().st_size > maximum_header_bytes:
+                reject("response headers exceed the size limit")
+            header_bytes = header_path.read_bytes()
+        status, locations = response_headers(header_bytes)
         if status in redirect_statuses or locations:
             reject("redirects are not permitted")
         if status != 200:
@@ -810,6 +1397,8 @@ for oid in oids:
         decoded = base64.b64decode(encoded_bytes, validate=True)
     except (UnicodeError, ValueError):
         reject("response base64 is malformed")
+    if token and token.encode("ascii") in decoded:
+        reject("response contains the setup credential")
     if len(decoded) != declared_size:
         reject("decoded blob size does not match the declaration")
     if len(decoded) > maximum_blob_bytes:
@@ -1078,7 +1667,12 @@ materialize_tree() {
           fail_materialization "symlink target is empty"
           return 1
         fi
-        ln -s "$link_target" "$target" || return $?
+        "$python_command" -I -S - "$link_target" "$target" <<'PY' || return $?
+import os
+import sys
+
+os.symlink(sys.argv[1], sys.argv[2])
+PY
         ;;
       160000:commit)
         fail_materialization "snapshot contains unsupported gitlink entries"
@@ -1479,7 +2073,7 @@ prepare_trusted_seed() {
     printf 'generated-workflows: trusted seed toolchain inputs are unsupported\n' >&2
     return 1
   }
-  if [[ "$seed_selection" != "$expected_selection" ]]; then
+  if [[ -n "$expected_selection" && "$seed_selection" != "$expected_selection" ]]; then
     printf 'generated-workflows: trusted seed toolchain does not match the reviewed snapshot pins\n' >&2
     return 1
   fi
@@ -1498,7 +2092,11 @@ from pathlib import Path
 root = Path(sys.argv[1])
 digest = hashlib.sha256()
 entries = []
-for directory, names, filenames in os.walk(root, followlinks=False):
+
+def fail(error):
+    raise error
+
+for directory, names, filenames in os.walk(root, followlinks=False, onerror=fail):
     current = Path(directory)
     for name in names + filenames:
         path = current / name
@@ -1523,6 +2121,142 @@ for path in sorted(entries, key=lambda item: os.fsencode(item.relative_to(root))
         digest.update(field)
 print(digest.hexdigest())
 PY
+}
+
+normalize_tool_cache_symlinks() {
+  "$python_command" -I -S - "$1" <<'PY'
+import os
+import stat
+import sys
+from pathlib import Path
+
+root_input = Path(sys.argv[1])
+root_info = root_input.lstat()
+if not stat.S_ISDIR(root_info.st_mode) or stat.S_ISLNK(root_info.st_mode):
+    raise SystemExit("generated-workflows: qualified tool cache staging tree is unsafe")
+root = root_input.resolve(strict=True)
+
+def fail(error):
+    raise error
+
+for directory, names, filenames in os.walk(root, topdown=True, followlinks=False, onerror=fail):
+    current = Path(directory)
+    for name in names + filenames:
+        path = current / name
+        info = path.lstat()
+        if not stat.S_ISLNK(info.st_mode):
+            continue
+        link_target = os.readlink(path)
+        target = path.resolve(strict=True)
+        if not target.is_relative_to(root):
+            raise SystemExit("generated-workflows: qualified tool cache has an escaping symlink")
+        if os.path.isabs(link_target):
+            relative_target = os.path.relpath(target, start=path.parent)
+            path.unlink()
+            path.symlink_to(relative_target)
+            if path.resolve(strict=True) != target:
+                raise SystemExit("generated-workflows: qualified tool cache symlink normalization failed")
+PY
+}
+
+validate_tool_cache() {
+  local generation=$1
+  local expected_key=$2
+  local expected_platform=$3
+  local expected_velnor=$4
+  local expected_rust=$5
+  local expected_jactionlint=$6
+  local expected_shellcheck=$7
+  local expected_inventory
+  local actual_inventory
+  if [[ -L "$generation" || ! -d "$generation" || -L "$generation/manifest" || ! -f "$generation/manifest" || -L "$generation/tool-state" || ! -d "$generation/tool-state" ]]; then
+    printf 'generated-workflows: qualified tool cache generation is missing or unsafe; run trusted setup from reviewed code\n' >&2
+    return 1
+  fi
+  for field in "key=$expected_key" "platform=$expected_platform" "velnor=$expected_velnor" "rust=$expected_rust" "jactionlint=$expected_jactionlint" "shellcheck=$expected_shellcheck" "seed_commit=$trusted_seed_commit" "trusted_lock_sha256=$trusted_lock_sha256" "checker_version=1" "checker_sha256=${checker_digest:-test}" "config_sha256=$expected_config_sha256" "mise_version=2026.11.3" "mise_sha256=$mise_sha256" "python_version=3.15.2" "python_artifact_sha256=$python_artifact_sha256" "python_lock_sha256=$python_lock_sha256" "python_mise_sha256=$expected_python_mise_sha256" "inventory_helper_sha256=$expected_inventory_helper_sha256"; do
+    if ! /usr/bin/grep -F -x -q "$field" "$generation/manifest"; then
+      printf 'generated-workflows: qualified tool cache manifest does not match its reviewed identity\n' >&2
+      return 1
+    fi
+  done
+  expected_inventory=$(/usr/bin/sed -n 's/^payload_sha256=//p' "$generation/manifest")
+  if [[ ! "$expected_inventory" =~ ^[0-9a-f]{64}$ ]]; then
+    printf 'generated-workflows: qualified tool cache manifest has no payload inventory digest\n' >&2
+    return 1
+  fi
+  actual_inventory=$(trusted_seed_inventory "$generation/tool-state") || return $?
+  if [[ "$actual_inventory" != "$expected_inventory" ]]; then
+    printf 'generated-workflows: qualified tool cache payload changed; refusing to execute it\n' >&2
+    return 1
+  fi
+  "$python_command" -I -S - "$generation" <<'PY'
+import os
+import stat
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+tool_state = (root / "tool-state").resolve(strict=True)
+owner = os.getuid()
+for directory in (root, root.parent, root.parent.parent, root.parent.parent.parent):
+    info = directory.lstat()
+    if not stat.S_ISDIR(info.st_mode) or stat.S_ISLNK(info.st_mode) or info.st_uid != owner or info.st_mode & 0o077:
+        raise SystemExit("generated-workflows: qualified tool cache directory chain is unsafe")
+def fail(error):
+    raise error
+
+for directory, names, filenames in os.walk(root, followlinks=False, onerror=fail):
+    current = Path(directory)
+    for name in names + filenames:
+        path = current / name
+        info = path.lstat()
+        if info.st_uid != owner or stat.S_ISREG(info.st_mode) and info.st_mode & 0o222 or stat.S_ISDIR(info.st_mode) and info.st_mode & 0o222:
+            raise SystemExit("generated-workflows: qualified tool cache has unsafe owner or writable contents")
+        if stat.S_ISLNK(info.st_mode):
+            target = path.resolve(strict=True)
+            if not target.is_relative_to(tool_state):
+                raise SystemExit("generated-workflows: qualified tool cache has an escaping symlink")
+        elif not (stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode)):
+            raise SystemExit("generated-workflows: qualified tool cache contains a special file")
+PY
+}
+
+publish_tool_cache() {
+  local generation=$1
+  local staging=$2
+  local key=$3
+  local host_platform=$4
+  local velnor=$5
+  local rust=$6
+  local jactionlint=$7
+  local shellcheck=$8
+  local payload_sha256
+  local cache_parent=${generation%/*}
+  mkdir -p "$staging/tool-state/mise-config" || return $?
+  cp "$private_config" "$staging/tool-state/mise-config/mise.toml" || return $?
+  cp "$private_lock" "$staging/tool-state/mise-config/mise.lock" || return $?
+  normalize_tool_cache_symlinks "$staging/tool-state" || return $?
+  find "$staging/tool-state" -type f -exec chmod a-w {} + || return $?
+  find "$staging/tool-state" -type d -exec chmod a-w {} + || return $?
+  chmod 500 "$staging/tool-state" || return $?
+  payload_sha256=$(trusted_seed_inventory "$staging/tool-state") || return $?
+  printf 'key=%s\nplatform=%s\nvelnor=%s\nrust=%s\njactionlint=%s\nshellcheck=%s\nseed_commit=%s\ntrusted_lock_sha256=%s\nchecker_version=1\nchecker_sha256=%s\nconfig_sha256=%s\nmise_version=2026.11.3\nmise_sha256=%s\npython_version=3.15.2\npython_artifact_sha256=%s\npython_lock_sha256=%s\npython_mise_sha256=%s\ninventory_helper_sha256=%s\npayload_sha256=%s\n' "$key" "$host_platform" "$velnor" "$rust" "$jactionlint" "$shellcheck" "$trusted_seed_commit" "$trusted_lock_sha256" "${checker_digest:-test}" "$expected_config_sha256" "$mise_sha256" "$python_artifact_sha256" "$python_lock_sha256" "$expected_python_mise_sha256" "$expected_inventory_helper_sha256" "$payload_sha256" > "$staging/manifest" || return $?
+  chmod 400 "$staging/manifest" || return $?
+  chmod 500 "$staging" || return $?
+  mkdir -p "$cache_parent" || return $?
+  if [[ -e "$generation" || -L "$generation" ]]; then
+    printf 'generated-workflows: qualified tool cache generation appeared during setup\n' >&2
+    return 1
+  fi
+  mv "$staging" "$generation" || return $?
+  if ! validate_tool_cache "$generation" "$key" "$host_platform" "$velnor" "$rust" "$jactionlint" "$shellcheck"; then
+    /bin/rm -f "$generation/manifest" 2>/dev/null || true
+    find "$generation" -type d -exec chmod u+w {} + 2>/dev/null || true
+    find "$generation" -type f -exec chmod u+w {} + 2>/dev/null || true
+    find "$generation" -depth -delete 2>/dev/null || true
+    return 1
+  fi
+  tool_cache_stage_dir=
 }
 
 validate_private_lock() {
@@ -2101,6 +2835,7 @@ fetch_trusted_seed_dependencies() {
   local runtime_tmp=$9
   local rust_pin=${10}
   local seed_inventory=${11}
+  local warm_tool_cache=${12:-false}
   local cargo_log="$runtime_tmp/trusted-cargo-fetch.log"
   local -a cargo_environment=(
     "HOME=$home_dir"
@@ -2123,16 +2858,18 @@ fetch_trusted_seed_dependencies() {
 
   validate_cargo_inputs "$seed" "$cargo_home" || return $?
   validate_trusted_lock_sources "$seed/Cargo.lock" || return $?
-  if ! (cd "$seed" && env -i "${cargo_environment[@]}" "$cargo_executable" fetch --locked --manifest-path "$seed/Cargo.toml") > "$cargo_log" 2>&1; then
-    printf 'generated-workflows: authenticated Cargo could not fetch the reviewed trusted seed\n' >&2
-    "$python_command" -I -S - "$cargo_log" <<'PY' >&2
+  if [[ "$warm_tool_cache" != true ]]; then
+    if ! (cd "$seed" && env -i "${cargo_environment[@]}" "$cargo_executable" fetch --locked --manifest-path "$seed/Cargo.toml") > "$cargo_log" 2>&1; then
+      printf 'generated-workflows: authenticated Cargo could not fetch the reviewed trusted seed\n' >&2
+      "$python_command" -I -S - "$cargo_log" <<'PY' >&2
 from pathlib import Path
 import sys
 
 payload = Path(sys.argv[1]).read_bytes()[-8192:]
 print(payload.decode("utf-8", "backslashreplace").encode("unicode_escape").decode("ascii"))
 PY
-    return 1
+      return 1
+    fi
   fi
   qualify_cargo_workspaces "$seed" "$cargo_executable" "$cargo_home" "$home_dir" "$rustup_home" "$safe_path" "$safe_git_config" "$runtime_tmp" "$rust_pin" trusted-seed true || return $?
   qualify_cargo_workspaces "$snapshot" "$cargo_executable" "$cargo_home" "$home_dir" "$rustup_home" "$safe_path" "$safe_git_config" "$runtime_tmp" "$rust_pin" actual-snapshot false || return $?
@@ -2370,22 +3107,34 @@ run_generator() {
   local snapshot=$1
   local preview=$2
   local label=$3
-  local tool_state_dir="$temporary_root/$label-tool-state"
-  local state_dir="$tool_state_dir/mise-state"
-  local config_dir="$tool_state_dir/mise-config"
-  local data_dir="$tool_state_dir/mise-data"
-  local cache_dir="$tool_state_dir/mise-cache"
-  local downloads_dir="$tool_state_dir/mise-downloads"
-  local home_dir="$tool_state_dir/home"
-  local runtime_tmp="$tool_state_dir/runtime-tmp"
-  local xdg_config="$tool_state_dir/xdg-config"
-  local xdg_data="$tool_state_dir/xdg-data"
-  local xdg_cache="$tool_state_dir/xdg-cache"
-  local cargo_home="$tool_state_dir/cargo-home"
-  local rustup_home="$tool_state_dir/rustup-home"
-  local trusted_seed="$tool_state_dir/trusted-seed"
-  local trusted_reader="$tool_state_dir/trusted-source-reader.git"
-  local trusted_entries="$tool_state_dir/trusted-seed-tree-entries"
+  local selection
+  local tool_pin
+  local rust_pin
+  local jactionlint_pin
+  local shellcheck_pin
+  local platform
+  local rust_host
+  local tool_cache_identity
+  local tool_cache_generation
+  local tool_state_dir
+  local cache_stage_dir=
+  local warm_tool_cache=false
+  local cached_mise_config
+  local state_dir="$temporary_root/$label-mise-state"
+  local config_dir="$temporary_root/$label-mise-config"
+  local data_dir
+  local cache_dir="$temporary_root/$label-mise-cache"
+  local downloads_dir="$temporary_root/$label-mise-downloads"
+  local home_dir="$temporary_root/$label-home"
+  local runtime_tmp="$temporary_root/$label-runtime-tmp"
+  local xdg_config="$temporary_root/$label-xdg-config"
+  local xdg_data="$temporary_root/$label-xdg-data"
+  local xdg_cache="$temporary_root/$label-xdg-cache"
+  local cargo_home
+  local rustup_home
+  local trusted_seed="$temporary_root/$label-trusted-seed"
+  local trusted_reader="$temporary_root/$label-trusted-source-reader.git"
+  local trusted_entries="$temporary_root/$label-trusted-seed-tree-entries"
   local private_config="$config_dir/mise.toml"
   local private_lock="$config_dir/mise.lock"
   local safe_git_config="$config_dir/gitconfig"
@@ -2419,6 +3168,56 @@ run_generator() {
   local -a mise_environment
   local -a generator_environment
 
+  selection=$(read_snapshot_tool_selection "$snapshot") || {
+    printf 'generated-workflows: cannot read reviewed snapshot tool data\n' >&2
+    return 1
+  }
+  tool_pin=$(sed -n '1p' <<< "$selection") || return $?
+  rust_pin=$(sed -n '2p' <<< "$selection") || return $?
+  jactionlint_pin=$(sed -n '3p' <<< "$selection") || return $?
+  shellcheck_pin=$(sed -n '4p' <<< "$selection") || return $?
+  case "$(uname -s):$(uname -m)" in
+    Linux:x86_64|Linux:amd64) platform=linux-x64; rust_host=x86_64-unknown-linux-gnu ;;
+    Darwin:arm64|Darwin:aarch64) platform=macos-arm64; rust_host=aarch64-apple-darwin ;;
+    *) printf 'generated-workflows: unsupported host platform for authenticated tools\n' >&2; return 1 ;;
+  esac
+  tool_cache_identity=$("$python_command" -I -S - "${checker_digest:-test}" "1" "$platform" "$tool_pin" "$rust_pin" "$jactionlint_pin" "$shellcheck_pin" "$trusted_seed_commit" "$trusted_lock_sha256" "2026.11.3" "$mise_sha256" "3.15.2" "$python_artifact_sha256" "$python_lock_sha256" "$expected_python_mise_sha256" "$expected_config_sha256" "$expected_inventory_helper_sha256" <<'PY'
+import hashlib
+import sys
+print(hashlib.sha256("\n".join(sys.argv[1:]).encode("ascii")).hexdigest())
+PY
+) || return $?
+  if [[ "$installed_checker" -eq 1 ]]; then
+    local tool_cache_parent="$install_root/cache/tools"
+    tool_cache_generation="$tool_cache_parent/$tool_cache_identity"
+    if [[ -e "$tool_cache_generation" || -L "$tool_cache_generation" ]]; then
+      validate_tool_cache "$tool_cache_generation" "$tool_cache_identity" "$platform" "$tool_pin" "$rust_pin" "$jactionlint_pin" "$shellcheck_pin" || return $?
+      warm_tool_cache=true
+      tool_state_dir="$tool_cache_generation/tool-state"
+    elif [[ "${prepare_cache_mode:-0}" -eq 1 ]]; then
+      mkdir -p "$tool_cache_parent" || return $?
+      if [[ -L "$tool_cache_parent" || ! -d "$tool_cache_parent" ]]; then
+        printf 'generated-workflows: private tool cache parent is unsafe\n' >&2
+        return 1
+      fi
+      cache_stage_dir="$tool_cache_parent/.stage.$$.${RANDOM}"
+      if ! mkdir "$cache_stage_dir"; then
+        printf 'generated-workflows: cannot create private tool cache staging directory\n' >&2
+        return 1
+      fi
+      tool_cache_stage_dir=$cache_stage_dir
+      tool_state_dir="$cache_stage_dir/tool-state"
+    else
+      printf 'generated-workflows: qualified tool cache is unavailable; run bash scripts/install-generated-workflow-guard.sh from reviewed code\n' >&2
+      return 1
+    fi
+  else
+    tool_state_dir="$temporary_root/$label-tool-state"
+  fi
+  cached_mise_config="$tool_state_dir/mise-config"
+  data_dir="$tool_state_dir/mise-data"
+  cargo_home="$tool_state_dir/cargo-home"
+  rustup_home="$tool_state_dir/rustup-home"
   mkdir -p "$state_dir" "$config_dir" "$data_dir" "$cache_dir" "$downloads_dir" "$home_dir" "$runtime_tmp" "$xdg_config" "$xdg_data" "$xdg_cache" "$cargo_home" "$rustup_home" || return $?
   : > "$config_dir/global.toml" || return $?
   : > "$config_dir/system.toml" || return $?
@@ -2472,6 +3271,7 @@ EOF
       "XDG_DATA_HOME=$xdg_data"
       "XDG_CACHE_HOME=$xdg_cache"
       "CARGO_HOME=$cargo_home"
+      "CARGO_TARGET_DIR=$temporary_root/$label-cargo-target"
       "RUSTUP_HOME=$rustup_home"
       "RUSTUP_DIST_SERVER=https://static.rust-lang.org"
       "RUSTUP_UPDATE_ROOT=https://static.rust-lang.org/rustup"
@@ -2490,6 +3290,7 @@ EOF
       "MISE_SYSTEM_CONFIG_FILE=$config_dir/system.toml"
       "MISE_STATE_DIR=$state_dir"
       "MISE_DATA_DIR=$data_dir"
+      "MISE_SHIMS_DIR=$temporary_root/$label-shims"
       "MISE_CACHE_DIR=$cache_dir"
       "MISE_DOWNLOADS_DIR=$downloads_dir"
       "MISE_ENABLE_TOOLS=github:tailrocks/velnor-new,rust,jactionlint,shellcheck"
@@ -2509,22 +3310,32 @@ EOF
       "MISE_TRUSTED_CONFIG_PATHS=$private_config"
     )
 
-    install_rustup_bootstrap "$rust_host" || exit $?
-
-    env -i "${mise_environment[@]}" "$mise_command" --cd "$config_dir" lock --platform "$platform" </dev/null || {
-      printf 'generated-workflows: cannot resolve authenticated private tools for Velnor %s\n' "$tool_pin" >&2
-      exit 1
-    }
+    if [[ "$warm_tool_cache" == true ]]; then
+      if [[ ! -f "$cached_mise_config/mise.toml" || -L "$cached_mise_config/mise.toml" || ! -f "$cached_mise_config/mise.lock" || -L "$cached_mise_config/mise.lock" ]]; then
+        printf 'generated-workflows: qualified private mise configuration is unavailable\n' >&2
+        exit 1
+      fi
+      cp "$cached_mise_config/mise.toml" "$private_config" || exit $?
+      cp "$cached_mise_config/mise.lock" "$private_lock" || exit $?
+    else
+      install_rustup_bootstrap "$rust_host" || exit $?
+      env -i "${mise_environment[@]}" "$mise_command" --cd "$config_dir" lock --platform "$platform" </dev/null || {
+        printf 'generated-workflows: cannot resolve authenticated private tools for Velnor %s\n' "$tool_pin" >&2
+        exit 1
+      }
+    fi
     if [[ ! -f "$private_lock" || -L "$private_lock" ]]; then
       printf 'generated-workflows: authenticated private tool lock was not created\n' >&2
       exit 1
     fi
     validate_private_lock "$private_lock" "$tool_pin" "$rust_pin" "$jactionlint_pin" "$shellcheck_pin" "$platform" "$rust_host" || exit $?
 
-    env -i "${mise_environment[@]}" "$mise_command" --locked --cd "$config_dir" install </dev/null || {
-      printf 'generated-workflows: authenticated private tool installation failed\n' >&2
-      exit 1
-    }
+    if [[ "$warm_tool_cache" != true ]]; then
+      env -i "${mise_environment[@]}" "$mise_command" --locked --cd "$config_dir" install </dev/null || {
+        printf 'generated-workflows: authenticated private tool installation failed\n' >&2
+        exit 1
+      }
+    fi
 
     tool_dir=$(env -i "${mise_environment[@]}" "$mise_command" --cd "$config_dir" where github:tailrocks/velnor-new) || {
       printf 'generated-workflows: authenticated Velnor is not installed\n' >&2
@@ -2630,8 +3441,10 @@ EOF
       exit 1
     fi
 
-    validate_trusted_git_source_trees "$trusted_seed/Cargo.lock" "$home_dir" "$runtime_tmp" "$safe_path" || exit $?
-    fetch_trusted_seed_dependencies "$trusted_seed" "$snapshot" "$rust_cargo_executable" "$cargo_home" "$home_dir" "$rustup_home" "$safe_path" "$safe_git_config" "$runtime_tmp" "$rust_pin" "$trusted_seed_inventory_value" || exit $?
+    if [[ "$warm_tool_cache" != true ]]; then
+      validate_trusted_git_source_trees "$trusted_seed/Cargo.lock" "$home_dir" "$runtime_tmp" "$safe_path" || exit $?
+    fi
+    fetch_trusted_seed_dependencies "$trusted_seed" "$snapshot" "$rust_cargo_executable" "$cargo_home" "$home_dir" "$rustup_home" "$safe_path" "$safe_git_config" "$runtime_tmp" "$rust_pin" "$trusted_seed_inventory_value" "$warm_tool_cache" || exit $?
 
     generator_path="${tool_executable%/*}:${rust_cargo_executable%/*}:${jactionlint_executable%/*}:${shellcheck_executable%/*}:$safe_path"
     generator_environment=(
@@ -2646,8 +3459,8 @@ EOF
     validate_snapshot_symlinks "$preview" || exit $?
 
     local comparison_status
-    if git -C "$snapshot" diff --no-index --quiet --no-ext-diff --no-textconv -- "$snapshot/.github" "$preview/.github"; then
-      exit 0
+    if git_in_snapshot_context -C "$snapshot" diff --no-index --quiet --no-ext-diff --no-textconv -- "$snapshot/.github" "$preview/.github"; then
+      comparison_status=0
     else
       comparison_status=$?
     fi
@@ -2656,7 +3469,13 @@ EOF
       printf 'generated-workflows: drift in %s snapshot\n' "$label" >&2
       exit 1
     fi
+    if [[ "$comparison_status" -ne 0 ]]; then
+      exit "$comparison_status"
+    fi
 
+    if [[ "$warm_tool_cache" != true && "$installed_checker" -eq 1 && "${prepare_cache_mode:-0}" -eq 1 ]]; then
+      publish_tool_cache "$tool_cache_generation" "$cache_stage_dir" "$tool_cache_identity" "$platform" "$tool_pin" "$rust_pin" "$jactionlint_pin" "$shellcheck_pin" || exit $?
+    fi
     exit "$comparison_status"
   )
 }
@@ -2672,7 +3491,11 @@ check_tree() {
   mkdir -p "$snapshot" "$preview" || return $?
   git_in_snapshot_context init --object-format="$object_format" --quiet "$snapshot" || return $?
   mkdir -p "$snapshot/.git/objects/info" || return $?
-  printf '%s\n%s\n%s\n' "$index_tree_objects" "$verified_blob_objects" "$objects" > "$snapshot/.git/objects/info/alternates" || return $?
+  printf '%s\n%s\n' "$index_tree_objects" "$verified_blob_objects" > "$snapshot/.git/objects/info/alternates" || return $?
+  if [[ "$installed_checker" -eq 1 ]]; then
+    printf '%s\n' "$trusted_private_objects" >> "$snapshot/.git/objects/info/alternates" || return $?
+  fi
+  printf '%s\n' "$objects" >> "$snapshot/.git/objects/info/alternates" || return $?
   while IFS= read -r alternate || [[ -n "$alternate" ]]; do
     if [[ "$alternate" != /* ]]; then
       printf 'generated-workflows: source alternate object directory is not absolute\n' >&2
@@ -2783,6 +3606,7 @@ check_push_records() {
   done
 }
 
+prepare_cache_mode=0
 case "${1:-}" in
   pre-commit)
     if [[ $# -ne 1 ]]; then
@@ -2791,21 +3615,39 @@ case "${1:-}" in
     fi
     initialize_snapshot_reader || exit $?
     private_index="$temporary_root/effective-index"
-    if [[ -f "$effective_index" ]]; then
-      cp -p "$effective_index" "$private_index" || exit $?
-      shared_index=$(git_with_private_tree_objects "$effective_index" rev-parse --shared-index-path) || {
-        printf 'generated-workflows: cannot resolve the effective split-index base\n' >&2
+    if [[ -L "$effective_index" || ! -f "$effective_index" ]]; then
+      printf 'generated-workflows: effective index is missing or not a regular file\n' >&2
+      exit 1
+    fi
+    copy_unchanged_regular_file "$effective_index" "$private_index" 'effective index' || exit $?
+    shared_index=$(git_in_source_context rev-parse --shared-index-path) || {
+      printf 'generated-workflows: cannot resolve the effective split-index base\n' >&2
+      exit 1
+    }
+    if [[ -n "$shared_index" ]]; then
+      shared_basename=${shared_index##*/}
+      if [[ ! "$shared_basename" =~ ^sharedindex\.[0-9a-f]{$object_length}$ ]]; then
+        printf 'generated-workflows: effective split-index base name is invalid\n' >&2
+        exit 1
+      fi
+      if [[ "$shared_index" == /* ]]; then
+        source_shared_index=$shared_index
+      else
+        source_shared_index="$repo_root/$shared_index"
+      fi
+      source_shared_parent=$(cd "$(dirname "$source_shared_index")" && pwd -P) || {
+        printf 'generated-workflows: cannot resolve the source split-index directory\n' >&2
         exit 1
       }
-      if [[ -n "$shared_index" ]]; then
-        if [[ ! -f "$shared_index" || -L "$shared_index" ]]; then
-          printf 'generated-workflows: effective split-index base is unavailable\n' >&2
-          exit 1
-        fi
-        cp -p "$shared_index" "$temporary_root/${shared_index##*/}" || exit $?
+      if [[ "$source_shared_parent" != "$source_git_directory" ]]; then
+        printf 'generated-workflows: effective split-index base is outside the source Git directory\n' >&2
+        exit 1
       fi
-    else
-      git_with_private_tree_objects "$private_index" read-tree --empty || exit $?
+      if [[ -L "$source_shared_index" || ! -f "$source_shared_index" ]]; then
+        printf 'generated-workflows: effective split-index base is unavailable\n' >&2
+        exit 1
+      fi
+      copy_unchanged_regular_file "$source_shared_index" "$temporary_root/$shared_basename" 'effective split-index base' || exit $?
     fi
     tree=$(git_with_private_tree_objects "$private_index" write-tree --missing-ok) || {
       printf 'generated-workflows: cannot materialize the staged index\n' >&2
@@ -2814,14 +3656,35 @@ case "${1:-}" in
     check_tree "$tree" index
     ;;
   pre-push)
-    if [[ $# -ne 1 ]]; then
-      printf 'generated-workflows: expected pre-push mode\n' >&2
+    if [[ $# -ne 1 && $# -ne 3 ]]; then
+      printf 'generated-workflows: expected pre-push mode and optional Git hook arguments\n' >&2
       exit 2
     fi
     check_push_records
     ;;
+  prepare-cache)
+    if [[ "$installed_checker" -ne 1 || $# -ne 1 ]]; then
+      printf 'generated-workflows: prepare-cache is available only through an installed trusted checker\n' >&2
+      exit 2
+    fi
+    prepare_cache_mode=1
+    provision_trusted_metadata_cache || exit $?
+    trusted_seed_reader="$temporary_root/prewarm-trusted-seed-reader.git"
+    initialize_trusted_reader "$trusted_seed_reader" || exit $?
+    resolved_seed_tree=$(git_in_trusted_reader "$trusted_seed_reader" rev-parse --verify "$trusted_seed_commit^{tree}") || {
+      printf 'generated-workflows: approved seed tree is unavailable for trusted setup\n' >&2
+      exit 1
+    }
+    if [[ "$resolved_seed_tree" != "$trusted_seed_tree" ]]; then
+      printf 'generated-workflows: approved seed tree does not match the reviewed identity\n' >&2
+      exit 1
+    fi
+    trusted_snapshot_auth=1
+    check_tree "$resolved_seed_tree" trusted-seed
+    trusted_snapshot_auth=0
+    ;;
   *)
-    printf 'generated-workflows: expected pre-commit or pre-push mode\n' >&2
+    printf 'generated-workflows: expected pre-commit, pre-push, or prepare-cache mode\n' >&2
     exit 2
     ;;
 esac

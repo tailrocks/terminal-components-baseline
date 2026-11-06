@@ -696,11 +696,11 @@ impl CapsuleScreen {
         };
         for (a, mut offer) in w.offered_agents(ws, role.as_deref()) {
             if !w.surfaces.tuples.is_empty()
-                && !w
-                    .surfaces
-                    .tuples
-                    .iter()
-                    .any(|o| o.agent == a && o.state == crate::domain::tuple::TupleState::Supported)
+                && !w.surfaces.tuples.iter().any(|offer| {
+                    offer.agent == a
+                        && offer.provider == a.provider()
+                        && offer.state == crate::domain::tuple::TupleState::Supported
+                })
             {
                 continue;
             }
@@ -726,7 +726,7 @@ impl CapsuleScreen {
                     .detail(detail)
                     .glyph("▪")
                     .group("agents")
-                    .disabled(offer.blocked.is_some())
+                    .disabled(!offer.has_usable_account())
             });
             self.picker_agents.push(Some(a));
         }
@@ -754,22 +754,22 @@ impl CapsuleScreen {
             .and_then(|x| w.workspace(x));
         let role = w.instance(&self.instance).map(|i| i.role.clone());
         let offer = w.offer_for(a, ws, role.as_deref());
-        match offer.accounts.len() {
-            _ if offer.blocked.is_some() => self.spawn_failed(a, offer.blocked, cx),
-            0 => self.spawn_failed(a, None, cx),
-            1 => self.spawn(Some(a), offer.accounts.first().cloned(), w, cx),
-            _ => {
-                self.pending_agent = Some(a);
-                let (p, ids) = super::modals::account_picker(
-                    WidgetId::of("capsule.provider"),
-                    w,
-                    a,
-                    ws,
-                    &offer,
-                );
-                self.picker_accounts = ids;
-                cx.open(p, LayerTag::new("provider"));
-            }
+        if !offer.has_usable_account() {
+            self.spawn_failed(a, offer.blocked, cx);
+        } else if offer.accounts.len() == 1 {
+            self.spawn(Some(a), offer.accounts.first().cloned(), w, cx);
+        } else {
+            self.pending_agent = Some(a);
+            let (p, ids) = super::modals::account_picker(
+                WidgetId::of("capsule.provider"),
+                w,
+                a,
+                a.provider(),
+                ws,
+                &offer,
+            );
+            self.picker_accounts = ids;
+            cx.open(p, LayerTag::new("provider"));
         }
     }
 

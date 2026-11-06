@@ -9,6 +9,7 @@ use crate::domain::account::{
 use crate::domain::instance::{Instance, InstanceStatus};
 use crate::domain::launch::LaunchContent;
 use crate::domain::role::{RoleCheckState, RoleRecord};
+use crate::domain::tuple::{AccountRequirement, TupleIdentity};
 use crate::domain::vocabulary::{Rejection, fill_in};
 use crate::domain::workspace::{RoleEntry, RoleSource, Workspace, WorkspaceId};
 use crate::launch::{LaunchFeed, LaunchTarget};
@@ -42,6 +43,7 @@ pub struct SimBackend {
     bind_fails_once: AtomicBool,
     doctor_runs: AtomicUsize,
     openshell: bool,
+    accountless_tuple: Option<TupleIdentity>,
     next_workspace_id: AtomicU32,
     refresh_fails: bool,
     index_fails_once: AtomicBool,
@@ -63,6 +65,7 @@ impl Default for SimBackend {
             bind_fails_once: AtomicBool::default(),
             doctor_runs: AtomicUsize::default(),
             openshell: false,
+            accountless_tuple: None,
             next_workspace_id: AtomicU32::new(100),
             refresh_fails: false,
             index_fails_once: AtomicBool::default(),
@@ -84,6 +87,15 @@ impl SimBackend {
         Arc::new(SimBackend {
             launch: LaunchRule::Guarded,
             openshell: true,
+            ..SimBackend::default()
+        })
+    }
+
+    pub fn guarded_accountless(tuple: TupleIdentity) -> Arc<dyn Backend> {
+        Arc::new(SimBackend {
+            launch: LaunchRule::Guarded,
+            openshell: true,
+            accountless_tuple: Some(tuple),
             ..SimBackend::default()
         })
     }
@@ -600,12 +612,21 @@ impl Backend for SimBackend {
         }
     }
 
+    fn account_requirement(&self, tuple: TupleIdentity) -> AccountRequirement {
+        if self.accountless_tuple == Some(tuple) {
+            AccountRequirement::Optional
+        } else {
+            AccountRequirement::Required
+        }
+    }
+
     fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed> {
-        let opening = match self.launch {
-            LaunchRule::Guarded => launch::opening(world, target),
-            LaunchRule::Clean | LaunchRule::FailNetwork | LaunchRule::HardCases => {
-                Opening::Straight
-            }
+        let opening = if self.launch == LaunchRule::Guarded {
+            launch::opening(world, target)
+        } else if let Some(reason) = launch::validate_tuples(world, target) {
+            Opening::Refuse(reason)
+        } else {
+            Opening::Straight
         };
         Box::new(SimLaunch::start(
             self.launch_plan(world, target),
@@ -622,27 +643,6 @@ impl Backend for SimBackend {
             &spawn,
             scripts::SimScripts::shared(),
         ))
-    }
-
-    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
-        if instance.agents.is_empty() {
-            return vec![PaneRequest::new(
-                &instance.id,
-                Some(instance.agent),
-                instance.account.clone(),
-            )];
-        }
-        instance
-            .agents
-            .iter()
-            .map(|a| {
-                let account = a
-                    .account
-                    .clone()
-                    .or_else(|| (a.agent == instance.agent).then(|| instance.account.clone())?);
-                PaneRequest::new(&instance.id, Some(a.agent), account)
-            })
-            .collect()
     }
 }
 

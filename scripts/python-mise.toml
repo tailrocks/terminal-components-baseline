@@ -1,0 +1,6 @@
+[tools]
+python = "3.15.2"
+
+[settings]
+python.compile = false
+python.github_attestations = true

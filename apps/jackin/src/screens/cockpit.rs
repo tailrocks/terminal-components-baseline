@@ -215,17 +215,25 @@ impl CockpitScreen {
     }
 
     fn credential_origin(&self, w: &World) -> (String, String, Tone) {
-        let (origin, val, tone) = self.credential_origin_for(self.account.as_deref(), w);
+        let account = self
+            .account
+            .as_deref()
+            .filter(|id| w.accounts.get(id).is_some())
+            .or_else(|| {
+                self.accounts
+                    .iter()
+                    .find(|id| w.accounts.get(id).is_some())
+                    .map(String::as_str)
+            });
+        let (origin, val, tone) = self.credential_origin_for(account, w);
         let others: Vec<String> = self
             .accounts
             .iter()
-            .filter(|id| Some(id.as_str()) != self.account.as_deref())
+            .filter(|id| Some(id.as_str()) != account)
             .filter_map(|id| w.accounts.get(id))
             .map(|a| a.title())
             .collect();
-        let primary = self
-            .account
-            .as_ref()
+        let primary = account
             .and_then(|id| w.accounts.get(id))
             .map(|a| format!("{} ({})", a.title(), a.source.origin_label()))
             .unwrap_or_else(|| origin.clone());

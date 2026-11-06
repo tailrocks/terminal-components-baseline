@@ -15,7 +15,7 @@ use ratatui::layout::Rect;
 
 use crate::backend::{FieldKind, OnePassword, OpError, OpListing, OpScope, Ticket};
 use crate::domain::account::AccountId;
-use crate::domain::agent::Agent;
+use crate::domain::agent::{Agent, Provider};
 use crate::domain::onepassword::OpReference;
 use crate::domain::workspace::{RoleEntry, Workspace};
 use crate::world::{AgentOffer, World};
@@ -74,6 +74,7 @@ pub fn account_picker(
     id: WidgetId,
     w: &World,
     agent: Agent,
+    provider: Provider,
     ws: Option<&Workspace>,
     offer: &AgentOffer,
 ) -> (Picker, Vec<AccountId>) {
@@ -88,7 +89,7 @@ pub fn account_picker(
         if acc.default_for_provider {
             tags.push("global default");
         }
-        if ws.is_some_and(|x| x.accounts.preferred.get(&agent.provider()) == Some(&acc.id)) {
+        if ws.is_some_and(|x| x.accounts.preferred.get(&provider) == Some(&acc.id)) {
             tags.push("Workspace preference");
         }
         if offer.preselected.as_ref() == Some(&acc.id) {

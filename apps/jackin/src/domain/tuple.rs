@@ -1,6 +1,30 @@
 use super::account::AccountId;
 use super::agent::{Agent, Provider};
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct TupleIdentity {
+    pub agent: Agent,
+    pub provider: Provider,
+}
+
+impl TupleIdentity {
+    pub const fn new(agent: Agent, provider: Provider) -> Self {
+        Self { agent, provider }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AccountRequirement {
+    Required,
+    Optional,
+}
+
+impl TupleIdentity {
+    pub fn label(self) -> String {
+        format!("{} · {}", self.agent.label(), self.provider.label())
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum TupleState {
     Supported,

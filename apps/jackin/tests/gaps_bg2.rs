@@ -397,6 +397,7 @@ fn an_account_gets_its_id_from_the_backend() {
 
 fn two_ready_claude_accounts() -> World {
     let mut world = world_for(Scenario::Returning);
+    world.surfaces.tuples.clear();
     for account in &mut world.accounts.accounts {
         account.default_for_provider = false;
     }
@@ -593,6 +594,7 @@ fn the_user_picks_the_account_when_none_is_preselected() {
 fn a_preselected_account_launches_without_a_second_pick() {
     let backend = Recording::new(no_answer);
     let mut world = world_for(Scenario::Returning);
+    world.surfaces.tuples.clear();
     world.backend = backend.clone();
     let mut app = timed(Scenario::Returning, world);
     press(&mut app, "down enter space enter");
