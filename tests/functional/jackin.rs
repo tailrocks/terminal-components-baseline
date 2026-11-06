@@ -22,6 +22,10 @@ fn button(app: &App, label: &str) -> Point {
     candidates[0]
 }
 
+fn normalized_text(text: &str) -> String {
+    text.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
 fn jackin(name: &str, motion: &str) -> App {
     App::new(
         name,
@@ -452,10 +456,15 @@ fn jackin_cockpit_launch_failure_acknowledges() {
     );
     app.wait_text("Loading the-architect into workspace");
     app.advance_clock(24_000);
-    let failed = app.wait_text("Launch failed");
+    let failed = app.wait_screen("launch failure details", |screen| {
+        let visible = text(screen);
+        visible.contains("The Construct network could not be attached")
+            && visible.contains("Network")
+            && normalized_text(&visible).contains("network jackin-net not found")
+    });
     assert!(text(&failed).contains("The Construct network could not be attached"));
     assert!(text(&failed).contains("Network"));
-    assert!(text(&failed).contains("network jackin-net not found"));
+    assert!(normalized_text(&text(&failed)).contains("network jackin-net not found"));
     app.visual("functional/jackin_launch_failed");
     app.key("escape");
     app.wait_text("Current directory");
