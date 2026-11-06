@@ -144,7 +144,7 @@ pub fn launch_accounts(
     content: &LaunchContent,
 ) -> Vec<AccountId> {
     let workspace = target.workspace.and_then(|id| w.workspace(id));
-    let mut accounts: Vec<AccountId> = workspace
+    let accounts: Vec<AccountId> = workspace
         .map(|x| {
             x.effective_accounts(&w.accounts)
                 .into_iter()
@@ -153,16 +153,28 @@ pub fn launch_accounts(
                 .collect()
         })
         .unwrap_or_default();
-    if let Some(a) = &target.account()
-        && !accounts.contains(a)
+    let mut selected: Vec<AccountId> = Vec::new();
+    for account in target
+        .instances
+        .iter()
+        .filter_map(|choice| choice.account.as_ref())
     {
-        accounts.insert(0, a.clone());
+        if !accounts.contains(account) && !selected.contains(account) {
+            selected.push(account.clone());
+        }
     }
+    selected.extend(accounts);
+    let mut accounts = selected;
     if content.agent_provider_only {
+        let providers: Vec<_> = target
+            .instances
+            .iter()
+            .map(|choice| choice.provider)
+            .collect();
         accounts.retain(|id| {
             w.accounts
                 .get(id)
-                .is_some_and(|a| a.provider == target.agent().provider())
+                .is_some_and(|account| providers.contains(&account.provider))
         });
     }
     accounts

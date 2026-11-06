@@ -1,0 +1,11 @@
+tree 5d842e61ade8e6bdbdcdc4081b219ddf968d7f0c
+parent 4ec7dc076d8e4a184bcd2377ba8ad1ce20dfd2dd
+author Alexey Zhokhov <alexey@zhokhov.com> 1793901361 +0700
+committer Alexey Zhokhov <alexey@zhokhov.com> 1793901361 +0700
+
+fix(ci): validate generated workflows from Git snapshots
+
+Co-authored-by: Codex <codex@openai.com>
+
+Task: backlog
+Signed-off-by: Alexey Zhokhov <alexey@zhokhov.com>

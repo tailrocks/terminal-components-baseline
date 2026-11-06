@@ -1238,6 +1238,12 @@ pub struct AgentOffer {
     pub configured: bool,
 }
 
+impl AgentOffer {
+    pub fn has_usable_account(&self) -> bool {
+        self.blocked.is_none() && !self.accounts.is_empty()
+    }
+}
+
 pub fn expand(home: &str, path: &str) -> String {
     if let Some(rest) = path.strip_prefix('~') {
         format!("{home}{rest}")

@@ -4,16 +4,19 @@ mod common;
 
 use common::*;
 use jackin_console::app::{App, Route};
+use jackin_console::domain::account::LaunchBlock;
 use jackin_console::domain::account::{
     Account, CredentialSource, Lifecycle, ValidationLevel, ValidationState,
 };
 use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider};
+use jackin_console::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
 use jackin_console::domain::launch::RefusalReason;
 use jackin_console::domain::tuple::{
-    AccountRequirement, InstanceChoice, TupleIdentity, TupleOffer,
+    AccountRequirement, InstanceChoice, TupleIdentity, TupleOffer, TupleState,
 };
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{EnvAnswer, EnvQuestion, LaunchEvent, LaunchTarget};
+use jackin_console::screens::Go;
 use jackin_console::sim::launch::validate_tuples;
 use jackin_console::sim::{self, SimBackend};
 use jackin_console::world::{Msg, Snapshot, World};
@@ -53,6 +56,44 @@ fn supported_tuple(agent: Agent, provider: Provider, model: &str) -> TupleOffer 
     TupleOffer::supported(agent, provider, &[model])
 }
 
+fn unavailable_tuple(agent: Agent, provider: Provider, model: &str) -> TupleOffer {
+    let mut offer = supported_tuple(agent, provider, model);
+    offer.state = TupleState::Unavailable;
+    offer.reason = Some("provider unavailable".into());
+    offer
+}
+
+fn remove_provider_accounts(world: &mut World, provider: Provider) {
+    world
+        .accounts
+        .accounts
+        .retain(|account| account.provider != provider);
+}
+
+fn daemon_tab_counts(world: &World) -> Vec<(String, usize)> {
+    world
+        .daemons
+        .iter()
+        .map(|(id, daemon)| (id.clone(), daemon.tabs.len()))
+        .collect()
+}
+
+fn newly_active_daemon(world: &World, before: &[(String, usize)]) -> (String, usize) {
+    let mut changed: Vec<(String, usize)> = world
+        .daemons
+        .iter()
+        .filter_map(|(id, daemon)| {
+            let previous = before
+                .iter()
+                .find(|(previous_id, _)| previous_id == id)
+                .map_or(0, |(_, tabs)| *tabs);
+            (daemon.tabs.len() > previous).then(|| (id.clone(), daemon.tabs.len()))
+        })
+        .collect();
+    assert_eq!(changed.len(), 1, "expected one session daemon to open");
+    changed.remove(0)
+}
+
 fn ready_account(id: &str, name: &str, provider: Provider) -> Account {
     let mut account = Account::registered(
         id,
@@ -86,6 +127,53 @@ fn tuple_world(tuples: Vec<TupleOffer>, accounts: Vec<Account>) -> World {
     world
 }
 
+fn running_instance() -> Instance {
+    Instance {
+        id: "jk-session-test".into(),
+        container: "jackin-payments-platform".into(),
+        workspace: Some(1),
+        workdir: "/workspace/payments-platform".into(),
+        role: "the-architect".into(),
+        agent: Agent::Codex,
+        status: InstanceStatus::Running,
+        created_secs: 0,
+        last_seen_secs: 0,
+        run_id: "run-session-test".into(),
+        sessions: Ok(vec![]),
+        daemon: DaemonSnapshot::Unavailable,
+        branch: None,
+        pr: None,
+        default_branch: "main".into(),
+        github: None,
+        uncommitted: 0,
+        unpushed: 0,
+        account: None,
+        accounts: vec![],
+        agents: vec![],
+        task: None,
+    }
+}
+
+fn manager_session_picker(mut world: World) -> App {
+    world.instances.push(running_instance());
+    let mut app = started(world);
+    press(&mut app, "down");
+    press(&mut app, "right");
+    press(&mut app, "down");
+    press(&mut app, "n");
+    assert!(screen(&mut app).contains("New session · choose Agent"));
+    app
+}
+
+fn capsule_new_tab_picker(world: World) -> App {
+    let mut app = manager_session_picker(world);
+    click_picker_option(&mut app, "New session · choose Agent", "Codex");
+    assert_eq!(app.route(), Route::Capsule);
+    press(&mut app, "ctrl+b c");
+    assert!(screen(&mut app).contains("New tab"));
+    app
+}
+
 fn accountless_tuple_world() -> World {
     let tuple = TupleIdentity::new(Agent::Omp, Provider::OpenCode);
     let mut world = tuple_world(
@@ -98,6 +186,466 @@ fn accountless_tuple_world() -> World {
     );
     world.backend = SimBackend::guarded_accountless(tuple);
     world
+}
+
+#[test]
+fn the_simulator_accepts_each_allowed_model_and_refuses_unknown_models() {
+    let model_world = || {
+        let mut offer = supported_tuple(Agent::Codex, Provider::OpenAi, "model-a");
+        offer.allowed_models = vec!["model-a".into(), "model-b".into()];
+        tuple_world(
+            vec![offer],
+            vec![
+                ready_account("fixture-model-account", "Model account", Provider::OpenAi),
+                ready_account(
+                    "fixture-wrong-provider",
+                    "Wrong provider account",
+                    Provider::Moonshot,
+                ),
+            ],
+        )
+    };
+    let choice = |model: &str| InstanceChoice {
+        agent: Agent::Codex,
+        provider: Provider::OpenAi,
+        account: Some("fixture-model-account".into()),
+        model: model.into(),
+    };
+
+    for model in ["model-a", "model-b"] {
+        let mut app = started(model_world());
+        let before = app.world.instances.len();
+        app.go(Go::LaunchMany {
+            workspace: None,
+            role: "the-architect".into(),
+            instances: vec![choice(model)],
+            task: None,
+        });
+        tick_until(&mut app, "model launch result", |app| {
+            app.world.instances.len() > before || screen(app).contains("Tuple not launchable")
+        });
+        assert!(
+            app.world.instances.len() > before,
+            "allowed model {model} did not launch\n{}",
+            screen(&mut app)
+        );
+        let launched = &app.world.instances[before];
+        let [recorded] = launched.agents.as_slice() else {
+            panic!("one selected tuple expected");
+        };
+        assert_eq!(recorded.model, model);
+        assert_eq!(recorded.account.as_deref(), Some("fixture-model-account"));
+        assert_eq!(recorded.provider, Provider::OpenAi);
+    }
+
+    let mut app = started(model_world());
+    let before = app.world.instances.clone();
+    app.go(Go::LaunchMany {
+        workspace: None,
+        role: "the-architect".into(),
+        instances: vec![choice("unknown-model")],
+        task: None,
+    });
+    tick_until(&mut app, "unknown model refusal", |app| {
+        screen(app).contains("Tuple not launchable")
+    });
+    assert_eq!(app.world.instances, before);
+
+    for account in ["fixture-wrong-provider", "fixture-nonexistent"] {
+        let mut app = started(model_world());
+        let before = app.world.instances.clone();
+        app.go(Go::LaunchMany {
+            workspace: None,
+            role: "the-architect".into(),
+            instances: vec![InstanceChoice {
+                account: Some(account.into()),
+                ..choice("model-b")
+            }],
+            task: None,
+        });
+        tick_until(&mut app, "invalid allowed-model account refusal", |app| {
+            screen(app).contains("Tuple not launchable")
+        });
+        assert_eq!(app.world.instances, before, "account {account}");
+    }
+
+    let mut app = started(model_world());
+    let before = app.world.instances.clone();
+    app.go(Go::LaunchMany {
+        workspace: None,
+        role: "the-architect".into(),
+        instances: vec![choice("")],
+        task: None,
+    });
+    tick_until(&mut app, "empty model refusal", |app| {
+        screen(app).contains("Tuple not launchable")
+    });
+    assert_eq!(app.world.instances, before);
+
+    let unrestricted_world = || {
+        let mut offer = supported_tuple(Agent::Codex, Provider::OpenAi, "model-a");
+        offer.allowed_models.clear();
+        tuple_world(
+            vec![offer],
+            vec![ready_account(
+                "fixture-model-account",
+                "Model account",
+                Provider::OpenAi,
+            )],
+        )
+    };
+    for model in ["", "unlisted-model"] {
+        let mut app = started(unrestricted_world());
+        let before = app.world.instances.len();
+        app.go(Go::LaunchMany {
+            workspace: None,
+            role: "the-architect".into(),
+            instances: vec![choice(model)],
+            task: None,
+        });
+        tick_until(&mut app, "unrestricted model result", |app| {
+            app.world.instances.len() > before || screen(app).contains("Tuple not launchable")
+        });
+        assert!(app.world.instances.len() > before, "model {model:?}");
+        assert_eq!(app.world.instances[before].agents[0].model, model);
+    }
+}
+
+#[test]
+fn the_cockpit_aggregates_credentials_for_every_choice_and_selected_provider() {
+    let aggregate_world = |workspace: bool| {
+        let accounts = vec![
+            ready_account("fixture-codex", "Codex selected", Provider::OpenAi),
+            ready_account("fixture-codex-extra", "Codex extra", Provider::OpenAi),
+            ready_account("fixture-kimi", "Kimi selected", Provider::Moonshot),
+            ready_account("fixture-kimi-extra", "Kimi extra", Provider::Moonshot),
+            ready_account("fixture-unrelated", "Unrelated account", Provider::Mimo),
+        ];
+        let tuples = vec![
+            supported_tuple(Agent::OpenCode, Provider::OpenCode, "opencode-default"),
+            supported_tuple(Agent::Omp, Provider::Moonshot, "omp-moonshot"),
+            supported_tuple(Agent::Codex, Provider::OpenAi, "codex-default"),
+            supported_tuple(Agent::KimiCode, Provider::Moonshot, "kimi-default"),
+        ];
+        let mut world = tuple_world(tuples, accounts);
+        remove_provider_accounts(&mut world, Provider::OpenCode);
+        world
+            .global
+            .agent_modes
+            .insert(Agent::KimiCode, AuthMode::Sync);
+        world.backend = SimBackend::guarded_accountless(TupleIdentity::new(
+            Agent::OpenCode,
+            Provider::OpenCode,
+        ));
+        if workspace {
+            for id in [
+                "fixture-codex",
+                "fixture-codex-extra",
+                "fixture-kimi",
+                "fixture-kimi-extra",
+                "fixture-unrelated",
+            ] {
+                world
+                    .accounts
+                    .get_mut(id)
+                    .expect("workspace account")
+                    .default_for_provider = false;
+            }
+            let policy = &mut world.workspace_mut(1).expect("workspace").accounts;
+            policy.disabled_defaults.clear();
+            policy.enabled = [
+                "fixture-codex".into(),
+                "fixture-codex-extra".into(),
+                "fixture-kimi".into(),
+                "fixture-kimi-extra".into(),
+                "fixture-unrelated".into(),
+            ]
+            .into();
+        }
+        world
+    };
+    let choices = vec![
+        InstanceChoice {
+            agent: Agent::OpenCode,
+            provider: Provider::OpenCode,
+            account: None,
+            model: "opencode-default".into(),
+        },
+        InstanceChoice {
+            agent: Agent::Omp,
+            provider: Provider::Moonshot,
+            account: Some("fixture-kimi".into()),
+            model: "omp-moonshot".into(),
+        },
+        InstanceChoice {
+            agent: Agent::Codex,
+            provider: Provider::OpenAi,
+            account: Some("fixture-codex".into()),
+            model: "codex-default".into(),
+        },
+        InstanceChoice {
+            agent: Agent::KimiCode,
+            provider: Provider::Moonshot,
+            account: Some("fixture-kimi".into()),
+            model: "kimi-default".into(),
+        },
+    ];
+
+    for (workspace, expected) in [
+        (None, vec!["fixture-kimi", "fixture-codex"]),
+        (
+            Some(1),
+            vec![
+                "fixture-codex",
+                "fixture-codex-extra",
+                "fixture-kimi",
+                "fixture-kimi-extra",
+            ],
+        ),
+    ] {
+        let launch = || {
+            let mut app = started(aggregate_world(workspace.is_some()));
+            app.go(Go::LaunchMany {
+                workspace,
+                role: "the-architect".into(),
+                instances: choices.clone(),
+                task: None,
+            });
+            app
+        };
+        let mut summary_app = launch();
+        tick_until(&mut summary_app, "credential summary", |app| {
+            screen(app).contains("credentials  ")
+        });
+        let summary = screen_at(&mut summary_app, 240, 40);
+        let credential_line = summary
+            .lines()
+            .find(|line| line.contains("credentials  "))
+            .expect("credential summary line");
+        assert!(credential_line.contains("Codex selected"), "{summary}");
+        assert!(credential_line.contains("Kimi selected"), "{summary}");
+        assert!(
+            credential_line.contains("API key"),
+            "selected account origin missing\n{summary}"
+        );
+        assert!(
+            summary.contains("identity authenticated"),
+            "selected account validation missing\n{summary}"
+        );
+        assert!(!credential_line.contains("host profile"), "{summary}");
+        assert!(
+            !credential_line.contains("no registered account"),
+            "{summary}"
+        );
+        assert!(
+            !credential_line.contains("Unrelated account"),
+            "provider-only launch must omit unrelated credentials\n{summary}"
+        );
+
+        let mut app = launch();
+        let before = app.world.instances.len();
+        tick_until(&mut app, "multi-choice instance record", |app| {
+            app.world.instances.len() > before
+        });
+        assert_eq!(app.world.instances[before].accounts, expected);
+        assert_eq!(
+            app.world.instances[before]
+                .agents
+                .iter()
+                .map(|choice| choice.account.as_deref())
+                .collect::<Vec<_>>(),
+            [
+                None,
+                Some("fixture-kimi"),
+                Some("fixture-codex"),
+                Some("fixture-kimi"),
+            ]
+        );
+    }
+}
+
+#[test]
+fn manager_new_session_rejects_empty_account_offers_and_keeps_valid_rows_usable() {
+    let tuple = TupleIdentity::new(Agent::Omp, Provider::OpenCode);
+    let mut blocked = tuple_world(
+        vec![supported_tuple(
+            Agent::Omp,
+            Provider::OpenCode,
+            "omp-default",
+        )],
+        vec![ready_account(
+            "fixture-omp-blocked",
+            "Blocked OMP account",
+            Provider::OpenCode,
+        )],
+    );
+    blocked
+        .accounts
+        .get_mut("fixture-omp-blocked")
+        .expect("blocked OMP account")
+        .launch_blocked = Some(LaunchBlock::UsageOnlySource);
+    blocked.backend = SimBackend::guarded_accountless(tuple);
+    let mut app = manager_session_picker(blocked);
+    let shown = screen(&mut app);
+    assert!(
+        shown.contains("OMP"),
+        "blocked supported tuple must be shown\n{shown}"
+    );
+    click_picker_option(&mut app, "New session · choose Agent", "OMP");
+    let after_blocked_click = screen(&mut app);
+    assert!(
+        after_blocked_click.contains("New session · choose Agent"),
+        "blocked tuple must remain disabled\n{after_blocked_click}"
+    );
+    assert!(
+        !after_blocked_click.contains("Account for OMP"),
+        "an empty account picker must not open\n{after_blocked_click}"
+    );
+
+    let mut empty_world = tuple_world(
+        vec![supported_tuple(
+            Agent::Omp,
+            Provider::OpenCode,
+            "omp-default",
+        )],
+        vec![],
+    );
+    remove_provider_accounts(&mut empty_world, Provider::OpenCode);
+    empty_world.backend = SimBackend::guarded_accountless(tuple);
+    let mut empty = manager_session_picker(empty_world);
+    let shown = screen(&mut empty);
+    assert!(
+        shown.contains("Shell"),
+        "session options remain available\n{shown}"
+    );
+    assert!(
+        !shown.contains("OMP"),
+        "accountless launch capability must not enable a new session\n{shown}"
+    );
+
+    let valid = tuple_world(
+        vec![supported_tuple(
+            Agent::Omp,
+            Provider::OpenCode,
+            "omp-default",
+        )],
+        vec![ready_account(
+            "fixture-omp-ready",
+            "Ready OMP account",
+            Provider::OpenCode,
+        )],
+    );
+    let mut app = manager_session_picker(valid);
+    click_picker_option(&mut app, "New session · choose Agent", "OMP");
+    assert_eq!(
+        app.route(),
+        Route::Capsule,
+        "a valid account-backed session remains usable"
+    );
+
+    let alternate_only = tuple_world(
+        vec![
+            supported_tuple(Agent::Codex, Provider::OpenAi, "codex-default"),
+            unavailable_tuple(Agent::Omp, Provider::OpenCode, "omp-default"),
+            supported_tuple(Agent::Omp, Provider::Moonshot, "omp-moonshot"),
+        ],
+        vec![
+            ready_account("fixture-cross-codex", "Codex", Provider::OpenAi),
+            ready_account("fixture-cross-omp", "OMP OpenCode", Provider::OpenCode),
+        ],
+    );
+    let mut alternate = manager_session_picker(alternate_only);
+    let shown = screen(&mut alternate);
+    assert!(shown.contains("OMP"), "default tuple is listed\n{shown}");
+    click_picker_option(&mut alternate, "New session · choose Agent", "OMP");
+    assert!(screen(&mut alternate).contains("New session · choose Agent"));
+    click_picker_option(&mut alternate, "New session · choose Agent", "Codex");
+    assert_eq!(alternate.route(), Route::Capsule);
+    press(&mut alternate, "ctrl+b c");
+    let capsule_shown = screen(&mut alternate);
+    assert!(!capsule_shown.contains("OMP"), "{capsule_shown}");
+
+    let mut blocked_capsule_world = tuple_world(
+        vec![
+            supported_tuple(Agent::Codex, Provider::OpenAi, "codex-default"),
+            supported_tuple(Agent::Omp, Provider::OpenCode, "omp-default"),
+        ],
+        vec![
+            ready_account("fixture-capsule-codex", "Codex", Provider::OpenAi),
+            ready_account("fixture-capsule-omp", "Blocked OMP", Provider::OpenCode),
+        ],
+    );
+    blocked_capsule_world
+        .accounts
+        .get_mut("fixture-capsule-omp")
+        .expect("blocked Capsule OMP account")
+        .launch_blocked = Some(LaunchBlock::UsageOnlySource);
+    let mut blocked_capsule = capsule_new_tab_picker(blocked_capsule_world);
+    let shown = screen(&mut blocked_capsule);
+    assert!(
+        shown.contains("OMP"),
+        "blocked Capsule offer is visible\n{shown}"
+    );
+    click_picker_option(&mut blocked_capsule, "New tab", "OMP");
+    let after_blocked_click = screen(&mut blocked_capsule);
+    assert!(
+        after_blocked_click.contains("New tab"),
+        "{after_blocked_click}"
+    );
+    assert!(
+        !after_blocked_click.contains("Account for OMP"),
+        "blocked Capsule offer must not open an account picker\n{after_blocked_click}"
+    );
+
+    let mut empty_capsule_world = tuple_world(
+        vec![
+            supported_tuple(Agent::Codex, Provider::OpenAi, "codex-default"),
+            supported_tuple(Agent::Omp, Provider::OpenCode, "omp-default"),
+        ],
+        vec![ready_account(
+            "fixture-capsule-codex",
+            "Codex",
+            Provider::OpenAi,
+        )],
+    );
+    remove_provider_accounts(&mut empty_capsule_world, Provider::OpenCode);
+    empty_capsule_world.backend = SimBackend::guarded_accountless(tuple);
+    let mut empty_capsule = capsule_new_tab_picker(empty_capsule_world);
+    let shown = screen(&mut empty_capsule);
+    assert!(
+        !shown.contains("OMP"),
+        "empty accountless Capsule offer\n{shown}"
+    );
+
+    let mut valid_capsule = manager_session_picker(tuple_world(
+        vec![
+            supported_tuple(Agent::Codex, Provider::OpenAi, "codex-default"),
+            supported_tuple(Agent::Omp, Provider::OpenCode, "omp-default"),
+            unavailable_tuple(Agent::Omp, Provider::Moonshot, "omp-moonshot"),
+        ],
+        vec![
+            ready_account("fixture-capsule-codex", "Codex", Provider::OpenAi),
+            ready_account("fixture-capsule-omp", "Ready OMP", Provider::OpenCode),
+        ],
+    ));
+    let before_session = daemon_tab_counts(&valid_capsule.world);
+    click_picker_option(&mut valid_capsule, "New session · choose Agent", "Codex");
+    assert_eq!(valid_capsule.route(), Route::Capsule);
+    let (capsule_instance, before_tabs) =
+        newly_active_daemon(&valid_capsule.world, &before_session);
+    press(&mut valid_capsule, "ctrl+b c");
+    click_picker_option(&mut valid_capsule, "New tab", "OMP");
+    let daemon = valid_capsule
+        .world
+        .daemons
+        .get(&capsule_instance)
+        .expect("active Capsule daemon");
+    assert_eq!(daemon.tabs.len(), before_tabs + 1);
+    let pane = daemon
+        .pane(daemon.active_tab().expect("active tab").focused)
+        .expect("new OMP pane");
+    assert_eq!(pane.agent, Some(Agent::Omp));
+    assert_eq!(pane.account.as_deref(), Some("fixture-capsule-omp"));
 }
 
 fn launch_tuple(world: World, label: &str, expected: InstanceChoice) {

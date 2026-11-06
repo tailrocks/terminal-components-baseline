@@ -28,6 +28,15 @@ use junie_tui::widgets::tree::TreeNode;
 
 const ID: WidgetId = WidgetId::of("pickers");
 const MULTI_ROWS: [&str; 4] = ["Row1", "Row2", "Row3", "Row4"];
+const MULTI_SELECTION_GROUP: ItemKey = ItemKey::text("multi-provider");
+
+fn multi_row_label(key: ItemKey) -> &'static str {
+    MULTI_ROWS
+        .iter()
+        .copied()
+        .find(|label| ItemKey::text(label) == key)
+        .unwrap_or("Unknown row")
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Kind {
@@ -263,6 +272,9 @@ impl Rows {
                         let mut it = Item::new(*l)
                             .key(ItemKey::text(l))
                             .detail(format!("multi row {}", i + 1));
+                        if matches!(i, 2 | 3) {
+                            it = it.selection_group(MULTI_SELECTION_GROUP);
+                        }
                         if i == 1 {
                             it = it.reason("Unavailable row");
                         }
@@ -487,6 +499,17 @@ impl PickersPage {
             return;
         };
         let picker = r.closed.as_ref().and_then(|e| e.get::<Picker>()).cloned();
+        let conflict_feedback = match &ev {
+            PickerAction::SelectionConflict {
+                attempted,
+                selected,
+            } => Some(format!(
+                "{} conflicts with selected {}",
+                multi_row_label(*attempted),
+                multi_row_label(*selected)
+            )),
+            _ => None,
+        };
         self.last = match &ev {
             PickerAction::ChosenMany(keys) => {
                 let positions: Vec<usize> = keys
@@ -500,9 +523,14 @@ impl PickersPage {
                     .collect();
                 format!("ChosenMany({positions:?})")
             }
-            PickerAction::SelectionConflict { .. } => "SelectionConflict".into(),
+            PickerAction::SelectionConflict { .. } => conflict_feedback
+                .clone()
+                .unwrap_or_else(|| "Selection conflict".into()),
             _ => format!("{ev:?}"),
         };
+        if let Some(message) = conflict_feedback {
+            cx.status(message);
+        }
         match ev {
             PickerAction::Toggled => {}
             PickerAction::SelectionConflict { .. } => {}

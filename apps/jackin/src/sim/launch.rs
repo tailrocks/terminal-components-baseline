@@ -274,18 +274,7 @@ pub fn validate_tuples(w: &World, target: &LaunchTarget) -> Option<RefusalReason
                     reason: offer.reason.clone(),
                 });
             }
-            if choice.model != offer.default_model {
-                return Some(RefusalReason::TupleNotLaunchable {
-                    agent: choice.agent,
-                    provider: choice.provider,
-                    state: offer.state,
-                    reason: Some("model offer changed".into()),
-                });
-            }
-            if !choice.model.is_empty()
-                && !offer.allowed_models.is_empty()
-                && !offer.allowed_models.contains(&choice.model)
-            {
+            if !offer.allowed_models.is_empty() && !offer.allowed_models.contains(&choice.model) {
                 return Some(RefusalReason::TupleNotLaunchable {
                     agent: choice.agent,
                     provider: choice.provider,

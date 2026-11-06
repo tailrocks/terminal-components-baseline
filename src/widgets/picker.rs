@@ -575,7 +575,7 @@ impl Picker {
                 match self.eligible(self.list.cursor.index) {
                     Some(i) => match self.toggle_checked(i) {
                         Some(action) => (Outcome::Consumed, Some(action)),
-                        None => (Outcome::Changed, None),
+                        None => (Outcome::Changed, Some(PickerAction::Toggled)),
                     },
                     None => (Outcome::Consumed, None),
                 }
@@ -584,7 +584,7 @@ impl Picker {
                 match self.eligible(self.list.cursor.index) {
                     Some(i) => match self.toggle_checked(i) {
                         Some(action) => (Outcome::Consumed, Some(action)),
-                        None => (Outcome::Changed, None),
+                        None => (Outcome::Changed, Some(PickerAction::Toggled)),
                     },
                     None => (Outcome::Consumed, None),
                 }
@@ -1457,6 +1457,94 @@ mod tests {
             })
         );
         assert_eq!(picker.checked(), &[ItemKey::text("omp-kimi")]);
+    }
+
+    #[test]
+    fn keyboard_toggles_emit_events_and_hidden_group_conflicts_keep_selection() {
+        let mut focus = Focus::default();
+        let ring = FocusRing::default();
+        let app = ();
+        let mut plain = Picker::new(WidgetId::of("picker-test-plain"), "Choose")
+            .multi_select(true)
+            .searchable(false);
+        plain.set_items(vec![Item::new("Alpha")]);
+        let space = Key {
+            code: KeyCode::Char(' '),
+            mods: KeyModifiers::NONE,
+        };
+        for (selected, expected) in [(true, &[ItemKey::index(0)][..]), (false, &[][..])] {
+            let outcome = {
+                let mut cx = LayerCx {
+                    focus: &mut focus,
+                    ring: &ring,
+                    app: &app,
+                };
+                <Picker as Layer<LayerResult, ()>>::on_key(&mut plain, &space, &mut cx)
+            };
+            assert_eq!(outcome, Outcome::Changed);
+            assert_eq!(plain.checked(), expected);
+            assert_eq!(
+                <Picker as Layer<LayerResult, ()>>::take_result(&mut plain),
+                Some(LayerOut::Event(LayerResult::Picker(PickerAction::Toggled)))
+            );
+            assert_eq!(plain.checked().is_empty(), !selected);
+        }
+
+        let group = ItemKey::text("provider");
+        let alpha = Item::new("Alpha")
+            .key(ItemKey::text("alpha"))
+            .selection_group(group);
+        let beta = Item::new("Beta")
+            .key(ItemKey::text("beta"))
+            .selection_group(group);
+        let mut searchable =
+            Picker::new(WidgetId::of("picker-test-searchable"), "Choose").multi_select(true);
+        searchable.set_items(vec![alpha.clone(), beta.clone()]);
+        searchable.toggle_checked(0);
+        searchable.set_visible_items(vec![beta]);
+
+        let insert = Key {
+            code: KeyCode::Insert,
+            mods: KeyModifiers::NONE,
+        };
+        let outcome = {
+            let mut cx = LayerCx {
+                focus: &mut focus,
+                ring: &ring,
+                app: &app,
+            };
+            <Picker as Layer<LayerResult, ()>>::on_key(&mut searchable, &insert, &mut cx)
+        };
+        assert_eq!(outcome, Outcome::Consumed);
+        assert_eq!(searchable.checked(), &[ItemKey::text("alpha")]);
+        assert_eq!(
+            <Picker as Layer<LayerResult, ()>>::take_result(&mut searchable),
+            Some(LayerOut::Event(LayerResult::Picker(
+                PickerAction::SelectionConflict {
+                    attempted: ItemKey::text("beta"),
+                    selected: ItemKey::text("alpha"),
+                }
+            )))
+        );
+
+        searchable.set_visible_items(vec![alpha]);
+        for (selected, expected) in [(false, &[][..]), (true, &[ItemKey::text("alpha")][..])] {
+            let outcome = {
+                let mut cx = LayerCx {
+                    focus: &mut focus,
+                    ring: &ring,
+                    app: &app,
+                };
+                <Picker as Layer<LayerResult, ()>>::on_key(&mut searchable, &insert, &mut cx)
+            };
+            assert_eq!(outcome, Outcome::Changed);
+            assert_eq!(searchable.checked(), expected);
+            assert_eq!(
+                <Picker as Layer<LayerResult, ()>>::take_result(&mut searchable),
+                Some(LayerOut::Event(LayerResult::Picker(PickerAction::Toggled)))
+            );
+            assert_eq!(searchable.checked().is_empty(), !selected);
+        }
     }
 
     #[test]

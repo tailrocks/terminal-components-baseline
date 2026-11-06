@@ -2392,22 +2392,48 @@ fn agent_rows(
             (None, None) => ("no usable account".to_owned(), true, Some("unavailable")),
         };
         let (detail, disabled, tag) = if effective.matrix_present {
+            let account_detail = if let Some(reason) = &effective.account_offer.blocked {
+                reason.clone()
+            } else if let Some(id) = &effective.account_offer.preselected {
+                let resolved = w.account_for(a.provider(), wsr, role, None);
+                let more = effective.account_offer.accounts.len().saturating_sub(1);
+                format!(
+                    "account {} · {}{}",
+                    w.accounts
+                        .get(id)
+                        .map(|account| account.title())
+                        .unwrap_or_else(|| id.clone()),
+                    resolved.level.label(),
+                    if more > 0 {
+                        format!(" · +{more} more available")
+                    } else {
+                        String::new()
+                    }
+                )
+            } else if effective.account_offer.accounts.len() > 1 {
+                format!(
+                    "{} accounts · choose at start",
+                    effective.account_offer.accounts.len()
+                )
+            } else if effective.account_offer.accounts.is_empty() {
+                "no usable account".to_owned()
+            } else {
+                "choose at start".to_owned()
+            };
             match &effective.tuple {
                 Some(tuple) => {
-                    let account_detail = if effective.account_offer.preselected.is_some() {
-                        detail
+                    let account_ready = effective.account_offer.has_usable_account();
+                    let tag = if !account_ready {
+                        "unavailable"
                     } else if effective.account_offer.accounts.len() > 1 {
-                        format!(
-                            "{} accounts · choose at start",
-                            effective.account_offer.accounts.len()
-                        )
+                        "choose at start"
                     } else {
-                        "choose at start".to_owned()
+                        "ready"
                     };
                     (
                         format!("{} · {account_detail}", tuple.provider.label()),
-                        false,
-                        Some("ready"),
+                        !account_ready,
+                        Some(tag),
                     )
                 }
                 None => {
