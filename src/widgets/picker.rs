@@ -67,6 +67,7 @@ pub struct Picker {
     pub(crate) pending: Option<PickerAction>,
 
     pub delete_is_secondary: bool,
+    pub multi: bool,
 
     pub choose_hint: std::borrow::Cow<'static, str>,
 
@@ -86,7 +87,17 @@ impl HasHints for Picker {
                 .into_iter()
                 .filter(|h| h.key != "Type"),
         );
-        v.push(Hint::new("Enter", self.choose_hint.clone()));
+        if self.multi {
+            v.push(Hint::new("Space", "Toggle"));
+        }
+        v.push(Hint::new(
+            "Enter",
+            if self.multi {
+                std::borrow::Cow::Borrowed("Confirm")
+            } else {
+                self.choose_hint.clone()
+            },
+        ));
         if !self.query().is_empty() {
             v.push(Hint::new("Esc", "Clear"));
         } else if self.list.dismiss.escape {
@@ -100,6 +111,7 @@ impl HasHints for Picker {
 pub enum PickerAction {
     QueryChanged,
     Chosen(usize),
+    ChosenMany(Vec<usize>),
 
     ChosenAlt(usize),
 
@@ -145,6 +157,7 @@ impl Picker {
             reveal: None,
             pending: None,
             delete_is_secondary: true,
+            multi: false,
             choose_hint: std::borrow::Cow::Borrowed("Choose"),
             edit_menu: EditMenu::default(),
         }
@@ -155,6 +168,24 @@ impl Picker {
         self
     }
 
+    pub fn multi_select(mut self, on: bool) -> Self {
+        self.multi = on;
+        if on {
+            self.choose_hint = std::borrow::Cow::Borrowed("Confirm");
+        }
+        self
+    }
+    pub fn is_multi(&self) -> bool {
+        self.multi
+    }
+    pub fn checked(&self) -> &[usize] {
+        &self.list.checked
+    }
+    pub fn toggle_checked(&mut self, i: usize) {
+        if self.eligible(i).is_some() {
+            self.list.toggle_checked(i);
+        }
+    }
     pub fn nav(mut self, nav: NavKeys) -> Self {
         self.list.nav = nav;
         self
@@ -283,6 +314,7 @@ impl Picker {
     }
 
     pub fn set_items(&mut self, items: Vec<Item>) {
+        self.list.checked.clear();
         self.items = items;
         self.list.reset(self.items.len());
         self.list.cursor.index = self.first_enabled();
@@ -295,6 +327,7 @@ impl Picker {
             .map(|i| i.key)
             .filter(|k| !matches!(k, ItemKey::Index(_)));
         let offset = self.list.scroll.offset;
+        self.list.checked.clear();
         self.items = items;
         self.list.cursor.index = keep
             .and_then(|k| self.items.iter().position(|i| i.key == k && !i.disabled))
@@ -406,6 +439,25 @@ impl Picker {
                 }
                 (Outcome::Changed, Some(PickerAction::Cancelled))
             }
+            KeyCode::Char(' ') if self.multi && !searchable => {
+                match self.eligible(self.list.cursor.index) {
+                    Some(i) => {
+                        self.list.toggle_checked(i);
+                        (Outcome::Changed, None)
+                    }
+                    None => (Outcome::Consumed, None),
+                }
+            }
+            KeyCode::Enter if self.multi && !key.alt() => {
+                if self.list.checked.is_empty() {
+                    (Outcome::Consumed, None)
+                } else {
+                    (
+                        Outcome::Changed,
+                        Some(PickerAction::ChosenMany(self.list.checked.clone())),
+                    )
+                }
+            }
             KeyCode::Enter => match self.eligible(self.list.cursor.index) {
                 Some(i) => {
                     let ev = if key.alt() {
@@ -462,7 +514,12 @@ impl Picker {
         }
         let i = self.eligible(self.list.row_of(id, self.items.len())?)?;
         self.list.select(i, &self.items[..]);
-        Some(PickerAction::Chosen(i))
+        if self.multi {
+            self.list.toggle_checked(i);
+            None
+        } else {
+            Some(PickerAction::Chosen(i))
+        }
     }
 
     pub fn draw(&mut self, screen: Rect, buf: &mut Buffer, ctx: &mut RenderCtx) {
@@ -703,6 +760,16 @@ impl Picker {
                     .remove_modifier(Modifier::BOLD),
                 );
 
+                if self.list.checked.contains(&i) {
+                    r.mark(
+                        ctx,
+                        buf,
+                        row.x + 1,
+                        ry,
+                        crate::ui::row::MarkKind::Tick,
+                        focused,
+                    );
+                }
                 let mut x = row.x + 3;
                 let label = truncate(&it.label, label_col as usize);
                 let label_cut = !it.disabled

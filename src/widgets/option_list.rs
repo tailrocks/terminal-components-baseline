@@ -198,6 +198,7 @@ pub struct OptionList {
     pub query: Option<Box<EditField>>,
 
     pub chosen: Option<usize>,
+    pub checked: Vec<usize>,
 
     pub clear_on_leave: bool,
     typeahead: TypeAhead,
@@ -238,6 +239,7 @@ impl OptionList {
             width: Self::WIDTH,
             query: None,
             chosen: None,
+            checked: Vec::new(),
             clear_on_leave: true,
             typeahead: TypeAhead::default(),
             hover: None,
@@ -368,6 +370,16 @@ impl OptionList {
         self
     }
 
+    pub fn toggle_checked(&mut self, i: usize) {
+        if let Some(pos) = self.checked.iter().position(|&c| c == i) {
+            self.checked.remove(pos);
+        } else {
+            self.checked.push(i);
+        }
+    }
+    pub fn is_checked(&self, i: usize) -> bool {
+        self.checked.contains(&i)
+    }
     pub fn reset(&mut self, len: usize) {
         self.cursor.index = 0;
         self.scroll.v = ScrollState::new(len);
@@ -545,7 +557,7 @@ impl OptionList {
             let mut state = ctx.state(self.row_id(i));
             state.focused = highlighted == Some(i);
             state.disabled = !src.enabled(i);
-            state.selected = self.chosen == Some(i);
+            state.selected = self.chosen == Some(i) || self.checked.contains(&i);
 
             state.hovered &= !self.hover_moves_cursor;
             let area = Rect::new(inner.x, y, inner.width.saturating_sub(u16::from(has_sb)), 1);
