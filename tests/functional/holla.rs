@@ -318,11 +318,14 @@ fn holla_second_gate_wrong_phrase_stays_then_reconfirm_executes() {
     app.paste(PHRASE);
     app.key("enter");
     app.wait_text("Stop running containers");
-    std::thread::sleep(std::time::Duration::from_secs(5));
-    let executed = app.wait_screen("exact phrase finishes the docker plan", |s| {
-        let t = text(s);
-        t.contains("finished · 7 ok") && t.contains("7 succeeded")
-    });
+    let executed = app.wait_screen_for(
+        "exact phrase finishes the docker plan",
+        std::time::Duration::from_secs(20),
+        |s| {
+            let t = text(s);
+            t.contains("finished · 7 ok") && t.contains("7 succeeded")
+        },
+    );
     for step in [
         "Stop running containers",
         "Remove containers",

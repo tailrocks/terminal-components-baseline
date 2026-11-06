@@ -83,9 +83,10 @@ over 702 frozen scenarios in `snapshots/`) is deleted, together with its
 oracle, scenario tables and the `baselines/oracle` pin. Its contract —
 "this screen looks like the approved frame" — is now carried per journey
 by the `App::visual` frozen check at the end of every functional test,
-with one approved `.tui.json` baseline per test in
-`tests/functional/baselines/`. The frozen `visual-baseline` tag is not
-moved, deleted or retargeted.
+with one approved `.tui.pb` baseline per active test in
+`tests/functional/baselines/functional/`. Historical JSON records remain
+review provenance and are not read as active baselines. The frozen
+`visual-baseline` tag is not moved, deleted or retargeted.
 
 ## The test boundary
 

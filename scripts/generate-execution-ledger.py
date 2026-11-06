@@ -774,15 +774,14 @@ def main() -> None:
         )
 
     baselines = []
-    for path in sorted((ROOT / "tests/functional/baselines").rglob("*.tui.json")):
-        data = json.loads(path.read_text())
-        snap = data.get("snapshot", {})
+    active_baselines = ROOT / "tests/functional/baselines/functional"
+    for path in sorted(active_baselines.rglob("*.tui.pb")):
+        test_id = path.relative_to(ROOT / "tests/functional/baselines").as_posix()
+        test_id = test_id[: -len(".tui.pb")]
         baselines.append(
             {
                 "path": str(path.relative_to(ROOT)),
-                "test_id": data.get("test_id"),
-                "cols": snap.get("cols"),
-                "rows": snap.get("rows"),
+                "test_id": test_id,
                 "active": True,
             }
         )

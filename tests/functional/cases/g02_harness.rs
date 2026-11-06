@@ -1,5 +1,5 @@
 use std::panic::AssertUnwindSafe;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use tui_test::profile::Rgb;
@@ -37,9 +37,62 @@ fn panic_text(payload: Box<dyn std::any::Any + Send>) -> String {
     }
 }
 
-fn production_baseline() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("tests/functional/baselines/functional/showcase_popover_resize.tui.json")
+fn production_baseline_digests() -> Vec<(PathBuf, String)> {
+    fn collect(directory: &Path, files: &mut Vec<PathBuf>) {
+        for entry in std::fs::read_dir(directory).expect("read production baselines") {
+            let path = entry.expect("production baseline entry").path();
+            if path.is_dir() {
+                collect(&path, files);
+            } else if path.is_file() {
+                files.push(path);
+            }
+        }
+    }
+
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let mut paths = Vec::new();
+    collect(&root, &mut paths);
+    paths.sort();
+
+    let shasum = Path::new("/usr/bin/shasum").is_file();
+    let mut digests = Vec::with_capacity(paths.len());
+    for batch in paths.chunks(64) {
+        let mut command = if shasum {
+            let mut command = std::process::Command::new("/usr/bin/shasum");
+            command.arg("-a").arg("256");
+            command
+        } else {
+            std::process::Command::new("/usr/bin/sha256sum")
+        };
+        let output = command
+            .args(batch)
+            .output()
+            .expect("hash production baselines");
+        assert!(
+            output.status.success(),
+            "baseline sha256 failed: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let lines: Vec<_> = String::from_utf8(output.stdout)
+            .expect("baseline sha256 output")
+            .lines()
+            .map(str::to_owned)
+            .collect();
+        assert_eq!(lines.len(), batch.len(), "one digest per baseline file");
+        for (path, line) in batch.iter().zip(lines) {
+            let digest = line
+                .split_whitespace()
+                .next()
+                .expect("baseline sha256 digest")
+                .to_owned();
+            let relative = path
+                .strip_prefix(&root)
+                .expect("production baseline is under baseline root")
+                .to_path_buf();
+            digests.push((relative, digest));
+        }
+    }
+    digests
 }
 
 fn temp_root(name: &str) -> PathBuf {
@@ -196,7 +249,7 @@ fn harness_dead_child_fails_wait() {
 
 #[test]
 fn harness_missing_baseline_fails() {
-    let before = file_sha256(&production_baseline());
+    let before = production_baseline_digests();
     let app = showcase("harness-missing-baseline");
     app.wait_text("120×40");
     let root = temp_root("missing");
@@ -208,44 +261,41 @@ fn harness_missing_baseline_fails() {
         CheckOutcome::Pass(success) => panic!("missing baseline passed: {success:?}"),
     }
     assert_candidate_logged(&app, "functional/harness_missing_screen");
-    assert_eq!(file_sha256(&production_baseline()), before);
+    assert_eq!(production_baseline_digests(), before);
     app.finish();
 }
 
 #[test]
 fn harness_changed_baseline_fails() {
-    let before = file_sha256(&production_baseline());
+    let before = production_baseline_digests();
     let app = showcase("harness-changed-baseline");
     app.wait_text("120×40");
     let root = temp_root("changed");
-    let raw = std::fs::read_to_string(production_baseline()).expect("read production baseline");
-    assert_eq!(raw.matches("functional/showcase_popover_resize").count(), 1);
-    let rewritten = raw.replacen(
-        "functional/showcase_popover_resize",
+    let sample = tuiscotti_latest::sample::Sample::state(
         "functional/harness_changed_screen",
-        1,
-    );
+        locator_screen(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build changed Tuiscotti baseline");
+    let bytes = sample
+        .to_bytes()
+        .expect("serialize changed Tuiscotti baseline");
     let dest = root.join("functional");
     std::fs::create_dir_all(&dest).expect("temp baseline dir");
-    std::fs::write(dest.join("harness_changed_screen.tui.json"), rewritten)
+    std::fs::write(dest.join("harness_changed_screen.tui.pb"), bytes)
         .expect("write changed baseline");
     let outcome = app.check_visual(&root, "functional/harness_changed_screen");
     match outcome {
         CheckOutcome::Failure(failure) => {
-            assert_ne!(failure.reason(), MismatchReason::Missing);
-            assert!(
-                matches!(
-                    failure.reason(),
-                    MismatchReason::State | MismatchReason::Dimensions
-                ),
-                "{:?}",
-                failure.reason()
-            );
+            assert_eq!(failure.reason(), MismatchReason::State);
+            let fields = failure.changed_fields();
+            assert!(fields.iter().any(|field| field == "cols"), "{fields:?}");
+            assert!(fields.iter().any(|field| field == "rows"), "{fields:?}");
         }
         CheckOutcome::Pass(success) => panic!("changed baseline passed: {success:?}"),
     }
     assert_candidate_logged(&app, "functional/harness_changed_screen");
-    assert_eq!(file_sha256(&production_baseline()), before);
+    assert_eq!(production_baseline_digests(), before);
     app.finish();
 }
 

@@ -293,7 +293,7 @@ fn assert_acceptance_receipts() {
             Some(expected_sha),
             "{file}"
         );
-        let baseline = baseline_root().join(format!("{baseline_id}.tui.json"));
+        let baseline = baseline_root().join(format!("{baseline_id}.tui.pb"));
         assert_eq!(
             receipt["candidate_sha256"].as_str(),
             Some(file_sha256(&baseline).as_str()),
@@ -510,7 +510,7 @@ fn g05_check_visual_does_not_write_baselines() {
         }
     }
     assert!(!app.evidence_dir().starts_with(&root));
-    let missing = root.join("functional/g05_read_only.tui.json");
+    let missing = root.join("functional/g05_read_only.tui.pb");
     assert!(!missing.exists());
     let outcome =
         app.check_visual_with_precondition(&root, "functional/g05_read_only", "screen is visible");
@@ -527,11 +527,7 @@ fn g05_check_visual_does_not_write_baselines() {
     let empty_compared = prefix_index(&actions, "visual functional/g05_read_only_empty candidate ");
     assert!(empty < empty_compared, "{actions}");
     assert!(!missing.exists());
-    assert!(
-        !root
-            .join("functional/g05_read_only_empty.tui.json")
-            .exists()
-    );
+    assert!(!root.join("functional/g05_read_only_empty.tui.pb").exists());
     assert_eq!(tree_digest(&root), before);
     app.finish();
 }

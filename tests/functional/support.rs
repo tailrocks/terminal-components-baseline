@@ -159,7 +159,16 @@ impl App {
         reason: &str,
         predicate: impl Fn(&TerminalSnapshot) -> bool,
     ) -> TerminalSnapshot {
-        let deadline = Instant::now() + TIMEOUT;
+        self.wait_screen_for(reason, TIMEOUT, predicate)
+    }
+
+    pub fn wait_screen_for(
+        &self,
+        reason: &str,
+        timeout: Duration,
+        predicate: impl Fn(&TerminalSnapshot) -> bool,
+    ) -> TerminalSnapshot {
+        let deadline = Instant::now() + timeout;
         loop {
             self.assert_running(reason);
             let screen = self.screen();

@@ -91,7 +91,7 @@
   ],
   "current_baselines": [
     {
-      "path": "functional/one.tui.json",
+      "path": "functional/one.tui.pb",
       "test_id": "functional/one",
       "active": true,
       "cols": 120,

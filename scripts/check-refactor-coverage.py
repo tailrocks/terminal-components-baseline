@@ -252,6 +252,8 @@ def load_receipts(directory):
 
 
 def strip_baseline_suffix(relative):
+    if relative.endswith(".tui.pb"):
+        return relative[: -len(".tui.pb")]
     if relative.endswith(".tui.json"):
         return relative[: -len(".tui.json")]
     if relative.endswith(".json"):
@@ -272,7 +274,7 @@ def baseline_files(baselines):
     if not baselines.is_dir():
         return files
     for path in sorted(baselines.rglob("*")):
-        if path.is_file():
+        if path.is_file() and path.name.endswith(".tui.pb"):
             relative = path.relative_to(baselines).as_posix()
             files[strip_baseline_suffix(relative)] = path
     return files
@@ -281,7 +283,7 @@ def baseline_files(baselines):
 def file_exists(baselines, files, baseline_id, hinted_path):
     if baseline_id in files:
         return True
-    if not hinted_path:
+    if not isinstance(hinted_path, str) or not hinted_path.endswith(".tui.pb"):
         return False
     hinted = Path(hinted_path)
     return hinted.is_file() or (baselines / hinted).is_file()
