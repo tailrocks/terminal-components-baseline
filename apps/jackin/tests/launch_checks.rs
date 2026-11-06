@@ -54,7 +54,7 @@ fn launch(app: &mut App, downs: usize, scope: &str) {
         picker.contains(scope),
         "{scope:?} not in the picker\n{picker}"
     );
-    press(app, "enter");
+    press(app, "space enter");
     assert_eq!(app.route(), Route::Cockpit);
 }
 
@@ -179,8 +179,13 @@ fn target(workspace: u32, role: &str) -> LaunchTarget {
     LaunchTarget {
         workspace: Some(workspace),
         role: role.into(),
-        agent: Agent::ClaudeCode,
-        account: None,
+        instances: vec![jackin_console::domain::tuple::InstanceChoice {
+            agent: Agent::ClaudeCode,
+            provider: jackin_console::domain::agent::Provider::Anthropic,
+            account: None,
+            model: String::new(),
+        }],
+        task: None,
     }
 }
 

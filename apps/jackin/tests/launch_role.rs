@@ -257,7 +257,7 @@ fn a_launch_picked_after_the_role_became_unusable_is_refused() {
             .trusted = false;
     });
     app.deliver(&reload);
-    press(&mut app, "enter");
+    press(&mut app, "space enter");
 
     assert_eq!(app.route(), Route::Manager);
     let shown = app.shell.status.text().unwrap_or_default().to_owned();
@@ -277,7 +277,7 @@ fn a_launch_picked_after_its_account_became_unusable_is_refused() {
         preselected.lifecycle = Lifecycle::NeedsLogin;
     });
     app.deliver(&reload);
-    press(&mut app, "enter");
+    press(&mut app, "space enter");
 
     assert_eq!(app.route(), Route::Manager);
 }
@@ -285,6 +285,6 @@ fn a_launch_picked_after_its_account_became_unusable_is_refused() {
 #[test]
 fn a_launch_picked_with_nothing_changed_goes_on() {
     let mut app = open_picker();
-    press(&mut app, "enter");
+    press(&mut app, "space enter");
     assert_eq!(app.route(), Route::Cockpit);
 }

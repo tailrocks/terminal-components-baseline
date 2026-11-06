@@ -952,11 +952,14 @@ fn probe_instance() -> Instance {
         unpushed: 5,
         account: Some("probe-account".into()),
         accounts: vec!["probe-id".into()],
+        agents: Vec::new(),
+        task: None,
     }
 }
 
 fn probe_surfaces() -> Surfaces {
     Surfaces {
+        tuples: Vec::new(),
         roles: Some(RoleAdmin {
             agents: vec![Agent::Amp],
             roles: vec![],
@@ -1081,6 +1084,7 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
         launch_role: _,
         wizard: _,
         fixed: _,
+        tuples: _,
         version,
         cockpit_version,
         config_path,

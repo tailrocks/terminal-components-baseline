@@ -1792,7 +1792,10 @@ fn showcase_picker_multi_select_order_toggle_and_confirm() {
     assert!(text(&opened).contains("Space Toggle"));
     assert!(text(&opened).contains("Enter Confirm"));
     app.key("enter");
-    assert!(text(&app.settle()).contains("Row3"), "empty Enter must be a no-op");
+    assert!(
+        text(&app.settle()).contains("Row3"),
+        "empty Enter must be a no-op"
+    );
     app.key("down");
     app.key("space");
     app.key("up");
@@ -1804,7 +1807,10 @@ fn showcase_picker_multi_select_order_toggle_and_confirm() {
     app.click(inside(find(&app.settle(), "Row4")));
     app.click(inside(find(&app.settle(), "Row4")));
     app.key("enter");
-    assert!(text(&app.settle()).contains("Row4"), "second click must uncheck, so Enter is a no-op");
+    assert!(
+        text(&app.settle()).contains("Row4"),
+        "second click must uncheck, so Enter is a no-op"
+    );
     app.key("escape");
     app.wait_absent("Row4");
     app.visual("functional/showcase_picker_multi_select");
@@ -1832,7 +1838,10 @@ fn showcase_picker_multi_search_space_edits_query_and_hidden_checked_retained() 
     assert!(text(&filtered).contains("Row1"));
     app.key("space");
     let after_space = app.settle();
-    assert!(!text(&after_space).contains("ChoseMany"), "Space in searchable picker must edit the query, not toggle or confirm");
+    assert!(
+        !text(&after_space).contains("ChoseMany"),
+        "Space in searchable picker must edit the query, not toggle or confirm"
+    );
     app.key("enter");
     app.wait_text("ChoseMany: Row3");
     app.visual("functional/showcase_picker_multi_search");

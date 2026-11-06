@@ -313,6 +313,15 @@ fn instance(
         unpushed: 0,
         account: None,
         accounts: vec![],
+        agents: vec![crate::domain::instance::AgentInstanceView {
+            agent,
+            provider: agent.provider(),
+            account: None,
+            model: String::new(),
+            branch: None,
+            state: crate::domain::instance::AgentState::Idle,
+        }],
+        task: None,
     }
 }
 

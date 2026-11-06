@@ -378,9 +378,9 @@ impl App {
             EntryPage::Launch(target) => {
                 self.go(Go::Launch {
                     workspace: target.workspace,
-                    role: target.role,
-                    agent: target.agent,
-                    account: target.account,
+                    role: target.role.clone(),
+                    agent: target.agent(),
+                    account: target.account(),
                 });
                 if frame > 0 {
                     let (_, reqs) = self.shell.deliver(true, |cx| {
@@ -1913,8 +1913,31 @@ impl App {
                     LaunchTarget {
                         workspace,
                         role,
-                        agent,
-                        account,
+                        instances: vec![crate::domain::tuple::InstanceChoice {
+                            agent,
+                            provider: agent.provider(),
+                            account,
+                            model: String::new(),
+                        }],
+                        task: None,
+                    },
+                    self.shell.motion,
+                )));
+                self.open_page(page);
+            }
+            Go::LaunchMany {
+                workspace,
+                role,
+                instances,
+                task,
+            } => {
+                let page = Page::Cockpit(Box::new(CockpitScreen::new(
+                    &self.world,
+                    LaunchTarget {
+                        workspace,
+                        role,
+                        instances,
+                        task,
                     },
                     self.shell.motion,
                 )));

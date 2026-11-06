@@ -568,7 +568,7 @@ fn the_user_picks_the_account_when_none_is_preselected() {
     has(&picker, "2 accounts · choose at start");
     lacks(&picker, "no usable account");
 
-    press(&mut app, "enter");
+    press(&mut app, "space enter");
     let accounts = screen(&mut app);
     has(&accounts, "Account for Claude Code");
     has(&accounts, "Personal");
@@ -585,8 +585,8 @@ fn the_user_picks_the_account_when_none_is_preselected() {
     let [target] = launched.as_slice() else {
         panic!("one launch expected, got {launched:?}");
     };
-    assert_eq!(target.agent, Agent::ClaudeCode);
-    assert_eq!(target.account.as_deref(), Some("acct-claude-work"));
+    assert_eq!(target.agent(), Agent::ClaudeCode);
+    assert_eq!(target.account().as_deref(), Some("acct-claude-work"));
 }
 
 #[test]
@@ -595,13 +595,13 @@ fn a_preselected_account_launches_without_a_second_pick() {
     let mut world = world_for(Scenario::Returning);
     world.backend = backend.clone();
     let mut app = timed(Scenario::Returning, world);
-    press(&mut app, "down enter enter");
+    press(&mut app, "down enter space enter");
     settle(&mut app);
     let launched = backend.launched();
     let [target] = launched.as_slice() else {
         panic!("one launch expected, got {launched:?}");
     };
-    assert_eq!(target.account.as_deref(), Some("acct-claude-personal"));
+    assert_eq!(target.account().as_deref(), Some("acct-claude-personal"));
 }
 
 // Gap 6: RoleFinding.fix and key are optional.

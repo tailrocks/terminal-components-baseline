@@ -13,6 +13,7 @@ pub mod reason;
 pub mod role;
 pub mod shown;
 pub mod surfaces;
+pub mod tuple;
 pub mod usage;
 pub mod vocabulary;
 pub mod workspace;

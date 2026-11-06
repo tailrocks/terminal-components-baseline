@@ -128,6 +128,8 @@ pub fn instance() -> Instance {
         unpushed: 0,
         account: None,
         accounts: Vec::new(),
+        agents: Vec::new(),
+        task: None,
     }
 }
 

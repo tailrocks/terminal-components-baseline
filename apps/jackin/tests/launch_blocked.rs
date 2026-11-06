@@ -21,7 +21,7 @@ fn blocked_launch() -> App {
         0,
         Theme::for_level(ColorLevel::TrueColor),
     );
-    press(&mut app, "down down enter enter");
+    press(&mut app, "down down enter space enter");
     assert_eq!(app.route(), Route::Cockpit);
     for _ in 0..400 {
         Application::handle(&mut app, Input::Tick);

@@ -36,6 +36,7 @@ pub enum ModalResult {
         text: Option<String>,
     },
     Picked(usize),
+    PickedMany(Vec<usize>),
     PickedAlt(usize),
 
     Scope,
@@ -63,6 +64,9 @@ impl From<LayerResult> for ModalResult {
             LayerResult::Picker(PickerAction::Chosen(i))
             | LayerResult::Menu(MenuAction::Chosen(i)) => ModalResult::Picked(i),
             LayerResult::Picker(PickerAction::ChosenAlt(i)) => ModalResult::PickedAlt(i),
+            LayerResult::Picker(PickerAction::ChosenMany(indices)) => {
+                ModalResult::PickedMany(indices)
+            }
             LayerResult::Picker(PickerAction::NextScope | PickerAction::PrevScope) => {
                 ModalResult::Scope
             }
@@ -123,6 +127,12 @@ pub enum Go {
         role: String,
         agent: Agent,
         account: Option<AccountId>,
+    },
+    LaunchMany {
+        workspace: Option<WorkspaceId>,
+        role: String,
+        instances: Vec<crate::domain::tuple::InstanceChoice>,
+        task: Option<String>,
     },
     Attach {
         instance: InstanceId,

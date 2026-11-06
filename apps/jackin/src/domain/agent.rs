@@ -6,16 +6,26 @@ pub enum Agent {
     KimiCode,
     OpenCode,
     GrokBuild,
+    MuseCode,
+    Antigravity,
+    MinimaxCode,
+    MimoCode,
+    Omp,
 }
 
 impl Agent {
-    pub const ALL: [Agent; 6] = [
+    pub const ALL: [Agent; 11] = [
         Agent::ClaudeCode,
         Agent::Codex,
         Agent::Amp,
         Agent::KimiCode,
         Agent::OpenCode,
         Agent::GrokBuild,
+        Agent::MuseCode,
+        Agent::Antigravity,
+        Agent::MinimaxCode,
+        Agent::MimoCode,
+        Agent::Omp,
     ];
 
     pub fn label(self) -> &'static str {
@@ -26,6 +36,11 @@ impl Agent {
             Agent::KimiCode => "Kimi Code",
             Agent::OpenCode => "OpenCode",
             Agent::GrokBuild => "Grok Build",
+            Agent::MuseCode => "Muse",
+            Agent::Antigravity => "Antigravity",
+            Agent::MinimaxCode => "MiniMax Code",
+            Agent::MimoCode => "Mimo Code",
+            Agent::Omp => "OMP",
         }
     }
 
@@ -37,6 +52,11 @@ impl Agent {
             Agent::KimiCode => "kimi",
             Agent::OpenCode => "opencode",
             Agent::GrokBuild => "grok",
+            Agent::MuseCode => "muse",
+            Agent::Antigravity => "antigravity",
+            Agent::MinimaxCode => "minimax",
+            Agent::MimoCode => "mimo",
+            Agent::Omp => "omp",
         }
     }
 
@@ -48,6 +68,11 @@ impl Agent {
             Agent::KimiCode => Provider::Moonshot,
             Agent::OpenCode => Provider::OpenCode,
             Agent::GrokBuild => Provider::XAi,
+            Agent::MuseCode => Provider::Muse,
+            Agent::Antigravity => Provider::Antigravity,
+            Agent::MinimaxCode => Provider::MiniMax,
+            Agent::MimoCode => Provider::Mimo,
+            Agent::Omp => Provider::OpenCode,
         }
     }
 
@@ -87,10 +112,11 @@ pub enum Provider {
     Antigravity,
     Hermes,
     Muse,
+    Mimo,
 }
 
 impl Provider {
-    pub const ALL: [Provider; 14] = [
+    pub const ALL: [Provider; 15] = [
         Provider::Anthropic,
         Provider::OpenAi,
         Provider::Amp,
@@ -105,6 +131,7 @@ impl Provider {
         Provider::Antigravity,
         Provider::Hermes,
         Provider::Muse,
+        Provider::Mimo,
     ];
 
     pub fn label(self) -> &'static str {
@@ -123,6 +150,7 @@ impl Provider {
             Provider::Antigravity => "Antigravity",
             Provider::Hermes => "Hermes",
             Provider::Muse => "Muse",
+            Provider::Mimo => "Mimo",
         }
     }
 
@@ -142,6 +170,7 @@ impl Provider {
             Provider::Antigravity => "Antigravity",
             Provider::Hermes => "Hermes",
             Provider::Muse => "Muse",
+            Provider::Mimo => "Mimo",
         }
     }
 
@@ -160,6 +189,7 @@ impl Provider {
             | Provider::Openrouter
             | Provider::Antigravity
             | Provider::Hermes
+            | Provider::Mimo
             | Provider::Muse => UsageSurface::Unsupported,
         }
     }
@@ -179,6 +209,7 @@ impl Provider {
             | Provider::Openrouter
             | Provider::Antigravity
             | Provider::Hermes
+            | Provider::Mimo
             | Provider::Muse => None,
         }
     }
@@ -203,6 +234,7 @@ impl Provider {
             Provider::Antigravity => "Antigravity API key",
             Provider::Hermes => "Hermes API key",
             Provider::Muse => "Muse API key",
+            Provider::Mimo => "Mimo API key",
         }
     }
 
@@ -222,6 +254,7 @@ impl Provider {
             Provider::Antigravity => "Antigravity profile folder",
             Provider::Hermes => "Hermes profile folder",
             Provider::Muse => "Muse profile folder",
+            Provider::Mimo => "Mimo profile folder",
         }
     }
 }

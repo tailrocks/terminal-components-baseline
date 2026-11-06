@@ -648,6 +648,7 @@ pub fn refresh_duration_ms(a: &Account) -> i64 {
         | Provider::Openrouter
         | Provider::Antigravity
         | Provider::Hermes
+        | Provider::Mimo
         | Provider::Muse => 700,
     };
     base + (a.id.len() as i64 % 5) * 40

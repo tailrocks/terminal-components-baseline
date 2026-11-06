@@ -755,6 +755,7 @@ fn provider_slot(p: Provider) -> usize {
         Provider::Antigravity => 11,
         Provider::Hermes => 12,
         Provider::Muse => 13,
+        Provider::Mimo => 14,
     }
 }
 
@@ -806,7 +807,7 @@ fn the_form_offers_the_providers_its_data_lists() {
 
     let live = provider_chosen_last(AccountForm::openshell());
     assert!(
-        live.contains("Muse"),
+        live.contains("Mimo"),
         "the last provider is chosen:\n{live}"
     );
     assert!(!live.contains("OpenCode · OpenCode"), "{live}");
