@@ -259,8 +259,8 @@ fn ticks_until_lock(app: &mut App) -> bool {
 
 #[test]
 fn hard_cases_credentials_plan() {
-    const CODEX: &str = "down enter down enter";
-    const CLAUDE_PERSONAL: &str = "down enter enter";
+    const CODEX: &str = "down enter down space enter";
+    const CLAUDE_PERSONAL: &str = "down enter space enter";
 
     let mut locked = launch_hard_cases(world_for(Scenario::HardCases), CODEX);
     assert!(ticks_until_lock(&mut locked), "{}", screen(&mut locked));

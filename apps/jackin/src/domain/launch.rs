@@ -104,6 +104,7 @@ pub struct LaunchWords {
     pub role_not_allowed: RefusalWords,
     /// Templates take `{agent}` and `{launchable}`.
     pub agent_not_launchable: RefusalWords,
+    pub tuple_not_launchable: RefusalWords,
     /// Takes `{sandbox}` and `{launch}`.
     pub next_retry: String,
     pub next_doctor: String,
@@ -131,6 +132,12 @@ pub enum RefusalReason {
     AgentNotLaunchable {
         agent: Agent,
         launchable: Agent,
+    },
+    TupleNotLaunchable {
+        agent: Agent,
+        provider: super::agent::Provider,
+        state: super::tuple::TupleState,
+        reason: Option<String>,
     },
 }
 
@@ -240,6 +247,11 @@ impl LaunchWords {
                         .into(),
                 next_step: "Launch with {launchable}; {agent} stays usage only.".into(),
             },
+            tuple_not_launchable: RefusalWords {
+                title: "Tuple not launchable".into(),
+                found: "{agent} via {provider} is not launchable: {reason}".into(),
+                next_step: "Choose a supported agent and provider, then launch again.".into(),
+            },
             next_retry: "sandbox {sandbox} remains; retry with: jackin load --launch-id {launch}"
                 .into(),
             next_doctor: "Run jackin doctor, fix the failing check, then launch again.".into(),
@@ -256,6 +268,19 @@ impl LaunchWords {
             RefusalReason::AgentNotLaunchable { agent, launchable } => (
                 &self.agent_not_launchable,
                 vec![("agent", agent.label()), ("launchable", launchable.label())],
+            ),
+            RefusalReason::TupleNotLaunchable {
+                agent,
+                provider,
+                reason,
+                ..
+            } => (
+                &self.tuple_not_launchable,
+                vec![
+                    ("agent", agent.label()),
+                    ("provider", provider.label()),
+                    ("reason", reason.as_deref().unwrap_or("not supported")),
+                ],
             ),
         };
         RefusalText {

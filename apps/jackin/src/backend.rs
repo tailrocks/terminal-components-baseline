@@ -534,7 +534,26 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
 
     fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody>;
 
-    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest>;
+    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
+        if instance.agents.is_empty() {
+            return vec![PaneRequest::new(
+                &instance.id,
+                Some(instance.agent),
+                instance.account.clone(),
+            )];
+        }
+        instance
+            .agents
+            .iter()
+            .map(|a| {
+                let account = a
+                    .account
+                    .clone()
+                    .or_else(|| (a.agent == instance.agent).then(|| instance.account.clone())?);
+                PaneRequest::new(&instance.id, Some(a.agent), account)
+            })
+            .collect()
+    }
 
     /// Whether a pane of `kind` may be started in `instance` now. An `Err` is
     /// the reason the new-tab picker shows on the disabled row, in the

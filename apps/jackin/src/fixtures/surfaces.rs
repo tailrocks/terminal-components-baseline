@@ -29,6 +29,23 @@ impl Surfaces {
             launch_role: LaunchRoleRule::Demo,
             wizard: None,
             fixed: None,
+            tuples: vec![
+                crate::domain::tuple::TupleOffer::supported(
+                    Agent::Codex,
+                    crate::domain::agent::Provider::OpenAi,
+                    &["gpt-5-codex"],
+                ),
+                crate::domain::tuple::TupleOffer::supported(
+                    Agent::Omp,
+                    crate::domain::agent::Provider::OpenCode,
+                    &["omp-default"],
+                ),
+                crate::domain::tuple::TupleOffer::supported(
+                    Agent::ClaudeCode,
+                    crate::domain::agent::Provider::Anthropic,
+                    &["claude-sonnet"],
+                ),
+            ],
             version: "0.9.2".into(),
             cockpit_version: Some("0.6.4 · preview".into()),
             config_path: None,

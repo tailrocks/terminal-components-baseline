@@ -133,6 +133,39 @@ pub fn capsule_terminal(w: &mut World) {
 
     d.active = 0;
     w.daemons.insert(INSTANCE.into(), d);
+    if let Some(i) = w.instances.iter_mut().find(|i| i.id == INSTANCE) {
+        i.agents = vec![
+            crate::domain::instance::AgentInstanceView {
+                agent: Agent::Codex,
+                provider: crate::domain::agent::Provider::OpenAi,
+                account: Some("acct-codex-primary".into()),
+                model: "gpt-5-codex".into(),
+                branch: None,
+                state: crate::domain::instance::AgentState::Working,
+            },
+            crate::domain::instance::AgentInstanceView {
+                agent: Agent::Omp,
+                provider: crate::domain::agent::Provider::OpenCode,
+                account: None,
+                model: "omp-default".into(),
+                branch: None,
+                state: crate::domain::instance::AgentState::Idle,
+            },
+        ];
+        i.task = Some(crate::domain::instance::TaskView {
+            text: "Ship the multi-agent launch".into(),
+            statuses: vec![
+                crate::domain::instance::InstanceStatusView {
+                    agent: Agent::Codex,
+                    text: "working".into(),
+                },
+                crate::domain::instance::InstanceStatusView {
+                    agent: Agent::Omp,
+                    text: "idle".into(),
+                },
+            ],
+        });
+    }
     refresh_snapshots(w);
     w.sync_arbiter();
 }

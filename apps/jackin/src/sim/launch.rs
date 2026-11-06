@@ -126,6 +126,11 @@ fn words() -> LaunchWords {
             found: "{agent} cannot be launched here: only {launchable} is.".into(),
             next_step: "Launch with {launchable} instead.".into(),
         },
+        tuple_not_launchable: RefusalWords {
+            title: "Tuple not launchable".into(),
+            found: "{agent} via {provider} is not launchable: {reason}".into(),
+            next_step: "Choose a supported agent and provider, then launch again.".into(),
+        },
         next_retry: "container {sandbox} remains; launch again with id {launch}".into(),
         next_doctor:
             "Check that Docker's jackin-net bridge exists (docker network ls), then launch again."
@@ -220,7 +225,67 @@ pub enum Opening {
 /// The checks a guarded simulator makes before it starts: the workspace must
 /// allow the role, and a role whose manifest prompts for env values asks for
 /// them.
+pub fn validate_tuples(w: &World, target: &LaunchTarget) -> Option<RefusalReason> {
+    use crate::domain::tuple::TupleState;
+    if target.instances.is_empty() {
+        return Some(RefusalReason::TupleNotLaunchable {
+            agent: Agent::Codex,
+            provider: crate::domain::agent::Provider::OpenAi,
+            state: TupleState::Unavailable,
+            reason: Some("no instances chosen".into()),
+        });
+    }
+    let mut seen = Vec::new();
+    for choice in &target.instances {
+        if seen.contains(&choice.agent) {
+            return Some(RefusalReason::TupleNotLaunchable {
+                agent: choice.agent,
+                provider: choice.provider,
+                state: TupleState::Unavailable,
+                reason: Some("duplicate agent".into()),
+            });
+        }
+        seen.push(choice.agent);
+        let offer = w
+            .surfaces
+            .tuples
+            .iter()
+            .find(|o| o.agent == choice.agent && o.provider == choice.provider);
+        let Some(offer) = offer else {
+            return Some(RefusalReason::TupleNotLaunchable {
+                agent: choice.agent,
+                provider: choice.provider,
+                state: TupleState::Unavailable,
+                reason: Some("unknown tuple".into()),
+            });
+        };
+        if offer.state != TupleState::Supported {
+            return Some(RefusalReason::TupleNotLaunchable {
+                agent: choice.agent,
+                provider: choice.provider,
+                state: offer.state,
+                reason: offer.reason.clone(),
+            });
+        }
+        if !choice.model.is_empty()
+            && !offer.allowed_models.is_empty()
+            && !offer.allowed_models.contains(&choice.model)
+        {
+            return Some(RefusalReason::TupleNotLaunchable {
+                agent: choice.agent,
+                provider: choice.provider,
+                state: offer.state,
+                reason: Some("unknown model".into()),
+            });
+        }
+    }
+    None
+}
+
 pub fn opening(w: &World, target: &LaunchTarget) -> Opening {
+    if let Some(reason) = validate_tuples(w, target) {
+        return Opening::Refuse(reason);
+    }
     if let Some(ws) = target.workspace.and_then(|id| w.workspace(id))
         && !ws.roles.allows(&target.role)
     {
@@ -329,8 +394,8 @@ impl SimLaunch {
             instance_id,
             workspace: target.workspace,
             role: target.role.clone(),
-            agent: target.agent,
-            account: target.account.clone(),
+            agent: target.agent(),
+            account: target.account(),
             accounts: launch_accounts(w, target, &content),
             tick: 0,
             stage_start: 0,
@@ -368,6 +433,15 @@ impl SimLaunch {
             github: repo.map(Into::into),
             uncommitted: 0,
             unpushed: 0,
+            agents: vec![crate::domain::instance::AgentInstanceView {
+                agent: self.agent,
+                provider: self.agent.provider(),
+                account: self.account.clone(),
+                model: String::new(),
+                branch: None,
+                state: crate::domain::instance::AgentState::Idle,
+            }],
+            task: None,
         }
     }
 

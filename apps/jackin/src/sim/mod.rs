@@ -129,7 +129,7 @@ impl SimBackend {
             LaunchRule::FailNetwork => LaunchPlan::FailNetwork,
             LaunchRule::HardCases => {
                 if world.op.session() == OpSession::Locked
-                    && target.account.as_deref().is_some_and(|a| {
+                    && target.account().as_deref().is_some_and(|a| {
                         a.contains("work") || a.contains("grok") || a.contains("codex-primary")
                     })
                 {
@@ -625,11 +625,24 @@ impl Backend for SimBackend {
     }
 
     fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
-        vec![PaneRequest::new(
-            &instance.id,
-            Some(instance.agent),
-            instance.account.clone(),
-        )]
+        if instance.agents.is_empty() {
+            return vec![PaneRequest::new(
+                &instance.id,
+                Some(instance.agent),
+                instance.account.clone(),
+            )];
+        }
+        instance
+            .agents
+            .iter()
+            .map(|a| {
+                let account = a
+                    .account
+                    .clone()
+                    .or_else(|| (a.agent == instance.agent).then(|| instance.account.clone())?);
+                PaneRequest::new(&instance.id, Some(a.agent), account)
+            })
+            .collect()
     }
 }
 

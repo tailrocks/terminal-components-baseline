@@ -345,6 +345,8 @@ fn launched(id: &str, container: &str, status: InstanceStatus) -> Instance {
         unpushed: 0,
         account: Some(WORK.into()),
         accounts: vec![WORK.into()],
+        agents: Vec::new(),
+        task: None,
     }
 }
 

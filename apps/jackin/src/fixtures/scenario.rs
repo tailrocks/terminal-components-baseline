@@ -112,14 +112,24 @@ pub fn entry_for(scenario: Scenario) -> Entry {
         Scenario::LaunchRunning | Scenario::LaunchFailure => EntryPage::Launch(LaunchTarget {
             workspace: Some(1),
             role: "the-architect".into(),
-            agent: Agent::ClaudeCode,
-            account: Some("acct-claude-work".into()),
+            instances: vec![crate::domain::tuple::InstanceChoice {
+                agent: Agent::ClaudeCode,
+                provider: crate::domain::agent::Provider::Anthropic,
+                account: Some("acct-claude-work".into()),
+                model: "claude-sonnet".into(),
+            }],
+            task: None,
         }),
         Scenario::LaunchOpenshell => EntryPage::Launch(LaunchTarget {
             workspace: Some(1),
             role: "sentinel".into(),
-            agent: Agent::Codex,
-            account: Some("acct-codex-primary".into()),
+            instances: vec![crate::domain::tuple::InstanceChoice {
+                agent: Agent::Codex,
+                provider: crate::domain::agent::Provider::OpenAi,
+                account: Some("acct-codex-primary".into()),
+                model: "gpt-5-codex".into(),
+            }],
+            task: None,
         }),
         Scenario::CapsuleMulti | Scenario::OutroLast | Scenario::CapsuleTerminal => {
             EntryPage::Attach {

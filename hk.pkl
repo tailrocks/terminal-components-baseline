@@ -1,0 +1,26 @@
+// SPDX-FileCopyrightText: 2026 Alexey Zhokhov
+// SPDX-License-Identifier: Apache-2.0
+
+amends "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.11.1/hk@2.11.1#/Builtins.pkl"
+
+jobs = 2
+fail_fast = false
+
+hooks {
+  ["pre-commit"] {
+    steps {
+      ["generated-workflows"] {
+        check = "bash scripts/check-generated-workflows.sh pre-commit"
+      }
+    }
+  }
+  ["pre-push"] {
+    steps {
+      ["generated-workflows"] {
+        check = "bash scripts/check-generated-workflows.sh pre-push"
+        stdin = "{{ hook_stdin }}"
+      }
+    }
+  }
+}

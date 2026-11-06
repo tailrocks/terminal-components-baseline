@@ -596,6 +596,14 @@ pub fn script(agent: Option<Agent>, workspace: &str) -> Vec<Step> {
             Step::State(AgentState::Done),
             Step::Await,
         ],
+        Some(Agent::MuseCode)
+        | Some(Agent::Antigravity)
+        | Some(Agent::MinimaxCode)
+        | Some(Agent::MimoCode)
+        | Some(Agent::Omp) => vec![
+            Step::State(AgentState::Working),
+            e(0, mixed(&[("agent ready", Tone::Normal)])),
+        ],
         None => {
             let p = format!("{workspace} ❯ ");
             vec![

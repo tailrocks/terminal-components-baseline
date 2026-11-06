@@ -1774,3 +1774,76 @@ fn showcase_fixeddialogs_browser_box_refuses_and_shows_its_reason() {
     app.wait_absent("Read-only");
     app.finish();
 }
+
+#[test]
+fn showcase_picker_multi_select_order_toggle_and_confirm() {
+    let app = App::new(
+        "showcase-picker-multi",
+        SHOWCASE,
+        &["--page", "pickers", "--motion", "paused"],
+        160,
+        50,
+        "truecolor",
+    );
+    let start = app.wait_text("Multi select");
+    let multi_btn = find(&start, "Multi select");
+    app.click(inside(multi_btn));
+    let opened = app.wait_text("Row3");
+    assert!(text(&opened).contains("Space Toggle"));
+    assert!(text(&opened).contains("Enter Confirm"));
+    app.key("enter");
+    assert!(
+        text(&app.settle()).contains("Row3"),
+        "empty Enter must be a no-op"
+    );
+    app.key("down");
+    app.key("space");
+    app.key("up");
+    app.key("space");
+    app.key("enter");
+    app.wait_text("ChoseMany: Row3, Row1");
+    app.click(inside(multi_btn));
+    app.wait_text("Row4");
+    app.click(inside(find(&app.settle(), "Row4")));
+    app.click(inside(find(&app.settle(), "Row4")));
+    app.key("enter");
+    assert!(
+        text(&app.settle()).contains("Row4"),
+        "second click must uncheck, so Enter is a no-op"
+    );
+    app.key("escape");
+    app.wait_absent("Row4");
+    app.visual("functional/showcase_picker_multi_select");
+    app.finish();
+}
+
+#[test]
+fn showcase_picker_multi_search_space_edits_query_and_hidden_checked_retained() {
+    let app = App::new(
+        "showcase-picker-multi-search",
+        SHOWCASE,
+        &["--page", "pickers", "--motion", "paused"],
+        160,
+        50,
+        "truecolor",
+    );
+    let start = app.wait_text("Multi search");
+    app.click(inside(find(&start, "Multi search")));
+    app.wait_text("Row3");
+    app.key("down");
+    app.key("down");
+    app.click(inside(find(&app.settle(), "Row3")));
+    app.type_text("Row1");
+    let filtered = app.settle();
+    assert!(text(&filtered).contains("Row1"));
+    app.key("space");
+    let after_space = app.settle();
+    assert!(
+        !text(&after_space).contains("ChoseMany"),
+        "Space in searchable picker must edit the query, not toggle or confirm"
+    );
+    app.key("enter");
+    app.wait_text("ChoseMany: Row3");
+    app.visual("functional/showcase_picker_multi_search");
+    app.finish();
+}

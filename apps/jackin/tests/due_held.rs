@@ -83,6 +83,8 @@ fn cancelled_launch() -> Instance {
         unpushed: 0,
         account: None,
         accounts: vec![],
+        agents: Vec::new(),
+        task: None,
     }
 }
 

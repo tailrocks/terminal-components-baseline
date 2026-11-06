@@ -695,6 +695,15 @@ impl CapsuleScreen {
             })
         };
         for (a, mut offer) in w.offered_agents(ws, role.as_deref()) {
+            if !w.surfaces.tuples.is_empty()
+                && !w
+                    .surfaces
+                    .tuples
+                    .iter()
+                    .any(|o| o.agent == a && o.state == crate::domain::tuple::TupleState::Supported)
+            {
+                continue;
+            }
             if offer.blocked.is_none() {
                 offer.blocked = refused(PaneKind::Agent {
                     agent: a,
@@ -1347,6 +1356,12 @@ impl CapsuleScreen {
         }
         if let Some(log) = &v.host_log {
             props.push(Prop::new("Host log", fill_in(log, &[("run", &i.run_id)])));
+        }
+        if let Some(task) = &i.task {
+            props.push(Prop::new("Task", task.text.clone()));
+            for status in &task.statuses {
+                props.push(Prop::new(status.agent.label(), status.text.clone()));
+            }
         }
         let _ = ws;
         let d = InfoDialog::new(WidgetId::of("capsule.info"), "Debug info", props)

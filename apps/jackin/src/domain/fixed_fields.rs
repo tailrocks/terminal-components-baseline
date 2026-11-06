@@ -266,6 +266,8 @@ pub fn instance_fixed(i: &Instance) -> InstanceFixed {
         unpushed: _,
         account: _,
         accounts: _,
+        agents: _,
+        task: _,
     } = i;
     InstanceFixed {
         workdir: workdir.clone(),
@@ -283,6 +285,7 @@ pub fn surface_fixed(s: &Surfaces) -> SurfaceFixed {
         launch_role,
         wizard,
         fixed,
+        tuples: _,
         version: _,
         cockpit_version: _,
         config_path: _,

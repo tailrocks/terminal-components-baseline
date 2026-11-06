@@ -197,6 +197,8 @@ fn record(id: &str, status: InstanceStatus) -> Instance {
         unpushed: 0,
         account: None,
         accounts: vec![],
+        agents: Vec::new(),
+        task: None,
     }
 }
 

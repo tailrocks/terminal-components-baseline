@@ -238,3 +238,19 @@ fn jackin_terminal_detached_exited_and_failed_panes() {
     detach(&app);
     app.finish();
 }
+
+#[test]
+fn jackin_terminal_task_panel_shows_task_and_statuses() {
+    let app = capsule("jackin-terminal-task");
+    drawn(&app);
+    app.advance_clock(1_000);
+    app.wait_text("gpt-5-codex");
+    chord(&app, "i");
+    let info = app.wait_text("Ship the multi-agent launch");
+    assert!(text(&info).contains("working"), "{}", text(&info));
+    assert!(text(&info).contains("OMP"), "{}", text(&info));
+    app.visual("functional/jackin_terminal_task_panel");
+    app.key("esc");
+    detach(&app);
+    app.finish();
+}

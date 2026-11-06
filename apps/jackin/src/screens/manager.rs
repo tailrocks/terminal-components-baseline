@@ -160,6 +160,9 @@ pub struct ManagerScreen {
     pending_session: Option<String>,
     choosing: Option<Choosing>,
     picker_targets: Vec<(Agent, Option<String>)>,
+    launch_queue: Vec<Agent>,
+    launch_chaining: bool,
+    launch_collected: Vec<crate::domain::tuple::InstanceChoice>,
     wide: bool,
 
     pub menu: RowMenu<RowKey, &'static str>,
@@ -195,6 +198,9 @@ impl ManagerScreen {
             pending_session: None,
             choosing: None,
             picker_targets: vec![],
+            launch_queue: vec![],
+            launch_chaining: false,
+            launch_collected: vec![],
             wide: false,
             menu: RowMenu::new(MENU),
         }
@@ -470,7 +476,8 @@ impl ManagerScreen {
             LaunchRole::Unavailable(why) => (String::new(), Some(why)),
         };
         self.pending_launch = unavailable.is_none().then(|| (ws, role.clone()));
-        let mut p = Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent");
+        let mut p =
+            Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent").multi_select(true);
         p.set_searchable(false);
         p.list.width = (84, 84);
         let shown_role = if unavailable.is_some() {
@@ -486,7 +493,11 @@ impl ManagerScreen {
             scope.push_str(" · Docker is on for this launch");
         }
         p.scope = Some(scope);
-        let (items, targets) = agent_rows(w, ws, unavailable.is_none().then_some(role.as_str()));
+        let (items, targets) = if w.surfaces.tuples.is_empty() {
+            agent_rows(w, ws, unavailable.is_none().then_some(role.as_str()))
+        } else {
+            tuple_rows(w, ws, unavailable.is_none().then_some(role.as_str()))
+        };
         let items = match &unavailable {
             Some(why) => items
                 .into_iter()
@@ -500,6 +511,82 @@ impl ManagerScreen {
         p.set_items(items);
         self.picker_targets = targets;
         cx.open(p, LayerTag::new("launch"));
+    }
+
+    fn advance_launch_queue(&mut self, w: &World, cx: &mut Cx) -> Outcome {
+        loop {
+            let Some(agent) = self.launch_queue.first().copied() else {
+                self.launch_chaining = false;
+                let Some((ws, role)) = self.pending_launch.take() else {
+                    return Outcome::Changed;
+                };
+                let instances = std::mem::take(&mut self.launch_collected);
+                if instances.is_empty() {
+                    return Outcome::Changed;
+                }
+                cx.go(Go::LaunchMany {
+                    workspace: ws,
+                    role,
+                    instances,
+                    task: None,
+                });
+                return Outcome::Changed;
+            };
+            let offer = w
+                .surfaces
+                .tuples
+                .iter()
+                .find(|o| {
+                    o.agent == agent && o.state == crate::domain::tuple::TupleState::Supported
+                })
+                .cloned();
+            let Some(offer) = offer else {
+                self.launch_queue.remove(0);
+                continue;
+            };
+            let preselected = self
+                .picker_targets
+                .iter()
+                .find(|(a, _)| *a == agent)
+                .and_then(|(_, acc)| acc.clone());
+            if let Some(account) = preselected {
+                self.launch_queue.remove(0);
+                self.launch_collected
+                    .push(crate::domain::tuple::InstanceChoice {
+                        agent,
+                        provider: offer.provider,
+                        account: Some(account),
+                        model: offer.default_model.clone(),
+                    });
+                continue;
+            }
+            let (ws, role) = match &self.pending_launch {
+                Some((ws, role)) => (*ws, role.clone()),
+                None => return Outcome::Changed,
+            };
+            let wsr = ws.and_then(|id| w.workspace(id));
+            if w.eligible_accounts(agent, wsr, Some(&role)).is_empty() {
+                self.launch_queue.remove(0);
+                self.launch_collected
+                    .push(crate::domain::tuple::InstanceChoice {
+                        agent,
+                        provider: offer.provider,
+                        account: None,
+                        model: offer.default_model.clone(),
+                    });
+                continue;
+            }
+            self.choose_account(
+                Start::Launch {
+                    workspace: ws,
+                    role,
+                },
+                agent,
+                w,
+                cx,
+            );
+            return Outcome::Changed;
+        }
     }
 
     /// Asks which of the accounts an agent offers it starts with, when the
@@ -1951,6 +2038,79 @@ impl ManagerScreen {
     }
 }
 
+fn tuple_rows(
+    w: &World,
+    ws: Option<WorkspaceId>,
+    role: Option<&str>,
+) -> (Vec<Item>, Vec<(Agent, Option<String>)>) {
+    let (fallback_items, fallback_targets) = agent_rows(w, ws, role);
+    let mut items = fallback_items;
+    let mut targets = fallback_targets;
+    for (idx, item) in items.iter_mut().enumerate() {
+        let agent = targets[idx].0;
+        let supported =
+            w.surfaces.tuples.iter().any(|o| {
+                o.agent == agent && o.state == crate::domain::tuple::TupleState::Supported
+            });
+        if !supported {
+            item.disabled = true;
+            if let Some(offer) = w.surfaces.tuples.iter().find(|o| o.agent == agent) {
+                item.detail = offer
+                    .reason
+                    .clone()
+                    .unwrap_or_else(|| offer.state.label().to_owned());
+            }
+        }
+    }
+    let mut agents: Vec<Agent> = Vec::new();
+    for offer in &w.surfaces.tuples {
+        if !agents.contains(&offer.agent) {
+            agents.push(offer.agent);
+        }
+    }
+    for agent in agents {
+        if targets.iter().any(|(a, _)| *a == agent) {
+            continue;
+        }
+        let offers: Vec<_> = w
+            .surfaces
+            .tuples
+            .iter()
+            .filter(|o| o.agent == agent)
+            .collect();
+        let supported = offers
+            .iter()
+            .find(|o| o.state == crate::domain::tuple::TupleState::Supported);
+        let (detail, disabled, tag) = match supported {
+            Some(offer) => (
+                format!("{} · choose at start", offer.provider.label()),
+                false,
+                Some("ready"),
+            ),
+            None => {
+                let first = offers.first();
+                (
+                    first.and_then(|o| o.reason.clone()).unwrap_or_else(|| {
+                        first.map_or("unavailable", |o| o.state.label()).to_owned()
+                    }),
+                    true,
+                    Some("unavailable"),
+                )
+            }
+        };
+        items.push(Item {
+            tag: tag.map(Into::into),
+            ..Item::new(agent.label())
+                .detail(detail)
+                .glyph("▪")
+                .group("agents")
+                .disabled(disabled)
+        });
+        targets.push((agent, None));
+    }
+    (items, targets)
+}
+
 fn agent_rows(
     w: &World,
     ws: Option<WorkspaceId>,
@@ -2514,6 +2674,45 @@ impl Page<Jackin> for ManagerScreen {
         cx: &mut Cx,
     ) -> Outcome {
         match (tag.kind, result) {
+            ("launch", ModalResult::PickedMany(indices)) => {
+                let agents: Vec<Agent> = indices
+                    .iter()
+                    .filter_map(|&i| self.picker_targets.get(i).map(|(a, _)| *a))
+                    .collect();
+                if agents.is_empty() || self.pending_launch.is_none() {
+                    return Outcome::Changed;
+                }
+                if let Some(pending) = self.pending_launch.clone() {
+                    for &agent in &agents {
+                        let account = self
+                            .picker_targets
+                            .iter()
+                            .find(|(a, _)| *a == agent)
+                            .and_then(|(_, acc)| acc.clone());
+                        if !self.launch_still_offered(w, &pending, agent, account.as_ref()) {
+                            cx.status("The launch options changed · open Launch again");
+                            return Outcome::Changed;
+                        }
+                    }
+                }
+                self.launch_queue = agents;
+                self.launch_collected = Vec::new();
+                self.launch_chaining = true;
+                self.advance_launch_queue(w, cx)
+            }
+            ("launch", ModalResult::Cancelled) => {
+                self.launch_queue.clear();
+                self.launch_collected.clear();
+                self.launch_chaining = false;
+                Outcome::Changed
+            }
+            ("account", ModalResult::Cancelled) if self.launch_chaining => {
+                self.launch_queue.clear();
+                self.launch_collected.clear();
+                self.launch_chaining = false;
+                self.choosing = None;
+                Outcome::Changed
+            }
             ("launch", ModalResult::Picked(i)) => {
                 let Some((agent, account)) = self.picker_targets.get(i).cloned() else {
                     return Outcome::Changed;
@@ -2552,6 +2751,30 @@ impl Page<Jackin> for ManagerScreen {
                     return Outcome::Changed;
                 };
                 let account = accounts.get(i).cloned();
+                if self.launch_chaining {
+                    self.launch_queue.retain(|a| *a != agent);
+                    let offer = w
+                        .surfaces
+                        .tuples
+                        .iter()
+                        .find(|o| {
+                            o.agent == agent
+                                && o.state == crate::domain::tuple::TupleState::Supported
+                        })
+                        .cloned();
+                    let (provider, model) = match &offer {
+                        Some(o) => (o.provider, o.default_model.clone()),
+                        None => (agent.provider(), String::new()),
+                    };
+                    self.launch_collected
+                        .push(crate::domain::tuple::InstanceChoice {
+                            agent,
+                            provider,
+                            account,
+                            model,
+                        });
+                    return self.advance_launch_queue(w, cx);
+                }
                 match start {
                     Start::Launch { workspace, role } => cx.go(Go::Launch {
                         workspace,

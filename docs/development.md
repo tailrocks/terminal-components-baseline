@@ -1,7 +1,9 @@
 # Development
 
 Install pinned tools with `mise install` (Rust 1.99.1 and the tool
-pins in `mise.toml`), then work from the workspace root.
+pins in `mise.toml`), then install the repository hooks with
+`mise exec -- hk install --mise`. Run both commands from the workspace
+root.
 
 ## Commands
 

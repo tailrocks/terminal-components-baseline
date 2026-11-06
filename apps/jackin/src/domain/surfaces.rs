@@ -5,6 +5,7 @@ use super::doctor::DoctorSurface;
 use super::fixed::Fixed;
 use super::fixed_fields::SurfaceFixed;
 use super::role::{LaunchRoleRule, RoleAdmin};
+use super::tuple::TupleOffer;
 use super::vocabulary::Vocabulary;
 use super::workspace::WizardDefaults;
 
@@ -19,6 +20,7 @@ pub struct Surfaces {
     pub launch_role: LaunchRoleRule,
     pub wizard: Option<WizardDefaults>,
     pub fixed: Option<Fixed>,
+    pub tuples: Vec<TupleOffer>,
     pub version: String,
     pub cockpit_version: Option<String>,
     pub config_path: Option<String>,
@@ -61,6 +63,11 @@ impl Surfaces {
             launch_role,
             wizard,
             fixed,
+            tuples: vec![TupleOffer::supported(
+                super::agent::Agent::Codex,
+                super::agent::Provider::OpenAi,
+                &[],
+            )],
             version,
             cockpit_version: None,
             config_path: Some(config_path),

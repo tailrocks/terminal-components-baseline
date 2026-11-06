@@ -59,6 +59,7 @@ fn jackin_launch_detach_reconnect_preserves_capsule() {
     assert!(text(&picker).contains("payments-platform › the-architect"));
 
     app.visual("functional/jackin_launch_reconnect");
+    app.key("space");
     app.key("enter");
     app.wait_text("Loading the-architect into workspace payments-platform");
     app.advance_clock(30_000);
@@ -585,6 +586,7 @@ fn jackin_cockpit_docker_names_key_and_egress_bypass() {
     app.wait_text("Current directory");
     app.key("enter");
     app.wait_text("Launch · choose Agent");
+    app.key("space");
     app.key("enter");
     let cockpit = app.wait_text("Loading the-architect");
     let screen = text(&cockpit);
@@ -2693,6 +2695,7 @@ fn launch_first_agent(app: &App, downs: usize, scope: &str) {
     }
     app.key("enter");
     app.wait_text(scope);
+    app.key("space");
     app.key("enter");
     app.wait_text("Cancel launch…");
 }
@@ -2791,5 +2794,42 @@ fn jackin_launch_questions_end_the_launch_on_escape() {
     let manager = app.wait_text("Current directory");
     assert!(!text(&manager).contains("Fail the preflight hook on purpose"));
     assert!(text(&manager).contains("2 running"), "nothing was started");
+    app.finish();
+}
+
+#[test]
+fn jackin_manager_multi_launch_codex_and_omp_in_check_order() {
+    let app = jackin("jackin-multi-launch", "paused");
+    app.wait_text("Current directory");
+    app.key("enter");
+    let picker = app.wait_text("Launch · choose Agent");
+    assert!(text(&picker).contains("Space Toggle"));
+    assert!(text(&picker).contains("Enter Confirm"));
+    app.click_text("▪ Codex");
+    app.key("end");
+    app.key("space");
+    app.key("enter");
+    app.wait_text("Cancel launch…");
+    app.visual("functional/jackin_manager_multi_launch");
+    app.key("ctrl+c");
+    app.wait_text("Current directory");
+    app.finish();
+}
+
+#[test]
+fn jackin_manager_multi_launch_reverse_order_and_cancel_second_picker() {
+    let app = jackin("jackin-multi-launch-reverse", "paused");
+    app.wait_text("Current directory");
+    app.key("enter");
+    app.wait_text("Launch · choose Agent");
+    app.key("end");
+    app.key("space");
+    app.key("home");
+    app.click_text("▪ Codex");
+    app.key("enter");
+    let cockpit = app.wait_text("Cancel launch…");
+    assert!(text(&cockpit).contains("OMP") || text(&cockpit).contains("Omp"));
+    app.key("ctrl+c");
+    app.wait_text("Current directory");
     app.finish();
 }

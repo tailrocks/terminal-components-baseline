@@ -104,6 +104,30 @@ pub struct Instance {
 
     pub account: Option<super::account::AccountId>,
     pub accounts: Vec<super::account::AccountId>,
+    pub agents: Vec<AgentInstanceView>,
+    pub task: Option<TaskView>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AgentInstanceView {
+    pub agent: Agent,
+    pub provider: super::agent::Provider,
+    pub account: Option<super::account::AccountId>,
+    pub model: String,
+    pub branch: Option<String>,
+    pub state: AgentState,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TaskView {
+    pub text: String,
+    pub statuses: Vec<InstanceStatusView>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstanceStatusView {
+    pub agent: Agent,
+    pub text: String,
 }
 
 impl Instance {

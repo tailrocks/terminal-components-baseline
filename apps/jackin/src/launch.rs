@@ -13,8 +13,17 @@ use crate::world::World;
 pub struct LaunchTarget {
     pub workspace: Option<WorkspaceId>,
     pub role: String,
-    pub agent: Agent,
-    pub account: Option<AccountId>,
+    pub instances: Vec<crate::domain::tuple::InstanceChoice>,
+    pub task: Option<String>,
+}
+
+impl LaunchTarget {
+    pub fn agent(&self) -> Agent {
+        self.instances.first().map_or(Agent::Codex, |i| i.agent)
+    }
+    pub fn account(&self) -> Option<AccountId> {
+        self.instances.first().and_then(|i| i.account.clone())
+    }
 }
 
 /// The instance a launch made, as its backend recorded it, and the run that
@@ -144,7 +153,7 @@ pub fn launch_accounts(
                 .collect()
         })
         .unwrap_or_default();
-    if let Some(a) = &target.account
+    if let Some(a) = &target.account()
         && !accounts.contains(a)
     {
         accounts.insert(0, a.clone());
@@ -153,7 +162,7 @@ pub fn launch_accounts(
         accounts.retain(|id| {
             w.accounts
                 .get(id)
-                .is_some_and(|a| a.provider == target.agent.provider())
+                .is_some_and(|a| a.provider == target.agent().provider())
         });
     }
     accounts

@@ -151,9 +151,11 @@ impl CockpitScreen {
         let LaunchTarget {
             workspace,
             role,
-            agent,
-            account,
+            instances,
+            task: _,
         } = target;
+        let agent = instances.first().map_or(Agent::Codex, |i| i.agent);
+        let account = instances.first().and_then(|i| i.account.clone());
         let steps = content.stages.iter().map(|s| Step::new(&s.label)).collect();
         let mut log = TextViewport::new(LOG).wrap(true).max_lines(5_000);
         log.follow = true;

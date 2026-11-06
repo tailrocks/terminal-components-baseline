@@ -27,12 +27,14 @@ fn surfaces_openshell_sets_every_field() {
         launch_role,
         wizard,
         fixed,
+        tuples,
         version,
         cockpit_version,
         config_path,
         about,
     } = live();
     assert_eq!(fixed, Some(Fixed::openshell()));
+    assert_eq!(tuples.len(), 1);
     assert_eq!(vocabulary, Vocabulary::openshell());
     assert_eq!(launch_role, LaunchRoleRule::Configured);
     assert_eq!(version, "1.4.0");
