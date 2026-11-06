@@ -18,6 +18,17 @@ fn holla(name: &str, scenario: &str) -> App {
     )
 }
 
+fn holla_paused(name: &str) -> App {
+    App::new(
+        name,
+        HOLLA,
+        &["--scenario", "first-use", "--motion", "paused", "--frame", "40"],
+        120,
+        40,
+        "truecolor",
+    )
+}
+
 #[test]
 fn holla_finder_search_runs_selected_task_and_records_result() {
     let app = holla("holla-finder-history", "parity-history");
@@ -252,7 +263,7 @@ fn holla_browser_hidden_files_preview_scroll_and_bad_path_recovery() {
 
 #[test]
 fn holla_first_use_idle_and_no_results() {
-    let app = holla("holla-first-use", "first-use");
+    let app = holla_paused("holla-first-use-paused");
     app.wait_text("Search actions and resources");
     app.type_text("zzzzqq");
     let none = app.wait_text("No matches for “zzzzqq”");
@@ -266,7 +277,7 @@ fn holla_first_use_idle_and_no_results() {
 
 #[test]
 fn holla_help_overlay() {
-    let app = holla("holla-help", "first-use");
+    let app = holla_paused("holla-help-paused");
     app.wait_text("Search actions and resources");
     app.key("f1");
     app.wait_text("Key reference");
