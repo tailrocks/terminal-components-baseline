@@ -36,6 +36,25 @@ SPECIMEN = (
 )
 CATALOG_STATES = [s for s in SPECIMEN if s != "editing"]
 
+
+def binary_baseline_inventory(baseline_root: Path, repository_root: Path) -> list[dict]:
+    """List active binary baselines under the root, excluding frozen history."""
+    baselines = []
+    for path in sorted(baseline_root.rglob("*.tui.pb")):
+        relative = path.relative_to(baseline_root)
+        if relative.parts[0] == "pre_refactor":
+            continue
+        test_id = relative.as_posix()[: -len(".tui.pb")]
+        baselines.append(
+            {
+                "path": str(path.relative_to(repository_root)),
+                "test_id": test_id,
+                "active": True,
+            }
+        )
+    return baselines
+
+
 # slug, label, page source, group card, static option array
 ROUTES = [
     ("overview", "Overview", "overview.rs", "S01", "OVERVIEW"),
@@ -773,18 +792,8 @@ def main() -> None:
             }
         )
 
-    baselines = []
-    active_baselines = ROOT / "tests/functional/baselines/functional"
-    for path in sorted(active_baselines.rglob("*.tui.pb")):
-        test_id = path.relative_to(ROOT / "tests/functional/baselines").as_posix()
-        test_id = test_id[: -len(".tui.pb")]
-        baselines.append(
-            {
-                "path": str(path.relative_to(ROOT)),
-                "test_id": test_id,
-                "active": True,
-            }
-        )
+    baseline_root = ROOT / "tests/functional/baselines"
+    baselines = binary_baseline_inventory(baseline_root, ROOT)
 
     summary = {
         "reference_sha": REF,
