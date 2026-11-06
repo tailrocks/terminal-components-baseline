@@ -1,6 +1,5 @@
 #![cfg(feature = "demo")]
 
-use jackin_console::backend::Backend;
 use jackin_console::domain::agent::{Agent, Provider};
 use jackin_console::domain::instance::{AgentInstanceView, AgentState};
 use jackin_console::domain::launch::RefusalReason;
