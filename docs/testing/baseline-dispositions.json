@@ -1,7 +1,7 @@
 [
   {
     "id": "functional/holla_resize_narrow",
-    "path": "tests/functional/baselines/functional/holla_resize_narrow.tui.json",
+    "path": "tests/functional/baselines/pre_refactor/functional/holla_resize_narrow.tui.json",
     "cols": 120,
     "rows": 40,
     "status": "suspect",
@@ -10,7 +10,7 @@
   },
   {
     "id": "functional/tablepro_resize_60x20",
-    "path": "tests/functional/baselines/functional/tablepro_resize_60x20.tui.json",
+    "path": "tests/functional/baselines/pre_refactor/functional/tablepro_resize_60x20.tui.json",
     "cols": 120,
     "rows": 40,
     "status": "suspect",
@@ -19,7 +19,7 @@
   },
   {
     "id": "functional/showcase_help_resize",
-    "path": "tests/functional/baselines/functional/showcase_help_resize.tui.json",
+    "path": "tests/functional/baselines/pre_refactor/functional/showcase_help_resize.tui.json",
     "cols": 160,
     "rows": 50,
     "status": "suspect",

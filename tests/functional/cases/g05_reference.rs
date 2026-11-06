@@ -2,6 +2,11 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use serde_json::Value;
+use tui_test::profile::Rgb;
+use tui_test::{
+    SnapshotCell, SnapshotColor, SnapshotCursor, SnapshotCursorShape, SnapshotMetadata,
+    SnapshotParts, SnapshotScope, SnapshotUnderline, TerminalSnapshot,
+};
 
 use crate::support::{
     App, Launch, SHOWCASE, SessionMode, file_sha256, reference_binary, reference_digest, text,
@@ -102,7 +107,55 @@ fn prefix_index(actions: &str, prefix: &str) -> usize {
         .unwrap_or_else(|| panic!("missing prefix {prefix:?}\n{actions}"))
 }
 
-fn assert_suspect_dispositions() {
+fn read_disposition_sample(path: &Path) -> tuiscotti_latest::sample::Sample {
+    tuiscotti_latest::sample::Sample::from_file(path)
+        .unwrap_or_else(|error| panic!("read disposition sample {}: {error}", path.display()))
+}
+
+fn active_baseline_path(root: &Path, test_id: &str) -> PathBuf {
+    root.join(format!("{test_id}.tui.pb"))
+}
+
+fn disposition_sample_fixture(cols: u32, rows: u32) -> TerminalSnapshot {
+    let cell = SnapshotCell::new(
+        "x".to_string(),
+        1,
+        SnapshotColor::Default,
+        SnapshotColor::Default,
+        tui_test::terminal::cell::Attrs::empty(),
+        SnapshotUnderline::None,
+        SnapshotColor::Default,
+        None,
+        None,
+    )
+    .expect("fixture cell");
+    let cell_count = usize::try_from(cols * rows).expect("fixture cell count fits usize");
+    TerminalSnapshot::try_new(SnapshotParts {
+        cols,
+        rows,
+        scope: SnapshotScope::Viewport,
+        viewport_origin: 0,
+        cells: vec![cell; cell_count],
+        palette: [Rgb::new(0, 0, 0); 256],
+        default_foreground: Rgb::new(255, 255, 255),
+        default_background: Rgb::new(0, 0, 0),
+        default_cursor: Rgb::new(255, 255, 255),
+        cursor: SnapshotCursor::new(
+            0,
+            0,
+            true,
+            true,
+            SnapshotCursorShape::Block,
+            Rgb::new(255, 255, 255),
+            None,
+        ),
+        title: None,
+        metadata: SnapshotMetadata::default(),
+    })
+    .expect("fixture snapshot")
+}
+
+fn assert_suspect_dispositions(active_root: &Path) {
     let path =
         PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("docs/testing/baseline-dispositions.json");
     let value: Value =
@@ -168,27 +221,62 @@ fn assert_suspect_dispositions() {
             Some("accepted"),
             "{replacement}"
         );
-        let replacement_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join(replacement_row["path"].as_str().expect("path"));
-        let replacement_file: Value =
-            serde_json::from_slice(&std::fs::read(&replacement_path).expect("replacement"))
-                .expect("replacement json");
         assert_eq!(
-            replacement_file["test_id"].as_str(),
-            Some(replacement),
+            replacement_row["replaces"].as_str(),
+            Some(id),
+            "{replacement}"
+        );
+        let replacement_path = active_baseline_path(active_root, replacement);
+        let replacement_sample = read_disposition_sample(&replacement_path);
+        assert_eq!(replacement_sample.test_id(), replacement, "{replacement}");
+        assert_eq!(
+            replacement_sample.snapshot().cols(),
+            u32::try_from(replacement_cols).expect("replacement columns fit u32"),
             "{replacement}"
         );
         assert_eq!(
-            replacement_file["snapshot"]["cols"].as_u64(),
-            Some(replacement_cols),
-            "{replacement}"
-        );
-        assert_eq!(
-            replacement_file["snapshot"]["rows"].as_u64(),
-            Some(replacement_rows),
+            replacement_sample.snapshot().rows(),
+            u32::try_from(replacement_rows).expect("replacement rows fit u32"),
             "{replacement}"
         );
     }
+}
+
+#[test]
+fn g05_disposition_sample_reader_accepts_pb_path() {
+    let fixture_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("target/functional")
+        .join(format!(
+            "g05-disposition-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("system clock")
+                .as_nanos()
+        ));
+    std::fs::create_dir_all(&fixture_root).expect("create temporary fixture root");
+    let replacements = [
+        ("functional/holla_browser_80x24", 80, 24),
+        ("functional/tablepro_workbench_60x20", 60, 20),
+        ("functional/showcase_help_80x24", 80, 24),
+    ];
+    for (test_id, cols, rows) in replacements {
+        let sample = tuiscotti_latest::sample::Sample::state(
+            test_id,
+            disposition_sample_fixture(cols, rows),
+            tuiscotti_latest::sample::Observation::empty(),
+        )
+        .expect("build binary sample fixture");
+        let bytes = sample.to_bytes().expect("serialize binary sample fixture");
+        assert_eq!(&bytes[..8], b"TUISCPB\0", "binary container magic");
+        let fixture = active_baseline_path(&fixture_root, test_id);
+        std::fs::create_dir_all(fixture.parent().expect("fixture parent"))
+            .expect("create temporary baseline directory");
+        std::fs::write(&fixture, bytes).expect("write temporary binary fixture");
+    }
+    assert_suspect_dispositions(&fixture_root);
+
+    std::fs::remove_dir_all(fixture_root).expect("remove temporary fixture root");
 }
 
 fn assert_acceptance_receipts() {
@@ -481,7 +569,7 @@ fn g05_acceptance_receipts_match_reference_baselines() {
 
 #[test]
 fn g05_check_visual_does_not_write_baselines() {
-    assert_suspect_dispositions();
+    assert_suspect_dispositions(&baseline_root());
     let root = baseline_root();
     let before = tree_digest(&root);
     let app = launch_showcase("g05-check-visual");
