@@ -354,7 +354,7 @@ fn jackin_first_use_empty_manager_and_intro() {
         "truecolor",
     );
     app.wait_text("Stand up, operator");
-    app.key("space");
+    app.key("enter");
     app.wait_text("Current directory");
     let empty = app.settle();
     assert!(
