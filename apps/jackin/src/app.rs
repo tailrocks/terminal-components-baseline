@@ -376,11 +376,11 @@ impl App {
             EntryPage::Roles { select } => self.go(Go::Roles { select }),
             EntryPage::RoleEditor { role } => self.go(Go::RoleEditor { role }),
             EntryPage::Launch(target) => {
-                self.go(Go::Launch {
+                self.go(Go::LaunchMany {
                     workspace: target.workspace,
-                    role: target.role.clone(),
-                    agent: target.agent(),
-                    account: target.account(),
+                    role: target.role,
+                    instances: target.instances,
+                    task: target.task,
                 });
                 if frame > 0 {
                     let (_, reqs) = self.shell.deliver(true, |cx| {
@@ -1483,7 +1483,6 @@ impl App {
                 self.refresh_picker();
                 return Outcome::Changed;
             }
-            ModalResult::PickerEvent(_) => return Outcome::Consumed,
             ModalResult::FormEvent(FormAction::Changed(_)) => {
                 self.form_changed();
                 return Outcome::Changed;
@@ -1900,29 +1899,6 @@ impl App {
             }
             Go::Prelude => {
                 let page = Page::Prelude(Box::new(PreludeScreen::new(&self.world)));
-                self.open_page(page);
-            }
-            Go::Launch {
-                workspace,
-                role,
-                agent,
-                account,
-            } => {
-                let page = Page::Cockpit(Box::new(CockpitScreen::new(
-                    &self.world,
-                    LaunchTarget {
-                        workspace,
-                        role,
-                        instances: vec![crate::domain::tuple::InstanceChoice {
-                            agent,
-                            provider: agent.provider(),
-                            account,
-                            model: String::new(),
-                        }],
-                        task: None,
-                    },
-                    self.shell.motion,
-                )));
                 self.open_page(page);
             }
             Go::LaunchMany {

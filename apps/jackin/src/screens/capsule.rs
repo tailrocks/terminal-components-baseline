@@ -764,6 +764,7 @@ impl CapsuleScreen {
                     WidgetId::of("capsule.provider"),
                     w,
                     a,
+                    a.provider(),
                     ws,
                     &offer,
                 );

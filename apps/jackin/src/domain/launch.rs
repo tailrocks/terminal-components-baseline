@@ -272,14 +272,14 @@ impl LaunchWords {
             RefusalReason::TupleNotLaunchable {
                 agent,
                 provider,
+                state,
                 reason,
-                ..
             } => (
                 &self.tuple_not_launchable,
                 vec![
                     ("agent", agent.label()),
                     ("provider", provider.label()),
-                    ("reason", reason.as_deref().unwrap_or("not supported")),
+                    ("reason", reason.as_deref().unwrap_or(state.label())),
                 ],
             ),
         };

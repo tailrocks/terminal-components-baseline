@@ -27,6 +27,7 @@ use junie_tui::widgets::props::{self, Prop};
 use junie_tui::widgets::tree::TreeNode;
 
 const ID: WidgetId = WidgetId::of("pickers");
+const MULTI_ROWS: [&str; 4] = ["Row1", "Row2", "Row3", "Row4"];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Kind {
@@ -224,7 +225,7 @@ impl Rows {
                 let live = self.tabs.iter().filter(|t| t.1.is_some()).count();
                 p.scope = Some(format!("{live} live"));
 
-                p.refresh_items(items);
+                p.replace_items(items);
             }
             Kind::Level => {
                 p.set_items(
@@ -255,22 +256,29 @@ impl Rows {
                     .collect(),
             ),
             Kind::Multi | Kind::MultiSearch => {
-                let preserve = p.checked().to_vec();
-                let items: Vec<Item> = ["Row1", "Row2", "Row3", "Row4"]
+                let items: Vec<Item> = MULTI_ROWS
                     .iter()
                     .enumerate()
-                    .filter(|(_, l)| kind == Kind::Multi || fuzzy(l, &q).is_some())
                     .map(|(i, l)| {
-                        let mut it = Item::new(*l).detail(format!("multi row {}", i + 1));
+                        let mut it = Item::new(*l)
+                            .key(ItemKey::text(l))
+                            .detail(format!("multi row {}", i + 1));
                         if i == 1 {
                             it = it.reason("Unavailable row");
                         }
                         it
                     })
                     .collect();
-                p.set_items(items);
                 if kind == Kind::MultiSearch {
-                    p.list.checked = preserve;
+                    p.replace_items(items.clone());
+                    p.set_visible_items(
+                        items
+                            .into_iter()
+                            .filter(|item| fuzzy(&item.label, &q).is_some())
+                            .collect(),
+                    );
+                } else {
+                    p.set_items(items);
                 }
             }
             Kind::Remote => match self.fetching {
@@ -478,9 +486,26 @@ impl PickersPage {
         let Some(LayerResult::Picker(ev)) = r.result else {
             return;
         };
-        self.last = format!("{ev:?}");
         let picker = r.closed.as_ref().and_then(|e| e.get::<Picker>()).cloned();
+        self.last = match &ev {
+            PickerAction::ChosenMany(keys) => {
+                let positions: Vec<usize> = keys
+                    .iter()
+                    .filter_map(|key| {
+                        let item = picker.as_ref()?.item_for_key(*key)?;
+                        MULTI_ROWS
+                            .iter()
+                            .position(|label| *label == item.label.as_str())
+                    })
+                    .collect();
+                format!("ChosenMany({positions:?})")
+            }
+            PickerAction::SelectionConflict { .. } => "SelectionConflict".into(),
+            _ => format!("{ev:?}"),
+        };
         match ev {
+            PickerAction::Toggled => {}
+            PickerAction::SelectionConflict { .. } => {}
             PickerAction::QueryChanged => self.refill(kind, cx),
             PickerAction::Chosen(i) | PickerAction::ChosenAlt(i) => {
                 let alt = matches!(ev, PickerAction::ChosenAlt(_));
@@ -496,17 +521,18 @@ impl PickersPage {
                     ));
                 }
             }
-            PickerAction::ChosenMany(indices) => {
-                let labels: Vec<String> = indices
+            PickerAction::ChosenMany(keys) => {
+                let labels: Vec<String> = keys
                     .iter()
-                    .map(|&i| {
-                        ["Row1", "Row2", "Row3", "Row4"]
-                            .get(i)
-                            .map(|s| s.to_string())
-                            .unwrap_or_else(|| format!("#{i}"))
+                    .map(|key| {
+                        picker
+                            .as_ref()
+                            .and_then(|picker| picker.item_for_key(*key))
+                            .map(|item| item.label.clone())
+                            .unwrap_or_else(|| "Unavailable selection".into())
                     })
                     .collect();
-                self.chosen = Some((labels.join(", "), format!("{} selected", indices.len())));
+                self.chosen = Some((labels.join(", "), format!("{} selected", keys.len())));
                 cx.status(format!("ChoseMany: {}", labels.join(", ")));
             }
             PickerAction::Secondary(i) => {

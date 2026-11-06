@@ -12,6 +12,7 @@ use crate::domain::onepassword::OpReference;
 use crate::domain::reason::{Found, IssueReason, RefreshOutcome};
 use crate::domain::role::RoleManifestDoc;
 use crate::domain::shown::is_hidden;
+use crate::domain::tuple::{AccountRequirement, TupleIdentity};
 use crate::domain::usage::AccountUsage;
 use crate::domain::vocabulary::ReasonWords;
 use crate::domain::workspace::{RoleName, Workspace, WorkspaceId};
@@ -527,6 +528,10 @@ pub trait Backend: std::fmt::Debug + Send + Sync {
     }
 
     fn launch_content(&self) -> Arc<LaunchContent>;
+
+    fn account_requirement(&self, _tuple: TupleIdentity) -> AccountRequirement {
+        AccountRequirement::Required
+    }
 
     /// Starts a launch. The cockpit polls the feed it returns and draws what
     /// its events say.

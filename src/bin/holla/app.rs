@@ -379,7 +379,7 @@ impl App {
         {
             let items = self.activity_picker_items();
             if let Some(p) = self.modals.top_as_mut::<Picker>() {
-                p.refresh_items(items);
+                p.replace_items(items);
             }
         }
         for entry in self.modals.iter_mut() {
@@ -1205,7 +1205,7 @@ impl App {
         if let Some((items, status)) = rows
             && let Some(p) = self.modals.top_as_mut::<Picker>()
         {
-            p.refresh_items(items);
+            p.replace_items(items);
             p.status = status;
         }
     }

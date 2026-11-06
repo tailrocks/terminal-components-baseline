@@ -18,6 +18,20 @@ fn choice(agent: Agent, provider: Provider, model: &str) -> InstanceChoice {
     }
 }
 
+fn choice_with_account(
+    agent: Agent,
+    provider: Provider,
+    model: &str,
+    account: &str,
+) -> InstanceChoice {
+    InstanceChoice {
+        agent,
+        provider,
+        account: Some(account.into()),
+        model: model.into(),
+    }
+}
+
 fn target(instances: Vec<InstanceChoice>) -> LaunchTarget {
     LaunchTarget {
         workspace: Some(1),
@@ -40,7 +54,12 @@ fn valid_supported_choice_is_accepted_and_task_passes_through() {
         Provider::OpenAi,
         &["gpt-5-codex"],
     )]);
-    let t = target(vec![choice(Agent::Codex, Provider::OpenAi, "gpt-5-codex")]);
+    let t = target(vec![choice_with_account(
+        Agent::Codex,
+        Provider::OpenAi,
+        "gpt-5-codex",
+        "acct-codex-primary",
+    )]);
     assert_eq!(validate_tuples(&w, &t), None);
     assert_eq!(t.task.as_deref(), Some("ship it"));
     assert_eq!(t.role, "the-architect");
@@ -85,6 +104,40 @@ fn empty_duplicate_unknown_unsupported_and_unknown_model_are_refused() {
             ..
         }
     ));
+
+    let same_agent_different_providers = world_with(vec![
+        TupleOffer::supported(Agent::Omp, Provider::OpenCode, &["opencode-default"]),
+        TupleOffer::supported(Agent::Omp, Provider::Moonshot, &["kimi-default"]),
+    ]);
+    let kimi_account = same_agent_different_providers
+        .accounts
+        .default_for(Provider::OpenCode)
+        .expect("OpenCode account")
+        .id
+        .clone();
+    let mut duplicate_target = target(vec![
+        choice_with_account(
+            Agent::Omp,
+            Provider::OpenCode,
+            "opencode-default",
+            &kimi_account,
+        ),
+        choice(Agent::Omp, Provider::Moonshot, "kimi-default"),
+    ]);
+    duplicate_target.workspace = None;
+    let dup = validate_tuples(&same_agent_different_providers, &duplicate_target)
+        .expect("one provider choice per agent");
+    assert!(
+        matches!(
+            &dup,
+            RefusalReason::TupleNotLaunchable {
+                agent: Agent::Omp,
+                reason: Some(reason),
+                ..
+            } if reason == "duplicate agent"
+        ),
+        "{dup:?}"
+    );
 
     let unknown = validate_tuples(&w, &target(vec![choice(Agent::Omp, Provider::Mimo, "x")]))
         .expect("unknown tuple refused");
@@ -161,6 +214,34 @@ fn new_agents_and_mimo_provider_have_labels() {
     assert_eq!(Provider::Mimo.label(), "Mimo");
     assert!(Provider::ALL.contains(&Provider::Mimo));
     assert!(Agent::ALL.contains(&Agent::Omp));
+    assert_eq!(Provider::Mimo.agent(), Some(Agent::MimoCode));
+    assert_eq!(Provider::Muse.agent(), None);
+}
+
+#[test]
+fn reasonless_tuple_refusals_report_their_state_and_keep_explicit_reasons() {
+    let words = jackin_console::domain::launch::LaunchContent::openshell().words;
+    let blocked = words.refusal(&RefusalReason::TupleNotLaunchable {
+        agent: Agent::MimoCode,
+        provider: Provider::Mimo,
+        state: TupleState::BlockedVendor,
+        reason: None,
+    });
+    let unavailable = words.refusal(&RefusalReason::TupleNotLaunchable {
+        agent: Agent::Omp,
+        provider: Provider::OpenCode,
+        state: TupleState::Unavailable,
+        reason: None,
+    });
+    let explained = words.refusal(&RefusalReason::TupleNotLaunchable {
+        agent: Agent::Omp,
+        provider: Provider::OpenCode,
+        state: TupleState::Unavailable,
+        reason: Some("maintenance window".into()),
+    });
+    assert!(blocked.found.contains("blocked by vendor"));
+    assert!(unavailable.found.contains("unavailable"));
+    assert!(explained.found.contains("maintenance window"));
 }
 
 #[test]

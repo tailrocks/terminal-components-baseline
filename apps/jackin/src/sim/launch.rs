@@ -11,6 +11,7 @@ use crate::domain::launch::{
     EmptyLanding, LaunchContent, LaunchFailure, LaunchWords, NextStep, RefusalReason, RefusalWords,
     StageKind, StageList, StageSpec,
 };
+use crate::domain::tuple::{AccountRequirement, TupleIdentity};
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
     EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
@@ -227,6 +228,7 @@ pub enum Opening {
 /// them.
 pub fn validate_tuples(w: &World, target: &LaunchTarget) -> Option<RefusalReason> {
     use crate::domain::tuple::TupleState;
+    let matrix_present = !w.surfaces.tuples.is_empty();
     if target.instances.is_empty() {
         return Some(RefusalReason::TupleNotLaunchable {
             agent: Agent::Codex,
@@ -246,37 +248,99 @@ pub fn validate_tuples(w: &World, target: &LaunchTarget) -> Option<RefusalReason
             });
         }
         seen.push(choice.agent);
-        let offer = w
-            .surfaces
-            .tuples
-            .iter()
-            .find(|o| o.agent == choice.agent && o.provider == choice.provider);
-        let Some(offer) = offer else {
+        let identity = TupleIdentity::new(choice.agent, choice.provider);
+        let offer = matrix_present
+            .then(|| {
+                w.surfaces
+                    .tuples
+                    .iter()
+                    .find(|o| o.agent == identity.agent && o.provider == identity.provider)
+            })
+            .flatten();
+        if matrix_present && offer.is_none() {
             return Some(RefusalReason::TupleNotLaunchable {
                 agent: choice.agent,
                 provider: choice.provider,
                 state: TupleState::Unavailable,
                 reason: Some("unknown tuple".into()),
             });
-        };
-        if offer.state != TupleState::Supported {
+        }
+        if let Some(offer) = offer {
+            if offer.state != TupleState::Supported {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.state,
+                    reason: offer.reason.clone(),
+                });
+            }
+            if choice.model != offer.default_model {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.state,
+                    reason: Some("model offer changed".into()),
+                });
+            }
+            if !choice.model.is_empty()
+                && !offer.allowed_models.is_empty()
+                && !offer.allowed_models.contains(&choice.model)
+            {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.state,
+                    reason: Some("unknown model".into()),
+                });
+            }
+        } else if choice.provider != choice.agent.provider() || !choice.model.is_empty() {
             return Some(RefusalReason::TupleNotLaunchable {
                 agent: choice.agent,
                 provider: choice.provider,
-                state: offer.state,
-                reason: offer.reason.clone(),
+                state: TupleState::Unavailable,
+                reason: Some("no tuple offer is available".into()),
             });
         }
-        if !choice.model.is_empty()
-            && !offer.allowed_models.is_empty()
-            && !offer.allowed_models.contains(&choice.model)
-        {
+        let workspace = target.workspace.and_then(|id| w.workspace(id));
+        let account_offer = if matrix_present {
+            w.offer_for_provider(choice.agent, choice.provider, workspace, Some(&target.role))
+        } else {
+            w.offer_for(choice.agent, workspace, Some(&target.role))
+        };
+        if let Some(reason) = account_offer.blocked {
             return Some(RefusalReason::TupleNotLaunchable {
                 agent: choice.agent,
                 provider: choice.provider,
-                state: offer.state,
-                reason: Some("unknown model".into()),
+                state: offer.map_or(TupleState::Unavailable, |offer| offer.state),
+                reason: Some(reason),
             });
+        }
+        match &choice.account {
+            Some(account)
+                if account_offer.accounts.contains(account)
+                    && w.accounts
+                        .get(account)
+                        .is_some_and(|registered| registered.provider == choice.provider) => {}
+            Some(_) => {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.map_or(TupleState::Unavailable, |offer| offer.state),
+                    reason: Some("account is not eligible for this provider".into()),
+                });
+            }
+            None if matrix_present
+                && w.backend.account_requirement(identity) == AccountRequirement::Optional
+                && account_offer.accounts.is_empty()
+                && !account_offer.configured => {}
+            None => {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.map_or(TupleState::Unavailable, |offer| offer.state),
+                    reason: Some("an eligible provider account is required".into()),
+                });
+            }
         }
     }
     None
@@ -334,6 +398,7 @@ pub struct SimLaunch {
     role: String,
     agent: Agent,
     account: Option<AccountId>,
+    choices: Vec<crate::domain::tuple::InstanceChoice>,
     accounts: Vec<AccountId>,
     tick: u64,
     stage_start: u64,
@@ -396,6 +461,7 @@ impl SimLaunch {
             role: target.role.clone(),
             agent: target.agent(),
             account: target.account(),
+            choices: target.instances.clone(),
             accounts: launch_accounts(w, target, &content),
             tick: 0,
             stage_start: 0,
@@ -433,14 +499,18 @@ impl SimLaunch {
             github: repo.map(Into::into),
             uncommitted: 0,
             unpushed: 0,
-            agents: vec![crate::domain::instance::AgentInstanceView {
-                agent: self.agent,
-                provider: self.agent.provider(),
-                account: self.account.clone(),
-                model: String::new(),
-                branch: None,
-                state: crate::domain::instance::AgentState::Idle,
-            }],
+            agents: self
+                .choices
+                .iter()
+                .map(|choice| crate::domain::instance::AgentInstanceView {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    account: choice.account.clone(),
+                    model: choice.model.clone(),
+                    branch: None,
+                    state: crate::domain::instance::AgentState::Idle,
+                })
+                .collect(),
             task: None,
         }
     }
