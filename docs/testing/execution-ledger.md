@@ -205,7 +205,7 @@ Option rows execute a default and one boundary, plus `needs` dependencies. They 
 ## Current evidence
 
 The Nextest list at the ledger draft contains 93 functional tests.
-The baseline tree contains 98 samples.
+The baseline tree contains 105 samples.
 Those tests are classified in `refactor-coverage.json` and are not counted as PASS for the new rows.
 
 ## Acceptance rule

@@ -22,7 +22,7 @@
   "coverage_rows": [],
   "checkpoints": [],
   "acceptance": "Record REFERENCE_SHA, tool digests, the missing visual-baseline tag, the Nextest list, and the existing gate results. Do not edit production or test behaviour.",
-  "status": "passed",
+  "status": "passed_existing_gates_pending_clippy_fmt",
   "architecture_refactor": false,
   "evidence": {
     "worktree": "clean except untracked terminal-components-baseline-goal.txt",
@@ -34,12 +34,5 @@
       "holla": "d0e1196de5b1fc1417904c4da43f75960028b0d29e87209e9b69ef1e91cddf8f",
       "jackin": "8f06be062879e897e5b3a49ea965e015e3f937452925d0baa41e992bd1b63839"
     }
-  },
-  "gates": {
-    "functional_partitions": "93 passed, 0 failed. Union of test(/holla_/) and not test(/holla_/).",
-    "all_targets_list": "93 tests, identical to --test functional",
-    "clippy": "cargo clippy --locked --all-targets -- -D warnings PASS",
-    "fmt": "cargo fmt --check PASS",
-    "all_targets": "cargo nextest run --locked --all-targets --no-tests fail: 93 passed, 0 skipped, 61.805s"
   }
 }

@@ -16,7 +16,10 @@ use crate::support::{
 const REFERENCE_SHA: &str = "fffe002e936d3621f22f9132144066a1374d5d74";
 const SHOWCASE_REFERENCE_SHA256: &str =
     "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b";
-const COMPARATOR_REV: &str = "d8d54155947f6303a41dfd6079b53c0abc16f29a";
+const COMPARATOR_REV: &str = "92ef2d9ee082b35f68e066c5129fedbf07675a80";
+const ACCEPTANCE_COMPARATOR_REV: &str = "d8d54155947f6303a41dfd6079b53c0abc16f29a";
+const ACCEPTANCE_LOCKFILE_SHA256: &str =
+    "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319";
 
 fn manifest() -> Value {
     let path =
@@ -243,6 +246,215 @@ fn assert_suspect_dispositions(active_root: &Path) {
 }
 
 #[test]
+fn g05_approved_binary_manifest_matches_active_samples() {
+    let root = baseline_root();
+    let manifest_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("docs/testing/binary-baselines-20261108.tsv");
+    let manifest = std::fs::read_to_string(&manifest_path).expect("binary baseline manifest");
+    let mut lines = manifest.lines();
+    assert_eq!(
+        lines.next(),
+        Some("test_id\tbaseline_path\tsha256\treceipt_path\tacceptance_sequence\tsource_lineage")
+    );
+    let mut ids = std::collections::BTreeSet::new();
+    let mut paths = std::collections::BTreeSet::new();
+    let mut count = 0;
+    for line in lines {
+        let fields: Vec<_> = line.split('\t').collect();
+        assert_eq!(fields.len(), 6, "{line}");
+        let [
+            test_id,
+            baseline_path,
+            expected_sha,
+            receipt_path,
+            sequence,
+            source_lineage,
+        ] = fields.as_slice()
+        else {
+            unreachable!("field count checked")
+        };
+        assert!(ids.insert(*test_id), "duplicate test ID {test_id}");
+        assert!(
+            !source_lineage.is_empty(),
+            "missing source lineage for {test_id}"
+        );
+        assert!(
+            sequence.parse::<u16>().is_ok(),
+            "bad acceptance sequence {sequence}"
+        );
+        assert!(
+            baseline_path.ends_with(".tui.pb"),
+            "not a PB path: {baseline_path}"
+        );
+        assert!(baseline_path.starts_with("tests/functional/baselines/"));
+        let relative = Path::new(baseline_path)
+            .strip_prefix("tests/functional/baselines")
+            .expect("baseline-relative path");
+        let path = root.join(relative);
+        assert!(
+            paths.insert(relative.to_path_buf()),
+            "duplicate path {baseline_path}"
+        );
+        assert!(
+            !root.join(format!("{test_id}.tui.json")).exists(),
+            "active JSON remains for {test_id}"
+        );
+        let bytes =
+            std::fs::read(&path).unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+        assert!(
+            bytes.starts_with(b"TUISCPB\0"),
+            "{} is not a protobuf container",
+            path.display()
+        );
+        assert_eq!(file_sha256(&path), *expected_sha, "{test_id}");
+        let sample = read_disposition_sample(&path);
+        assert_eq!(sample.test_id(), *test_id);
+        let receipt_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(receipt_path);
+        let receipt: Value = serde_json::from_slice(
+            &std::fs::read(&receipt_path)
+                .unwrap_or_else(|error| panic!("{}: {error}", receipt_path.display())),
+        )
+        .expect("binary acceptance receipt");
+        assert_eq!(
+            receipt["candidate_sha256"].as_str(),
+            Some(*expected_sha),
+            "{test_id}"
+        );
+        count += 1;
+    }
+    assert_eq!(count, 105);
+    assert!(!ids.contains("functional/tablepro_query_syntax_error"));
+    let historical_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("docs/testing/acceptance-receipts/historical-binary-20261108/transactions.jsonl");
+    let historical = std::fs::read_to_string(&historical_path)
+        .unwrap_or_else(|error| panic!("{}: {error}", historical_path.display()));
+    let mut historical_ids = std::collections::BTreeSet::new();
+    let mut historical_paths = std::collections::BTreeSet::new();
+    let mut historical_count = 0;
+    for line in historical.lines() {
+        let receipt: Value = serde_json::from_str(line).expect("historical transaction receipt");
+        assert_eq!(
+            receipt["schema"].as_str(),
+            Some("tcb.historical-binary-transaction.v1")
+        );
+        let test_id = receipt["test_id"].as_str().expect("historical test ID");
+        assert!(
+            historical_ids.insert(test_id.to_string()),
+            "duplicate historical test ID {test_id}"
+        );
+        assert!(
+            !ids.contains(test_id),
+            "historical ID collides with active ID {test_id}"
+        );
+        let baseline_path = receipt["baseline_path"].as_str().expect("baseline path");
+        assert!(baseline_path.starts_with("tests/functional/baselines/"));
+        assert!(baseline_path.ends_with(".tui.pb"));
+        let relative = Path::new(baseline_path)
+            .strip_prefix("tests/functional/baselines")
+            .expect("historical baseline is under baseline root");
+        assert!(
+            historical_paths.insert(relative.to_path_buf()),
+            "duplicate historical path {baseline_path}"
+        );
+        let path = root.join(relative);
+        let expected_sha = receipt["baseline_sha256"].as_str().expect("baseline SHA");
+        assert_eq!(file_sha256(&path), expected_sha, "{test_id}");
+        assert!(
+            std::fs::read(&path)
+                .expect("historical sample")
+                .starts_with(b"TUISCPB\0")
+        );
+        let sample = read_disposition_sample(&path);
+        assert_eq!(sample.test_id(), test_id, "{test_id}");
+
+        let historical_json = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(
+            receipt["historical_json"]
+                .as_str()
+                .expect("historical JSON path"),
+        );
+        assert!(historical_json.is_file(), "{}", historical_json.display());
+        let expected_path = historical_json
+            .strip_prefix(
+                PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines"),
+            )
+            .expect("historical JSON is under baseline root")
+            .with_extension("pb");
+        assert_eq!(
+            relative, expected_path,
+            "history-derived path for {test_id}"
+        );
+        assert_eq!(
+            receipt["historical_json_sha256"].as_str().map(str::len),
+            Some(64)
+        );
+        assert!(receipt["path_id"].as_str().is_some());
+
+        let candidate = &receipt["candidate_record"];
+        assert_eq!(candidate["test_id"].as_str(), Some(test_id));
+        assert_eq!(candidate["candidate_sha256"].as_str(), Some(expected_sha));
+        assert!(
+            candidate["source"]
+                .as_str()
+                .is_some_and(|source| !source.is_empty())
+        );
+        let alternates = candidate["alternates"]
+            .as_array()
+            .expect("candidate alternatives");
+        assert!(
+            alternates.is_empty()
+                || alternates.iter().any(|alternate| {
+                    alternate.as_str() == Some(expected_sha)
+                        || alternate["sha256"].as_str() == Some(expected_sha)
+                }),
+            "selected candidate absent from alternatives for {test_id}"
+        );
+
+        let acceptance = &receipt["acceptance"];
+        assert_eq!(acceptance["exit_code"].as_i64(), Some(0), "{test_id}");
+        assert_eq!(acceptance["cli_version"].as_str(), Some("tuiscotti 0.4.0"));
+        assert_eq!(acceptance["cli_sha256"].as_str().map(str::len), Some(64));
+        assert_eq!(
+            acceptance["staging_baseline_sha256"].as_str(),
+            Some(expected_sha)
+        );
+        let response = &acceptance["stdout"];
+        assert_eq!(response["schema"].as_str(), Some("tuiscotti.cli.v1"));
+        assert_eq!(response["command"].as_str(), Some("accept"));
+        assert_eq!(response["status"].as_str(), Some("pass"));
+        assert_eq!(response["candidate_sha256"].as_str(), Some(expected_sha));
+        assert_eq!(response["baseline_sha256"].as_str(), Some(expected_sha));
+        let raw_response = acceptance["stdout_raw"].as_str().expect("raw CLI result");
+        assert_eq!(
+            serde_json::from_str::<Value>(raw_response).expect("raw CLI JSON"),
+            *response
+        );
+        let command = acceptance["command"].as_array().expect("accept command");
+        assert!(command.iter().any(|part| part == "--expect-baseline"));
+        assert!(command.iter().any(|part| part == "missing"));
+        historical_count += 1;
+    }
+    assert_eq!(historical_count, 1868);
+    fn collect_pb_paths(root: &Path, dir: &Path, paths: &mut std::collections::BTreeSet<PathBuf>) {
+        for entry in std::fs::read_dir(dir).expect("read active baseline directory") {
+            let path = entry.expect("baseline entry").path();
+            if path.is_dir() {
+                collect_pb_paths(root, &path, paths);
+            } else if path.extension().is_some_and(|extension| extension == "pb") {
+                paths.insert(
+                    path.strip_prefix(root)
+                        .expect("path is inside baseline root")
+                        .to_path_buf(),
+                );
+            }
+        }
+    }
+    let mut actual_paths = std::collections::BTreeSet::new();
+    collect_pb_paths(&root, &root, &mut actual_paths);
+    paths.extend(historical_paths);
+    assert_eq!(actual_paths, paths);
+}
+
+#[test]
 fn g05_disposition_sample_reader_accepts_pb_path() {
     let fixture_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("target/functional")
@@ -281,7 +493,6 @@ fn g05_disposition_sample_reader_accepts_pb_path() {
 
 fn assert_acceptance_receipts() {
     let manifest = manifest();
-    let lockfile = manifest["lockfile_sha256"].as_str().expect("lockfile");
     let cases = [
         (
             "functional_holla_browser_80x24",
@@ -346,7 +557,7 @@ fn assert_acceptance_receipts() {
     ];
     for (file, binary, baseline_id) in cases {
         let receipt_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("docs/testing/acceptance-receipts")
+            .join("docs/testing/acceptance-receipts/protobuf-20261107")
             .join(format!("{file}.json"));
         let receipt: Value =
             serde_json::from_slice(&std::fs::read(&receipt_path).expect("receipt"))
@@ -358,17 +569,26 @@ fn assert_acceptance_receipts() {
         );
         assert_eq!(
             receipt["lockfile_sha256"].as_str(),
-            Some(lockfile),
+            Some(ACCEPTANCE_LOCKFILE_SHA256),
             "{file}"
         );
         assert_eq!(
             receipt["comparator_rev"].as_str(),
-            Some(COMPARATOR_REV),
+            Some(ACCEPTANCE_COMPARATOR_REV),
             "{file}"
         );
+        let expected_previous = match file {
+            "functional_tablepro_query_recovered" => {
+                "ed9b89699ee57340d92bc47bd37169b523bd39c321cda73d1b55bccf07543c0b"
+            }
+            "functional_jackin_launch_failed" => {
+                "2b2c711b926a175a2bde8fa73921fbc4249828b5d2d66bfd9b71af0a829b67f2"
+            }
+            _ => "missing",
+        };
         assert_eq!(
             receipt["expect_baseline"].as_str(),
-            Some("missing"),
+            Some(expected_previous),
             "{file}"
         );
         let precondition = receipt["precondition"].as_str().unwrap_or("");
