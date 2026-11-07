@@ -109,6 +109,8 @@ hydration_deadline_file="$temporary_root/blob-hydration-deadline"
 
 trusted_seed_commit=a7413118476128a1c9b4f290277eb91ddf64ea7a
 trusted_lock_sha256=54035a5337e01cd95129b464ffbd0db45e4b0c989a699742efa1f0ab6329046d
+snapshot_lock_sha256=887b51b91d33a92ae8956a1f9f3a3e6f3666a44d579acaa25d313d6ad8fb47fe
+snapshot_manifests_sha256=a5312d5f9ec69a1817109c1d48076279a169f9d635127d8a71f5353af6d050ee
 
 fail_materialization() {
   printf 'generated-workflows: cannot materialize snapshot: %s\n' "$1" >&2
@@ -1219,7 +1221,7 @@ PY
 }
 
 validate_cargo_inputs() {
-  "$python_command" -I -S - "$1" "$2" "$trusted_lock_sha256" <<'PY'
+  "$python_command" -I -S - "$1" "$2" "$3" "$4" <<'PY'
 import os
 import re
 import sys
@@ -1229,6 +1231,7 @@ from pathlib import Path, PurePosixPath
 snapshot = Path(sys.argv[1]).resolve(strict=True)
 cargo_home = Path(sys.argv[2]).resolve(strict=True)
 trusted_lock_sha256 = sys.argv[3]
+trusted_manifests_sha256 = sys.argv[4]
 
 def reject(message):
     raise SystemExit(f"generated-workflows: {message}")
@@ -1326,6 +1329,16 @@ for name in ("config", "config.toml"):
 
 if not manifests:
     reject("snapshot contains no Cargo manifests")
+if trusted_manifests_sha256 != "-":
+    manifest_digest = __import__("hashlib").sha256()
+    for path in sorted(manifests, key=lambda item: item.relative_to(snapshot).as_posix()):
+        relative = path.relative_to(snapshot).as_posix()
+        manifest_digest.update(relative.encode("utf-8"))
+        manifest_digest.update(b"\0")
+        manifest_digest.update(__import__("hashlib").sha256(path.read_bytes()).hexdigest().encode("ascii"))
+        manifest_digest.update(b"\n")
+    if manifest_digest.hexdigest() != trusted_manifests_sha256:
+        reject("Cargo manifests are outside the reviewed dependency support policy")
 lock_path = snapshot / "Cargo.lock"
 if lock_path.is_symlink() or not lock_path.is_file():
     reject("snapshot Cargo.lock is not a regular file")
@@ -1473,7 +1486,7 @@ prepare_trusted_seed() {
     return 1
   }
   validate_snapshot_symlinks "$seed" || return $?
-  validate_cargo_inputs "$seed" "$cargo_home" || return $?
+  validate_cargo_inputs "$seed" "$cargo_home" "$trusted_lock_sha256" - || return $?
   validate_trusted_lock_sources "$seed/Cargo.lock" || return $?
   seed_selection=$(read_snapshot_tool_selection "$seed") || {
     printf 'generated-workflows: trusted seed toolchain inputs are unsupported\n' >&2
@@ -1704,16 +1717,17 @@ PY
 
 validate_trusted_git_source_trees() {
   local lock_path=$1
-  local home_dir=$2
-  local runtime_tmp=$3
-  local safe_path=$4
+  local lock_role=$2
+  local home_dir=$3
+  local runtime_tmp=$4
+  local safe_path=$5
   env -i \
     "HOME=$home_dir" \
     "PATH=$safe_path" \
     "TMPDIR=$runtime_tmp" \
     LANG=C \
     LC_ALL=C \
-    "$python_command" -I -S - "$lock_path" "$curl_command" <<'PY'
+    "$python_command" -I -S - "$lock_path" "$curl_command" "$lock_role" <<'PY'
 import json
 import os
 import re
@@ -1725,28 +1739,34 @@ import time
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
-lock_path, curl = sys.argv[1:]
+lock_path, curl, lock_role = sys.argv[1:]
+
+def fail(message):
+    raise SystemExit(f"generated-workflows: {message}")
+
 expected = {
     "git+https://github.com/tailrocks/termpane?rev=46cc0977d8ee95d5284f75080d507ca2d116c007#46cc0977d8ee95d5284f75080d507ca2d116c007": ("tailrocks", "termpane", "46cc0977d8ee95d5284f75080d507ca2d116c007"),
-    "git+https://github.com/tailrocks/tuiscotti?rev=d8d54155947f6303a41dfd6079b53c0abc16f29a#d8d54155947f6303a41dfd6079b53c0abc16f29a": ("tailrocks", "tuiscotti", "d8d54155947f6303a41dfd6079b53c0abc16f29a"),
 }
+if lock_role == "trusted-seed":
+    expected["git+https://github.com/tailrocks/tuiscotti?rev=d8d54155947f6303a41dfd6079b53c0abc16f29a#d8d54155947f6303a41dfd6079b53c0abc16f29a"] = ("tailrocks", "tuiscotti", "d8d54155947f6303a41dfd6079b53c0abc16f29a")
+elif lock_role == "actual-snapshot":
+    expected["git+https://github.com/tailrocks/tuiscotti?rev=92ef2d9ee082b35f68e066c5129fedbf07675a80#92ef2d9ee082b35f68e066c5129fedbf07675a80"] = ("tailrocks", "tuiscotti", "92ef2d9ee082b35f68e066c5129fedbf07675a80")
+else:
+    fail("Cargo lock has an unsupported reviewed source role")
 redirect_statuses = {301, 302, 303, 307, 308}
 maximum_redirects = 3
 maximum_header_bytes = 65536
 maximum_body_bytes = 8 * 1024 * 1024
-
-def fail(message):
-    raise SystemExit(f"generated-workflows: {message}")
 
 try:
     import tomllib
     with open(lock_path, "rb") as source:
         lock = tomllib.load(source)
 except (OSError, tomllib.TOMLDecodeError):
-    fail("trusted seed lock is unavailable for Git source qualification")
+    fail("reviewed Cargo lock is unavailable for Git source qualification")
 locked_sources = {package.get("source") for package in lock.get("package", []) if isinstance(package, dict) and isinstance(package.get("source"), str) and package["source"].startswith("git+")}
 if locked_sources != set(expected):
-    fail("trusted seed Git source set does not match the reviewed allowlist")
+    fail("reviewed Cargo lock Git source set does not match its allowlist")
 
 def validate_url(url, expected_url):
     try:
@@ -1942,11 +1962,15 @@ metadata_path, root_value, cargo_home_value, require_git_sources, manifest_value
 root = Path(root_value).resolve(strict=True)
 cargo_home = Path(cargo_home_value).resolve(strict=True)
 manifest_input = Path(manifest_value).resolve(strict=True)
-expected_lock_sha256 = "54035a5337e01cd95129b464ffbd0db45e4b0c989a699742efa1f0ab6329046d"
-expected_git = {
-    "git+https://github.com/tailrocks/termpane?rev=46cc0977d8ee95d5284f75080d507ca2d116c007#46cc0977d8ee95d5284f75080d507ca2d116c007",
-    "git+https://github.com/tailrocks/tuiscotti?rev=d8d54155947f6303a41dfd6079b53c0abc16f29a#d8d54155947f6303a41dfd6079b53c0abc16f29a",
-}
+termpane_source = "git+https://github.com/tailrocks/termpane?rev=46cc0977d8ee95d5284f75080d507ca2d116c007#46cc0977d8ee95d5284f75080d507ca2d116c007"
+if require_git_sources == "true":
+    # The trusted seed remains frozen at its independently reviewed identity.
+    expected_lock_sha256 = "54035a5337e01cd95129b464ffbd0db45e4b0c989a699742efa1f0ab6329046d"
+    tuiscotti_source = "git+https://github.com/tailrocks/tuiscotti?rev=d8d54155947f6303a41dfd6079b53c0abc16f29a#d8d54155947f6303a41dfd6079b53c0abc16f29a"
+else:
+    expected_lock_sha256 = "887b51b91d33a92ae8956a1f9f3a3e6f3666a44d579acaa25d313d6ad8fb47fe"
+    tuiscotti_source = "git+https://github.com/tailrocks/tuiscotti?rev=92ef2d9ee082b35f68e066c5129fedbf07675a80#92ef2d9ee082b35f68e066c5129fedbf07675a80"
+expected_git = {termpane_source, tuiscotti_source}
 registry_source = "registry+https://github.com/rust-lang/crates.io-index"
 
 def reject(message):
@@ -2102,6 +2126,7 @@ fetch_trusted_seed_dependencies() {
   local rust_pin=${10}
   local seed_inventory=${11}
   local cargo_log="$runtime_tmp/trusted-cargo-fetch.log"
+  local snapshot_cargo_log="$runtime_tmp/snapshot-cargo-fetch.log"
   local -a cargo_environment=(
     "HOME=$home_dir"
     "PATH=$safe_path"
@@ -2121,11 +2146,23 @@ fetch_trusted_seed_dependencies() {
     LC_ALL=C
   )
 
-  validate_cargo_inputs "$seed" "$cargo_home" || return $?
+  validate_cargo_inputs "$seed" "$cargo_home" "$trusted_lock_sha256" - || return $?
   validate_trusted_lock_sources "$seed/Cargo.lock" || return $?
   if ! (cd "$seed" && env -i "${cargo_environment[@]}" "$cargo_executable" fetch --locked --manifest-path "$seed/Cargo.toml") > "$cargo_log" 2>&1; then
     printf 'generated-workflows: authenticated Cargo could not fetch the reviewed trusted seed\n' >&2
     "$python_command" -I -S - "$cargo_log" <<'PY' >&2
+from pathlib import Path
+import sys
+
+payload = Path(sys.argv[1]).read_bytes()[-8192:]
+print(payload.decode("utf-8", "backslashreplace").encode("unicode_escape").decode("ascii"))
+PY
+    return 1
+  fi
+  validate_cargo_inputs "$snapshot" "$cargo_home" "$snapshot_lock_sha256" "$snapshot_manifests_sha256" || return $?
+  if ! (cd "$snapshot" && env -i "${cargo_environment[@]}" "$cargo_executable" fetch --locked --manifest-path "$snapshot/Cargo.toml") > "$snapshot_cargo_log" 2>&1; then
+    printf 'generated-workflows: authenticated Cargo could not fetch the reviewed snapshot dependencies\n' >&2
+    "$python_command" -I -S - "$snapshot_cargo_log" <<'PY' >&2
 from pathlib import Path
 import sys
 
@@ -2450,7 +2487,7 @@ run_generator() {
       macos-arm64) rust_host=aarch64-apple-darwin ;;
       linux-x64) rust_host=x86_64-unknown-linux-gnu ;;
     esac
-    validate_cargo_inputs "$snapshot" "$cargo_home" || exit $?
+    validate_cargo_inputs "$snapshot" "$cargo_home" "$snapshot_lock_sha256" "$snapshot_manifests_sha256" || exit $?
     prepare_trusted_seed "$trusted_seed" "$trusted_reader" "$trusted_entries" "$selection" "$cargo_home" || exit $?
     trusted_seed_inventory_value=$(trusted_seed_inventory "$trusted_seed") || exit $?
 
@@ -2630,7 +2667,8 @@ EOF
       exit 1
     fi
 
-    validate_trusted_git_source_trees "$trusted_seed/Cargo.lock" "$home_dir" "$runtime_tmp" "$safe_path" || exit $?
+    validate_trusted_git_source_trees "$trusted_seed/Cargo.lock" trusted-seed "$home_dir" "$runtime_tmp" "$safe_path" || exit $?
+    validate_trusted_git_source_trees "$snapshot/Cargo.lock" actual-snapshot "$home_dir" "$runtime_tmp" "$safe_path" || exit $?
     fetch_trusted_seed_dependencies "$trusted_seed" "$snapshot" "$rust_cargo_executable" "$cargo_home" "$home_dir" "$rustup_home" "$safe_path" "$safe_git_config" "$runtime_tmp" "$rust_pin" "$trusted_seed_inventory_value" || exit $?
 
     generator_path="${tool_executable%/*}:${rust_cargo_executable%/*}:${jactionlint_executable%/*}:${shellcheck_executable%/*}:$safe_path"
