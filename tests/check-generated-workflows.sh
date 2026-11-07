@@ -157,12 +157,48 @@ set_denied_response() {
   set_response_plan 502 - -
 }
 
+copy_checker_for_fixture() {
+  local source=$1
+  local directory=$2
+  local destination="$directory/scripts/check-generated-workflows.sh"
+  mkdir -p "$directory/scripts"
+  cp -p "$source" "$destination"
+  python3 - "$destination" "$directory" <<'PY'
+import hashlib
+import os
+import re
+import sys
+from pathlib import Path
+
+checker, root = map(Path, sys.argv[1:])
+manifests = []
+for directory, names, filenames in os.walk(root, followlinks=False):
+    current = Path(directory)
+    names[:] = [name for name in names if name != ".git" and not (current / name).is_symlink()]
+    manifests.extend(current / name for name in filenames if name == "Cargo.toml")
+digest = hashlib.sha256()
+for manifest in sorted(manifests, key=lambda path: path.relative_to(root).as_posix()):
+    digest.update(manifest.relative_to(root).as_posix().encode("utf-8"))
+    digest.update(b"\0")
+    digest.update(hashlib.sha256(manifest.read_bytes()).hexdigest().encode("ascii"))
+    digest.update(b"\n")
+contents = checker.read_text()
+updated, replacements = re.subn(
+    r"(?m)^snapshot_manifests_sha256=[0-9a-f]{64}$",
+    f"snapshot_manifests_sha256={digest.hexdigest()}",
+    contents,
+)
+if replacements != 1:
+    raise SystemExit("checker fixture could not bind its reviewed manifest inventory")
+checker.write_text(updated)
+PY
+}
+
 new_repo() {
   local name=$1
   local directory="$test_root/$name"
   git clone --quiet "$repository_template" "$directory"
-  mkdir -p "$directory/scripts"
-  cp -p "$checker" "$directory/scripts/check-generated-workflows.sh"
+  copy_checker_for_fixture "$checker" "$directory"
   printf '%s\n' "$directory"
 }
 
@@ -295,7 +331,7 @@ reset_repo() {
   git -C "$1" reset --hard --quiet HEAD
   git -C "$1" clean --quiet -ffdqx
   mkdir -p "$1/scripts"
-  cp -p "$checker" "$1/scripts/check-generated-workflows.sh"
+  copy_checker_for_fixture "$checker" "$1"
 }
 
 set_velnor_pin() {
@@ -762,7 +798,7 @@ if contents.count(original) != 1:
     raise SystemExit("trusted seed pin mutation was not uniquely applicable")
 Path(destination).write_text(contents.replace(original, replacement, 1))
 PY
-  cp -p "$mutation" "$directory/scripts/check-generated-workflows.sh"
+  copy_checker_for_fixture "$mutation" "$directory"
   : > "$raw"
   python3 - "$empty_oid" "$body" <<'PY'
 import json
@@ -1885,6 +1921,23 @@ PY
   assert_no_temporary_snapshot
 }
 
+test_unreviewed_snapshot_manifest_source() {
+  local directory
+  directory=$(new_repo unreviewed-manifest-source)
+  cat >> "$directory/Cargo.toml" <<'EOF'
+
+[workspace.dependencies]
+unreviewed = { git = "https://example.invalid/unreviewed", branch = "main" }
+EOF
+  git -C "$directory" add -- Cargo.toml
+  set_denied_response
+  run_checker "$directory" pre-commit
+  assert_failed 'snapshot with an unreviewed Cargo manifest source fails closed'
+  assert_contains 'snapshot manifest source rejection is specific' 'Cargo manifests are outside the reviewed dependency support policy'
+  assert_request_count 0
+  assert_no_temporary_snapshot
+}
+
 run_cargo_config_case() {
   local directory=$1
   local label=$2
@@ -2113,6 +2166,7 @@ run_case() {
       test_trusted_seed_ignores_replacement_and_shallow_state
       test_trusted_seed_rejects_object_alternates
       test_unreviewed_snapshot_lock_source
+      test_unreviewed_snapshot_manifest_source
       test_cargo_config_vectors
       test_toolchain_and_symlink
       test_redirect_policy
@@ -2142,13 +2196,14 @@ run_case() {
     missing-metadata) test_trusted_seed_missing_commit; test_trusted_seed_missing_objects ;;
     projection) test_trusted_seed_excluded_baseline_blob_is_not_hydrated ;;
     lock-source) test_unreviewed_snapshot_lock_source ;;
+    manifest-source) test_unreviewed_snapshot_manifest_source ;;
     cargo) test_cargo_config_vectors ;;
     toolchain) test_toolchain_and_symlink ;;
     redirects) test_redirect_policy ;;
     responses) test_response_bounds ;;
     environment) test_curl_environment_isolation ;;
     *)
-      printf 'usage: %s [all|boundary|snapshots|push-records|replacement|raw-blob|selected-hydration|shared-blob-reuse|distinct-blob-budget|pushed-blob-hydration|hydrated-occurrences|pushed-missing|snapshot-limits|gitlink|relative-tmpdir|trusted-seed|hydration|empty-blob|hydration-boundaries|missing-metadata|projection|lock-source|cargo|toolchain|redirects|responses|environment]\n' "$0" >&2
+      printf 'usage: %s [all|boundary|snapshots|push-records|replacement|raw-blob|selected-hydration|shared-blob-reuse|distinct-blob-budget|pushed-blob-hydration|hydrated-occurrences|pushed-missing|snapshot-limits|gitlink|relative-tmpdir|trusted-seed|hydration|empty-blob|hydration-boundaries|missing-metadata|projection|lock-source|manifest-source|cargo|toolchain|redirects|responses|environment]\n' "$0" >&2
       return 2
       ;;
   esac
