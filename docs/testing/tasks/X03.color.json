@@ -1,0 +1,42 @@
+{
+  "task_id": "X03.color",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "S02.buttons",
+    "S01.shell",
+    "T05.menus",
+    "H01.finder",
+    "J01.status"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x03_color.rs",
+    "docs/testing/cases/X03.color.json",
+    "tests/functional/baselines/pre_refactor/X03.color/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/theme.rs",
+    "src/ui/ctx.rs"
+  ],
+  "coverage_rows": [
+    "X03.color.route",
+    "X03.color.matrix"
+  ],
+  "checkpoints": [
+    "X03.color.matrix.120x40"
+  ],
+  "acceptance": "Truecolor, 256, 16, none, and NO_COLOR each show the shared treatment, and contrast defects are recorded rather than fixed.",
+  "status": "queued",
+  "architecture_refactor": false
+}

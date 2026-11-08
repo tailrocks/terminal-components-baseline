@@ -1,0 +1,82 @@
+{
+  "task_id": "S07.splitsstacks",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s07_splitsstacks.rs",
+    "docs/testing/cases/S07.splitsstacks.json",
+    "tests/functional/baselines/pre_refactor/S07.splitsstacks/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/splits_stacks.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.splitsstacks.route",
+    "sc.splitsstacks.playground",
+    "sc.splitsstacks.playground.120x40",
+    "sc.splitsstacks.playground.80x24",
+    "sc.splitsstacks.options",
+    "sc.splitsstacks.options.120x40",
+    "sc.splitsstacks.options.80x24",
+    "sc.splitsstacks.states",
+    "sc.splitsstacks.states.120x40",
+    "sc.splitsstacks.states.80x24",
+    "sc.splitsstacks.specimen.rest",
+    "sc.splitsstacks.specimen.hover",
+    "sc.splitsstacks.specimen.pressed",
+    "sc.splitsstacks.specimen.focused",
+    "sc.splitsstacks.specimen.focused_hover",
+    "sc.splitsstacks.specimen.selected",
+    "sc.splitsstacks.specimen.disabled",
+    "sc.splitsstacks.specimen.busy",
+    "sc.splitsstacks.specimen.error",
+    "sc.splitsstacks.specimen.editing",
+    "sc.splitsstacks.specimen.empty",
+    "sc.splitsstacks.specimen.loading",
+    "sc.splitsstacks.specimen.overflow",
+    "sc.splitsstacks.specimen.narrow",
+    "sc.splitsstacks.compare-levels",
+    "opt.splitsstacks.dir",
+    "opt.splitsstacks.percent",
+    "opt.splitsstacks.min",
+    "opt.splitsstacks.maximized",
+    "opt.splitsstacks.double_click",
+    "opt.splitsstacks.hit_pad",
+    "opt.splitsstacks.overflow",
+    "opt.splitsstacks.min_child_rows",
+    "opt.splitsstacks.gap",
+    "opt.splitsstacks.scrollbar_gap",
+    "opt.splitsstacks.track_click",
+    "sc.splitsstacks.splits"
+  ],
+  "checkpoints": [
+    "sc.splitsstacks.playground.120x40",
+    "sc.splitsstacks.playground.80x24",
+    "sc.splitsstacks.options.120x40",
+    "sc.splitsstacks.options.80x24",
+    "sc.splitsstacks.states.120x40",
+    "sc.splitsstacks.states.80x24",
+    "sc.splitsstacks.compare-levels",
+    "sc.splitsstacks.splits"
+  ],
+  "acceptance": "Open Splits & stacks by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

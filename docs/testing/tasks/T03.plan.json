@@ -1,0 +1,36 @@
+{
+  "task_id": "T03.plan",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t03_plan.rs",
+    "docs/testing/cases/T03.plan.json",
+    "tests/functional/baselines/pre_refactor/T03.plan/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/tabs.rs"
+  ],
+  "coverage_rows": [
+    "T03.plan.route",
+    "T03.plan.plan"
+  ],
+  "checkpoints": [
+    "T03.plan.plan.120x40"
+  ],
+  "acceptance": "Plan tree, raw plan, and analysis output are distinct bodies.",
+  "status": "queued",
+  "architecture_refactor": false
+}

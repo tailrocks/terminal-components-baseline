@@ -1,0 +1,124 @@
+{
+  "task_id": "X02.exit",
+  "cases": [
+    {
+      "case_id": "X02.exit.route",
+      "owner_task": "X02.exit",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "showcase --page quit at 120\u00d740 in truecolor with reduced motion opens Quit & leave. The screen shows Document, QuitKeys::classify, Q3 settlement report, Run export, and Clean. Still running, Unsaved changes, Stop export, and Export stopped are absent. src/bin/showcase/pages/quit_leave.rs says the showcase quit keys see this page's stakes, and that with edits or a running export Ctrl+Q asks first. QuitLeavePage::leave_stakes returns those stakes. src/bin/showcase/app.rs request_quit calls LeaveGuard::request_quit. Stakes::Clean in src/ui/leave.rs request returns Ok, and the showcase quit path then sets shell.quit. Shell::quit_through in src/shell/app.rs is that same Ok path for the other applications: it calls LeaveGuard::request_quit and sets shell.quit. runtime::run ends in TerminalSession::leave, which runs restore_terminal: DisableMouseCapture, Show, DisableBracketedPaste, and LeaveAlternateScreen. finish() observed exit code 0, exit_signal None, mouse_mode none, cursor visible, alternate_screen false, and bracketed_paste false. The test does not call kill_child, and it asserts the code before App is dropped.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7bcbdb1fd7c409e0671281d363df8f7a6b0fdc54",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X02.exit",
+      "entry_path": "showcase --page quit --color truecolor --motion reduced at 120x40",
+      "return_path": "finish sends Ctrl+Q and the process exits 0 with no signal"
+    },
+    {
+      "case_id": "X02.exit.exit",
+      "owner_task": "X02.exit",
+      "application": "cross",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the showcase running guard from the unchanged reference showcase sha256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b. On --page quit, clicking Run export shows Stop export and Running \u00b7 the export. Ctrl+Q opens the dialog from running_dialog in src/ui/leave.rs. src/theme.rs supplies Still running, {} still running. Leaving stops it., Stay, and Stop and leave. Stay starts focused. The 120\u00d740 frame is stored while that dialog is up and still shows Running \u00b7 the export. The terminal then resizes to 80\u00d724, and that frame is stored before the return to 120\u00d740. The narrow frame keeps Still running, the export still running, Stay, and Stop and leave, and it does not contain Export stopped. Right then Enter confirms Stop and leave. expect_exited(0) runs before App is dropped: code 0, exit_signal None. Modes on that confirm path are the same restore_terminal result finish() observed on the clean Ctrl+Q paths, because a second finish() would send Ctrl+Q to a dead process. TablePro clean opens Connections (Filter connections) and finish() exits 0 with no signal, mouse_mode none, cursor visible, alternate_screen false, and bracketed_paste false. The dirty path connects Development, types SELECT 'x02_exit' AS marker, and Esc leaves the editor. Ctrl+Q opens Quit TablePro? and 1 unsaved query will be lost., with Cancel and Quit. Enter on Cancel leaves the process running and keeps the SQL. Right then Enter confirms, and expect_exited(0) reports code 0 and exit_signal None. Holla --scenario first-use shows Analyze disk usage under HOLLA_NO_HISTORY=1, and finish() exits 0 with no signal and those same modes. --scenario activities-multi: Ctrl+Q opens Quit holla with Stay, Stop and quit, and still running. Right then Enter shows quitting when every process is gone while the process is still running. src/bin/holla/app.rs request_quit returns when quitting is already set, so the later Ctrl+Q from finish() does not open another dialog. finish() then observes code 0, exit_signal None, and the restored modes after the activities end. Jackin --scenario hard-cases, clock off, reduced motion, attaches the clean instance 9b02. Ctrl+Q opens Quit jackin\u276f? and force-stops the container, with Cancel focused, not Unsaved work \u2014 quit?. Confirm returns to the manager with The final session ended cleanly and returning to host without the outro, from ExitDecision::Unknown in src/bin/jackin/app.rs leave_construct, and the process stays running. finish() on the manager exits 0 with no signal and restores the modes. --scenario launch-running lands on the capsule (Claude Code v2.1.14). Ctrl+Q opens the same clean Quit jackin\u276f? dialog. Confirm returns to the manager with Still inside the Construct and leaves the process running. finish() exits 0 with no signal and restores the modes. Simulated backend only. No --frame and no kill_child. Shell::quit_through and LeaveGuard::request are the clean and running paths cited above. Drop is not treated as success.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7bcbdb1fd7c409e0671281d363df8f7a6b0fdc54",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x02_exit/x02_exit_exit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x02_exit/x02_exit_exit_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Exit each applicable application through its clean path and through one guarded path.",
+      "expected_results": "The code is 0 and the signal is empty after the user confirms. Alternate screen, paste, and mouse modes are restored.",
+      "forbidden_effects": "Drop's cleanup kill counts as success.",
+      "checkpoint_ids": [
+        "X02.exit.exit.120x40",
+        "X02.exit.exit.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "quit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c0b9f43c3d48048784e0b192dddd92c75621bf829f04be2bd6c17529b5e21138",
+        "expect_baseline": "missing",
+        "precondition": "X02.exit.exit.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "quit",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e60e016cb9bc4995755e0ecd5b9da95319eae5b00c9d76eb558af69b7f016bca",
+        "expect_baseline": "missing",
+        "precondition": "X02.exit.exit.narrow"
+      }
+    }
+  ]
+}

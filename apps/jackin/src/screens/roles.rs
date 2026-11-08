@@ -482,9 +482,11 @@ impl RolesScreen {
             WidgetId::of("roles.pick"),
             &format!("Bind account · {role} · {}", agent.label()),
         );
-        p.set_searchable(false);
-        p.set_items(items);
-        p.list.chosen = chosen;
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
+        p.set_chosen(chosen);
         if let Some(i) = chosen {
             p.set_cursor(i);
         }

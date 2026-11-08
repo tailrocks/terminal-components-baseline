@@ -1,0 +1,159 @@
+{
+  "task_id": "H06.gate",
+  "cases": [
+    {
+      "case_id": "H06.gate.route",
+      "owner_task": "H06.gate",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-gradle --color truecolor --motion reduced at 120×40 with HOLLA_NO_HISTORY=1 and JUNIE_TUI_CLIENT_PLATFORM=macos opens the finder. The shell paints ~/work/android, mbp, build.gradle.kts, android · Gradle build, and Clean Gradle outputs. vm.img, sparse.img, ~/work/big, and 842 of 926 stay absent, as do .idea, workspace.xml, app.iml, and ~/work/ide. Paste Clean Gradle outputs under ~/work/android, the visible prefix of the gradle.clean-all catalog row, and Enter. The crumb is Here › Cleanup › gradle.clean-all. The heading is mode Trash (recoverable until emptied) and live. The page paints ~/work/android/.gradle, ~/work/android/build, ~/work/android/app/build, and 4 selected. d opens gate 1. The header contains · gate 1 of 2 · review the resolved facts, then continue deliberately, the facts line is gradle --stop first · a failed or unknown stop cancels the cleanup, and the focused button is Cancel beside Continue…. Esc sets Cancelled · nothing was executed and leaves the cleanup page. A second Esc returns to the finder, which still shows the pasted prefix and Enter, and does not show Cleanup · or gate 1 of 2. cleanup started and gradle --stop failed stay absent. finish() sends Ctrl+Q and exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "acb0267123431a440b0e776715fa020e7191b46a",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H06.gate",
+      "entry_path": "launch holla --scenario parity-gradle --color truecolor --motion reduced at 120x40; paste Clean Gradle outputs under ~/work/android; Enter",
+      "return_path": "Esc from gate 1, then Esc, returns to the finder; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H06.gate.confirm",
+      "owner_task": "H06.gate",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "parity-gradle opens the cleanup page through Clean Gradle outputs under ~/work/android. a clears the preselected rows: Everything unselected and 0 selected (0 B). d then paints Select at least one eligible candidate first · Space selects and does not open a gate. a selects again: Every eligible candidate selected · 49.0 MiB. d opens gate 1, which paints ~/work/android/a/b/c/d/e/build. Esc sets Cancelled · nothing was executed. d and Enter on the focused Cancel button does the same and does not open gate 2. d, Right, and Enter open gate 2. The title is Trash 4 items · gate 2 of 2. The prompt contains TRASH 4 UNDER /Users/alex/work/android ON mbp. Execute is painted. The live facts include gradle --stop first. The dry-run prerequisite and the permanent phrase are absent. The 120×40 shot is this open dialog, before any phrase is typed and before execute. The terminal is then 80×24, the same dialog is shot, and the terminal returns to 120×40 before the phrase is submitted. Partial text TRASH and Enter paints Does not match and leaves the dialog open. ctrl+l, NOPE, and Enter paints Does not match and NOPE, and does not paint NOPETRASH. m switches to Mode: PERMANENT · cannot be undone · any earlier review is void. The next gate 2 title starts Permanently delete 4 items and the prompt contains PERMANENTLY DELETE 4 UNDER /Users/alex/work/android ON mbp. Typing the trash phrase paints Does not match and does not paint cleanup started. m returns to Trash. n paints Dry run:, dry run: nothing is removed, and would-remove. That gate 2 title starts Dry run 4 items and the prerequisite is gradle --stop is not run on a dry run, while the token stays the trash phrase. The dialog is cancelled without submitting. n returns to Live run. The exact trash phrase then paints cleanup started · 4 items · quitting waits for it. gradle --stop failed stays absent through that commit. src/bin/holla/domain/parity.rs gradle() sets stop_fails: None and daemon_running: true, so this scenario's stop succeeds and the failure string is not painted. An immediate second confirmation, with no extra sleep, sends Esc, Enter, d, Right, Enter, the old phrase, and Enter. When that screen paints a cleanup is still running · wait for its report, the test locks it. On the recorded passing run the job had already finished: the footer was 4 trashed, the new gate asked for TRASH 3 UNDER /Users/alex/work/android ON mbp, the field still held the old TRASH 4 phrase, Does not match was painted, and cleanup started was absent. src/bin/holla/screens/cleanup.rs commit returns the still-running refusal only while cleanup_job is Some, and step moves one item per tick, so a waited reopening can miss the refusal. The test does not require that string when it is absent. finish() leaves any open dialog and exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "acb0267123431a440b0e776715fa020e7191b46a",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h06_gate/h06_gate_confirm_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h06_gate/h06_gate_confirm_narrow.tui.pb"
+      ],
+      "scenario": [
+        "parity-gradle",
+        "parity-idea"
+      ],
+      "action_sequence": "Cancel each stage. Enter partial, wrong, and exact text. Change the plan and try the old confirmation. Attempt a second cleanup as soon as the first success status is painted.",
+      "expected_results": "Exact text on the current plan is the only path that deletes. A failed prerequisite deletes nothing.",
+      "forbidden_effects": "The old phrase deletes after the plan changes.",
+      "checkpoint_ids": [
+        "H06.gate.confirm.120x40",
+        "H06.gate.confirm.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-gradle",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ab5127d3f21c57387b3b43ff0bad835640c15082218c468c82c0d315de3f9ec5",
+        "expect_baseline": "missing",
+        "precondition": "H06.gate.confirm.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-gradle",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "efc1d510216b7fd43032348e06918431c4e2af5d49a0845cd5a392f27da4a10e",
+        "expect_baseline": "missing",
+        "precondition": "H06.gate.confirm.narrow"
+      }
+    },
+    {
+      "case_id": "H06.gate.scenario.parity-gradle",
+      "owner_task": "H06.gate",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "The same launch shows Clean Gradle outputs, build.gradle.kts, ~/work/android, mbp, and android · Gradle build. .idea, workspace.xml, app.iml, and ~/work/ide are absent, as are vm.img, sparse.img, ~/work/big, and 842 of 926. Paste the gradle prefix and Enter. The crumb is Here › Cleanup › gradle.clean-all. The page paints ~/work/android/.gradle, ~/work/android/build, ~/work/android/app/build, the truncated deep build row a/b/c/d/e/bu, 4 selected, and Gradle outputs. Idea identities, cleanup started, and gradle --stop failed stay absent. finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "acb0267123431a440b0e776715fa020e7191b46a",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-gradle",
+      "action_sequence": "Launch the application with scenario parity-gradle and exercise the surface owned by H06.gate.",
+      "expected_results": "The visible fixture data belongs to parity-gradle.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    },
+    {
+      "case_id": "H06.gate.scenario.parity-idea",
+      "owner_task": "H06.gate",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "holla --scenario parity-idea at 120×40 paints ~/work/ide, mbp, and Clean IntelliJ. build.gradle.kts, .gradle, and ~/work/android are absent, as are vm.img, sparse.img, ~/work/big, and 842 of 926. Paste Clean IntelliJ metadata under ~/work/ide and Enter. The crumb is Here › Cleanup › idea.clean. The page paints .idea and at least one of workspace.xml or app.iml, plus IntelliJ metadata and Trash. EROFS is not painted. src/bin/holla/domain/parity.rs idea() sets ops_log.write_failure to EROFS, and that write failure is not a gate refusal. d opens gate 1 with Cancel. Esc sets Cancelled · nothing was executed and .idea is still on the page. Esc returns to the finder with the pasted prefix and without Cleanup ·. Gradle identities, cleanup started, and gradle --stop failed stay absent. finish() exits 0. Upper.IML does not end in .iml and is not required.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "acb0267123431a440b0e776715fa020e7191b46a",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-idea",
+      "action_sequence": "Launch the application with scenario parity-idea and exercise the surface owned by H06.gate.",
+      "expected_results": "The visible fixture data belongs to parity-idea.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

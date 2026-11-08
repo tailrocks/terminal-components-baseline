@@ -1,0 +1,77 @@
+{
+  "task_id": "S01.breadcrumbsrails",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s01_breadcrumbsrails.rs",
+    "docs/testing/cases/S01.breadcrumbsrails.json",
+    "tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/breadcrumbs_rails.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.breadcrumbsrails.route",
+    "sc.breadcrumbsrails.playground",
+    "sc.breadcrumbsrails.playground.120x40",
+    "sc.breadcrumbsrails.playground.80x24",
+    "sc.breadcrumbsrails.options",
+    "sc.breadcrumbsrails.options.120x40",
+    "sc.breadcrumbsrails.options.80x24",
+    "sc.breadcrumbsrails.states",
+    "sc.breadcrumbsrails.states.120x40",
+    "sc.breadcrumbsrails.states.80x24",
+    "sc.breadcrumbsrails.specimen.rest",
+    "sc.breadcrumbsrails.specimen.hover",
+    "sc.breadcrumbsrails.specimen.pressed",
+    "sc.breadcrumbsrails.specimen.focused",
+    "sc.breadcrumbsrails.specimen.focused_hover",
+    "sc.breadcrumbsrails.specimen.selected",
+    "sc.breadcrumbsrails.specimen.disabled",
+    "sc.breadcrumbsrails.specimen.busy",
+    "sc.breadcrumbsrails.specimen.error",
+    "sc.breadcrumbsrails.specimen.editing",
+    "sc.breadcrumbsrails.specimen.empty",
+    "sc.breadcrumbsrails.specimen.loading",
+    "sc.breadcrumbsrails.specimen.overflow",
+    "sc.breadcrumbsrails.specimen.narrow",
+    "sc.breadcrumbsrails.compare-levels",
+    "opt.breadcrumbsrails.clickable",
+    "opt.breadcrumbsrails.width",
+    "opt.breadcrumbsrails.collapsed",
+    "opt.breadcrumbsrails.collapsed_rail",
+    "sc.breadcrumbsrails.navigate",
+    "sc.breadcrumbsrails.rail"
+  ],
+  "checkpoints": [
+    "sc.breadcrumbsrails.playground.120x40",
+    "sc.breadcrumbsrails.playground.80x24",
+    "sc.breadcrumbsrails.options.120x40",
+    "sc.breadcrumbsrails.options.80x24",
+    "sc.breadcrumbsrails.states.120x40",
+    "sc.breadcrumbsrails.states.80x24",
+    "sc.breadcrumbsrails.compare-levels",
+    "sc.breadcrumbsrails.navigate",
+    "sc.breadcrumbsrails.rail"
+  ],
+  "acceptance": "Open Breadcrumbs & rails by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

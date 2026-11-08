@@ -1,0 +1,36 @@
+{
+  "task_id": "J06.export",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j06_export.rs",
+    "docs/testing/cases/J06.export.json",
+    "tests/functional/baselines/pre_refactor/J06.export/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/capsule.rs"
+  ],
+  "coverage_rows": [
+    "J06.export.route",
+    "J06.export.export"
+  ],
+  "checkpoints": [
+    "J06.export.export.120x40"
+  ],
+  "acceptance": "Export validates the path, cancel exports nothing, and success reports the simulated path only.",
+  "status": "queued",
+  "architecture_refactor": false
+}

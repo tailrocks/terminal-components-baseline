@@ -528,49 +528,35 @@ def validate_and_import(repo_root, checker, seed_repository):
                 total_blob_bytes += size
         if total_blob_bytes > MAX_TOTAL_BLOB_BYTES:
             fail("metadata pack exceeds its reviewed object byte bound")
-        staged = run_git(git, repo_root, "ls-files", "--stage", "-z", home=home, output_limit=8 * 1024 * 1024)
-        indexed = {}
-        for record in staged.split(b"\0"):
-            if not record:
-                continue
-            try:
-                metadata, raw_path = record.split(b"\t", 1)
-                mode, oid, stage = metadata.decode("ascii").split(" ")
-                path = raw_path.decode("utf-8", "strict")
-            except (ValueError, UnicodeError):
-                fail("source Git index contains an invalid tracked path record")
-            if stage == "0":
-                indexed[path] = (mode, oid)
-        baseline_total_bytes = 0
-        for mode, kind, oid, path, excluded in entries:
-            if not excluded:
-                continue
-            indexed_entry = indexed.get(path)
-            if indexed_entry is None or indexed_entry[0] != mode:
-                fail(f"tracked baseline provenance differs from the pinned tree: {path}")
-            available_total = MAX_TOTAL_BLOB_BYTES - total_blob_bytes - baseline_total_bytes
-            byte_limit = min(MAX_BASELINE_BLOB_BYTES, available_total)
-            if byte_limit < 0:
-                fail("completed private seed graph exceeds its reviewed total blob byte bound")
-            payload, metadata = read_relative(
-                repo_fd,
-                path,
-                f"tracked baseline {path}",
-                byte_limit,
-                missing_message=f"required tracked baseline is missing: {path}",
-                nonregular_message=f"required tracked baseline is not a regular non-symlink file: {path}",
-                growth_message=f"required tracked baseline changed while it was read: {path}",
-            )
-            actual_mode = "100755" if metadata.st_mode & 0o111 else "100644"
-            if actual_mode != mode:
-                fail(f"required tracked baseline mode differs from the pinned tree: {path}")
-            baseline_total_bytes += metadata.st_size
-            blob_oid = hashlib.sha1(b"blob " + str(len(payload)).encode() + b"\0" + payload).hexdigest()
-            if blob_oid != oid:
-                fail(f"required tracked baseline bytes differ from the pinned tree: {path}")
-            written = run_git(git, seed_repository, "hash-object", "-w", "--stdin", home=home, output_limit=128, input_bytes=payload).decode("ascii", "strict").strip()
-            if written != oid:
-                fail(f"private baseline blob identity differs from the pinned tree: {path}")
+        baseline_pack, _ = read_relative(
+            repo_fd,
+            "tests/fixtures/trusted-seed-baselines.pack",
+            "trusted seed baseline pack",
+            1024 * 1024,
+        )
+        if hashlib.sha256(baseline_pack).hexdigest() != "44f010a183cf42d933e61622c00b49c944842c096641063d7057345b951140f7":
+            fail("trusted seed baseline pack digest differs from its reviewed identity")
+        run_git(git, seed_repository, "index-pack", "--stdin", home=home, output_limit=4096, input_bytes=baseline_pack)
+        complete_raw = run_git(
+            git,
+            seed_repository,
+            "cat-file",
+            "--batch-all-objects",
+            "--batch-check=%(objectname) %(objecttype) %(objectsize)",
+            home=home,
+            output_limit=4 * 1024 * 1024,
+        )
+        complete = parse_actual_object_inventory(complete_raw)
+        if set(complete) != set(expected_types) or any(complete[oid][0] != kind for oid, kind in expected_types.items()):
+            fail("complete seed object inventory differs from the pinned tree")
+        total_blob_bytes = 0
+        for kind, size in complete.values():
+            if kind == "blob":
+                if size > MAX_BASELINE_BLOB_BYTES:
+                    fail("complete seed contains an oversized blob")
+                total_blob_bytes += size
+        if total_blob_bytes > MAX_TOTAL_BLOB_BYTES:
+            fail("complete seed exceeds its reviewed object byte bound")
         run_git(git, seed_repository, "update-ref", "refs/heads/trusted-seed", commit, home=home, output_limit=4096)
         seed_objects_path = seed_repository / "objects"
         reject_private_alternates(seed_objects_path)

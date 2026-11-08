@@ -1,0 +1,37 @@
+{
+  "task_id": "T02.viewers",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t02_viewers.rs",
+    "docs/testing/cases/T02.viewers.json",
+    "tests/functional/baselines/pre_refactor/T02.viewers/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/workbench.rs",
+    "src/bin/tablepro/context.rs"
+  ],
+  "coverage_rows": [
+    "T02.viewers.route",
+    "T02.viewers.viewer"
+  ],
+  "checkpoints": [
+    "T02.viewers.viewer.120x40"
+  ],
+  "acceptance": "Cell viewers, row menus, foreign-key follow, refresh, and additional-row fetch stay on the selected cell.",
+  "status": "queued",
+  "architecture_refactor": false
+}

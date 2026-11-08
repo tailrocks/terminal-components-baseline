@@ -1,0 +1,36 @@
+{
+  "task_id": "X02.suspend",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x02_suspend.rs",
+    "docs/testing/cases/X02.suspend.json",
+    "tests/functional/baselines/pre_refactor/X02.suspend/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/runtime.rs"
+  ],
+  "coverage_rows": [
+    "X02.suspend.route",
+    "X02.suspend.suspend"
+  ],
+  "checkpoints": [
+    "X02.suspend.suspend.120x40"
+  ],
+  "acceptance": "Suspend and resume are tested only if the pinned PTY API supports them. Otherwise the row records the limitation.",
+  "status": "queued",
+  "architecture_refactor": false
+}

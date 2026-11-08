@@ -1,0 +1,82 @@
+{
+  "task_id": "S05.dialogkinds",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s05_dialogkinds.rs",
+    "docs/testing/cases/S05.dialogkinds.json",
+    "tests/functional/baselines/pre_refactor/S05.dialogkinds/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/dialog_kinds.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.dialogkinds.route",
+    "sc.dialogkinds.playground",
+    "sc.dialogkinds.playground.120x40",
+    "sc.dialogkinds.playground.80x24",
+    "sc.dialogkinds.options",
+    "sc.dialogkinds.options.120x40",
+    "sc.dialogkinds.options.80x24",
+    "sc.dialogkinds.states",
+    "sc.dialogkinds.states.120x40",
+    "sc.dialogkinds.states.80x24",
+    "sc.dialogkinds.specimen.rest",
+    "sc.dialogkinds.specimen.hover",
+    "sc.dialogkinds.specimen.pressed",
+    "sc.dialogkinds.specimen.focused",
+    "sc.dialogkinds.specimen.focused_hover",
+    "sc.dialogkinds.specimen.selected",
+    "sc.dialogkinds.specimen.disabled",
+    "sc.dialogkinds.specimen.busy",
+    "sc.dialogkinds.specimen.error",
+    "sc.dialogkinds.specimen.editing",
+    "sc.dialogkinds.specimen.empty",
+    "sc.dialogkinds.specimen.loading",
+    "sc.dialogkinds.specimen.overflow",
+    "sc.dialogkinds.specimen.narrow",
+    "sc.dialogkinds.compare-levels",
+    "opt.dialogkinds.width",
+    "opt.dialogkinds.nav",
+    "opt.dialogkinds.close_button",
+    "opt.dialogkinds.button_wrap",
+    "opt.dialogkinds.keep_open",
+    "opt.dialogkinds.form_meta",
+    "opt.dialogkinds.info_error",
+    "opt.dialogkinds.info_keymap",
+    "opt.dialogkinds.choice_tones",
+    "opt.dialogkinds.choice_stepper",
+    "opt.dialogkinds.choice_buttons",
+    "sc.dialogkinds.kinds"
+  ],
+  "checkpoints": [
+    "sc.dialogkinds.playground.120x40",
+    "sc.dialogkinds.playground.80x24",
+    "sc.dialogkinds.options.120x40",
+    "sc.dialogkinds.options.80x24",
+    "sc.dialogkinds.states.120x40",
+    "sc.dialogkinds.states.80x24",
+    "sc.dialogkinds.compare-levels",
+    "sc.dialogkinds.kinds"
+  ],
+  "acceptance": "Open Dialog kinds by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

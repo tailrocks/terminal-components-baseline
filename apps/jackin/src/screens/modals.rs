@@ -22,7 +22,6 @@ use crate::world::{AgentOffer, World};
 
 use super::ModalResult;
 use crate::domain::docker::DockerRiskText;
-use junie_tui::core::scroll::Scrollable;
 use junie_tui::theme::StatusKind;
 use junie_tui::ui::text::plural;
 use junie_tui::widgets::button::Button;
@@ -79,8 +78,9 @@ pub fn account_picker(
     offer: &AgentOffer,
 ) -> (Picker, Vec<AccountId>) {
     let mut p = Picker::new(id, &format!("Account for {}", agent.label()));
-    p.set_searchable(false);
-    p.list.width = (72, 72);
+    p.set_searchable(false)
+        .expect("disabling picker search is valid");
+    p.set_width(72);
     p.scope = Some("active for this Workspace".into());
     let mut items = vec![];
     let mut ids = vec![];
@@ -111,7 +111,8 @@ pub fn account_picker(
         );
         ids.push(acc.id.clone());
     }
-    p.set_items(items);
+    p.set_items(items)
+        .unwrap_or_else(|error| p.report_item_error(error));
     (p, ids)
 }
 
@@ -311,7 +312,7 @@ impl OpFlow {
             last_error: None,
             concealed_only: true,
         };
-        f.picker.list.width = (64, 64);
+        f.picker.set_width(64);
 
         if let [only] = op.accounts().as_slice() {
             f.account = Some(only.id.clone());
@@ -398,7 +399,9 @@ impl OpFlow {
             OpStep::Item => "Search items…".into(),
             OpStep::Field => "Search fields…".into(),
         };
-        self.picker.set_searchable(true);
+        self.picker
+            .set_searchable(true)
+            .unwrap_or_else(|error| self.picker.report_item_error(error));
         self.picker.status = PickerStatus::Loading(match self.step {
             OpStep::Account => "loading accounts…".into(),
             OpStep::Vault => "loading vaults…".into(),
@@ -411,7 +414,9 @@ impl OpFlow {
                 self.item.as_ref().map(|i| i.1.as_str()).unwrap_or("item")
             ),
         });
-        self.picker.set_items(vec![]);
+        self.picker
+            .set_items(vec![])
+            .unwrap_or_else(|error| self.picker.report_item_error(error));
         self.ids.clear();
         self.sections.clear();
         self.listing = None;
@@ -530,7 +535,9 @@ impl OpFlow {
         }
         self.ids = ids;
         self.sections = sections;
-        self.picker.set_items(items);
+        self.picker
+            .set_items(items)
+            .unwrap_or_else(|error| self.picker.report_item_error(error));
     }
 
     fn back(&mut self, op: &dyn OnePassword) -> Outcome {
@@ -562,8 +569,10 @@ impl OpFlow {
     }
 
     fn choose(&mut self, i: usize, op: &dyn OnePassword) -> Outcome {
-        let (Some(row), Some(id)) = (self.picker.items.get(i).cloned(), self.ids.get(i).cloned())
-        else {
+        let (Some(row), Some(id)) = (
+            self.picker.items().get(i).cloned(),
+            self.ids.get(i).cloned(),
+        ) else {
             return Outcome::Consumed;
         };
         let section = self.sections.get(i).cloned().flatten();
@@ -634,9 +643,7 @@ impl OpFlow {
     pub fn pointer(&mut self, ev: &PointerEvent, op: &dyn OnePassword) -> Outcome {
         let Some(r) = self.picker.route(ev) else {
             return match ev.wheel() {
-                Some((Axis::Vertical, delta)) => {
-                    self.picker.list.wheel(Axis::Vertical, delta).outcome()
-                }
+                Some((Axis::Vertical, delta)) => self.picker.wheel(Axis::Vertical, delta),
                 _ if ev.is(Phase::Click) => Outcome::Consumed,
                 _ => Outcome::Ignored,
             };

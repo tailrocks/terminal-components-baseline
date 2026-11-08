@@ -1,0 +1,76 @@
+{
+  "task_id": "S01.shell",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s01_shell.rs",
+    "docs/testing/cases/S01.shell.json",
+    "tests/functional/baselines/pre_refactor/S01.shell/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/app.rs",
+    "src/bin/showcase/inspector.rs",
+    "src/bin/showcase/options.rs",
+    "src/shell/"
+  ],
+  "coverage_rows": [
+    "opt.shell.color",
+    "opt.shell.overrides",
+    "opt.shell.glyphs",
+    "opt.shell.strings",
+    "opt.shell.motion",
+    "opt.shell.focus_on",
+    "opt.shell.double_click_ms",
+    "opt.shell.double_click_slop",
+    "opt.shell.wheel_lines",
+    "opt.shell.hover_refresh_after_scroll",
+    "opt.shell.flash_ms",
+    "opt.shell.secondary_outside",
+    "opt.shell.end_edit_on_dead_space",
+    "opt.shell.autoscroll",
+    "opt.shell.autoscroll_ms",
+    "opt.shell.track_repeat",
+    "opt.shell.track_repeat_ms",
+    "opt.shell.track_click",
+    "opt.shell.pointer_shapes",
+    "opt.shell.caret_shape",
+    "opt.shell.click_skips_animation",
+    "opt.shell.tooltips",
+    "opt.shell.reveal",
+    "opt.shell.platform",
+    "opt.shell.field_keys",
+    "opt.shell.edit_entry",
+    "opt.shell.focus_fallback",
+    "opt.shell.shift_wheel_horizontal",
+    "opt.shell.legacy_ctrl_punctuation",
+    "opt.shell.keyboard_protocol",
+    "opt.shell.alt_keys",
+    "opt.shell.card_heading",
+    "opt.shell.inactive_selection",
+    "sc.shell.inspector",
+    "sc.shell.sidebar-policy",
+    "sc.shell.shell-override"
+  ],
+  "checkpoints": [
+    "sc.shell.inspector.120x40",
+    "sc.shell.sidebar-policy.120x40",
+    "sc.shell.shell-override.120x40"
+  ],
+  "acceptance": "Shell options, Inspector sections, and sidebar expansion policies show their exact visible result. A shell change does not retarget the page.",
+  "status": "queued",
+  "architecture_refactor": false
+}

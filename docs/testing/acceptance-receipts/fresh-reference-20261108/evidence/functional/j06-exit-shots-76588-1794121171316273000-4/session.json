@@ -1,0 +1,21 @@
+{
+  "TERM": "xterm-256color",
+  "args": [
+    "--scenario",
+    "outro-last"
+  ],
+  "binary_path": "/private/tmp/tcb-pr2-reference-evidence-20261108/tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+  "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+  "clock": false,
+  "color": "truecolor",
+  "cols": 120,
+  "comparator_name": "tuiscotti FrozenStore state comparison",
+  "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+  "history": false,
+  "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+  "mode": "reference",
+  "motion": "reduced",
+  "platform": "macos",
+  "reference_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+  "rows": 40
+}

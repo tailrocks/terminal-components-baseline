@@ -1,0 +1,16 @@
+spawn /private/tmp/tcb-pr2-reference-evidence-20261108/tests/functional/reference-bins/aarch64-apple-darwin/showcase ["--page", "splits", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: splits page f9c846a5aed4a5e6
+mouse Motion { x: 54, y: 11 }
+mouse Motion { x: 54, y: 11 }
+checkpoint 001: seam hover 05be4764b66a595a
+mouse Press { x: 54, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: seam press b2f878dff4cf8af8
+mouse Drag { x: 54, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 003: seam drag b2f878dff4cf8af8
+resize 80x24
+checkpoint 004: pressed seam at 80x24 08ca1700535fa925
+resize 120x40
+checkpoint 005: pressed seam back at 120x40 f19619313cacbd01
+mouse Release { x: 54, y: 11, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+key ctrl+q
+clean exit 0

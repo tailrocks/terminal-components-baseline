@@ -62,6 +62,7 @@ runtime_tmp_trace="$test_root/curl runtime TMPDIR"
 observer_plan="$test_root/materialization observer"
 last_output="$test_root/checker output"
 last_status=0
+python_command=$(python3 -c 'import sys; print(sys.executable)')
 object_length=$(seed_git -C "$repo_root" rev-parse --show-object-format | awk '{ if ($0 == "sha1") print 40; else if ($0 == "sha256") print 64; else exit 1 }')
 zero_oid=$(printf '%0*d' "$object_length" 0)
 
@@ -132,7 +133,7 @@ Path(sys.argv[2]).write_text("".join(f"{name} {repositories[name]} {trees[name]}
 PYTHON
 
 {
-  printf '#!/bin/bash\ncontrol=%q\nrequest_log=%q\nenvironment_trace=%q\nruntime_tmp_trace=%q\nobserver_plan=%q\nheader_fixture=%q\nmetadata_log=%q\nmetadata_routes=%q\n' "$response_plan" "$request_log" "$environment_trace" "$runtime_tmp_trace" "$observer_plan" "$header_fixture" "$metadata_log" "$metadata_routes"
+  printf '#!/bin/bash\ncontrol=%q\nrequest_log=%q\nenvironment_trace=%q\nruntime_tmp_trace=%q\nobserver_plan=%q\nheader_fixture=%q\nmetadata_log=%q\nmetadata_routes=%q\npython_command=%q\n' "$response_plan" "$request_log" "$environment_trace" "$runtime_tmp_trace" "$observer_plan" "$header_fixture" "$metadata_log" "$metadata_routes" "$python_command"
   cat <<'EOF'
 set -eu
 [[ "${1-}" == "--disable" ]] || exit 91
@@ -194,7 +195,7 @@ else
 fi
 printf '%s\n' "$url" >> "$request_log"
 if [[ -s "$observer_plan" && "$url" == https://static.rust-lang.org/* ]]; then
-  python3 -I -S - "$observer_plan" "$TMPDIR" <<'PY'
+  "$python_command" -I -S - "$observer_plan" "$TMPDIR" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -2001,6 +2002,192 @@ PY
   assert_no_temporary_snapshot
 }
 
+use_trusted_manifests() {
+  local directory=$1
+  local path
+  for path in Cargo.toml Cargo.lock apps/jackin/Cargo.toml; do
+    seed_git -C "$private_seed_repository" show "$trusted_seed_commit:$path" > "$directory/$path"
+  done
+  seed_git -C "$directory" add -- Cargo.toml Cargo.lock apps/jackin/Cargo.toml
+}
+
+test_approved_reference_blobs() {
+  local path directory oid observed canary status raw index_file
+  observed="$test_root/approved-reference-observed"
+  canary="$test_root/approved-reference-canary"
+  status="$test_root/approved-reference-status"
+  for path in \
+    tests/functional/reference-bins/aarch64-apple-darwin/holla \
+    tests/functional/reference-bins/aarch64-apple-darwin/showcase \
+    tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin; do
+    directory=$(new_repo "approved-$(basename "$path")-$(basename "$(dirname "$path")")")
+    use_trusted_manifests "$directory"
+    oid=$(git -C "$directory" hash-object -w --stdin < "$repo_root/$path")
+    git -C "$directory" update-index --add --cacheinfo "100755,$oid,$path"
+    set_denied_response
+    set_materialization_observer index "$path" "$observed" "$canary" "$status"
+    run_checker "$directory" pre-commit
+    assert_failed "approved reference reaches the deterministic network boundary: $path"
+    assert_contains "approved reference materializes: $path" 'rustup bootstrap response has an unexpected status'
+    assert_equal "approved reference observer finds file: $path" absent "$(cat "$status")"
+    if cmp -s "$repo_root/$path" "$observed"; then
+      assert_equal "approved reference retains exact bytes: $path" true true
+    else
+      assert_equal "approved reference retains exact bytes: $path" true false
+    fi
+    assert_no_temporary_snapshot
+  done
+  path=tests/functional/reference-bins/aarch64-apple-darwin/holla
+  directory=$(new_repo reference-wrong-path)
+  oid=$(git -C "$directory" hash-object -w --stdin < "$repo_root/$path")
+  git -C "$directory" update-index --add --cacheinfo "100755,$oid,docs/unapproved-reference"
+  set_denied_response
+  run_checker "$directory" pre-commit
+  assert_failed 'approved blob at another path is rejected'
+  assert_contains 'unapproved path reports per-blob limit' 'snapshot blob exceeds the per-object size limit'
+  assert_request_count 0
+  directory=$(new_repo reference-wrong-object)
+  raw="$test_root/unapproved-reference"
+  python3 -c 'import sys; sys.stdout.buffer.write(b"x" * 16835672)' > "$raw"
+  oid=$(git -C "$directory" hash-object -w --stdin < "$raw")
+  git -C "$directory" update-index --add --cacheinfo "100755,$oid,$path"
+  set_denied_response
+  run_checker "$directory" pre-commit
+  assert_failed 'different blob at approved path is rejected'
+  assert_contains 'unapproved object reports per-blob limit' 'snapshot blob exceeds the per-object size limit'
+  assert_request_count 0
+  directory=$(new_repo reference-aggregate)
+  oid=$(git -C "$directory" hash-object -w --stdin < "$repo_root/$path")
+  git -C "$directory" update-index --add --cacheinfo "100755,$oid,$path"
+  python3 -c 'import sys; sys.stdout.buffer.write(b"y" * (16 * 1024 * 1024))' > "$raw"
+  oid=$(git -C "$directory" hash-object -w --stdin < "$raw")
+  index_file=$(git -C "$directory" rev-parse --path-format=absolute --git-path index)
+  python3 - "$oid" <<'PYTHON' | GIT_INDEX_FILE="$index_file" git -C "$directory" update-index --index-info
+import sys
+for number in range(31):
+    print(f"100644 {sys.argv[1]}\taggregate/entry-{number:02d}")
+PYTHON
+  set_denied_response
+  run_checker "$directory" pre-commit
+  assert_failed 'approved reference still counts toward aggregate cap'
+  assert_contains 'approved reference cannot bypass aggregate cap' 'snapshot exceeds the total materialized blob size limit'
+  assert_request_count 0
+}
+
+test_reference_size_faults() {
+  local directory path oid size variant wrapper_dir
+  path=tests/functional/reference-bins/aarch64-apple-darwin/holla
+  size=16835672
+  directory=$(new_repo reference-size-faults)
+  use_trusted_manifests "$directory"
+  oid=$(git -C "$directory" hash-object -w --stdin < "$repo_root/$path")
+  git -C "$directory" update-index --add --cacheinfo "100755,$oid,$path"
+  wrapper_dir="$test_root/git-size-fault"
+  mkdir -p "$wrapper_dir"
+  for variant in short-status long-status short-stream; do
+    {
+      printf '#!/bin/bash\nreal_git=%q\noid=%q\nsize=%q\nvariant=%q\n' "$git_bin" "$oid" "$size" "$variant"
+      cat <<'WRAPPER'
+case " $* " in
+  *" cat-file --batch-check "*)
+    if [[ "$variant" == short-status || "$variant" == long-status ]]; then
+      if [[ "$variant" == short-status ]]; then changed=$((size - 1)); else changed=$((size + 1)); fi
+      "$real_git" "$@" | /usr/bin/awk -v oid="$oid" -v changed="$changed" '{ if ($1 == oid && $2 == "blob") $3 = changed; print }'
+      exit "${PIPESTATUS[0]}"
+    fi
+    ;;
+  *" cat-file blob $oid "*)
+    if [[ "$variant" == short-stream ]]; then
+      "$real_git" "$@" | /usr/bin/head -c "$((size - 1))"
+      exit 0
+    fi
+    ;;
+esac
+exec "$real_git" "$@"
+WRAPPER
+    } > "$wrapper_dir/git"
+    chmod 755 "$wrapper_dir/git"
+    set_denied_response
+    run_checker "$directory" pre-commit '' "PATH=$wrapper_dir:$fixture_bin:$caller_path"
+    assert_failed "approved reference altered size is rejected: $variant"
+    if [[ "$variant" == short-stream ]]; then
+      assert_contains 'copied reference byte count is checked' 'approved reference blob size differs from its reviewed identity'
+    else
+      assert_contains "altered status size is rejected: $variant" 'snapshot blob exceeds the per-object size limit'
+    fi
+    assert_request_count 0
+  done
+}
+
+test_reviewed_cargo_bundle() {
+  local directory variant
+  directory=$(new_repo cargo-bundle-baseline)
+  use_trusted_manifests "$directory"
+  set_denied_response
+  run_checker "$directory" pre-commit
+  assert_failed 'unchanged seed manifests reach external boundary'
+  assert_contains 'unchanged seed manifests are accepted' 'rustup bootstrap response has an unexpected status'
+  directory=$(new_repo cargo-bundle-approved)
+  set_denied_response
+  run_checker "$directory" pre-commit
+  assert_failed 'reviewed Cargo bundle reaches external boundary'
+  assert_contains 'reviewed Cargo bundle is accepted' 'rustup bootstrap response has an unexpected status'
+  for variant in workspace root app version source path features extra extra-app lock-root lock-self; do
+    directory=$(new_repo "cargo-bundle-$variant")
+    python3 - "$directory" "$variant" <<'PYTHON'
+import sys
+from pathlib import Path
+root = Path(sys.argv[1])
+variant = sys.argv[2]
+manifest = root / "Cargo.toml"
+app = root / "apps/jackin/Cargo.toml"
+lock = root / "Cargo.lock"
+if variant == "workspace":
+    p, before, after = manifest, 'sha2 = "0.10.9"\n', ''
+elif variant == "root":
+    p, before, after = manifest, 'sha2 = { workspace = true }\n', ''
+elif variant == "app":
+    p, before, after = app, 'jackin-console = { path = ".", default-features = false, features = ["demo"] }\n', ''
+elif variant == "version":
+    p, before, after = manifest, 'sha2 = "0.10.9"', 'sha2 = "0.10.8"'
+elif variant == "source":
+    p, before, after = manifest, 'sha2 = "0.10.9"', 'sha2 = { version = "0.10.9", registry = "other" }'
+elif variant == "path":
+    p, before, after = app, 'path = ".", default-features = false', 'path = "..", default-features = false'
+elif variant == "features":
+    p, before, after = app, 'jackin-console = { path = ".", default-features = false, features = ["demo"] }', 'jackin-console = { path = ".", default-features = false, features = ["demo", "other"] }'
+elif variant == "extra":
+    p, before, after = manifest, 'sha2 = { workspace = true }', 'sha2 = { workspace = true }\nextra = "1"'
+elif variant == "extra-app":
+    p, before, after = app, 'jackin-console = { path = ".", default-features = false, features = ["demo"] }', 'jackin-console = { path = ".", default-features = false, features = ["demo"] }\nextra = "1"'
+else:
+    package = 'junie-tui' if variant == 'lock-root' else 'jackin-console'
+    edge = 'sha2 0.10.9' if variant == 'lock-root' else 'jackin-console'
+    chunks = lock.read_text().split('[[package]]')
+    selected = [i for i, chunk in enumerate(chunks) if chunk.startswith('\nname = "' + package + '"\n')]
+    if len(selected) != 1:
+        raise SystemExit('ambiguous lock package')
+    index = selected[0]
+    before = ' "' + edge + '",\n'
+    if chunks[index].count(before) != 1:
+        raise SystemExit('ambiguous lock edge')
+    chunks[index] = chunks[index].replace(before, '', 1)
+    lock.write_text('[[package]]'.join(chunks))
+    raise SystemExit(0)
+s = p.read_text()
+if s.count(before) != 1:
+    raise SystemExit(f"ambiguous fixture replacement: {variant}")
+p.write_text(s.replace(before, after, 1))
+PYTHON
+    git -C "$directory" add -- Cargo.toml Cargo.lock apps/jackin/Cargo.toml
+    set_denied_response
+    run_checker "$directory" pre-commit
+    assert_failed "unreviewed Cargo bundle variant is rejected: $variant"
+    assert_contains "Cargo bundle variant is rejected at policy boundary: $variant" 'generated-workflows: Cargo'
+    assert_request_count 0
+  done
+}
+
 test_hydrated_repeated_blob_occurrence_limit() {
   local directory
   local raw="$test_root/repeated hydrated blob.raw"
@@ -2430,6 +2617,11 @@ run_case() {
       test_snapshot_entry_limit
       test_snapshot_listing_limit
       test_snapshot_blob_limits
+      test_approved_reference_blobs
+      test_reference_size_faults
+      test_reviewed_cargo_bundle
+      python3 -B -I -S "$repo_root/tests/test_trusted_seed_fixture.py"
+      python3 -B -I -S "$repo_root/tests/test_materialize_git_tree.py"
       test_hydrated_repeated_blob_occurrence_limit
       test_snapshot_rejects_gitlinks
       test_relative_tmpdir_public_hooks
@@ -2461,6 +2653,9 @@ run_case() {
     pushed-blob-hydration) test_pushed_missing_blob_hydration ;;
     pushed-missing) test_pushed_missing_objects ;;
     staged-missing) test_staged_missing_blob ;;
+    approved-references) test_approved_reference_blobs ;;
+    reference-size-faults) test_reference_size_faults ;;
+    reviewed-cargo-bundle) test_reviewed_cargo_bundle ;;
     snapshot-limits) test_snapshot_entry_limit; test_snapshot_listing_limit; test_snapshot_blob_limits ;;
     hydrated-occurrences) test_hydrated_repeated_blob_occurrence_limit ;;
     listing-limit) test_snapshot_listing_limit ;;

@@ -1,0 +1,75 @@
+{
+  "task_id": "S06.emptyerror",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s06_emptyerror.rs",
+    "docs/testing/cases/S06.emptyerror.json",
+    "tests/functional/baselines/pre_refactor/S06.emptyerror/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/empty_error.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.emptyerror.route",
+    "sc.emptyerror.playground",
+    "sc.emptyerror.playground.120x40",
+    "sc.emptyerror.playground.80x24",
+    "sc.emptyerror.options",
+    "sc.emptyerror.options.120x40",
+    "sc.emptyerror.options.80x24",
+    "sc.emptyerror.states",
+    "sc.emptyerror.states.120x40",
+    "sc.emptyerror.states.80x24",
+    "sc.emptyerror.specimen.rest",
+    "sc.emptyerror.specimen.hover",
+    "sc.emptyerror.specimen.pressed",
+    "sc.emptyerror.specimen.focused",
+    "sc.emptyerror.specimen.focused_hover",
+    "sc.emptyerror.specimen.selected",
+    "sc.emptyerror.specimen.disabled",
+    "sc.emptyerror.specimen.busy",
+    "sc.emptyerror.specimen.error",
+    "sc.emptyerror.specimen.editing",
+    "sc.emptyerror.specimen.empty",
+    "sc.emptyerror.specimen.loading",
+    "sc.emptyerror.specimen.overflow",
+    "sc.emptyerror.specimen.narrow",
+    "sc.emptyerror.compare-levels",
+    "opt.emptyerror.kind",
+    "opt.emptyerror.hint",
+    "opt.emptyerror.actions",
+    "opt.emptyerror.reason",
+    "sc.emptyerror.empty"
+  ],
+  "checkpoints": [
+    "sc.emptyerror.playground.120x40",
+    "sc.emptyerror.playground.80x24",
+    "sc.emptyerror.options.120x40",
+    "sc.emptyerror.options.80x24",
+    "sc.emptyerror.states.120x40",
+    "sc.emptyerror.states.80x24",
+    "sc.emptyerror.compare-levels",
+    "sc.emptyerror.empty"
+  ],
+  "acceptance": "Open Empty & error by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

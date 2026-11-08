@@ -715,11 +715,13 @@ impl RoleEditorScreen {
             return;
         }
         let mut p = Picker::new(WidgetId::of("roleeditor.choose"), "Choose a file");
-        p.set_searchable(true);
+        p.set_searchable(true)
+            .unwrap_or_else(|error| p.report_item_error(error));
         p.scope = Some(format!("role {}", self.role));
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         if let Some(i) = self.files.iter().position(|f| *f == current) {
-            p.list.chosen = Some(i);
+            p.set_chosen(Some(i));
             p.set_cursor(i);
         }
         self.pick = Some(which);

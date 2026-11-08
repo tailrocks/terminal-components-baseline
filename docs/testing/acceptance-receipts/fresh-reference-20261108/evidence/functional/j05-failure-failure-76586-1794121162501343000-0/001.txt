@@ -1,0 +1,40 @@
+  jackin❯   entering the Construct  ● 2 running  Launch › payments-platform › the-architect        6/11 stages  ? help  
+                                                                                                                        
+                                q                                                   P                                   
+                                %                       jackin❯                     W                             A     
+                                 Loading the-architect into workspace payments-platform                           <     
+                       Claude Code · Anthropic / Claude · account Claude · Work (session choice)                  9     
+                                      stage 9 of 11 · Sidecar · 6 done · 1 skipped                                5     
+                                                                                                  6                     
+                         ╭─ ! Launch failed ────────── run id is the only copyable value ─ × ─╮   W                     
+                         │  The Construct network could not be attached                       │   N                     
+                         │  Loading the-architect into workspace payments-platform            │   D                     
+                         │                                                                    │                         
+                         │ ▎ Stage      Network                                               │                         
+                         │   Run id     run-202609030914-b5df                                 │                         
+                         │   Next step  Check that Docker's jackin-net bridge exists          │                         
+                         │              (docker network ls), then launch again.               │                         
+                         │   Container  jackin-payments-platform-b5df                         │                         
+                         │                                                                    │                         
+                         │  network: attach jackin-net to jackin-payments-platform-7f3a      ┃│                         
+                         │  docker: Error response from daemon: network jackin-net not       ┃│                         
+                         │  found                                                            ┃│· Personal · Codex · P…  
+                         │  retry 1/3 after 400 ms: network jackin-net not found             ┃│ quota readable · sess…  
+                         │  retry 2/3 after 800 ms: network jackin-net not found             ┃│                         
+                         │  retry 3/3 after 1600 ms: network jackin-net not found            ┃│                         
+                         │  sidecar: not started (network stage failed)                      ┃│                         
+                         │  capsule: not started                                             ┃│                         
+                         │  cleanup: container jackin-payments-platform-7f3a kept for        ┆│                         
+                         │  inspection                                                       ┆│                         
+                         │                                                                    │                         
+                         │                                                            Close   │                         
+                         ╰────────────────────────────────────────────────────────────────────╯                         
+                                                                      F                                                 
+                                                                      G                                     $           
+                                                                                                            U           
+                                                                                                            i           
+                                                                                                                        
+ ! Network failed                                                                        jackin-payments-platform-b5df  
+ 44 lines · b build log                                                                                                 
+                                                                                                                        
+ ↑↓ Move  y Copy  Esc Close                                                                                             

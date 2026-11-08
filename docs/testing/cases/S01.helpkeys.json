@@ -1,0 +1,1776 @@
+{
+  "task_id": "S01.helpkeys",
+  "cases": [
+    {
+      "case_id": "sc.helpkeys.route",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_route.tui.pb"
+      ],
+      "route": "helpkeys",
+      "label": "Help & keys",
+      "entry_path": "--page helpkeys",
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b67620f36097d405f4b39d4859c4f7dc11c155ac7d38bc802537e4b78a1b0175",
+        "expect_baseline": "missing",
+        "precondition": "--page helpkeys opens the playground with the sidebar focused and caption the live widget",
+        "case_id": "sc.helpkeys.route"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.playground",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_playground.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "053bf686c61fb5e15a86ecaff2a3261826df36dda713ee504b66df370807c684",
+        "expect_baseline": "missing",
+        "precondition": "playground is the visible Help & keys section",
+        "case_id": "sc.helpkeys.playground"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.playground.120x40",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_playground_120x40.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.helpkeys.playground.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Help & keys playground section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page helpkeys --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3d6490b8e2fa451e2ce20e31b4d324cd2e01850da6bb0866689eab10f85f47e1",
+        "expect_baseline": "missing",
+        "precondition": "playground caption the live widget is active at 120 by 40 after keyboard section jumps",
+        "case_id": "sc.helpkeys.playground.120x40"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.playground.80x24",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_playground_80x24.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.helpkeys.playground.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Help & keys playground section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page helpkeys --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4e2b1788b8aabe997afdefa4631e4ccb10ab9562bb3a0584cab66008042d3db0",
+        "expect_baseline": "missing",
+        "precondition": "playground at 80 by 24 before the terminal grows, with no section caption",
+        "case_id": "sc.helpkeys.playground.80x24"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.options",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_options.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9743a2873b4e49cddd4b1518679939618614e4a458a83ddc99793606e8b68a63",
+        "expect_baseline": "missing",
+        "precondition": "options is the visible Help & keys section",
+        "case_id": "sc.helpkeys.options"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.options.120x40",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_options_120x40.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.helpkeys.options.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Help & keys options section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page helpkeys --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "345d91b9ff7ce7c95a8fa6b43a8d51fb9621d6e9ffaf8d554fa760ad6ae077be",
+        "expect_baseline": "missing",
+        "precondition": "options caption one control per option is active at 120 by 40 and every control is at its default",
+        "case_id": "sc.helpkeys.options.120x40"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.options.80x24",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_options_80x24.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.helpkeys.options.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Help & keys options section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page helpkeys --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d23e82824a11cd80ffa6e421bb4446106e031db6f93c241b0d8882ff7e1167b2",
+        "expect_baseline": "missing",
+        "precondition": "options at 80 by 24 before the terminal grows, with the default controls and no caption",
+        "case_id": "sc.helpkeys.options.80x24"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.states",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_states.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e8491dc86051f5c66b4f85c952f52ba0fad8814dfcb958f0cc3460332ed16133",
+        "expect_baseline": "missing",
+        "precondition": "states is the visible Help & keys section",
+        "case_id": "sc.helpkeys.states"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.states.120x40",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_states_120x40.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.helpkeys.states.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Help & keys states section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page helpkeys --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4298a04ed293a3c1f64b46561d9aac12dafe296f13df282569f5447b2f09994e",
+        "expect_baseline": "missing",
+        "precondition": "states caption every state, drawn by the widget is active at 120 by 40",
+        "case_id": "sc.helpkeys.states.120x40"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.states.80x24",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_states_80x24.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.helpkeys.states.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Help & keys states section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page helpkeys --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c87f883629f9905ba5d1da16b59789f03461497d9910485fe2cdb1301b94381a",
+        "expect_baseline": "missing",
+        "precondition": "states at 80 by 24 before the terminal grows, showing rest, overflow, and narrow",
+        "case_id": "sc.helpkeys.states.80x24"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.rest",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_specimen_rest.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "63e654b12256587cc699b0cff11ce560cca39901c3d0f4af0e3130a82c9f9383",
+        "expect_baseline": "missing",
+        "precondition": "states grid draws the rest row as Query, Ctrl+Enter, and Esc",
+        "case_id": "sc.helpkeys.specimen.rest"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.hover",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Hover (src/ui/specimen.rs:15) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.pressed",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Pressed (src/ui/specimen.rs:17) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.focused",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Focused (src/ui/specimen.rs:19) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.focused_hover",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::FocusedHover (src/ui/specimen.rs:21) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.selected",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Selected (src/ui/specimen.rs:23) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.disabled",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Disabled (src/ui/specimen.rs:25) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.busy",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Busy (src/ui/specimen.rs:27) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.error",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Error (src/ui/specimen.rs:29) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.editing",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Editing (src/ui/specimen.rs:31) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": false
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.empty",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Empty (src/ui/specimen.rs:33) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.loading",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "states_grid (src/bin/showcase/pages/help_keys.rs:287) calls StateGrid::rows with only Rest, Overflow, and Narrow. SpecimenState::Loading (src/ui/specimen.rs:35) is omitted, so this page's StateGrid does not draw it.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.overflow",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_specimen_overflow.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8d84812fa36544e59c8abf2f8c52fcd359ec3a59337abf137b32801286e9ccb9",
+        "expect_baseline": "missing",
+        "precondition": "states grid draws the overflow row with Ctrl+Shift+F and find in every open file",
+        "case_id": "sc.helpkeys.specimen.overflow"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.specimen.narrow",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_specimen_narrow.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ef09b15ad09eefd8166f0d3d0fabda7561cbb2c395947620516c9236093631de",
+        "expect_baseline": "missing",
+        "precondition": "states grid draws the narrow row with the wrapped Ctrl+Enter statement",
+        "case_id": "sc.helpkeys.specimen.narrow"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.compare-levels",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_compare-levels_80x24.tui.pb"
+      ],
+      "route": "helpkeys",
+      "section_or_overlay": "states",
+      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
+      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
+      "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
+      "checkpoint_ids": [
+        "sc.helpkeys.compare-levels.120x40",
+        "sc.helpkeys.compare-levels.80x24"
+      ],
+      "acceptance_receipt": {
+        "case_id": "sc.helpkeys.compare-levels",
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "expect_baseline": "missing",
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "checkpoints": [
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "helpkeys",
+              "--color",
+              "truecolor",
+              "--motion",
+              "paused"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "c53cd797c64e6411d22df730abd35479419afc8913f483bb71198c551d6c4f7e",
+            "expect_baseline": "missing",
+            "precondition": "compare levels is on at 120 by 40 and the 16 color and no color bands are visible",
+            "case_id": "sc.helpkeys.compare-levels.120x40",
+            "checkpoint_id": "sc.helpkeys.compare-levels.120x40"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "helpkeys",
+              "--color",
+              "truecolor",
+              "--motion",
+              "paused"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "13ac731d80075c9798c556f55b78355be5bedcd275b1dc9014889858224ce4c0",
+            "expect_baseline": "missing",
+            "precondition": "narrow compare levels stays on at 80 by 24 before the terminal grows and before it is turned off",
+            "case_id": "sc.helpkeys.compare-levels.80x24",
+            "checkpoint_id": "sc.helpkeys.compare-levels.80x24"
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "opt.helpkeys.width",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/opt_helpkeys_width.tui.pb"
+      ],
+      "route": "helpkeys",
+      "option_values": [
+        "full",
+        "40",
+        "28"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set helpkeys.width from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Reference width effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5510ca697439cc7ca49a700ad1d9110958bb7852183a5ae30793f306edcf7d85",
+        "expect_baseline": "missing",
+        "precondition": "Reference width 28 wraps the key reference and the other options stay at their defaults",
+        "case_id": "opt.helpkeys.width"
+      }
+    },
+    {
+      "case_id": "opt.helpkeys.key_max_share",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/opt_helpkeys_key_max_share.tui.pb"
+      ],
+      "route": "helpkeys",
+      "option_values": [
+        "40",
+        "25",
+        "60"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set helpkeys.key_max_share from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Key column share effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--opt",
+          "helpkeys.key_max_share=60",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "958e9d84d6564041487eb3483afef13907277335514c16cf7c5c59c50d263865",
+        "expect_baseline": "missing",
+        "precondition": "Key column share is 60 on the playground and the other options stay at their defaults",
+        "case_id": "opt.helpkeys.key_max_share"
+      }
+    },
+    {
+      "case_id": "opt.helpkeys.gap",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/opt_helpkeys_gap.tui.pb"
+      ],
+      "route": "helpkeys",
+      "option_values": [
+        "3",
+        "6"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set helpkeys.gap from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Column gap effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--opt",
+          "helpkeys.gap=6",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "015e224c6e35647e9a302a157f288b5df114c261fe7d7a7dfcd6c3597de13375",
+        "expect_baseline": "missing",
+        "precondition": "Column gap is 6 on the playground and the other options stay at their defaults",
+        "case_id": "opt.helpkeys.gap"
+      }
+    },
+    {
+      "case_id": "opt.helpkeys.title",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/opt_helpkeys_title.tui.pb"
+      ],
+      "route": "helpkeys",
+      "option_values": [
+        "default",
+        "custom"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set helpkeys.title from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Overlay title effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--opt",
+          "helpkeys.title=custom",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6556a41522ffb035aeddcc715ba50f521d60a004bcf28e75584f0443d85e7a5a",
+        "expect_baseline": "missing",
+        "precondition": "Overlay title is custom on the playground and the other options stay at their defaults",
+        "case_id": "opt.helpkeys.title"
+      }
+    },
+    {
+      "case_id": "opt.helpkeys.max_percent",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/opt_helpkeys_max_percent.tui.pb"
+      ],
+      "route": "helpkeys",
+      "option_values": [
+        "80",
+        "60",
+        "100"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set helpkeys.max_percent from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Overlay size effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--opt",
+          "helpkeys.max_percent=100",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "de350185aeb9db93c5718db993e7651c6859e8323eded82f86c7983245a6e4d5",
+        "expect_baseline": "missing",
+        "precondition": "Overlay size is 100 on the playground and the other options stay at their defaults",
+        "case_id": "opt.helpkeys.max_percent"
+      }
+    },
+    {
+      "case_id": "opt.helpkeys.nav",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/opt_helpkeys_nav.tui.pb"
+      ],
+      "route": "helpkeys",
+      "option_values": [
+        "default",
+        "vim"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set helpkeys.nav from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Scroll keys effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--opt",
+          "helpkeys.nav=vim",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1f717d98054b2e0cf4a9ec59aa30e040b2b8d44d8a400b78afcbd7a1927c649e",
+        "expect_baseline": "missing",
+        "precondition": "Scroll keys is vim on the playground and the other options stay at their defaults",
+        "case_id": "opt.helpkeys.nav"
+      }
+    },
+    {
+      "case_id": "opt.helpkeys.keymap",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/opt_helpkeys_keymap.tui.pb"
+      ],
+      "route": "helpkeys",
+      "option_values": [
+        "default",
+        "f1"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set helpkeys.keymap from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Close keys effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--opt",
+          "helpkeys.keymap=f1",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4c1074038e87c273dd20ef690ddca5543156ae7b56697523dc4da0426d0793bd",
+        "expect_baseline": "missing",
+        "precondition": "Close keys is f1 on the playground and the other options stay at their defaults",
+        "case_id": "opt.helpkeys.keymap"
+      }
+    },
+    {
+      "case_id": "opt.helpkeys.dismiss",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/opt_helpkeys_dismiss.tui.pb"
+      ],
+      "route": "helpkeys",
+      "option_values": [
+        "light",
+        "escape"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set helpkeys.dismiss from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Dismiss effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "helpkeys",
+          "--opt",
+          "helpkeys.dismiss=escape",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9170fbf9fb8444034085877a5a23fb24ebbd060d3573ad8fca1153b1fc792c51",
+        "expect_baseline": "missing",
+        "precondition": "Dismiss is escape on the playground and the other options stay at their defaults",
+        "case_id": "opt.helpkeys.dismiss"
+      }
+    },
+    {
+      "case_id": "sc.helpkeys.help",
+      "owner_task": "S01.helpkeys",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Captured from the unchanged reference showcase and matched by the candidate.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4febcaa4858dd60637156f25399817b10f641403",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_help_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_helpkeys/sc_helpkeys_help_after.tui.pb"
+      ],
+      "route": "helpkeys",
+      "action_sequence": "Open page help and global help separately, scroll help, and dismiss it.",
+      "expected_results": "Each help layer shows its own title, and focus returns to the control that opened it.",
+      "forbidden_effects": "Help keys activate the page underneath.",
+      "checkpoint_ids": [
+        "sc.helpkeys.help.before",
+        "sc.helpkeys.help.after"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "case_id": "sc.helpkeys.help",
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "expect_baseline": "missing",
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "checkpoints": [
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "helpkeys",
+              "--color",
+              "truecolor",
+              "--motion",
+              "paused"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "fd83afcfd5e21aa65aaae85f925e438ab284228b770d016888e9720d8cd16383",
+            "expect_baseline": "missing",
+            "precondition": "playground is open and neither page help nor global help is showing",
+            "case_id": "sc.helpkeys.help.before",
+            "checkpoint_id": "sc.helpkeys.help.before"
+          },
+          {
+            "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+            "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+            "toolchain": {
+              "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+              "cargo": "1.99.1 (5f94df478 2026-08-27)",
+              "nextest": "0.9.148",
+              "tuiscotti_cli": "0.4.0",
+              "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+              "tuiscotti_tui_test": "0.2.1",
+              "mise": "2026.10.25",
+              "velnor_actions": "0.1.70",
+              "host": "aarch64-apple-darwin"
+            },
+            "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+            "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+            "fixture_args": [
+              "--page",
+              "helpkeys",
+              "--color",
+              "truecolor",
+              "--motion",
+              "paused"
+            ],
+            "env": {
+              "TERM": "xterm-256color",
+              "COLORTERM": "truecolor",
+              "LANG": "C.UTF-8",
+              "LC_ALL": "C.UTF-8",
+              "TZ": "UTC",
+              "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+              "HOLLA_NO_HISTORY": "1"
+            },
+            "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "candidate_sha256": "da21b3e107b6730b325649cf3c5faea6835eb42e56c9878bfcf4dec11a64cb38",
+            "expect_baseline": "missing",
+            "precondition": "both help layers are dismissed and focus is back on Open help overlay",
+            "case_id": "sc.helpkeys.help.after",
+            "checkpoint_id": "sc.helpkeys.help.after"
+          }
+        ]
+      }
+    }
+  ]
+}

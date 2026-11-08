@@ -1,0 +1,38 @@
+{
+  "task_id": "H06.cleanup",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h06_cleanup.rs",
+    "docs/testing/cases/H06.cleanup.json",
+    "tests/functional/baselines/pre_refactor/H06.cleanup/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/cleanup.rs",
+    "src/bin/holla/domain/cleanup.rs"
+  ],
+  "coverage_rows": [
+    "H06.cleanup.route",
+    "H06.cleanup.select",
+    "H06.cleanup.scenario.parity-delete-safety"
+  ],
+  "checkpoints": [
+    "H06.cleanup.select.120x40"
+  ],
+  "acceptance": "Only eligible, unprotected items can be selected for a dry run, Trash, or permanent delete.",
+  "status": "queued",
+  "architecture_refactor": false
+}

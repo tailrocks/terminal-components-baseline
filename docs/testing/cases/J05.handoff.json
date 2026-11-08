@@ -1,0 +1,124 @@
+{
+  "task_id": "J05.handoff",
+  "cases": [
+    {
+      "case_id": "J05.handoff.route",
+      "owner_task": "J05.handoff",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario launch-running --motion paused --frame 299 --color truecolor at 120\u00d740. for_scenario in src/bin/jackin/app.rs sets world.clock.running false when motion is Paused. start sends Go::Launch with LaunchPlan::Clean, workspace Some(1), role the-architect, agent Claude Code, and account acct-claude-work, then seeks the cockpit by frame. LaunchEvent::Ready in src/bin/jackin/screens/cockpit.rs sets activity Hardline open \u00b7 handing off to the Capsule, pushes one Running instance from instance_record, and Go::Attach. Go::Attach, while route() is still Cockpit, sets handoff to Some(0). Motion is not Reduced, so it does not call finish_handoff. route() is Route::Handoff while handoff is Some. on_tick advances that counter only while clock.running, so the frame stays handoff_stage(0), CockpitDim(1), from src/bin/jackin/rain.rs. It shows 3 running and jackin-payments-platform-b5df. sequence_key on Route::Handoff calls finish_handoff for Enter and for Esc. finish_handoff clears handoff and enters the capsule. Neither key pushes another instance: detach shows 3 running, b5df \u00b7 payments-platform, and no b5e0. A separate --motion full launch plays all HANDOFF_LEN ticks (12) and then finish_handoff. That capsule is still the one launched instance.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8d9af529ef94a96563339e57d1e75ab2090177ad",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.handoff",
+      "entry_path": "jackin --scenario launch-running --color truecolor --motion paused --frame 299 at 120x40; Enter, and Esc on a second launch. A third launch uses --motion full",
+      "return_path": "Enter or Esc finishes the paused handoff into the capsule of b5df; Ctrl+B d detaches to an inventory of 3 running"
+    },
+    {
+      "case_id": "J05.handoff.handoff",
+      "owner_task": "J05.handoff",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The case records scenario null. --scenario launch-running is the entry path. start in src/bin/jackin/app.rs opens LaunchPlan::Clean. LaunchEvent::Ready in src/bin/jackin/screens/cockpit.rs pushes one Running record from instance_record. new_instance_id in src/bin/jackin/sim/world.rs names that record jk-b5df for this fixture; the next push would be jk-b5e0. Go::Attach in src/bin/jackin/app.rs, while the route is still Cockpit and motion is Reduced, sets handoff to Some(0) and calls finish_handoff immediately. There is no fade frame. finish_handoff clears handoff and enters Route::Capsule. The checkpoints are that capsule after the pane reaches Allow edit to src/settlement/config.rs, at 120\u00d740 and then at 80\u00d724 after resize(80, 24), before resize(120, 40) and before detach. The wide frame shows payments-platform \u203a the-architect, 1 Claude Code (Work), feature/settlement-backoff, and needs input. Detach shows 3 running, b5df \u00b7 payments-platform, and jackin-payments-platform-b5df, and it does not show 4 running or b5e0. The handoff draw arm in src/bin/jackin/app.rs is not the reduced frame.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "8d9af529ef94a96563339e57d1e75ab2090177ad",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j05_handoff/j05_handoff_handoff_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j05_handoff/j05_handoff_handoff_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Under --motion reduced, capture the capsule at 120\u00d740, resize to 80\u00d724, capture it, resize back to 120\u00d740, then detach. On separate launches, skip a paused handoff with Enter and with Esc, and finish a full-motion handoff.",
+      "expected_results": "The capsule is the one launched instance, jk-b5df. Reduced motion skips the fade. Enter, Esc, and the full-motion finish leave the running count at 3.",
+      "forbidden_effects": "Skip or finish pushes a second instance. The reduced checkpoints show a fade frame or a Launch failed dialog.",
+      "checkpoint_ids": [
+        "J05.handoff.handoff.120x40",
+        "J05.handoff.handoff.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "launch-running",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "05fed10fd38e840defefc22421061ce1825f4d70926da1cfdfa790f2e8b075e9",
+        "expect_baseline": "missing",
+        "precondition": "J05.handoff.handoff.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "launch-running",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c11994e222ae2085c265b08850756f2764b69597b959fc2158b35dcfe9d0b94a",
+        "expect_baseline": "missing",
+        "precondition": "J05.handoff.handoff.narrow"
+      }
+    }
+  ]
+}

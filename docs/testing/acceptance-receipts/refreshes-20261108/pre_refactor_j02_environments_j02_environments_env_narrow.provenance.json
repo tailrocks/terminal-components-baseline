@@ -1,0 +1,134 @@
+{
+  "source_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+  "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+  "toolchain": {
+    "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "1.99.1 (5f94df478 2026-08-27)",
+    "nextest": "0.9.151 (6b3f994577a98874a2e0ea5bef77fbbab343404)",
+    "tuiscotti_cli": "0.4.0",
+    "tuiscotti_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+    "tuiscotti_tui_test": "0.2.1",
+    "mise": "2026.11.3",
+    "build_profile": "dev"
+  },
+  "binary_path": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+  "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+  "fixture_args": [
+    "--scenario",
+    "returning"
+  ],
+  "env": {},
+  "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+  "candidate_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa",
+  "expect_baseline": "3f342e4c087afe8bbb68d3b949c3671fc4f2ed7ef2eabc23262605cdd9fe20f6",
+  "precondition": "Reference-mode capture from signed source 3cbe13c; verified required-field marker and full passing environment-key workflow",
+  "session": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/functional/j02-environments-env-94969-1794109524878101000-0/session.json",
+  "expected_test_id": "pre_refactor/j02_environments/j02_environments_env_narrow",
+  "reference_session": {
+    "mode": "reference",
+    "reference_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "binary_path": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+    "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+    "args": [
+      "--scenario",
+      "returning"
+    ],
+    "cols": 120,
+    "rows": 40,
+    "color": "truecolor",
+    "platform": "macos",
+    "history": false,
+    "motion": "reduced",
+    "clock": false,
+    "TERM": "xterm-256color",
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
+  },
+  "capture_record": {
+    "binary_path": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+    "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+    "candidate_path": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/target/functional/j02-environments-env-94969-1794109524878101000-0/reference-candidates/pre_refactor_j02_environments_j02_environments_env_narrow.tui.pb",
+    "candidate_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa",
+    "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "reference_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "session_path": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/target/functional/j02-environments-env-94969-1794109524878101000-0/session.json",
+    "test_id": "pre_refactor/j02_environments/j02_environments_env_narrow"
+  },
+  "pre_accept_check": {
+    "schema": "tuiscotti.cli.v1",
+    "command": "check",
+    "status": "different",
+    "test_id": "pre_refactor/j02_environments/j02_environments_env_narrow",
+    "reason": "state",
+    "candidate_path": {
+      "encoding": "utf8",
+      "value": "/private/var/folders/cc/fzt86g2963s5865x4zxczm8h0000gn/T/tuiscotti-accept-check-4e41trom/pre_refactor/j02_environments/j02_environments_env_narrow/76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa/sample.tui.pb"
+    },
+    "candidate_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa",
+    "baseline_sha256": "3f342e4c087afe8bbb68d3b949c3671fc4f2ed7ef2eabc23262605cdd9fe20f6",
+    "output_path": {
+      "encoding": "utf8",
+      "value": "/private/var/folders/cc/fzt86g2963s5865x4zxczm8h0000gn/T/tuiscotti-accept-check-4e41trom/pre_refactor/j02_environments/j02_environments_env_narrow/76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa/checks/3f342e4c087afe8bbb68d3b949c3671fc4f2ed7ef2eabc23262605cdd9fe20f6/report.html"
+    },
+    "error_code": null
+  },
+  "cli_receipt": {
+    "schema": "tuiscotti.cli.v1",
+    "command": "accept",
+    "status": "pass",
+    "test_id": "pre_refactor/j02_environments/j02_environments_env_narrow",
+    "reason": null,
+    "candidate_path": {
+      "encoding": "utf8",
+      "value": "target/functional/j02-environments-env-94969-1794109524878101000-0/reference-candidates/pre_refactor_j02_environments_j02_environments_env_narrow.tui.pb"
+    },
+    "candidate_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa",
+    "baseline_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa",
+    "output_path": {
+      "encoding": "utf8",
+      "value": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/baselines/pre_refactor/j02_environments/j02_environments_env_narrow.tui.pb"
+    },
+    "error_code": null
+  },
+  "capture_index_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/functional/j02-environments-env-94969-1794109524878101000-0/reference-candidates/index.jsonl",
+  "source_context": {
+    "reference_source_commit": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "reference_lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "manifest_path": "docs/testing/reference-manifest-j06-pr2.json",
+    "manifest_sha256": "b81e546a33a5b5fb2b54878b30e82fb7ed2c2a5f14b80cea59b89142a1e8ece8",
+    "product_source_path": "apps/jackin/src/screens/config.rs",
+    "product_source_sha256": "8050c035a531297f1140cb05eea927541824037cf59392e9ffa69c538c6b4287",
+    "test_source_path": "tests/functional/cases/j02_environments.rs",
+    "test_source_sha256": "354df696d12d5b3622e4868c753cd1b92615fbecd7ae69df83269e8f4ff3c164",
+    "candidate_build": "cargo build --package jackin-console --features demo --bin jackin-preview --locked --offline",
+    "reference_binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421"
+  },
+  "history": {
+    "superseded_baseline": "docs/testing/acceptance-receipts/refreshes-20261108/superseded/pre_refactor_j02_environments_j02_environments_env_narrow.old.tui.pb",
+    "superseded_baseline_sha256": "3f342e4c087afe8bbb68d3b949c3671fc4f2ed7ef2eabc23262605cdd9fe20f6",
+    "historical_json": "tests/functional/baselines/pre_refactor/j02_environments/j02_environments_env_narrow.tui.json",
+    "historical_json_sha256": "ad792f2cafbd62494853b53a001b15a64e0c36810b607d9479d2ff419c99b264",
+    "historical_json_modified": false
+  },
+  "selection": {
+    "policy": "accept the single exact capture from a passing full J02 producer session in Reference mode, checked against the pinned binary, source, lock, and profile",
+    "valid_capture_count": 1,
+    "selected_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa",
+    "material_delta": "Current config form declares the environment key TextInput required(true), so the focused field shows a required * marker; the frozen JSON shows the old optional caption. Full J02 key validation, masked-value, duplicate-rejection, correction, save, role move, removal, and unchanged-stored-row assertions passed before acceptance.",
+    "failed_exploratory_capture_hashes_excluded": true
+  },
+  "test_id": "pre_refactor/j02_environments/j02_environments_env_narrow",
+  "acceptance": {
+    "expected_baseline_sha256": "3f342e4c087afe8bbb68d3b949c3671fc4f2ed7ef2eabc23262605cdd9fe20f6",
+    "accepted_baseline_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa"
+  },
+  "previous_baseline": {
+    "sha256": "3f342e4c087afe8bbb68d3b949c3671fc4f2ed7ef2eabc23262605cdd9fe20f6"
+  },
+  "candidate": {
+    "sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/refreshes-20261108/superseded/pre_refactor_j02_environments_j02_environments_env_narrow.old.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j02_environments_j02_environments_env_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j02_environments_j02_environments_env_narrow.provenance.json"
+}

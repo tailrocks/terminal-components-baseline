@@ -1,0 +1,120 @@
+{
+  "task_id": "T04.tabs",
+  "cases": [
+    {
+      "case_id": "T04.tabs.route",
+      "owner_task": "T04.tabs",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing screen shows Development and Filter connections, and Query 1 is absent. A click on Development, then Connect, finishes on Query 1 with Type SQL and status Connected to Development, after Loading schema has left the screen. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7bc8b45cba8ba2c0fbde03332d34031165bd2da3",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T04.tabs",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "Query 1 with Type SQL; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "T04.tabs.close",
+      "owner_task": "T04.tabs",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Query 1 through Query 4 hold t04_tabs_first, t04_tabs_mid, t04_tabs_last, and t04_tabs_tail. Ctrl+W on the active last tab opens Close tab with unsaved work?; Esc leaves that tab and its SQL. A left click on inactive Query 1's close glyph, confirmed with Close anyway, removes t04_tabs_first and keeps the same active tab on t04_tabs_tail. Each remaining tab, when activated, shows only its own marker. Ctrl+W on active Query 2 makes the right neighbour Query 3 active with t04_tabs_last. That screen is captured at 120×40 and at 80×24, with the narrow shot taken before the terminal returns to 120×40. Closing the active last tab makes the left neighbour the only tab, still showing t04_tabs_last. Closing that only tab shows No open tabs. The driver has no middle-click, so the pointer close is the close glyph and the keyboard close is Ctrl+W.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7bc8b45cba8ba2c0fbde03332d34031165bd2da3",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t04_tabs/t04_tabs_close_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t04_tabs/t04_tabs_close_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Close tabs by pointer, keyboard, and middle-click where supported.",
+      "expected_results": "The remaining tab titles and SQL values are the ones that were not closed. Active fallback is the documented neighbour.",
+      "forbidden_effects": "A reused index shows a different tab's SQL.",
+      "checkpoint_ids": [
+        "T04.tabs.close.120x40",
+        "T04.tabs.close.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "bb20e29b894b036029af723da866ab5cc8a4ae3cedd6d5fb38fd9de9b53ab583",
+        "expect_baseline": "missing",
+        "precondition": "T04.tabs.close.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f7ddd8f2c19471d2b2bf47c7ecac7629ea8ff29c9f619951b166f6e428a60ada",
+        "expect_baseline": "missing",
+        "precondition": "T04.tabs.close.narrow"
+      }
+    }
+  ]
+}

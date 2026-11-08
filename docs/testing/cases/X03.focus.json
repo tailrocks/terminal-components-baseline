@@ -1,0 +1,124 @@
+{
+  "task_id": "X03.focus",
+  "cases": [
+    {
+      "case_id": "X03.focus.route",
+      "owner_task": "X03.focus",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "showcase --page focus at 120×40 in truecolor with reduced motion opens Focus & navigation. parse_page in src/bin/showcase/main.rs calls PageId::from_name, and PAGE_ALIASES in src/bin/showcase/app.rs maps focus to PageId::FocusNavigation. FocusNavPage::blurb is The focus ring, fallback, nav keys, key bindings, input and keyboard protocol. The header ellipsizes that line, and the visible prefix is The focus ring, fallback, nav keys. Theme::gutter_symbol paints glyphs.focus_bar (▎) in phosphor Rgb(72, 224, 84) while VisualState.focused is set and the control is not disabled. The screen has exactly one such cell, on the sidebar row. The process is still running, and finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f625c61cd793b0aa4de920d2740ebbb869f74bc0",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X03.focus",
+      "entry_path": "showcase --page focus --color truecolor --motion reduced at 120x40",
+      "return_path": "finish sends Ctrl+Q and the process exits 0"
+    },
+    {
+      "case_id": "X03.focus.focus",
+      "owner_task": "X03.focus",
+      "application": "cross",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Tab on --page focus moves the single phosphor ▎ from the sidebar row onto the Playground section tab. The previous cell is no longer ▎, and the screen still has one. That move ends with kill_child. The checkpoint is showcase --page dialogs. Before the dialog, the sidebar Dialogs row is fg Rgb(72, 224, 84) bg Rgb(23, 63, 28), Theme accent and accent_bg, and the single ▎ is on that row. Clicking Delete branch opens Dialog::destructive titled Delete branch?. initial_focus is the Cancel button, and Button::render paints the gutter in the cell before C. While the dialog is open the screen has exactly one ▎, on Cancel, fg Rgb(72, 224, 84) bg Rgb(39, 39, 42). The sidebar Dialogs cell is then fg Rgb(138, 138, 138) bg Rgb(39, 39, 42), text_muted and surface_overlay. The accent fill is gone. The cell at column 1 of that row is a space. Interaction::focused is false while focus_hidden is set. Showcase page_under_layer includes modal_open, and the shell passes that to RenderCtx::page_under_layer. modal_backdrop_with replaces a focus bar under the dim with a space. Theme::inactive_look maps Accent to Neutral when VisualState.backdrop is set, and Theme::backdrop maps the accent background to surface_overlay. The 120×40 frame is stored first. The terminal then resizes to 80×24, and that frame is stored before the return to 120×40. Both frames contain Delete branch?, feat/rate-limit, and cannot be undone, and exactly one ▎ on Cancel. At 80×24 the dialog border │ covers the tail of the sidebar Dialogs row. The word Dialogs stays visible at fg Rgb(138, 138, 138) bg Rgb(39, 39, 42). Esc cancels the dialog through Dismiss::LIGHT, Confirm run is back, and finish() exits 0. The check compares the stored frames. The pair comes from the unchanged reference showcase sha256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b. On --page pickers, clicking Open quickly opens the quick picker. The single ▎ is the search field, bg Rgb(30, 30, 34), painted by Picker with gutter_symbol forced focused. The Cargo.toml cursor row is a fill, bg Rgb(47, 90, 168), Plane::Highlight for Kind::CursorRow(CursorStyle::Fill). The gutter slot on that row is a space. option_list::paint_rows uses RowLook::Fill. src/ui/specimen.rs depict_focus only restyles a bar a specimen already painted. That list does not grow a second ▎. The assertion ends with kill_child. Tablepro opens on Filter connections with exactly one ▎ on the Personal tree row. Holla --scenario activities-multi, with HOLLA_NO_HISTORY=1, has exactly one ▎ on Search actions. Jackin --scenario hard-cases, with the clock off and no --frame, has exactly one ▎ on the selected Current directory row, fg Rgb(72, 224, 84) bg Rgb(23, 63, 28). Those three end with kill_child. Every measured screen has one ▎.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f625c61cd793b0aa4de920d2740ebbb869f74bc0",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x03_focus/x03_focus_focus_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x03_focus/x03_focus_focus_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Focus a control, open an overlay over a selected list, and show an owner-controlled cursor.",
+      "expected_results": "One gutter is visible in the top layer. The covered selection is neutral. The owner cursor is a fill without a second gutter.",
+      "forbidden_effects": "The page under the overlay keeps its gutter.",
+      "checkpoint_ids": [
+        "X03.focus.focus.120x40",
+        "X03.focus.focus.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "dialogs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "df0c15abf8d0e659a4dec53f4ab95330c7390b434009bb423e7d28d90d09959f",
+        "expect_baseline": "missing",
+        "precondition": "X03.focus.focus.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "dialogs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "38e8339bd38be0ad44029422859b68bbdd6dd86ff72bfb6576ba2868bad4d57c",
+        "expect_baseline": "missing",
+        "precondition": "X03.focus.focus.narrow"
+      }
+    }
+  ]
+}

@@ -607,10 +607,11 @@ impl FilesPage {
     fn open_jump(&mut self, w: &World, cx: &mut Cx) {
         let mut p = Picker::new(WidgetId::of("files.jump"), "Go to path");
         p.placeholder = "path · ~/… · relative to this folder".into();
-        p.list.width = (74, 74);
+        p.set_width(74);
         p.scope = Some(w.location.short(&self.dir));
         p.empty_text = "type a path or a name".into();
-        p.set_items(vec![]);
+        p.set_items(vec![])
+            .unwrap_or_else(|error| p.report_item_error(error));
         self.jump_error = None;
         cx.open(p, LayerTag::new("files-jump"));
     }

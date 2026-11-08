@@ -1,0 +1,24 @@
+ ▪ Junie Design system  App shell › Quit & leave          i Inspector   ? Help  
+                                                                                
+ Components      54  Quit & leave  QuitKeys, the leave guard with Clean, Unsav… 
+ ──────────────────                                                             
+    Overview          Playground    Options    States                           
+  ▾ App shell        ━━━━━━━━━━━━━──────────────────────────────────────────────
+      Chrome                                                                    
+      Status & hi…     Document                                    exporting   ┃
+      Breadcr╭──────────────────────────────────────────────── × ─╮─────────   ┃
+      Help & │                                                    │            ┃
+    › Quit & │  Still running                                     │            ┃
+      Focus &│                                                    │            ┃
+  ▸ Inputs & │  the export still running. Leaving stops it.       │            ┃
+  ▸ Tables   │                                                    │            ┃
+  ▸ Navigatio│                          ▎Stay    Stop and leave   │            ┆
+  ▸ Overlays │                                                    │            ┆
+  ▸ Feedback ╰────────────────────────────────────────────────────╯            ┆
+  ▸ Layout             LeaveGuard    save: Cancel Discard Save                 ┆
+  ▸ Text & code        Last request  —                                         ┆
+  ▸ Screens            Last answer   —                                         ┆
+                                                                               ┆
+                                                                               ┆
+                                                                                
+ ←→ Choose  Enter Stay  Esc Stay                                 Export running 

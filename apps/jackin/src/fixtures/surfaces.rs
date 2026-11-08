@@ -19,6 +19,35 @@ use crate::world::World;
 
 impl Surfaces {
     pub fn demo(scenario: Scenario) -> Self {
+        let mut tuples = vec![
+            crate::domain::tuple::TupleOffer::supported(
+                Agent::Codex,
+                crate::domain::agent::Provider::OpenAi,
+                &["gpt-5-codex"],
+            ),
+            crate::domain::tuple::TupleOffer::supported(
+                Agent::Omp,
+                crate::domain::agent::Provider::OpenCode,
+                &["omp-default"],
+            ),
+            crate::domain::tuple::TupleOffer::supported(
+                Agent::ClaudeCode,
+                crate::domain::agent::Provider::Anthropic,
+                &["claude-sonnet"],
+            ),
+        ];
+        if scenario == Scenario::CapsuleMulti {
+            tuples.push(crate::domain::tuple::TupleOffer::supported(
+                Agent::OpenCode,
+                crate::domain::agent::Provider::OpenCode,
+                &["opencode-0.5.11"],
+            ));
+            tuples.push(crate::domain::tuple::TupleOffer::supported(
+                Agent::GrokBuild,
+                crate::domain::agent::Provider::XAi,
+                &["grok-4-code"],
+            ));
+        }
         Self {
             roles: None,
             docker: None,
@@ -29,23 +58,7 @@ impl Surfaces {
             launch_role: LaunchRoleRule::Demo,
             wizard: None,
             fixed: None,
-            tuples: vec![
-                crate::domain::tuple::TupleOffer::supported(
-                    Agent::Codex,
-                    crate::domain::agent::Provider::OpenAi,
-                    &["gpt-5-codex"],
-                ),
-                crate::domain::tuple::TupleOffer::supported(
-                    Agent::Omp,
-                    crate::domain::agent::Provider::OpenCode,
-                    &["omp-default"],
-                ),
-                crate::domain::tuple::TupleOffer::supported(
-                    Agent::ClaudeCode,
-                    crate::domain::agent::Provider::Anthropic,
-                    &["claude-sonnet"],
-                ),
-            ],
+            tuples,
             version: "0.9.2".into(),
             cockpit_version: Some("0.6.4 · preview".into()),
             config_path: None,

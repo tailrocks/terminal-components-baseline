@@ -1,0 +1,33 @@
+{
+  "task_id": "G03",
+  "wave": "B",
+  "kind": "prerequisite",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/showcase.rs",
+    "tests/functional/tablepro.rs",
+    "tests/functional/holla.rs",
+    "tests/functional/jackin.rs",
+    "tests/functional/lifecycle.rs",
+    "tests/functional/visual.rs"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    "AGENTS.md",
+    "docs/GOAL.md",
+    "docs/functional-testing.md",
+    "tests/functional/support.rs",
+    "src/catalog.rs"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "Each repaired test name matches the actions performed. Keyboard activation starts from a fresh control. Sort compares row identities. The form resets and submits. The dialog cycles focus. TablePro, Holla, and Jackin assertions require the real result, and narrow checkpoints are captured before the terminal grows.",
+  "status": "queued",
+  "architecture_refactor": false
+}

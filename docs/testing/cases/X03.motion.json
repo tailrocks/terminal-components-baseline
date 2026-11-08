@@ -1,0 +1,128 @@
+{
+  "task_id": "X03.motion",
+  "cases": [
+    {
+      "case_id": "X03.motion.route",
+      "owner_task": "X03.motion",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "showcase --page hints --frame 0 --color truecolor --motion paused at 120×40. PAGE_ALIASES maps hints to StatusHints (src/bin/showcase/app.rs). The page title is Status & hints and the blurb starts The footer hint bar (src/bin/showcase/pages/status_hints.rs). The header row contains that title and blurb and does not contain Text areas or Splits & stacks. The process is still running, and finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d3ad3bcf8c6f99bda7f797a682deea90952144be",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X03.motion",
+      "entry_path": "showcase --page hints --frame 0 --color truecolor --motion paused at 120x40",
+      "return_path": "finish sends Ctrl+Q and the process exits 0"
+    },
+    {
+      "case_id": "X03.motion.motion",
+      "owner_task": "X03.motion",
+      "application": "cross",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Paused showcase --page hints --frame 0 --color truecolor --motion paused at 120×40. The motion row is below the fold. One wheel on Layers, amount 2, reveals Indexing idle. The spinner is ⠋, spinner_frame(0) (src/widgets/progress.rs). The painted motion-note prefix is full: the spinner turns. Two observations are cell-identical. The terminal then resizes to 80×24. The stored narrow frame is taken while the title Status & hints is still on screen, after two cell-identical observations, and before the return to 120×40. The narrow frame does not show the indexing row. The page returns to 120×40 with Indexing idle and ⠋, then finish() exits 0. check_stored compares those two stored frames. --frame 4 selects ⠼, which differs from ⠋, and two observations match. No third baseline. Reduced --frame 0 is idle on ⠋. Run job sets job to Some(0.0) (src/bin/showcase/pages/status_hints.rs). The indexing label leaves Indexing idle and the percent advances, while the spinner stays ⠋, because Reduced ticks and does not animate (src/motion.rs). Those moving frames are not stored. Full motion after Run job shows two different spinner glyphs. That frame is not stored: on_tick in src/bin/showcase/app.rs increments tick only while the page is animating and motion.animates(). Jackin --scenario launch-failure --motion paused, with the test clock on and no --frame. advance_clock(33) is one cockpit tick (rain::TICK_MS). LaunchRun::advance's first tick changes the activity from Preparing launch… to Resolving launch identity… (src/bin/jackin/sim/launch.rs). CockpitScreen::on_tick steps while clock.running, which clock::run_step sets for the paste (src/bin/jackin/screens/cockpit.rs, src/bin/jackin/app.rs). A second observation matches. The advance-clock paste is absent. No jackin baseline. Intro rain on_tick returns immediately while paused (src/bin/jackin/rain.rs). TablePro at 120×40 opens Filter connections under the TablePro header. The resting screen has no spinner. render_spinner runs only while Connecting (src/bin/tablepro/connections.rs). Paused and reduced text match. The resting screen does not move. Holla --scenario first-use paused shows discovering … · 0 of 6 with ⠋. Reduced sources_for zeroes source delays (src/bin/holla/domain/fixtures.rs), so that line is absent and there is no spinner. No extra baselines.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d3ad3bcf8c6f99bda7f797a682deea90952144be",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x03_motion/x03_motion_motion_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x03_motion/x03_motion_motion_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Capture paused and reduced frames with the existing frame controls. Capture a Jackin phase with the clock hook. Do not add a Showcase clock hook.",
+      "expected_results": "Paused frames are stable. A Showcase transient that cannot be frozen is BLOCKED, not accepted as a changing baseline.",
+      "forbidden_effects": "A changing frame is stored as the expected image.",
+      "checkpoint_ids": [
+        "X03.motion.motion.120x40",
+        "X03.motion.motion.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "hints",
+          "--frame",
+          "0",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8a6f1ee56587f01f71460a3a92b0b8f22bfea021e9161bbf1ba4675a66080cd5",
+        "expect_baseline": "missing",
+        "precondition": "X03.motion.motion.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "hints",
+          "--frame",
+          "0",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0749bb20e6a398b57f039518cc58ac60378a7cf9868f1266fa489487e3aa638c",
+        "expect_baseline": "missing",
+        "precondition": "X03.motion.motion.narrow"
+      }
+    }
+  ]
+}

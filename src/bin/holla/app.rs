@@ -379,7 +379,8 @@ impl App {
         {
             let items = self.activity_picker_items();
             if let Some(p) = self.modals.top_as_mut::<Picker>() {
-                p.replace_items(items);
+                p.replace_items(items)
+                    .unwrap_or_else(|error| p.report_item_error(error));
             }
         }
         for entry in self.modals.iter_mut() {
@@ -954,11 +955,13 @@ impl App {
     fn open_activities(&mut self) {
         let items = self.activity_picker_items();
         let mut p = Picker::new(WidgetId::of("activities"), "Activities").choose_hint("Switch");
-        p.set_searchable(false);
-        p.list.width = (70, 70);
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_width(70);
         p.empty_text = "Nothing has been started yet".into();
         p.scope = Some(format!("{} live", self.world.live_activities()));
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         self.open_layer(Box::new(p), LayerTag::new("activities"));
     }
 
@@ -1126,8 +1129,8 @@ impl App {
                 if let ModalResult::Picked(i) = result {
                     let row = entry
                         .get::<Picker>()
-                        .and_then(|p| p.items.get(i))
-                        .map(|it| (it.key, it.group == "plans"));
+                        .and_then(|p| p.items().get(i))
+                        .and_then(|it| it.key.map(|key| (key, it.group == "plans")));
                     match row {
                         Some((k, true)) => {
                             let plans = self.world.plans.iter();
@@ -1205,7 +1208,8 @@ impl App {
         if let Some((items, status)) = rows
             && let Some(p) = self.modals.top_as_mut::<Picker>()
         {
-            p.replace_items(items);
+            p.replace_items(items)
+                .unwrap_or_else(|error| p.report_item_error(error));
             p.status = status;
         }
     }

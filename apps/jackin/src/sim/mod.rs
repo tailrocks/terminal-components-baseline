@@ -36,6 +36,12 @@ enum LaunchRule {
     Guarded,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum RefreshOverride {
+    Healthy,
+    BrokerDown,
+}
+
 #[derive(Debug)]
 pub struct SimBackend {
     launch: LaunchRule,
@@ -45,7 +51,7 @@ pub struct SimBackend {
     openshell: bool,
     accountless_tuple: Option<TupleIdentity>,
     next_workspace_id: AtomicU32,
-    refresh_fails: bool,
+    refresh_overrides: Vec<(AccountId, RefreshOverride)>,
     index_fails_once: AtomicBool,
     takeover: Mutex<Option<Takeover>>,
 }
@@ -67,7 +73,7 @@ impl Default for SimBackend {
             openshell: false,
             accountless_tuple: None,
             next_workspace_id: AtomicU32::new(100),
-            refresh_fails: false,
+            refresh_overrides: Vec::new(),
             index_fails_once: AtomicBool::default(),
             takeover: Mutex::new(None),
         }
@@ -111,7 +117,10 @@ impl SimBackend {
         Arc::new(SimBackend {
             save_fails_once: AtomicBool::new(true),
             launch: LaunchRule::HardCases,
-            refresh_fails: true,
+            refresh_overrides: vec![
+                ("acct-claude-personal".into(), RefreshOverride::BrokerDown),
+                ("acct-claude-work".into(), RefreshOverride::Healthy),
+            ],
             index_fails_once: AtomicBool::new(true),
             takeover: Mutex::new(Some(Takeover {
                 at_ms: 45_000,
@@ -381,11 +390,20 @@ impl Backend for SimBackend {
                 account, source, ..
             } => {
                 let refreshed = world.accounts.get(account).map(|a| {
+                    let override_for_account = self
+                        .refresh_overrides
+                        .iter()
+                        .find_map(|(id, override_)| (id == account).then_some(override_));
                     provider::refresh(
                         a,
                         world.now_secs(),
-                        world.op.session() != OpSession::SignedIn,
-                        self.refresh_fails,
+                        match override_for_account {
+                            Some(RefreshOverride::Healthy) => false,
+                            Some(RefreshOverride::BrokerDown) | None => {
+                                world.op.session() != OpSession::SignedIn
+                            }
+                        },
+                        matches!(override_for_account, Some(RefreshOverride::BrokerDown)),
                     )
                 });
                 Some(Msg::AccountRefreshed {

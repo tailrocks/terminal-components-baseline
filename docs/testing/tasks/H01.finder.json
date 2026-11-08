@@ -1,0 +1,42 @@
+{
+  "task_id": "H01.finder",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h01_finder.rs",
+    "docs/testing/cases/H01.finder.json",
+    "tests/functional/baselines/pre_refactor/H01.finder/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/finder.rs",
+    "src/bin/holla/domain/ranking.rs",
+    "src/bin/holla/app.rs"
+  ],
+  "coverage_rows": [
+    "H01.finder.route",
+    "H01.finder.discovery",
+    "H01.finder.scenario.first-use",
+    "H01.finder.scenario.rust-dirty",
+    "H01.finder.scenario.monorepo-root",
+    "H01.finder.scenario.parity-discovery"
+  ],
+  "checkpoints": [
+    "H01.finder.discovery.120x40"
+  ],
+  "acceptance": "Discovery stages and query edits keep the selected identity and do not run a previous result on an empty list.",
+  "status": "queued",
+  "architecture_refactor": false
+}

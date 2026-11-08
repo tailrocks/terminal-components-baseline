@@ -1,0 +1,37 @@
+{
+  "task_id": "H01.why",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h01_why.rs",
+    "docs/testing/cases/H01.why.json",
+    "tests/functional/baselines/pre_refactor/H01.why/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/finder.rs",
+    "src/bin/holla/domain/ranking.rs"
+  ],
+  "coverage_rows": [
+    "H01.why.route",
+    "H01.why.why"
+  ],
+  "checkpoints": [
+    "H01.why.why.120x40"
+  ],
+  "acceptance": "Why explains the selected item.",
+  "status": "queued",
+  "architecture_refactor": false
+}

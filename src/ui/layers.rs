@@ -157,7 +157,7 @@ impl<R: From<LayerResult> + 'static, W: ?Sized + 'static> Layer<R, W> for Picker
         }
     }
     fn on_wheel(&mut self, delta: i32, _: Position) -> Outcome {
-        Scrollable::wheel(&mut self.list, Axis::Vertical, delta).outcome()
+        self.wheel(Axis::Vertical, delta)
     }
     fn on_paste(&mut self, text: &str) -> Outcome {
         let (o, ev) = Picker::on_paste(self, text);

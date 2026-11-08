@@ -1,0 +1,71 @@
+{
+  "schema": "tcb.baseline-refresh-provenance.v1",
+  "test_id": "pre_refactor/x02_resize/x02_resize_resize_narrow",
+  "acceptance": {
+    "command": "tuiscotti accept --json",
+    "cli_path": "/Users/donbeave/.local/share/mise/installs/cargo-https-github-com-tailrocks-tuiscotti/rev-92ef2d9ee082b35f68e066c5129fedbf07675a80/bin/tuiscotti",
+    "cli_sha256": "4233b4a75a6483251614550441688ad0b0acdd213cb2c719319abf58bfeda356",
+    "cli_version": "tuiscotti 0.4.0",
+    "expected_baseline_sha256": "98bb1f91be07146324a0feb278a4d46ccd1d0db185b5880930ac180ab199a96d",
+    "candidate_sha256": "0e8113caa6712e851c789ec2dff69642e758427ad345168b525ba7557ac120a4",
+    "accepted_baseline_sha256": "0e8113caa6712e851c789ec2dff69642e758427ad345168b525ba7557ac120a4",
+    "transaction_receipt": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_x02_resize_resize_narrow.accept.json"
+  },
+  "candidate": {
+    "path": "target/functional/x02-resize-checkpoint-86204-1794097375597914000-5/check-artifacts/pre_refactor/x02_resize/x02_resize_resize_narrow/0e8113caa6712e851c789ec2dff69642e758427ad345168b525ba7557ac120a4/sample.tui.pb",
+    "sha256": "0e8113caa6712e851c789ec2dff69642e758427ad345168b525ba7557ac120a4",
+    "evidence_directory": "target/functional/x02-resize-checkpoint-86204-1794097375597914000-5",
+    "session": "target/functional/x02-resize-checkpoint-86204-1794097375597914000-5/session.json",
+    "binary": "target/functional/x02-resize-checkpoint-86204-1794097375597914000-5/binary.json",
+    "actions": "target/functional/x02-resize-checkpoint-86204-1794097375597914000-5/actions.txt",
+    "producer_mode": "candidate",
+    "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/debug/showcase",
+    "binary_sha256": "d16bac2592c08c2021e8f8735561c2aee390c0e27bcc61ada88b931cb2b94672",
+    "fixture_args": [
+      "--page",
+      "pickers"
+    ],
+    "color": "truecolor",
+    "motion": "reduced",
+    "clock": false,
+    "size": [
+      80,
+      24
+    ],
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+    "capture_count": 1,
+    "visual_state_diff_cell_total": 288,
+    "selection_reason": "current Pickers playground screenshot has passed test assertions for visible query/result and requested terminal size"
+  },
+  "source_context": {
+    "git_head": "9409215747997a473dab138b974c5a718fcf1271",
+    "test_source_path": "tests/functional/cases/x02_resize.rs",
+    "test_source_sha256": "e8be0e22b47f8c1ff03e8386375f9f3d5effa56d8231c58faa8d6f0ecc393f70",
+    "candidate_source_cargo_lock_path": "Cargo.lock",
+    "candidate_source_cargo_lock_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "candidate_build_invocation": "mise exec -- cargo nextest run -p junie-tui --test functional -E test(x02_resize_resize) --locked --offline",
+    "reference_manifest_path": "docs/testing/reference-manifest.json",
+    "reference_manifest_sha256": "d8aabe881c188520e53960efe3cedffb77b1b7a7bf763f6138c69858db01cc70",
+    "reference_manifest_lockfile_sha256": "924da8b2cf72e2ed3151abff9c399fc9591e33b840f7002cbbe63cdfa4848091",
+    "session_lockfile_sha256_semantics": "session.json lockfile_sha256 records pinned reference identity; candidate source Cargo.lock SHA is recorded separately."
+  },
+  "history": {
+    "superseded_baseline": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/x02_resize/x02_resize_resize_narrow.tui.pb",
+    "superseded_baseline_sha256": "98bb1f91be07146324a0feb278a4d46ccd1d0db185b5880930ac180ab199a96d",
+    "historical_json": "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_narrow.tui.json",
+    "historical_json_sha256": "317b4223bf623190e6e1e777b25421fe5a34b4e6dfafca2ea1156dcd5fd4f208",
+    "historical_json_modified": false
+  },
+  "selection": {
+    "policy": "accept exact fresh current-producer capture after full-screen visual inspection and successful semantic/size assertions",
+    "candidate_count": 1,
+    "distinct_visual_diff_signatures": 1,
+    "material_delta": "current Pickers playground shows added Multi select and Multi search controls and associated command/remote detail rows behind the same open quick picker; query, matching result row, modal scope and requested size remain correct. No pixel comparison."
+  },
+  "previous_baseline": {
+    "sha256": "98bb1f91be07146324a0feb278a4d46ccd1d0db185b5880930ac180ab199a96d"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/x02_resize/x02_resize_resize_narrow.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_x02_resize_resize_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_x02_resize_resize_narrow.provenance.json"
+}

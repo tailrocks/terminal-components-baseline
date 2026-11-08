@@ -1,4 +1,7 @@
 pub const PICKER_COVERAGE: &[(&str, &str)] = &[
+    ("widgets::picker::Picker::report_item_error", "pickers"),
+    ("widgets::picker::Picker::items", "pickers"),
+    ("widgets::picker::Picker::list", "pickers"),
     ("widgets::picker::PickerStatus", "pickers"),
     ("widgets::picker::PickerStatus::Ready", "pickers"),
     ("widgets::picker::PickerStatus::Loading", "pickers"),
@@ -49,6 +52,42 @@ pub const PICKER_COVERAGE: &[(&str, &str)] = &[
 ];
 
 pub const PICKER_ALLOWLIST: &[(&str, &str)] = &[
+    (
+        "widgets::picker::Picker::wheel",
+        "The showcase uses builder configuration and layer-driven interaction; this method serves application or layer plumbing.",
+    ),
+    (
+        "widgets::picker::Picker::set_chosen",
+        "The showcase uses builder configuration and layer-driven interaction; this method serves application or layer plumbing.",
+    ),
+    (
+        "widgets::picker::Picker::set_placement",
+        "The showcase configures placement through its builder; no concrete app uses this setter.",
+    ),
+    (
+        "widgets::picker::Picker::set_max_rows",
+        "The showcase uses builder configuration and layer-driven interaction; this method serves application or layer plumbing.",
+    ),
+    (
+        "widgets::picker::Picker::set_width",
+        "The showcase uses builder configuration and layer-driven interaction; this method serves application or layer plumbing.",
+    ),
+    (
+        "widgets::picker::PickerItemsError::UnknownVisibleKey",
+        "Invalid item identities are exercised by picker validation tests; the showcase uses valid picker inputs.",
+    ),
+    (
+        "widgets::picker::PickerItemsError::MissingStableKey",
+        "Invalid item identities are exercised by picker validation tests; the showcase uses valid picker inputs.",
+    ),
+    (
+        "widgets::picker::PickerItemsError::DuplicateKey",
+        "Invalid item identities are exercised by picker validation tests; the showcase uses valid picker inputs.",
+    ),
+    (
+        "widgets::picker::PickerItemsError",
+        "Invalid item identities are exercised by picker validation tests; the showcase uses valid picker inputs.",
+    ),
     (
         "widgets::picker::DEFAULT_GLYPH",
         "Every showcase row sets its glyph to show the list style explicitly, so the default glyph is not visible in this page.",

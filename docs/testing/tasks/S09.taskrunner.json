@@ -1,0 +1,77 @@
+{
+  "task_id": "S09.taskrunner",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s09_taskrunner.rs",
+    "docs/testing/cases/S09.taskrunner.json",
+    "tests/functional/baselines/pre_refactor/S09.taskrunner/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/taskrunner.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.taskrunner.route",
+    "sc.taskrunner.playground",
+    "sc.taskrunner.playground.120x40",
+    "sc.taskrunner.playground.80x24",
+    "sc.taskrunner.options",
+    "sc.taskrunner.options.120x40",
+    "sc.taskrunner.options.80x24",
+    "sc.taskrunner.states",
+    "sc.taskrunner.states.120x40",
+    "sc.taskrunner.states.80x24",
+    "sc.taskrunner.specimen.rest",
+    "sc.taskrunner.specimen.hover",
+    "sc.taskrunner.specimen.pressed",
+    "sc.taskrunner.specimen.focused",
+    "sc.taskrunner.specimen.focused_hover",
+    "sc.taskrunner.specimen.selected",
+    "sc.taskrunner.specimen.disabled",
+    "sc.taskrunner.specimen.busy",
+    "sc.taskrunner.specimen.error",
+    "sc.taskrunner.specimen.editing",
+    "sc.taskrunner.specimen.empty",
+    "sc.taskrunner.specimen.loading",
+    "sc.taskrunner.specimen.overflow",
+    "sc.taskrunner.specimen.narrow",
+    "sc.taskrunner.compare-levels",
+    "opt.taskrunner.expanded",
+    "opt.taskrunner.indent",
+    "opt.taskrunner.env_glyphs",
+    "opt.taskrunner.tree_meta",
+    "opt.taskrunner.follow",
+    "opt.taskrunner.wrap",
+    "sc.taskrunner.pipeline"
+  ],
+  "checkpoints": [
+    "sc.taskrunner.playground.120x40",
+    "sc.taskrunner.playground.80x24",
+    "sc.taskrunner.options.120x40",
+    "sc.taskrunner.options.80x24",
+    "sc.taskrunner.states.120x40",
+    "sc.taskrunner.states.80x24",
+    "sc.taskrunner.compare-levels",
+    "sc.taskrunner.pipeline"
+  ],
+  "acceptance": "Open Task runner by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

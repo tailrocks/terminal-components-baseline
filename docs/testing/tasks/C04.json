@@ -1,0 +1,26 @@
+{
+  "task_id": "C04",
+  "wave": "F",
+  "kind": "closing",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "C03"
+  ],
+  "owned_files": [
+    "docs/testing/refactor-protection.md",
+    "docs/audits/refactor-test-readiness.md"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    ".velnor/config.toml",
+    "docs/ci.md"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "The report starts with READY only when every required row is PASS at the recorded HEAD. Otherwise it starts with BLOCKED and lists the gaps and resume steps.",
+  "status": "queued",
+  "architecture_refactor": false
+}

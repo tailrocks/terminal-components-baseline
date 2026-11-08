@@ -676,7 +676,7 @@ impl CapsuleScreen {
             Intent::Split(SplitDir::Vertical, true) => "Split ↑ Above".into(),
         };
         let mut p = Picker::new(WidgetId::of("capsule.agent"), &title);
-        p.list.width = (72, 72);
+        p.set_width(72);
         let ws = w
             .instance(&self.instance)
             .and_then(|i| i.workspace)
@@ -739,7 +739,8 @@ impl CapsuleScreen {
                 .disabled(shell_refused.is_some()),
         );
         self.picker_agents.push(None);
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         cx.open(p, LayerTag::new("agent"));
     }
 
@@ -874,10 +875,12 @@ impl CapsuleScreen {
         let label = agent
             .map(|a| a.label().to_owned())
             .unwrap_or("Shell".into());
-        match account.and_then(|id| w.accounts.get(&id).map(|a| a.display_name.clone())) {
-            Some(acc) => cx.status(format!("Started {label} · account {acc}")),
-            None => cx.status(format!("Started {label}")),
-        }
+        let notice =
+            match account.and_then(|id| w.accounts.get(&id).map(|a| a.display_name.clone())) {
+                Some(acc) => format!("Started {label} · account {acc}"),
+                None => format!("Started {label}"),
+            };
+        cx.status(notice);
         crate::world::refresh_snapshots(w);
         w.refresh_now();
     }
@@ -978,11 +981,12 @@ impl CapsuleScreen {
 
     fn open_palette(&mut self, w: &World, cx: &mut Cx) {
         let mut p = Picker::new(WidgetId::of("capsule.palette"), "Command palette");
-        p.list.width = (60, 60);
+        p.set_width(60);
         p.placeholder = "Type to filter commands…".into();
         p.empty_text = "No matching commands".into();
         self.palette_cmds = PALETTE.to_vec();
-        p.set_items(self.palette_items("", w));
+        p.set_items(self.palette_items("", w))
+            .unwrap_or_else(|error| p.report_item_error(error));
         p.scope = Some(format!("{} of 20", PALETTE.len()));
         cx.open(p, LayerTag::new("palette"));
     }
@@ -1074,14 +1078,16 @@ impl CapsuleScreen {
             Command::NewTab => self.spawn_flow(Intent::NewTab, w, cx),
             Command::SplitPane => {
                 let mut p = Picker::new(WidgetId::of("capsule.split"), "Split pane");
-                p.set_searchable(false);
-                p.list.width = (40, 40);
+                p.set_searchable(false)
+                    .expect("disabling picker search is valid");
+                p.set_width(40);
                 p.set_items(
                     ["→ Right", "← Left", "↓ Below", "↑ Above"]
                         .iter()
                         .map(|l| Item::new(*l).glyph(" "))
                         .collect(),
-                );
+                )
+                .unwrap_or_else(|error| p.report_item_error(error));
                 cx.open(p, LayerTag::new("split"));
             }
             Command::ZoomPane => self.toggle_zoom(w, cx),
@@ -1130,14 +1136,16 @@ impl CapsuleScreen {
                     self.close_pane_flow(true, w, cx);
                 } else {
                     let mut p = Picker::new(WidgetId::of("capsule.closetarget"), "Close");
-                    p.set_searchable(false);
-                    p.list.width = (40, 40);
+                    p.set_searchable(false)
+                        .expect("disabling picker search is valid");
+                    p.set_width(40);
                     p.set_items(
                         ["Close pane", "Close tab"]
                             .iter()
                             .map(|l| Item::new(*l).glyph(" "))
                             .collect(),
-                    );
+                    )
+                    .unwrap_or_else(|error| p.report_item_error(error));
                     cx.open(p, LayerTag::new("closetarget"));
                 }
             }

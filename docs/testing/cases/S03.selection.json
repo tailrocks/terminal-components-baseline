@@ -1,0 +1,2046 @@
+{
+  "task_id": "S03.selection",
+  "cases": [
+    {
+      "case_id": "sc.selection.route",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "--page selection opens the playground with the sidebar on Selection",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_route.tui.pb"
+      ],
+      "route": "selection",
+      "label": "Selection",
+      "entry_path": "--page selection",
+      "return_path": "sidebar selection returns to Overview and keyboard [ ] can leave and re-enter the route",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5f8bfeace45cc9465746f94d68540a77684541e4d542b3fe7c61a8267cdc82ae",
+        "expect_baseline": "missing",
+        "precondition": "--page selection opens the playground with the sidebar on Selection"
+      }
+    },
+    {
+      "case_id": "sc.selection.playground",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "playground is the visible Selection section",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "playground",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b81fb06d3ae37dd9a5577debbf5c819191b6548effca39ff96e6624111937dfc",
+        "expect_baseline": "missing",
+        "precondition": "playground is the visible Selection section"
+      }
+    },
+    {
+      "case_id": "sc.selection.playground.120x40",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "playground tab at 120 by 40 after the narrow capture",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground_120x40.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.selection.playground.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Selection playground section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page selection --motion paused at 120x40 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "de4f1c8ba83467bcb9b243cd7c25cb224eb97852ef84454013602eab4a8d573a",
+        "expect_baseline": "missing",
+        "precondition": "playground tab at 120 by 40 after the narrow capture"
+      }
+    },
+    {
+      "case_id": "sc.selection.playground.80x24",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "playground at 80 by 24 before the terminal grows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground_80x24.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.selection.playground.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Selection playground section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page selection --motion paused at 80x24 and activate the playground tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9c6be13e6f7d6fe44c4225a2337a1724ba33111e5f34ad0b838c372d33242c39",
+        "expect_baseline": "missing",
+        "precondition": "playground at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.selection.options",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "options is the visible Selection section",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "options",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c4a101eeed10f5df10d64295c0b101ce4362b9ba6c3125090e522907406cfb66",
+        "expect_baseline": "missing",
+        "precondition": "options is the visible Selection section"
+      }
+    },
+    {
+      "case_id": "sc.selection.options.120x40",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "options caption and every default value at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options_120x40.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.selection.options.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Selection options section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page selection --motion paused at 120x40 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "09c7874fefb3a51c19ce3d1cda485e77e10f89d6404e024153daa25628acb6e6",
+        "expect_baseline": "missing",
+        "precondition": "options caption and every default value at 120 by 40"
+      }
+    },
+    {
+      "case_id": "sc.selection.options.80x24",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "options at 80 by 24 before the terminal grows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options_80x24.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "options",
+      "checkpoint_ids": [
+        "sc.selection.options.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Selection options section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page selection --motion paused at 80x24 and activate the options tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9ce757bab7e76f087eacfdca4872651b024f6d940c39aee536f693dcc647d428",
+        "expect_baseline": "missing",
+        "precondition": "options at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.selection.states",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section",
+      "result": "PASS",
+      "disposition_reason": "states is the visible Selection section",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "2fb2c7235cec7600108fae9341aed3be907c6dce32a29cb12d2c4d009d7d5fdd",
+        "expect_baseline": "missing",
+        "precondition": "states is the visible Selection section"
+      }
+    },
+    {
+      "case_id": "sc.selection.states.120x40",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "states caption and the grid rows that fit at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states_120x40.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.selection.states.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Selection states section is the visible section at 120 by 40.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page selection --motion paused at 120x40 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "51f2dc54935f5cb1d070138de91b4ef947ebaafe5023242cebe655fb8a13ae47",
+        "expect_baseline": "missing",
+        "precondition": "states caption and the grid rows that fit at 120 by 40"
+      }
+    },
+    {
+      "case_id": "sc.selection.states.80x24",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "section-size",
+      "result": "PASS",
+      "disposition_reason": "states grid at 80 by 24 before the terminal grows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states_80x24.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "checkpoint_ids": [
+        "sc.selection.states.80x24"
+      ],
+      "terminal_columns": 80,
+      "terminal_rows": 24,
+      "color_mode": "truecolor",
+      "glyph_mode": "unicode",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "expected_results": "The Selection states section is the visible section at 80 by 24.",
+      "forbidden_effects": "A different section's caption is the active caption.",
+      "action_sequence": "Launch showcase --page selection --motion paused at 80x24 and activate the states tab.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "235a5f2271db6bdb36dd75930848bda9662fdc04b53a5ac30177e501d557f5f9",
+        "expect_baseline": "missing",
+        "precondition": "states grid at 80 by 24 before the terminal grows"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.rest",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_rest.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "25462c7727663bb59e15099ef34120a99d6968bcdb05ecf4cd96d1c4133dbbb3",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.hover",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_hover.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "52092cbc6f361a2aa2907047b01a19dc4ce129a3d3c705df65aa75309c55d949",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.pressed",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_pressed.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "73a613f6c1b383701662558db505b136f89b0aefa6f1ddbf0ea9bc862163d5ae",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.focused",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_focused.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4375d48ebc2a76586657bb79d3728e120909f3bc65e6669c51e8876cde2737cc",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.focused_hover",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_focused_hover.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a04ff6cad4d895fbbc80867bd20b4cf73f5ef9d52769b9390bfb6214a484162f",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.selected",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_selected.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c5a1e7abb058716f84e15ad2138baff8231f2dd9118c3d1a6c892dd9b3d138dd",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.disabled",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "states grid row is visible and compare levels is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_disabled.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1586b78a94c9aa77bfd571ac5de3d2decd164b4ef77a137a87703be0a5d68ee4",
+        "expect_baseline": "missing",
+        "precondition": "states grid row is visible and compare levels is off"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.busy",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/selectable.rs states_grid lines 274-284 build the Selection StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Empty, and Narrow. The list omits SpecimenState::Busy.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.selection.specimen.error",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/selectable.rs states_grid lines 274-284 build the Selection StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Empty, and Narrow. The list omits SpecimenState::Error.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.selection.specimen.editing",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/selectable.rs states_grid lines 274-284 build the Selection StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Empty, and Narrow. The list omits SpecimenState::Editing.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": false
+    },
+    {
+      "case_id": "sc.selection.specimen.empty",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "empty specimen shows No rows",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_empty.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "01b78d58b7d21a82ba4ea2dbafa407e6d02e015681278c5f2c4a0e2c76e8e3af",
+        "expect_baseline": "missing",
+        "precondition": "empty specimen shows No rows"
+      }
+    },
+    {
+      "case_id": "sc.selection.specimen.loading",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/selectable.rs states_grid lines 274-284 build the Selection StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Empty, and Narrow. The list omits SpecimenState::Loading.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.selection.specimen.overflow",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "src/bin/showcase/pages/selectable.rs states_grid lines 274-284 build the Selection StateGrid with rows Rest, Hover, Pressed, Focused, FocusedHover, Selected, Disabled, Empty, and Narrow. The list omits SpecimenState::Overflow.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": null,
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true
+    },
+    {
+      "case_id": "sc.selection.specimen.narrow",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "state",
+      "result": "PASS",
+      "disposition_reason": "narrow specimen shows Dana Whitfield under the clipped header",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_narrow.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "applicability": "Required when this page's StateGrid rows include the state. If the grid omits it, set NOT_APPLICABLE with the page source line. Editing is a SpecimenState and is absent from the catalog state list; that catalog gap does not remove the specimen when the page draws it.",
+      "catalog_listed": true,
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "146d3420fb67d3f876ad1f2d601a5fd31aff402a7c2e8efd640658db8acf5ce5",
+        "expect_baseline": "missing",
+        "precondition": "narrow specimen shows Dana Whitfield under the clipped header"
+      }
+    },
+    {
+      "case_id": "sc.selection.compare-levels",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "compare levels scrolled to no color at 120 by 40",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_compare-levels_80x24.tui.pb"
+      ],
+      "route": "selection",
+      "section_or_overlay": "states",
+      "action_sequence": "Turn Compare levels on, scroll the bands, narrow the terminal, then turn Compare levels off.",
+      "expected_results": "Colour bands for the supported levels are visible, and the page state is unchanged after return.",
+      "forbidden_effects": "Leaving Compare levels changes the selected page or an option value.",
+      "checkpoint_ids": [
+        "sc.selection.compare-levels.120x40",
+        "sc.selection.compare-levels.80x24"
+      ],
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5ac54564a5b6d30e12d91a858abb4d9cc0c380d7eab42eac93564c300ff08af4",
+        "expect_baseline": "missing",
+        "precondition": "compare levels scrolled to no color at 120 by 40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "6a2622b4288b881435974dcab9507773c39a0fb3e8241de3a0656b86c17c4e04",
+        "expect_baseline": "missing",
+        "precondition": "compare levels still on at 80 by 24 before restoring 120 by 40"
+      }
+    },
+    {
+      "case_id": "opt.selection.esc_clears",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "Esc leaves Ari selected when Esc clears the selection is off",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_esc_clears.tui.pb"
+      ],
+      "route": "selection",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set selection.esc_clears from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Esc clears the selection effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--opt",
+          "selection.esc_clears=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "10240976e0c4073c81f3a04c76d971c6dbcaa55aee04732fd059e406cfe482e1",
+        "expect_baseline": "missing",
+        "precondition": "Esc leaves Ari selected when Esc clears the selection is off"
+      }
+    },
+    {
+      "case_id": "opt.selection.toggle_mods",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "ctrl toggle hint is Ctrl+click and the other options stay default",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_toggle_mods.tui.pb"
+      ],
+      "route": "selection",
+      "option_values": [
+        "platform",
+        "ctrl",
+        "alt"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set selection.toggle_mods from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Toggle click effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--opt",
+          "selection.toggle_mods=ctrl",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "93bf40cb8c51cec3922ca9190d2f6c313c6a05f15e79a3ad195f46cf3fcfda23",
+        "expect_baseline": "missing",
+        "precondition": "ctrl toggle hint is Ctrl+click and the other options stay default"
+      }
+    },
+    {
+      "case_id": "opt.selection.disabled_rows",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "none lets Select All include Dana, so the count is 12",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_disabled_rows.tui.pb"
+      ],
+      "route": "selection",
+      "option_values": [
+        "owner",
+        "none"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set selection.disabled_rows from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Disabled rows effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--opt",
+          "selection.disabled_rows=none",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "76d437ab74e0afde89b4d5e48a9fd2528537a25a36a4ee5ed9df1120b556bb23",
+        "expect_baseline": "missing",
+        "precondition": "none lets Select All include Dana, so the count is 12"
+      }
+    },
+    {
+      "case_id": "opt.selection.check_column",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "the checkbox column is gone and Ari can still be selected",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_check_column.tui.pb"
+      ],
+      "route": "selection",
+      "option_values": [
+        "off",
+        "on"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set selection.check_column from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Checkbox column effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--opt",
+          "selection.check_column=off",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "a85df6073707da40dfb1b64227e21ed6b0deeeebed1a0566425dfeea4418c4b0",
+        "expect_baseline": "missing",
+        "precondition": "the checkbox column is gone and Ari can still be selected"
+      }
+    },
+    {
+      "case_id": "opt.selection.activate",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "option",
+      "result": "PASS",
+      "disposition_reason": "never keeps a second click on Ari out of the name field",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_activate.tui.pb"
+      ],
+      "route": "selection",
+      "option_values": [
+        "double",
+        "again",
+        "single",
+        "never"
+      ],
+      "effect": "frame",
+      "needs": [],
+      "combination_reason": "Execute the default and one non-default boundary. Execute another option in combination only when needs declares a dependency. Unrelated options do not form a Cartesian product.",
+      "action_sequence": "Set selection.activate from its default to another listed value through --opt or the Options control.",
+      "expected_results": "The visible Click opens effect matches the selected value.",
+      "forbidden_effects": "A different option's value changes.",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "selection",
+          "--opt",
+          "selection.activate=never",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7b50d15bde5236304a21c1fb6bb1954b7b8b689e41f1819920748a398c93efe4",
+        "expect_baseline": "missing",
+        "precondition": "never keeps a second click on Ari out of the name field"
+      }
+    },
+    {
+      "case_id": "sc.selection.policies",
+      "owner_task": "S03.selection",
+      "application": "showcase",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Revert restores the applied Admin role and Dana stays unselected",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_80x24.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_single.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_range.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_move.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_toggle.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_all.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_dirty.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_applied.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_after.tui.pb"
+      ],
+      "route": "selection",
+      "action_sequence": "Exercise none, single, and multiple selection, range, toggle, and Select All with a disabled row. Move the cursor without replacing the set. Apply and revert a mixed bulk field.",
+      "expected_results": "The selected identities match the policy. Cursor movement keeps the set. Select All skips disabled rows.",
+      "forbidden_effects": "A disabled row becomes selected.",
+      "checkpoint_ids": [
+        "sc.selection.policies.before",
+        "sc.selection.policies.after"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "acceptance_receipt": {
+        "80x24": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "fc42736de157608bd2372126ad0ec202c17b7498fa101d386058e599e94e162a",
+          "expect_baseline": "missing",
+          "precondition": "narrow playground before the terminal grows"
+        },
+        "before": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "95b5e2d2fae565f5b2c660ff7d4303a94be15e09ef70859e40ef2664599bc177",
+          "expect_baseline": "missing",
+          "precondition": "table focused with nothing selected"
+        },
+        "single": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "5a039bfd848db70364aba389339f78fbd33450cc00355c9402f5bdd43bd98feb",
+          "expect_baseline": "missing",
+          "precondition": "Space selects Ari and leaves Dana clear"
+        },
+        "range": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "8c2393625c5e5fcc2856df1014d4d4195dd6df9a949f5ac7f424498e4a1e1c1b",
+          "expect_baseline": "missing",
+          "precondition": "Shift+Down extends the set to Cleo and the bulk role stays mixed"
+        },
+        "move": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "674916d0b2f5ebb1eb886e998c9688d2bd371206cf7aa828d29e25279bca67be",
+          "expect_baseline": "missing",
+          "precondition": "Down moves the cursor to Bo and keeps Ari and Cleo selected"
+        },
+        "toggle": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "e4fa29c4f19f774916f3f81f62889f86a6cd3068d016373ea4b30f044c461fee",
+          "expect_baseline": "missing",
+          "precondition": "Space on Cleo removes her and leaves Ari selected"
+        },
+        "all": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "00856b26ec1b2e63f72354cd2e970fbe621e7fdffea1e34ea7c3674a813a2cbc",
+          "expect_baseline": "missing",
+          "precondition": "Select All checks every enabled row and skips Dana"
+        },
+        "dirty": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "810b45f4b5ee83fccffd8f5106597b46272b3ce8ef7aa9963ca0f8b51cfb8e3f",
+          "expect_baseline": "missing",
+          "precondition": "the mixed role is Admin, with Apply, Revert, and Unsaved changes"
+        },
+        "applied": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "1102ad8cbc4b530eafa52acaaf2c58f8844036d6d37315d6a7d41d1c9ec23ffa",
+          "expect_baseline": "missing",
+          "precondition": "Apply writes Admin for the 11 selected members"
+        },
+        "after": {
+          "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+          "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+          "toolchain": {
+            "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+            "cargo": "1.99.1 (5f94df478 2026-08-27)",
+            "nextest": "0.9.148",
+            "tuiscotti_cli": "0.4.0",
+            "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+            "tuiscotti_tui_test": "0.2.1",
+            "mise": "2026.10.25",
+            "velnor_actions": "0.1.70",
+            "host": "aarch64-apple-darwin"
+          },
+          "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/showcase",
+          "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+          "fixture_args": [
+            "--page",
+            "selection",
+            "--color",
+            "truecolor",
+            "--motion",
+            "paused"
+          ],
+          "env": {
+            "TERM": "xterm-256color",
+            "COLORTERM": "truecolor",
+            "LANG": "C.UTF-8",
+            "LC_ALL": "C.UTF-8",
+            "TZ": "UTC",
+            "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+            "HOLLA_NO_HISTORY": "1"
+          },
+          "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "candidate_sha256": "277dafd6206428b30c626d893324f00d87ae85b550bd35adaf2b882656b69511",
+          "expect_baseline": "missing",
+          "precondition": "Revert restores the applied Admin role and Dana stays unselected"
+        }
+      }
+    }
+  ]
+}

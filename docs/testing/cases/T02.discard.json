@@ -1,0 +1,120 @@
+{
+  "task_id": "T02.discard",
+  "cases": [
+    {
+      "case_id": "T02.discard.route",
+      "owner_task": "T02.discard",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with status ✓ Connected to Development. Ctrl+O opens public.organizations. The grid offers Enter Edit and shows no pending marker and no discard dialog. Ctrl+W closes that tab and returns to Query 1, whose status line still says Opened public.organizations. Ctrl+Q exits 0 with no discard dialog.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d23bcfe4cc02dda7e81b7723dd7d7428d3400e4d",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T02.discard",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect; Ctrl+O organizations",
+      "return_path": "Ctrl+W closes the organizations tab and returns to Query 1; Ctrl+Q exits"
+    },
+    {
+      "case_id": "T02.discard.discard",
+      "owner_task": "T02.discard",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Development, organizations row be6dd084-a1f4-4d47-ae53-915ac89debab shows Tessellate and slug tessellate. The name edit commits DiscardEdit, keeps tessellate, and draws • 1 pending · 1 update. The next row stays Northwind Labs / northwind-labs. U opens Discard unsaved changes? with body 1 pending change will be dropped. The rows are reloaded from the server. Cancel starts focused (▎Cancel, footer Enter Cancel) and Discard is the other button. At 120×40 DiscardEdit stays on row 1 beside the dialog. At 80×24 the same dialog stays open, with • 1 pending · 1 update and rows 1–8 of 500 loaded · 1,240 total, captured before the terminal returns to 120×40. Enter on Cancel closes the dialog, keeps DiscardEdit and the pending marker, and does not show Changes discarded. U again and Enter on the danger Discard button sets status Changes discarded, restores Tessellate on that row, removes DiscardEdit and the pending marker, and leaves Northwind Labs / northwind-labs unchanged. Ctrl+Q exits.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d23bcfe4cc02dda7e81b7723dd7d7428d3400e4d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t02_discard/t02_discard_discard_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t02_discard/t02_discard_discard_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Edit a cell, open discard review, cancel, then confirm.",
+      "expected_results": "Cancel keeps the edit. Confirm restores the original cell.",
+      "forbidden_effects": "Discard changes a row that was not pending.",
+      "checkpoint_ids": [
+        "T02.discard.discard.120x40",
+        "T02.discard.discard.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "841e8fe457f9212b3e0adc0fb6f0cd5bce4793b4d9c50bcf74f76d870959ec78",
+        "expect_baseline": "missing",
+        "precondition": "T02.discard.discard.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "7e24996490243bcf5713edcf643e546dca9cd96453f2670faae624676d31092d",
+        "expect_baseline": "missing",
+        "precondition": "T02.discard.discard.narrow"
+      }
+    }
+  ]
+}

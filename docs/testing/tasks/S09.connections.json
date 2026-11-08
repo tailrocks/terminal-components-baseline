@@ -1,0 +1,77 @@
+{
+  "task_id": "S09.connections",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s09_connections.rs",
+    "docs/testing/cases/S09.connections.json",
+    "tests/functional/baselines/pre_refactor/S09.connections/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/connections.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.connections.route",
+    "sc.connections.playground",
+    "sc.connections.playground.120x40",
+    "sc.connections.playground.80x24",
+    "sc.connections.options",
+    "sc.connections.options.120x40",
+    "sc.connections.options.80x24",
+    "sc.connections.states",
+    "sc.connections.states.120x40",
+    "sc.connections.states.80x24",
+    "sc.connections.specimen.rest",
+    "sc.connections.specimen.hover",
+    "sc.connections.specimen.pressed",
+    "sc.connections.specimen.focused",
+    "sc.connections.specimen.focused_hover",
+    "sc.connections.specimen.selected",
+    "sc.connections.specimen.disabled",
+    "sc.connections.specimen.busy",
+    "sc.connections.specimen.error",
+    "sc.connections.specimen.editing",
+    "sc.connections.specimen.empty",
+    "sc.connections.specimen.loading",
+    "sc.connections.specimen.overflow",
+    "sc.connections.specimen.narrow",
+    "sc.connections.compare-levels",
+    "opt.connections.group_by",
+    "opt.connections.meta",
+    "opt.connections.list_width",
+    "opt.connections.list",
+    "opt.connections.state",
+    "opt.connections.form_width",
+    "sc.connections.connections"
+  ],
+  "checkpoints": [
+    "sc.connections.playground.120x40",
+    "sc.connections.playground.80x24",
+    "sc.connections.options.120x40",
+    "sc.connections.options.80x24",
+    "sc.connections.states.120x40",
+    "sc.connections.states.80x24",
+    "sc.connections.compare-levels",
+    "sc.connections.connections"
+  ],
+  "acceptance": "Open Connections by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

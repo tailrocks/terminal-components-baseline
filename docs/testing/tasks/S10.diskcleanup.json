@@ -1,0 +1,78 @@
+{
+  "task_id": "S10.diskcleanup",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s10_diskcleanup.rs",
+    "docs/testing/cases/S10.diskcleanup.json",
+    "tests/functional/baselines/pre_refactor/S10.diskcleanup/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/disk_cleanup.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.diskcleanup.route",
+    "sc.diskcleanup.playground",
+    "sc.diskcleanup.playground.120x40",
+    "sc.diskcleanup.playground.80x24",
+    "sc.diskcleanup.options",
+    "sc.diskcleanup.options.120x40",
+    "sc.diskcleanup.options.80x24",
+    "sc.diskcleanup.states",
+    "sc.diskcleanup.states.120x40",
+    "sc.diskcleanup.states.80x24",
+    "sc.diskcleanup.specimen.rest",
+    "sc.diskcleanup.specimen.hover",
+    "sc.diskcleanup.specimen.pressed",
+    "sc.diskcleanup.specimen.focused",
+    "sc.diskcleanup.specimen.focused_hover",
+    "sc.diskcleanup.specimen.selected",
+    "sc.diskcleanup.specimen.disabled",
+    "sc.diskcleanup.specimen.busy",
+    "sc.diskcleanup.specimen.error",
+    "sc.diskcleanup.specimen.editing",
+    "sc.diskcleanup.specimen.empty",
+    "sc.diskcleanup.specimen.loading",
+    "sc.diskcleanup.specimen.overflow",
+    "sc.diskcleanup.specimen.narrow",
+    "sc.diskcleanup.compare-levels",
+    "opt.diskcleanup.mode",
+    "opt.diskcleanup.typed",
+    "opt.diskcleanup.check_click",
+    "opt.diskcleanup.sizes",
+    "opt.diskcleanup.meter_visual",
+    "opt.diskcleanup.scan",
+    "opt.diskcleanup.collapse_below",
+    "sc.diskcleanup.cleanup"
+  ],
+  "checkpoints": [
+    "sc.diskcleanup.playground.120x40",
+    "sc.diskcleanup.playground.80x24",
+    "sc.diskcleanup.options.120x40",
+    "sc.diskcleanup.options.80x24",
+    "sc.diskcleanup.states.120x40",
+    "sc.diskcleanup.states.80x24",
+    "sc.diskcleanup.compare-levels",
+    "sc.diskcleanup.cleanup"
+  ],
+  "acceptance": "Open Disk cleanup by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

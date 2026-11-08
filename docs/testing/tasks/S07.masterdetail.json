@@ -1,0 +1,79 @@
+{
+  "task_id": "S07.masterdetail",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s07_masterdetail.rs",
+    "docs/testing/cases/S07.masterdetail.json",
+    "tests/functional/baselines/pre_refactor/S07.masterdetail/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/master_detail.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.masterdetail.route",
+    "sc.masterdetail.playground",
+    "sc.masterdetail.playground.120x40",
+    "sc.masterdetail.playground.80x24",
+    "sc.masterdetail.options",
+    "sc.masterdetail.options.120x40",
+    "sc.masterdetail.options.80x24",
+    "sc.masterdetail.states",
+    "sc.masterdetail.states.120x40",
+    "sc.masterdetail.states.80x24",
+    "sc.masterdetail.specimen.rest",
+    "sc.masterdetail.specimen.hover",
+    "sc.masterdetail.specimen.pressed",
+    "sc.masterdetail.specimen.focused",
+    "sc.masterdetail.specimen.focused_hover",
+    "sc.masterdetail.specimen.selected",
+    "sc.masterdetail.specimen.disabled",
+    "sc.masterdetail.specimen.busy",
+    "sc.masterdetail.specimen.error",
+    "sc.masterdetail.specimen.editing",
+    "sc.masterdetail.specimen.empty",
+    "sc.masterdetail.specimen.loading",
+    "sc.masterdetail.specimen.overflow",
+    "sc.masterdetail.specimen.narrow",
+    "sc.masterdetail.compare-levels",
+    "opt.masterdetail.width",
+    "opt.masterdetail.collapse",
+    "opt.masterdetail.size",
+    "opt.masterdetail.summary",
+    "opt.masterdetail.esc_returns",
+    "opt.masterdetail.keys",
+    "opt.masterdetail.step",
+    "opt.masterdetail.gap",
+    "sc.masterdetail.detail"
+  ],
+  "checkpoints": [
+    "sc.masterdetail.playground.120x40",
+    "sc.masterdetail.playground.80x24",
+    "sc.masterdetail.options.120x40",
+    "sc.masterdetail.options.80x24",
+    "sc.masterdetail.states.120x40",
+    "sc.masterdetail.states.80x24",
+    "sc.masterdetail.compare-levels",
+    "sc.masterdetail.detail"
+  ],
+  "acceptance": "Open Master-detail by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

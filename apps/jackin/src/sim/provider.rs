@@ -661,6 +661,16 @@ pub fn refresh(account: &Account, now: i64, op_locked: bool, broker_down: bool) 
     let mut a = account.clone();
     let outcome: RefreshOutcome;
     match (&a.source, a.issue.as_ref().map(|i| i.code)) {
+        (_, Some(IssueCode::RateLimited))
+            if a.issue
+                .as_ref()
+                .and_then(|issue| issue.retry_secs)
+                .unwrap_or(now)
+                > now =>
+        {
+            a.usage.freshness.phase = Freshness::Failed;
+            outcome = RefreshOutcome::StillRateLimited;
+        }
         _ if broker_down => {
             a.usage.freshness.phase = if a.usage.freshness.last_good_secs.is_some() {
                 Freshness::Stale

@@ -1,0 +1,40 @@
+{
+  "task_id": "X03.chrome",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "S07.scrolling",
+    "S07.splitsstacks"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x03_chrome.rs",
+    "docs/testing/cases/X03.chrome.json",
+    "tests/functional/baselines/pre_refactor/X03.chrome/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/widgets/scrollbar.rs",
+    "src/widgets/splitter.rs",
+    "src/theme.rs"
+  ],
+  "coverage_rows": [
+    "X03.chrome.route",
+    "X03.chrome.chrome"
+  ],
+  "checkpoints": [
+    "X03.chrome.chrome.120x40"
+  ],
+  "acceptance": "Scrollbar and seam states change only their own cells.",
+  "status": "queued",
+  "architecture_refactor": false
+}

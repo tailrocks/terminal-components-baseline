@@ -1,0 +1,41 @@
+{
+  "task_id": "X02.exit",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "T05.quit",
+    "H03.guards",
+    "J05.failure",
+    "J06.exit"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x02_exit.rs",
+    "docs/testing/cases/X02.exit.json",
+    "tests/functional/baselines/pre_refactor/X02.exit/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/shell/app.rs",
+    "src/runtime.rs"
+  ],
+  "coverage_rows": [
+    "X02.exit.route",
+    "X02.exit.exit"
+  ],
+  "checkpoints": [
+    "X02.exit.exit.120x40"
+  ],
+  "acceptance": "Clean, dirty, running, attached, and launch exits report the real code and restore the observed modes.",
+  "status": "queued",
+  "architecture_refactor": false
+}

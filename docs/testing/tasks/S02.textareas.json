@@ -1,0 +1,81 @@
+{
+  "task_id": "S02.textareas",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s02_textareas.rs",
+    "docs/testing/cases/S02.textareas.json",
+    "tests/functional/baselines/pre_refactor/S02.textareas/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/textareas.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.textareas.route",
+    "sc.textareas.playground",
+    "sc.textareas.playground.120x40",
+    "sc.textareas.playground.80x24",
+    "sc.textareas.options",
+    "sc.textareas.options.120x40",
+    "sc.textareas.options.80x24",
+    "sc.textareas.states",
+    "sc.textareas.states.120x40",
+    "sc.textareas.states.80x24",
+    "sc.textareas.specimen.rest",
+    "sc.textareas.specimen.hover",
+    "sc.textareas.specimen.pressed",
+    "sc.textareas.specimen.focused",
+    "sc.textareas.specimen.focused_hover",
+    "sc.textareas.specimen.selected",
+    "sc.textareas.specimen.disabled",
+    "sc.textareas.specimen.busy",
+    "sc.textareas.specimen.error",
+    "sc.textareas.specimen.editing",
+    "sc.textareas.specimen.empty",
+    "sc.textareas.specimen.loading",
+    "sc.textareas.specimen.overflow",
+    "sc.textareas.specimen.narrow",
+    "sc.textareas.compare-levels",
+    "opt.textareas.edit_entry",
+    "opt.textareas.focus_select",
+    "opt.textareas.esc_reverts",
+    "opt.textareas.field_keys",
+    "opt.textareas.text_keymap",
+    "opt.textareas.nav",
+    "opt.textareas.pointer_select",
+    "opt.textareas.blur_action",
+    "opt.textareas.horizontal",
+    "opt.textareas.label_hit",
+    "sc.textareas.multiline"
+  ],
+  "checkpoints": [
+    "sc.textareas.playground.120x40",
+    "sc.textareas.playground.80x24",
+    "sc.textareas.options.120x40",
+    "sc.textareas.options.80x24",
+    "sc.textareas.states.120x40",
+    "sc.textareas.states.80x24",
+    "sc.textareas.compare-levels",
+    "sc.textareas.multiline"
+  ],
+  "acceptance": "Open Text areas by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,78 @@
+{
+  "task_id": "S02.forms",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s02_forms.rs",
+    "docs/testing/cases/S02.forms.json",
+    "tests/functional/baselines/pre_refactor/S02.forms/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/forms.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.forms.route",
+    "sc.forms.playground",
+    "sc.forms.playground.120x40",
+    "sc.forms.playground.80x24",
+    "sc.forms.options",
+    "sc.forms.options.120x40",
+    "sc.forms.options.80x24",
+    "sc.forms.states",
+    "sc.forms.states.120x40",
+    "sc.forms.states.80x24",
+    "sc.forms.specimen.rest",
+    "sc.forms.specimen.hover",
+    "sc.forms.specimen.pressed",
+    "sc.forms.specimen.focused",
+    "sc.forms.specimen.focused_hover",
+    "sc.forms.specimen.selected",
+    "sc.forms.specimen.disabled",
+    "sc.forms.specimen.busy",
+    "sc.forms.specimen.error",
+    "sc.forms.specimen.editing",
+    "sc.forms.specimen.empty",
+    "sc.forms.specimen.loading",
+    "sc.forms.specimen.overflow",
+    "sc.forms.specimen.narrow",
+    "sc.forms.compare-levels",
+    "opt.forms.required",
+    "opt.forms.validate_when",
+    "opt.forms.blur",
+    "opt.forms.desc_rows",
+    "opt.forms.help",
+    "opt.forms.placeholders",
+    "opt.forms.managed",
+    "sc.forms.submit"
+  ],
+  "checkpoints": [
+    "sc.forms.playground.120x40",
+    "sc.forms.playground.80x24",
+    "sc.forms.options.120x40",
+    "sc.forms.options.80x24",
+    "sc.forms.states.120x40",
+    "sc.forms.states.80x24",
+    "sc.forms.compare-levels",
+    "sc.forms.submit"
+  ],
+  "acceptance": "Open Forms by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

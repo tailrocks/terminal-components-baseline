@@ -16,6 +16,7 @@ default-members = [".", "apps/jackin"]
 clap = { version = "4.6", features = ["derive"] }
 ratatui = { version = "0.30", features = ["crossterm_0_29"] }
 serde_json = "1"
+sha2 = "0.10.9"
 tui-test = { package = "tuiscotti-tui-test", version = "=0.2.1" }
 tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/tuiscotti", rev = "92ef2d9ee082b35f68e066c5129fedbf07675a80" }
 
@@ -69,6 +70,7 @@ tui-test = { workspace = true }
 
 tuiscotti-latest = { workspace = true }
 serde_json = { workspace = true }
+sha2 = { workspace = true }
 
 [profile.dev.package."*"]
 opt-level = 3

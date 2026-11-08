@@ -1,0 +1,124 @@
+{
+  "task_id": "X03.chrome",
+  "cases": [
+    {
+      "case_id": "X03.chrome.route",
+      "owner_task": "X03.chrome",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "showcase --page scrolling at 120×40 in truecolor with reduced motion opens Scrolling. parse_page in src/bin/showcase/main.rs calls PageId::from_name (src/bin/showcase/app.rs). from_name lowercases and strips non-alphanumeric characters, so the label Scrolling normalizes to scrolling. ScrollingPage::title is Scrolling and ScrollingPage::blurb starts Wheel under the pointer, keys on the focused container (src/bin/showcase/pages/scrolling.rs). draw_main paints that title and the truncated blurb on the header row. The header row contains Scrolling and the blurb prefix, and it does not contain Splits & stacks. The process is still running, and finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "14294387f27434f67c27a967109c51cae2cdc1da",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X03.chrome",
+      "entry_path": "showcase --page scrolling --color truecolor --motion reduced at 120x40",
+      "return_path": "finish sends Ctrl+Q and the process exits 0"
+    },
+    {
+      "case_id": "X03.chrome.chrome",
+      "owner_task": "X03.chrome",
+      "application": "cross",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On showcase --page scrolling the long-list thumb is ┃ at rest, hover, and press. scrollbar::THUMB is Glyphs::UNICODE.scroll_thumb, render_vertical writes that glyph on every thumb cell and scroll_track (┆) on the rest of the column, and thumb_style uses Theme::interactive(Kind::Handle) (src/widgets/scrollbar.rs). Truecolor ladders.handle is Ladder::new(WHITE_50, WHITE_70, GREEN) (src/theme.rs). Measured cells, background staying the surface fill Rgb(17, 17, 17): rest ┃ fg Rgb(128, 128, 128); hover ┃ fg Rgb(179, 179, 179); pressed ┃ fg Rgb(72, 224, 84). A drag moves the thumb down two rows. The thumb cell stays ┃ in the pressed colour. The cell it left is ┆ fg Rgb(71, 71, 71) bg Rgb(17, 17, 17). Launch color nocolor sets NO_COLOR=1 and passes no --color flag. ColorLevel::detect returns Mono, and StateModifiers::MONO sets thumb_hover to BOLD and thumb_pressed to REVERSED. The same thumb is then ┃ Default/Default with no modifier, BOLD on hover, and REVERSED while pressed. The dragged thumb stays ┃ and REVERSED. The screen has zero RGB and zero indexed colour. Those shells end with kill_child. On showcase --page splits, PAGE_ALIASES maps splits to PageId::SplitsStacks. The outer seam is Splitter::new(splitsstacks/outer, SplitDir::Horizontal) with the default hit_pad of 1, rendered on the card background (src/bin/showcase/pages/splits_stacks.rs). render_held paints divider (│) at rest and scroll_thumb (┃) while hovered or pressed, with Theme::interactive(Kind::Seam) then style.bg(bg), and only area is painted (src/widgets/splitter.rs). Truecolor ladders.seam is Ladder::new(WHITE_30, WHITE_50, GREEN). Measured outer seam, background staying Rgb(17, 17, 17): rest │ fg Rgb(77, 77, 77); hover ┃ fg Rgb(128, 128, 128); pressed and in-place drag ┃ fg Rgb(72, 224, 84). The hover and the press change only that column. Padding cells stay ╮ and ╭, fg Rgb(58, 58, 58) bg Rgb(0, 0, 0), and do not take the accent. NO_COLOR on the same seam is │ Default/Default, then ┃ BOLD, then ┃ REVERSED, with zero RGB, and the padding cells keep their text and modifiers. The stored pair is this pressed outer seam, mouse still down. The 120×40 frame is column 54, rows 11 through 26, ┃ fg Rgb(72, 224, 84) bg Rgb(17, 17, 17). The terminal then resizes to 80×24. The stored narrow frame is taken after the header and the hint line are on screen and the seam position has settled, and before the return to 120×40. The press survives the resize: column 45, rows 11 through 20, the same pressed paint. Padding there is ╮ and ╭ at fg Rgb(58, 58, 58) bg Rgb(0, 0, 0). The page is back at 120×40 with the seam still pressed, then finish() exits 0. The check compares the stored frames. The pair comes from the unchanged reference showcase sha256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b. Tablepro's connections screen paints Panel::framed borders (src/bin/tablepro/connections.rs) and no ┃ thumb and no ┆ track. Those │ cells are fg Rgb(77, 77, 77) bg Rgb(0, 0, 0), and hovering one leaves it unchanged. Holla --scenario activities-multi paints no ┃, no │, and no ┆. The ━ under Here is the tab rule, glyphs.bar_fill in the accent (src/widgets/tabs.rs), not a seam. Both end with kill_child. Jackin --scenario hard-cases, clock off and no --frame, paints manager.seam through MasterDetail::layout on t.canvas (src/bin/jackin/screens/manager.rs, src/ui/master_detail.rs). The column that changes from │ to ┃ is the seam. Measured on canvas Rgb(0, 0, 0): rest │ fg Rgb(77, 77, 77); hover ┃ fg Rgb(128, 128, 128); pressed and in-place drag ┃ fg Rgb(72, 224, 84). Cells beside it keep their text and do not take the accent. That shell ends with kill_child. No disabled handle is on these screens.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "14294387f27434f67c27a967109c51cae2cdc1da",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x03_chrome/x03_chrome_chrome_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x03_chrome/x03_chrome_chrome_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Show a scrollbar at rest, hover, and drag, including monochrome modifiers. Show a seam at rest, hover, and drag.",
+      "expected_results": "The thumb glyph stays the same. Only the seam cells change weight and colour.",
+      "forbidden_effects": "Padding cells take the accent.",
+      "checkpoint_ids": [
+        "X03.chrome.chrome.120x40",
+        "X03.chrome.chrome.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "splits",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ac721aeaa3deecfe6341a3aa5ca0f00ded6a664daa1a96415b7a545199e6c964",
+        "expect_baseline": "missing",
+        "precondition": "X03.chrome.chrome.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "splits",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "87d7cceff35e376934d1f9bfd78169548285d8e761a6226ee9967ca6247c028f",
+        "expect_baseline": "missing",
+        "precondition": "X03.chrome.chrome.narrow"
+      }
+    }
+  ]
+}

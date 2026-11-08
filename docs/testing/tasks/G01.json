@@ -1,0 +1,30 @@
+{
+  "task_id": "G01",
+  "wave": "A",
+  "kind": "prerequisite",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G00"
+  ],
+  "owned_files": [
+    "docs/testing/refactor-coverage.json",
+    "docs/testing/known-gaps.md",
+    "docs/testing/execution-ledger.md"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    "AGENTS.md",
+    "docs/GOAL.md",
+    "docs/functional-testing.md",
+    "tests/functional/support.rs",
+    "src/catalog.rs"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "Every implemented screen, section, option, scenario, and specimen state has one owner and one coverage row. NOT_APPLICABLE is unused for an implemented state that has no test.",
+  "status": "queued",
+  "architecture_refactor": false
+}

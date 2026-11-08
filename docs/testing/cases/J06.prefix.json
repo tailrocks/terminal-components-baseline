@@ -1,0 +1,124 @@
+{
+  "task_id": "J06.prefix",
+  "cases": [
+    {
+      "case_id": "J06.prefix.route",
+      "owner_task": "J06.prefix",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario capsule-multi --color truecolor --motion reduced at 120×40. start in src/bin/jackin/app.rs matches Scenario::CapsuleMulti and calls Go::Attach for jk-7f3a. populated in src/bin/jackin/domain/fixtures.rs builds the payments-platform daemon with Claude pane 1, Codex pane 2, and a shell pane 3, focused on pane 1. boot_all in src/bin/jackin/sim/pty.rs stops at Await, so Claude shows Allow edit to src/settlement/config.rs? (y/n) and Claude Code v2.1.14. follow in src/widgets/viewport.rs keeps the Codex tail at Codex (Primary) and 12.4k tokens. The shell prompt is payments-platform ❯. Ctrl+B enters prefix mode in CapsuleScreen::on_key in src/bin/jackin/screens/capsule.rs. d calls handle_prefix_cmd, which calls detach. Go::Detach in src/bin/jackin/app.rs returns to the workspace manager and sets Detached · payments-platform keeps running. The permission question is gone. The test does not quit, and You were in the Construct from src/bin/jackin/rain.rs stays absent. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9577fa53bb4ea7fc300c1e4c36dc8322223ffd10",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J06.prefix",
+      "entry_path": "jackin --scenario capsule-multi --color truecolor --motion reduced at 120x40",
+      "return_path": "Ctrl+B then d detaches to the workspace manager; the process stays there and does not play the outro"
+    },
+    {
+      "case_id": "J06.prefix.prefix",
+      "owner_task": "J06.prefix",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The same capsule-multi attach is the start. The focused Claude pane owns input: forward_key in src/bin/jackin/screens/capsule.rs calls Pane::type_char in src/bin/jackin/sim/pty.rs, so zzprefix is painted on the prompt. prefix_timeout_ms in that screen is None. enter_prefix therefore sets prefix_until to i64::MAX. on_tick sets Prefix timed out only when now_ms() >= until, so that status is unreachable and stays absent through the waited frame. The armed prefix, with zzprefix still in the pane and no command letter, is the checkpoint, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40). After the restore, prefix… from draw_identity is still visible. z calls toggle_zoom. The tab has more than one leaf, so the status is Zoomed · z restores the layout and the letter is not typed. Ctrl+B z sets Unzoomed. handle_prefix_cmd clears prefix_until before the key is handled. A second Ctrl+B returns without re-arming, so the next z is typed into the pane and Zoomed · z restores the layout stays absent. Esc is the empty arm in handle_prefix_cmd, so the prefix clears and Esc types nothing. Ctrl+B Space calls open_palette. The picker title is Command palette and the placeholder is Type to filter commands…. zzpal stays in that query. Picker::on_key in src/widgets/picker.rs clears a non-empty query on the first Esc, and the next Esc emits PickerAction::Cancelled, which src/ui/layers.rs closes. The pane is still only zzprefix. F10 is not a ContextKeys match: ContextKeys::matches in src/ui/context.rs is Shift+F10 or the Menu key. Plain F10 hits the F(10) arm in on_key, clears any prefix, and calls menubar.open_menu(0), the File menu (New tab, Split right). Esc closes it. The pane text is still only zzprefix. Prefix timed out never appears, and the command key after the wait runs only while the prefix is armed. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9577fa53bb4ea7fc300c1e4c36dc8322223ffd10",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j06_prefix/j06_prefix_prefix_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_prefix/j06_prefix_prefix_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Enter the prefix, let it time out, repeat it, and cancel it. Also use the palette and a menu while a pane owns input.",
+      "expected_results": "The command runs only after a completed prefix. Cancellation types nothing into the pane.",
+      "forbidden_effects": "A timed-out prefix still runs the command.",
+      "checkpoint_ids": [
+        "J06.prefix.prefix.120x40",
+        "J06.prefix.prefix.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "capsule-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "497ee434d60ec5da2b1ebe2ce3e6cc93b1837e1bc66a688d9efaeaded0695ea2",
+        "expect_baseline": "missing",
+        "precondition": "J06.prefix.prefix.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "capsule-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "afff158c20c06eaa572b7ad999885df6578aba54f1c8cfe73e2d533631f3f7a8",
+        "expect_baseline": "missing",
+        "precondition": "J06.prefix.prefix.narrow"
+      }
+    }
+  ]
+}

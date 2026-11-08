@@ -1,0 +1,124 @@
+{
+  "task_id": "J06.takeover",
+  "cases": [
+    {
+      "case_id": "J06.takeover.route",
+      "owner_task": "J06.takeover",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario hard-cases --color truecolor --motion reduced at 120×40. Scenario::HardCases in src/bin/jackin/domain/fixtures.rs sets takeover_at_ms to 45_000, daemon_health to Stale, and arbiter.discovery to DiscoveryError::IndexUnreadable. start in src/bin/jackin/app.rs takes EntryDecision::Unknown and enters the manager, so there is no intro. for_scenario sets world.clock.running because motion is not Motion::Paused. App::on_tick advances World::tick by Route::tick_ms(true), 80 ms on the manager and the capsule, and daemons with panes make tick_interval the same 80 ms. World::tick in src/bin/jackin/sim/world.rs emits Msg::Takeover once when now_ms reaches 45_000, for the first Running instance, which fixtures.rs places first as jk-7f3a in payments-platform with role the-architect, by tty004 · MacBook, then clears takeover_at_ms. ManagerScreen::on_msg in src/bin/jackin/screens/manager.rs ignores that message, so this route attaches before it is due. ManagerScreen::new selects Current directory with workspaces collapsed. Down selects payments-platform, Right expands it, and Down selects the row painted 7f3a. Enter calls reconnect and Go::Attach. CapsuleScreen::on_msg in src/bin/jackin/screens/capsule.rs applies Takeover only when instance equals self.instance. CapsuleScreen::render paints Attach taken over, tty004 · MacBook attached to payments-platform 3 s ago. from Clock::ago(now_secs - 3) in src/clock.rs, The instance, tabs and panes keep running., and the Reconnect and Workspace manager buttons, then returns before the capsule status bar. Esc calls leave_takeover, which clears the overlay and sends Go::Detach. Go::Detach in src/bin/jackin/app.rs returns to the manager, select_instance leaves 7f3a selected, and the status is Detached · payments-platform keeps running. The detail stays 7f3a · payments-platform. payments-platform stays payments-platform. You were in the Construct from src/bin/jackin/rain.rs stays absent. The process stays running. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "bc6a03ce622eac8eeab27369a0f279ac819f6a74",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J06.takeover",
+      "entry_path": "jackin --scenario hard-cases --color truecolor --motion reduced at 120x40, then Down, Right, Down, Enter on the jk-7f3a row",
+      "return_path": "Esc leaves the takeover overlay and returns to the workspace manager with 7f3a still selected; the process stays there and does not play the outro"
+    },
+    {
+      "case_id": "J06.takeover.takeover",
+      "owner_task": "J06.takeover",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "A fresh process attaches jk-9b02. populated in src/bin/jackin/domain/fixtures.rs inserts that Running instance on infra-control-plane with role sre and a daemon, and the rich hard-cases path removes the jk-e0e0 daemon. The one Takeover from World::tick in src/bin/jackin/sim/world.rs names jk-7f3a. CapsuleScreen::on_msg in src/bin/jackin/screens/capsule.rs applies it only when instance equals self.instance, so the 9b02 screen keeps infra-control-plane and never paints Attach taken over. The test polls that screen from before the 45_000 ms deadline through 50s on the same clock. A second launch attaches jk-7f3a and waits there, because a manager that receives the one-shot message drops it. The checkpoint is the overlay before Enter and before Esc, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40). Clock::ago(now_secs - 3) in src/clock.rs is 3 s ago on both frames. The manager title Workspaces is absent. The overlay returns before draw_status, so the shots do not require the status tty004 · MacBook attached to this instance. Enter calls reconnect, which clears the overlay, sets attached_by to this terminal, sets Reconnected · the other client was displaced, and stays on this capsule. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "bc6a03ce622eac8eeab27369a0f279ac819f6a74",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j06_takeover/j06_takeover_takeover_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_takeover/j06_takeover_takeover_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Take over the current instance, attempt a stale takeover aimed at another instance, reconnect, and leave.",
+      "expected_results": "The stale attempt does not attach the other instance.",
+      "forbidden_effects": "Stale takeover switches instances.",
+      "checkpoint_ids": [
+        "J06.takeover.takeover.120x40",
+        "J06.takeover.takeover.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "hard-cases",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c7fcfc1da4fbcfb24715b3ef8cc1a96f265473ab0d63f2fd9c5f79df379907a3",
+        "expect_baseline": "missing",
+        "precondition": "J06.takeover.takeover.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "hard-cases",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ba265bcacf5e1eb2adb94ff458874678f9f1d14c5e09afdb3665fe92d052e578",
+        "expect_baseline": "missing",
+        "precondition": "J06.takeover.takeover.narrow"
+      }
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "task_id": "T05.quit",
+  "cases": [
+    {
+      "case_id": "T05.quit.route",
+      "owner_task": "T05.quit",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with placeholder Type SQL and status Connected to Development. Loading schema is absent. Quit TablePro? is absent. Ctrl+Q exits 0 with no signal. The test does not inject focus.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "a4ae6ebe74cac044f4b13130d24750033f2049dd",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T05.quit",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "Ctrl+Q exits"
+    },
+    {
+      "case_id": "T05.quit.quit",
+      "owner_task": "T05.quit",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Query 1, connected to Development, receives SELECT 't05_quit_keep' AS marker. Esc commits that statement and does not revert it. Ctrl+Q opens Quit TablePro?. The body is 1 unsaved query will be lost. The actions are ▎Cancel and Quit. Save and Discard are absent. The open dialog is captured at 120×40, then at 80×24 while it is still up, and only then does the terminal return to 120×40. Enter on Cancel closes the dialog, keeps the marker SQL and Connected to Development, and leaves the process running. It does not return to the connection list. Ctrl+Q opens the dialog again. Right moves the gutter onto Quit. Enter confirms. The process exits 0 with no signal. The test does not call finish or kill the child.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "a4ae6ebe74cac044f4b13130d24750033f2049dd",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t05_quit/t05_quit_quit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_quit/t05_quit_quit_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Quit clean, then quit dirty and cancel, then confirm.",
+      "expected_results": "Cancel preserves drafts. The confirmed exit is code 0 without a signal.",
+      "forbidden_effects": "The harness kill is treated as the application exit.",
+      "checkpoint_ids": [
+        "T05.quit.quit.120x40",
+        "T05.quit.quit.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1692781b4713a5156005998b2059d19fd030ebebdc1bc08cfb1c02b1031227b8",
+        "expect_baseline": "2cc9f26e1b0ad65e15ca0b3345905fa6cb277dc904d77f61aa15e8caa2b50155",
+        "precondition": "T05.quit.quit.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "95aba5f44c15d6bc0311edd6a8e910d74718468722f17abbc8f7973d77be8d4c",
+        "expect_baseline": "missing",
+        "precondition": "T05.quit.quit.narrow"
+      }
+    }
+  ]
+}

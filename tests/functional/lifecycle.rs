@@ -25,6 +25,7 @@ fn showcase_help_survives_shrink_and_growth_and_returns_focus() {
             && text(s).contains("Keyboard & mouse")
     });
     assert_ne!(find(&narrow, "Keyboard & mouse"), original_title);
+    app.visual("functional/showcase_help_80x24");
     app.resize(160, 50);
     app.wait_screen("help reflows at 160×50", |s| {
         s.cols() == 160

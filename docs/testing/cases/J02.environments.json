@@ -1,0 +1,126 @@
+{
+  "task_id": "J02.environments",
+  "cases": [
+    {
+      "case_id": "J02.environments.route",
+      "owner_task": "J02.environments",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120\u00d740. Current directory is the initial selection in src/bin/jackin/screens/manager.rs. Space dismisses Stand up, operator only when that line is showing. One Down focuses payments-platform. Key e on that row calls Go::Editor. Three ] presses in src/bin/jackin/screens/editor.rs move General to Mounts, Roles, and Environments. The workspace env from src/bin/jackin/domain/fixtures.rs is DATABASE_URL, STRIPE_KEY, LOG_LEVEL, and GH_TOKEN. mask() in src/bin/jackin/domain/workspace.rs paints the URL as 16 asterisks because the value contains :// and /, paints debug as five asterisks, and paints GH_TOKEN as $GH_TOKEN. STRIPE_KEY paints a 16-asterisk mask plus the [op] path. pw-fixture-only is absent. Esc calls leave in editor.rs. change_count is 0, so Unsaved changes stays closed. app.finish() exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "ba7093684ad868f8de5fc95aa3d26bbea6320218",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J02.environments",
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; Down to payments-platform; e; ] ] ]",
+      "return_path": "Esc from a clean Environments tab returns to the manager; app.finish() exits 0"
+    },
+    {
+      "case_id": "J02.environments.env",
+      "owner_task": "J02.environments",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open New workspace environment key form from open_env_form in src/bin/jackin/screens/config.rs, width 70, after the key DATABASE_URL and the masked plain value are typed, before Save. Pressing a on the workspace DATABASE_URL row opens that form because build_rows skips the workspace header. The shot is 120\u00d740, then 80\u00d724, and the narrow shot is taken before the terminal returns to 120\u00d740. The focused field paints Theme mask bullets, and duplicate-secret-value and pw-fixture-only stay absent. FormDialog::take_result in src/ui/layers.rs closes on FormAction::Save, and the form is popped before save_env runs. save_env calls with_top for DATABASE_URL already exists in this scope, which does not reach the closed form, and it returns before push. After Save the form is closed, that error string is absent, and exactly one DATABASE_URL row remains, still 16 asterisks from mask() in src/bin/jackin/domain/workspace.rs. Adding FIELD_TOKEN paints FIELD_TOKEN \u00b7 added \u00b7 save to apply and the list masks it as ************t-91. Editing LOG_LEVEL to info paints LOG_LEVEL \u00b7 updated \u00b7 save to apply and four asterisks. Scope for FIELD_TOKEN chooses role backend and paints FIELD_TOKEN moved to role backend. The workspace section no longer lists FIELD_TOKEN. Role: backend lists it, still masked. Delete environment variable LOG_LEVEL? focuses Cancel through Dialog::destructive. Activating Delete paints Removed LOG_LEVEL \u00b7 u restores until save, and u is not pressed. Ctrl+S opens Save workspace from open_preview in src/bin/jackin/screens/editor.rs. The focused line contains Cancel. Clean up & save\u2026 is absent. Confirm Save calls start_save, which schedules WorkspaceSaved at 900 ms, and the wall clock reaches Workspace payments-platform saved. Reopening Environments shows FIELD_TOKEN under Role: backend, still masked. LOG_LEVEL is absent. DATABASE_URL is one row and pw-fixture-only is absent. STRIPE_KEY still shows the [op] reference mask. GH_TOKEN still shows $GH_TOKEN. The workspace name is still payments-platform.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "ba7093684ad868f8de5fc95aa3d26bbea6320218",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j02_environments/j02_environments_env_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j02_environments/j02_environments_env_narrow.tui.pb"
+      ],
+      "scenario": [
+        "returning"
+      ],
+      "action_sequence": "Type a duplicate DATABASE_URL, add FIELD_TOKEN, edit LOG_LEVEL, move FIELD_TOKEN to role backend, delete LOG_LEVEL, and save.",
+      "expected_results": "The duplicate form closes with one DATABASE_URL row and no already-exists error. FIELD_TOKEN stays masked under role backend. LOG_LEVEL is gone after save.",
+      "forbidden_effects": "pw-fixture-only, duplicate-secret-value, or field-token-secret-91 is painted. A second DATABASE_URL row is stored.",
+      "checkpoint_ids": [
+        "J02.environments.env.120x40",
+        "J02.environments.env.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1c9997f14c7e2915921a0786eb0bd7af04745991b6cc92ccf36a726232b5edb8",
+        "expect_baseline": "missing",
+        "precondition": "J02.environments.env.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ad792f2cafbd62494853b53a001b15a64e0c36810b607d9479d2ff419c99b264",
+        "expect_baseline": "missing",
+        "precondition": "J02.environments.env.narrow"
+      }
+    }
+  ]
+}

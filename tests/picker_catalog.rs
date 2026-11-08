@@ -135,7 +135,11 @@ impl PageUsage {
 
     fn is_picker_type(ty: &Type) -> bool {
         match ty {
-            Type::Path(path) => path.path.segments.iter().any(|part| part.ident == "Picker"),
+            Type::Path(path) => path
+                .path
+                .segments
+                .last()
+                .is_some_and(|part| part.ident == "Picker"),
             Type::Reference(reference) => Self::is_picker_type(&reference.elem),
             Type::Paren(paren) => Self::is_picker_type(&paren.elem),
             Type::Group(group) => Self::is_picker_type(&group.elem),
@@ -152,6 +156,38 @@ impl PageUsage {
             Pat::Paren(paren) => self.bind_pattern(&paren.pat),
             Pat::Type(typed) => self.bind_pattern(&typed.pat),
             _ => {}
+        }
+    }
+
+    fn unbind_pattern(&mut self, pattern: &Pat) {
+        struct Bindings(Vec<String>);
+        impl<'ast> Visit<'ast> for Bindings {
+            fn visit_pat_ident(&mut self, node: &'ast syn::PatIdent) {
+                self.0.push(node.ident.to_string());
+                syn::visit::visit_pat_ident(self, node);
+            }
+        }
+        let mut bindings = Bindings(Vec::new());
+        bindings.visit_pat(pattern);
+        for name in bindings.0 {
+            self.picker_vars.remove(&name);
+        }
+    }
+
+    fn visit_condition(&mut self, expr: &Expr) {
+        match expr {
+            Expr::Let(binding) => {
+                self.visit_expr(&binding.expr);
+                self.unbind_pattern(&binding.pat);
+                self.visit_pat(&binding.pat);
+            }
+            Expr::Binary(binary) if matches!(binary.op, syn::BinOp::And(_)) => {
+                self.visit_condition(&binary.left);
+                self.visit_condition(&binary.right);
+            }
+            Expr::Paren(paren) => self.visit_condition(&paren.expr),
+            Expr::Group(group) => self.visit_condition(&group.expr),
+            _ => self.visit_expr(expr),
         }
     }
 
@@ -244,28 +280,95 @@ impl PageUsage {
 
 impl<'ast> Visit<'ast> for PageUsage {
     fn visit_item_fn(&mut self, node: &'ast syn::ItemFn) {
+        let outer = std::mem::take(&mut self.picker_vars);
         self.bind_picker_arguments(&node.sig.inputs);
         syn::visit::visit_item_fn(self, node);
+        self.picker_vars = outer;
     }
 
     fn visit_impl_item_fn(&mut self, node: &'ast syn::ImplItemFn) {
+        let outer = std::mem::take(&mut self.picker_vars);
         self.bind_picker_arguments(&node.sig.inputs);
         syn::visit::visit_impl_item_fn(self, node);
+        self.picker_vars = outer;
+    }
+
+    fn visit_block(&mut self, node: &'ast syn::Block) {
+        let outer = self.picker_vars.clone();
+        syn::visit::visit_block(self, node);
+        self.picker_vars = outer;
+    }
+
+    fn visit_expr_closure(&mut self, node: &'ast syn::ExprClosure) {
+        let outer = self.picker_vars.clone();
+        for pattern in &node.inputs {
+            self.unbind_pattern(pattern);
+            if let Pat::Type(typed) = pattern
+                && Self::is_picker_type(&typed.ty)
+            {
+                self.bind_pattern(pattern);
+            }
+        }
+        syn::visit::visit_expr_closure(self, node);
+        self.picker_vars = outer;
+    }
+
+    fn visit_expr_if(&mut self, node: &'ast syn::ExprIf) {
+        let outer = self.picker_vars.clone();
+        self.visit_condition(&node.cond);
+        self.visit_block(&node.then_branch);
+        self.picker_vars = outer.clone();
+        if let Some((_, branch)) = &node.else_branch {
+            self.visit_expr(branch);
+        }
+        self.picker_vars = outer;
+    }
+
+    fn visit_expr_while(&mut self, node: &'ast syn::ExprWhile) {
+        let outer = self.picker_vars.clone();
+        self.visit_condition(&node.cond);
+        self.visit_block(&node.body);
+        self.picker_vars = outer;
+    }
+
+    fn visit_expr_for_loop(&mut self, node: &'ast syn::ExprForLoop) {
+        self.visit_expr(&node.expr);
+        let outer = self.picker_vars.clone();
+        self.unbind_pattern(&node.pat);
+        self.visit_pat(&node.pat);
+        self.visit_block(&node.body);
+        self.picker_vars = outer;
+    }
+
+    fn visit_arm(&mut self, node: &'ast syn::Arm) {
+        let outer = self.picker_vars.clone();
+        self.unbind_pattern(&node.pat);
+        syn::visit::visit_arm(self, node);
+        self.picker_vars = outer;
     }
 
     fn visit_local(&mut self, node: &'ast syn::Local) {
+        let typed = match &node.pat {
+            Pat::Type(typed) => Some(Self::is_picker_type(&typed.ty)),
+            _ => None,
+        };
+        let mut picker = typed.unwrap_or(false);
         if let Some(init) = &node.init {
             self.visit_expr(&init.expr);
-            if self.is_picker_expr(&init.expr) {
-                self.bind_pattern(&node.pat);
+            if typed.is_none() {
+                picker = self.is_picker_expr(&init.expr);
             }
         }
-        self.visit_pat(&node.pat);
         if let Some(init) = &node.init
             && let Some((_, diverge)) = &init.diverge
         {
             self.visit_expr(diverge);
         }
+        self.unbind_pattern(&node.pat);
+        if picker {
+            self.bind_pattern(&node.pat);
+        }
+        self.visit_pat(&node.pat);
     }
 
     fn visit_type_path(&mut self, node: &'ast syn::TypePath) {
@@ -334,7 +437,7 @@ fn configured_profile_match(args: &syn::punctuated::Punctuated<Expr, syn::Token!
             Some(Expr::Lit(syn::ExprLit {
                 lit: syn::Lit::Str(value),
                 ..
-            })) if value.value() == "pickers.toggle"
+            })) if value.value() == "pickers.nav"
         ),
         _ => false,
     };
@@ -439,7 +542,7 @@ fn picker_repository_guard_matches_actual_catalog_and_showcase_usage() {
 #[test]
 fn picker_repository_guard_rejects_a_removed_configured_toggle_demonstration() {
     let (picker, catalog, page) = repository_sources();
-    let old = ".key_profile(match o.value(\"pickers.toggle\") {\n                \"vim\" => PickerKeyProfile::Vim,\n                _ => PickerKeyProfile::Desktop,\n            })";
+    let old = ".key_profile(match o.value(\"pickers.nav\") {\n                \"vim\" => PickerKeyProfile::Vim,\n                _ => PickerKeyProfile::Desktop,\n            })";
     let broken_page = page.replace(old, ".key_profile(PickerKeyProfile::Desktop)");
     assert_ne!(
         broken_page, page,
@@ -467,4 +570,124 @@ fn picker_repository_guard_rejects_a_removed_exported_catalog_entry() {
             .any(|error| error.contains("missing from catalog: widgets::picker::Picker::query"))),
         "removed catalog entry unexpectedly passed: {result:?}"
     );
+}
+
+#[test]
+fn typed_picker_bindings_respect_lexical_scope_and_shadowing() {
+    let (picker, catalog, _) = repository_sources();
+    let exported = picker_api(&picker);
+    let catalog = picker_catalog(&catalog);
+    let has_list = |source: &str| {
+        PageUsage::from_source(source, &exported, &catalog)
+            .api
+            .contains("widgets::picker::Picker::list")
+    };
+    assert!(has_list(
+        "fn show(&self) { let p: Picker = self.style(); p.list(); }"
+    ));
+    assert!(!has_list(
+        "fn show(&self) { let p: Other = self.style(); p.list(); }"
+    ));
+    assert!(!has_list(
+        "fn show(&self) { let p: Picker::Other = self.style(); p.list(); }"
+    ));
+    assert!(has_list(
+        "fn show(&self) { let p: crate::Picker = self.style(); p.list(); }"
+    ));
+    assert!(!has_list(
+        "fn first(p: Picker) {} fn second(p: Other) { p.list(); }"
+    ));
+    assert!(!has_list(
+        "fn show(p: Picker) { { let p: Other = other(); p.list(); } }"
+    ));
+    assert!(has_list(
+        "fn show(p: Picker) { { let p: Other = other(); p.list(); } p.list(); }"
+    ));
+}
+
+#[test]
+fn typed_picker_closures_respect_shadowing_and_restore_outer_bindings() {
+    let (picker, catalog, _) = repository_sources();
+    let exported = picker_api(&picker);
+    let catalog = picker_catalog(&catalog);
+    let has_items = |source: &str| {
+        PageUsage::from_source(source, &exported, &catalog)
+            .api
+            .contains("widgets::picker::Picker::items")
+    };
+    assert!(has_items(
+        "fn show() { value.map(|p: &Picker| p.items()); }"
+    ));
+    assert!(!has_items(
+        "fn show(p: Picker) { value.map(|p: &Other| p.items()); }"
+    ));
+    assert!(!has_items(
+        "fn show() { value.map(|p: &Other| p.items()); } fn other(p: &Other) { p.items(); }"
+    ));
+    assert!(has_items(
+        "fn show(p: Picker) { value.map(|p: &Other| p.items()); p.items(); }"
+    ));
+}
+
+fn page_uses_picker_list(source: &str) -> bool {
+    let (picker, catalog, _) = repository_sources();
+    PageUsage::from_source(source, &picker_api(&picker), &picker_catalog(&catalog))
+        .api
+        .contains("widgets::picker::Picker::list")
+}
+
+#[test]
+fn picker_scope_respects_loop_pattern_shadow() {
+    assert!(!page_uses_picker_list(
+        "fn show(p: Picker) { for p in items { p.list(); } }"
+    ));
+    assert!(page_uses_picker_list(
+        "fn show(p: Picker) { for p in items { p.list(); } p.list(); }"
+    ));
+}
+
+#[test]
+fn picker_scope_respects_match_pattern_shadow() {
+    assert!(!page_uses_picker_list(
+        "fn show(p: Picker) { match item { Some(p) => p.list(), None => () } }"
+    ));
+    assert!(page_uses_picker_list(
+        "fn show(p: Picker) { match item { Some(p) => p.list(), None => () } p.list(); }"
+    ));
+}
+
+#[test]
+fn picker_scope_respects_if_let_pattern_shadow() {
+    assert!(!page_uses_picker_list(
+        "fn show(p: Picker) { if let Some(p) = value { p.list(); } }"
+    ));
+    assert!(!page_uses_picker_list(
+        "fn show(p: Picker) { if let Some(p) = value && p.list() { } }"
+    ));
+    assert!(page_uses_picker_list(
+        "fn show(p: Picker) { if let Some(p) = value { p.list(); } else { p.list(); } }"
+    ));
+    assert!(page_uses_picker_list(
+        "fn show(p: Picker) { if let Some(p) = value { p.list(); } p.list(); }"
+    ));
+}
+
+#[test]
+fn picker_scope_respects_while_let_pattern_shadow() {
+    assert!(!page_uses_picker_list(
+        "fn show(p: Picker) { while let Some(p) = value { p.list(); } }"
+    ));
+    assert!(page_uses_picker_list(
+        "fn show(p: Picker) { while let Some(p) = value { p.list(); } p.list(); }"
+    ));
+}
+
+#[test]
+fn picker_scope_respects_let_else_pattern_shadow() {
+    assert!(page_uses_picker_list(
+        "fn show(p: Picker) { let Some(p) = value else { p.list(); return; }; }"
+    ));
+    assert!(!page_uses_picker_list(
+        "fn show(p: Picker) { let Some(p) = value else { return; }; p.list(); }"
+    ));
 }

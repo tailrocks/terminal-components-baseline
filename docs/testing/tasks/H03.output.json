@@ -1,0 +1,41 @@
+{
+  "task_id": "H03.output",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h03_output.rs",
+    "docs/testing/cases/H03.output.json",
+    "tests/functional/baselines/pre_refactor/H03.output/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/activity.rs",
+    "src/bin/holla/domain/activity.rs",
+    "src/bin/holla/sim/world.rs"
+  ],
+  "coverage_rows": [
+    "H03.output.route",
+    "H03.output.states",
+    "H03.output.scenario.activities-multi",
+    "H03.output.scenario.launch-failure",
+    "H03.output.scenario.parity-executor"
+  ],
+  "checkpoints": [
+    "H03.output.states.120x40"
+  ],
+  "acceptance": "Queued, running, completed, failed, and stopped activities keep their own output.",
+  "status": "queued",
+  "architecture_refactor": false
+}

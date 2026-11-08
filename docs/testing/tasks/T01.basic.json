@@ -1,0 +1,39 @@
+{
+  "task_id": "T01.basic",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t01_basic.rs",
+    "docs/testing/cases/T01.basic.json",
+    "tests/functional/baselines/pre_refactor/T01.basic/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/connections.rs",
+    "src/bin/tablepro/model.rs"
+  ],
+  "coverage_rows": [
+    "T01.basic.route",
+    "T01.basic.fields",
+    "T01.basic.reopen"
+  ],
+  "checkpoints": [
+    "T01.basic.fields.120x40",
+    "T01.basic.reopen.120x40"
+  ],
+  "acceptance": "Basic fields reject blank names and invalid ports and preserve the original record when validation fails.",
+  "status": "queued",
+  "architecture_refactor": false
+}

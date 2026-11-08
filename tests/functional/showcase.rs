@@ -1,8 +1,7 @@
 use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, TerminalSnapshot};
 
-use super::bins::SHOWCASE;
-use super::support::{App, Point, cell_bg, crop, find, find_all, row_text, text};
+use super::support::{App, Point, SHOWCASE, cell_bg, crop, find, find_all, row_text, text};
 
 fn inside(point: Point) -> Point {
     Point {
@@ -558,8 +557,18 @@ fn showcase_scrollbar_thumb_drag_moves_list() {
     app.finish();
 }
 
+fn gutter_on(screen: &TerminalSnapshot, label: &str) -> bool {
+    let point = find(screen, label);
+    (1..=3).any(|back| {
+        point.x >= back
+            && screen
+                .cell_at(u32::from(point.x - back), u32::from(point.y))
+                .is_some_and(|cell| cell.text() == "▎")
+    })
+}
+
 #[test]
-fn showcase_keyboard_activation_after_click_focus() {
+fn showcase_keyboard_activates_focused_run_task() {
     let app = App::new(
         "showcase-keyboard",
         SHOWCASE,
@@ -570,14 +579,31 @@ fn showcase_keyboard_activation_after_click_focus() {
     );
     let initial = app.wait_text("Run task");
     assert!(!text(&initial).contains("Run task ✓"));
+    assert!(!text(&initial).contains("Preview ✓"));
 
-    app.click(inside(find(&initial, "Preview")));
-    app.wait_text("Preview ✓");
-    app.key("tab");
+    let mut screen = initial;
+    for _ in 0..16 {
+        if gutter_on(&screen, "Run task") {
+            break;
+        }
+        app.key("tab");
+        screen = app.settle();
+    }
+    assert!(
+        gutter_on(&app.screen(), "Run task"),
+        "Run task starts unactivated and receives keyboard focus:\n{}",
+        text(&app.screen())
+    );
+    assert!(!text(&app.screen()).contains("Run task ✓"));
+    assert!(!text(&app.screen()).contains("Preview ✓"));
     app.key("enter");
-    let done = app.wait_text("Cancel ✓");
-    assert!(!text(&done).contains("Preview ✓"));
-    app.visual("functional/showcase_keyboard_activation");
+    let done = app.wait_text("Run task ✓");
+    assert!(
+        !text(&done).contains("Preview ✓"),
+        "Preview stays idle when Run task is the activated control:\n{}",
+        text(&done)
+    );
+    app.visual("functional/showcase_keyboard_run_task");
     app.finish();
 }
 
@@ -657,20 +683,11 @@ fn showcase_tree_expand_and_file_selection() {
         s.cell_at(u32::from(gutter.x), u32::from(gutter.y))
             .map(|c| c.text().to_string())
     };
-    let flash = tui_test::SnapshotColor::Rgb(56, 56, 62);
-    // A paused page draws the click flash of the src row until the first frame
-    // after its window; no tick ends it. That frame must come before the
-    // frames of the focus moves, or it is the last write and parks the hidden
-    // cursor on the row instead of the footer. The last expand was fenced, so
-    // the click was handled before this wait starts.
-    std::thread::sleep(
-        std::time::Duration::from_millis(junie_tui::core::pointer::PointerConfig::DEFAULT.flash_ms)
-            + std::time::Duration::from_millis(50),
-    );
+    let settled = |s: &TerminalSnapshot| {
+        gutter_text(s).as_deref() == Some("▎")
+            && cell_bg(s, label) != tui_test::SnapshotColor::Rgb(56, 56, 62)
+    };
     app.move_to(Point { x: 0, y: 0 });
-    app.wait_screen("the click flash on src has ended", |s| {
-        cell_bg(s, label) != flash
-    });
     app.key("tab");
     app.wait_screen("focus leaves the tree", |s| {
         gutter_text(s).as_deref() != Some("▎")
@@ -679,6 +696,19 @@ fn showcase_tree_expand_and_file_selection() {
     app.wait_screen("focus returns to the tree", |s| {
         gutter_text(s).as_deref() == Some("▎")
     });
+
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(20);
+    loop {
+        if app.try_sustained(std::time::Duration::from_millis(600), |s| settled(s)) {
+            break;
+        }
+        assert!(
+            std::time::Instant::now() < deadline,
+            "tree row must settle without hover"
+        );
+        app.move_to(Point { x: 0, y: 0 });
+        std::thread::sleep(std::time::Duration::from_millis(100));
+    }
     app.visual("functional/showcase_trees");
     app.finish();
 }
@@ -729,18 +759,37 @@ fn showcase_dialog_opens_traps_and_escape_cancels() {
     );
     app.wait_text("Open a dialog");
     app.click(inside(find(&app.screen(), "Confirm run")));
-    let open = app.wait_screen("confirm dialog opens", |s| {
-        let t = text(s);
-        t.contains("Cancel") && (t.contains("Run") || t.contains("Confirm"))
-    });
-    assert!(!text(&open).contains("Nothing yet") || text(&open).contains("Cancel"));
+    let open = app.wait_text("Run task now?");
+    assert!(text(&open).contains("Nothing yet"));
+    assert!(text(&open).contains("Cancel"));
 
     app.visual("functional/showcase_dialogs");
-    app.key("escape");
-    let cancelled = app.wait_screen("escape cancels the dialog", |s| {
-        text(s).contains("Nothing yet") || text(s).contains("Cancelled")
+    app.key("tab");
+    let tabbed = app.wait_screen("tab stays inside the confirm dialog", |s| {
+        text(s).contains("Run task now?") && text(s).contains("Nothing yet")
     });
-    assert!(text(&cancelled).contains("Open a dialog"));
+    assert!(!text(&tabbed).contains("Delete branch?"));
+    app.key("shift+tab");
+    let shifted = app.wait_screen("shift+tab stays inside the confirm dialog", |s| {
+        text(s).contains("Run task now?") && text(s).contains("Nothing yet")
+    });
+    assert!(!text(&shifted).contains("Task started"));
+    app.key("d");
+    let trapped = app.settle();
+    assert!(
+        text(&trapped).contains("Run task now?"),
+        "the page shortcut must not open Delete branch while the dialog is up:\n{}",
+        text(&trapped)
+    );
+    assert!(!text(&trapped).contains("Delete branch?"));
+    assert!(text(&trapped).contains("Nothing yet"));
+    app.key("escape");
+    let cancelled = app.wait_screen("escape cancels and returns to the opener", |s| {
+        let t = text(s);
+        t.contains("Cancelled") && !t.contains("Run task now?") && gutter_on(s, "Confirm run")
+    });
+    assert!(!text(&cancelled).contains("Nothing yet"));
+    assert!(!text(&cancelled).contains("Task started"));
     app.finish();
 }
 
@@ -756,15 +805,50 @@ fn showcase_table_header_sort_changes_row_order() {
     );
     let initial = app.wait_text("#1040");
     assert!(text(&initial).contains("unsorted"));
-    let first_before = row_text(&initial, u32::from(find(&initial, "#1040").y)).to_string();
+    let before = task_lines(&initial);
+    let on_1040 = before
+        .iter()
+        .find(|line| line.contains("#1040"))
+        .expect("row identity on #1040")
+        .clone();
+    assert!(
+        on_1040.contains("Add rate limiting") && on_1040.contains("Done"),
+        "{on_1040}"
+    );
+    assert!(
+        before.iter().any(|line| line.contains("#1041")),
+        "unsorted neighbor #1041 is visible:\n{}",
+        text(&initial)
+    );
     app.click(inside(find(&initial, "Status")));
     let sorted = app.wait_screen("header click sorts the table", |s| {
-        !text(s).contains("unsorted")
+        !text(s).contains("unsorted") && text(s).contains("sorted by status")
     });
-    assert!(text(&sorted).contains("#1040"));
-    let _ = first_before;
+    let after = task_lines(&sorted);
+    assert_ne!(before, after, "status sort changes row order");
+    let moved = after
+        .iter()
+        .find(|line| !line.contains("#1040"))
+        .expect("a row other than #1040")
+        .clone();
+    assert_ne!(on_1040, moved);
+    assert!(
+        after.iter().any(|line| line.contains("#1040")),
+        "the #1040 identity stays in the table"
+    );
+    assert!(
+        !after.iter().take(2).any(|line| line.contains("#1041")),
+        "Running #1041 leaves the top of the status order:\n{after:?}"
+    );
     app.visual("functional/showcase_table_sort");
     app.finish();
+}
+
+fn task_lines(screen: &TerminalSnapshot) -> Vec<String> {
+    (0..screen.rows())
+        .map(|row| row_text(screen, row))
+        .filter(|line| line.contains("#10"))
+        .collect()
 }
 
 #[test]
@@ -779,12 +863,39 @@ fn showcase_form_required_validation_and_reset() {
     );
     app.wait_text("New task");
     app.click(inside(find(&app.screen(), "Create task")));
-    let invalid = app.wait_screen("empty required field blocks creation", |s| {
-        let t = text(s).to_lowercase();
-        t.contains("required") || t.contains("task name") && t.contains("!")
-    });
+    let invalid = app.wait_text("Required");
     assert!(text(&invalid).contains("New task"));
+    assert!(!text(&invalid).contains("Task created ✓"));
     app.visual("functional/showcase_forms");
+    app.finish();
+
+    let app = App::new(
+        "showcase-forms-reset",
+        SHOWCASE,
+        &["--page", "forms", "--motion", "reduced"],
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("Short imperative summary");
+    app.click(inside(find(&app.screen(), "Short imperative summary")));
+    app.type_text("Ship login fix");
+    app.wait_text("Ship login fix");
+    app.click(inside(find(&app.screen(), "Reset")));
+    let reset = app.wait_text("Form reset");
+    assert!(
+        !text(&reset).contains("Ship login fix"),
+        "Reset clears the task name:\n{}",
+        text(&reset)
+    );
+    assert!(text(&reset).contains("Short imperative summary"));
+    app.click(inside(find(&app.screen(), "Short imperative summary")));
+    app.type_text("Ship login fix");
+    app.wait_text("Ship login fix");
+    app.click(inside(find(&app.screen(), "Create task")));
+    let created = app.wait_text("Task created ✓");
+    assert!(text(&created).contains("Ship login fix"));
+    assert!(!text(&created).contains("Required"));
     app.finish();
 }
 
@@ -798,8 +909,6 @@ fn visit_page(slug: &str, heading: &str) {
         "truecolor",
     );
     app.wait_text(heading);
-    app.settle();
-    app.advance_clock(100);
     app.settle();
     app.visual(&format!("functional/showcase_page_{slug}"));
     app.finish();
@@ -836,6 +945,57 @@ page_test!(showcase_page_celleditors, "celleditors", "Cell editors");
 page_test!(showcase_page_columns, "columns", "Columns");
 page_test!(showcase_page_sidebars, "sidebars", "Sidebars");
 page_test!(showcase_page_pickers, "pickers", "Pickers");
+
+#[test]
+fn showcase_multi_picker_modes_filter_disabled_and_report_selection() {
+    let app = App::new(
+        "showcase-multi-pickers",
+        SHOWCASE,
+        &["--page", "pickers", "--motion", "paused"],
+        120,
+        40,
+        "truecolor",
+    );
+    app.click_text("Multi select");
+    app.wait_screen("multi picker shows the disabled row", |screen| {
+        let visible = text(screen);
+        visible.contains("Space Toggle")
+            && visible.contains("Row1")
+            && visible.contains("Row2")
+            && visible.contains("Row3")
+    });
+    app.key("space");
+    app.key("down");
+    app.key("space");
+    app.key("enter");
+    let chosen = app.wait_text("ChoseMany: Row1, Row3");
+    assert!(text(&chosen).contains("2 selected"));
+    assert!(!text(&chosen).contains("Row2, Row3"));
+
+    app.click_text("Multi search");
+    app.wait_text("Insert Toggle");
+    app.type_text("Row3");
+    app.wait_screen("search filters to the third row", |screen| {
+        (0..screen.rows()).any(|row| {
+            let line = row_text(screen, row);
+            line.contains("Row3") && line.contains("multi row 3")
+        })
+    });
+    app.key("insert");
+    app.key("escape");
+    app.type_text("Row1");
+    app.wait_screen("search filters to the first row", |screen| {
+        (0..screen.rows()).any(|row| {
+            let line = row_text(screen, row);
+            line.contains("Row1") && line.contains("multi row 1")
+        })
+    });
+    app.key("insert");
+    app.key("enter");
+    let searched = app.wait_text("ChoseMany: Row3, Row1");
+    assert!(text(&searched).contains("2 selected"));
+    app.finish();
+}
 page_test!(showcase_page_dialogkinds, "dialogkinds", "Dialog kinds");
 page_test!(showcase_page_filebrowser, "filebrowser", "File browser");
 page_test!(showcase_page_progress, "progress", "Progress");
@@ -848,12 +1008,6 @@ page_test!(showcase_page_panetree, "panetree", "Pane tree");
 page_test!(showcase_page_codeeditor, "codeeditor", "Code editor");
 page_test!(showcase_page_diff, "diff", "Diff");
 page_test!(showcase_page_terminal, "terminal", "Terminal");
-page_test!(showcase_page_terminalpane, "terminalpane", "Terminal pane");
-page_test!(
-    showcase_page_fixedcontrols,
-    "fixedcontrols",
-    "Fixed controls"
-);
 page_test!(
     showcase_page_textutilities,
     "textutilities",
@@ -1871,7 +2025,18 @@ fn showcase_picker_returns_both_named_rows_selected_across_a_filter() {
     let opened = app.wait_text("Row3");
     app.click(inside(find(&opened, "Row3")));
     app.type_text("Row1");
-    let filtered = app.wait_text("Row1");
+    let filtered = app.wait_screen("Row1 query and filtered option", |screen| {
+        let rows: Vec<String> = (0..screen.rows())
+            .map(|row| row_text(screen, row))
+            .collect();
+        rows.iter().any(|line| line.contains("▎ Row1"))
+            && rows
+                .iter()
+                .any(|line| line.contains("Row1") && line.contains("multi row 1"))
+            && !rows
+                .iter()
+                .any(|line| line.contains("Row3") && line.contains("multi row 3"))
+    });
     let row1 = find_all(&filtered, "Row1")
         .into_iter()
         .find(|point| row_text(&filtered, u32::from(point.y)).contains("multi row 1"))
@@ -1937,4 +2102,29 @@ fn showcase_picker_reports_group_conflicts_and_keeps_selection() {
     let nonconflicting = app.wait_text("ChoseMany: Row3, Row1");
     assert!(text(&nonconflicting).contains("2 selected"));
     app.finish();
+}
+
+#[test]
+fn showcase_picker_nav_profiles_toggle_with_the_displayed_key() {
+    for (name, option, hint, toggle) in [
+        ("desktop", "pickers.nav=desktop", "Insert Toggle", "insert"),
+        ("vim", "pickers.nav=vim", "Ctrl+T Toggle", "ctrl+t"),
+    ] {
+        let app = App::new(
+            &format!("showcase-picker-nav-{name}"),
+            SHOWCASE,
+            &["--page", "pickers", "--motion", "paused", "--opt", option],
+            160,
+            50,
+            "truecolor",
+        );
+        app.click_text("Multi search");
+        let shown = app.wait_text(hint);
+        assert!(text(&shown).contains("Row1"));
+        app.key(toggle);
+        app.key("enter");
+        let selected = app.wait_text("ChoseMany: Row1");
+        assert!(text(&selected).contains("1 selected"));
+        app.finish();
+    }
 }

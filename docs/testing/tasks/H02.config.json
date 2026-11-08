@@ -1,0 +1,39 @@
+{
+  "task_id": "H02.config",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h02_config.rs",
+    "docs/testing/cases/H02.config.json",
+    "tests/functional/baselines/pre_refactor/H02.config/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/domain/custom.rs",
+    "src/bin/holla/screens/review.rs"
+  ],
+  "coverage_rows": [
+    "H02.config.route",
+    "H02.config.config",
+    "H02.config.scenario.parity-custom-actions",
+    "H02.config.scenario.hard-cases"
+  ],
+  "checkpoints": [
+    "H02.config.config.120x40"
+  ],
+  "acceptance": "Malformed, duplicate, and unavailable custom actions do not start an activity.",
+  "status": "queued",
+  "architecture_refactor": false
+}

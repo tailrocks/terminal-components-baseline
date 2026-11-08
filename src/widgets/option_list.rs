@@ -37,7 +37,7 @@ pub enum WheelMode {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Item {
-    pub key: ItemKey,
+    pub key: Option<ItemKey>,
     pub label: String,
 
     pub glyph: Cow<'static, str>,
@@ -69,7 +69,7 @@ impl Default for Item {
 impl Item {
     pub fn new(label: impl Into<String>) -> Self {
         Self {
-            key: ItemKey::index(0),
+            key: None,
             label: label.into(),
             glyph: Cow::Borrowed(""),
             detail: String::new(),
@@ -85,7 +85,7 @@ impl Item {
     }
 
     pub fn key(mut self, key: ItemKey) -> Self {
-        self.key = key;
+        self.key = Some(key);
         self
     }
 
@@ -166,10 +166,7 @@ impl<T: AsItem> RowSource for [T] {
         &self[i].as_item().label
     }
     fn key(&self, i: usize) -> ItemKey {
-        match self[i].as_item().key {
-            ItemKey::Index(_) => ItemKey::index(i),
-            k => k,
-        }
+        self[i].as_item().key.unwrap_or(ItemKey::index(i))
     }
 }
 

@@ -1,0 +1,119 @@
+{
+  "source_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+  "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+  "toolchain": {
+    "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "1.99.1 (5f94df478 2026-08-27)",
+    "nextest": "0.9.151 (6b3f994577a98874a2e0ea5bef77fbbab343404)",
+    "tuiscotti_cli": "0.4.0",
+    "tuiscotti_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+    "tuiscotti_tui_test": "0.2.1",
+    "mise": "2026.11.3",
+    "build_profile": "dev"
+  },
+  "binary_path": "tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+  "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+  "fixture_args": [
+    "--scenario",
+    "launch-failure"
+  ],
+  "env": {
+    "TERM": "xterm-256color",
+    "COLORTERM": "truecolor",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "TZ": "UTC",
+    "JUNIE_TUI_CLIENT_PLATFORM": "macos"
+  },
+  "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+  "candidate_sha256": "c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8",
+  "expect_baseline": "2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b",
+  "precondition": "Fresh Reference capture at asserted pre_refactor/j05_failure/j05_failure_failure_narrow checkpoint",
+  "session": "docs/testing/acceptance-receipts/fresh-reference-20261108/evidence/functional/j05-failure-failure-76586-1794121162501343000-0/session.json",
+  "expected_test_id": "pre_refactor/j05_failure/j05_failure_failure_narrow",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_j05_failure_j05_failure_failure_narrow.json",
+  "provenance_path": "docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_j05_failure_j05_failure_failure_narrow.provenance.json",
+  "previous_archive_path": "docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.pb",
+  "test_id": "pre_refactor/j05_failure/j05_failure_failure_narrow",
+  "acceptance": {
+    "expected_baseline_sha256": "2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b",
+    "accepted_baseline_sha256": "c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8",
+    "transaction_receipt": "docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_j05_failure_j05_failure_failure_narrow.json",
+    "candidate_sha256": "c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8"
+  },
+  "previous_baseline": {
+    "sha256": "2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b"
+  },
+  "candidate": {
+    "sha256": "c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8",
+    "path": "docs/testing/acceptance-receipts/fresh-reference-20261108/evidence/functional/j05-failure-failure-76586-1794121162501343000-0/reference-candidates/pre_refactor_j05_failure_j05_failure_failure_narrow.tui.pb"
+  },
+  "reference_session": {
+    "mode": "reference",
+    "reference_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "binary_path": "tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+    "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+    "args": [
+      "--scenario",
+      "launch-failure"
+    ],
+    "cols": 120,
+    "rows": 40,
+    "color": "truecolor",
+    "platform": "macos",
+    "history": false,
+    "motion": "reduced",
+    "clock": false,
+    "TERM": "xterm-256color",
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
+  },
+  "capture_record": {
+    "binary_path": "tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+    "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+    "candidate_path": "docs/testing/acceptance-receipts/fresh-reference-20261108/evidence/functional/j05-failure-failure-76586-1794121162501343000-0/reference-candidates/pre_refactor_j05_failure_j05_failure_failure_narrow.tui.pb",
+    "candidate_sha256": "c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8",
+    "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "reference_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "session_path": "docs/testing/acceptance-receipts/fresh-reference-20261108/evidence/functional/j05-failure-failure-76586-1794121162501343000-0/session.json",
+    "test_id": "pre_refactor/j05_failure/j05_failure_failure_narrow"
+  },
+  "pre_accept_check": {
+    "schema": "tuiscotti.cli.v1",
+    "command": "check",
+    "status": "pass",
+    "test_id": "pre_refactor/j05_failure/j05_failure_failure_narrow",
+    "reason": null,
+    "candidate_path": {
+      "encoding": "utf8",
+      "value": "docs/testing/acceptance-receipts/fresh-reference-20261108/evidence/functional/j05-failure-failure-76586-1794121162501343000-0/reference-candidates/pre_refactor_j05_failure_j05_failure_failure_narrow.tui.pb"
+    },
+    "candidate_sha256": "c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8",
+    "baseline_sha256": "2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b",
+    "output_path": null,
+    "error_code": null
+  },
+  "cli_receipt": {
+    "schema": "tuiscotti.cli.v1",
+    "command": "accept",
+    "status": "pass",
+    "test_id": "pre_refactor/j05_failure/j05_failure_failure_narrow",
+    "reason": null,
+    "candidate_path": {
+      "encoding": "utf8",
+      "value": "docs/testing/acceptance-receipts/fresh-reference-20261108/evidence/functional/j05-failure-failure-76586-1794121162501343000-0/reference-candidates/pre_refactor_j05_failure_j05_failure_failure_narrow.tui.pb"
+    },
+    "candidate_sha256": "c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8",
+    "baseline_sha256": "c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8",
+    "output_path": {
+      "encoding": "utf8",
+      "value": "tests/functional/baselines/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.pb"
+    },
+    "error_code": null
+  },
+  "capture_index_path": "docs/testing/acceptance-receipts/fresh-reference-20261108/evidence/functional/j05-failure-failure-76586-1794121162501343000-0/reference-candidates/index.jsonl",
+  "history": {
+    "superseded_baseline": "docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.pb",
+    "superseded_baseline_sha256": "2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b"
+  }
+}

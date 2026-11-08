@@ -24,6 +24,7 @@ use jackin_console::domain::instance::Instance;
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::onepassword::OpReference;
 use jackin_console::domain::reason::{Found, IssueReason, RefreshOutcome, UsageReason};
+use jackin_console::domain::usage::Freshness;
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use jackin_console::launch::{LaunchFeed, LaunchTarget};
@@ -37,6 +38,69 @@ use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
 
 type Answer = fn(&Effect, &World) -> Option<Msg>;
+
+#[test]
+fn active_rate_limit_survives_a_broker_outage_refresh() {
+    let world = world_for(Scenario::AccountsMixed);
+    let account = world
+        .accounts
+        .get("acct-opencode-go")
+        .expect("fixture account");
+    let now = world.clock.now_secs();
+    let refreshed = provider::refresh(account, now, false, true);
+
+    assert_eq!(refreshed.outcome, RefreshOutcome::StillRateLimited);
+    assert_eq!(
+        refreshed.issue.as_ref().map(|issue| issue.code),
+        Some(IssueCode::RateLimited)
+    );
+    assert_eq!(
+        refreshed.issue.as_ref().and_then(|issue| issue.retry_secs),
+        account.issue.as_ref().and_then(|issue| issue.retry_secs)
+    );
+    assert_eq!(refreshed.usage.freshness.phase, Freshness::Failed);
+    assert_eq!(
+        refreshed.usage.freshness.last_good_secs,
+        account.usage.freshness.last_good_secs
+    );
+    assert_eq!(refreshed.usage.windows, account.usage.windows);
+}
+
+#[test]
+fn expired_rate_limit_exposes_broker_outage_without_losing_last_good_values() {
+    let world = world_for(Scenario::AccountsMixed);
+    let mut account = world
+        .accounts
+        .get("acct-opencode-go")
+        .expect("fixture account")
+        .clone();
+    let now = world.clock.now_secs();
+    account.issue = Some(
+        account
+            .issue
+            .take()
+            .expect("rate limited issue")
+            .retry(now - 1),
+    );
+
+    let refreshed = provider::refresh(&account, now, false, true);
+
+    assert_eq!(refreshed.outcome, RefreshOutcome::BrokerUnreachable);
+    assert_eq!(
+        refreshed.issue.as_ref().map(|issue| issue.code),
+        Some(IssueCode::ProviderUnavailable)
+    );
+    assert_eq!(
+        refreshed.issue.as_ref().map(|issue| &issue.reason),
+        Some(&IssueReason::BrokerDown)
+    );
+    assert_eq!(refreshed.usage.freshness.phase, Freshness::Stale);
+    assert_eq!(
+        refreshed.usage.freshness.last_good_secs,
+        account.usage.freshness.last_good_secs
+    );
+    assert_eq!(refreshed.usage.windows, account.usage.windows);
+}
 
 /// The simulator, except that the requests this file is about get no answer
 /// until the test delivers one, and one function may answer an effect first.

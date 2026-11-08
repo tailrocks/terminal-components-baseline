@@ -1,0 +1,120 @@
+{
+  "task_id": "T04.close",
+  "cases": [
+    {
+      "case_id": "T04.close.route",
+      "owner_task": "T04.close",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with placeholder Type SQL and status ✓ Connected to Development, and the screen does not say Loading schema. The unsaved-close dialog is absent. Ctrl+Q exits 0. The test does not inject focus.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d730641aa0136fa54f59095e138865f931719123",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T04.close",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "Ctrl+Q exits"
+    },
+    {
+      "case_id": "T04.close.dirty",
+      "owner_task": "T04.close",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Development, Query 1 receives SELECT 't04_close_keep' AS marker and Query 2 receives SELECT 't04_close_drop' AS marker. Ctrl+W on Query 1 opens Close tab with unsaved work? The body wraps as Pending row edits and unsaved query text in this / tab will be lost. The actions are ▎Cancel and Close anyway. The dialog does not show a Save button. A second Ctrl+W leaves the dialog open and leaves both Query 1 and Query 2 in the strip. The tab-strip close glyph is behind the modal hit barrier, so a click there is an outside cancel and this case does not click it. The open dialog is captured at 120×40, then at 80×24 while it is still up, and only then does the terminal return to 120×40. Enter on Cancel closes the dialog, keeps Query 1 and t04_close_keep, and keeps Query 2. On Query 2, Ctrl+W, Right, and Enter on Close anyway remove Query 2 and t04_close_drop. Query 1 and t04_close_keep remain. Ctrl+Q confirms Quit TablePro? and exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d730641aa0136fa54f59095e138865f931719123",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t04_close/t04_close_dirty_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t04_close/t04_close_dirty_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Close a dirty tab and choose Cancel, then Discard, then Save on separate tabs. While confirmation is open, try to close the neighbour.",
+      "expected_results": "Cancel keeps the SQL. The modal refuses the neighbour close.",
+      "forbidden_effects": "Cancel closes the tab.",
+      "checkpoint_ids": [
+        "T04.close.dirty.120x40",
+        "T04.close.dirty.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "8f3cbd2f8b4b768f64d7dba2fa798be04329f371b4f6667db66c0780524618f9",
+        "expect_baseline": "missing",
+        "precondition": "T04.close.dirty.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "c7ad94a5bf09c6b5200f685a9d0b2e9b56207ac154999cf9329e96ec461c8e04",
+        "expect_baseline": "missing",
+        "precondition": "T04.close.dirty.narrow"
+      }
+    }
+  ]
+}

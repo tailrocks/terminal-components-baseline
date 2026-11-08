@@ -951,8 +951,8 @@ impl Specimen for crate::widgets::picker::Picker {
         use SpecimenState::*;
         match state {
             Rest | Empty | Loading | Error => true,
-            Hover | Pressed | Disabled => self.items.len() > 1,
-            Overflow => self.items.len() > 3,
+            Hover | Pressed | Disabled => self.items().len() > 1,
+            Overflow => self.items().len() > 3,
             Focused | FocusedHover | Selected | Busy | Editing | Narrow => false,
         }
     }
@@ -971,10 +971,10 @@ impl Specimen for crate::widgets::picker::Picker {
     ) {
         let _ = bg;
         let mut p = picker_sample(self, state);
-        let w = p.list.width.1.min(area.width);
-        p.list.width = (w, w);
+        let w = p.list().width.1.min(area.width);
+        p.set_width(w);
         let v = state.visual();
-        let row = p.row_id(1.min(p.items.len().saturating_sub(1)));
+        let row = p.row_id(1.min(p.items().len().saturating_sub(1)));
         ctx.interaction.focus = None;
         ctx.interaction.hover = v.hovered.then_some(row);
         ctx.interaction.pressed = v.pressed.then_some(row);
@@ -988,28 +988,36 @@ fn picker_sample(
 ) -> crate::widgets::picker::Picker {
     use crate::widgets::picker::PickerStatus;
     let mut p = p.clone();
-    p.list.placement = crate::ui::popup::Placement::Center;
+    p.set_placement(crate::ui::popup::Placement::Center);
     p.anchor = Rect::ZERO;
     p.backdrop = crate::ui::ctx::Backdrop::FULL;
     match state {
         SpecimenState::Disabled => {
-            if let Some(it) = p.items.get_mut(1) {
-                it.disabled = true;
+            let mut items = p.items().to_vec();
+            if let Some(item) = items.get_mut(1) {
+                item.disabled = true;
             }
+            p.set_items(items)
+                .unwrap_or_else(|error| p.report_item_error(error));
         }
-        SpecimenState::Empty => p.set_items(vec![]),
+        SpecimenState::Empty => {
+            p.set_items(vec![])
+                .unwrap_or_else(|error| p.report_item_error(error));
+        }
         SpecimenState::Loading => {
-            p.set_items(vec![]);
+            p.set_items(vec![])
+                .unwrap_or_else(|error| p.report_item_error(error));
             p.status = PickerStatus::Loading("Fetching branches…".into());
         }
         SpecimenState::Error => {
-            p.set_items(vec![]);
+            p.set_items(vec![])
+                .unwrap_or_else(|error| p.report_item_error(error));
             p.status = PickerStatus::Error {
                 message: "Could not reach origin".into(),
                 detail: Some("r retries".into()),
             };
         }
-        SpecimenState::Overflow => p.list.max_rows = 3,
+        SpecimenState::Overflow => p.set_max_rows(3),
         _ => {}
     }
     p

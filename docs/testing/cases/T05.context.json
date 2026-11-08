@@ -1,0 +1,120 @@
+{
+  "task_id": "T05.context",
+  "cases": [
+    {
+      "case_id": "T05.context.route",
+      "owner_task": "T05.context",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing lists Filter connections and Development and does not show Query 1. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with Connected to Development, after Loading schema has left the screen. Keyboard Down moves the explorer focus to customers. Shift+F10 opens the row menu. Its title line is customers, and the menu shows Open and Filter objects…. Esc closes the menu. The focused explorer row is still customers, and public › products is absent. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "b4df814fcc2830e7a39095870c584115e6f4c808",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T05.context",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect; Down to customers; Shift+F10",
+      "return_path": "Esc closes the customers row menu and focus stays on customers; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "T05.context.context",
+      "owner_task": "T05.context",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Keyboard Down stops on customers, then on products. Shift+F10 opens the products row menu. Open is enabled, and the menu does not show Tables and views only. Enter runs Open. The panel title is public › products with meta 9 cols, the meta does not contain preview, and public › customers is absent. One tab row contains Query 1 and products, and that row does not contain customers. The focused grid row is SKU-01000. Right then Down moves the cursor to SKU-01001. Shift+F10 opens the cell menu titled sku · row 2. The menu shows Copy cell, Copy row, and Edit cell, and it does not show Read-only rows or sku · row 1. That open menu is captured at 120×40. After resize to 80×24 it is captured again, and that narrow shot is taken before resize back to 120×40. Enter runs Copy cell. The menu closes, the focused row stays SKU-01001, and the Copied status names SKU-01001 and does not name SKU-01000. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "b4df814fcc2830e7a39095870c584115e6f4c808",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t05_context/t05_context_context_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_context/t05_context_context_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Open a row context menu and a cell context menu and run one action in each.",
+      "expected_results": "The action's object is the selected object.",
+      "forbidden_effects": "The action applies to the previously selected row.",
+      "checkpoint_ids": [
+        "T05.context.context.120x40",
+        "T05.context.context.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4d309ddbbc684c0a3cea580dedcf5e62cea4247a4edeb4f1ce0506e261355a97",
+        "expect_baseline": "missing",
+        "precondition": "T05.context.context.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1e7cc12617249e3b3edd31263c5b9a7491f32f245c6be2ea4cc64868ef97a203",
+        "expect_baseline": "missing",
+        "precondition": "T05.context.context.narrow"
+      }
+    }
+  ]
+}

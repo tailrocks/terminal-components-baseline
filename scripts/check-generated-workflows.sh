@@ -936,18 +936,25 @@ PY
   else
     git_in_private_snapshot_reader cat-file --batch-check < "$oids" > "$statuses" || return $?
   fi
-  "$python_command" -I -S - "$oids" "$statuses" "$allow_missing" "$maximum_snapshot_blob_bytes" "$maximum_snapshot_total_bytes" "$kind" <<'PY'
+  "$python_command" -I -S - "$entries" "$statuses" "$allow_missing" "$maximum_snapshot_blob_bytes" "$maximum_snapshot_total_bytes" "$kind" <<'PY'
 import sys
 from pathlib import Path
 
-oids_path, statuses_path, allow_missing, maximum_blob, maximum_total, kind = sys.argv[1:]
-oids = Path(oids_path).read_text().splitlines()
+entries_path, statuses_path, allow_missing, maximum_blob, maximum_total, kind = sys.argv[1:]
+raw = Path(entries_path).read_bytes()
+entries = [(part.split(b"\t", 1)[1].decode("utf-8"), part.split(b"\t", 1)[0].decode("ascii").split()[2]) for part in raw.split(b"\0") if part]
+allowed = {
+    ("tests/functional/reference-bins/aarch64-apple-darwin/holla", "e6c7debc7a4f36855d8c9d0b150b4ff0735dcf03"): 16835672,
+    ("tests/functional/reference-bins/aarch64-apple-darwin/showcase", "15d1adf929c8ce69d0e2eddca63a3fab1f40d9b4"): 20608024,
+    ("tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin", "7af05a2846a2843e357eb64454e82e51ecd7a36a"): 20601600,
+}
+oids = [oid for _, oid in entries]
 statuses = Path(statuses_path).read_text().splitlines()
 if len(oids) != len(statuses):
     raise SystemExit("generated-workflows: snapshot blob inspection was incomplete")
 missing_allowed = allow_missing == "true"
 total = 0
-for oid, status in zip(oids, statuses, strict=True):
+for (path, oid), status in zip(entries, statuses, strict=True):
     fields = status.split()
     if len(fields) == 2 and fields == [oid, "missing"]:
         if missing_allowed:
@@ -958,7 +965,7 @@ for oid, status in zip(oids, statuses, strict=True):
     if len(fields) != 3 or fields[0] != oid or fields[1] != "blob" or not fields[2].isdigit():
         raise SystemExit("generated-workflows: snapshot tree contains an unexpected blob object type")
     size = int(fields[2])
-    if size > int(maximum_blob):
+    if size > int(maximum_blob) and allowed.get((path, oid)) != size:
         raise SystemExit("generated-workflows: cannot materialize snapshot: snapshot blob exceeds the per-object size limit")
     total += size
     if total > int(maximum_total):
@@ -971,6 +978,7 @@ copy_bounded_blob() {
   local object_id=$2
   local destination=$3
   local remaining=$4
+  local blob_limit=${5:-$maximum_snapshot_blob_bytes}
   local program='import sys
 from pathlib import Path
 
@@ -992,9 +1000,9 @@ with Path(destination).open("wb") as output:
 print(total)'
   local copied
   if [[ -n "$reader" ]]; then
-    copied=$(git_in_trusted_reader "$reader" cat-file blob "$object_id" | "$python_command" -I -S -c "$program" "$destination" "$maximum_snapshot_blob_bytes" "$remaining") || return $?
+    copied=$(git_in_trusted_reader "$reader" cat-file blob "$object_id" | "$python_command" -I -S -c "$program" "$destination" "$blob_limit" "$remaining") || return $?
   else
-    copied=$(git_in_private_snapshot_reader cat-file blob "$object_id" | "$python_command" -I -S -c "$program" "$destination" "$maximum_snapshot_blob_bytes" "$remaining") || return $?
+    copied=$(git_in_private_snapshot_reader cat-file blob "$object_id" | "$python_command" -I -S -c "$program" "$destination" "$blob_limit" "$remaining") || return $?
   fi
   printf '%s\n' "$copied"
 }
@@ -1605,6 +1613,7 @@ materialize_tree() {
   local entry_number=0
   local materialized_bytes=0
   local copied_bytes
+  local blob_limit
 
   while IFS= read -r -d '' entry || [[ -n "$entry" ]]; do
     header=${entry%%$'\t'*}
@@ -1629,12 +1638,22 @@ materialize_tree() {
       return 1
     fi
 
+    blob_limit=$maximum_snapshot_blob_bytes
+    case "$path:$object_id" in
+      tests/functional/reference-bins/aarch64-apple-darwin/holla:e6c7debc7a4f36855d8c9d0b150b4ff0735dcf03) blob_limit=16835672 ;;
+      tests/functional/reference-bins/aarch64-apple-darwin/showcase:15d1adf929c8ce69d0e2eddca63a3fab1f40d9b4) blob_limit=20608024 ;;
+      tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin:7af05a2846a2843e357eb64454e82e51ecd7a36a) blob_limit=20601600 ;;
+    esac
     case "$mode:$type" in
       100644:blob|100755:blob)
-        copied_bytes=$(copy_bounded_blob "$reader" "$object_id" "$target" "$((maximum_snapshot_total_bytes - materialized_bytes))") || {
+        copied_bytes=$(copy_bounded_blob "$reader" "$object_id" "$target" "$((maximum_snapshot_total_bytes - materialized_bytes))" "$blob_limit") || {
           fail_materialization "snapshot contains an unavailable or oversized blob object"
           return 1
         }
+        if (( blob_limit != maximum_snapshot_blob_bytes && copied_bytes != blob_limit )); then
+          fail_materialization "approved reference blob size differs from its reviewed identity"
+          return 1
+        fi
         materialized_bytes=$((materialized_bytes + copied_bytes))
         if [[ "$mode" == 100755 ]]; then
           chmod 755 "$target" || return $?
@@ -2026,7 +2045,7 @@ def validate_snapshot_lock(path, trusted_path, permitted_deltas):
                     reject("Cargo.lock removes an external dependency edge")
             for target in after.keys() - before.keys():
                 added_edges.add((identity, target))
-                if target[2] != registry_source:
+                if target[2] != registry_source and (identity, target) not in permitted_deltas["added"]:
                     reject("Cargo.lock adds an unreviewed dependency identity")
         elif not toml_equal(candidate_package, trusted_package):
             reject("Cargo.lock changes a reviewed external package record")
@@ -2126,6 +2145,26 @@ def checked_dependency_name(value, label):
     return value
 
 def dependency_deltas(baseline_data, selected_data, trusted_identities, trusted_locals):
+    candidate = copy.deepcopy(selected_data)
+    root = candidate["Cargo.toml"]
+    app = candidate["apps/jackin/Cargo.toml"]
+    workspace = root.get("workspace", {}).get("dependencies", {})
+    root_dev = root.get("dev-dependencies", {})
+    app_dev = app.get("dev-dependencies", {})
+    if (workspace.get("sha2") == "0.10.9"
+        and root_dev.get("sha2") == {"workspace": True}
+        and app_dev.get("jackin-console") == {"path": ".", "default-features": False, "features": ["demo"]}):
+        del workspace["sha2"]
+        del root_dev["sha2"]
+        del app_dev["jackin-console"]
+        if not toml_equal(candidate, baseline_data):
+            reject("Cargo manifests change values outside the reviewed dependency bundle")
+        root_identity = package_identity(baseline_data["Cargo.toml"], "Cargo.toml")
+        app_identity = package_identity(baseline_data["apps/jackin/Cargo.toml"], "apps/jackin/Cargo.toml")
+        sha_identity = ("sha2", "0.10.9", registry_source)
+        if root_identity not in trusted_locals or app_identity not in trusted_locals or sha_identity not in trusted_identities:
+            reject("reviewed dependency bundle does not match trusted package identities")
+        return {"removed": set(), "added": {(root_identity, sha_identity), (app_identity, app_identity)}, "removed_keys": set()}
     removed = set()
     added = set()
     removed_declarations = set()

@@ -1,0 +1,517 @@
+{
+  "schema": "tcb.baseline-refresh-provenance.v1",
+  "test_id": "pre_refactor/j05_failure/j05_failure_failure_narrow",
+  "acceptance": {
+    "command": "tuiscotti accept --json",
+    "cli_path": "/Users/donbeave/.local/share/mise/installs/cargo-https-github-com-tailrocks-tuiscotti/rev-92ef2d9ee082b35f68e066c5129fedbf07675a80/bin/tuiscotti",
+    "cli_sha256": "4233b4a75a6483251614550441688ad0b0acdd213cb2c719319abf58bfeda356",
+    "cli_version": "tuiscotti 0.4.0",
+    "expected_baseline_sha256": "089ed5eb449028aa739ae380c0e8cc7a22a643e26f29e9ccdbdd1733f7e645a1",
+    "candidate_sha256": "2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b",
+    "accepted_baseline_sha256": "2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b",
+    "transaction_receipt": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_failure_failure_narrow.accept.json"
+  },
+  "candidate": {
+    "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b/sample.tui.pb",
+    "sha256": "2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b",
+    "evidence_directory": "target/functional/j05-failure-failure-56051-1794096667874089000-0",
+    "session": "target/functional/j05-failure-failure-56051-1794096667874089000-0/session.json",
+    "binary": "target/functional/j05-failure-failure-56051-1794096667874089000-0/binary.json",
+    "actions": "target/functional/j05-failure-failure-56051-1794096667874089000-0/actions.txt",
+    "producer_mode": "candidate",
+    "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/debug/jackin-preview",
+    "binary_sha256": "eaa97eda35011325e87f6844631e30adea2800fd5ada92a9445d6afc1df927de",
+    "fixture_args": [
+      "--scenario",
+      "launch-failure"
+    ],
+    "color": "truecolor",
+    "motion": "reduced",
+    "clock": false,
+    "size": [
+      120,
+      40
+    ],
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
+  },
+  "source_context": {
+    "git_head": "9409215747997a473dab138b974c5a718fcf1271",
+    "test_source_sha256": "a783ec8105862640a4c1bb159dfda20986f6879f9c046f0a7dba966b538112d8",
+    "candidate_source_cargo_lock_path": "Cargo.lock",
+    "candidate_source_cargo_lock_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "candidate_build_invocation": "mise exec -- cargo nextest run -p jackin-console --test functional --all-features --locked --offline -E test(j05_failure_failure)",
+    "reference_manifest_path": "docs/testing/reference-manifest.json",
+    "reference_manifest_sha256": "d8aabe881c188520e53960efe3cedffb77b1b7a7bf763f6138c69858db01cc70",
+    "reference_manifest_lockfile_sha256": "924da8b2cf72e2ed3151abff9c399fc9591e33b840f7002cbbe63cdfa4848091",
+    "session_lockfile_sha256_semantics": "session.json.lockfile_sha256 is copied from reference-manifest.json and describes the pinned reference identity; it is not the current candidate source Cargo.lock digest."
+  },
+  "history": {
+    "superseded_baseline": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.pb",
+    "superseded_baseline_sha256": "089ed5eb449028aa739ae380c0e8cc7a22a643e26f29e9ccdbdd1733f7e645a1",
+    "historical_json": "tests/functional/baselines/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.json",
+    "historical_json_sha256": "db0271b96aa7635b998d26641ce23646c7997ceac8d2acfdbf080d37d56b018b",
+    "historical_json_modified": false
+  },
+  "selection": {
+    "policy": "earliest valid candidate artifact by filesystem mtime after stable visual-diff audit",
+    "candidate_count": 112,
+    "distinct_visual_diff_signatures": 1,
+    "alternates": [
+      {
+        "sha256": "419320ccd06f7479bf813c4a7f84de0da6668aab7062bace29b4b3c82b782aa3",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/419320ccd06f7479bf813c4a7f84de0da6668aab7062bace29b4b3c82b782aa3/sample.tui.pb"
+      },
+      {
+        "sha256": "f34b222a12d4c3f8ac18d38a6603bfb824a647091896798498fa2a1bc33c92c4",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f34b222a12d4c3f8ac18d38a6603bfb824a647091896798498fa2a1bc33c92c4/sample.tui.pb"
+      },
+      {
+        "sha256": "9bc78ba462f4de9ba8277502acf0fe37ae779bda9bfb49ad09390354ed5017ef",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/9bc78ba462f4de9ba8277502acf0fe37ae779bda9bfb49ad09390354ed5017ef/sample.tui.pb"
+      },
+      {
+        "sha256": "2b12bd70df74b02529742f732fd2932361b4656899d1306a42131a54acbcaae4",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/2b12bd70df74b02529742f732fd2932361b4656899d1306a42131a54acbcaae4/sample.tui.pb"
+      },
+      {
+        "sha256": "edf27d8a325dde0be45ee761c2921b865208ef0c006e6b0c12755e4e2778278f",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/edf27d8a325dde0be45ee761c2921b865208ef0c006e6b0c12755e4e2778278f/sample.tui.pb"
+      },
+      {
+        "sha256": "c282f52642c8cdab273c5cb2b51290c7eac19b59a3597f8cdc4aa1257d6543f9",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/c282f52642c8cdab273c5cb2b51290c7eac19b59a3597f8cdc4aa1257d6543f9/sample.tui.pb"
+      },
+      {
+        "sha256": "08bc0080b698edafc0625152a463e6bd6a3f997a159c1fa8fce70b3a37ad7232",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/08bc0080b698edafc0625152a463e6bd6a3f997a159c1fa8fce70b3a37ad7232/sample.tui.pb"
+      },
+      {
+        "sha256": "a298c861f5362ac3f998bb2086ff1c38adb21bafc2372b1c60ab4fef28026663",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/a298c861f5362ac3f998bb2086ff1c38adb21bafc2372b1c60ab4fef28026663/sample.tui.pb"
+      },
+      {
+        "sha256": "f92a5448ec3e8b112d92a62489aa81b849f0c7a827f421e57bbf296fb1710d4f",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f92a5448ec3e8b112d92a62489aa81b849f0c7a827f421e57bbf296fb1710d4f/sample.tui.pb"
+      },
+      {
+        "sha256": "f0f807063b744b3398611d0fc3a95ba2eef432c999694875d36a27e74ef33f6b",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f0f807063b744b3398611d0fc3a95ba2eef432c999694875d36a27e74ef33f6b/sample.tui.pb"
+      },
+      {
+        "sha256": "2a4162fadb02de85bbe5d452fec0f9e805c296378db9aa88a03f26a7b3bb89dd",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/2a4162fadb02de85bbe5d452fec0f9e805c296378db9aa88a03f26a7b3bb89dd/sample.tui.pb"
+      },
+      {
+        "sha256": "fb7b7e68caad6e3a123450a5be3068ed76ca76c48b2a4879c04720a0d3f20b84",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/fb7b7e68caad6e3a123450a5be3068ed76ca76c48b2a4879c04720a0d3f20b84/sample.tui.pb"
+      },
+      {
+        "sha256": "37dc3a1f94be87a323de4b3b2950c8d78c424db4a766ba5d629d61649f69560e",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/37dc3a1f94be87a323de4b3b2950c8d78c424db4a766ba5d629d61649f69560e/sample.tui.pb"
+      },
+      {
+        "sha256": "8f60d94af808152819b1d855bcdf050b94836084ec408a4930aded84c3450feb",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/8f60d94af808152819b1d855bcdf050b94836084ec408a4930aded84c3450feb/sample.tui.pb"
+      },
+      {
+        "sha256": "6e7773c3f4a8f6e73e9ca02a8e156c9b66f8a554b36ebf05bb11bfc5c9d7f182",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/6e7773c3f4a8f6e73e9ca02a8e156c9b66f8a554b36ebf05bb11bfc5c9d7f182/sample.tui.pb"
+      },
+      {
+        "sha256": "1a51b13ab7b59fce618b6802ebfc78449532ac0d4cb7226caf6335032a9b0a73",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/1a51b13ab7b59fce618b6802ebfc78449532ac0d4cb7226caf6335032a9b0a73/sample.tui.pb"
+      },
+      {
+        "sha256": "23ea029586532dd4feff1f279b2ad37bfd57fd003388716c27881631da868544",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/23ea029586532dd4feff1f279b2ad37bfd57fd003388716c27881631da868544/sample.tui.pb"
+      },
+      {
+        "sha256": "173014427ff5a75e00ebe03981a08cc0d943435b0ac49853cfaf2152197366ab",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/173014427ff5a75e00ebe03981a08cc0d943435b0ac49853cfaf2152197366ab/sample.tui.pb"
+      },
+      {
+        "sha256": "d5b2e5cc8140ea485cb7f2c401dd9a88a1fdee5a9d3893c57956befc18c9e7e4",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/d5b2e5cc8140ea485cb7f2c401dd9a88a1fdee5a9d3893c57956befc18c9e7e4/sample.tui.pb"
+      },
+      {
+        "sha256": "932e1a8652eda3ed2ddd9998048c7d8bcf6ea904e17da0bff1b0f1103bdcff2d",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/932e1a8652eda3ed2ddd9998048c7d8bcf6ea904e17da0bff1b0f1103bdcff2d/sample.tui.pb"
+      },
+      {
+        "sha256": "c35ae5a1324a91fa39b9e1dff39bf8813b4e82d771d79cf7facd70cd74319401",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/c35ae5a1324a91fa39b9e1dff39bf8813b4e82d771d79cf7facd70cd74319401/sample.tui.pb"
+      },
+      {
+        "sha256": "43133c20b13aa05853b53af9c32144b482cc4a01c4faad977df569242c829194",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/43133c20b13aa05853b53af9c32144b482cc4a01c4faad977df569242c829194/sample.tui.pb"
+      },
+      {
+        "sha256": "263c01f5b99ffcb92055fa473bb7ea096aaa668f5761f2bc628c1568888607f9",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/263c01f5b99ffcb92055fa473bb7ea096aaa668f5761f2bc628c1568888607f9/sample.tui.pb"
+      },
+      {
+        "sha256": "14416dcf0766346fe20a69d42a4e74a9453cc69448a35ae7b0267704cde1a125",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/14416dcf0766346fe20a69d42a4e74a9453cc69448a35ae7b0267704cde1a125/sample.tui.pb"
+      },
+      {
+        "sha256": "406d301d53f2373fa1152cf4e525cef4f31852779bfaf7fd4bab420936dd5028",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/406d301d53f2373fa1152cf4e525cef4f31852779bfaf7fd4bab420936dd5028/sample.tui.pb"
+      },
+      {
+        "sha256": "ba12fea38df8b060c6d3553ea2c0d3dbd94f8b89581bad145240bd91932b5b66",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/ba12fea38df8b060c6d3553ea2c0d3dbd94f8b89581bad145240bd91932b5b66/sample.tui.pb"
+      },
+      {
+        "sha256": "0b472a7753aa8ef27986998c9dcb5343c98e7665d3cc9303f32b0e383ec78548",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/0b472a7753aa8ef27986998c9dcb5343c98e7665d3cc9303f32b0e383ec78548/sample.tui.pb"
+      },
+      {
+        "sha256": "12320d5c1841ad691ff4e3bf7d041534cb733086741aff28a767866e23f640d3",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/12320d5c1841ad691ff4e3bf7d041534cb733086741aff28a767866e23f640d3/sample.tui.pb"
+      },
+      {
+        "sha256": "35550d34af5a587f504d1e9456ffce31de214a0f00e4f447eb5052377f73afb6",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/35550d34af5a587f504d1e9456ffce31de214a0f00e4f447eb5052377f73afb6/sample.tui.pb"
+      },
+      {
+        "sha256": "2a4bf7859badd8d9c7d339d6ca585c3c3ee0d338feb0bce3b19967cf10aafdf7",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/2a4bf7859badd8d9c7d339d6ca585c3c3ee0d338feb0bce3b19967cf10aafdf7/sample.tui.pb"
+      },
+      {
+        "sha256": "36572fea1b9a696fb6badceb13f1b635b3ecce97da2332719e13bf0bb7fd14d2",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/36572fea1b9a696fb6badceb13f1b635b3ecce97da2332719e13bf0bb7fd14d2/sample.tui.pb"
+      },
+      {
+        "sha256": "5cca9ac9c5e7f44a847fc53d378d87c965f7c61ac9edb6ea2ee15649f4df0742",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/5cca9ac9c5e7f44a847fc53d378d87c965f7c61ac9edb6ea2ee15649f4df0742/sample.tui.pb"
+      },
+      {
+        "sha256": "3e3aa9cf1154e07389ae43d01fc72e19ff5ae21d3dcf612dcaa27d4d555be83d",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/3e3aa9cf1154e07389ae43d01fc72e19ff5ae21d3dcf612dcaa27d4d555be83d/sample.tui.pb"
+      },
+      {
+        "sha256": "f9f6f1c0d441e93f047cb28a1aaa02602df2084d089ec05d89c69a3cfa3dba2d",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f9f6f1c0d441e93f047cb28a1aaa02602df2084d089ec05d89c69a3cfa3dba2d/sample.tui.pb"
+      },
+      {
+        "sha256": "6952c26b298bf4c4bfad9b261253c3d1c56274649ec0440c4540e484d08e5e9a",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/6952c26b298bf4c4bfad9b261253c3d1c56274649ec0440c4540e484d08e5e9a/sample.tui.pb"
+      },
+      {
+        "sha256": "55e40335ce77801fa12b10d86fe471ca1febfe865457d5c52a9da9b52a0a1b83",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/55e40335ce77801fa12b10d86fe471ca1febfe865457d5c52a9da9b52a0a1b83/sample.tui.pb"
+      },
+      {
+        "sha256": "c91faf637b7dd64dc236347b5376414b0d947100497ede34c6ebd35d0064b4e0",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/c91faf637b7dd64dc236347b5376414b0d947100497ede34c6ebd35d0064b4e0/sample.tui.pb"
+      },
+      {
+        "sha256": "bb17d13964cc9325306567956488d5f518b61e04ce165723ebfc2307e6a1c333",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/bb17d13964cc9325306567956488d5f518b61e04ce165723ebfc2307e6a1c333/sample.tui.pb"
+      },
+      {
+        "sha256": "b0e41156a28c4522dab06aef59e235733f65d593b835d0a90adeac3143eb130d",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/b0e41156a28c4522dab06aef59e235733f65d593b835d0a90adeac3143eb130d/sample.tui.pb"
+      },
+      {
+        "sha256": "6b4df6854ac1f7b960d51a35b06fecfe8406d5325a83926ea52088821073291e",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/6b4df6854ac1f7b960d51a35b06fecfe8406d5325a83926ea52088821073291e/sample.tui.pb"
+      },
+      {
+        "sha256": "f62f62e72bca46b2c47fbf9a1c5d7ff592431745d8baff0d78d5a0a4b3c51c57",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f62f62e72bca46b2c47fbf9a1c5d7ff592431745d8baff0d78d5a0a4b3c51c57/sample.tui.pb"
+      },
+      {
+        "sha256": "609a6e7f04e492ab5028fbefa6c7e044f33d57a64d0b5ee77142c8b4df4ae398",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/609a6e7f04e492ab5028fbefa6c7e044f33d57a64d0b5ee77142c8b4df4ae398/sample.tui.pb"
+      },
+      {
+        "sha256": "228a1deab7c56670ee7228d300700626b2baa37870c25b9d665ebc4b6eb20418",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/228a1deab7c56670ee7228d300700626b2baa37870c25b9d665ebc4b6eb20418/sample.tui.pb"
+      },
+      {
+        "sha256": "3c357035dedd231cd433eff9d111e520b4b363f1d1d6509ee6d6f58e2335daae",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/3c357035dedd231cd433eff9d111e520b4b363f1d1d6509ee6d6f58e2335daae/sample.tui.pb"
+      },
+      {
+        "sha256": "8eb99aef484473e988963a1e5b19f7e3e1c1a6f432618638140b04b558425f73",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/8eb99aef484473e988963a1e5b19f7e3e1c1a6f432618638140b04b558425f73/sample.tui.pb"
+      },
+      {
+        "sha256": "02d4043f0b0b31f1ea4eebaac8369dababbc476bdac471c82b76cea668bc440f",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/02d4043f0b0b31f1ea4eebaac8369dababbc476bdac471c82b76cea668bc440f/sample.tui.pb"
+      },
+      {
+        "sha256": "aa58f20f2cefe400c244aa4cd29663426978f78d7ecf2fdf82d81fb852620efa",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/aa58f20f2cefe400c244aa4cd29663426978f78d7ecf2fdf82d81fb852620efa/sample.tui.pb"
+      },
+      {
+        "sha256": "754b0f66f2af9bff4ba6f2999b7c481e308a474c08e069ae43aec850e022f3f5",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/754b0f66f2af9bff4ba6f2999b7c481e308a474c08e069ae43aec850e022f3f5/sample.tui.pb"
+      },
+      {
+        "sha256": "3b427d6d5843374f0fa529c5ae481f695e0828d5de63dbc423b3fcc1f26a00ec",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/3b427d6d5843374f0fa529c5ae481f695e0828d5de63dbc423b3fcc1f26a00ec/sample.tui.pb"
+      },
+      {
+        "sha256": "b841e3da1f299b570c2b1034b72e1ca1382cce79e6f2de4c8db74871492708c4",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/b841e3da1f299b570c2b1034b72e1ca1382cce79e6f2de4c8db74871492708c4/sample.tui.pb"
+      },
+      {
+        "sha256": "4161e1115f0939070192012dfd2f8ee65da2693f9a7d181bdd6544ffe56bd63f",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/4161e1115f0939070192012dfd2f8ee65da2693f9a7d181bdd6544ffe56bd63f/sample.tui.pb"
+      },
+      {
+        "sha256": "a210264401ab9e05880865faf34f56eb1b96af0e0ad68b58d345d84175333640",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/a210264401ab9e05880865faf34f56eb1b96af0e0ad68b58d345d84175333640/sample.tui.pb"
+      },
+      {
+        "sha256": "359a80494445a0f5ccee2704c3dfde45070998e6d8734e9cdb47f371874556d5",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/359a80494445a0f5ccee2704c3dfde45070998e6d8734e9cdb47f371874556d5/sample.tui.pb"
+      },
+      {
+        "sha256": "94aa7efc6ea6f42bc173d391312f9f243ddfe77edda5ddbd7660dded55635fc4",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/94aa7efc6ea6f42bc173d391312f9f243ddfe77edda5ddbd7660dded55635fc4/sample.tui.pb"
+      },
+      {
+        "sha256": "3d7bf73be75f9145ed33dd7a57998b535256ccd68ead4ac70af2ce39914b1756",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/3d7bf73be75f9145ed33dd7a57998b535256ccd68ead4ac70af2ce39914b1756/sample.tui.pb"
+      },
+      {
+        "sha256": "cca2029f94edfca56ce50e55353cdf27c5c33f498850b2120d9227796ad64b27",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/cca2029f94edfca56ce50e55353cdf27c5c33f498850b2120d9227796ad64b27/sample.tui.pb"
+      },
+      {
+        "sha256": "df6cb7b9aa73a8ff4c13a5321fc9c4060733f0962551fde754819845c8e38c8a",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/df6cb7b9aa73a8ff4c13a5321fc9c4060733f0962551fde754819845c8e38c8a/sample.tui.pb"
+      },
+      {
+        "sha256": "127b4bc2bef5efbeb7d6997c0fd036bf6db965aaa762096c1e42339ee6266382",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/127b4bc2bef5efbeb7d6997c0fd036bf6db965aaa762096c1e42339ee6266382/sample.tui.pb"
+      },
+      {
+        "sha256": "9ef12ab3a38565ac43e1802ed831cc0fb8feac5cc3180e8ea33f32cdb49e2171",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/9ef12ab3a38565ac43e1802ed831cc0fb8feac5cc3180e8ea33f32cdb49e2171/sample.tui.pb"
+      },
+      {
+        "sha256": "9a5a8d3c6419d5dcf6d45ce823ad86bf97332ac1f0ef06779ac168229b997f19",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/9a5a8d3c6419d5dcf6d45ce823ad86bf97332ac1f0ef06779ac168229b997f19/sample.tui.pb"
+      },
+      {
+        "sha256": "ea74615bf7e78e75102570b03856637dd1de9bb17aed82b4e899b2699ac9bbf1",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/ea74615bf7e78e75102570b03856637dd1de9bb17aed82b4e899b2699ac9bbf1/sample.tui.pb"
+      },
+      {
+        "sha256": "9d58162d20818a296392155af20144f3bce6c182b2ccab4597339c6fda117075",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/9d58162d20818a296392155af20144f3bce6c182b2ccab4597339c6fda117075/sample.tui.pb"
+      },
+      {
+        "sha256": "c3c06067de090c9544432d234eae869b9792bc7fbc310fe935b898fd58215ad8",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/c3c06067de090c9544432d234eae869b9792bc7fbc310fe935b898fd58215ad8/sample.tui.pb"
+      },
+      {
+        "sha256": "4ec8a987fe17e99555654735b1fd7937d14978699e937e9cabe3b3d813c9f2a8",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/4ec8a987fe17e99555654735b1fd7937d14978699e937e9cabe3b3d813c9f2a8/sample.tui.pb"
+      },
+      {
+        "sha256": "7c69582e6cb026e2c14d2dd086c426ca63bd981392201ba652666c82316495a8",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/7c69582e6cb026e2c14d2dd086c426ca63bd981392201ba652666c82316495a8/sample.tui.pb"
+      },
+      {
+        "sha256": "5e63b3db613a011501ef300b9fe624ed8ac54adf2b1792af8d9cd07c1657aebd",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/5e63b3db613a011501ef300b9fe624ed8ac54adf2b1792af8d9cd07c1657aebd/sample.tui.pb"
+      },
+      {
+        "sha256": "eafe26d05179139cae42efb45db2dc68dd31fa822a050e65e338c7c865329a0e",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/eafe26d05179139cae42efb45db2dc68dd31fa822a050e65e338c7c865329a0e/sample.tui.pb"
+      },
+      {
+        "sha256": "0ab0374050042fe9b9bba663a19ebe2b6dd2142875bbb1d16373254b535804b8",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/0ab0374050042fe9b9bba663a19ebe2b6dd2142875bbb1d16373254b535804b8/sample.tui.pb"
+      },
+      {
+        "sha256": "2ab3560cd98ccb55d39f625fa215c63fe2a28b4247624bd7a0a5a21416c6c09e",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/2ab3560cd98ccb55d39f625fa215c63fe2a28b4247624bd7a0a5a21416c6c09e/sample.tui.pb"
+      },
+      {
+        "sha256": "93c599d2934f754587172d2c2041277e6ffb5e213aae25546d4ca554b53fc56e",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/93c599d2934f754587172d2c2041277e6ffb5e213aae25546d4ca554b53fc56e/sample.tui.pb"
+      },
+      {
+        "sha256": "7bb272d9de79595b3c15b75e21597b8eefc67f7d396accbc8e127789c893e1a4",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/7bb272d9de79595b3c15b75e21597b8eefc67f7d396accbc8e127789c893e1a4/sample.tui.pb"
+      },
+      {
+        "sha256": "a1e16bce168bd91c67fd190d47097f7140b5b5b7417c7988ba25ebdfd8260298",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/a1e16bce168bd91c67fd190d47097f7140b5b5b7417c7988ba25ebdfd8260298/sample.tui.pb"
+      },
+      {
+        "sha256": "fa1f7c6af5598f1f9fc563bfdb527992ebf78de54e0ffaba08405f5a356357f5",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/fa1f7c6af5598f1f9fc563bfdb527992ebf78de54e0ffaba08405f5a356357f5/sample.tui.pb"
+      },
+      {
+        "sha256": "d8a223b5ee782f456c4abff4ae60b69db2ca5451e3c794f5cf6395260c37d46e",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/d8a223b5ee782f456c4abff4ae60b69db2ca5451e3c794f5cf6395260c37d46e/sample.tui.pb"
+      },
+      {
+        "sha256": "7ef4abf8b2ad2183023b71b8459df11b3c33391557effb36bd6ce16c5d833cf9",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/7ef4abf8b2ad2183023b71b8459df11b3c33391557effb36bd6ce16c5d833cf9/sample.tui.pb"
+      },
+      {
+        "sha256": "af9a7c36b2da4a83ef32014494975d925db6d882b42aa17fb4d99f5fa880858b",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/af9a7c36b2da4a83ef32014494975d925db6d882b42aa17fb4d99f5fa880858b/sample.tui.pb"
+      },
+      {
+        "sha256": "3cc7e99b07b04c636577d088242b29287cbec7e232b483a9f1f5cdc7dfc17aa0",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/3cc7e99b07b04c636577d088242b29287cbec7e232b483a9f1f5cdc7dfc17aa0/sample.tui.pb"
+      },
+      {
+        "sha256": "ad8c1cc90ea76606b7868eb01b7f0cc9a9870e2393724ef51968d07dec54ad8b",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/ad8c1cc90ea76606b7868eb01b7f0cc9a9870e2393724ef51968d07dec54ad8b/sample.tui.pb"
+      },
+      {
+        "sha256": "980f682c8dd970892e5faa5736775b3ad5d7613a1cbbf4072fb500c416727fbe",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/980f682c8dd970892e5faa5736775b3ad5d7613a1cbbf4072fb500c416727fbe/sample.tui.pb"
+      },
+      {
+        "sha256": "e848e110d17e7da2c491bda42becadc6a100c4dc3983a83192ef555616612845",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/e848e110d17e7da2c491bda42becadc6a100c4dc3983a83192ef555616612845/sample.tui.pb"
+      },
+      {
+        "sha256": "6ca841bafbed3c1ab4b46ffa2cb595b65ee98a137ffe24c116c091c39c6de080",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/6ca841bafbed3c1ab4b46ffa2cb595b65ee98a137ffe24c116c091c39c6de080/sample.tui.pb"
+      },
+      {
+        "sha256": "80efe159e1612b9c4a445844d98e5b4abf8dbda73e96be3c41dbd72b209b6c28",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/80efe159e1612b9c4a445844d98e5b4abf8dbda73e96be3c41dbd72b209b6c28/sample.tui.pb"
+      },
+      {
+        "sha256": "370880f5784fc084fc799342e28b458ae6a769b497ae85b41f1b3fc8299f56dc",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/370880f5784fc084fc799342e28b458ae6a769b497ae85b41f1b3fc8299f56dc/sample.tui.pb"
+      },
+      {
+        "sha256": "5432be7ab44fe05f25e08c8280218d174cb8439cbc9c60ef2110b2532f92a567",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/5432be7ab44fe05f25e08c8280218d174cb8439cbc9c60ef2110b2532f92a567/sample.tui.pb"
+      },
+      {
+        "sha256": "a9455f3cc7c86aece128f191d52edf26e83e9569e90fff8a6a53af9777843cf7",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/a9455f3cc7c86aece128f191d52edf26e83e9569e90fff8a6a53af9777843cf7/sample.tui.pb"
+      },
+      {
+        "sha256": "25902a3ba450fa791d8551b2737e20fac4a50cbe0502e8cd8b96a919d0a1ff90",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/25902a3ba450fa791d8551b2737e20fac4a50cbe0502e8cd8b96a919d0a1ff90/sample.tui.pb"
+      },
+      {
+        "sha256": "77ae9701ca9de313db97724887be5502ce1a619fb194df205e8f6864ccb2a304",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/77ae9701ca9de313db97724887be5502ce1a619fb194df205e8f6864ccb2a304/sample.tui.pb"
+      },
+      {
+        "sha256": "ed7fef98fbd521d261bc3e1ad54698cc2ed7f67d82a407d3a11996f1e12e06c5",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/ed7fef98fbd521d261bc3e1ad54698cc2ed7f67d82a407d3a11996f1e12e06c5/sample.tui.pb"
+      },
+      {
+        "sha256": "57583dc15ff187d64d5b042bca6da697b181a92828f8e9863a4cbf310e81be3b",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/57583dc15ff187d64d5b042bca6da697b181a92828f8e9863a4cbf310e81be3b/sample.tui.pb"
+      },
+      {
+        "sha256": "602637cfb26cf93bcf60f1d2a42dcba47f256b5a6f7bc841bc231062ee5f770c",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/602637cfb26cf93bcf60f1d2a42dcba47f256b5a6f7bc841bc231062ee5f770c/sample.tui.pb"
+      },
+      {
+        "sha256": "e6dd711132ce1175eff136905bbec8a959007d37dbfdcaf2b0bd8539387eec06",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/e6dd711132ce1175eff136905bbec8a959007d37dbfdcaf2b0bd8539387eec06/sample.tui.pb"
+      },
+      {
+        "sha256": "acb9e0292bdac3d2e31c8f0d49cf8735a1cd4c255d039779ccd9b91db347ab01",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/acb9e0292bdac3d2e31c8f0d49cf8735a1cd4c255d039779ccd9b91db347ab01/sample.tui.pb"
+      },
+      {
+        "sha256": "35409ab63155ddfc16f0714ab3e60edf18566f0ce63dff9381c65f48895a6409",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/35409ab63155ddfc16f0714ab3e60edf18566f0ce63dff9381c65f48895a6409/sample.tui.pb"
+      },
+      {
+        "sha256": "f0231f940d40b182dd3551b1bf72f463426642e4e3202b0c48a692c1ab29c7ea",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f0231f940d40b182dd3551b1bf72f463426642e4e3202b0c48a692c1ab29c7ea/sample.tui.pb"
+      },
+      {
+        "sha256": "538d3f3886424c2aee78083c78fba4b44ebe6b8e2d17ed3b4f0af9eb12ca47b1",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/538d3f3886424c2aee78083c78fba4b44ebe6b8e2d17ed3b4f0af9eb12ca47b1/sample.tui.pb"
+      },
+      {
+        "sha256": "d32c700c66120876283be154e68c75b79a6f9965023fdfdf7e0f9c7906622f72",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/d32c700c66120876283be154e68c75b79a6f9965023fdfdf7e0f9c7906622f72/sample.tui.pb"
+      },
+      {
+        "sha256": "3f02169732a16981531af7ecfa1d6cf8e1cd1169bb4d5a759b6df7363c687238",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/3f02169732a16981531af7ecfa1d6cf8e1cd1169bb4d5a759b6df7363c687238/sample.tui.pb"
+      },
+      {
+        "sha256": "2108c209bbdcc900927a7e5e5238e2471d984e25a8ed7fdc7891bd4a6b104229",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/2108c209bbdcc900927a7e5e5238e2471d984e25a8ed7fdc7891bd4a6b104229/sample.tui.pb"
+      },
+      {
+        "sha256": "f79e9f1f0d86b8aa2e8f9c7b310e1a3790e1e9fba2972b90b29f7094e6396424",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f79e9f1f0d86b8aa2e8f9c7b310e1a3790e1e9fba2972b90b29f7094e6396424/sample.tui.pb"
+      },
+      {
+        "sha256": "cabb0a94070769b439db0b476bff28028e1a874bc1305338d359f78330fb68b4",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/cabb0a94070769b439db0b476bff28028e1a874bc1305338d359f78330fb68b4/sample.tui.pb"
+      },
+      {
+        "sha256": "0e5138f9a6afa20afd9c2da556806b2fd700ca9bcca73dafa7008c9d5029623b",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/0e5138f9a6afa20afd9c2da556806b2fd700ca9bcca73dafa7008c9d5029623b/sample.tui.pb"
+      },
+      {
+        "sha256": "aca4cbaee8ed25fffa1bd50225678d0c418673fa634aefc33ab83a75feaf97a2",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/aca4cbaee8ed25fffa1bd50225678d0c418673fa634aefc33ab83a75feaf97a2/sample.tui.pb"
+      },
+      {
+        "sha256": "f84fe10d2bf6961b84c14e80ea6783f5427c3c0cf4fea7881541ba12d425b36c",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f84fe10d2bf6961b84c14e80ea6783f5427c3c0cf4fea7881541ba12d425b36c/sample.tui.pb"
+      },
+      {
+        "sha256": "c632b89eb1ea052d0bdcfda47b0ad6316668898a6534646b96b9207f3f337ceb",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/c632b89eb1ea052d0bdcfda47b0ad6316668898a6534646b96b9207f3f337ceb/sample.tui.pb"
+      },
+      {
+        "sha256": "3ba15d14d325fe5090aea545368189605983b14d30c46b3bb4abe96c7d015f90",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/3ba15d14d325fe5090aea545368189605983b14d30c46b3bb4abe96c7d015f90/sample.tui.pb"
+      },
+      {
+        "sha256": "1d061f6b79f5949343c21c83a5365054673a8453b57542aeed4c034c1ec6b006",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/1d061f6b79f5949343c21c83a5365054673a8453b57542aeed4c034c1ec6b006/sample.tui.pb"
+      },
+      {
+        "sha256": "0dc36fa69f072f7916d4e648c42e336134455324653c9cc2a65358afaa928d57",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/0dc36fa69f072f7916d4e648c42e336134455324653c9cc2a65358afaa928d57/sample.tui.pb"
+      },
+      {
+        "sha256": "011b05d748c3bba4642091cc6e0911af4347cfbaa89bb888dedac1423cafc62f",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/011b05d748c3bba4642091cc6e0911af4347cfbaa89bb888dedac1423cafc62f/sample.tui.pb"
+      },
+      {
+        "sha256": "0ac3c7573a4dea0338d538c317fcb5d3ecdb159d79a3be6acc84952d383db15a",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/0ac3c7573a4dea0338d538c317fcb5d3ecdb159d79a3be6acc84952d383db15a/sample.tui.pb"
+      },
+      {
+        "sha256": "f2669edfd3e463354012105088b7309580b81b7683c5abf511d29c0e12941c2d",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/f2669edfd3e463354012105088b7309580b81b7683c5abf511d29c0e12941c2d/sample.tui.pb"
+      },
+      {
+        "sha256": "20e2f42ab401ebfb639b1b3371c9c68ae02fce04a9cadb9b6c26aa660bf8bee4",
+        "path": "target/functional/j05-failure-failure-56051-1794096667874089000-0/check-artifacts/pre_refactor/j05_failure/j05_failure_failure_narrow/20e2f42ab401ebfb639b1b3371c9c68ae02fce04a9cadb9b6c26aa660bf8bee4/sample.tui.pb"
+      }
+    ]
+  },
+  "observed_delta": {
+    "summary": "At 80x24 the current failure dialog retains the Launch failed title, network attachment summary, Network stage, and wrapped jackin-net-missing cause; the compact layout crops lower dialog details. The test checks the full capsule-not-started detail at 120x40 before and after the narrow shot.",
+    "candidate_frame": "80x24 network failure dialog with wrapped network error and retry lines; same candidate frame across all 112 captures.",
+    "frozen_frame": "Legacy narrow screenshot differs in dialog/body layout and text wrapping."
+  },
+  "previous_baseline": {
+    "sha256": "089ed5eb449028aa739ae380c0e8cc7a22a643e26f29e9ccdbdd1733f7e645a1"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_failure_failure_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_failure_failure_narrow.provenance.json"
+}

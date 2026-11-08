@@ -245,19 +245,19 @@ impl PreludeScreen {
                 };
                 let mut p = Picker::new(WORKDIR, Self::title(step));
                 p.placeholder = "Search folders…".into();
-                p.list.width = (72, 72);
-                p.list.max_rows = 8;
+                p.set_width(72);
+                p.set_max_rows(8);
                 p.empty_text = "No folder matches".into();
                 self.workdir_rows = self.workdir_candidates(w);
                 let rows = self.workdir_rows.clone();
-                p.set_items(self.workdir_items(&rows, "", w));
+                p.set_items(self.workdir_items(&rows, "", w))
+                    .unwrap_or_else(|error| p.report_item_error(error));
                 if let Some(cur) = self
                     .workdir
                     .as_ref()
                     .and_then(|wd| rows.iter().position(|r| r == wd))
                 {
                     p.set_cursor(cur);
-                    p.list.scroll.ensure_visible(cur);
                 }
                 let _ = dest;
                 cx.open(p, LayerTag::new("prelude.workdir"));

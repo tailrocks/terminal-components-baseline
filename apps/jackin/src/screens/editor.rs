@@ -1540,10 +1540,11 @@ impl EditorScreen {
 
     fn open_role_picker(&mut self, w: &World, cx: &mut Cx) {
         let mut p = Picker::new(WidgetId::of("editor.roles.picker"), "Load role");
-        p.list.width = (84, 84);
+        p.set_width(84);
         p.scope = Some("trusted role registry".into());
         let (items, targets) = self.role_items(w, "");
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         self.picker_targets = targets;
         cx.open(p, LayerTag::new("role.load"));
     }
@@ -1650,7 +1651,7 @@ impl EditorScreen {
 
     fn open_workdir_picker(&mut self, w: &World, cx: &mut Cx) {
         let mut p = Picker::new(WidgetId::of("editor.workdir.picker"), "Working directory");
-        p.list.width = (72, 72);
+        p.set_width(72);
         p.scope = Some(self.pending.name.clone());
         let mut items = vec![];
         let mut targets = vec![];
@@ -1697,7 +1698,8 @@ impl EditorScreen {
             );
             targets.push(self.pending.workdir.clone());
         }
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         self.picker_targets = targets;
         cx.open(p, LayerTag::new("workdir"));
     }

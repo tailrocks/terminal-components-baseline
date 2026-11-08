@@ -1,0 +1,40 @@
+{
+  "task_id": "X01.cli",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x01_cli.rs",
+    "docs/testing/cases/X01.cli.json",
+    "tests/functional/baselines/pre_refactor/X01.cli/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/cli.rs",
+    "src/bin/showcase/main.rs",
+    "src/bin/tablepro/main.rs",
+    "src/bin/holla/main.rs",
+    "src/bin/jackin/main.rs"
+  ],
+  "coverage_rows": [
+    "X01.cli.route",
+    "X01.cli.cli"
+  ],
+  "checkpoints": [
+    "X01.cli.cli.120x40"
+  ],
+  "acceptance": "Help and invalid CLI values return the current exit status and error text. Short commands do not use the Ctrl+Q helper.",
+  "status": "queued",
+  "architecture_refactor": false
+}

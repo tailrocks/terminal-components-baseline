@@ -1,6 +1,7 @@
 #![cfg(any(target_os = "macos", target_os = "linux"))]
 
 mod bins;
+mod cases;
 mod holla;
 mod lifecycle;
 mod showcase;

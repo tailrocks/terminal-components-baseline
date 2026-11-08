@@ -675,10 +675,12 @@ impl ManagerScreen {
         self.launch_queue.clear();
         self.launch_collected.clear();
         self.launch_chaining = false;
-        let mut p =
-            Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent").multi_select(true);
-        p.set_searchable(false);
-        p.list.width = (84, 84);
+        let mut p = Picker::new(WidgetId::of("manager.launch"), "Launch · choose Agent")
+            .multi_select(true)
+            .expect("empty picker accepts multi-selection");
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_width(84);
         let shown_role = if unavailable.is_some() {
             "no default role"
         } else {
@@ -718,7 +720,8 @@ impl ManagerScreen {
                 .collect(),
             None => items,
         };
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         self.launch_picker_targets = targets;
         cx.open(p, LayerTag::new("launch"));
     }
@@ -839,8 +842,9 @@ impl ManagerScreen {
             WidgetId::of("manager.session"),
             "New session · choose Agent",
         );
-        p.set_searchable(false);
-        p.list.width = (84, 84);
+        p.set_searchable(false)
+            .expect("disabling picker search is valid");
+        p.set_width(84);
         p.scope = Some(format!(
             "instance {} › {}",
             i.id.short_suffix(),
@@ -854,7 +858,8 @@ impl ManagerScreen {
                 .group("shells"),
         );
         targets.push((Agent::ClaudeCode, Some("__shell__".into())));
-        p.set_items(items);
+        p.set_items(items)
+            .unwrap_or_else(|error| p.report_item_error(error));
         self.session_picker_targets = targets;
         cx.open(p, LayerTag::new("session"));
     }
@@ -999,7 +1004,6 @@ impl ManagerScreen {
                 "Agent",
                 format!("{} · account {}", i.agent.label(), account),
             ),
-            Prop::new("Metadata", "verified"),
             Prop::new(
                 "Target",
                 format!(
@@ -2068,7 +2072,6 @@ impl ManagerScreen {
                                 acc.level.label()
                             ),
                         ),
-                        Prop::new("Metadata", "verified"),
                         Prop::new(&w.surfaces.vocabulary.container_noun, i.container_id()),
                         Prop::new(
                             "Started",

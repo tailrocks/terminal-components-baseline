@@ -1,0 +1,124 @@
+{
+  "task_id": "H03.picker",
+  "cases": [
+    {
+      "case_id": "H03.picker.route",
+      "owner_task": "H03.picker",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla activities-multi at 120×40 in truecolor with paused motion and HOLLA_NO_HISTORY=1 opens the finder. Ctrl+G opens Activities with frontend dev highlighted. Esc returns to the finder. Live activities make Ctrl+Q a destructive dialog: Dialog::destructive focuses Stay, and Stop and quit is drawn beside it. Right then Enter confirms stop. The activities stay cancelling. World::tick in src/bin/holla/sim/world.rs returns before self.tick increments when !clock.running, and clock.running is false for paused motion in src/bin/holla/domain/fixtures.rs, so TERM_EXIT_TICKS never elapse and the process does not exit. Duration follows world.tick in src/bin/holla/domain/activity.rs duration_ticks and stays 0 s. The test does not call finish while the dialog is open.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9829719c206381e44ac49bd994d26157be5c61dd",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H03.picker",
+      "entry_path": "launch holla --scenario activities-multi --color truecolor --motion paused at 120x40; Ctrl+G",
+      "return_path": "Esc returns to the finder. Confirming Stop and quit leaves the process running because the paused clock never reaps the activities."
+    },
+    {
+      "case_id": "H03.picker.picker",
+      "owner_task": "H03.picker",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Ctrl+G opens Activities. The first row is frontend dev. Down highlights api dev and leaves frontend dev unhighlighted. The open picker is captured at 120×40, then at 80×24, and the narrow shot is taken before the terminal returns to 120×40. Enter opens api dev. The body is $ mise run dev  (services/api) and the insight names port 8080. It does not contain VITE v6.3.1, http://localhost:5173/, or the tick-41 listening line. activities_multi calls World::tick 48 times, but World::tick in src/bin/holla/sim/world.rs returns before self.tick increments when !clock.running, and clock.running is false for paused motion in src/bin/holla/domain/fixtures.rs. Duration follows world.tick in src/bin/holla/domain/activity.rs duration_ticks and stays 0 s. Reduced motion would keep changing that text. Confirming Stop and quit marks the activities cancelling and does not exit, because a paused clock never delivers TERM_EXIT_TICKS.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "9829719c206381e44ac49bd994d26157be5c61dd",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h03_picker/h03_picker_picker_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h03_picker/h03_picker_picker_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Open the picker and choose one activity.",
+      "expected_results": "The opened output is that activity's output.",
+      "forbidden_effects": "The picker opens the first activity regardless of the highlight.",
+      "checkpoint_ids": [
+        "H03.picker.picker.120x40",
+        "H03.picker.picker.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "activities-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "f1ef4e599cc433179180fb04417795ebd82e58844d74c9a74b25758c6db50215",
+        "expect_baseline": "missing",
+        "precondition": "H03.picker.picker.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "activities-multi",
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b40f514b306710113c213d742653a17da331d81bbf6670635fcb5bc9eb58ed43",
+        "expect_baseline": "missing",
+        "precondition": "H03.picker.picker.narrow"
+      }
+    }
+  ]
+}

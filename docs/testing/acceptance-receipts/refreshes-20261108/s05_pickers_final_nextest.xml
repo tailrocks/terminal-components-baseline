@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="nextest-run" tests="17" skipped="0" failures="0" errors="0" uuid="7de852da-dad6-429a-af17-88e385ee4e12" timestamp="2026-11-08T06:38:36.264+07:00" time="34.644">
+    <testsuite name="junie-tui::functional" tests="17" skipped="0" errors="0" failures="0">
+        <testcase name="cases::s05_pickers::option_backdrop_full" classname="junie-tui::functional" timestamp="2026-11-08T06:38:36.265+07:00" time="2.547"/>
+        <testcase name="cases::s05_pickers::option_cursor_bar" classname="junie-tui::functional" timestamp="2026-11-08T06:38:36.265+07:00" time="2.553"/>
+        <testcase name="cases::s05_pickers::option_delete_is_secondary_off" classname="junie-tui::functional" timestamp="2026-11-08T06:38:36.265+07:00" time="2.971"/>
+        <testcase name="cases::s05_pickers::option_dismiss_escape" classname="junie-tui::functional" timestamp="2026-11-08T06:38:38.813+07:00" time="2.490"/>
+        <testcase name="cases::s05_pickers::option_empty_state" classname="junie-tui::functional" timestamp="2026-11-08T06:38:38.819+07:00" time="2.709"/>
+        <testcase name="cases::s05_pickers::option_fit_flush" classname="junie-tui::functional" timestamp="2026-11-08T06:38:39.236+07:00" time="2.294"/>
+        <testcase name="cases::s05_pickers::option_hints_short" classname="junie-tui::functional" timestamp="2026-11-08T06:38:41.303+07:00" time="2.383"/>
+        <testcase name="cases::s05_pickers::option_max_rows_6" classname="junie-tui::functional" timestamp="2026-11-08T06:38:41.528+07:00" time="2.189"/>
+        <testcase name="cases::s05_pickers::option_nav_vim" classname="junie-tui::functional" timestamp="2026-11-08T06:38:41.531+07:00" time="2.210"/>
+        <testcase name="cases::s05_pickers::option_placement_below" classname="junie-tui::functional" timestamp="2026-11-08T06:38:43.717+07:00" time="2.170"/>
+        <testcase name="cases::s05_pickers::option_placeholder_custom" classname="junie-tui::functional" timestamp="2026-11-08T06:38:43.686+07:00" time="2.389"/>
+        <testcase name="cases::s05_pickers::option_remote_fails" classname="junie-tui::functional" timestamp="2026-11-08T06:38:43.741+07:00" time="2.587"/>
+        <testcase name="cases::s05_pickers::option_width_96" classname="junie-tui::functional" timestamp="2026-11-08T06:38:45.887+07:00" time="2.439"/>
+        <testcase name="cases::s05_pickers::route_by_page_keyboard_and_pointer" classname="junie-tui::functional" timestamp="2026-11-08T06:38:46.328+07:00" time="5.286"/>
+        <testcase name="cases::s05_pickers::pickers_open_choose_cancel_and_empty" classname="junie-tui::functional" timestamp="2026-11-08T06:38:46.075+07:00" time="6.502"/>
+        <testcase name="cases::s05_pickers::compare_levels_narrows_before_restore" classname="junie-tui::functional" timestamp="2026-11-08T06:38:36.265+07:00" time="18.642"/>
+        <testcase name="cases::s05_pickers::sections_narrow_then_wide" classname="junie-tui::functional" timestamp="2026-11-08T06:38:48.326+07:00" time="22.582"/>
+    </testsuite>
+</testsuites>

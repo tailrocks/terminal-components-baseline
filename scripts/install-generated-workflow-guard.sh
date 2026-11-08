@@ -26,7 +26,7 @@ case "$(uname -s):$(uname -m)" in
   Linux:x86_64|Linux:amd64) hash_tool=/usr/bin/sha256sum ;;
   *) printf 'generated-workflows: unsupported host for hook installation\n' >&2; exit 2 ;;
 esac
-reviewed_checker_sha256=83b44c1175f40e243bafe94f0dd50bf28435a626b7815bb038c9e0c88086e3b9
+reviewed_checker_sha256=3aab54fa7419e914e0865a4a4d9c8d18d8589d26ab2945822580b3b237d3f8bd
 reviewed_config_sha256=e31ae40a15860bf0f060976c64fb5fa8cd3684b6eb7a13107f76a463478da4ad
 reviewed_python_mise_sha256=4bf669510cff7c1f5d5c7c8edc5f6d496bedf872b635295a607f81680074744d
 reviewed_inventory_helper_sha256=0541173812097cd6ac4deb065a7e45b6960ddcf26369eb3fd32805a0b66f33eb

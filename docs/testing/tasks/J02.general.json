@@ -1,0 +1,38 @@
+{
+  "task_id": "J02.general",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j02_general.rs",
+    "docs/testing/cases/J02.general.json",
+    "tests/functional/baselines/pre_refactor/J02.general/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/editor.rs",
+    "src/bin/jackin/domain/workspace.rs"
+  ],
+  "coverage_rows": [
+    "J02.general.route",
+    "J02.general.general",
+    "J02.general.scenario.returning"
+  ],
+  "checkpoints": [
+    "J02.general.general.120x40"
+  ],
+  "acceptance": "General name, directory, and policy edits stay pending until save.",
+  "status": "queued",
+  "architecture_refactor": false
+}

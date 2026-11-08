@@ -1575,7 +1575,8 @@ impl App {
             && let Some(p) = self.layers.top_as_mut::<Picker>()
         {
             let n = items.len();
-            p.set_items(items);
+            p.set_items(items)
+                .unwrap_or_else(|error| p.report_item_error(error));
             if tag.kind == "palette" {
                 p.scope = Some(format!("{n} of 20"));
             }

@@ -1,0 +1,82 @@
+{
+  "task_id": "S07.panels",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s07_panels.rs",
+    "docs/testing/cases/S07.panels.json",
+    "tests/functional/baselines/pre_refactor/S07.panels/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/panels.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.panels.route",
+    "sc.panels.playground",
+    "sc.panels.playground.120x40",
+    "sc.panels.playground.80x24",
+    "sc.panels.options",
+    "sc.panels.options.120x40",
+    "sc.panels.options.80x24",
+    "sc.panels.states",
+    "sc.panels.states.120x40",
+    "sc.panels.states.80x24",
+    "sc.panels.specimen.rest",
+    "sc.panels.specimen.hover",
+    "sc.panels.specimen.pressed",
+    "sc.panels.specimen.focused",
+    "sc.panels.specimen.focused_hover",
+    "sc.panels.specimen.selected",
+    "sc.panels.specimen.disabled",
+    "sc.panels.specimen.busy",
+    "sc.panels.specimen.error",
+    "sc.panels.specimen.editing",
+    "sc.panels.specimen.empty",
+    "sc.panels.specimen.loading",
+    "sc.panels.specimen.overflow",
+    "sc.panels.specimen.narrow",
+    "sc.panels.compare-levels",
+    "opt.panels.focus_mark",
+    "opt.panels.heading",
+    "opt.panels.title_min",
+    "opt.panels.pad_x",
+    "opt.panels.meta_short",
+    "opt.panels.wrap",
+    "opt.panels.tail",
+    "opt.panels.hscroll",
+    "opt.panels.track_click",
+    "opt.panels.nav",
+    "opt.panels.keymap",
+    "sc.panels.panels"
+  ],
+  "checkpoints": [
+    "sc.panels.playground.120x40",
+    "sc.panels.playground.80x24",
+    "sc.panels.options.120x40",
+    "sc.panels.options.80x24",
+    "sc.panels.states.120x40",
+    "sc.panels.states.80x24",
+    "sc.panels.compare-levels",
+    "sc.panels.panels"
+  ],
+  "acceptance": "Open Panels by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}
