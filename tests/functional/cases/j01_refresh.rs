@@ -4,12 +4,13 @@
 //! `pre_refactor/j01_refresh/`. Refresh is F5. `returning` joins live
 //! instances and `hard-cases` starts from an unreadable index, so neither
 //! scenario plays the intro. The failure message is delivered on the tick
-//! after F5 arms the refresh, which is why the selection moves while
-//! `Refreshing…` is still painted. The preserved-dirty description wraps
-//! inside the detail card, so the proof uses the two fragments that each
-//! stay on one painted line.
+//! after F5 arms the refresh. The preserved-dirty description wraps inside
+//! the detail card, so the proof uses the two fragments that each stay on one
+//! painted line. The transient pending selection transition is checked
+//! deterministically in Jackin's app test; this process test checks the
+//! completed failure state.
 
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
 use tui_test::TerminalSnapshot;
 
@@ -230,46 +231,12 @@ fn prove_failure(app: &App) {
     );
     forbid_other_scenario(&first);
 
+    // The process-level assertion is independent of whether the PTY observes
+    // the short-lived pending frame. The exact pending transition is covered
+    // by a deterministic app test.
+    app.key("down");
+    app.wait_screen("dirty instance before failed refresh", shows_dirty);
     app.key("f5");
-    // The failed refresh replaces `Refreshing…` on the tick after F5.
-    // Down has to leave on the first refreshing frame, before that tick.
-    let start = Instant::now();
-    let mut moved = false;
-    let pending = loop {
-        let screen = app.screen();
-        let visible = text(&screen);
-        let refreshing = visible.contains(REFRESHING);
-        if refreshing
-            && shows_dirty(&screen)
-            && !visible.contains(EMPTY)
-            && visible.contains("7f3a")
-        {
-            break screen;
-        }
-        if refreshing && shows_running(&screen) && !moved {
-            assert!(visible.contains("Workspaces"));
-            assert!(
-                !visible.contains(FAILURE),
-                "failure replaced Refreshing too soon\n{visible}"
-            );
-            assert!(!visible.contains(EMPTY));
-            app.key("down");
-            moved = true;
-            continue;
-        }
-        assert!(
-            start.elapsed() < Duration::from_secs(8),
-            "timed out\n{}",
-            text(&screen)
-        );
-        std::thread::sleep(Duration::from_millis(5));
-    };
-    let visible = text(&pending);
-    assert!(
-        !visible.contains(FAILURE),
-        "failure arrived before the other instance was selected\n{visible}"
-    );
-
     let failed = app.wait_text(FAILURE);
     let visible = text(&failed);
     assert!(

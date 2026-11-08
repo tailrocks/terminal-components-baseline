@@ -3,11 +3,17 @@ use std::time::{Duration, Instant};
 
 use jackin_console::app::Route;
 use jackin_console::fixtures::{Scenario, app_for};
+use jackin_console::screens::manager::TREE;
 use junie_tui::core::event::{Input, Key, Outcome};
+use junie_tui::core::focus::FocusRing;
+use junie_tui::core::hit::HitRegistry;
 use junie_tui::motion::Motion;
 use junie_tui::shell::App as ShellApp;
 use junie_tui::theme::Theme;
+use junie_tui::ui::ctx::{Interaction, RenderCtx};
+use ratatui::buffer::Buffer;
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
+use ratatui::layout::Rect;
 use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, SnapshotUnderline, TerminalSnapshot};
 
@@ -37,6 +43,130 @@ fn intro_enter_is_consumed_for_exactly_the_first_three_ticks() {
     assert_eq!(app.route(), Route::Intro);
     assert_eq!(ShellApp::on_input(&mut app, enter), Outcome::Changed);
     assert_eq!(app.route(), Route::Manager);
+}
+
+#[test]
+fn failed_refresh_keeps_selection_moved_during_pending_frame() {
+    let mut app = app_for(Scenario::HardCases, Motion::Reduced, 0, Theme::junie());
+    app.shell_mut().focus.focus(TREE);
+    let area = Rect::new(0, 0, 120, 40);
+
+    let draw = |app: &mut jackin_console::app::App| {
+        let mut buffer = Buffer::empty(area);
+        let theme = Theme::junie();
+        let mut hits = HitRegistry::default();
+        let mut focus = FocusRing::default();
+        let mut ctx = RenderCtx::new(&theme, Interaction::default(), &mut hits, &mut focus);
+        ShellApp::draw(app, area, &mut buffer, &mut ctx);
+        (0..area.height)
+            .map(|y| {
+                (0..area.width)
+                    .map(|x| buffer[(x, y)].symbol())
+                    .collect::<String>()
+            })
+            .collect::<Vec<_>>()
+            .join("\n")
+    };
+    let key = |code| {
+        Input::Key(Key {
+            code,
+            mods: KeyModifiers::NONE,
+        })
+    };
+
+    let initial = draw(&mut app);
+    assert!(
+        initial.contains("Workspaces"),
+        "manager did not render\n{initial}"
+    );
+    assert_eq!(
+        ShellApp::on_input(&mut app, key(KeyCode::Down)),
+        Outcome::Changed
+    );
+    assert_eq!(
+        ShellApp::on_input(&mut app, key(KeyCode::Right)),
+        Outcome::Changed
+    );
+    let expanded = draw(&mut app);
+    assert!(
+        expanded.contains("7f3a"),
+        "payments did not expand\n{expanded}"
+    );
+
+    assert_eq!(
+        ShellApp::on_input(&mut app, key(KeyCode::Down)),
+        Outcome::Changed
+    );
+    let running = draw(&mut app);
+    assert!(running.contains("Container and Capsule daemon are live."));
+
+    assert_eq!(
+        ShellApp::on_input(&mut app, key(KeyCode::F(5))),
+        Outcome::Changed
+    );
+    let pending = draw(&mut app);
+    assert!(
+        pending.contains("Workspaces"),
+        "refresh left the manager\n{pending}"
+    );
+    assert!(
+        !pending.contains("no instances"),
+        "refresh cleared the list\n{pending}"
+    );
+    assert!(
+        pending.contains("Refreshing…"),
+        "pending status missing\n{pending}"
+    );
+    assert!(
+        !pending.contains("Refresh failed:"),
+        "refresh failed before tick\n{pending}"
+    );
+
+    assert_eq!(
+        ShellApp::on_input(&mut app, key(KeyCode::Down)),
+        Outcome::Changed
+    );
+    let moved = draw(&mut app);
+    assert!(
+        moved.contains("Workspaces"),
+        "refresh left the manager\n{moved}"
+    );
+    assert!(
+        !moved.contains("no instances"),
+        "refresh cleared the list\n{moved}"
+    );
+    assert!(
+        moved.contains("Refreshing…"),
+        "pending status disappeared\n{moved}"
+    );
+    assert!(moved.contains("c41e"), "dirty instance missing\n{moved}");
+    assert!(
+        moved.contains("Stopped with uncommitted changes"),
+        "dirty selection details missing\n{moved}"
+    );
+    assert!(
+        !moved.contains("Refresh failed:"),
+        "failure replaced the pending refresh\n{moved}"
+    );
+
+    ShellApp::on_input(&mut app, Input::Tick);
+    let failed = draw(&mut app);
+    assert!(
+        failed.contains("Refresh failed: instance index unreadable"),
+        "failure missing\n{failed}"
+    );
+    assert!(
+        failed.contains("c41e"),
+        "selection was lost after failure\n{failed}"
+    );
+    assert!(
+        failed.contains("Stopped with uncommitted changes"),
+        "dirty details were lost\n{failed}"
+    );
+    assert!(
+        failed.contains("7f3a"),
+        "last-good rows were lost\n{failed}"
+    );
 }
 
 fn configured_launch(
