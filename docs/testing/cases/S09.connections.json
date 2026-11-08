@@ -12,7 +12,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_route.tui.pb"
       ],
       "route": "connections",
       "label": "Connections",
@@ -68,7 +68,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground_120x40.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_playground_80x24.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options_120x40.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_options_80x24.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states_120x40.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_states_80x24.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_rest.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_hover.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_pressed.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_focused.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -866,7 +866,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_selected.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -922,7 +922,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_disabled.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -978,7 +978,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_busy.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_busy.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -1114,7 +1114,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_specimen_narrow.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -1170,8 +1170,8 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_compare-levels_80x24.tui.pb"
       ],
       "route": "connections",
       "section_or_overlay": "states",
@@ -1270,7 +1270,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_group_by.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_group_by.tui.pb"
       ],
       "route": "connections",
       "option_values": [
@@ -1335,7 +1335,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_meta.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_meta.tui.pb"
       ],
       "route": "connections",
       "option_values": [
@@ -1400,7 +1400,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_list_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_list_width.tui.pb"
       ],
       "route": "connections",
       "option_values": [
@@ -1466,7 +1466,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_list.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_list.tui.pb"
       ],
       "route": "connections",
       "option_values": [
@@ -1531,7 +1531,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_state.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_state.tui.pb"
       ],
       "route": "connections",
       "option_values": [
@@ -1598,7 +1598,7 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_form_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/opt_connections_form_width.tui.pb"
       ],
       "route": "connections",
       "option_values": [
@@ -1664,8 +1664,8 @@
       "execution_commit": "2c5f6df9777a2114c461cf18c721514ef020318a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_connections_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_connections_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_connections_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_connections/sc_connections_connections_after.tui.pb"
       ],
       "route": "connections",
       "action_sequence": "Create, edit, test, save, cancel, duplicate, and delete a connection. Filter, and show empty, loading, and failure.",

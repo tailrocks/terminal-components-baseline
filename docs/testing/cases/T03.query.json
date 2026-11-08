@@ -27,8 +27,8 @@
       "execution_commit": "45aeb52b8139dcafb010fbbf723d8f19d17885a4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t03_query/t03_query_classify_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t03_query/t03_query_classify_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t03_query/t03_query_classify_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t03_query/t03_query_classify_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Run SELECT, a scoped write, an unscoped write, a destructive statement, a mixed batch, EXPLAIN, and EXPLAIN ANALYZE under each implemented safe mode. Include comments, a quoted semicolon, empty SQL, and a syntax error.",

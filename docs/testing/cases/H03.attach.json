@@ -27,8 +27,8 @@
       "execution_commit": "2d6ee992684dd96963546410f55ae44462c55e73",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h03_attach/h03_attach_attach_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h03_attach/h03_attach_attach_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h03_attach/h03_attach_attach_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h03_attach/h03_attach_attach_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Detach, observe the monitor, attach, request stop, and escalate a resistant process.",

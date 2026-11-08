@@ -12,7 +12,7 @@
       "execution_commit": "50a9ae94243d29765d89f013d656fdec5afb8601",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t01_test/t01_test_route.tui.json"
+        "tests/functional/baselines/pre_refactor/t01_test/t01_test_route.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -65,8 +65,8 @@
       "execution_commit": "50a9ae94243d29765d89f013d656fdec5afb8601",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t01_test/t01_test_actions_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t01_test/t01_test_actions_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t01_test/t01_test_actions_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t01_test/t01_test_actions_narrow.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",

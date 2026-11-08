@@ -27,8 +27,8 @@
       "execution_commit": "f625c61cd793b0aa4de920d2740ebbb869f74bc0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x03_focus/x03_focus_focus_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x03_focus/x03_focus_focus_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x03_focus/x03_focus_focus_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x03_focus/x03_focus_focus_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Focus a control, open an overlay over a selected list, and show an owner-controlled cursor.",

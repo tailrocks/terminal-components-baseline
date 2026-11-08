@@ -27,8 +27,8 @@
       "execution_commit": "b02bfebc2d44da2ddf3f1e536c7ae7eaf0f8455d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j04_chooser/j04_chooser_chooser_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j04_chooser/j04_chooser_chooser_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j04_chooser/j04_chooser_chooser_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j04_chooser/j04_chooser_chooser_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open the access-denied chooser and shoot it. Dismiss it. Cancel, go Back, open the inaccessible vault again, reject a disabled notes field and a missing query, choose credential, then retry a locked session.",

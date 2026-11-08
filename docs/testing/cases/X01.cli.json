@@ -27,8 +27,8 @@
       "execution_commit": "db4e7052e301c914dd7a57996fea7d5bed9d6179",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x01_cli/x01_cli_cli_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x01_cli/x01_cli_cli_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x01_cli/x01_cli_cli_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x01_cli/x01_cli_cli_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Run --help and an unknown page, scenario, connection, option key, and option value for each binary. Repeat --opt and observe precedence.",

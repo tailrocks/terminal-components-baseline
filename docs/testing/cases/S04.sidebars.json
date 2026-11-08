@@ -12,7 +12,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_route.tui.pb"
       ],
       "route": "sidebars",
       "label": "Sidebars",
@@ -68,7 +68,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground_120x40.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_playground_80x24.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options_120x40.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_options_80x24.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states_120x40.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_states_80x24.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_rest.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_hover.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_pressed.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_focused.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -850,7 +850,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_focused_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_focused_hover.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -906,7 +906,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_selected.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -962,7 +962,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_disabled.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -1098,7 +1098,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_overflow.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -1154,7 +1154,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_specimen_narrow.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -1210,8 +1210,8 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_compare-levels_80x24.tui.pb"
       ],
       "route": "sidebars",
       "section_or_overlay": "states",
@@ -1310,7 +1310,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed.tui.pb"
       ],
       "route": "sidebars",
       "option_values": [
@@ -1375,7 +1375,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_width.tui.pb"
       ],
       "route": "sidebars",
       "option_values": [
@@ -1441,7 +1441,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed_width.tui.pb"
       ],
       "route": "sidebars",
       "option_values": [
@@ -1514,7 +1514,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_keys.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_keys.tui.pb"
       ],
       "route": "sidebars",
       "option_values": [
@@ -1579,7 +1579,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_badges.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_badges.tui.pb"
       ],
       "route": "sidebars",
       "option_values": [
@@ -1644,7 +1644,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_hidden.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_hidden.tui.pb"
       ],
       "route": "sidebars",
       "option_values": [
@@ -1709,7 +1709,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed_rail.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_collapsed_rail.tui.pb"
       ],
       "route": "sidebars",
       "option_values": [
@@ -1781,7 +1781,7 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_rail_label.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/opt_sidebars_rail_label.tui.pb"
       ],
       "route": "sidebars",
       "option_values": [
@@ -1853,8 +1853,8 @@
       "execution_commit": "9c824dfca3aea097d23563faa71dd8d638f8883d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_sidebar_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_sidebar_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_sidebar_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s04_sidebars/sc_sidebars_sidebar_after.tui.pb"
       ],
       "route": "sidebars",
       "action_sequence": "Collapse the sidebar, hide the rail, read badges, and recover the selection.",

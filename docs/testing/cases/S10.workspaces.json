@@ -12,7 +12,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_route.tui.pb"
       ],
       "route": "workspaces",
       "label": "Workspaces",
@@ -68,7 +68,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground_120x40.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_playground_80x24.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options_120x40.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_options_80x24.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states_120x40.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_states_80x24.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_rest.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_hover.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -754,7 +754,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_focused.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -826,7 +826,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_selected.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -898,7 +898,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_busy.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_busy.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -1034,7 +1034,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_specimen_narrow.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -1090,8 +1090,8 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_compare-levels_80x24.tui.pb"
       ],
       "route": "workspaces",
       "section_or_overlay": "states",
@@ -1190,7 +1190,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_collapse_below.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_collapse_below.tui.pb"
       ],
       "route": "workspaces",
       "option_values": [
@@ -1256,7 +1256,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_size.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_size.tui.pb"
       ],
       "route": "workspaces",
       "option_values": [
@@ -1321,7 +1321,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_roster.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_roster.tui.pb"
       ],
       "route": "workspaces",
       "option_values": [
@@ -1386,7 +1386,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_esc_returns.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_esc_returns.tui.pb"
       ],
       "route": "workspaces",
       "option_values": [
@@ -1455,7 +1455,7 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_typed.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/opt_workspaces_typed.tui.pb"
       ],
       "route": "workspaces",
       "option_values": [
@@ -1520,10 +1520,10 @@
       "execution_commit": "6bc98878fa6e22ffbb48db11d97e81e071662858",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_80x24.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_dialog.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_80x24.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_dialog.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_workspaces/sc_workspaces_workspaces_after.tui.pb"
       ],
       "route": "workspaces",
       "action_sequence": "Select a workspace and a roster entry. Launch, edit, prewarm, and delete. Collapse the detail and return.",

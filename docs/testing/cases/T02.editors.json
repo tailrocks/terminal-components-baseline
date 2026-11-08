@@ -12,7 +12,7 @@
       "execution_commit": "4fac39d4b953424a4179ca64f46746b2373ec21e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_route_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_route_120x40.tui.pb"
       ],
       "route": "T02.editors",
       "entry_path": "click Development, click Connect, Enter on public.orders, scroll until total_amount is visible",
@@ -65,8 +65,8 @@
       "execution_commit": "4fac39d4b953424a4179ca64f46746b2373ec21e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_types_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_types_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_types_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t02_editors/t02_editors_types_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open public.orders. View shipping_address. On one row, reject and commit id, status, total_amount, notes, and delivered_at. Enter on order_number. Toggle is_gift and press Delete. Clear delivered_at. Mark the next row with minus. Duplicate the edited row and insert a blank row.",

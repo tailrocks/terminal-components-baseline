@@ -27,8 +27,8 @@
       "execution_commit": "f0f4e561544dec7f04e15ba5513a87eab95f0fb8",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t05_viewers/t05_viewers_viewer_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t05_viewers/t05_viewers_viewer_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t05_viewers/t05_viewers_viewer_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_viewers/t05_viewers_viewer_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open a viewer, select text, copy, and close.",

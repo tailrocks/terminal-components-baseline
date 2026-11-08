@@ -27,8 +27,8 @@
       "execution_commit": "7768501ab19718ad1eabafccfa9ab84112396088",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t03_completion/t03_completion_complete_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t03_completion/t03_completion_complete_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t03_completion/t03_completion_complete_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t03_completion/t03_completion_complete_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open completion, move the selection, accept one item, then dismiss another.",

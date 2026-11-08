@@ -12,7 +12,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_route.tui.pb"
       ],
       "route": "notices",
       "label": "Notices",
@@ -68,7 +68,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground_120x40.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_playground_80x24.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options_120x40.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_options_80x24.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states_120x40.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_states_80x24.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_rest.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_error.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "states",
@@ -898,7 +898,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_overflow.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "states",
@@ -954,7 +954,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_specimen_narrow.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "states",
@@ -1010,8 +1010,8 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_compare-levels_80x24.tui.pb"
       ],
       "route": "notices",
       "section_or_overlay": "states",
@@ -1110,7 +1110,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_kind.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_kind.tui.pb"
       ],
       "route": "notices",
       "option_values": [
@@ -1177,7 +1177,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_detail.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_detail.tui.pb"
       ],
       "route": "notices",
       "option_values": [
@@ -1242,7 +1242,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_hint.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_hint.tui.pb"
       ],
       "route": "notices",
       "option_values": [
@@ -1307,7 +1307,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_max_lines.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_max_lines.tui.pb"
       ],
       "route": "notices",
       "option_values": [
@@ -1373,7 +1373,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_message_lines.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_message_lines.tui.pb"
       ],
       "route": "notices",
       "option_values": [
@@ -1438,7 +1438,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_detail_tone.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_detail_tone.tui.pb"
       ],
       "route": "notices",
       "option_values": [
@@ -1503,7 +1503,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_mark_cut.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_mark_cut.tui.pb"
       ],
       "route": "notices",
       "option_values": [
@@ -1568,7 +1568,7 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/opt_notices_width.tui.pb"
       ],
       "route": "notices",
       "option_values": [
@@ -1633,8 +1633,8 @@
       "execution_commit": "f2800466681b0014f16a7366f5b60d3b6f52f6f4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_notices_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_notices_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_notices_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s06_notices/sc_notices_notices_after.tui.pb"
       ],
       "route": "notices",
       "action_sequence": "Cycle every connection-notice outcome. Open details and exercise hints, line limits, and truncation marks.",

@@ -27,8 +27,8 @@
       "execution_commit": "28c395513647cc26bbb207c6e2325bee3723e28d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j06_inspect/j06_inspect_inspect_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j06_inspect/j06_inspect_inspect_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j06_inspect/j06_inspect_inspect_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_inspect/j06_inspect_inspect_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Select a change, open its detail and diff, and copy where the result is visible.",

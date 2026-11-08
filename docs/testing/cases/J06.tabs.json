@@ -27,8 +27,8 @@
       "execution_commit": "de82e6792ab9143c42139fe575331956a6720ecd",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Create a tab, a shell tab, and an agent tab. Split both ways, move focus, zoom, drag a seam, and resize by key. Refuse a minimum-size violation. Rename and close, including cancel, and close the last pane and last tab.",

@@ -12,7 +12,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_route.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -68,7 +68,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -122,7 +122,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground_120x40.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -188,7 +188,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_playground_80x24.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -254,7 +254,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -308,7 +308,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options_120x40.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -374,7 +374,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_options_80x24.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -440,7 +440,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -494,7 +494,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states_120x40.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -560,7 +560,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_states_80x24.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -626,7 +626,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_rest.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -714,7 +714,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_focused.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -834,7 +834,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_error.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -922,7 +922,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_loading.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_loading.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -978,7 +978,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_overflow.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1034,7 +1034,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_specimen_narrow.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1090,8 +1090,8 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_compare-levels_80x24.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1190,7 +1190,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_offline.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_offline.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1255,7 +1255,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_visual.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_visual.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1320,7 +1320,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_notices.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_notices.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1385,7 +1385,7 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_copyable.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/opt_readonlyreport_copyable.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1450,8 +1450,8 @@
       "execution_commit": "e6a789bbf9cd8d96d9305f286610408fc1c62119",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_report_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_report_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_report_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_readonlyreport/sc_readonlyreport_report_after.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",

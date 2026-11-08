@@ -27,8 +27,8 @@
       "execution_commit": "e97d95dc62b52bc7c05f83e5d7b164a0f6f2b593",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t05_menus/t05_menus_menus_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t05_menus/t05_menus_menus_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t05_menus/t05_menus_menus_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_menus/t05_menus_menus_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open every implemented shell menu and invoke an enabled command. Invoke a disabled command.",

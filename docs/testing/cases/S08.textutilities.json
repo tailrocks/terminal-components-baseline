@@ -12,7 +12,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_route.tui.pb"
       ],
       "route": "textutilities",
       "label": "Text utilities",
@@ -68,7 +68,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground_120x40.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_playground_80x24.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options_120x40.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_options_80x24.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states_120x40.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_states_80x24.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_rest.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -714,7 +714,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_focused.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -834,7 +834,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_error.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -922,7 +922,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_loading.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_loading.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -978,7 +978,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_overflow.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -1034,7 +1034,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_specimen_narrow.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -1090,8 +1090,8 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_compare-levels_80x24.tui.pb"
       ],
       "route": "textutilities",
       "section_or_overlay": "states",
@@ -1190,7 +1190,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_width.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1257,7 +1257,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_sheet.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_sheet.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1322,7 +1322,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_wrap.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1389,7 +1389,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_duration.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_duration.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1454,7 +1454,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_case.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_case.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1519,7 +1519,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_nav.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1584,7 +1584,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_copy_key.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_copy_key.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1649,7 +1649,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_track_click.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1714,7 +1714,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_scrollbar_gap.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_scrollbar_gap.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1780,7 +1780,7 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_reveal.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/opt_textutilities_reveal.tui.pb"
       ],
       "route": "textutilities",
       "option_values": [
@@ -1846,8 +1846,8 @@
       "execution_commit": "b2dfee8224eb9f5c84f4ce7d43bc889e2a0ec463",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_text_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_text_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_text_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_textutilities/sc_textutilities_text_after.tui.pb"
       ],
       "route": "textutilities",
       "action_sequence": "Activate and copy property rows. Exercise fit, wrap, case, duration, and reveal.",

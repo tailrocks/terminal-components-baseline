@@ -27,8 +27,8 @@
       "execution_commit": "8d9af529ef94a96563339e57d1e75ab2090177ad",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j05_handoff/j05_handoff_handoff_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j05_handoff/j05_handoff_handoff_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j05_handoff/j05_handoff_handoff_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j05_handoff/j05_handoff_handoff_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Under --motion reduced, capture the capsule at 120\u00d740, resize to 80\u00d724, capture it, resize back to 120\u00d740, then detach. On separate launches, skip a paused handoff with Enter and with Esc, and finish a full-motion handoff.",

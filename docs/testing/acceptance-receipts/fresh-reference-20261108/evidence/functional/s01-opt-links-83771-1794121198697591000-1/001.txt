@@ -1,0 +1,40 @@
+ ▪ Junie Design system  App shell › Breadcrumbs & rails                      truecolor · 120×40   i Inspector   ? Help  
+                                                                                                                        
+ Components           54  Breadcrumbs & rails  Breadcrumb trails (static, clickable, collapsing) and the collapsible S… 
+ ───────────────────────                                                                                                
+    Overview               Playground   ▎Options    States                                       one control per option 
+  ▾ App shell             ──────────────━━━━━━━━━━──────────────────────────────────────────────────────────────────────
+      Chrome                                                                                                            
+      Status & hints      Page options                                                                                  
+    › Breadcrumbs & ra…    ──● Links on                                                                                 
+      Help & keys           Deep trail width                                                                            
+      Quit & leave          full                                                                                      ▾ 
+      Focus & navigati…    ○── Sidebar collapsed off                                                                    
+  ▸ Inputs & forms         ──● Collapsed rail on                                                                        
+  ▸ Tables                                                                                                              
+  ▸ Navigation                                                                                                          
+  ▸ Overlays                                                                                                            
+  ▸ Feedback                                                                                                            
+  ▸ Layout                                                                                                              
+  ▸ Text & code                                                                                                         
+  ▸ Screens                                                                                                             
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+ ←→ Section  1–3 Jump  Tab Next                                                                                         

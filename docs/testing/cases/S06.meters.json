@@ -12,7 +12,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_route.tui.pb"
       ],
       "route": "meters",
       "label": "Meters",
@@ -70,7 +70,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground_120x40.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_playground_80x24.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options_120x40.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_options_80x24.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states_120x40.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_states_80x24.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_rest.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -804,7 +804,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_error.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -894,7 +894,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_loading.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_loading.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -952,7 +952,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_overflow.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -1010,7 +1010,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_specimen_narrow.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -1068,8 +1068,8 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_compare-levels_80x24.tui.pb"
       ],
       "route": "meters",
       "section_or_overlay": "states",
@@ -1168,7 +1168,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_label_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_label_width.tui.pb"
       ],
       "route": "meters",
       "option_values": [
@@ -1236,7 +1236,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_label_gap.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_label_gap.tui.pb"
       ],
       "route": "meters",
       "option_values": [
@@ -1303,7 +1303,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_meter_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_meter_width.tui.pb"
       ],
       "route": "meters",
       "option_values": [
@@ -1371,7 +1371,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_detail.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_detail.tui.pb"
       ],
       "route": "meters",
       "option_values": [
@@ -1438,7 +1438,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_detail_tone.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_detail_tone.tui.pb"
       ],
       "route": "meters",
       "option_values": [
@@ -1505,7 +1505,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_visual.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_visual.tui.pb"
       ],
       "route": "meters",
       "option_values": [
@@ -1572,7 +1572,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_offline.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_offline.tui.pb"
       ],
       "route": "meters",
       "option_values": [
@@ -1639,7 +1639,7 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_stale_style.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/opt_meters_stale_style.tui.pb"
       ],
       "route": "meters",
       "option_values": [
@@ -1708,8 +1708,8 @@
       "execution_commit": "a567887d500d7fd2852cd42b5643fe660918e2d0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_meters_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_meters_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_meters_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s06_meters/sc_meters_meters_after.tui.pb"
       ],
       "route": "meters",
       "action_sequence": "Start a refresh, observe the busy state and the final values, then refuse refresh while offline. Show warning, stale, and detail tones.",

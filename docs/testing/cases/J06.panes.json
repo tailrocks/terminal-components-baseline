@@ -27,8 +27,8 @@
       "execution_commit": "ff8bc499f898b1ff709f2c2f906722a77ea1e389",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j06_panes/j06_panes_input_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j06_panes/j06_panes_input_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j06_panes/j06_panes_input_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_panes/j06_panes_input_narrow.tui.pb"
       ],
       "scenario": [
         "capsule-multi"

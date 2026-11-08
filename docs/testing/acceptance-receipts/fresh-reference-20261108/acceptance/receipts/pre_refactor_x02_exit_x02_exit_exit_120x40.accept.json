@@ -1,0 +1,18 @@
+{
+  "schema": "tuiscotti.cli.v1",
+  "command": "accept",
+  "status": "pass",
+  "test_id": "pre_refactor/x02_exit/x02_exit_exit_120x40",
+  "reason": null,
+  "candidate_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-reference-evidence-20261108/evidence/functional/x02-exit-guard-83769-1794121198044791000-0/reference-candidates/pre_refactor_x02_exit_x02_exit_exit_120x40.tui.pb"
+  },
+  "candidate_sha256": "d49e0e7d27cc1da67d548f7e1232bc1ced356dd9cf4f8e48f903d96c3bb56d63",
+  "baseline_sha256": "d49e0e7d27cc1da67d548f7e1232bc1ced356dd9cf4f8e48f903d96c3bb56d63",
+  "output_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-reference-evidence-20261108/tests/functional/baselines/pre_refactor/x02_exit/x02_exit_exit_120x40.tui.pb"
+  },
+  "error_code": null
+}

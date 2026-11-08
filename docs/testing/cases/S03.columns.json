@@ -12,7 +12,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_route.tui.pb"
       ],
       "route": "columns",
       "label": "Columns",
@@ -68,7 +68,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_playground.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_playground_120x40.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_playground_80x24.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_options.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_options_120x40.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_options_80x24.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_states.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_states_120x40.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_states_80x24.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_rest.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_hover.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -754,7 +754,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_focused.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -826,7 +826,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_selected.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -978,7 +978,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_overflow.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -1034,7 +1034,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_specimen_narrow.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -1090,8 +1090,8 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_compare-levels_80x24.tui.pb"
       ],
       "route": "columns",
       "section_or_overlay": "states",
@@ -1190,7 +1190,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_width.tui.pb"
       ],
       "route": "columns",
       "option_values": [
@@ -1256,7 +1256,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_resizable.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_resizable.tui.pb"
       ],
       "route": "columns",
       "option_values": [
@@ -1319,7 +1319,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_seam_w.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_seam_w.tui.pb"
       ],
       "route": "columns",
       "option_values": [
@@ -1383,7 +1383,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_min_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_min_width.tui.pb"
       ],
       "route": "columns",
       "option_values": [
@@ -1447,7 +1447,7 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_header_labels.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/opt_columns_header_labels.tui.pb"
       ],
       "route": "columns",
       "option_values": [
@@ -1510,8 +1510,8 @@
       "execution_commit": "750d7d4d5fd2a00470361781bc381909c6145fdf",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_seams_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_seams_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_seams_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_columns/sc_columns_seams_after.tui.pb"
       ],
       "route": "columns",
       "action_sequence": "Resize columns inside their limits. Exercise fixed columns, horizontal overflow, and the column menu.",

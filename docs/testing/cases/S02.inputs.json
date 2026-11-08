@@ -12,7 +12,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_route.tui.pb"
       ],
       "route": "inputs",
       "label": "Inputs",
@@ -68,8 +68,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "playground",
@@ -161,7 +161,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "playground",
@@ -227,7 +227,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "playground",
@@ -293,8 +293,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "options",
@@ -386,7 +386,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_120x40.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "options",
@@ -452,7 +452,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_options_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "options",
@@ -518,8 +518,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -611,7 +611,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -677,7 +677,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -743,8 +743,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -838,8 +838,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -949,8 +949,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -1076,7 +1076,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -1148,8 +1148,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -1243,8 +1243,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -1338,7 +1338,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -1410,7 +1410,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -1466,7 +1466,7 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_states_120x40.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -1522,8 +1522,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_compare-levels_80x24.tui.pb"
       ],
       "route": "inputs",
       "section_or_overlay": "states",
@@ -1622,8 +1622,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_edit_entry.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_edit_entry.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -1728,8 +1728,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_focus_select.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_focus_select.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -1833,8 +1833,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_field_keys.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_field_keys.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -1938,8 +1938,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_text_keymap.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_text_keymap.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -2042,8 +2042,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_blur_action.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_blur_action.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -2147,8 +2147,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_pointer_select.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_pointer_select.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -2255,8 +2255,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_label_hit.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_label_hit.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -2359,8 +2359,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_wrap_label.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_wrap_label.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -2463,8 +2463,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_plain_label.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_plain_label.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -2567,8 +2567,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_readout.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_readout.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -2669,8 +2669,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_required_message.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/opt_inputs_required_message.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_playground_120x40.tui.pb"
       ],
       "route": "inputs",
       "option_values": [
@@ -2773,8 +2773,8 @@
       "execution_commit": "b7a1ff453dc5b8428316d4237c7b7ffb8c97b6f2",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_edit_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_edit_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_edit_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_inputs/sc_inputs_edit_after.tui.pb"
       ],
       "route": "inputs",
       "action_sequence": "Exercise each entry mode and blur policy, then selection, paste, undo, redo, validation, and secret masking.",

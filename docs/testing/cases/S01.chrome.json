@@ -12,7 +12,7 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_route.tui.pb"
       ],
       "route": "chrome",
       "label": "Chrome",
@@ -68,8 +68,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "playground",
@@ -161,7 +161,7 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "playground",
@@ -227,7 +227,7 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "playground",
@@ -293,8 +293,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "options",
@@ -386,7 +386,7 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_120x40.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "options",
@@ -452,7 +452,7 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_options_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "options",
@@ -518,8 +518,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -611,7 +611,7 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -677,7 +677,7 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -743,8 +743,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -838,8 +838,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -933,8 +933,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -1092,8 +1092,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -1267,8 +1267,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_states_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -1362,8 +1362,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_compare-levels_80x24.tui.pb"
       ],
       "route": "chrome",
       "section_or_overlay": "states",
@@ -1462,8 +1462,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_bar.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_bar.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -1566,8 +1566,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_open_on.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_open_on.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -1670,8 +1670,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_overflow.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_bar.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_overflow.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_bar.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -1783,8 +1783,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_hover_switch.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_hover_switch.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -1887,8 +1887,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_press_drag.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_press_drag.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -1991,8 +1991,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_hide_owner_focus.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_hide_owner_focus.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -2095,8 +2095,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_wrap.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_wrap.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -2199,8 +2199,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_type_ahead.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_type_ahead.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -2301,8 +2301,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_nav.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_nav.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -2405,8 +2405,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_dismiss.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_dismiss.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -2509,8 +2509,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_brand.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/opt_chrome_brand.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_playground_120x40.tui.pb"
       ],
       "route": "chrome",
       "option_values": [
@@ -2614,8 +2614,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menus_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menus_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menus_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menus_after.tui.pb"
       ],
       "route": "chrome",
       "action_sequence": "Open every Chrome menu by pointer and by keyboard and invoke each enabled command.",
@@ -2715,8 +2715,8 @@
       "execution_commit": "7cd05c48538b8df7c73ee0921eac7b7764aef46d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menu-switch_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menu-switch_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menu-switch_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_chrome/sc_chrome_menu-switch_after.tui.pb"
       ],
       "route": "chrome",
       "action_sequence": "Move the pointer and the keyboard from one open menu to the next.",

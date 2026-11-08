@@ -27,8 +27,8 @@
       "execution_commit": "8024cc64766ce1586693ab386f0fca2c0091c93a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h04_snapshots_docker/h04_snapshots-docker_docker_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h04_snapshots_docker/h04_snapshots-docker_docker_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h04_snapshots_docker/h04_snapshots-docker_docker_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h04_snapshots_docker/h04_snapshots-docker_docker_narrow.tui.pb"
       ],
       "scenario": [
         "docker-cleanup",

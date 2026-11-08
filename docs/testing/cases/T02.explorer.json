@@ -27,8 +27,8 @@
       "execution_commit": "4406922903cd0c444a90ef702fd33d742726678f",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_explorer/t02_explorer_tree_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t02_explorer/t02_explorer_tree_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_explorer/t02_explorer_tree_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t02_explorer/t02_explorer_tree_narrow.tui.pb"
       ],
       "scenario": "Schema expansion, filtering, preview reuse, and a permanent open keep the selected object's identity.",
       "action_sequence": "Expand analytics until events is visible. Open organizations as a preview, then pin it. Capture 120x40, narrow to 80x24 and capture before restoring 120x40. Open customers as a preview, replace that preview with products, reuse the pinned organizations tab, filter the tree to customers, and open that row.",

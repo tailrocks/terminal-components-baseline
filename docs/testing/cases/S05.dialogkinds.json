@@ -12,7 +12,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_route.tui.pb"
       ],
       "route": "dialogkinds",
       "label": "Dialog kinds",
@@ -68,7 +68,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground_120x40.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_playground_80x24.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options_120x40.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_options_80x24.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states_120x40.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_states_80x24.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_rest.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_hover.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -754,7 +754,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_focused.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -826,7 +826,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_selected.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -882,7 +882,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_specimen_disabled.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -1050,8 +1050,8 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_compare-levels_80x24.tui.pb"
       ],
       "route": "dialogkinds",
       "section_or_overlay": "states",
@@ -1150,7 +1150,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_width.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1216,7 +1216,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_nav.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1281,7 +1281,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_close_button.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_close_button.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1346,7 +1346,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_button_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_button_wrap.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1411,7 +1411,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_keep_open.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_keep_open.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1476,7 +1476,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_form_meta.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_form_meta.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1541,7 +1541,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_info_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_info_error.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1606,7 +1606,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_info_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_info_keymap.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1671,7 +1671,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_tones.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_tones.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1736,7 +1736,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_stepper.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_stepper.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1801,7 +1801,7 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_buttons.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/opt_dialogkinds_choice_buttons.tui.pb"
       ],
       "route": "dialogkinds",
       "option_values": [
@@ -1866,8 +1866,8 @@
       "execution_commit": "bf00d5b0649a8dfff00b37a340cbba5286de1be3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_kinds_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_kinds_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_kinds_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_dialogkinds/sc_dialogkinds_kinds_after.tui.pb"
       ],
       "route": "dialogkinds",
       "action_sequence": "Open Form, Info, Choice, and Help kinds. Exercise each form field and the nested key chooser. Run failure, success, save, cancel, and keep-open.",

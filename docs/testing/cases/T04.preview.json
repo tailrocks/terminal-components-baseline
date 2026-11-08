@@ -27,8 +27,8 @@
       "execution_commit": "775c224af8b3f8420258b2c21ef32a29a6425e54",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t04_preview/t04_preview_preview_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t04_preview/t04_preview_preview_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t04_preview/t04_preview_preview_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t04_preview/t04_preview_preview_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Preview an object, pin a tab, dirty another tab, and preview again.",

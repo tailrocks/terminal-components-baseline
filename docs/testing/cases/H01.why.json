@@ -27,8 +27,8 @@
       "execution_commit": "8b626cb866f38ac051f6db123940cfd60b3dacf8",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h01_why/h01_why_why_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h01_why/h01_why_why_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h01_why/h01_why_why_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h01_why/h01_why_why_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open Why for the selected row and close it.",

@@ -27,8 +27,8 @@
       "execution_commit": "d3ad3bcf8c6f99bda7f797a682deea90952144be",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x03_motion/x03_motion_motion_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x03_motion/x03_motion_motion_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x03_motion/x03_motion_motion_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x03_motion/x03_motion_motion_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Capture paused and reduced frames with the existing frame controls. Capture a Jackin phase with the clock hook. Do not add a Showcase clock hook.",

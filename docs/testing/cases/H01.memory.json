@@ -27,8 +27,8 @@
       "execution_commit": "465a9b489ab0f494d45abe9fb5222e7179db58e7",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h01_memory/h01_memory_memory_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h01_memory/h01_memory_memory_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h01_memory/h01_memory_memory_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h01_memory/h01_memory_memory_narrow.tui.pb"
       ],
       "scenario": [
         "parity-history"

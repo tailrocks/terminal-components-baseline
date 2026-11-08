@@ -12,8 +12,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-color-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-color-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -119,8 +119,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-overrides-default.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-overrides-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-overrides-default.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-overrides-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -233,8 +233,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-glyphs-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-glyphs-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -338,8 +338,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-strings-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-strings-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -443,8 +443,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-motion-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-motion-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -547,8 +547,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-focus_on-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-focus_on-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -652,8 +652,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-double_click_ms-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-double_click_ms-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -758,8 +758,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-double_click_slop-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-double_click_slop-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -864,8 +864,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-wheel-lines-default.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-wheel-lines-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-wheel-lines-default.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-wheel-lines-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -972,8 +972,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-hover_refresh_after_scroll-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-hover_refresh_after_scroll-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1077,8 +1077,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-flash_ms-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-flash_ms-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1183,8 +1183,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-secondary_outside-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-secondary_outside-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1289,8 +1289,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-end_edit_on_dead_space-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-end_edit_on_dead_space-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1394,8 +1394,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-autoscroll-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-autoscroll-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1499,8 +1499,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-autoscroll_ms-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-autoscroll_ms-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1605,8 +1605,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_repeat-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_repeat-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1710,8 +1710,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_repeat_ms-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_repeat_ms-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1816,8 +1816,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_click-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-track_click-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -1921,8 +1921,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-pointer_shapes-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-pointer_shapes-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2026,8 +2026,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-caret_shape-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-caret_shape-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2133,8 +2133,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-click_skips_animation-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-click_skips_animation-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2238,8 +2238,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-tooltips-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-tooltips-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2343,8 +2343,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-reveal-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-reveal-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2448,8 +2448,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-platform-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-platform-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2554,8 +2554,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-field_keys-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-field_keys-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2660,8 +2660,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-edit_entry-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-edit_entry-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2766,8 +2766,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-focus_fallback-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-focus_fallback-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2871,8 +2871,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-shift_wheel_horizontal-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-shift_wheel_horizontal-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -2976,8 +2976,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-legacy_ctrl_punctuation-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-legacy_ctrl_punctuation-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -3081,8 +3081,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-keyboard_protocol-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-keyboard_protocol-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -3187,8 +3187,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-alt_keys-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-alt_keys-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -3295,8 +3295,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-card-heading-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-card-heading-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -3402,8 +3402,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-inactive-selection-boundary.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-defaults.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/opt-shell-inactive-selection-boundary.tui.pb"
       ],
       "route": "shell",
       "option_values": [
@@ -3508,8 +3508,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-inspector-narrow.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-inspector-120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-inspector-narrow.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-inspector-120x40.tui.pb"
       ],
       "action_sequence": "Open the Inspector, move through its sections, change an option, and close it.",
       "expected_results": "The Inspector shows the current page and the option change is visible on that page.",
@@ -3609,10 +3609,10 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-all-open.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-accordion.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-current.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-all-open.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-accordion.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-sidebar-policy-current.tui.pb"
       ],
       "action_sequence": "Switch Current, Accordion, and All expansion.",
       "expected_results": "The visible groups match the selected policy.",
@@ -3796,9 +3796,9 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-reduced.tui.json",
-        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-page-option.tui.json"
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-reduced.tui.pb",
+        "tests/functional/baselines/pre_refactor/S01.shell/sc-shell-shell-override-page-option.tui.pb"
       ],
       "action_sequence": "Change a shell option that the page says affects a control, from the default to one other value.",
       "expected_results": "The control's visible behaviour matches that value.",

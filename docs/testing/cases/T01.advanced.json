@@ -27,8 +27,8 @@
       "execution_commit": "d8cbbb53f58bc8e207fc55dba2eebef3da60eb50",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t01_advanced/t01_advanced_secrets_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t01_advanced/t01_advanced_secrets_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t01_advanced/t01_advanced_secrets_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t01_advanced/t01_advanced_secrets_narrow.tui.pb"
       ],
       "scenario": "Edit Production. Change SSH host, SSH user, startup commands, and Local only. Mask a password on Basic. Save and reopen.",
       "action_sequence": "Cancel a change to drop.acme.io. Discard a dirty change to leave.acme.io from the unsaved-changes dialog. Set SSH host to gate.acme.io, SSH user to notdeploy, startup to extra_float_digits=0, and Local only on. On Basic, paste the secret into Password and capture the masked field at 120×40, then at 80×24, then restore 120×40. Ctrl+S, then reopen.",

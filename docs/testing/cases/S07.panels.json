@@ -12,7 +12,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_route.tui.pb"
       ],
       "route": "panels",
       "label": "Panels",
@@ -70,7 +70,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground_120x40.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_playground_80x24.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options_120x40.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_options_80x24.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states_120x40.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_states_80x24.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_rest.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "states",
@@ -724,7 +724,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_focused.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "states",
@@ -910,7 +910,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_overflow.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "states",
@@ -968,7 +968,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_specimen_narrow.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "states",
@@ -1026,8 +1026,8 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_compare-levels_80x24.tui.pb"
       ],
       "route": "panels",
       "section_or_overlay": "states",
@@ -1126,7 +1126,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_focus_mark.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_focus_mark.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1193,7 +1193,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_heading.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_heading.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1263,7 +1263,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_title_min.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_title_min.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1331,7 +1331,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_pad_x.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_pad_x.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1399,7 +1399,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_meta_short.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_meta_short.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1466,7 +1466,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_wrap.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1533,7 +1533,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_tail.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_tail.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1600,7 +1600,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_hscroll.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_hscroll.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1671,7 +1671,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_track_click.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1739,7 +1739,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_nav.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1807,7 +1807,7 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/opt_panels_keymap.tui.pb"
       ],
       "route": "panels",
       "option_values": [
@@ -1874,8 +1874,8 @@
       "execution_commit": "32ffd190f072786c2545019f02532f6d906edc41",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_panels_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_panels_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_panels_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s07_panels/sc_panels_panels_after.tui.pb"
       ],
       "route": "panels",
       "action_sequence": "Scroll adjacent and nested panels on both axes.",

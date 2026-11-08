@@ -27,8 +27,8 @@
       "execution_commit": "cdfd601630335f2ccf55d44a01e5d94b40227cbd",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h01_finder/h01_finder_discovery_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h01_finder/h01_finder_discovery_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h01_finder/h01_finder_discovery_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h01_finder/h01_finder_discovery_narrow.tui.pb"
       ],
       "scenario": [
         "first-use",

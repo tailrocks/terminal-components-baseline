@@ -27,8 +27,8 @@
       "execution_commit": "56a18c0387d2dc763d8546398fe14cd37894ec57",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j04_usage/j04_usage_usage_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j04_usage/j04_usage_usage_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j04_usage/j04_usage_usage_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j04_usage/j04_usage_usage_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open each usage view. Show quota, missing data, mixed health, freshness, and stale values. Start refresh, refuse a duplicate, succeed, and fail.",

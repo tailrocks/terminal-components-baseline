@@ -12,7 +12,7 @@
       "execution_commit": "bdd16291f2ec81a5be8ede2bfc97b82787c39b18",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_120x40.tui.pb"
       ],
       "route": "T02.structure",
       "entry_path": "launch tablepro with --color truecolor --motion reduced; click Development; click Connect; open customers; press Ctrl+D",
@@ -65,8 +65,8 @@
       "execution_commit": "bdd16291f2ec81a5be8ede2bfc97b82787c39b18",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t02_structure/t02_structure_tabs_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open Columns, Indexes, Foreign keys, Constraints, Triggers, and DDL on customers, then the same six tabs on products. Jump back to Triggers. Capture 120×40, then 80×24, then restore 120×40.",

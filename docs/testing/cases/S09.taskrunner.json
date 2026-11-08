@@ -12,7 +12,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_route.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -70,7 +70,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_playground.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -126,7 +126,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_playground_120x40.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -192,7 +192,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_playground_80x24.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -258,7 +258,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_options.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -314,7 +314,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_options_120x40.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -380,7 +380,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_options_80x24.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -446,7 +446,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_states.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -502,7 +502,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_states_120x40.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -568,7 +568,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_states_80x24.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -634,7 +634,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_rest.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -692,7 +692,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_hover.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -750,7 +750,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_pressed.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -808,7 +808,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_focused.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -882,7 +882,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_selected.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -940,7 +940,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_disabled.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -998,7 +998,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_busy.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_busy.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1056,7 +1056,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_error.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1130,7 +1130,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_empty.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1204,7 +1204,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_overflow.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1262,7 +1262,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_specimen_narrow.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1320,8 +1320,8 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_compare-levels_80x24.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1420,7 +1420,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_expanded.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_expanded.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1487,7 +1487,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_indent.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_indent.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1555,7 +1555,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_env_glyphs.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_env_glyphs.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1622,7 +1622,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_tree_meta.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_tree_meta.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1689,7 +1689,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_follow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_follow.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1756,7 +1756,7 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/opt_taskrunner_wrap.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
@@ -1823,9 +1823,9 @@
       "execution_commit": "28d719b8403a24bb94d5338e942e25bde804f749",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_pipeline_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_pipeline_after.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_pipeline_dialog.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_pipeline_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_pipeline_after.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_taskrunner/sc_taskrunner_pipeline_dialog.tui.pb"
       ],
       "acceptance_receipt": {
         "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",

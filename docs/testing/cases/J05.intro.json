@@ -27,8 +27,8 @@
       "execution_commit": "ae09834bff81f5d580d9bc676bbe041502bab709",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j05_intro/j05_intro_intro_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j05_intro/j05_intro_intro_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j05_intro/j05_intro_intro_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j05_intro/j05_intro_intro_narrow.tui.pb"
       ],
       "scenario": [
         "first-use",

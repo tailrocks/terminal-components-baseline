@@ -12,7 +12,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_route.tui.pb"
       ],
       "route": "selection",
       "label": "Selection",
@@ -68,7 +68,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground_120x40.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_playground_80x24.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options_120x40.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_options_80x24.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states_120x40.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_states_80x24.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_rest.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_hover.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_pressed.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_focused.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -850,7 +850,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_focused_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_focused_hover.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -906,7 +906,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_selected.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -962,7 +962,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_disabled.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -1066,7 +1066,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_empty.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -1154,7 +1154,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_specimen_narrow.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -1210,8 +1210,8 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_compare-levels_80x24.tui.pb"
       ],
       "route": "selection",
       "section_or_overlay": "states",
@@ -1310,7 +1310,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_esc_clears.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_esc_clears.tui.pb"
       ],
       "route": "selection",
       "option_values": [
@@ -1375,7 +1375,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_toggle_mods.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_toggle_mods.tui.pb"
       ],
       "route": "selection",
       "option_values": [
@@ -1441,7 +1441,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_disabled_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_disabled_rows.tui.pb"
       ],
       "route": "selection",
       "option_values": [
@@ -1506,7 +1506,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_check_column.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_check_column.tui.pb"
       ],
       "route": "selection",
       "option_values": [
@@ -1571,7 +1571,7 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_activate.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/opt_selection_activate.tui.pb"
       ],
       "route": "selection",
       "option_values": [
@@ -1638,16 +1638,16 @@
       "execution_commit": "9fde6420f07cfe020cf52c21eea1261a6476fa4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_80x24.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_single.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_range.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_move.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_toggle.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_all.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_dirty.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_applied.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_80x24.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_single.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_range.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_move.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_toggle.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_all.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_dirty.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_applied.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_selection/sc_selection_policies_after.tui.pb"
       ],
       "route": "selection",
       "action_sequence": "Exercise none, single, and multiple selection, range, toggle, and Select All with a disabled row. Move the cursor without replacing the set. Apply and revert a mixed bulk field.",

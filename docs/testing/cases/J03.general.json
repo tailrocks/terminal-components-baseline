@@ -27,8 +27,8 @@
       "execution_commit": "8756cf3355906410ccad80d9ae75411077d16aaa",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j03_general/j03_general_edit_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j03_general/j03_general_edit_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j03_general/j03_general_edit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_general/j03_general_edit_narrow.tui.pb"
       ],
       "scenario": [
         "returning"

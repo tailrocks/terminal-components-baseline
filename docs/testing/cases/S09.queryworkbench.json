@@ -12,7 +12,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_route.tui.pb"
       ],
       "route": "queryworkbench",
       "label": "Query workbench",
@@ -68,7 +68,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_playground.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_playground_120x40.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_playground_80x24.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_options.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_options_120x40.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_options_80x24.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_states.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_states_120x40.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_states_80x24.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_rest.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_hover.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -754,7 +754,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_focused.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -826,7 +826,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_selected.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -898,7 +898,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_busy.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_busy.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -1018,7 +1018,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_overflow.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -1074,7 +1074,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_specimen_narrow.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -1130,8 +1130,8 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_compare-levels_80x24.tui.pb"
       ],
       "route": "queryworkbench",
       "section_or_overlay": "states",
@@ -1230,7 +1230,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_explorer.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_explorer.tui.pb"
       ],
       "route": "queryworkbench",
       "option_values": [
@@ -1295,7 +1295,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_explorer_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_explorer_width.tui.pb"
       ],
       "route": "queryworkbench",
       "option_values": [
@@ -1361,7 +1361,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_editor_share.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_editor_share.tui.pb"
       ],
       "route": "queryworkbench",
       "option_values": [
@@ -1427,7 +1427,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_allow_new.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_allow_new.tui.pb"
       ],
       "route": "queryworkbench",
       "option_values": [
@@ -1492,7 +1492,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_close_reveal.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_close_reveal.tui.pb"
       ],
       "route": "queryworkbench",
       "option_values": [
@@ -1557,7 +1557,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_read_only.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_read_only.tui.pb"
       ],
       "route": "queryworkbench",
       "option_values": [
@@ -1622,7 +1622,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_result.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_result.tui.pb"
       ],
       "route": "queryworkbench",
       "option_values": [
@@ -1689,7 +1689,7 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_env.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/opt_queryworkbench_env.tui.pb"
       ],
       "route": "queryworkbench",
       "option_values": [
@@ -1756,9 +1756,9 @@
       "execution_commit": "309aab2dd73d31dbad96d7c7370f8aeaff7ec724",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_queries_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_queries_running.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_queries_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_queries_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_queries_running.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_queryworkbench/sc_queryworkbench_queries_after.tui.pb"
       ],
       "route": "queryworkbench",
       "action_sequence": "Expand the explorer, open a table, and create, switch, and close query tabs. Run, explain, stop, and clear. Show rows, plan, and error.",

@@ -27,8 +27,8 @@
       "execution_commit": "7bc8b45cba8ba2c0fbde03332d34031165bd2da3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t04_tabs/t04_tabs_close_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t04_tabs/t04_tabs_close_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t04_tabs/t04_tabs_close_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t04_tabs/t04_tabs_close_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Close tabs by pointer, keyboard, and middle-click where supported.",

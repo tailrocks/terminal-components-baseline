@@ -27,8 +27,8 @@
       "execution_commit": "b4df814fcc2830e7a39095870c584115e6f4c808",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t05_context/t05_context_context_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t05_context/t05_context_context_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t05_context/t05_context_context_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_context/t05_context_context_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open a row context menu and a cell context menu and run one action in each.",

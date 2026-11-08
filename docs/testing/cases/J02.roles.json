@@ -27,8 +27,8 @@
       "execution_commit": "de5d7e02290474a8a9b26b1d5378dff74ca04f63",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j02_roles/j02_roles_roles_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j02_roles/j02_roles_roles_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j02_roles/j02_roles_roles_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j02_roles/j02_roles_roles_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Load roles, trust one, show the failure fixture, and retry.",

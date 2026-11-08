@@ -27,8 +27,8 @@
       "execution_commit": "f0ea32ec2e8cd62d3b9b20d5139027538ee8f997",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h03_output/h03_output_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h03_output/h03_output_states_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h03_output/h03_output_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h03_output/h03_output_states_narrow.tui.pb"
       ],
       "scenario": [
         "activities-multi",

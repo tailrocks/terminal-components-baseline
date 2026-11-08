@@ -27,8 +27,8 @@
       "execution_commit": "763b5fc85576217eead601c1b7e17820eea2b20f",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t05_help/t05_help_help_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t05_help/t05_help_help_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t05_help/t05_help_help_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_help/t05_help_help_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open Help, scroll it, press a page key, and close it.",

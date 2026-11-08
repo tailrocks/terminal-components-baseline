@@ -12,7 +12,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_route.tui.pb"
       ],
       "route": "editable",
       "label": "Editable",
@@ -68,7 +68,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground_120x40.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_playground_80x24.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options_120x40.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_options_80x24.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states_120x40.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_states_80x24.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_rest.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_hover.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_pressed.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_focused.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -882,7 +882,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_disabled.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -954,7 +954,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_error.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -1010,7 +1010,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_editing.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_editing.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -1066,7 +1066,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_empty.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -1138,7 +1138,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_overflow.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -1194,7 +1194,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_specimen_narrow.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -1250,8 +1250,8 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_compare-levels_80x24.tui.pb"
       ],
       "route": "editable",
       "section_or_overlay": "states",
@@ -1350,7 +1350,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_rows.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1415,7 +1415,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_type_ahead.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_type_ahead.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1481,7 +1481,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_affordance.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_affordance.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1547,7 +1547,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_overflow_marks.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_overflow_marks.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1612,7 +1612,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_numeric.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_numeric.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1677,7 +1677,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_nav.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1742,7 +1742,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_keymap.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1807,7 +1807,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_horizontal.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_horizontal.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1872,7 +1872,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_reveal.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_reveal.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -1937,7 +1937,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_track_click.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -2003,7 +2003,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_blur_action.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_blur_action.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -2068,7 +2068,7 @@
       "execution_commit": "681f3cfc641ec4ac411ff5bd761156a9a25b85ab",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_header_labels.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/opt_editable_header_labels.tui.pb"
       ],
       "route": "editable",
       "option_values": [
@@ -2133,7 +2133,7 @@
       "execution_commit": "392f74022d8d22122b45532e3c113a50498ab2fc",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_cells.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_editable/sc_editable_cells.tui.pb"
       ],
       "route": "editable",
       "action_sequence": "Focus the first task cell, press Enter, type Q, redraw after the click flash, and capture the open edit before commit or cancel.",

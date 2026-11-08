@@ -12,7 +12,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_route.tui.pb"
       ],
       "route": "finder",
       "label": "Finder",
@@ -68,7 +68,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground_120x40.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_playground_80x24.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options_120x40.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_options_80x24.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states_120x40.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_states_80x24.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_rest.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_hover.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -754,7 +754,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_focused.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -826,7 +826,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_selected.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -946,7 +946,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_empty.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -1018,7 +1018,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_overflow.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -1074,7 +1074,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_specimen_narrow.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -1130,8 +1130,8 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_compare-levels_80x24.tui.pb"
       ],
       "route": "finder",
       "section_or_overlay": "states",
@@ -1230,7 +1230,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_query.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_query.tui.pb"
       ],
       "route": "finder",
       "option_values": [
@@ -1296,7 +1296,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_scope.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_scope.tui.pb"
       ],
       "route": "finder",
       "option_values": [
@@ -1362,7 +1362,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_risk_column.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_risk_column.tui.pb"
       ],
       "route": "finder",
       "option_values": [
@@ -1427,7 +1427,7 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_preview.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/opt_finder_preview.tui.pb"
       ],
       "route": "finder",
       "option_values": [
@@ -1492,8 +1492,8 @@
       "execution_commit": "117226a87b4dae71fb5b4bb41d824bfcaedb80f5",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_finder_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_finder_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_finder_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_finder/sc_finder_finder_after.tui.pb"
       ],
       "route": "finder",
       "action_sequence": "Edit a query, change scope, activate a result, and open Alternatives, Why, preview, and no results.",

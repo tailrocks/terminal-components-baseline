@@ -27,8 +27,8 @@
       "execution_commit": "ab0f077ce3f2f7c408592f9fe7fa1fbc7c07eb5d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Add REVIEW_NOTE as masked plain text, add OPS_REF as a host environment variable, save settings, then open the payments-platform Environments tab.",

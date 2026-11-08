@@ -12,7 +12,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_route.tui.pb"
       ],
       "route": "celleditors",
       "label": "Cell editors",
@@ -68,7 +68,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground_120x40.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_playground_80x24.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options_120x40.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_options_80x24.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states_120x40.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_states_80x24.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_rest.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_hover.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -754,7 +754,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_focused.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -842,7 +842,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_disabled.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -914,7 +914,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_error.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -970,7 +970,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_editing.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_editing.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -1026,7 +1026,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_empty.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -1098,7 +1098,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_overflow.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -1154,7 +1154,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_specimen_narrow.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -1210,8 +1210,8 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_compare-levels_80x24.tui.pb"
       ],
       "route": "celleditors",
       "section_or_overlay": "states",
@@ -1310,7 +1310,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_dismiss.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_dismiss.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1375,7 +1375,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_blur.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_blur.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1440,7 +1440,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_max_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_max_rows.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1506,7 +1506,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_popup_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_popup_width.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1572,7 +1572,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_cursor_style.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_cursor_style.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1637,7 +1637,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_type_ahead.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_type_ahead.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1702,7 +1702,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_affordance.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_affordance.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1768,7 +1768,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_flag_out_of_set.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_flag_out_of_set.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1833,7 +1833,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_tag_separator.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_tag_separator.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1898,7 +1898,7 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_placement.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/opt_celleditors_placement.tui.pb"
       ],
       "route": "celleditors",
       "option_values": [
@@ -1963,8 +1963,8 @@
       "execution_commit": "b1310d220d1e87fe98bf24c0cff21a923cf9e083",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_editors_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_editors_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_editors_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_celleditors/sc_celleditors_editors_after.tui.pb"
       ],
       "route": "celleditors",
       "action_sequence": "Focus the table, open the Env choice, capture the open popup, move to Sandbox, press Enter, capture the stored value, reopen, and press Esc.",

@@ -27,8 +27,8 @@
       "execution_commit": "83b3384d60f10d28695fe03c913d4d7790ba0518",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h01_scope/h01_scope_scope_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h01_scope/h01_scope_scope_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h01_scope/h01_scope_scope_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h01_scope/h01_scope_scope_narrow.tui.pb"
       ],
       "scenario": [
         "monorepo-child",

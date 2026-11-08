@@ -27,8 +27,8 @@
       "execution_commit": "43ab9f8f106891dbd295417fa3e2d9dbbaf397d3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j01_prelude/j01_prelude_steps_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j01_prelude/j01_prelude_steps_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j01_prelude/j01_prelude_steps_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j01_prelude/j01_prelude_steps_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Start from a host directory and from Git. Visit Source, Destination, Edit, Workdir, and Name. Go Back and Cancel at each boundary. Enter an invalid and a duplicate name. Finish one valid prelude.",

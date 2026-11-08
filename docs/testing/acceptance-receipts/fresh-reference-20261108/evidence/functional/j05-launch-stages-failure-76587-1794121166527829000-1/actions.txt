@@ -1,0 +1,9 @@
+spawn /private/tmp/tcb-pr2-reference-evidence-20261108/tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin ["--scenario", "launch-failure", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: failure 120x40 3f0d6c149b6ab2f1
+resize 80x24
+resize 120x40
+checkpoint 001: failure 120x40 again ed97e8702c188253
+key escape
+checkpoint 002: manager after the shots d75b202b390e5356
+key ctrl+q
+clean exit 0

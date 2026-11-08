@@ -27,8 +27,8 @@
       "execution_commit": "71933a55fca0c90c4aced7b725e4d6c404b8656f",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j06_export/j06_export_export_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j06_export/j06_export_export_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j06_export/j06_export_export_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_export/j06_export_export_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Enter an invalid path, cancel a valid path, and confirm a valid path.",

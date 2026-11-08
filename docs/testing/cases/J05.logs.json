@@ -27,8 +27,8 @@
       "execution_commit": "a74b5609674868cb18fb8d61fa3076cd099e14f8",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j05_logs/j05_logs_logs_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j05_logs/j05_logs_logs_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j05_logs/j05_logs_logs_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j05_logs/j05_logs_logs_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open the completed build log and capture it at 120x40, then at 80x24. Ctrl+A and Ctrl+C copy. Ctrl+Q, Enter on Cancel, then Ctrl+Q, Right, and Enter on Quit.",

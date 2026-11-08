@@ -27,8 +27,8 @@
       "execution_commit": "5b5b870e1858fcf36013adb7d273b79d96c79edd",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_viewers/t02_viewers_viewer_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t02_viewers/t02_viewers_viewer_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_viewers/t02_viewers_viewer_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t02_viewers/t02_viewers_viewer_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open a cell viewer, select and copy its text, follow a foreign key, refresh, and fetch more rows.",

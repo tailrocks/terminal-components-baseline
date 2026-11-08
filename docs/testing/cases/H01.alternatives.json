@@ -27,8 +27,8 @@
       "execution_commit": "6dd67ef819e28aa250e693ed5855d8eaebc2267d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h01_alternatives/h01_alternatives_alternatives_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h01_alternatives/h01_alternatives_alternatives_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h01_alternatives/h01_alternatives_alternatives_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h01_alternatives/h01_alternatives_alternatives_narrow.tui.pb"
       ],
       "scenario": "rust-dirty",
       "action_sequence": "Open Alternatives for the selected row.",

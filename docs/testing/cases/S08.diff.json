@@ -12,7 +12,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_route.tui.pb"
       ],
       "route": "diff",
       "label": "Diff",
@@ -70,7 +70,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_playground.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_playground_120x40.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_playground_80x24.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_options.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_options_120x40.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_options_80x24.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_states.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_states_120x40.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_states_80x24.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_specimen_rest.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "states",
@@ -724,7 +724,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_specimen_focused.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "states",
@@ -878,7 +878,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_specimen_empty.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "states",
@@ -968,7 +968,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_specimen_narrow.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "states",
@@ -1026,8 +1026,8 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_compare-levels_80x24.tui.pb"
       ],
       "route": "diff",
       "section_or_overlay": "states",
@@ -1126,7 +1126,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/opt_diff_mode.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/opt_diff_mode.tui.pb"
       ],
       "route": "diff",
       "option_values": [
@@ -1193,7 +1193,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/opt_diff_file.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/opt_diff_file.tui.pb"
       ],
       "route": "diff",
       "option_values": [
@@ -1260,7 +1260,7 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/opt_diff_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/opt_diff_width.tui.pb"
       ],
       "route": "diff",
       "option_values": [
@@ -1327,9 +1327,9 @@
       "execution_commit": "af81dd4ae4e9025225361a977075dad166abd6c4",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_diff_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_diff_80x24.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_diff_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_diff_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_diff_80x24.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_diff/sc_diff_diff_after.tui.pb"
       ],
       "route": "diff",
       "action_sequence": "Switch files and unified, review, and empty modes. Scroll, select, copy, and narrow the view.",

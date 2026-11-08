@@ -27,8 +27,8 @@
       "execution_commit": "499dec0a2f1bbb2d3c4f518f94732881a884e870",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j06_reconnect/j06_reconnect_reconnect_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j06_reconnect/j06_reconnect_reconnect_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j06_reconnect/j06_reconnect_reconnect_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_reconnect/j06_reconnect_reconnect_narrow.tui.pb"
       ],
       "scenario": [
         "returning"

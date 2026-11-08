@@ -12,7 +12,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_route.tui.pb"
       ],
       "route": "chipsselects",
       "label": "Chips & selects",
@@ -68,8 +68,8 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_80x24.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "playground",
@@ -161,7 +161,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_120x40.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "playground",
@@ -227,7 +227,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_playground_80x24.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "playground",
@@ -293,8 +293,8 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_80x24.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "options",
@@ -386,7 +386,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_120x40.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "options",
@@ -452,7 +452,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_options_80x24.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "options",
@@ -518,8 +518,8 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_80x24.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -611,7 +611,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_120x40.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -677,7 +677,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_states_80x24.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -743,7 +743,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_rest.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -799,7 +799,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_hover.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -855,7 +855,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_pressed.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -911,7 +911,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_focused.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -967,7 +967,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_focused_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_focused_hover.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -1039,7 +1039,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_disabled.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -1111,7 +1111,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_error.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -1183,7 +1183,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_empty.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -1255,7 +1255,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_overflow.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -1311,7 +1311,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_specimen_narrow.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -1367,8 +1367,8 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_compare-levels_80x24.tui.pb"
       ],
       "route": "chipsselects",
       "section_or_overlay": "states",
@@ -1467,7 +1467,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_bar_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_bar_width.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -1533,7 +1533,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_overflow_marker.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_overflow_marker.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -1598,7 +1598,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_overflow_menu.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_overflow_menu.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -1663,7 +1663,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_target.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_target.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -1729,7 +1729,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_button.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_button.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -1794,7 +1794,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_more_button.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_more_button.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -1859,7 +1859,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_chip_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_chip_nav.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -1925,7 +1925,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_chip_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_chip_keymap.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -1990,7 +1990,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_digit_toggles.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_digit_toggles.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2055,7 +2055,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_arrows.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_arrows.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2120,7 +2120,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_wheel.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_wheel.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2185,7 +2185,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_tab_in_open.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_tab_in_open.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2251,7 +2251,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_max_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_max_rows.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2317,7 +2317,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_placement.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_placement.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2382,7 +2382,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_popup_fit.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_popup_fit.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2448,7 +2448,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_popup_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_popup_width.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2514,7 +2514,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_cursor_style.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_cursor_style.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2579,7 +2579,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_hover_moves_cursor.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_hover_moves_cursor.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2644,7 +2644,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_press_drag.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_press_drag.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2709,7 +2709,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_label_hit.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_label_hit.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2774,7 +2774,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_track_click.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2840,7 +2840,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_wrap.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2905,7 +2905,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_type_ahead.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_type_ahead.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -2970,7 +2970,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_on_blur.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_close_on_blur.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -3035,7 +3035,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_dismiss.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_dismiss.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -3100,7 +3100,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_select_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_select_nav.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -3165,7 +3165,7 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_mixed.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/opt_chipsselects_mixed.tui.pb"
       ],
       "route": "chipsselects",
       "option_values": [
@@ -3228,8 +3228,8 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_chips_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_chips_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_chips_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_chips_after.tui.pb"
       ],
       "route": "chipsselects",
       "action_sequence": "Add, remove, clear, activate, and toggle chips, including overflow and the close hit target.",
@@ -3329,8 +3329,8 @@
       "execution_commit": "eefbf330438367391d8311da982386a1c4fc1f58",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_selects_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_selects_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_selects_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_chipsselects/sc_chipsselects_selects_after.tui.pb"
       ],
       "route": "chipsselects",
       "action_sequence": "Choose, type-ahead, scroll, and dismiss each select, including a disabled select and a mixed value.",

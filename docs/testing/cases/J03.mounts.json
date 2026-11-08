@@ -27,8 +27,8 @@
       "execution_commit": "d563dc124db36ca35b20ea9245c0a413242937c9",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j03_mounts/j03_mounts_mounts_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j03_mounts/j03_mounts_mounts_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j03_mounts/j03_mounts_mounts_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_mounts/j03_mounts_mounts_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Add /home/agent/field-notes on the default global scope, save settings, then open the payments-platform Mounts tab.",

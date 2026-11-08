@@ -27,8 +27,8 @@
       "execution_commit": "89b07dc3477d0029573f58db77e8617d52f643e1",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j05_failure/j05_failure_failure_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j05_failure/j05_failure_failure_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Launch --scenario launch-failure and shoot the open Launch failed dialog at 120×40, resize to 80×24, shoot it, and resize back, before any dismiss. Copy the run id, then Esc. On --scenario hard-cases, launch Codex · Primary from payments-platform and use Retry, Enter plain text instead, and Cancel launch. Launch the default agent from infra-control-plane and Esc on the blocked sidecar.",

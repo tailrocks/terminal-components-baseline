@@ -74,6 +74,17 @@ fn open(name: &str, scenario: &str) -> App {
     try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
 }
 
+fn open_paused_clock(name: &str, scenario: &str) -> App {
+    let mut launch = Launch::new(name, JACKIN);
+    launch.args = vec!["--scenario".to_string(), scenario.to_string()];
+    launch.cols = 120;
+    launch.rows = 40;
+    launch.color = Some("truecolor".to_string());
+    launch.motion = Some("paused".to_string());
+    launch.clock = true;
+    try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
+}
+
 fn focused_line(screen: &TerminalSnapshot) -> String {
     (0..screen.rows())
         .map(|row| row_text(screen, row))
@@ -481,9 +492,12 @@ fn keep_changes() {
 }
 
 fn discard_confirm() {
-    let app = open("j06-exit-discard", "hard-cases");
+    let app = open_paused_clock("j06-exit-discard", "hard-cases");
     select_dirty(&app);
     attach_dirty(&app);
+    // The paused fixture clock keeps the final unknown-discovery warning
+    // visible until this test has observed the manager state.
+    app.advance_clock(5_000);
     open_dirty(&app);
     move_choice(&app, INSPECT_ROW);
     move_choice(&app, KEEP_ROW);

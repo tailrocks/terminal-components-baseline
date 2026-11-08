@@ -27,8 +27,8 @@
       "execution_commit": "29d2e084cb7c7a294e9b8f72503e8aee4af2856c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j01_purge/j01_purge_purge_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Enter a partial token, then a wrong token, then the exact token.",

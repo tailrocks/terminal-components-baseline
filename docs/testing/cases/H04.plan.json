@@ -27,8 +27,8 @@
       "execution_commit": "c9678b989cb61bcae0c62434587b602494a06fce",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h04_plan/h04_plan_plan_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h04_plan/h04_plan_plan_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h04_plan/h04_plan_plan_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h04_plan/h04_plan_plan_narrow.tui.pb"
       ],
       "scenario": [
         "upgrade-plan"

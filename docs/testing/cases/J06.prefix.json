@@ -27,8 +27,8 @@
       "execution_commit": "9577fa53bb4ea7fc300c1e4c36dc8322223ffd10",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j06_prefix/j06_prefix_prefix_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j06_prefix/j06_prefix_prefix_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j06_prefix/j06_prefix_prefix_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_prefix/j06_prefix_prefix_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Enter the prefix, let it time out, repeat it, and cancel it. Also use the palette and a menu while a pane owns input.",

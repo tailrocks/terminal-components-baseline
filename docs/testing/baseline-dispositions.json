@@ -4,27 +4,30 @@
     "path": "tests/functional/baselines/pre_refactor/functional/holla_resize_narrow.tui.json",
     "cols": 120,
     "rows": 40,
-    "status": "suspect",
-    "reason": "Measured 120 by 40. The live name says narrow and the narrow checkpoint is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
-    "replacement_id": "functional/holla_browser_80x24"
+    "status": "superseded",
+    "reason": "Retired historical sample measured 120 by 40. The live name says narrow and the narrow checkpoint is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint. The historical JSON bytes are removed; the SHA256 remains in baseline-archives-20261108.tsv and the acceptance receipt.",
+    "replacement_id": "functional/holla_browser_80x24",
+    "historical_json_sha256": "e9490308578f6c39935cf5b7fb3a011d5fff0c9507435d04ec27fe41b024817d"
   },
   {
     "id": "functional/tablepro_resize_60x20",
     "path": "tests/functional/baselines/pre_refactor/functional/tablepro_resize_60x20.tui.json",
     "cols": 120,
     "rows": 40,
-    "status": "suspect",
-    "reason": "Measured 120 by 40. The name says 60 by 20. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
-    "replacement_id": "functional/tablepro_workbench_60x20"
+    "status": "superseded",
+    "reason": "Retired historical sample measured 120 by 40. The name says 60 by 20. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint. The historical JSON bytes are removed; the SHA256 remains in baseline-archives-20261108.tsv and the acceptance receipt.",
+    "replacement_id": "functional/tablepro_workbench_60x20",
+    "historical_json_sha256": "6ae9e99da7d384ba6e06d9d7600779cfd85c2fe1cd9ca51c7e67f0e18ab662b0"
   },
   {
     "id": "functional/showcase_help_resize",
     "path": "tests/functional/baselines/pre_refactor/functional/showcase_help_resize.tui.json",
     "cols": 160,
     "rows": 50,
-    "status": "suspect",
-    "reason": "Measured 160 by 50. The narrow help checkpoint in the test is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint.",
-    "replacement_id": "functional/showcase_help_80x24"
+    "status": "superseded",
+    "reason": "Retired historical sample measured 160 by 50. The narrow help checkpoint in the test is 80 by 24. The file's dimensions are not the dimensions named by the test, so it cannot be the narrow or named-size checkpoint. The historical JSON bytes are removed; the SHA256 remains in baseline-archives-20261108.tsv and the acceptance receipt.",
+    "replacement_id": "functional/showcase_help_80x24",
+    "historical_json_sha256": "3ee85d86ccb38027b7b6310bc51da6314a0f933b9f81849f9cc1dead30f4ddb8"
   },
   {
     "id": "functional/showcase_keyboard_activation",
@@ -32,8 +35,9 @@
     "cols": 120,
     "rows": 40,
     "status": "superseded",
-    "reason": "The capture followed a Preview click and accepted either Run task or Preview. functional/showcase_keyboard_run_task is the focused Run task activation. Archived outside the active root; original bytes and SHA256 are recorded in baseline-archives-20261108.tsv.",
-    "replacement_id": "functional/showcase_keyboard_run_task"
+    "reason": "The capture followed a Preview click and accepted either Run task or Preview. functional/showcase_keyboard_run_task is the focused Run task activation. The historical JSON bytes are removed; their SHA256 is recorded in baseline-archives-20261108.tsv and the acceptance receipt.",
+    "replacement_id": "functional/showcase_keyboard_run_task",
+    "historical_json_sha256": "2ec7f4cb28b1cd541d5a408a248e6c389ec4079c7573fb9bf1fbbbe55e43ec12"
   },
   {
     "id": "functional/tablepro_query_error_recovery",
@@ -41,8 +45,9 @@
     "cols": 120,
     "rows": 40,
     "status": "superseded",
-    "reason": "The file is the unrecovered syntax-error screen. The scratch-only tablepro_query_syntax_error candidate was excluded; tablepro_query_recovered is a separate state. Archived outside the active root; no screen equivalence is claimed.",
-    "replacement_id": null
+    "reason": "The file is the unrecovered syntax-error screen. The scratch-only tablepro_query_syntax_error candidate was excluded; tablepro_query_recovered is a separate state. The historical JSON bytes are removed; the SHA256 is recorded in baseline-archives-20261108.tsv, and no screen equivalence is claimed.",
+    "replacement_id": null,
+    "historical_json_sha256": "a87328fd7174a30f0f0406b5c23289e6e9336a25739c22c9c3cc0b31a022684f"
   },
   {
     "id": "functional/jackin_manager_stop_dialog",
@@ -50,8 +55,9 @@
     "cols": 120,
     "rows": 40,
     "status": "superseded",
-    "reason": "The file is the manager without the stop dialog. functional/jackin_stop_instance_dialog shows Stop instance 7f3a. Archived outside the active root; original bytes and SHA256 are recorded in baseline-archives-20261108.tsv.",
-    "replacement_id": "functional/jackin_stop_instance_dialog"
+    "reason": "The file is the manager without the stop dialog. functional/jackin_stop_instance_dialog shows Stop instance 7f3a. The historical JSON bytes are removed; their SHA256 is recorded in baseline-archives-20261108.tsv and the acceptance receipt.",
+    "replacement_id": "functional/jackin_stop_instance_dialog",
+    "historical_json_sha256": "7d776bc3242ac7d0396832090e65dcdca405ca779ab63c4ece08821c7b460294"
   },
   {
     "id": "functional/jackin_settings_leave",
@@ -59,8 +65,9 @@
     "cols": 120,
     "rows": 40,
     "status": "superseded",
-    "reason": "The file is the manager. functional/jackin_settings_dirty_leave shows the unsaved-changes leave choice. Archived outside the active root; original bytes and SHA256 are recorded in baseline-archives-20261108.tsv.",
-    "replacement_id": "functional/jackin_settings_dirty_leave"
+    "reason": "The file is the manager. functional/jackin_settings_dirty_leave shows the unsaved-changes leave choice. The historical JSON bytes are removed; their SHA256 is recorded in baseline-archives-20261108.tsv and the acceptance receipt.",
+    "replacement_id": "functional/jackin_settings_dirty_leave",
+    "historical_json_sha256": "685e8d9fe61890363eabe6694b444de29ceb1eac8094ddee59fda554db35a146"
   },
   {
     "id": "functional/jackin_launch_failure",
@@ -68,8 +75,9 @@
     "cols": 120,
     "rows": 40,
     "status": "superseded",
-    "reason": "The file is the loading cockpit. functional/jackin_launch_failed is the failed network stage. Archived outside the active root; original bytes and SHA256 are recorded in baseline-archives-20261108.tsv.",
-    "replacement_id": "functional/jackin_launch_failed"
+    "reason": "The file is the loading cockpit. functional/jackin_launch_failed is the failed network stage. The historical JSON bytes are removed; their SHA256 is recorded in baseline-archives-20261108.tsv and the acceptance receipt.",
+    "replacement_id": "functional/jackin_launch_failed",
+    "historical_json_sha256": "2d7a7bcd54e06f180e1e6de4350db3882f6ff606826a6d900fc02e50f7a5f0f1"
   },
   {
     "id": "functional/jackin_first_use_empty",
@@ -424,7 +432,7 @@
     "cols": 120,
     "rows": 40,
     "status": "accepted",
-    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for S01.breadcrumbsrails.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source fffe002e936d3621f22f9132144066a1374d5d74; pinned binary SHA256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b; accepted sample SHA256 51cb9e00933bee6980838e20cf24d755937cb4694d6d5721f224aea8afa8c956. Prior active PB SHA256 a69d1bcde8e8abde3adad9a0e8a760631c9fc824c4e30b2d95287b6c64d3e357 is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_clickable.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/opt_breadcrumbsrails_clickable.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/opt_breadcrumbsrails_clickable.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16534,7 +16542,7 @@
     "cols": 120,
     "rows": 40,
     "status": "accepted",
-    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.launch.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source 3cbe13ce922f7d0902bf42af418f3d012d8b537f; pinned binary SHA256 7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421; accepted sample SHA256 5965272bfe5e6cc66b3758468b0f33442b17672fe2ef503386a56f7ce8717f72. Prior active PB SHA256 ee8513113441888913233bd042c3ace4528251685675038e08be44714dadaf06 is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/j05_launch/j05_launch_stages_120x40.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_j05_launch_j05_launch_stages_120x40.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_j05_launch_j05_launch_stages_120x40.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16543,7 +16551,7 @@
     "cols": 80,
     "rows": 24,
     "status": "accepted",
-    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.launch.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source 3cbe13ce922f7d0902bf42af418f3d012d8b537f; pinned binary SHA256 7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421; accepted sample SHA256 ba207fbc82325004ce4b7ec7fbed021fab0324c02f4976bcaf8a9709018e19b8. Prior active PB SHA256 438496cfa8b31e9435c8f070aaf50710767674d3b90f0b4ed8bc06eb7d1380f3 is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/j05_launch/j05_launch_stages_narrow.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_j05_launch_j05_launch_stages_narrow.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_j05_launch_j05_launch_stages_narrow.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16570,7 +16578,7 @@
     "cols": 120,
     "rows": 40,
     "status": "accepted",
-    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.failure.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source 3cbe13ce922f7d0902bf42af418f3d012d8b537f; pinned binary SHA256 7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421; accepted sample SHA256 5c25744d5e080fdbc3ff01a6a629633787a81dc46aa88fdfa3411e056a7e3720. Prior active PB SHA256 0f7845f5b1cfa16ec6e41374ca8259d5676391299d42d4c4a207ed9885688fc9 is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/j05_failure/j05_failure_failure_120x40.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_j05_failure_j05_failure_failure_120x40.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_j05_failure_j05_failure_failure_120x40.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16579,7 +16587,7 @@
     "cols": 80,
     "rows": 24,
     "status": "accepted",
-    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J05.failure.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source 3cbe13ce922f7d0902bf42af418f3d012d8b537f; pinned binary SHA256 7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421; accepted sample SHA256 c65553bd8a3c303ccb24bab2e98f45bf18052b435fb5ca93cc656ee288f72fe8. Prior active PB SHA256 2de4611050a91316392c83e306715c0e6ff0f337436089844e282f41688f909b is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_j05_failure_j05_failure_failure_narrow.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_j05_failure_j05_failure_failure_narrow.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16750,7 +16758,7 @@
     "cols": 120,
     "rows": 40,
     "status": "accepted",
-    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J06.exit.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source 3cbe13ce922f7d0902bf42af418f3d012d8b537f; pinned binary SHA256 7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421; accepted sample SHA256 d56ccf0b3e42de47efd87042e569f20ace51eec540d01ad2cd2ba60c76bc6695. Prior active PB SHA256 34075d9d632cb76b85fc2403233650ce61ce8b6da446281ed7cb04f246e0917a is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/j06_exit/j06_exit_exit_120x40.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_j06_exit_j06_exit_exit_120x40.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_j06_exit_j06_exit_exit_120x40.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16759,7 +16767,7 @@
     "cols": 80,
     "rows": 24,
     "status": "accepted",
-    "reason": "Accepted from the unchanged jackin reference executable at fffe002 for J06.exit.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source 3cbe13ce922f7d0902bf42af418f3d012d8b537f; pinned binary SHA256 7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421; accepted sample SHA256 fade674a46ed4d9a8bc87b14b87c2b602cf620dd8f8f62f2cfc0a75cb0a3ebd0. Prior active PB SHA256 46ab58a92a0675b8aa3bd4fc3959af40fc3d8b229a2e1c7a8953f5c03d1d7cf0 is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/j06_exit/j06_exit_exit_narrow.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_j06_exit_j06_exit_exit_narrow.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_j06_exit_j06_exit_exit_narrow.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16894,7 +16902,7 @@
     "cols": 120,
     "rows": 40,
     "status": "accepted",
-    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X02.exit.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source fffe002e936d3621f22f9132144066a1374d5d74; pinned binary SHA256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b; accepted sample SHA256 d49e0e7d27cc1da67d548f7e1232bc1ced356dd9cf4f8e48f903d96c3bb56d63. Prior active PB SHA256 4dafa7ca82b0af6db51c21d43397e25ed98a4c7cbbdd1aa8dc30c373cccc6f1a is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/x02_exit/x02_exit_exit_120x40.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_x02_exit_x02_exit_exit_120x40.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_x02_exit_x02_exit_exit_120x40.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16903,7 +16911,7 @@
     "cols": 80,
     "rows": 24,
     "status": "accepted",
-    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X02.exit.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source fffe002e936d3621f22f9132144066a1374d5d74; pinned binary SHA256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b; accepted sample SHA256 148b6be0c315c798ea4f64dc98e12d4d20a2afa40859485fc3ae75598a30ad2c. Prior active PB SHA256 9b2fb5134518d110d765a32543540e4b195002e1ae85624a487f9ee32df9331e is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/x02_exit/x02_exit_exit_narrow.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_x02_exit_x02_exit_exit_narrow.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_x02_exit_x02_exit_exit_narrow.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16948,7 +16956,7 @@
     "cols": 120,
     "rows": 40,
     "status": "accepted",
-    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X03.chrome.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source fffe002e936d3621f22f9132144066a1374d5d74; pinned binary SHA256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b; accepted sample SHA256 dedaf64347c97be5238c2152bd362b8d8c4178fd6777e763748fc1741449822a. Prior active PB SHA256 115cb2730d97587817ced4d3c02ce7b5b0f8a9445aa2a55e56fb9042a1954505 is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/x03_chrome/x03_chrome_chrome_120x40.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_x03_chrome_x03_chrome_chrome_120x40.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_x03_chrome_x03_chrome_chrome_120x40.provenance.json.",
     "replacement_id": null
   },
   {
@@ -16957,7 +16965,7 @@
     "cols": 80,
     "rows": 24,
     "status": "accepted",
-    "reason": "Accepted from the unchanged showcase reference executable at fffe002 for X03.chrome.",
+    "reason": "Fresh Reference capture accepted by exact SHA-256 compare-and-swap. Reference source fffe002e936d3621f22f9132144066a1374d5d74; pinned binary SHA256 430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b; accepted sample SHA256 17354be49b93215a58aaff7f842c3885b40ca299c45c5cbd66cdb2dc1e3ed8a7. Prior active PB SHA256 a58858dca6b2b14f91e059c1e1782d6beac109c077113a9439d36fe3b0d8b9f0 is preserved at docs/testing/acceptance-receipts/fresh-reference-20261108/superseded/pre_refactor/x03_chrome/x03_chrome_chrome_narrow.tui.pb. CLI receipt docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/integrated-receipts/pre_refactor_x03_chrome_x03_chrome_chrome_narrow.json; normalized session and capture-index provenance docs/testing/acceptance-receipts/fresh-reference-20261108/acceptance/provenance/pre_refactor_x03_chrome_x03_chrome_chrome_narrow.provenance.json.",
     "replacement_id": null
   },
   {

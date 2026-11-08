@@ -12,7 +12,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_route.tui.pb"
       ],
       "route": "basictable",
       "label": "Basic table",
@@ -68,7 +68,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground_120x40.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_playground_80x24.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options_120x40.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_options_80x24.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states_120x40.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_states_80x24.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_rest.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_hover.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_pressed.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_focused.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -850,7 +850,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_focused_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_focused_hover.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -906,7 +906,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_selected.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -962,7 +962,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_disabled.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -1066,7 +1066,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_empty.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -1138,7 +1138,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_overflow.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -1194,7 +1194,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_specimen_narrow.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -1250,8 +1250,8 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_compare-levels_80x24.tui.pb"
       ],
       "route": "basictable",
       "section_or_overlay": "states",
@@ -1350,7 +1350,7 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/opt_basictable_selection.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/opt_basictable_selection.tui.pb"
       ],
       "route": "basictable",
       "option_values": [
@@ -1414,8 +1414,8 @@
       "execution_commit": "38844a5a5fbc4ebf6d12eabafa6d4a9bfc9d6742",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_sort_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_sort_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_sort_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s03_basictable/sc_basictable_sort_after.tui.pb"
       ],
       "route": "basictable",
       "action_sequence": "Sort ascending, descending, and back to the original order. Select a row and activate a row separately.",

@@ -27,8 +27,8 @@
       "execution_commit": "cafa9cb8fada743e56492074079b567df2d357c3",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h02_trust/h02_trust_trust_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h02_trust/h02_trust_trust_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h02_trust/h02_trust_trust_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h02_trust/h02_trust_trust_narrow.tui.pb"
       ],
       "scenario": [
         "monorepo-child"

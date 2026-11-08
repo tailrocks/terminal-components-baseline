@@ -27,8 +27,8 @@
       "execution_commit": "0fba9e586748205ae0225c00308b02dba9c9dcaa",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h02_validation/h02_validation_literal_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h02_validation/h02_validation_literal_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h02_validation/h02_validation_literal_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h02_validation/h02_validation_literal_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Enter literal shell metacharacters where the argument field allows them, then return after an error.",

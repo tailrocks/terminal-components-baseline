@@ -27,8 +27,8 @@
       "execution_commit": "f8bccdb3fa19af6f5439daad5b6ff6b230706ebe",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j04_accounts/j04_accounts_accounts_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j04_accounts/j04_accounts_accounts_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j04_accounts/j04_accounts_accounts_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j04_accounts/j04_accounts_accounts_narrow.tui.pb"
       ],
       "scenario": [
         "first-use",

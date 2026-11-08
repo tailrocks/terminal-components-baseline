@@ -12,7 +12,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_route.tui.pb"
       ],
       "route": "forms",
       "label": "Forms",
@@ -68,8 +68,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "playground",
@@ -161,7 +161,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_120x40.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "playground",
@@ -227,7 +227,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_playground_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "playground",
@@ -293,8 +293,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "options",
@@ -386,7 +386,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_120x40.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "options",
@@ -452,7 +452,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_options_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "options",
@@ -518,8 +518,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -611,7 +611,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -677,7 +677,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -743,8 +743,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -838,8 +838,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -949,8 +949,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -1076,8 +1076,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -1187,8 +1187,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -1282,8 +1282,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -1377,8 +1377,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_states_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -1504,7 +1504,7 @@
       "execution_commit": "b63305d17a81e76e2f193fa2a5126e3a3470d0a9",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_specimen_narrow.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -1560,8 +1560,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_compare-levels_80x24.tui.pb"
       ],
       "route": "forms",
       "section_or_overlay": "states",
@@ -1660,7 +1660,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_required.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_required.tui.pb"
       ],
       "route": "forms",
       "option_values": [
@@ -1725,7 +1725,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_validate_when.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_validate_when.tui.pb"
       ],
       "route": "forms",
       "option_values": [
@@ -1791,7 +1791,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_blur.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_blur.tui.pb"
       ],
       "route": "forms",
       "option_values": [
@@ -1857,7 +1857,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_desc_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_desc_rows.tui.pb"
       ],
       "route": "forms",
       "option_values": [
@@ -1923,7 +1923,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_help.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_help.tui.pb"
       ],
       "route": "forms",
       "option_values": [
@@ -1986,7 +1986,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_placeholders.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_placeholders.tui.pb"
       ],
       "route": "forms",
       "option_values": [
@@ -2051,7 +2051,7 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_managed.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/opt_forms_managed.tui.pb"
       ],
       "route": "forms",
       "option_values": [
@@ -2116,8 +2116,8 @@
       "execution_commit": "d4aba49d990c30e490a99c910bf8f45b8c7eb40e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_submit_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_submit_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_submit_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_forms/sc_forms_submit_after.tui.pb"
       ],
       "route": "forms",
       "action_sequence": "Submit an invalid form, correct it, submit the valid form, and reset.",

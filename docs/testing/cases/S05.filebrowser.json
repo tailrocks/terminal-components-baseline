@@ -12,7 +12,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_route.tui.pb"
       ],
       "route": "filebrowser",
       "label": "File browser",
@@ -70,7 +70,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground_120x40.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_playground_80x24.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options_120x40.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_options_80x24.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states_120x40.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_states_80x24.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_rest.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -692,7 +692,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_hover.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -766,7 +766,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_focused.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -840,7 +840,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_selected.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -898,7 +898,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_disabled.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -1004,7 +1004,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_empty.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -1094,7 +1094,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_specimen_narrow.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -1152,8 +1152,8 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_compare-levels_80x24.tui.pb"
       ],
       "route": "filebrowser",
       "section_or_overlay": "states",
@@ -1252,7 +1252,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_choose.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_choose.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1320,7 +1320,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_source.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_source.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1387,7 +1387,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_path_bar.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_path_bar.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1454,7 +1454,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_filter.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_filter.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1521,7 +1521,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_hidden_toggle.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_hidden_toggle.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1588,7 +1588,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_show_hidden.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_show_hidden.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1655,7 +1655,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_type_ahead.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_type_ahead.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1722,7 +1722,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_keys.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_keys.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1789,7 +1789,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_url_entry.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_url_entry.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1856,7 +1856,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_checkbox.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_checkbox.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1923,7 +1923,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_stepper.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_stepper.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -1990,7 +1990,7 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_dismiss.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/opt_filebrowser_dismiss.tui.pb"
       ],
       "route": "filebrowser",
       "option_values": [
@@ -2058,8 +2058,8 @@
       "execution_commit": "e429f19a795e4bf95d699face40d6ddfc7ac302a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_browse_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_browse_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_browse_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_filebrowser/sc_filebrowser_browse_after.tui.pb"
       ],
       "route": "filebrowser",
       "action_sequence": "Enter a directory, return to the parent, toggle hidden entries, filter, switch selection mode, and cancel. Enter an empty, invalid, and valid URL.",

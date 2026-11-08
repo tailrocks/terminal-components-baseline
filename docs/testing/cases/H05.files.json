@@ -27,8 +27,8 @@
       "execution_commit": "3d3410291fdb69e24238894607baa786f3b9f2aa",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h05_files/h05_files_nav_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h05_files/h05_files_nav_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h05_files/h05_files_nav_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h05_files/h05_files_nav_narrow.tui.pb"
       ],
       "scenario": [
         "parity-files",

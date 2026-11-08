@@ -27,8 +27,8 @@
       "execution_commit": "e87ff6976f051626ef79dc09fa88a43fb319405f",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h06_cleanup/h06_cleanup_select_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h06_cleanup/h06_cleanup_select_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h06_cleanup/h06_cleanup_select_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h06_cleanup/h06_cleanup_select_narrow.tui.pb"
       ],
       "scenario": [
         "parity-delete-safety"

@@ -12,7 +12,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_route.tui.pb"
       ],
       "route": "launchcockpit",
       "label": "Launch cockpit",
@@ -68,7 +68,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_120x40.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_playground_80x24.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options_120x40.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_options_80x24.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states_120x40.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_states_80x24.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_rest.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -714,7 +714,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_focused.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -866,7 +866,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_empty.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -938,7 +938,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_overflow.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -994,7 +994,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_specimen_narrow.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -1050,8 +1050,8 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_compare-levels_80x24.tui.pb"
       ],
       "route": "launchcockpit",
       "section_or_overlay": "states",
@@ -1150,7 +1150,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_outcome.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_outcome.tui.pb"
       ],
       "route": "launchcockpit",
       "option_values": [
@@ -1216,7 +1216,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_numbered.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_numbered.tui.pb"
       ],
       "route": "launchcockpit",
       "option_values": [
@@ -1281,7 +1281,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_selectable.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_selectable.tui.pb"
       ],
       "route": "launchcockpit",
       "option_values": [
@@ -1346,7 +1346,7 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/opt_launchcockpit_wrap.tui.pb"
       ],
       "route": "launchcockpit",
       "option_values": [
@@ -1411,12 +1411,12 @@
       "execution_commit": "5650fefb9829fd7d8690d5b0227f52fb29f721ae",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancel.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancelled.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_credentials.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_build.tui.json",
-        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancel.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_cancelled.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_credentials.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_build.tui.pb",
+        "tests/functional/baselines/pre_refactor/s10_launchcockpit/sc_launchcockpit_launch_after.tui.pb"
       ],
       "route": "launchcockpit",
       "action_sequence": "Run the stages to success. Show credential failure, retry, build failure, and cancellation.",

@@ -27,8 +27,8 @@
       "execution_commit": "050ad823771814162761aff7c793d584f2e3f8c1",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j02_mounts/j02_mounts_mounts_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j02_mounts/j02_mounts_mounts_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j02_mounts/j02_mounts_mounts_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j02_mounts/j02_mounts_mounts_narrow.tui.pb"
       ],
       "scenario": [
         "returning"

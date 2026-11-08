@@ -27,8 +27,8 @@
       "execution_commit": "447f4aee149ff1c436d2be5fef7b68275652fa9f",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j05_outro/j05_outro_outro_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j05_outro/j05_outro_outro_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j05_outro/j05_outro_outro_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j05_outro/j05_outro_outro_narrow.tui.pb"
       ],
       "scenario": [
         "outro-last"

@@ -27,8 +27,8 @@
       "execution_commit": "4eb35d9cc2649cb0918f0994d68e5e7eb6203783",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j02_save/j02_save_save_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j02_save/j02_save_save_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j02_save/j02_save_save_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j02_save/j02_save_save_narrow.tui.pb"
       ],
       "scenario": [
         "hard-cases"

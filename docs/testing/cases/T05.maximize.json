@@ -27,8 +27,8 @@
       "execution_commit": "c990bd92c22f69c7b0917287eeb88d5bfe574c8b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t05_maximize/t05_maximize_layout_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t05_maximize/t05_maximize_layout_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t05_maximize/t05_maximize_layout_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_maximize/t05_maximize_layout_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Hide and show the explorer. Maximize and restore the supported panes. Drag the implemented seams.",

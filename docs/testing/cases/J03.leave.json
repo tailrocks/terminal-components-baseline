@@ -27,8 +27,8 @@
       "execution_commit": "35621db4bd7512b3c22c4b756f50c9a495224bd6",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j03_leave/j03_leave_leave_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j03_leave/j03_leave_leave_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j03_leave/j03_leave_leave_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_leave/j03_leave_leave_narrow.tui.pb"
       ],
       "scenario": [
         "hard-cases"

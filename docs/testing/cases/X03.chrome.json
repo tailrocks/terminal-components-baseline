@@ -27,8 +27,8 @@
       "execution_commit": "14294387f27434f67c27a967109c51cae2cdc1da",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x03_chrome/x03_chrome_chrome_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x03_chrome/x03_chrome_chrome_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x03_chrome/x03_chrome_chrome_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x03_chrome/x03_chrome_chrome_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Show a scrollbar at rest, hover, and drag, including monochrome modifiers. Show a seam at rest, hover, and drag.",

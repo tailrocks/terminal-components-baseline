@@ -12,7 +12,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_route.tui.pb"
       ],
       "route": "dialogs",
       "label": "Dialogs",
@@ -74,7 +74,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "playground",
@@ -134,7 +134,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground_120x40.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "playground",
@@ -206,7 +206,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_playground_80x24.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "playground",
@@ -278,7 +278,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "options",
@@ -338,7 +338,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options_120x40.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "options",
@@ -410,7 +410,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_options_80x24.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "options",
@@ -482,7 +482,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -542,7 +542,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states_120x40.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -614,7 +614,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_states_80x24.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -686,7 +686,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_rest.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -748,7 +748,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_hover.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -826,7 +826,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_focused.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -920,7 +920,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_disabled.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -1014,7 +1014,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_editing.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_editing.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -1108,7 +1108,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_specimen_overflow.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -1186,8 +1186,8 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_compare-levels_80x24.tui.pb"
       ],
       "route": "dialogs",
       "section_or_overlay": "states",
@@ -1296,7 +1296,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_width.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1368,7 +1368,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_placement.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_placement.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1442,7 +1442,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_chrome.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_chrome.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1513,7 +1513,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_outer_margin.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_outer_margin.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1585,7 +1585,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_max_height.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_max_height.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1657,7 +1657,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_body_scroll.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_body_scroll.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1728,7 +1728,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_backdrop.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_backdrop.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1800,7 +1800,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_dismiss.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_dismiss.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1873,7 +1873,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_close_button.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_close_button.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -1944,7 +1944,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_accelerators.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_accelerators.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2015,7 +2015,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_keymap.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2086,7 +2086,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_mnemonics.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_mnemonics.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2157,7 +2157,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_nav.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2228,7 +2228,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_ack_enter.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_ack_enter.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2299,7 +2299,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_guard_dirty.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_guard_dirty.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2370,7 +2370,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_guard_destructive.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_guard_destructive.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2441,7 +2441,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_edit_entry.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_edit_entry.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2513,7 +2513,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_button_row.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_button_row.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2585,7 +2585,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_cancel_label.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_cancel_label.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2656,7 +2656,7 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_confirm_index.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/opt_dialogs_confirm_index.tui.pb"
       ],
       "route": "dialogs",
       "option_values": [
@@ -2727,8 +2727,8 @@
       "execution_commit": "ecddd87d89f938a08990f7618cb3149be8d63a5e",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_dialogs_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_dialogs_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_dialogs_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_dialogs/sc_dialogs_dialogs_after.tui.pb"
       ],
       "route": "dialogs",
       "action_sequence": "Open every dialog variant, including confirm, rename, unsaved, delete, facts, typed-drop, retry, and release notes. Enter invalid and valid prompts and both typed-confirmation stages.",

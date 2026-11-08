@@ -27,8 +27,8 @@
       "execution_commit": "d730641aa0136fa54f59095e138865f931719123",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t04_close/t04_close_dirty_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t04_close/t04_close_dirty_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t04_close/t04_close_dirty_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t04_close/t04_close_dirty_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Close a dirty tab and choose Cancel, then Discard, then Save on separate tabs. While confirmation is open, try to close the neighbour.",

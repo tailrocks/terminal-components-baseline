@@ -27,8 +27,8 @@
       "execution_commit": "398005f7d0fe2a1153ff2390315395e26e961053",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x01_clipboard/x01_clipboard_copy_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x01_clipboard/x01_clipboard_copy_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x01_clipboard/x01_clipboard_copy_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x01_clipboard/x01_clipboard_copy_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Ctrl+C with no selection on showcase Read-only report, tablepro connections, and holla parity-files. Shift-select a data-grid cell and press Ctrl+C. Copy a tablepro history query with y. Copy this folder's path under parity-files and parity-platforms-linux. Copy the 71-byte cloud-only.txt path under parity-files. Copy the jackin launch-failure run id with y, then press Ctrl+C. Click Copy report, capture 120\u00d740, resize to 80\u00d724, capture that frame, resize back, then finish.",

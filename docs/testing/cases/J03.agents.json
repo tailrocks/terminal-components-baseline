@@ -27,8 +27,8 @@
       "execution_commit": "bb83db161430c1d4625fb721d0e7577ba394773d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Cycle Claude Code from sync to api key, save settings, then reopen Agents.",

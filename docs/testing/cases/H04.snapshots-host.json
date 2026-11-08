@@ -27,8 +27,8 @@
       "execution_commit": "c0270f75c2fa8864293431fc24e746c0cce28598",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h04_snapshots_host/h04_snapshots-host_host_narrow.tui.pb"
       ],
       "scenario": "first-use",
       "action_sequence": "Open system, processes, port, disk-history, and ssh.",

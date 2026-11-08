@@ -27,8 +27,8 @@
       "execution_commit": "f27ab8b742e65eedbba403c7868ed2bab249276d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h04_snapshots_git/h04_snapshots-git_git_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open git, git-diff, git-stash, and git-all.",

@@ -12,7 +12,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_route.tui.pb"
       ],
       "route": "checksradios",
       "label": "Checks & radios",
@@ -68,8 +68,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "playground",
@@ -161,7 +161,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_120x40.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "playground",
@@ -227,7 +227,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_playground_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "playground",
@@ -293,8 +293,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "options",
@@ -386,7 +386,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_120x40.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "options",
@@ -452,7 +452,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_options_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "options",
@@ -518,8 +518,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -611,7 +611,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -677,7 +677,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -743,8 +743,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -838,8 +838,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -933,8 +933,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -1028,8 +1028,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -1123,8 +1123,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -1234,7 +1234,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -1370,7 +1370,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_states_120x40.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -1442,8 +1442,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_compare-levels_80x24.tui.pb"
       ],
       "route": "checksradios",
       "section_or_overlay": "states",
@@ -1542,7 +1542,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_hit.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_hit.tui.pb"
       ],
       "route": "checksradios",
       "option_values": [
@@ -1607,7 +1607,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_mixed.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_mixed.tui.pb"
       ],
       "route": "checksradios",
       "option_values": [
@@ -1672,7 +1672,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_radio_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_radio_nav.tui.pb"
       ],
       "route": "checksradios",
       "option_values": [
@@ -1738,7 +1738,7 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/opt_checksradios_disabled.tui.pb"
       ],
       "route": "checksradios",
       "option_values": [
@@ -1801,8 +1801,8 @@
       "execution_commit": "42d9da42da75003a30b3193ddbf8ff420e97ee49",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_choice_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_choice_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_choice_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_checksradios/sc_checksradios_choice_after.tui.pb"
       ],
       "route": "checksradios",
       "action_sequence": "Move mixed, checked, and unchecked values, and change the radio by key and by pointer.",

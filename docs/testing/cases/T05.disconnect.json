@@ -27,8 +27,8 @@
       "execution_commit": "a64ab162ba4bd2ff1ac80dc70d5c609297c980a9",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t05_disconnect/t05_disconnect_disconnect_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t05_disconnect/t05_disconnect_disconnect_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t05_disconnect/t05_disconnect_disconnect_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_disconnect/t05_disconnect_disconnect_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Disconnect with a clean session, then with dirty SQL or pending table edits. Cancel, then confirm on a later attempt.",

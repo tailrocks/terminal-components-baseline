@@ -27,8 +27,8 @@
       "execution_commit": "4f7b6b1389635fd15553fe20756b748b6727dd74",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h02_args/h02_args_args_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h02_args/h02_args_args_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h02_args/h02_args_args_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h02_args/h02_args_args_narrow.tui.pb"
       ],
       "scenario": [
         "parity-task-sources"

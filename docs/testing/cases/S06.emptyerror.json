@@ -12,7 +12,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_route.tui.pb"
       ],
       "route": "emptyerror",
       "label": "Empty & error",
@@ -68,7 +68,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground_120x40.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_playground_80x24.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options_120x40.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_options_80x24.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states_120x40.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_states_80x24.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_rest.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_hover.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_pressed.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_focused.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -914,7 +914,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_error.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -1018,7 +1018,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_overflow.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -1074,7 +1074,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_specimen_narrow.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -1130,8 +1130,8 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_compare-levels_80x24.tui.pb"
       ],
       "route": "emptyerror",
       "section_or_overlay": "states",
@@ -1230,7 +1230,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_kind.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_kind.tui.pb"
       ],
       "route": "emptyerror",
       "option_values": [
@@ -1295,7 +1295,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_hint.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_hint.tui.pb"
       ],
       "route": "emptyerror",
       "option_values": [
@@ -1360,7 +1360,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_actions.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_actions.tui.pb"
       ],
       "route": "emptyerror",
       "option_values": [
@@ -1426,7 +1426,7 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_reason.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/opt_emptyerror_reason.tui.pb"
       ],
       "route": "emptyerror",
       "option_values": [
@@ -1492,8 +1492,8 @@
       "execution_commit": "db16c9bdd3d9f6ae8fdbefb96793ada83b8f7b33",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_empty_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_empty_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_empty_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s06_emptyerror/sc_emptyerror_empty_after.tui.pb"
       ],
       "route": "emptyerror",
       "action_sequence": "Activate New, Import, and Retry from the empty or error state. Refuse a read-only mutation. Narrow the actions until they overflow.",

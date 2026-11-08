@@ -27,8 +27,8 @@
       "execution_commit": "3ac709eacefbf62cfe94be49ec0f26ebca49cc2d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x02_startup/x02_startup_start_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x02_startup/x02_startup_start_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x02_startup/x02_startup_start_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x02_startup/x02_startup_start_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "On showcase --page lists, press Down. Then Down, Down, Up, move the pointer to the title bar, wheel the language list, resize to 100×30, and press Right. Capture 120×40, resize to 80×24, capture that frame, resize back to 120×40, then finish. On another lists launch set JUNIE_TUI_FIRST_POLL_DELAY_MS to 80 and press Down. On another set it to nope and press Down. On tablepro press Down. On holla --scenario first-use press Down. On jackin --scenario first-use press Down.",

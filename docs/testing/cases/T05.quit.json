@@ -27,8 +27,8 @@
       "execution_commit": "a4ae6ebe74cac044f4b13130d24750033f2049dd",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t05_quit/t05_quit_quit_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t05_quit/t05_quit_quit_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t05_quit/t05_quit_quit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_quit/t05_quit_quit_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Quit clean, then quit dirty and cancel, then confirm.",

@@ -27,8 +27,8 @@
       "execution_commit": "44e52f023bcac3b6a69497091ebcde976957aafc",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h06_report/h06_report_results_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h06_report/h06_report_results_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h06_report/h06_report_results_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h06_report/h06_report_results_narrow.tui.pb"
       ],
       "scenario": [
         "parity-cleanup-results"

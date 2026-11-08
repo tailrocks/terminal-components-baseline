@@ -27,8 +27,8 @@
       "execution_commit": "eaabc07efebf8a323321223b09d1f78dd5cd8204",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h03_guards/h03_guards_quit_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h03_guards/h03_guards_quit_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h03_guards/h03_guards_quit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h03_guards/h03_guards_quit_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Close a completed tab. Close a running tab and choose Stay, then Stop and quit. Type q in the Finder query.",

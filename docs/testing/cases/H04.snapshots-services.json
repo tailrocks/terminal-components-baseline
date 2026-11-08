@@ -27,8 +27,8 @@
       "execution_commit": "f72aae56c2b1c393e34a510d8dba795c1a9352c7",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h04_snapshots_services/h04_snapshots-services_services_narrow.tui.pb"
       ],
       "scenario": [
         "parity-platforms",

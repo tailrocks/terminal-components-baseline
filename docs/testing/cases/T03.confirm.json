@@ -27,8 +27,8 @@
       "execution_commit": "f16f319425e2e4aadd793c665f7b1cb2f531d677",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t03_confirm/t03_confirm_gates_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t03_confirm/t03_confirm_gates_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t03_confirm/t03_confirm_gates_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t03_confirm/t03_confirm_gates_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Cancel an ordinary confirmation and a typed confirmation. Enter a wrong, partial, and exact phrase.",

@@ -27,8 +27,8 @@
       "execution_commit": "5d43b03e065c85429bfce8007a4806359e1ce744",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h05_previews/h05_previews_preview_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h05_previews/h05_previews_preview_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h05_previews/h05_previews_preview_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h05_previews/h05_previews_preview_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Preview each fixture kind, toggle hidden files, scroll big.log, then find, select, and copy inside the open preview.",

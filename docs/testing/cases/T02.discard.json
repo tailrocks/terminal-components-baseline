@@ -27,8 +27,8 @@
       "execution_commit": "d23bcfe4cc02dda7e81b7723dd7d7428d3400e4d",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_discard/t02_discard_discard_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t02_discard/t02_discard_discard_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_discard/t02_discard_discard_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t02_discard/t02_discard_discard_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Edit a cell, open discard review, cancel, then confirm.",

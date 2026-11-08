@@ -27,8 +27,8 @@
       "execution_commit": "f738696a300b0ad3ff608dd29f70d5d7996a5e31",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h05_find/h05_find_find_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h05_find/h05_find_find_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h05_find/h05_find_find_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h05_find/h05_find_find_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Search, clear to empty results, select a hit, and open it.",

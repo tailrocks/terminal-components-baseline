@@ -27,8 +27,8 @@
       "execution_commit": "7bcbdb1fd7c409e0671281d363df8f7a6b0fdc54",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x02_exit/x02_exit_exit_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x02_exit/x02_exit_exit_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x02_exit/x02_exit_exit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x02_exit/x02_exit_exit_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Exit each applicable application through its clean path and through one guarded path.",

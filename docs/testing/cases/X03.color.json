@@ -27,8 +27,8 @@
       "execution_commit": "b78b89705fa190c2fb2da60f3219c5f5d5645994",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x03_color/x03_color_matrix_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x03_color/x03_color_matrix_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x03_color/x03_color_matrix_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x03_color/x03_color_matrix_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Capture one shared control treatment in all five colour configurations for each application shell.",

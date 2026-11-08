@@ -1,0 +1,19 @@
+spawn /private/tmp/tcb-pr2-reference-evidence-20261108/tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin ["--scenario", "outro-last", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: capsule 3927dfe05d801cf7
+key ctrl+q
+checkpoint 001: unsaved quit cfa2faea2c87b6eb
+key down
+checkpoint 002: Inspect changes 81f20342104c561a
+key down
+checkpoint 003: Quit & keep changes 2baa89eb69e5ba64
+key down
+checkpoint 004: Quit & discard changes 6aa4418de739f03e
+key enter
+checkpoint 005: second dialog wide 5f33151ae65357b6
+resize 80x24
+resize 120x40
+key esc
+key ctrl+q
+checkpoint 006: unsaved quit cfa2faea2c87b6eb
+key esc
+checkpoint 007: choice cancelled 766b446191f7fc20

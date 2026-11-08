@@ -12,7 +12,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_route.tui.pb"
       ],
       "route": "codeeditor",
       "label": "Code editor",
@@ -70,7 +70,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground_120x40.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_playground_80x24.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options_120x40.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_options_80x24.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states_120x40.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_states_80x24.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_rest.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -724,7 +724,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_focused.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -814,7 +814,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_disabled.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -872,7 +872,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_busy.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_busy.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -930,7 +930,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_error.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -988,7 +988,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_editing.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_editing.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -1046,7 +1046,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_empty.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -1120,7 +1120,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_specimen_overflow.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -1194,8 +1194,8 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_compare-levels_80x24.tui.pb"
       ],
       "route": "codeeditor",
       "section_or_overlay": "states",
@@ -1294,7 +1294,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_read_only.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_read_only.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1361,7 +1361,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_edit_entry.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_edit_entry.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1430,7 +1430,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_tab_leaves.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_tab_leaves.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1497,7 +1497,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_esc_reverts.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_esc_reverts.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1564,7 +1564,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_field_keys.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_field_keys.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1632,7 +1632,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_text_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_text_keymap.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1699,7 +1699,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_nav.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1767,7 +1767,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_keymap.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1834,7 +1834,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_indent.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_indent.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1901,7 +1901,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_highlighter.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_highlighter.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -1968,7 +1968,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_segmenter.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_segmenter.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2035,7 +2035,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_document.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_document.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2102,7 +2102,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_horizontal.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_horizontal.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2170,7 +2170,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_scrollbar_gap.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_scrollbar_gap.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2238,7 +2238,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_track_click.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2305,7 +2305,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_rows.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2372,7 +2372,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_width.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2439,7 +2439,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_placement.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_placement.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2506,7 +2506,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_fit.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_fit.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2573,7 +2573,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_cursor.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_cursor.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2640,7 +2640,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_dismiss.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_dismiss.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2707,7 +2707,7 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/opt_codeeditor_completion_nav.tui.pb"
       ],
       "route": "codeeditor",
       "option_values": [
@@ -2774,8 +2774,8 @@
       "execution_commit": "fe263dce9d1483537d106290786e312486bc0ec0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_edit_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_edit_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_edit_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_codeeditor/sc_codeeditor_edit_after.tui.pb"
       ],
       "route": "codeeditor",
       "action_sequence": "Enter, edit, commit, and revert. Select by grapheme, copy, paste, undo, and redo. Move find and accept or dismiss completion. Show diagnostics.",

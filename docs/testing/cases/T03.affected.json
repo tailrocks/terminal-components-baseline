@@ -27,8 +27,8 @@
       "execution_commit": "e785789b18aa96030be36170a916dce48fa76c83",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t03_affected/t03_affected_affected_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t03_affected/t03_affected_affected_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t03_affected/t03_affected_affected_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t03_affected/t03_affected_affected_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Confirm one scoped write.",

@@ -27,8 +27,8 @@
       "execution_commit": "b0809b8fded94ce44659c269d6269335352bacf0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j01_status/j01_status_status_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j01_status/j01_status_status_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j01_status/j01_status_status_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j01_status/j01_status_status_narrow.tui.pb"
       ],
       "scenario": [
         "first-use",

@@ -27,8 +27,8 @@
       "execution_commit": "7571cc1692bf9a98fe80577d79ccd9e1834040ca",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h06_quit/h06_quit_quit_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h06_quit/h06_quit_quit_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h06_quit/h06_quit_quit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h06_quit/h06_quit_quit_narrow.tui.pb"
       ],
       "scenario": [
         "parity-platforms",

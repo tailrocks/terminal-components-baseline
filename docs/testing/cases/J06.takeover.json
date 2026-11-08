@@ -27,8 +27,8 @@
       "execution_commit": "bc6a03ce622eac8eeab27369a0f279ac819f6a74",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j06_takeover/j06_takeover_takeover_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j06_takeover/j06_takeover_takeover_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j06_takeover/j06_takeover_takeover_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_takeover/j06_takeover_takeover_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Take over the current instance, attempt a stale takeover aimed at another instance, reconnect, and leave.",

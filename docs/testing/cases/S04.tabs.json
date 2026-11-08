@@ -12,7 +12,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_route.tui.pb"
       ],
       "route": "tabs",
       "label": "Tabs",
@@ -68,7 +68,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground_120x40.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_playground_80x24.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options_120x40.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_options_80x24.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states_120x40.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_states_80x24.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_rest.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_hover.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_pressed.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_focused.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -850,7 +850,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_focused_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_focused_hover.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -938,7 +938,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_busy.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_busy.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -994,7 +994,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_error.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -1098,7 +1098,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_overflow.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -1154,7 +1154,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_specimen_narrow.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -1210,8 +1210,8 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_compare-levels_80x24.tui.pb"
       ],
       "route": "tabs",
       "section_or_overlay": "states",
@@ -1310,7 +1310,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_rule.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_rule.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1377,7 +1377,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_reveal.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_reveal.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1442,7 +1442,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_w.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_w.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1508,7 +1508,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_button.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_button.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1573,7 +1573,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_allow_new.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_allow_new.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1638,7 +1638,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_new_key.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_new_key.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1704,7 +1704,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_keys.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_close_keys.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1769,7 +1769,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_keymap.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1834,7 +1834,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_digit_jump.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_digit_jump.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1899,7 +1899,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_nav.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -1964,7 +1964,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_wrap.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -2029,7 +2029,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_middle_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_middle_click.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -2094,7 +2094,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_overflow_menu.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_overflow_menu.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -2159,7 +2159,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_more_button.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_more_button.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -2224,7 +2224,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_passive.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_passive.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -2290,7 +2290,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_gap.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_gap.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -2355,7 +2355,7 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_count.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/opt_tabs_count.tui.pb"
       ],
       "route": "tabs",
       "option_values": [
@@ -2420,8 +2420,8 @@
       "execution_commit": "06f77404da91d9913e9738ddc602566679612528",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_tabs_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_tabs_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_tabs_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s04_tabs/sc_tabs_tabs_after.tui.pb"
       ],
       "route": "tabs",
       "action_sequence": "Capture the editor strip with Overview active, select orders.sql, move to Import and close it, then jump with 1, open a tab with n, open the overflow menu, jump with 2, and cancel, discard, and save the dirty orders.sql tab.",

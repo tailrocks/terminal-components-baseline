@@ -27,8 +27,8 @@
       "execution_commit": "2960082fee44dbc73e22af0d9236e12b78cf6c35",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t03_rows/t03_rows_rows_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t03_rows/t03_rows_rows_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t03_rows/t03_rows_rows_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t03_rows/t03_rows_rows_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Run a query with no rows, a query with known rows, and a large result. Try to edit the result. Select, sort, copy, pin, switch, and close it.",

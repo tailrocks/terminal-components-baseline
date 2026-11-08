@@ -1,0 +1,18 @@
+{
+  "schema": "tuiscotti.cli.v1",
+  "command": "accept",
+  "status": "pass",
+  "test_id": "opt_breadcrumbsrails_clickable",
+  "reason": null,
+  "candidate_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-reference-evidence-20261108/evidence/functional/s01-opt-links-83771-1794121198697591000-1/reference-candidates/opt_breadcrumbsrails_clickable.tui.pb"
+  },
+  "candidate_sha256": "51cb9e00933bee6980838e20cf24d755937cb4694d6d5721f224aea8afa8c956",
+  "baseline_sha256": "51cb9e00933bee6980838e20cf24d755937cb4694d6d5721f224aea8afa8c956",
+  "output_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-reference-evidence-20261108/tests/functional/baselines/pre_refactor/S01.breadcrumbsrails/opt_breadcrumbsrails_clickable.tui.pb"
+  },
+  "error_code": null
+}

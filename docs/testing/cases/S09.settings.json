@@ -12,7 +12,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_route.tui.pb"
       ],
       "route": "settings",
       "label": "Settings",
@@ -68,7 +68,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground_120x40.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_playground_80x24.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options_120x40.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_options_80x24.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states_120x40.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_states_80x24.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_rest.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_hover.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_pressed.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_focused.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -866,7 +866,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_selected.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -922,7 +922,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_disabled.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -994,7 +994,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_error.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -1050,7 +1050,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_editing.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_editing.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -1106,7 +1106,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_empty.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -1178,7 +1178,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_overflow.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -1234,7 +1234,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_specimen_narrow.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -1290,8 +1290,8 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_compare-levels_80x24.tui.pb"
       ],
       "route": "settings",
       "section_or_overlay": "states",
@@ -1390,7 +1390,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_tab.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_tab.tui.pb"
       ],
       "route": "settings",
       "option_values": [
@@ -1456,7 +1456,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_cell_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_cell_nav.tui.pb"
       ],
       "route": "settings",
       "option_values": [
@@ -1528,7 +1528,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_env_select.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_env_select.tui.pb"
       ],
       "route": "settings",
       "option_values": [
@@ -1600,7 +1600,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_desc_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_desc_rows.tui.pb"
       ],
       "route": "settings",
       "option_values": [
@@ -1666,7 +1666,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_tab_dirty.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_tab_dirty.tui.pb"
       ],
       "route": "settings",
       "option_values": [
@@ -1731,7 +1731,7 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_save_confirm.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/opt_settings_save_confirm.tui.pb"
       ],
       "route": "settings",
       "option_values": [
@@ -1796,8 +1796,8 @@
       "execution_commit": "75bdb1cc0f85632a5f158093922d5d9fd3f09fee",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_settings_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_settings_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_settings_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s09_settings/sc_settings_settings_after.tui.pb"
       ],
       "route": "settings",
       "action_sequence": "On the general form, choose Internal, open Save changes, and cancel the confirm dialog.",

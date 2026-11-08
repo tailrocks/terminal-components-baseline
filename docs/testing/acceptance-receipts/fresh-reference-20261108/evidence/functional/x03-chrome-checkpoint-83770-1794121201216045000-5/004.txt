@@ -1,0 +1,24 @@
+ ▪ Junie Design system  Layout › Splits & stacks          i Inspector   ? Help  
+                                                                                
+ Components      54  Splits & stacks  Split panes with draggable seams and zoo… 
+ ──────────────────                                                             
+    Overview          Playground    Options    States                           
+  ▸ App shell        ━━━━━━━━━━━━━──────────────────────────────────────────────
+  ▸ Inputs & forms                                                              
+  ▸ Tables             Three panes                   30% · min 16 · drag a sea ┃
+  ▸ Navigation         ─────────────────────────────────────────────────────── ┃
+  ▸ Overlays            Zoom editor    Zoom output    Restore                  ┃
+  ▸ Feedback                                                                   ┃
+  ▾ Layout             ╭─ Explorer ─────────╮┃╭─ Editor ────────────────────── ┃
+      Panels           │  ▾ src             │┃│  pub fn toggle_max(&mut self,  ┆
+      Scrolling        │    ▸ core          │┃│      self.maximized = if self. ┆
+ ▎  › Splits & st…     │    ▸ ui            │┃│          Maximized::None       ┆
+      Master-deta…     │    ▾ widgets       │┃│      } else {                  ┆
+      Pane tree        │        splitter.rs │┃│          which                 ┆
+  ▸ Text & code        │        progress.rs │┃│      };                        ┆
+  ▸ Screens            │    lib.rs          │┃│  }                             ┆
+                       │  Cargo.toml        │┃╰─────────────────────────────── ┆
+                       │                    │┃──────────────────────────────── ┆
+                     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄ 
+                                                                                
+ ↑↓ Move  Enter Open  / Filter  Tab Into page  q Quit                           

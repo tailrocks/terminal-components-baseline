@@ -12,7 +12,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_route.tui.pb"
       ],
       "route": "focusnavigation",
       "label": "Focus & navigation",
@@ -68,8 +68,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "playground",
@@ -161,7 +161,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_120x40.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "playground",
@@ -227,7 +227,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_playground_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "playground",
@@ -293,8 +293,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "options",
@@ -386,7 +386,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_120x40.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "options",
@@ -452,7 +452,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_options_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "options",
@@ -518,8 +518,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "states",
@@ -611,7 +611,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "states",
@@ -677,7 +677,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "states",
@@ -743,8 +743,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "states",
@@ -838,8 +838,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "states",
@@ -949,8 +949,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "states",
@@ -1044,8 +1044,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_states_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "states",
@@ -1283,8 +1283,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_compare-levels_80x24.tui.pb"
       ],
       "route": "focusnavigation",
       "section_or_overlay": "states",
@@ -1383,7 +1383,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/opt_focusnavigation_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/opt_focusnavigation_nav.tui.pb"
       ],
       "route": "focusnavigation",
       "option_values": [
@@ -1451,7 +1451,7 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/opt_focusnavigation_tab_in_field.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/opt_focusnavigation_tab_in_field.tui.pb"
       ],
       "route": "focusnavigation",
       "option_values": [
@@ -1514,8 +1514,8 @@
       "execution_commit": "0b9d1541eba219e96c9d38b47f2deabb1d67fbea",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_ring_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_ring_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_ring_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_focusnavigation/sc_focusnavigation_ring_after.tui.pb"
       ],
       "route": "focusnavigation",
       "action_sequence": "Tab and Shift+Tab across the whole focus ring, then first-click a control.",

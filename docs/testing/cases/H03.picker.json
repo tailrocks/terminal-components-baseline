@@ -27,8 +27,8 @@
       "execution_commit": "9829719c206381e44ac49bd994d26157be5c61dd",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h03_picker/h03_picker_picker_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h03_picker/h03_picker_picker_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h03_picker/h03_picker_picker_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h03_picker/h03_picker_picker_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open the picker and choose one activity.",

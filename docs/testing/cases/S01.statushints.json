@@ -12,7 +12,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_route.tui.pb"
       ],
       "route": "statushints",
       "label": "Status & hints",
@@ -66,7 +66,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "playground",
@@ -120,7 +120,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "playground",
@@ -186,7 +186,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_playground_80x24.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "playground",
@@ -252,7 +252,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "options",
@@ -306,7 +306,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "options",
@@ -372,7 +372,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_options_80x24.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "options",
@@ -438,7 +438,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -492,7 +492,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -558,7 +558,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_80x24.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -624,7 +624,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -792,7 +792,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -848,7 +848,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -936,7 +936,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -992,7 +992,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_states_120x40.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -1048,8 +1048,8 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_compare-levels_80x24.tui.pb"
       ],
       "route": "statushints",
       "section_or_overlay": "states",
@@ -1148,7 +1148,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_layer.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_layer.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1212,7 +1212,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_align.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_align.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1277,7 +1277,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_width.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1342,7 +1342,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_compact.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_compact.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1414,7 +1414,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_share.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_share.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1493,7 +1493,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_priority.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_priority.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1566,7 +1566,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_status.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_status.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1634,7 +1634,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_badge.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_badge.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1699,7 +1699,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_hidden.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_hidden.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1764,7 +1764,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_too_small_min.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_too_small_min.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1829,7 +1829,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_quit_hint.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_quit_hint.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1894,7 +1894,7 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_brand.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/opt_statushints_brand.tui.pb"
       ],
       "route": "statushints",
       "option_values": [
@@ -1959,8 +1959,8 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_status_after.tui.pb"
       ],
       "route": "statushints",
       "action_sequence": "Post success, error, and progress through the page controls.",
@@ -2060,8 +2060,8 @@
       "execution_commit": "8b1f911f8af5d29fd6e7dfb244327193fa46a126",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_statushints/sc_statushints_hints_after.tui.pb"
       ],
       "route": "statushints",
       "action_sequence": "Exercise hint priority, hidden hints, width, and the too-small option.",

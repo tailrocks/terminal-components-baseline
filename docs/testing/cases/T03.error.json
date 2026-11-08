@@ -27,8 +27,8 @@
       "execution_commit": "7cd6b57d5052e691c254458eaac316596cace959",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t03_error/t03_error_recover_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t03_error/t03_error_recover_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t03_error/t03_error_recover_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t03_error/t03_error_recover_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Run a statement that fails, then correct it and run it again.",

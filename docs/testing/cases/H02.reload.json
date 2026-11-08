@@ -27,8 +27,8 @@
       "execution_commit": "0ca07c45ce30ddf909057b7ef71b5b106dfb3407",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h02_reload/h02_reload_reload_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h02_reload/h02_reload_reload_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h02_reload/h02_reload_reload_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h02_reload/h02_reload_reload_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Change trust, revoke it, and reload. Use the fixture's reload failure.",

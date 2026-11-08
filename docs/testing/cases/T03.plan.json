@@ -27,8 +27,8 @@
       "execution_commit": "235d032f0fd5fde71226f34ae8f8db7a6bb78c0c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t03_plan/t03_plan_plan_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t03_plan/t03_plan_plan_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t03_plan/t03_plan_plan_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t03_plan/t03_plan_plan_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Explain a statement, switch to the raw plan, and run EXPLAIN ANALYZE where the mode allows it.",

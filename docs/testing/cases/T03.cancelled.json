@@ -27,8 +27,8 @@
       "execution_commit": "6c1f75f815dc2a67ddd6abdb70710a7e785b6275",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t03_cancelled/t03_cancelled_boundary_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t03_cancelled/t03_cancelled_boundary_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Cancel before completion and, where the UI allows it, between statements.",

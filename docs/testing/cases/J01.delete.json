@@ -27,8 +27,8 @@
       "execution_commit": "21754af34787c79853b523d8b2616d2aaa998bec",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j01_delete/j01_delete_delete_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j01_delete/j01_delete_delete_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j01_delete/j01_delete_delete_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j01_delete/j01_delete_delete_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Delete a workspace that the fixture links to an instance and one that does not.",

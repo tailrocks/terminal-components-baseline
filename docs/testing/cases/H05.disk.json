@@ -27,8 +27,8 @@
       "execution_commit": "1e599ee86d401adfcc334cd54143e161726a49e6",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h05_disk/h05_disk_tree_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h05_disk/h05_disk_tree_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h05_disk/h05_disk_tree_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h05_disk/h05_disk_tree_narrow.tui.pb"
       ],
       "scenario": [
         "parity-disk-navigation",

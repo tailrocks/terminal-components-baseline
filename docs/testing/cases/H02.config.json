@@ -27,8 +27,8 @@
       "execution_commit": "8bbeddd48d20269bdf3ee764ea515b53ca697284",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h02_config/h02_config_config_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h02_config/h02_config_config_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h02_config/h02_config_config_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h02_config/h02_config_config_narrow.tui.pb"
       ],
       "scenario": [
         "parity-custom-actions",

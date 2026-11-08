@@ -12,7 +12,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_route.tui.pb"
       ],
       "route": "masterdetail",
       "label": "Master-detail",
@@ -70,7 +70,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground_120x40.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_playground_80x24.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options_120x40.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_options_80x24.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states_120x40.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_states_80x24.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_rest.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "states",
@@ -692,7 +692,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_hover.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "states",
@@ -750,7 +750,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_pressed.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "states",
@@ -968,7 +968,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_specimen_narrow.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "states",
@@ -1026,8 +1026,8 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_compare-levels_80x24.tui.pb"
       ],
       "route": "masterdetail",
       "section_or_overlay": "states",
@@ -1126,7 +1126,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_width.tui.pb"
       ],
       "route": "masterdetail",
       "option_values": [
@@ -1194,7 +1194,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_collapse.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_collapse.tui.pb"
       ],
       "route": "masterdetail",
       "option_values": [
@@ -1262,7 +1262,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_size.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_size.tui.pb"
       ],
       "route": "masterdetail",
       "option_values": [
@@ -1330,7 +1330,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_summary.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_summary.tui.pb"
       ],
       "route": "masterdetail",
       "option_values": [
@@ -1405,7 +1405,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_esc_returns.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_esc_returns.tui.pb"
       ],
       "route": "masterdetail",
       "option_values": [
@@ -1472,7 +1472,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_keys.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_keys.tui.pb"
       ],
       "route": "masterdetail",
       "option_values": [
@@ -1540,7 +1540,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_step.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_step.tui.pb"
       ],
       "route": "masterdetail",
       "option_values": [
@@ -1608,7 +1608,7 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_gap.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/opt_masterdetail_gap.tui.pb"
       ],
       "route": "masterdetail",
       "option_values": [
@@ -1676,8 +1676,8 @@
       "execution_commit": "92401484e4b80a18d2dda24420dc320ce1f6fe48",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_detail_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_detail_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_detail_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s07_masterdetail/sc_masterdetail_detail_after.tui.pb"
       ],
       "route": "masterdetail",
       "action_sequence": "Record the thin seam, drag it while the pointer stays down, release, then select order_items.",

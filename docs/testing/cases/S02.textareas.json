@@ -12,7 +12,7 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_route.tui.pb"
       ],
       "route": "textareas",
       "label": "Text areas",
@@ -68,8 +68,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "playground",
@@ -161,7 +161,7 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "playground",
@@ -227,7 +227,7 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "playground",
@@ -293,8 +293,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "options",
@@ -386,7 +386,7 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_120x40.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "options",
@@ -452,7 +452,7 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_options_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "options",
@@ -518,8 +518,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -611,7 +611,7 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -677,7 +677,7 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -743,8 +743,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -838,8 +838,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -949,8 +949,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -1076,8 +1076,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -1187,8 +1187,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -1282,8 +1282,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -1377,8 +1377,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -1488,8 +1488,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -1583,8 +1583,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_states_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -1678,8 +1678,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_compare-levels_80x24.tui.pb"
       ],
       "route": "textareas",
       "section_or_overlay": "states",
@@ -1778,8 +1778,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_edit_entry.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_edit_entry.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -1884,8 +1884,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_focus_select.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_focus_select.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -1989,8 +1989,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_esc_reverts.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_esc_reverts.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -2091,8 +2091,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_field_keys.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_field_keys.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -2196,8 +2196,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_text_keymap.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_text_keymap.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -2300,8 +2300,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_nav.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_nav.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -2405,8 +2405,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_pointer_select.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_pointer_select.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -2513,8 +2513,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_blur_action.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_blur_action.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -2618,8 +2618,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_horizontal.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_horizontal.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -2723,8 +2723,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_label_hit.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/opt_textareas_label_hit.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_playground_120x40.tui.pb"
       ],
       "route": "textareas",
       "option_values": [
@@ -2827,8 +2827,8 @@
       "execution_commit": "b9aecb58e09ea4658c8bcf7b1b438b3c2c901d4b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_multiline_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_multiline_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_multiline_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s02_textareas/sc_textareas_multiline_after.tui.pb"
       ],
       "route": "textareas",
       "action_sequence": "Insert and paste multiple lines, select a line, scroll, commit, cancel, Tab, and try a read-only area.",

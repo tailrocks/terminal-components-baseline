@@ -27,8 +27,8 @@
       "execution_commit": "778d1452d8772a09b516d4d5da1d25e33a2f4053",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h05_scan/h05_scan_scan_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h05_scan/h05_scan_scan_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h05_scan/h05_scan_scan_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h05_scan/h05_scan_scan_narrow.tui.pb"
       ],
       "scenario": [
         "parity-disk-scan",

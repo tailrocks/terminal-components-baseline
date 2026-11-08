@@ -12,7 +12,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_route.tui.pb"
       ],
       "route": "trees",
       "label": "Trees",
@@ -68,7 +68,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground_120x40.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_playground_80x24.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options_120x40.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_options_80x24.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states_120x40.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_states_80x24.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_rest.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_hover.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_pressed.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -794,7 +794,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_focused.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -850,7 +850,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_focused_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_focused_hover.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -906,7 +906,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_selected.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -978,7 +978,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_busy.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_busy.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -1034,7 +1034,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_error.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -1122,7 +1122,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_loading.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_loading.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -1178,7 +1178,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_overflow.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -1234,7 +1234,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_specimen_narrow.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -1290,8 +1290,8 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_compare-levels_80x24.tui.pb"
       ],
       "route": "trees",
       "section_or_overlay": "states",
@@ -1390,7 +1390,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_branch.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_branch.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1456,7 +1456,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_click.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1521,7 +1521,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_indent.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_indent.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1587,7 +1587,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_divider.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_divider.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1652,7 +1652,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_alt_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_alt_click.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1717,7 +1717,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_reserve_right.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_reserve_right.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1782,7 +1782,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_show_meta.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_show_meta.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1847,7 +1847,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_track_click.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1912,7 +1912,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_nav.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -1977,7 +1977,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_wrap.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -2042,7 +2042,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_type_ahead.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_type_ahead.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -2107,7 +2107,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_keymap.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -2172,7 +2172,7 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_marker.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/opt_trees_marker.tui.pb"
       ],
       "route": "trees",
       "option_values": [
@@ -2237,8 +2237,8 @@
       "execution_commit": "25a940aa83653e382b4318c09621b5f7a1280e62",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_branches_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_branches_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_branches_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s04_trees/sc_trees_branches_after.tui.pb"
       ],
       "route": "trees",
       "action_sequence": "Expand the nested api branch, then collapse it.",

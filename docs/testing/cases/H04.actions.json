@@ -27,8 +27,8 @@
       "execution_commit": "0ef3bbe46d8f290b7ef2dd011588239d3b18f198",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h04_actions/h04_actions_families_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h04_actions/h04_actions_families_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h04_actions/h04_actions_families_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h04_actions/h04_actions_families_narrow.tui.pb"
       ],
       "scenario": [
         "parity-git-current",

@@ -12,7 +12,7 @@
       "execution_commit": "002ed160a4ca225c02f55066f15615dabadd516a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_route_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_route_120x40.tui.pb"
       ],
       "route": "T01.leave",
       "entry_path": "tablepro --color truecolor --motion reduced at 120x40, with no --page flag",
@@ -65,8 +65,8 @@
       "execution_commit": "002ed160a4ca225c02f55066f15615dabadd516a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_guards_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_guards_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_guards_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t01_leave/t01_leave_guards_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "From a dirty form, try close, New, Edit another, and Quit. Choose Stay, Discard, and Save. Also attempt invalid Save from the dialog.",

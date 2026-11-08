@@ -27,8 +27,8 @@
       "execution_commit": "95bc0b2ae240a1b01703932d9b60995bb9da564a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x01_input/x01_input_input_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x01_input/x01_input_input_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x01_input/x01_input_input_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x01_input/x01_input_input_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Send a modified key, a bracketed paste, multiline paste, control-like text, and Unicode. Paste while a modal is open.",

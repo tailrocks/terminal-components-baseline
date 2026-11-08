@@ -12,7 +12,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_route.tui.pb"
       ],
       "route": "splitsstacks",
       "label": "Splits & stacks",
@@ -70,7 +70,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground_120x40.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_playground_80x24.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options_120x40.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_options_80x24.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states_120x40.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_states_80x24.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_rest.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "states",
@@ -692,7 +692,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_hover.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "states",
@@ -750,7 +750,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_specimen_pressed.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "states",
@@ -984,8 +984,8 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_compare-levels_80x24.tui.pb"
       ],
       "route": "splitsstacks",
       "section_or_overlay": "states",
@@ -1084,7 +1084,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_dir.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_dir.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1151,7 +1151,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_percent.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_percent.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1219,7 +1219,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_min.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_min.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1286,7 +1286,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_maximized.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_maximized.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1354,7 +1354,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_double_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_double_click.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1421,7 +1421,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_hit_pad.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_hit_pad.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1489,7 +1489,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_overflow.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1556,7 +1556,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_min_child_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_min_child_rows.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1623,7 +1623,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_gap.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_gap.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1690,7 +1690,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_scrollbar_gap.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_scrollbar_gap.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1758,7 +1758,7 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/opt_splitsstacks_track_click.tui.pb"
       ],
       "route": "splitsstacks",
       "option_values": [
@@ -1825,8 +1825,8 @@
       "execution_commit": "9e79a9876833c4c57586a00a6c4aebf1ad46da02",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_splits_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_splits_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_splits_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s07_splitsstacks/sc_splitsstacks_splits_after.tui.pb"
       ],
       "route": "splitsstacks",
       "action_sequence": "Resize horizontal and vertical splits, hit the minimum, double-click where supported, and zoom and restore.",

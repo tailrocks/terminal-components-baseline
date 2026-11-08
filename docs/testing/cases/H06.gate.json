@@ -27,8 +27,8 @@
       "execution_commit": "acb0267123431a440b0e776715fa020e7191b46a",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h06_gate/h06_gate_confirm_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h06_gate/h06_gate_confirm_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h06_gate/h06_gate_confirm_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h06_gate/h06_gate_confirm_narrow.tui.pb"
       ],
       "scenario": [
         "parity-gradle",

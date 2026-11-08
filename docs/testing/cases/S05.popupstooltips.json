@@ -12,7 +12,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_route.tui.pb"
       ],
       "route": "popupstooltips",
       "label": "Popups & tooltips",
@@ -68,7 +68,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground_120x40.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_playground_80x24.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options_120x40.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_options_80x24.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states_120x40.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_states_80x24.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_rest.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_hover.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "states",
@@ -738,7 +738,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_specimen_pressed.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "states",
@@ -970,8 +970,8 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_compare-levels_80x24.tui.pb"
       ],
       "route": "popupstooltips",
       "section_or_overlay": "states",
@@ -1070,7 +1070,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_placement.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_placement.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1138,7 +1138,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_margin.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_margin.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1204,7 +1204,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_vertical_margin.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_vertical_margin.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1270,7 +1270,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_v_align.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_v_align.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1335,7 +1335,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_overflow.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1400,7 +1400,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_text_inset.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_text_inset.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1465,7 +1465,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_escape.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_escape.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1530,7 +1530,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_outside_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_outside_click.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1595,7 +1595,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_pass_through.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_pass_through.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1660,7 +1660,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_refuse_feedback.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_refuse_feedback.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1725,7 +1725,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_focus_out.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_focus_out.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1790,7 +1790,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_placement.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_placement.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1856,7 +1856,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_fit.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_fit.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1922,7 +1922,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_margin.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_margin.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -1987,7 +1987,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_min.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_min.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2052,7 +2052,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_chrome.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_chrome.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2118,7 +2118,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_backdrop.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_backdrop.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2183,7 +2183,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_dim.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_dim.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2250,7 +2250,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_dismiss.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_dismiss.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2315,7 +2315,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_close.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_close.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2380,7 +2380,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_close_button.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_frame_close_button.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2445,7 +2445,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tooltips.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tooltips.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2510,7 +2510,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tip_delay.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tip_delay.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2576,7 +2576,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tip_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_tip_width.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2641,7 +2641,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_hover.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2706,7 +2706,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_key.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_key.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2772,7 +2772,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_mode.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_mode.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2837,7 +2837,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_rows.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2902,7 +2902,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_scroll.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_scroll.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -2967,7 +2967,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_wheel.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_wheel.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -3032,7 +3032,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_delay.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_delay.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -3097,7 +3097,7 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_passes.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/opt_popupstooltips_reveal_passes.tui.pb"
       ],
       "route": "popupstooltips",
       "option_values": [
@@ -3162,8 +3162,8 @@
       "execution_commit": "a24a7e4e5e570ce7dc056751a45721a8e155b152",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_overlays_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_overlays_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_overlays_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_popupstooltips/sc_popupstooltips_overlays_after.tui.pb"
       ],
       "route": "popupstooltips",
       "action_sequence": "Click Open popover, settle the released click, press Esc, then press End.",

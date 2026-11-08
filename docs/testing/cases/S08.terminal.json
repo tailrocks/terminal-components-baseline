@@ -12,7 +12,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_route.tui.pb"
       ],
       "route": "terminal",
       "label": "Terminal",
@@ -70,7 +70,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground_120x40.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_playground_80x24.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options_120x40.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_options_80x24.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states_120x40.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_states_80x24.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_rest.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -724,7 +724,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_focused.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -798,7 +798,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_selected.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_selected.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -920,7 +920,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_empty.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -994,7 +994,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_overflow.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -1052,7 +1052,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_specimen_narrow.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -1110,8 +1110,8 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_compare-levels_80x24.tui.pb"
       ],
       "route": "terminal",
       "section_or_overlay": "states",
@@ -1210,7 +1210,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_wrap.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1277,7 +1277,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_max_lines.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_max_lines.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1344,7 +1344,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_horizontal.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_horizontal.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1412,7 +1412,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_scrollbar_gap.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_scrollbar_gap.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1480,7 +1480,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_track_click.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1547,7 +1547,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_nav.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1615,7 +1615,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_keymap.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_keymap.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1682,7 +1682,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_mark.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_mark.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1749,7 +1749,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_selectable.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_selectable.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1816,7 +1816,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_numbered.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_numbered.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1883,7 +1883,7 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_rail_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/opt_terminal_rail_nav.tui.pb"
       ],
       "route": "terminal",
       "option_values": [
@@ -1951,9 +1951,9 @@
       "execution_commit": "3b7c9687ded255b1b2abe612e235a95c530f61c0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_run_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_run_after.tui.json",
-        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_seam_held.tui.json"
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_run_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_run_after.tui.pb",
+        "tests/functional/baselines/pre_refactor/s08_terminal/sc_terminal_seam_held.tui.pb"
       ],
       "route": "terminal",
       "action_sequence": "Run a successful demonstration and a failed one. Select a step, toggle follow, show find marks, and wrap or scroll horizontally.",

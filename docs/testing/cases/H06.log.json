@@ -27,8 +27,8 @@
       "execution_commit": "e6b4297e90332a7dbdff1bf12b6a0d301030f158",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/h06_log/h06_log_log_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/h06_log/h06_log_log_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/h06_log/h06_log_log_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h06_log/h06_log_log_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Produce an operation log and the fixture's log failure.",

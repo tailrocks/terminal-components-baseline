@@ -27,8 +27,8 @@
       "execution_commit": "272164d6ddb9635b53567ffd9582d63f8b6775f8",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j05_launch/j05_launch_stages_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j05_launch/j05_launch_stages_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j05_launch/j05_launch_stages_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j05_launch/j05_launch_stages_narrow.tui.pb"
       ],
       "scenario": [
         "launch-running",

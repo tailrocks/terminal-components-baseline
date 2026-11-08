@@ -27,8 +27,8 @@
       "execution_commit": "d0be796c2ed6fe0db5f876098ea813c194c6744b",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j01_refresh/j01_refresh_refresh_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Start refresh, show success and failure, and change selection while a result is pending.",

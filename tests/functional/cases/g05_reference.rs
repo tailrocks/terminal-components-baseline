@@ -356,7 +356,7 @@ fn disposition_sample_fixture(cols: u32, rows: u32) -> TerminalSnapshot {
     .expect("fixture snapshot")
 }
 
-fn assert_suspect_dispositions(active_root: &Path) {
+fn assert_superseded_json_dispositions(active_root: &Path) {
     let path =
         PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("docs/testing/baseline-dispositions.json");
     let value: Value =
@@ -393,7 +393,7 @@ fn assert_suspect_dispositions(active_root: &Path) {
             .iter()
             .find(|row| row["id"] == id)
             .unwrap_or_else(|| panic!("missing disposition {id}"));
-        assert_eq!(row["status"].as_str(), Some("suspect"), "{id}");
+        assert_eq!(row["status"].as_str(), Some("superseded"), "{id}");
         assert_eq!(row["cols"].as_u64(), Some(cols), "{id}");
         assert_eq!(row["rows"].as_u64(), Some(rows_n), "{id}");
         assert_eq!(row["replacement_id"].as_str(), Some(replacement), "{id}");
@@ -408,11 +408,11 @@ fn assert_suspect_dispositions(active_root: &Path) {
         );
         let baseline =
             PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(row["path"].as_str().expect("path"));
-        let file: Value = serde_json::from_slice(&std::fs::read(&baseline).expect("baseline"))
-            .expect("baseline json");
-        assert_eq!(file["test_id"].as_str(), Some(id));
-        assert_eq!(file["snapshot"]["cols"].as_u64(), Some(cols));
-        assert_eq!(file["snapshot"]["rows"].as_u64(), Some(rows_n));
+        assert!(
+            !baseline.exists(),
+            "superseded JSON sample remains: {}",
+            baseline.display()
+        );
         let replacement_row = rows
             .iter()
             .find(|row| row["id"] == replacement)
@@ -443,9 +443,194 @@ fn assert_suspect_dispositions(active_root: &Path) {
     }
 }
 
+fn assert_no_legacy_json_samples(root: &Path) {
+    if !root.exists() {
+        return;
+    }
+    for entry in
+        std::fs::read_dir(root).unwrap_or_else(|error| panic!("{}: {error}", root.display()))
+    {
+        let entry = entry.expect("read sample directory entry");
+        let path = entry.path();
+        let file_type = entry.file_type().expect("sample directory entry type");
+        if file_type.is_dir() {
+            assert_no_legacy_json_samples(&path);
+        } else if file_type.is_file() {
+            assert!(
+                !path
+                    .file_name()
+                    .is_some_and(|name| name.to_string_lossy().ends_with(".tui.json")),
+                "legacy Tuiscotti JSON sample remains: {}",
+                path.display()
+            );
+        }
+    }
+}
+
+fn assert_no_legacy_sample_trees() {
+    let workspace = crate::support::workspace_root();
+    for relative in [
+        "tests/functional/baselines",
+        "docs/testing/acceptance-receipts/historical-baselines-json",
+        "scripts/coverage-fixtures",
+    ] {
+        assert_no_legacy_json_samples(&workspace.join(relative));
+    }
+}
+
+fn legacy_sample_json_hashes() -> std::collections::BTreeMap<PathBuf, String> {
+    let workspace = crate::support::workspace_root();
+    let manifest = workspace.join("docs/testing/legacy-sample-json-20261108.tsv");
+    let contents = std::fs::read_to_string(&manifest)
+        .unwrap_or_else(|error| panic!("{}: {error}", manifest.display()));
+    let mut lines = contents.lines();
+    assert_eq!(
+        lines.next(),
+        Some("source_path\tsha256\tdisposition\treplacement_pb_path\tprovenance")
+    );
+    let mut samples = std::collections::BTreeMap::new();
+    let mut dispositions = std::collections::BTreeMap::<String, usize>::new();
+    for line in lines {
+        let fields: Vec<_> = line.split('\t').collect();
+        assert_eq!(fields.len(), 5, "malformed legacy sample receipt: {line}");
+        let [source, digest, disposition, replacement, provenance] = fields.as_slice() else {
+            unreachable!("five fields checked above")
+        };
+        let source = PathBuf::from(source);
+        assert!(source.to_string_lossy().ends_with(".tui.json"));
+        assert!(
+            !workspace.join(&source).exists(),
+            "legacy sample remains: {}",
+            source.display()
+        );
+        assert_eq!(
+            digest.len(),
+            64,
+            "legacy sample digest for {}",
+            source.display()
+        );
+        assert!(
+            digest.bytes().all(|byte| byte.is_ascii_hexdigit()),
+            "legacy sample digest for {}",
+            source.display()
+        );
+        assert!(
+            !provenance.is_empty(),
+            "legacy sample provenance for {}",
+            source.display()
+        );
+        if !replacement.is_empty() {
+            let replacement = workspace.join(replacement);
+            assert!(
+                replacement.is_file(),
+                "missing PB replacement: {}",
+                replacement.display()
+            );
+            if *disposition != "test-fixture" {
+                assert!(
+                    std::fs::read(&replacement)
+                        .expect("replacement PB")
+                        .starts_with(b"TUISCPB\0"),
+                    "replacement is not a PB container: {}",
+                    replacement.display()
+                );
+            }
+        }
+        assert!(
+            samples
+                .insert(source.clone(), (*digest).to_owned())
+                .is_none(),
+            "duplicate legacy sample receipt: {}",
+            source.display()
+        );
+        *dispositions.entry((*disposition).to_owned()).or_default() += 1;
+    }
+    assert_eq!(samples.len(), 1890, "legacy sample hash receipt count");
+    assert_eq!(dispositions.get("same-id"), Some(&1868));
+    assert_eq!(dispositions.get("superseded"), Some(&8));
+    assert_eq!(dispositions.get("archived-copy"), Some(&12));
+    assert_eq!(dispositions.get("test-fixture"), Some(&2));
+    samples
+}
+
+fn assert_historical_json_hash_receipts(dispositions: &[Value], baseline_root: &Path) {
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("docs/testing/baseline-archives-20261108.tsv");
+    let contents = std::fs::read_to_string(&path)
+        .unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+    let mut lines = contents.lines();
+    assert_eq!(
+        lines.next(),
+        Some(
+            "test_id\tactive_path_before\thistorical_path_after\tsha256\tdisposition\treplacement_pointer"
+        )
+    );
+    let mut seen = std::collections::BTreeSet::new();
+    for line in lines {
+        let fields: Vec<_> = line.split('\t').collect();
+        assert_eq!(fields.len(), 6, "malformed archive receipt row: {line}");
+        let [id, _active_path, historical_path, sha, status, replacement] = fields.as_slice()
+        else {
+            unreachable!("six fields checked above")
+        };
+        assert!(
+            seen.insert(*id),
+            "duplicate historical JSON receipt for {id}"
+        );
+        assert_eq!(*status, "superseded", "{id}");
+        assert_eq!(sha.len(), 64, "historical JSON SHA256 for {id}");
+        assert!(sha.bytes().all(|byte| byte.is_ascii_hexdigit()), "{id}");
+
+        let source_relative = PathBuf::from("tests/functional/baselines").join(historical_path);
+        let source = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(&source_relative);
+        assert!(
+            !source.exists(),
+            "legacy sample remains for {id}: {}",
+            source.display()
+        );
+        let disposition = dispositions
+            .iter()
+            .find(|row| row["id"] == *id)
+            .unwrap_or_else(|| panic!("missing disposition for {id}"));
+        assert_eq!(disposition["status"].as_str(), Some("superseded"), "{id}");
+        assert_eq!(
+            disposition["historical_json_sha256"].as_str(),
+            Some(*sha),
+            "{id}"
+        );
+        assert_eq!(
+            Path::new(disposition["path"].as_str().expect("historical path")),
+            source_relative,
+            "{id}"
+        );
+
+        if !replacement.starts_with("none ") && *replacement != "none" {
+            let replacement_path = active_baseline_path(baseline_root, replacement);
+            let sample = read_disposition_sample(&replacement_path);
+            assert_eq!(sample.test_id(), *replacement, "{id} replacement");
+        }
+    }
+    assert_eq!(
+        seen.len(),
+        8,
+        "expected all eight superseded historical JSON samples"
+    );
+}
+
 #[test]
 fn g05_approved_binary_manifest_matches_active_samples() {
     let root = baseline_root();
+    assert_no_legacy_sample_trees();
+    let legacy_json_hashes = legacy_sample_json_hashes();
+    let dispositions_path =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("docs/testing/baseline-dispositions.json");
+    let dispositions: Value =
+        serde_json::from_slice(&std::fs::read(&dispositions_path).expect("baseline dispositions"))
+            .expect("baseline dispositions JSON");
+    assert_historical_json_hash_receipts(
+        dispositions.as_array().expect("dispositions array"),
+        &root,
+    );
     let manifest_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("docs/testing/binary-baselines-20261108.tsv");
     let manifest = std::fs::read_to_string(&manifest_path).expect("binary baseline manifest");
@@ -547,92 +732,107 @@ fn g05_approved_binary_manifest_matches_active_samples() {
             "test_id\tactive_baseline_path\tactive_sha256\tprevious_sha256\tprevious_archive_path\tacceptance_receipt\tprovenance_path"
         )
     );
-    let mut refreshes = std::collections::BTreeMap::new();
+    let mut refreshes: std::collections::BTreeMap<String, Vec<Vec<String>>> =
+        std::collections::BTreeMap::new();
     for line in refresh_lines {
         let fields: Vec<String> = line.split('\t').map(str::to_owned).collect();
         assert_eq!(fields.len(), 7, "{line}");
-        assert!(
-            refreshes
-                .insert(fields[0].clone(), fields[1..].to_vec())
-                .is_none(),
-            "duplicate refresh {}",
-            fields[0]
-        );
+        refreshes
+            .entry(fields[0].clone())
+            .or_default()
+            .push(fields[1..].to_vec());
     }
     let mut refreshed_ids = std::collections::BTreeSet::new();
-    for (test_id, fields) in &refreshes {
+    for (test_id, chain) in &refreshes {
         let Some((active_path, active_sha, active_receipt)) = active_records.get(test_id) else {
             continue;
         };
-        let [
-            manifest_path,
-            manifest_sha,
-            previous_sha,
-            archive_path,
-            receipt_path,
-            provenance_path,
-        ] = fields.as_slice()
-        else {
-            unreachable!("refresh field count checked")
-        };
-        assert_eq!(manifest_path, active_path, "active refresh path {test_id}");
-        assert_eq!(manifest_sha, active_sha, "active refresh SHA {test_id}");
-        assert_eq!(
-            receipt_path, active_receipt,
-            "active refresh receipt {test_id}"
-        );
-
         let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
         let active_path = repo_root.join(active_path);
+        let mut prior_active_sha = None;
+        for fields in chain {
+            let [
+                manifest_path,
+                manifest_sha,
+                previous_sha,
+                archive_path,
+                receipt_path,
+                provenance_path,
+            ] = fields.as_slice()
+            else {
+                unreachable!("refresh field count checked")
+            };
+            assert_eq!(
+                manifest_path.as_str(),
+                active_records[test_id].0.as_str(),
+                "active refresh path {test_id}"
+            );
+            if let Some(expected_previous) = prior_active_sha {
+                assert_eq!(
+                    previous_sha, expected_previous,
+                    "broken refresh chain {test_id}"
+                );
+            }
+            let archive = repo_root.join(archive_path);
+            assert_eq!(
+                sha256_file(&archive),
+                previous_sha.as_str(),
+                "archived sample {test_id}"
+            );
+            let receipt: Value = serde_json::from_slice(
+                &std::fs::read(repo_root.join(receipt_path)).expect("active refresh receipt"),
+            )
+            .expect("parse active refresh receipt");
+            assert_eq!(receipt["command"].as_str(), Some("accept"), "{test_id}");
+            assert_eq!(receipt["status"].as_str(), Some("pass"), "{test_id}");
+            assert_eq!(
+                receipt["test_id"].as_str(),
+                Some(test_id.as_str()),
+                "{test_id}"
+            );
+            assert_eq!(
+                receipt["candidate_sha256"].as_str(),
+                Some(manifest_sha.as_str()),
+                "{test_id}"
+            );
+            assert_eq!(
+                receipt["baseline_sha256"].as_str(),
+                Some(manifest_sha.as_str()),
+                "{test_id}"
+            );
+            let provenance: Value = serde_json::from_slice(
+                &std::fs::read(repo_root.join(provenance_path)).expect("active refresh provenance"),
+            )
+            .expect("parse active refresh provenance");
+            validate_refresh_provenance(
+                &provenance,
+                test_id,
+                previous_sha,
+                manifest_sha,
+                archive_path,
+                receipt_path,
+                provenance_path,
+            )
+            .unwrap_or_else(|error| panic!("{error}"));
+            prior_active_sha = Some(manifest_sha.as_str());
+        }
+        let last = chain.last().expect("nonempty refresh chain");
+        let [_, last_sha, _, _, last_receipt, _] = last.as_slice() else {
+            unreachable!("refresh field count checked")
+        };
+        assert_eq!(last_sha, active_sha, "active refresh SHA {test_id}");
+        assert_eq!(
+            last_receipt, active_receipt,
+            "active refresh receipt {test_id}"
+        );
         assert_eq!(
             sha256_file(&active_path),
             active_sha.as_str(),
             "active sample {test_id}"
         );
-        let archive = repo_root.join(archive_path);
-        assert_eq!(
-            sha256_file(&archive),
-            previous_sha.as_str(),
-            "archived sample {test_id}"
-        );
-        let receipt: Value = serde_json::from_slice(
-            &std::fs::read(repo_root.join(receipt_path)).expect("active refresh receipt"),
-        )
-        .expect("parse active refresh receipt");
-        assert_eq!(receipt["command"].as_str(), Some("accept"), "{test_id}");
-        assert_eq!(receipt["status"].as_str(), Some("pass"), "{test_id}");
-        assert_eq!(
-            receipt["test_id"].as_str(),
-            Some(test_id.as_str()),
-            "{test_id}"
-        );
-        assert_eq!(
-            receipt["candidate_sha256"].as_str(),
-            Some(active_sha.as_str()),
-            "{test_id}"
-        );
-        assert_eq!(
-            receipt["baseline_sha256"].as_str(),
-            Some(active_sha.as_str()),
-            "{test_id}"
-        );
-        let provenance: Value = serde_json::from_slice(
-            &std::fs::read(repo_root.join(provenance_path)).expect("active refresh provenance"),
-        )
-        .expect("parse active refresh provenance");
-        validate_refresh_provenance(
-            &provenance,
-            test_id,
-            previous_sha,
-            active_sha,
-            archive_path,
-            receipt_path,
-            provenance_path,
-        )
-        .unwrap_or_else(|error| panic!("{error}"));
         assert!(
             refreshed_ids.insert(test_id.clone()),
-            "duplicate refresh use {test_id}"
+            "duplicate refresh chain {test_id}"
         );
     }
     let mut historical_ids = std::collections::BTreeSet::new();
@@ -668,18 +868,15 @@ fn g05_approved_binary_manifest_matches_active_samples() {
         let sample_path = if sha256_file(&path) == expected_sha {
             path
         } else {
-            let fields = refreshes.get(test_id).unwrap_or_else(|| {
+            let chain = refreshes.get(test_id).unwrap_or_else(|| {
                 panic!("historical sample changed without an explicit refresh record: {test_id}")
             });
-            let [
-                active_baseline,
-                active_sha,
-                previous_sha,
-                archive_path,
-                receipt_path,
-                provenance_path,
-            ] = fields.as_slice()
-            else {
+            let first = chain.first().expect("nonempty refresh chain");
+            let last = chain.last().expect("nonempty refresh chain");
+            let [active_baseline, _, previous_sha, archive_path, _, _] = first.as_slice() else {
+                unreachable!("refresh field count checked")
+            };
+            let [_, active_sha, _, _, _, _] = last.as_slice() else {
                 unreachable!("refresh field count checked")
             };
             assert_eq!(active_baseline, baseline_path, "{test_id}");
@@ -696,41 +893,6 @@ fn g05_approved_binary_manifest_matches_active_samples() {
                 expected_sha,
                 "archived historical sample {test_id}"
             );
-            let refresh_receipt_path = repo_root.join(receipt_path);
-            let refresh_receipt: Value = serde_json::from_slice(
-                &std::fs::read(&refresh_receipt_path)
-                    .unwrap_or_else(|error| panic!("{}: {error}", refresh_receipt_path.display())),
-            )
-            .expect("baseline refresh CLI receipt");
-            assert_eq!(refresh_receipt["schema"].as_str(), Some("tuiscotti.cli.v1"));
-            assert_eq!(refresh_receipt["command"].as_str(), Some("accept"));
-            assert_eq!(refresh_receipt["status"].as_str(), Some("pass"));
-            assert_eq!(refresh_receipt["test_id"].as_str(), Some(test_id));
-            assert_eq!(
-                refresh_receipt["candidate_sha256"].as_str(),
-                Some(active_sha.as_str())
-            );
-            assert_eq!(
-                refresh_receipt["baseline_sha256"].as_str(),
-                Some(active_sha.as_str())
-            );
-            let provenance_relative_path = provenance_path;
-            let provenance_path = repo_root.join(provenance_relative_path);
-            let provenance: Value = serde_json::from_slice(
-                &std::fs::read(&provenance_path)
-                    .unwrap_or_else(|error| panic!("{}: {error}", provenance_path.display())),
-            )
-            .expect("baseline refresh provenance");
-            validate_refresh_provenance(
-                &provenance,
-                test_id,
-                previous_sha,
-                active_sha,
-                archive_path,
-                receipt_path,
-                provenance_relative_path,
-            )
-            .unwrap_or_else(|error| panic!("{error}"));
             assert!(
                 refreshed_ids.insert(test_id.to_string()),
                 "duplicate refresh use {test_id}"
@@ -745,24 +907,48 @@ fn g05_approved_binary_manifest_matches_active_samples() {
         let sample = read_disposition_sample(&sample_path);
         assert_eq!(sample.test_id(), test_id, "{test_id}");
 
-        let historical_json = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(
+        let historical_json_relative = PathBuf::from(
             receipt["historical_json"]
                 .as_str()
-                .expect("historical JSON path"),
+                .expect("historical JSON source path"),
         );
-        assert!(historical_json.is_file(), "{}", historical_json.display());
+        assert!(
+            historical_json_relative
+                .to_string_lossy()
+                .ends_with(".tui.json"),
+            "historical source is not a Tuiscotti sample path for {test_id}"
+        );
+        let historical_json =
+            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(&historical_json_relative);
+        assert!(
+            !historical_json.exists(),
+            "superseded JSON sample remains for {test_id}: {}",
+            historical_json.display()
+        );
+        let historical_sha = receipt["historical_json_sha256"]
+            .as_str()
+            .expect("historical JSON sha256 receipt");
         assert_eq!(
-            sha256_file(&historical_json),
-            receipt["historical_json_sha256"]
-                .as_str()
-                .expect("historical JSON sha256"),
-            "historical JSON changed for {test_id}"
+            legacy_json_hashes
+                .get(&historical_json_relative)
+                .map(String::as_str),
+            Some(historical_sha),
+            "historical JSON hash receipt for {test_id}"
+        );
+        assert_eq!(
+            historical_sha.len(),
+            64,
+            "historical JSON digest for {test_id}"
+        );
+        assert!(
+            historical_sha.bytes().all(|byte| byte.is_ascii_hexdigit()),
+            "historical JSON digest is malformed for {test_id}"
         );
         let expected_path = historical_json
             .strip_prefix(
                 PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines"),
             )
-            .expect("historical JSON is under baseline root")
+            .expect("historical JSON source is under baseline root")
             .with_extension("pb");
         assert_eq!(
             relative, expected_path,
@@ -943,7 +1129,7 @@ fn g05_disposition_sample_reader_accepts_pb_path() {
             .expect("create temporary baseline directory");
         std::fs::write(&fixture, bytes).expect("write temporary binary fixture");
     }
-    assert_suspect_dispositions(&fixture_root);
+    assert_superseded_json_dispositions(&fixture_root);
 
     std::fs::remove_dir_all(fixture_root).expect("remove temporary fixture root");
 }
@@ -1266,7 +1452,7 @@ fn g05_acceptance_receipts_match_reference_baselines() {
 
 #[test]
 fn g05_check_visual_does_not_write_baselines() {
-    assert_suspect_dispositions(&baseline_root());
+    assert_superseded_json_dispositions(&baseline_root());
     let root = baseline_root();
     let before = tree_digest(&root);
     let app = launch_showcase("g05-check-visual");

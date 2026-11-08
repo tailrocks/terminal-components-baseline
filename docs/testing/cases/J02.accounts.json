@@ -27,8 +27,8 @@
       "execution_commit": "39ec260aa6e7924cc3e90e61a6348815e7100ff0",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j02_accounts/j02_accounts_bindings_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j02_accounts/j02_accounts_bindings_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j02_accounts/j02_accounts_bindings_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j02_accounts/j02_accounts_bindings_narrow.tui.pb"
       ],
       "scenario": [
         "returning"

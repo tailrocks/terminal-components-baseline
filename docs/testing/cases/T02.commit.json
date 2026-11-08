@@ -27,8 +27,8 @@
       "execution_commit": "d6c129d43ccd413c92ee2c4bde29f14e06e70691",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_commit/t02_commit_commit_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t02_commit/t02_commit_commit_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_commit/t02_commit_commit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t02_commit/t02_commit_commit_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open the SQL preview, cancel commit, then confirm commit.",

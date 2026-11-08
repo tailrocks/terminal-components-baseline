@@ -27,8 +27,8 @@
       "execution_commit": "1fceea51d319d07752448c9d50ce0a5c4d443e11",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/t02_data/t02_data_kinds_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/t02_data/t02_data_kinds_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/t02_data/t02_data_kinds_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t02_data/t02_data_kinds_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open an editable table, a read-only view, and a table without a primary key.",

@@ -27,8 +27,8 @@
       "execution_commit": "e438b248742677e7a7d5df70967e0bb8e68aa4b6",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j06_exit/j06_exit_exit_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j06_exit/j06_exit_exit_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j06_exit/j06_exit_exit_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j06_exit/j06_exit_exit_narrow.tui.pb"
       ],
       "scenario": [
         "outro-last",

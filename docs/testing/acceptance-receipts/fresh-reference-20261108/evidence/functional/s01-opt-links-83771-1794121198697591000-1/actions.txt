@@ -1,0 +1,14 @@
+spawn /private/tmp/tcb-pr2-reference-evidence-20261108/tests/functional/reference-bins/aarch64-apple-darwin/showcase ["--page", "breadcrumbsrails", "--frame", "40", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible the live widget 8dd55d052bf91148
+key right
+key 2
+checkpoint 001: visible Links on 3a57592fd9bca522
+key tab
+key  
+checkpoint 002: visible Links off abdf51a4d237ed91
+checkpoint 003: settled abdf51a4d237ed91
+mouse Press { x: 27, y: 4, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 27, y: 4, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 004: visible clickable(false) b72eff99a622e116
+key ctrl+q
+clean exit 0

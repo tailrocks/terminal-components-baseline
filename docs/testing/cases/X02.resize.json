@@ -27,8 +27,8 @@
       "execution_commit": "22b2172a7c51543fddc6c98db5c5fc15a88f7da9",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x02_resize/x02_resize_resize_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "On tablepro, holla --scenario first-use, and jackin --scenario first-use, resize to 71×20 and then to 72×20. On showcase --page dialogs, open Delete branch, then resize through 71×20, 72×19, and 72×20. On showcase --page taskrunner, run the pipeline, resize through those sizes, and return to 120×40. On showcase --page forms, commit FormDraftX02, resize through 71×20 and 72×19, restore 72×20, then walk 40×12, 60×18, 80×24, 100×25, 106×29, 120×40, and 160×50. On showcase --page pickers, open Open quickly and type schema at 120×40. Resize through 71×20 and 72×19, restore 72×20, capture 80×24, then capture the restored 120×40 frame. Esc clears the query, Esc closes the picker, then finish.",

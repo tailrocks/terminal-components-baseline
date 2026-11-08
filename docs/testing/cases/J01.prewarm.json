@@ -27,8 +27,8 @@
       "execution_commit": "3b6b824bd3b8701209d6b2e66ab7c3d07051f2ac",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j01_prewarm/j01_prewarm_prewarm_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j01_prewarm/j01_prewarm_prewarm_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j01_prewarm/j01_prewarm_prewarm_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j01_prewarm/j01_prewarm_prewarm_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "On the payments-platform workspace row, press w, capture the in-progress prewarm at both sizes, press w again, then wait for the single completion.",

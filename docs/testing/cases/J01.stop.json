@@ -27,8 +27,8 @@
       "execution_commit": "96691d92705048f06d7bfdff2103b2ef8f7a83b6",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j01_stop/j01_stop_stop_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j01_stop/j01_stop_stop_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j01_stop/j01_stop_stop_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j01_stop/j01_stop_stop_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Select a running instance, open Stop, cancel, then confirm on the same instance.",

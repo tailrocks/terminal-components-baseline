@@ -12,7 +12,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_route.tui.pb"
       ],
       "route": "quitleave",
       "label": "Quit & leave",
@@ -69,7 +69,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "playground",
@@ -124,7 +124,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground_120x40.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "playground",
@@ -191,7 +191,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_playground_80x24.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "options",
@@ -313,7 +313,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options_120x40.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_options_80x24.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "options",
@@ -447,7 +447,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states_120x40.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -569,7 +569,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_states_80x24.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -636,7 +636,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_rest.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -693,7 +693,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_hover.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -750,7 +750,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_pressed.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -807,7 +807,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_focused.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_focused.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -896,7 +896,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_specimen_disabled.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -1065,8 +1065,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_compare-levels_80x24.tui.pb"
       ],
       "route": "quitleave",
       "section_or_overlay": "states",
@@ -1200,7 +1200,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_stakes.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_stakes.tui.pb"
       ],
       "route": "quitleave",
       "option_values": [
@@ -1265,7 +1265,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_save.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_save.tui.pb"
       ],
       "route": "quitleave",
       "option_values": [
@@ -1331,7 +1331,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_letter.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_letter.tui.pb"
       ],
       "route": "quitleave",
       "option_values": [
@@ -1398,7 +1398,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_esc_quits.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_esc_quits.tui.pb"
       ],
       "route": "quitleave",
       "option_values": [
@@ -1464,7 +1464,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_ctrl_c.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_ctrl_c.tui.pb"
       ],
       "route": "quitleave",
       "option_values": [
@@ -1530,7 +1530,7 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_ctrl_q.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/opt_quitleave_ctrl_q.tui.pb"
       ],
       "route": "quitleave",
       "option_values": [
@@ -1596,8 +1596,8 @@
       "execution_commit": null,
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_leave_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_leave_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_leave_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s01_quitleave/sc_quitleave_leave_after.tui.pb"
       ],
       "route": "quitleave",
       "action_sequence": "Exercise clean leave, dirty Stay, Cancel, Discard, and Save, and the running Stop and Stay choices.",

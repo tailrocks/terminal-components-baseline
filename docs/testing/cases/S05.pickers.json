@@ -12,7 +12,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_route.tui.pb"
       ],
       "route": "pickers",
       "label": "Pickers",
@@ -68,7 +68,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "playground",
@@ -122,7 +122,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground_120x40.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "playground",
@@ -188,7 +188,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_playground_80x24.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "playground",
@@ -254,7 +254,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "options",
@@ -308,7 +308,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options_120x40.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "options",
@@ -374,7 +374,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_options_80x24.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "options",
@@ -440,7 +440,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -494,7 +494,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states_120x40.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -560,7 +560,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_states_80x24.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -626,7 +626,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_rest.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -682,7 +682,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_hover.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -802,7 +802,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_disabled.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -874,7 +874,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_error.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_error.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -946,7 +946,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_empty.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -1002,7 +1002,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_loading.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_loading.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -1058,7 +1058,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_specimen_overflow.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -1130,8 +1130,8 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_compare-levels_80x24.tui.pb"
       ],
       "route": "pickers",
       "section_or_overlay": "states",
@@ -1230,7 +1230,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_width.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_width.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1296,7 +1296,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_max_rows.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_max_rows.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1361,7 +1361,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_placement.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_placement.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1426,7 +1426,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_fit.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_fit.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1492,7 +1492,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_backdrop.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_backdrop.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1557,7 +1557,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_cursor_style.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_cursor_style.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1622,7 +1622,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_delete_is_secondary.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_delete_is_secondary.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1687,7 +1687,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_nav.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_nav.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1752,7 +1752,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_dismiss.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_dismiss.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1817,7 +1817,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_empty.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1882,7 +1882,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_placeholder.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_placeholder.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -1947,7 +1947,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_hints.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_hints.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -2012,7 +2012,7 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_remote.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_remote.tui.pb"
       ],
       "route": "pickers",
       "option_values": [
@@ -2077,8 +2077,8 @@
       "execution_commit": "cb7b5ea811e0b207aaff79fc366be1caed9b0e85",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_pickers_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_pickers_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_pickers_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s05_pickers/sc_pickers_pickers_after.tui.pb"
       ],
       "route": "pickers",
       "action_sequence": "Open Quick, Tabs, Level, Commands, and Remote pickers. Filter, clear, change scope, and exercise loading, error, retry, and nonsearchable states.",

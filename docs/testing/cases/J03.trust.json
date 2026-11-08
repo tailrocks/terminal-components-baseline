@@ -27,8 +27,8 @@
       "execution_commit": "609c9e8ba1b99c2afd3d701616109c7ea47d9e46",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/j03_trust/j03_trust_trust_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/j03_trust/j03_trust_trust_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/j03_trust/j03_trust_trust_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_trust/j03_trust_trust_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Change a trust value, Discard on one attempt, and Save on another.",

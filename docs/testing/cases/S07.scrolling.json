@@ -12,7 +12,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_route.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_route.tui.pb"
       ],
       "route": "scrolling",
       "label": "Scrolling",
@@ -70,7 +70,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "playground",
@@ -126,7 +126,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground_120x40.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "playground",
@@ -192,7 +192,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_playground_80x24.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "playground",
@@ -258,7 +258,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "options",
@@ -314,7 +314,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options_120x40.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "options",
@@ -380,7 +380,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_options_80x24.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "options",
@@ -446,7 +446,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -502,7 +502,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states_120x40.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states_120x40.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -568,7 +568,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_states_80x24.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -634,7 +634,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_rest.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_rest.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -692,7 +692,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_hover.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_hover.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -750,7 +750,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_pressed.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_pressed.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -920,7 +920,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_empty.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_empty.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -994,7 +994,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_overflow.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_overflow.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -1052,7 +1052,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_specimen_narrow.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -1110,8 +1110,8 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_compare-levels_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_compare-levels_80x24.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_compare-levels_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_compare-levels_80x24.tui.pb"
       ],
       "route": "scrolling",
       "section_or_overlay": "states",
@@ -1210,7 +1210,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_context.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_context.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1278,7 +1278,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_follow.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_follow.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1345,7 +1345,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_track_click.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_track_click.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1413,7 +1413,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_hbar.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_hbar.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1481,7 +1481,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_columns.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_columns.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1548,7 +1548,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_profile.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_profile.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1615,7 +1615,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_type_ahead.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_type_ahead.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1683,7 +1683,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_timeout.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_timeout.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1751,7 +1751,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_precedence.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_precedence.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1818,7 +1818,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_wrap.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_wrap.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1885,7 +1885,7 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_skip_disabled.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/opt_scrolling_skip_disabled.tui.pb"
       ],
       "route": "scrolling",
       "option_values": [
@@ -1952,8 +1952,8 @@
       "execution_commit": "2e5918cf87434f27357f9bab61efdcba10f2951c",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_scroll_before.tui.json",
-        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_scroll_after.tui.json"
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_scroll_before.tui.pb",
+        "tests/functional/baselines/pre_refactor/s07_scrolling/sc_scrolling_scroll_after.tui.pb"
       ],
       "route": "scrolling",
       "action_sequence": "Track-click, hold the track, drag the thumb, wheel, follow the tail, and type-ahead.",

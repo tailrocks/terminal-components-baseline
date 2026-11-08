@@ -27,8 +27,8 @@
       "execution_commit": "fe681479765d9ee884b5a3904a2ec198164678da",
       "evidence_paths": [],
       "baseline_paths": [
-        "tests/functional/baselines/pre_refactor/x03_glyphs/x03_glyphs_glyphs_120x40.tui.json",
-        "tests/functional/baselines/pre_refactor/x03_glyphs/x03_glyphs_glyphs_narrow.tui.json"
+        "tests/functional/baselines/pre_refactor/x03_glyphs/x03_glyphs_glyphs_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x03_glyphs/x03_glyphs_glyphs_narrow.tui.pb"
       ],
       "scenario": null,
       "action_sequence": "Open one glyph-dependent family in Unicode and ASCII, including combining text, wide text, and emoji where the fixture has them.",
