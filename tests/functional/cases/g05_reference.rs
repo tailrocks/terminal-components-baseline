@@ -1372,6 +1372,10 @@ fn g05_reference_session_receipt_records_identity() {
     launch.color = Some("truecolor".to_string());
     launch.cols = 120;
     launch.rows = 40;
+    launch.env.push((
+        "TUISCOTTI_CAPTURE_MARKER".to_string(),
+        "recorded".to_string(),
+    ));
     let app = try_launch(launch).expect("launch reference showcase");
     let screen = app.wait_screen("reference showcase painted", |screen| {
         text(screen).chars().any(|ch| ch.is_ascii_alphanumeric())
@@ -1406,6 +1410,7 @@ fn g05_reference_session_receipt_records_identity() {
             "cols",
             "comparator_name",
             "comparator_rev",
+            "env",
             "history",
             "lockfile_sha256",
             "mode",
@@ -1440,6 +1445,13 @@ fn g05_reference_session_receipt_records_identity() {
     assert_eq!(session["motion"].as_str(), Some("paused"));
     assert_eq!(session["clock"].as_bool(), Some(false));
     assert_eq!(session["TERM"].as_str(), Some("xterm-256color"));
+    assert_eq!(session["env"]["COLORTERM"].as_str(), Some("truecolor"));
+    assert_eq!(session["env"]["LANG"].as_str(), Some("C.UTF-8"));
+    assert_eq!(session["env"]["LC_ALL"].as_str(), Some("C.UTF-8"));
+    assert_eq!(
+        session["env"]["TUISCOTTI_CAPTURE_MARKER"].as_str(),
+        Some("recorded")
+    );
     assert_eq!(session["comparator_name"], manifest["comparator"]["name"]);
     assert_eq!(session["comparator_rev"].as_str(), Some(COMPARATOR_REV));
     app.finish();

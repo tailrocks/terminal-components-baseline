@@ -89,6 +89,30 @@ def load_manifest(path: Path) -> dict:
     return manifest
 
 
+def verify_reference_environment(session: dict, expected: dict[str, str]) -> dict[str, str]:
+    environment = session.get("env")
+    if not isinstance(environment, dict) or not all(
+        isinstance(key, str) and isinstance(value, str)
+        for key, value in environment.items()
+    ):
+        fail("reference session environment is missing or invalid")
+    for key, value in expected.items():
+        if environment.get(key) != value:
+            fail(f"reference session environment {key} does not match the acceptance arguments")
+    return environment
+
+
+def read_reference_session(path: Path) -> tuple[dict, str]:
+    try:
+        session_bytes = path.read_bytes()
+        session = json.loads(session_bytes)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+        fail(f"reference session {path}: {error}")
+    if not isinstance(session, dict):
+        fail(f"reference session {path} is not an object")
+    return session, hashlib.sha256(session_bytes).hexdigest()
+
+
 def receipt_body(manifest: dict, args: argparse.Namespace, binary: Path) -> dict:
     toolchain = manifest.get("toolchain")
     comparator = manifest.get("comparator")
@@ -131,16 +155,13 @@ def receipt_body(manifest: dict, args: argparse.Namespace, binary: Path) -> dict
 
 def verify_reference_session(
     manifest: dict,
-    session_path: Path,
+    session: dict,
     binary: Path,
     binary_sha256: str,
     fixture_args: list[str],
     expected_profile: dict,
+    expected_env: dict[str, str],
 ) -> dict:
-    try:
-        session = json.loads(session_path.read_text())
-    except (OSError, json.JSONDecodeError) as error:
-        fail(f"reference session {session_path}: {error}")
     if session.get("mode") != "reference":
         fail("acceptance session is not Reference mode")
     if session.get("binary_sha256") != binary_sha256:
@@ -183,12 +204,14 @@ def verify_reference_session(
     for key, expected in expected_profile.items():
         if session.get(key) != expected:
             fail(f"reference session {key} does not match the expected capture profile")
+    verify_reference_environment(session, expected_env)
     return session
 
 
 def verify_capture_index(
     index_path: Path,
     session_path: Path,
+    session_sha256: str,
     binary: Path,
     binary_sha256: str,
     candidate: Path,
@@ -217,6 +240,8 @@ def verify_capture_index(
         fail("capture index test ID does not match the expected test ID")
     if Path(entry.get("session_path", "")).resolve() != session_path:
         fail("capture index does not bind this candidate to the supplied reference session")
+    if entry.get("session_sha256") != session_sha256:
+        fail("capture index session digest does not match the supplied reference session")
     if Path(entry.get("binary_path", "")).resolve() != binary:
         fail("capture index binary path does not match the supplied binary")
     if entry.get("binary_sha256") != binary_sha256:
@@ -339,9 +364,11 @@ def main() -> None:
     if args.session is not None:
         if args.capture_index is None or args.expected_test_id is None:
             fail("Reference-mode acceptance requires --capture-index and --expected-test-id")
+        session_path = args.session.resolve()
+        reference_session, session_sha256 = read_reference_session(session_path)
         reference_session = verify_reference_session(
             manifest,
-            args.session,
+            reference_session,
             binary,
             actual_binary,
             args.fixture_arg,
@@ -363,10 +390,12 @@ def main() -> None:
                 }.items()
                 if value is not None
             },
+            parse_env(args.env),
         )
         capture_entry = verify_capture_index(
             args.capture_index.resolve(),
-            args.session.resolve(),
+            session_path,
+            session_sha256,
             binary,
             actual_binary,
             args.candidate.resolve(),
@@ -377,6 +406,7 @@ def main() -> None:
         if args.capture_index is not None:
             fail("--capture-index requires --session")
         reference_session = None
+        session_sha256 = None
         capture_entry = None
     if args.expected_test_id:
         sample_check = inspect_sample(args, baselines, args.expected_test_id)
@@ -409,8 +439,10 @@ def main() -> None:
                 "clock",
                 "TERM",
                 "comparator_rev",
+                "env",
             )
         }
+        body["reference_session"]["session_sha256"] = session_sha256
         body["capture_record"] = capture_entry
         body["pre_accept_check"] = sample_check
     # Invokes `tuiscotti accept` with the four approval flags. Tests never do this.
@@ -427,6 +459,13 @@ def main() -> None:
         str(baselines),
     ]
     command.insert(1, "--json")
+    if reference_session is not None:
+        try:
+            current_session_sha256 = hashlib.sha256(args.session.read_bytes()).hexdigest()
+        except OSError as error:
+            fail(f"reference session {args.session}: {error}")
+        if current_session_sha256 != session_sha256:
+            fail("reference session changed after capture verification")
     completed = subprocess.run(command, check=False, capture_output=True, text=True)
     if completed.returncode != 0:
         sys.stderr.write(completed.stderr)

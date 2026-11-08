@@ -51,6 +51,10 @@ class AcceptancePreflightTests(unittest.TestCase):
             "TERM": "xterm-256color",
             "clock": False,
             "history": False,
+            "env": {
+                "COLORTERM": "truecolor",
+                "LANG": "C.UTF-8",
+            },
         }
         self.session.write_text(json.dumps(session))
         self.index = capture / "index.jsonl"
@@ -59,6 +63,7 @@ class AcceptancePreflightTests(unittest.TestCase):
             "candidate_path": str(self.candidate),
             "candidate_sha256": self.candidate_sha,
             "session_path": str(self.session),
+            "session_sha256": hashlib.sha256(self.session.read_bytes()).hexdigest(),
             "binary_path": str(self.binary),
             "binary_sha256": self.binary_sha,
         }
@@ -92,8 +97,22 @@ class AcceptancePreflightTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
+    def test_session_digest_is_for_the_exact_bytes_that_were_parsed(self):
+        parsed, digest = accept_baseline.read_reference_session(self.session)
+        self.assertEqual(parsed["mode"], "reference")
+        self.assertEqual(digest, hashlib.sha256(self.session.read_bytes()).hexdigest())
+        self.session.write_bytes(self.session.read_bytes() + b" ")
+        _, changed_digest = accept_baseline.read_reference_session(self.session)
+        self.assertNotEqual(digest, changed_digest)
+
     def run_preflight(
-        self, *, expected_test_id=None, fixture_args=None, with_session=True, with_profile=True
+        self,
+        *,
+        expected_test_id=None,
+        fixture_args=None,
+        environment=(),
+        with_session=True,
+        with_profile=True,
     ):
         expected_test_id = expected_test_id or self.test_id
         fixture_args = fixture_args or ["--scenario", "capsule-multi"]
@@ -156,6 +175,8 @@ class AcceptancePreflightTests(unittest.TestCase):
             )
         for item in fixture_args:
             argv.append(f"--fixture-arg={item}")
+        for item in environment:
+            argv.append(f"--env={item}")
         before = self.baseline.read_bytes()
         with patch("sys.argv", argv), patch.object(accept_baseline.subprocess, "run") as run:
             with self.assertRaises(SystemExit):
@@ -169,6 +190,15 @@ class AcceptancePreflightTests(unittest.TestCase):
 
     def test_fixture_args_must_match_exact_order_before_accept(self):
         self.run_preflight(fixture_args=["capsule-multi", "--scenario"])
+
+    def test_claimed_environment_must_match_captured_session(self):
+        self.run_preflight(environment=["COLORTERM=monochrome"])
+
+    def test_session_mutation_invalidates_capture_index(self):
+        session = json.loads(self.session.read_text())
+        session["env"]["LANG"] = "C"
+        self.session.write_text(json.dumps(session))
+        self.run_preflight()
 
     def test_alternate_manifest_requires_session_before_accept(self):
         self.run_preflight(with_session=False)

@@ -20,7 +20,8 @@ A successful launch writes `session.json` in its evidence directory under
 `tests/functional/baselines`. Its keys are `mode`, `reference_sha`,
 `lockfile_sha256`, `binary_path`, `binary_sha256`, `args`, `cols`, `rows`,
 `color`, `platform`, `history`, `motion`, `clock`, `TERM`,
-`comparator_name`, and `comparator_rev`.
+`env`, `comparator_name`, and `comparator_rev`. `env` records the complete
+cleared child environment assembled by the harness and used for the launch.
 
 `App::visual` and `App::check_visual` pass an empty precondition.
 `App::check_visual_with_precondition` records `precondition <text>` in the
@@ -31,7 +32,9 @@ New baselines are produced only by `scripts/accept-baseline.py`, using a
 sample captured from a Reference-mode session. The script shells out to
 `tuiscotti accept` and writes the receipt at `--receipt`, which must sit
 outside the baseline root. It refuses to run when
-`FUNCTIONAL_CANDIDATE_GATE=1`.
+`FUNCTIONAL_CANDIDATE_GATE=1`. In Reference mode, every supplied `--env`
+entry must match the session's recorded environment. The capture index binds
+the session file by SHA-256 so edits after capture invalidate acceptance.
 
 ## Public items
 

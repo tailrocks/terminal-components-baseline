@@ -1,4 +1,5 @@
 use std::cell::{Cell, RefCell};
+use std::collections::BTreeMap;
 use std::hash::{Hash, Hasher};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -911,30 +912,9 @@ fn prepared_launch(launch: &Launch, home: &Path) -> LaunchOptions {
     let mut options = LaunchOptions::new(launch.bin.as_os_str())
         .with_args(child_args(launch))
         .with_cwd(home)
-        .with_env_mode(LaunchEnvMode::Cleared)
-        .with_env("HOME", home)
-        .with_env("XDG_CONFIG_HOME", home.join("config"))
-        .with_env("XDG_CACHE_HOME", home.join("cache"))
-        .with_env("XDG_DATA_HOME", home.join("data"))
-        .with_env("SHELL", "/bin/sh")
-        .with_env("PATH", "/usr/bin:/bin")
-        .with_env("TERM", &launch.term)
-        .with_env("COLORTERM", "truecolor")
-        .with_env("LANG", "C.UTF-8")
-        .with_env("LC_ALL", "C.UTF-8")
-        .with_env("TZ", "UTC")
-        .with_env("JUNIE_TUI_CLIENT_PLATFORM", &launch.platform);
-    if launch.clock {
-        options = options.with_env("JUNIE_TUI_TEST_CLOCK", "1");
-    }
-    if !launch.history {
-        options = options.with_env("HOLLA_NO_HISTORY", "1");
-    }
-    if launch.color.as_deref() == Some("nocolor") {
-        options = options.with_env("NO_COLOR", "1");
-    }
-    for (key, value) in &launch.env {
-        options = options.with_env(key, value);
+        .with_env_mode(LaunchEnvMode::Cleared);
+    for (key, value) in effective_launch_env(launch, home) {
+        options = options.with_env(&key, &value);
     }
     options
 }
@@ -1189,6 +1169,7 @@ fn write_session(
         "motion": launch.motion,
         "clock": launch.clock,
         "TERM": launch.term,
+        "env": effective_launch_env(launch, &directory.join("home")),
         "comparator_name": manifest.comparator_name,
         "comparator_rev": manifest.comparator_rev,
     });
@@ -1197,4 +1178,60 @@ fn write_session(
     let path = directory.join(&manifest.session_file);
     std::fs::write(&path, bytes)
         .unwrap_or_else(|error| panic!("write {}: {error}", path.display()));
+}
+
+fn effective_launch_env(launch: &Launch, home: &Path) -> BTreeMap<String, String> {
+    let home_text = env_path(home);
+    let config_home = env_path(&home.join("config"));
+    let cache_home = env_path(&home.join("cache"));
+    let data_home = env_path(&home.join("data"));
+    let mut environment = BTreeMap::from([
+        ("HOME".to_string(), home_text),
+        ("XDG_CONFIG_HOME".to_string(), config_home),
+        ("XDG_CACHE_HOME".to_string(), cache_home),
+        ("XDG_DATA_HOME".to_string(), data_home),
+        ("SHELL".to_string(), "/bin/sh".to_string()),
+        ("PATH".to_string(), "/usr/bin:/bin".to_string()),
+        ("TERM".to_string(), launch.term.clone()),
+        ("COLORTERM".to_string(), "truecolor".to_string()),
+        ("LANG".to_string(), "C.UTF-8".to_string()),
+        ("LC_ALL".to_string(), "C.UTF-8".to_string()),
+        ("TZ".to_string(), "UTC".to_string()),
+        (
+            "JUNIE_TUI_CLIENT_PLATFORM".to_string(),
+            launch.platform.clone(),
+        ),
+    ]);
+    if launch.clock {
+        environment.insert("JUNIE_TUI_TEST_CLOCK".to_string(), "1".to_string());
+    }
+    if !launch.history {
+        environment.insert("HOLLA_NO_HISTORY".to_string(), "1".to_string());
+    }
+    if launch.color.as_deref() == Some("nocolor") {
+        environment.insert("NO_COLOR".to_string(), "1".to_string());
+    }
+    for (key, value) in &launch.env {
+        environment.insert(key.clone(), value.clone());
+    }
+    environment
+}
+
+fn env_path(path: &Path) -> String {
+    path.to_str()
+        .expect("functional test environment paths must be valid UTF-8")
+        .to_owned()
+}
+
+#[cfg(all(test, unix))]
+mod env_path_tests {
+    use super::env_path;
+    use std::{ffi::OsString, os::unix::ffi::OsStringExt, path::Path};
+
+    #[test]
+    #[should_panic(expected = "functional test environment paths must be valid UTF-8")]
+    fn rejects_non_utf8_environment_paths_instead_of_rewriting_them() {
+        let path = Path::new(OsString::from_vec(vec![b'/', 0xff]).as_os_str()).to_path_buf();
+        let _ = env_path(&path);
+    }
 }

@@ -185,24 +185,9 @@ fn j05_intro_route() {
 
 #[test]
 fn j05_intro_intro() {
-    let guarded = open("j05-intro-guard", "first-use");
-    // The guard is three ticks. Waiting until the phrase is visible can
-    // outlast it, so Enter is queued for the first poll, while intro_guard
-    // is still 3.
-    guarded.key("enter");
-    let phrase = guarded.wait_screen("intro after the guard key", |screen| {
-        intro_at(screen, 120, 40)
-    });
-    let seen = Instant::now();
-    assert!(shows_intro(&phrase), "{}", text(&phrase));
-    assert!(
-        guarded.try_sustained(Duration::from_millis(200), shows_intro),
-        "Enter during the guard left the intro\n{}",
-        text(&guarded.screen())
-    );
-    skip_into_manager(&guarded, seen);
-    guarded.finish();
-
+    // The exact three-tick input guard is tested with injected Input::Tick in
+    // App unit tests; PTY startup can consume those ticks before a queued key
+    // is delivered, so this process-level test covers the visible intro path.
     let app = open("j05-intro-intro", "first-use");
     let wide = app.wait_screen("intro 120x40", |screen| intro_at(screen, 120, 40));
     let seen = Instant::now();

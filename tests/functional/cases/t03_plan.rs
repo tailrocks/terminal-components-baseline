@@ -168,6 +168,7 @@ fn capture_reference_frame(app: &App, test_id: &str, screen: &TerminalSnapshot) 
         "candidate_path": candidate,
         "candidate_sha256": digest,
         "session_path": session_path,
+        "session_sha256": file_sha256(&session_path),
         "binary_path": session["binary_path"],
         "binary_sha256": session["binary_sha256"],
         "reference_sha": session["reference_sha"],

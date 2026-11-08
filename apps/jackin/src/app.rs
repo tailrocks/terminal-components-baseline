@@ -2418,6 +2418,36 @@ impl App {
     }
 }
 
+#[cfg(all(test, feature = "demo"))]
+mod intro_guard_tests {
+    use super::{App, Route};
+    use crate::fixtures::{Scenario, app_for};
+    use junie_tui::core::event::{Input, Key, Outcome};
+    use junie_tui::motion::Motion;
+    use junie_tui::theme::Theme;
+    use ratatui::crossterm::event::{KeyCode, KeyModifiers};
+
+    #[test]
+    fn enter_is_consumed_for_exactly_the_first_three_intro_ticks() {
+        let mut app: App = app_for(Scenario::FirstUse, Motion::Reduced, 0, Theme::junie());
+        let enter = Input::Key(Key {
+            code: KeyCode::Enter,
+            mods: KeyModifiers::NONE,
+        });
+
+        assert_eq!(app.route(), Route::Intro);
+        assert_eq!(app.handle_input(enter.clone()), Outcome::Consumed);
+        for _ in 0..3 {
+            assert_eq!(app.route(), Route::Intro);
+            assert_eq!(app.handle_input(enter.clone()), Outcome::Consumed);
+            app.handle_input(Input::Tick);
+        }
+        assert_eq!(app.route(), Route::Intro);
+        assert_eq!(app.handle_input(enter), Outcome::Changed);
+        assert_eq!(app.route(), Route::Manager);
+    }
+}
+
 const BRAND_PADDED: &str = " jackin❯ ";
 
 impl shell::App for App {
