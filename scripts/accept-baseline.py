@@ -39,6 +39,21 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def atomic_write_text(destination: Path, text: str) -> None:
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            handle.write(text)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def inside(child: Path, parent: Path) -> bool:
     return child.resolve().is_relative_to(parent.resolve())
 
@@ -433,15 +448,11 @@ def main() -> None:
     if args.provenance and inside(args.provenance, baselines):
         fail("provenance is inside the baseline root")
     text = json.dumps(cli_receipt if reference_session is not None else body, indent=2) + "\n"
-    temporary = receipt.with_name(receipt.name + ".tmp")
-    temporary.write_text(text)
-    temporary.replace(receipt)
+    atomic_write_text(receipt, text)
     if args.provenance:
         provenance = args.provenance
         provenance_text = json.dumps(body, indent=2) + "\n"
-        provenance_temporary = provenance.with_name(provenance.name + ".tmp")
-        provenance_temporary.write_text(provenance_text)
-        provenance_temporary.replace(provenance)
+        atomic_write_text(provenance, provenance_text)
 
 
 if __name__ == "__main__":

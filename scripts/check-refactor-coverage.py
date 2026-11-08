@@ -76,6 +76,27 @@ def brace_body(text, open_at, path, pattern):
     raise ScanError("{0}: pattern {1} has an unclosed brace".format(path, pattern))
 
 
+def enum_variants(body):
+    variants = []
+    for line in body.splitlines():
+        variant = line.partition("//")[0].strip()
+        if variant.endswith(","):
+            variant = variant[:-1].rstrip()
+        if (
+            variant
+            and "A" <= variant[0] <= "Z"
+            and all(
+                character == "_"
+                or "A" <= character <= "Z"
+                or "a" <= character <= "z"
+                or "0" <= character <= "9"
+                for character in variant
+            )
+        ):
+            variants.append(variant)
+    return variants
+
+
 def route_id_from_label(label):
     # PageId::from_name keeps ASCII letters and digits and lowercases them.
     # Inventory route ids are those names, not the Rust variant identifiers.
@@ -95,7 +116,7 @@ def scan_routes(path):
     if not match:
         raise ScanError("{0}: pattern {1} matched nothing".format(path, pattern))
     body = brace_body(text, match.end() - 1, path, pattern)
-    variants = re.findall(r"(?m)^\s*([A-Z][A-Za-z0-9_]*)\s*,?\s*(?://.*)?$", body)
+    variants = enum_variants(body)
     if not variants:
         raise ScanError("{0}: pattern PageId variant matched nothing".format(path))
     pairs = re.findall(
@@ -170,10 +191,7 @@ def scan_scenario_names(path):
     if not enum_match:
         raise ScanError("{0}: pattern {1} matched nothing".format(path, enum_pattern))
     enum_body = brace_body(text, enum_match.end() - 1, path, enum_pattern)
-    variants = re.findall(
-        r"(?m)^\s*([A-Z][A-Za-z0-9_]*)\s*,?\s*(?://.*)?$",
-        enum_body,
-    )
+    variants = enum_variants(enum_body)
     all_pattern = "pub const ALL: [Scenario; N]"
     all_match = re.search(r"pub const ALL:\s*\[Scenario;\s*(\d+)\]", text)
     if not all_match:
