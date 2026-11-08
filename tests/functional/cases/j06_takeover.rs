@@ -373,6 +373,16 @@ fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
 #[test]
 fn j06_takeover_route() {
     let app = open("j06-takeover-route");
+    // Consume the hard-cases fixture's one-shot unreadable-index refresh
+    // before attaching. Otherwise its later error status can race and replace
+    // the explicit Detached status after Esc, even though detach succeeded.
+    let refresh_error = app.wait_screen("initial unreadable index is reported", |screen| {
+        text(screen).contains("Refresh failed: instance index unreadable · showing last-good rows")
+    });
+    require(
+        &refresh_error,
+        "Refresh failed: instance index unreadable · showing last-good rows",
+    );
     let _clock = attach_payments(&app);
     assert!(
         _clock.elapsed() < Duration::from_secs(15),
