@@ -1,0 +1,79 @@
+{
+  "task_id": "S06.meters",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s06_meters.rs",
+    "docs/testing/cases/S06.meters.json",
+    "tests/functional/baselines/pre_refactor/S06.meters/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/meters.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.meters.route",
+    "sc.meters.playground",
+    "sc.meters.playground.120x40",
+    "sc.meters.playground.80x24",
+    "sc.meters.options",
+    "sc.meters.options.120x40",
+    "sc.meters.options.80x24",
+    "sc.meters.states",
+    "sc.meters.states.120x40",
+    "sc.meters.states.80x24",
+    "sc.meters.specimen.rest",
+    "sc.meters.specimen.hover",
+    "sc.meters.specimen.pressed",
+    "sc.meters.specimen.focused",
+    "sc.meters.specimen.focused_hover",
+    "sc.meters.specimen.selected",
+    "sc.meters.specimen.disabled",
+    "sc.meters.specimen.busy",
+    "sc.meters.specimen.error",
+    "sc.meters.specimen.editing",
+    "sc.meters.specimen.empty",
+    "sc.meters.specimen.loading",
+    "sc.meters.specimen.overflow",
+    "sc.meters.specimen.narrow",
+    "sc.meters.compare-levels",
+    "opt.meters.label_width",
+    "opt.meters.label_gap",
+    "opt.meters.meter_width",
+    "opt.meters.detail",
+    "opt.meters.detail_tone",
+    "opt.meters.visual",
+    "opt.meters.offline",
+    "opt.meters.stale_style",
+    "sc.meters.meters"
+  ],
+  "checkpoints": [
+    "sc.meters.playground.120x40",
+    "sc.meters.playground.80x24",
+    "sc.meters.options.120x40",
+    "sc.meters.options.80x24",
+    "sc.meters.states.120x40",
+    "sc.meters.states.80x24",
+    "sc.meters.compare-levels",
+    "sc.meters.meters"
+  ],
+  "acceptance": "Open Meters by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

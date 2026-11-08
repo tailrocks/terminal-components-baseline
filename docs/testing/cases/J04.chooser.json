@@ -1,0 +1,124 @@
+{
+  "task_id": "J04.chooser",
+  "cases": [
+    {
+      "case_id": "J04.chooser.route",
+      "owner_task": "J04.chooser",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario accounts-mixed --color truecolor --motion reduced at 120×40. Scenario::AccountsMixed in src/bin/jackin/app.rs start() calls go(Go::Accounts), so Accounts › Overview is already open. Key a in AccountsScreen::on_key in src/bin/jackin/screens/accounts.rs calls open_form. The chooser field is named op, labeled 1Password reference, value not chosen, button Choose…. Enter on that button is FormAction::Choose, and on_layer_result opens OpFlow from src/bin/jackin/screens/modals.rs. list_accounts in src/bin/jackin/sim/onepassword.rs returns the fixture accounts. alexey@donbeave.dev is tagged locked and alexey@acme-fixture.example is tagged authorize. Esc on the account step is PickerAction::Cancelled, back() sets result to None, and ModalResult::Op(None) does not call set_chooser. The form still shows not chosen, and op://v_eng01/it_cdx01/credential stays absent. Esc cancels the form. on_layer_result for Form(None) sets status Cancelled · nothing saved and returns to Accounts › Overview. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "b02bfebc2d44da2ddf3f1e536c7ae7eaf0f8455d",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J04.chooser",
+      "entry_path": "jackin --scenario accounts-mixed --color truecolor --motion reduced at 120x40; a; Choose…; Enter",
+      "return_path": "Esc closes the chooser with no new reference; Esc cancels the form back to Accounts › Overview; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J04.chooser.chooser",
+      "owner_task": "J04.chooser",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open access-denied chooser, shot at 120×40 and then at 80×24 after resize, before Esc. Hard Cases is not the shot: accounts_hard in src/bin/jackin/domain/fixtures.rs leaves one account in Freshness::Refreshing, AccountsScreen::strip_right in src/bin/jackin/screens/accounts.rs paints a spinner from now_ms/80, and OpFlow::animating in src/bin/jackin/screens/modals.rs is always true, so that screen never holds still. Scenario::FirstUse has an empty account registry and SimOnePassword::fixture is still signed in. Shared Infra is VaultAccess::Denied. Choosing it calls list_items, which returns OpError::PermissionDenied. OpFlow::set_error paints No access to vault Shared Infra and Choose another vault. It does not paint OpError::message from src/bin/jackin/sim/onepassword.rs, which would be 1Password access denied: no permission for vault Shared Infra. The form behind the picker still says not chosen at 120×40. Reference chosen and op://v_eng01/it_cdx01/credential stay absent. Esc calls back() to the vault list, then to the account list, then ModalResult::Op(None) stores nothing. A later Esc from the account step is the same cancel. Backspace on the vault step is PickerAction::Back and returns to the account list with no reference. Choosing Shared Infra again leaves the same denial and still stores nothing. Broken · Wrong shape has only a text notes field. concealed_only disables that row, eligible returns None, and Enter does not call describe, so Field notes is not a credential: choose a concealed field stays absent. A query with no row paints No matches. Enter emits PickerAction::Submit, which OpFlow ignores, so 1Password field not found: stays absent. On the unlocked fixture, Enter through chainargos.1password.com, Engineering, OpenAI · Codex Primary, and credential calls reference and describe. set_chooser in src/bin/jackin/screens/accounts.rs stores display_path Engineering › OpenAI · Codex Primary › credential, and the note shows op://v_eng01/it_cdx01/credential. The status is Reference chosen · Validate checks provider compatibility. Fixture materials such as openai:valid-cdx01 stay off screen. Esc cancels the form, so the new reference leaves the accounts screen. The locked retry uses Scenario::HardCases, which sets OpSession::Locked in world_for in src/bin/jackin/domain/fixtures.rs. list_accounts returns OpError::Locked. set_error paints 1Password is locked and Unlock it in the 1Password app, then press r to retry, not the OpError::message 1Password locked: unlock the app and retry. Esc stores nothing. Key r calls begin_load again. The load waits latency_ms 260 on the sim clock, which reduced motion keeps running, and the locked copy returns. No field is stored.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "b02bfebc2d44da2ddf3f1e536c7ae7eaf0f8455d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j04_chooser/j04_chooser_chooser_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j04_chooser/j04_chooser_chooser_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Open the access-denied chooser and shoot it. Dismiss it. Cancel, go Back, open the inaccessible vault again, reject a disabled notes field and a missing query, choose credential, then retry a locked session.",
+      "expected_results": "The denied chooser stays open with no stored field. Cancel and Back store nothing. The disabled and missing rows do not call describe or reference. The successful choice shows the reference and not the secret. The locked retry returns to the locked copy and stores nothing.",
+      "forbidden_effects": "An inaccessible vault returns a field. The captures are the open access-denied chooser.",
+      "checkpoint_ids": [
+        "J04.chooser.chooser.120x40",
+        "J04.chooser.chooser.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "first-use",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "36c20a4e93cadd29404e27079f4a9989eedda41e9bd41d9a79ffd7d1d3c991e8",
+        "expect_baseline": "missing",
+        "precondition": "J04.chooser.chooser.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "first-use",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "02e63e961181786551834168dddb694c412301b15ffd8bd1fc87345556e3f614",
+        "expect_baseline": "missing",
+        "precondition": "J04.chooser.chooser.narrow"
+      }
+    }
+  ]
+}

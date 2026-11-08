@@ -1,0 +1,39 @@
+{
+  "task_id": "H05.files",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h05_files.rs",
+    "docs/testing/cases/H05.files.json",
+    "tests/functional/baselines/pre_refactor/H05.files/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/files.rs",
+    "src/bin/holla/sim/fs.rs"
+  ],
+  "coverage_rows": [
+    "H05.files.route",
+    "H05.files.nav",
+    "H05.files.scenario.parity-files",
+    "H05.files.scenario.parity-browser"
+  ],
+  "checkpoints": [
+    "H05.files.nav.120x40"
+  ],
+  "acceptance": "Directory entry and parent or root boundaries keep the path identity.",
+  "status": "queued",
+  "architecture_refactor": false
+}

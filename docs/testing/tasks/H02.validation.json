@@ -1,0 +1,36 @@
+{
+  "task_id": "H02.validation",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h02_validation.rs",
+    "docs/testing/cases/H02.validation.json",
+    "tests/functional/baselines/pre_refactor/H02.validation/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/review.rs"
+  ],
+  "coverage_rows": [
+    "H02.validation.route",
+    "H02.validation.literal"
+  ],
+  "checkpoints": [
+    "H02.validation.literal.120x40"
+  ],
+  "acceptance": "Literal shell syntax stays input text, and the action after an error is the same action.",
+  "status": "queued",
+  "architecture_refactor": false
+}

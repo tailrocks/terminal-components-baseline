@@ -1,0 +1,37 @@
+{
+  "task_id": "T02.structure",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t02_structure.rs",
+    "docs/testing/cases/T02.structure.json",
+    "tests/functional/baselines/pre_refactor/T02.structure/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/workbench.rs",
+    "src/bin/tablepro/tabs.rs"
+  ],
+  "coverage_rows": [
+    "T02.structure.route",
+    "T02.structure.tabs"
+  ],
+  "checkpoints": [
+    "T02.structure.tabs.120x40"
+  ],
+  "acceptance": "Each Structure tab shows that object's schema values or its empty state.",
+  "status": "queued",
+  "architecture_refactor": false
+}

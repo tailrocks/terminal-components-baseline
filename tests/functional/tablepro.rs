@@ -1,5 +1,4 @@
-use super::bins::TABLEPRO;
-use super::support::{App, Point, crop, find, find_all, row_text, text};
+use super::support::{App, Point, TABLEPRO, crop, find, find_all, row_text, text};
 
 fn inside(point: Point) -> Point {
     Point {
@@ -97,7 +96,6 @@ fn tablepro_write_confirmation_cancels_retries_and_executes_only_when_armed() {
     app.click_text("Close anyway");
     app.wait_text("No open tabs");
 
-    app.advance_clock(5_000);
     app.wait_screen("status flash faded before freeze", |s| {
         let footer = row_text(s, 49);
         !footer.contains("Cancelled")
@@ -338,7 +336,6 @@ fn close_all_tabs(app: &App) {
 }
 
 fn freeze(app: &App, test_id: &str) {
-    app.advance_clock(5_000);
     app.wait_absent("\u{2713} Connected to");
     app.visual(test_id);
 }
@@ -437,36 +434,47 @@ fn tablepro_delete_connection_cancel_then_confirm() {
     app.finish();
 }
 
+fn orders_result(screen: &tui_test::TerminalSnapshot) -> bool {
+    let body = text(screen);
+    body.contains("Showing 500 rows")
+        && body.contains("order_number")
+        && body.contains("10000")
+        && !body.contains("syntax error")
+}
+
 #[test]
 fn tablepro_query_select_results_and_error_recovery() {
     let app = connected("tablepro-query-results");
     app.key("tab");
     app.paste("SELECT * FROM orders;");
     app.key("ctrl+r");
-    app.wait_screen("select results appear", |s| {
-        let t = text(s);
-        !t.contains("Type orders to confirm") && (t.contains("rows") || t.contains("orders"))
-    });
+    app.wait_screen("select returns order rows", orders_result);
     freeze(&app, "functional/tablepro_query_results");
     close_all_tabs(&app);
     app.finish();
 
-    let app = connected("tablepro-query-error");
+    let app = App::new(
+        "tablepro-query-error",
+        TABLEPRO,
+        &["--connect", "Local PostgreSQL", "--motion", "reduced"],
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("Query 1");
     app.key("tab");
     app.paste("SELEC bogus;");
     app.key("ctrl+r");
-    app.wait_screen("sql error is reported", |s| {
-        let t = text(s).to_lowercase();
-        t.contains("error") || t.contains("syntax") || t.contains("failed")
-    });
-
-    app.key("ctrl+a");
+    let failed = app.wait_text("syntax error at or near \"SELEC\"");
+    assert!(text(&failed).contains("SELEC bogus"));
+    app.key("ctrl+l");
     app.paste("SELECT * FROM orders;");
     app.key("ctrl+r");
-    app.wait_screen("corrected query returns results", |s| {
-        text(s).contains("rows") || text(s).contains("orders")
-    });
-    freeze(&app, "functional/tablepro_query_error_recovery");
+    let recovered = app.wait_screen("corrected query replaces the syntax error", orders_result);
+    assert!(!text(&recovered).contains("syntax error at or near \"SELEC\""));
+    assert!(!text(&recovered).contains("SELEC bogus"));
+    app.wait_absent("\u{2713} Connected to");
+    app.visual("functional/tablepro_query_recovered");
     close_all_tabs(&app);
     app.finish();
 }
@@ -476,28 +484,39 @@ fn tablepro_history_rerun_and_help_and_layout() {
     let app = connected("tablepro-history");
     app.key("tab");
     app.paste("SELECT * FROM orders;");
-    app.type_text("\x12\x19");
-    app.wait_screen("history opens", |s| {
-        text(s).to_lowercase().contains("history")
-    });
-
-    app.advance_clock(5_000);
-    app.wait_screen("history entry settled", |s| {
+    app.key("ctrl+r");
+    app.key("ctrl+y");
+    app.wait_screen("history opens before the orders query settles", |s| {
         let t = text(s);
-
-        t.contains("16 entries") && !t.contains("running") && !t.contains("\u{2713} Connected to")
+        t.contains("Query history")
+            && t.contains("16 entries")
+            && !t.contains("\u{2713} Connected to")
     });
     app.visual("functional/tablepro_history");
-    app.key("escape");
-    app.click_text("Query 1");
-    close_all_tabs(&app);
-    app.finish();
+    app.key("r");
+    let rerun = app.wait_screen("rerun executes the selected orders query", orders_result);
+    assert!(text(&rerun).contains("SELECT * FROM orders"));
+    assert!(!text(&rerun).contains("syntax error"));
+    app.key("ctrl+q");
+    let quit = app.wait_text("Quit TablePro?");
+    assert!(text(&quit).contains("unsaved"));
+    app.key("right");
+    app.key("enter");
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+    while app.child_running() {
+        assert!(
+            std::time::Instant::now() < deadline,
+            "tablepro stayed up after confirming quit"
+        );
+        std::thread::sleep(std::time::Duration::from_millis(25));
+    }
+    app.expect_exited(0);
 
     let app = connected("tablepro-help-layout");
     app.key("?");
-    app.wait_screen("help overlay opens", |s| {
-        text(s).contains("TablePro") || text(s).to_lowercase().contains("help")
-    });
+    let help = app.wait_text("Keyboard shortcuts");
+    assert!(text(&help).contains("Shell and workbench"));
+    assert!(text(&help).contains("Grid and editor"));
     app.key("escape");
     app.key("ctrl+b");
     app.wait_screen("explorer toggles closed", |s| {
@@ -512,11 +531,22 @@ fn tablepro_history_rerun_and_help_and_layout() {
 
 #[test]
 fn tablepro_resize_and_too_small_recovers() {
-    let app = connected("tablepro-resize");
+    let app = App::new(
+        "tablepro-resize",
+        TABLEPRO,
+        &["--connect", "Local PostgreSQL", "--motion", "reduced"],
+        120,
+        40,
+        "truecolor",
+    );
+    app.wait_text("Query 1");
     app.resize(60, 20);
     app.wait_screen("workbench at 60x20", |s| {
-        s.cols() == 60 && (text(s).contains("Query") || text(s).contains("TablePro"))
+        s.cols() == 60
+            && s.rows() == 20
+            && (text(s).contains("Query") || text(s).contains("TablePro"))
     });
+    app.visual("functional/tablepro_workbench_60x20");
     app.resize(120, 40);
     app.wait_screen("workbench recovered at 120x40", |s| {
         s.cols() == 120 && text(s).contains("Query 1")

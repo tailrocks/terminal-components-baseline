@@ -8,7 +8,7 @@ use common::*;
 use jackin_console::app::{App, Remote, Route};
 use jackin_console::backend::{Backend, Completion, Effect, FileSource, Refresh};
 use jackin_console::domain::account::{
-    AccountRegistry, CredentialSource, DetectedKind, ValidationState,
+    AccountRegistry, CredentialSource, DetectedKind, IssueCode, ValidationState,
 };
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::instance::{Instance, InstanceStatus};
@@ -867,6 +867,77 @@ fn the_sim_refreshes_as_it_did() {
         status(&app),
         "Refreshed Claude · Personal · current · 4 windows"
     );
+}
+
+#[test]
+fn hard_cases_refresh_keeps_its_per_account_outcomes() {
+    let mut app = timed(Scenario::HardCases, world_for(Scenario::HardCases));
+    press(&mut app, "u r");
+    settle(&mut app);
+
+    let work = app
+        .world
+        .accounts
+        .get("acct-claude-work")
+        .expect("work account");
+    assert_eq!(work.usage.freshness.phase, Freshness::Current);
+    assert_eq!(work.usage.windows[0].used_pct, Some(77));
+    assert_eq!(work.issue, None);
+
+    let go = app
+        .world
+        .accounts
+        .get("acct-opencode-go")
+        .expect("go account");
+    assert_eq!(go.usage.freshness.phase, Freshness::Failed);
+    assert_eq!(
+        go.issue.as_ref().map(|issue| issue.code),
+        Some(IssueCode::RateLimited)
+    );
+
+    let minimax = app
+        .world
+        .accounts
+        .get("disc-minimax")
+        .expect("minimax account");
+    assert_eq!(minimax.usage.freshness.phase, Freshness::Failed);
+    assert_eq!(
+        minimax.issue.as_ref().map(|issue| issue.code),
+        Some(IssueCode::ProviderUnavailable)
+    );
+}
+
+#[test]
+fn refreshing_usage_updates_the_stale_work_account() {
+    const WORK: &str = "acct-claude-work";
+    let (mut app, backend) = backed(Scenario::AccountsMixed, unchanged_roster);
+    let original_source = app
+        .world
+        .accounts
+        .get(WORK)
+        .expect("work account")
+        .source
+        .clone();
+
+    press(&mut app, "u r");
+    settle(&mut app);
+
+    let work_effects: Vec<_> = backend
+        .seen()
+        .into_iter()
+        .filter_map(|effect| match effect {
+            Effect::RefreshAccount {
+                account, source, ..
+            } if account == WORK => Some((source, account)),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(work_effects.len(), 1, "{work_effects:?}");
+    assert_eq!(work_effects[0].0, original_source);
+
+    let work = app.world.accounts.get(WORK).expect("work account");
+    assert_eq!(work.usage.freshness.phase, Freshness::Current);
+    assert_eq!(work.issue, None);
 }
 
 #[test]

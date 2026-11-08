@@ -1,0 +1,77 @@
+{
+  "task_id": "S07.panetree",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s07_panetree.rs",
+    "docs/testing/cases/S07.panetree.json",
+    "tests/functional/baselines/pre_refactor/S07.panetree/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/pane_tree.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.panetree.route",
+    "sc.panetree.playground",
+    "sc.panetree.playground.120x40",
+    "sc.panetree.playground.80x24",
+    "sc.panetree.options",
+    "sc.panetree.options.120x40",
+    "sc.panetree.options.80x24",
+    "sc.panetree.states",
+    "sc.panetree.states.120x40",
+    "sc.panetree.states.80x24",
+    "sc.panetree.specimen.rest",
+    "sc.panetree.specimen.hover",
+    "sc.panetree.specimen.pressed",
+    "sc.panetree.specimen.focused",
+    "sc.panetree.specimen.focused_hover",
+    "sc.panetree.specimen.selected",
+    "sc.panetree.specimen.disabled",
+    "sc.panetree.specimen.busy",
+    "sc.panetree.specimen.error",
+    "sc.panetree.specimen.editing",
+    "sc.panetree.specimen.empty",
+    "sc.panetree.specimen.loading",
+    "sc.panetree.specimen.overflow",
+    "sc.panetree.specimen.narrow",
+    "sc.panetree.compare-levels",
+    "opt.panetree.layout",
+    "opt.panetree.frames",
+    "opt.panetree.min",
+    "opt.panetree.keys",
+    "opt.panetree.step",
+    "opt.panetree.hit_pad",
+    "sc.panetree.panes"
+  ],
+  "checkpoints": [
+    "sc.panetree.playground.120x40",
+    "sc.panetree.playground.80x24",
+    "sc.panetree.options.120x40",
+    "sc.panetree.options.80x24",
+    "sc.panetree.states.120x40",
+    "sc.panetree.states.80x24",
+    "sc.panetree.compare-levels",
+    "sc.panetree.panes"
+  ],
+  "acceptance": "Open Pane tree by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,120 @@
+{
+  "task_id": "T04.history",
+  "cases": [
+    {
+      "case_id": "T04.history.route",
+      "owner_task": "T04.history",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. The landing screen shows Development and Filter connections, and Query history is absent. A click on Development shows host dev-db.internal.acme.io. Enter finishes on Query 1 with status Connected to Development after Loading schema has left the screen. Ctrl+Y opens Query history with scope Development and status any, and the list hints include Rerun. The markers, No matching queries, and all connections are absent. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f321cfb612bf10bfa4d18bde879d687ace8f8f7f",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T04.history",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; Enter; Ctrl+Y",
+      "return_path": "Query history; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "T04.history.rerun",
+      "owner_task": "T04.history",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Development, the editor runs a comment line t04_history_entry and SELECT slug FROM organizations WHERE slug = 'tessellate' LIMIT 1. A bare SELECT of a quoted marker has no FROM, so parse_select records Expected FROM and failed-only would keep that row. This read finishes with the cell tessellate and status 1 row. The editor is then replaced with SELECT 't04_history_decoy' AS marker, which is not run. Ctrl+Y opens Query history and the new row is the entry statement. Search for t04_history_entry keeps that row. Search for t04_history_missing shows No matching queries and neither marker. Esc clears the search. c shows all connections, including the Production row 4 min ago · 38 ms, and c returns to Development, where that row is absent. s hides the successful entry. The Development checkout failure stays visible, and the Production ordres failure appears only in all-connections scope. s turns failed-only off. The detail editor shows the entry statement and not the decoy. y reports Copied query. r, before Enter, opens Query 2 and finishes on tessellate with 1 row. The decoy and the pending-orders statement are absent. That finished result is captured at 120×40 and at 80×24, with the narrow shot taken before the terminal returns to 120×40. Enter then opens the same SQL in Query 3 with No results yet and does not run it. Ctrl+Q asks to quit because 1 unsaved query will be lost; Right then Enter confirms and the process exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "f321cfb612bf10bfa4d18bde879d687ace8f8f7f",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t04_history/t04_history_rerun_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t04_history/t04_history_rerun_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Search, switch connection scope and all-scope, enable failed-only, open details, copy, and rerun the selected entry. Also search a missing phrase.",
+      "expected_results": "The rerun result is that entry's statement. Empty search shows no rows.",
+      "forbidden_effects": "Rerun executes the previously active editor text instead of the selected entry.",
+      "checkpoint_ids": [
+        "T04.history.rerun.120x40",
+        "T04.history.rerun.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "483c0c8e66d8af129abdd87f6aa26c8ceb42de134781a6967d8b49d7adc1421e",
+        "expect_baseline": "missing",
+        "precondition": "T04.history.rerun.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3e0a0ecf7bbc7b583579b1f1453ba0083413efb911f28fc8cb5d2493d0eb248a",
+        "expect_baseline": "missing",
+        "precondition": "T04.history.rerun.narrow"
+      }
+    }
+  ]
+}

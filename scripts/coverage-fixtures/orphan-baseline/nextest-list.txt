@@ -1,0 +1,1 @@
+junie-tui::functional showcase::miniature

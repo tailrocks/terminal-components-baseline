@@ -1,0 +1,36 @@
+{
+  "task_id": "T02.commit",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t02_commit.rs",
+    "docs/testing/cases/T02.commit.json",
+    "tests/functional/baselines/pre_refactor/T02.commit/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/app.rs"
+  ],
+  "coverage_rows": [
+    "T02.commit.route",
+    "T02.commit.commit"
+  ],
+  "checkpoints": [
+    "T02.commit.commit.120x40"
+  ],
+  "acceptance": "Cancel keeps pending changes. Confirm clears them and adds the expected History entry. The simulator's success-only commit is a recorded scope limit.",
+  "status": "queued",
+  "architecture_refactor": false
+}

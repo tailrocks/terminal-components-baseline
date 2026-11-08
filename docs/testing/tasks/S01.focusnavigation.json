@@ -1,0 +1,73 @@
+{
+  "task_id": "S01.focusnavigation",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s01_focusnavigation.rs",
+    "docs/testing/cases/S01.focusnavigation.json",
+    "tests/functional/baselines/pre_refactor/S01.focusnavigation/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/focus_navigation.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.focusnavigation.route",
+    "sc.focusnavigation.playground",
+    "sc.focusnavigation.playground.120x40",
+    "sc.focusnavigation.playground.80x24",
+    "sc.focusnavigation.options",
+    "sc.focusnavigation.options.120x40",
+    "sc.focusnavigation.options.80x24",
+    "sc.focusnavigation.states",
+    "sc.focusnavigation.states.120x40",
+    "sc.focusnavigation.states.80x24",
+    "sc.focusnavigation.specimen.rest",
+    "sc.focusnavigation.specimen.hover",
+    "sc.focusnavigation.specimen.pressed",
+    "sc.focusnavigation.specimen.focused",
+    "sc.focusnavigation.specimen.focused_hover",
+    "sc.focusnavigation.specimen.selected",
+    "sc.focusnavigation.specimen.disabled",
+    "sc.focusnavigation.specimen.busy",
+    "sc.focusnavigation.specimen.error",
+    "sc.focusnavigation.specimen.editing",
+    "sc.focusnavigation.specimen.empty",
+    "sc.focusnavigation.specimen.loading",
+    "sc.focusnavigation.specimen.overflow",
+    "sc.focusnavigation.specimen.narrow",
+    "sc.focusnavigation.compare-levels",
+    "opt.focusnavigation.nav",
+    "opt.focusnavigation.tab_in_field",
+    "sc.focusnavigation.ring"
+  ],
+  "checkpoints": [
+    "sc.focusnavigation.playground.120x40",
+    "sc.focusnavigation.playground.80x24",
+    "sc.focusnavigation.options.120x40",
+    "sc.focusnavigation.options.80x24",
+    "sc.focusnavigation.states.120x40",
+    "sc.focusnavigation.states.80x24",
+    "sc.focusnavigation.compare-levels",
+    "sc.focusnavigation.ring"
+  ],
+  "acceptance": "Open Focus & navigation by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

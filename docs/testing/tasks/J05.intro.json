@@ -1,0 +1,38 @@
+{
+  "task_id": "J05.intro",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j05_intro.rs",
+    "docs/testing/cases/J05.intro.json",
+    "tests/functional/baselines/pre_refactor/J05.intro/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/app.rs",
+    "src/bin/jackin/rain.rs"
+  ],
+  "coverage_rows": [
+    "J05.intro.route",
+    "J05.intro.intro",
+    "J05.intro.scenario.first-use"
+  ],
+  "checkpoints": [
+    "J05.intro.intro.120x40"
+  ],
+  "acceptance": "First entry, joining, duplicate entry, and unknown discovery follow the current intro rules, including skip, guard, and abort.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,79 @@
+{
+  "task_id": "S04.sidebars",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s04_sidebars.rs",
+    "docs/testing/cases/S04.sidebars.json",
+    "tests/functional/baselines/pre_refactor/S04.sidebars/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/sidebars.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.sidebars.route",
+    "sc.sidebars.playground",
+    "sc.sidebars.playground.120x40",
+    "sc.sidebars.playground.80x24",
+    "sc.sidebars.options",
+    "sc.sidebars.options.120x40",
+    "sc.sidebars.options.80x24",
+    "sc.sidebars.states",
+    "sc.sidebars.states.120x40",
+    "sc.sidebars.states.80x24",
+    "sc.sidebars.specimen.rest",
+    "sc.sidebars.specimen.hover",
+    "sc.sidebars.specimen.pressed",
+    "sc.sidebars.specimen.focused",
+    "sc.sidebars.specimen.focused_hover",
+    "sc.sidebars.specimen.selected",
+    "sc.sidebars.specimen.disabled",
+    "sc.sidebars.specimen.busy",
+    "sc.sidebars.specimen.error",
+    "sc.sidebars.specimen.editing",
+    "sc.sidebars.specimen.empty",
+    "sc.sidebars.specimen.loading",
+    "sc.sidebars.specimen.overflow",
+    "sc.sidebars.specimen.narrow",
+    "sc.sidebars.compare-levels",
+    "opt.sidebars.collapsed",
+    "opt.sidebars.width",
+    "opt.sidebars.collapsed_width",
+    "opt.sidebars.keys",
+    "opt.sidebars.badges",
+    "opt.sidebars.hidden",
+    "opt.sidebars.collapsed_rail",
+    "opt.sidebars.rail_label",
+    "sc.sidebars.sidebar"
+  ],
+  "checkpoints": [
+    "sc.sidebars.playground.120x40",
+    "sc.sidebars.playground.80x24",
+    "sc.sidebars.options.120x40",
+    "sc.sidebars.options.80x24",
+    "sc.sidebars.states.120x40",
+    "sc.sidebars.states.80x24",
+    "sc.sidebars.compare-levels",
+    "sc.sidebars.sidebar"
+  ],
+  "acceptance": "Open Sidebars by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

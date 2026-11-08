@@ -874,10 +874,12 @@ impl CapsuleScreen {
         let label = agent
             .map(|a| a.label().to_owned())
             .unwrap_or("Shell".into());
-        match account.and_then(|id| w.accounts.get(&id).map(|a| a.display_name.clone())) {
-            Some(acc) => cx.status(format!("Started {label} · account {acc}")),
-            None => cx.status(format!("Started {label}")),
-        }
+        let notice =
+            match account.and_then(|id| w.accounts.get(&id).map(|a| a.display_name.clone())) {
+                Some(acc) => format!("Started {label} · account {acc}"),
+                None => format!("Started {label}"),
+            };
+        cx.status(notice);
         crate::world::refresh_snapshots(w);
         w.refresh_now();
     }

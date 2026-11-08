@@ -1,0 +1,79 @@
+{
+  "task_id": "S01.helpkeys",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s01_helpkeys.rs",
+    "docs/testing/cases/S01.helpkeys.json",
+    "tests/functional/baselines/pre_refactor/S01.helpkeys/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/help_keys.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.helpkeys.route",
+    "sc.helpkeys.playground",
+    "sc.helpkeys.playground.120x40",
+    "sc.helpkeys.playground.80x24",
+    "sc.helpkeys.options",
+    "sc.helpkeys.options.120x40",
+    "sc.helpkeys.options.80x24",
+    "sc.helpkeys.states",
+    "sc.helpkeys.states.120x40",
+    "sc.helpkeys.states.80x24",
+    "sc.helpkeys.specimen.rest",
+    "sc.helpkeys.specimen.hover",
+    "sc.helpkeys.specimen.pressed",
+    "sc.helpkeys.specimen.focused",
+    "sc.helpkeys.specimen.focused_hover",
+    "sc.helpkeys.specimen.selected",
+    "sc.helpkeys.specimen.disabled",
+    "sc.helpkeys.specimen.busy",
+    "sc.helpkeys.specimen.error",
+    "sc.helpkeys.specimen.editing",
+    "sc.helpkeys.specimen.empty",
+    "sc.helpkeys.specimen.loading",
+    "sc.helpkeys.specimen.overflow",
+    "sc.helpkeys.specimen.narrow",
+    "sc.helpkeys.compare-levels",
+    "opt.helpkeys.width",
+    "opt.helpkeys.key_max_share",
+    "opt.helpkeys.gap",
+    "opt.helpkeys.title",
+    "opt.helpkeys.max_percent",
+    "opt.helpkeys.nav",
+    "opt.helpkeys.keymap",
+    "opt.helpkeys.dismiss",
+    "sc.helpkeys.help"
+  ],
+  "checkpoints": [
+    "sc.helpkeys.playground.120x40",
+    "sc.helpkeys.playground.80x24",
+    "sc.helpkeys.options.120x40",
+    "sc.helpkeys.options.80x24",
+    "sc.helpkeys.states.120x40",
+    "sc.helpkeys.states.80x24",
+    "sc.helpkeys.compare-levels",
+    "sc.helpkeys.help"
+  ],
+  "acceptance": "Open Help & keys by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

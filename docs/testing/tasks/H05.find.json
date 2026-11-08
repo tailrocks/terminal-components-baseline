@@ -1,0 +1,36 @@
+{
+  "task_id": "H05.find",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h05_find.rs",
+    "docs/testing/cases/H05.find.json",
+    "tests/functional/baselines/pre_refactor/H05.find/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/files.rs"
+  ],
+  "coverage_rows": [
+    "H05.find.route",
+    "H05.find.find"
+  ],
+  "checkpoints": [
+    "H05.find.find.120x40"
+  ],
+  "acceptance": "Find queries, empty results, and opening the selected path stay in the file pane.",
+  "status": "queued",
+  "architecture_refactor": false
+}

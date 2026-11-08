@@ -1,0 +1,142 @@
+{
+  "task_id": "H02.args",
+  "cases": [
+    {
+      "case_id": "H02.args.route",
+      "owner_task": "H02.args",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla --scenario parity-task-sources opens the finder at 120×40 in truecolor with reduced motion. The world is ~/work/poly, a Node project on yarn. Pasting Clone a GitHub repository selects that row. The preview shows protocol = ssh and destination = ~/work/poly. Enter opens Clone a GitHub repository… · arguments. Esc returns to that row. The form title, activity output, and confirmation dialog are absent. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4f7b6b1389635fd15553fe20756b748b6727dd74",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H02.args",
+      "entry_path": "launch holla --scenario parity-task-sources --color truecolor --motion reduced at 120x40; paste Clone a GitHub repository; Enter",
+      "return_path": "Esc returns to the finder on the clone row; Ctrl+Q exits"
+    },
+    {
+      "case_id": "H02.args.args",
+      "owner_task": "H02.args",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "parity-task-sources lists Clone a GitHub repository…. The form has an owner choice defaulting to alex-dev, a required repository text field, a protocol choice of ssh or https, and a destination that defaults to ~/work/poly. Ctrl+S on an empty repository keeps the form open and shows Fill the required fields first and Required. Activity output and the confirmation dialog stay absent. Typing args-repo and choosing https shows gh repo clone 'alex-dev/args-repo' '~/work/poly' --protocol https. The open form is captured at 120×40, then at 80×24, while that value is filled and still unsubmitted. The terminal returns to 120×40 only after the narrow shot. Cancel (Tab, Tab, Enter) closes the form. The finder shows protocol = ssh again and args-repo is gone, so the activity was not started. ArgSpec::text and ArgSpec::choice both set secret: false in src/bin/holla/domain/action.rs. No ArgSpec assignment sets secret: true, and this launch never reaches a secret script prompt, so the secret operation is NOT_APPLICABLE.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4f7b6b1389635fd15553fe20756b748b6727dd74",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h02_args/h02_args_args_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h02_args/h02_args_args_narrow.tui.pb"
+      ],
+      "scenario": [
+        "parity-task-sources"
+      ],
+      "action_sequence": "Fill each implemented argument type, enter invalid input, correct it, and cancel after an edit.",
+      "expected_results": "The displayed command and directory match the form. The secret is masked.",
+      "forbidden_effects": "Cancel starts the activity.",
+      "checkpoint_ids": [
+        "H02.args.args.120x40",
+        "H02.args.args.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-task-sources",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "40c79fdf122733f0bd349e2302544a7c9952b70efb6180a1c1a257827defd2a4",
+        "expect_baseline": "missing",
+        "precondition": "H02.args.args.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-task-sources",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "16b9b0ef63dc6ee6d9ef925f36cd93c43d34a5d03b2bd01ba5d540f79fa1f5fc",
+        "expect_baseline": "missing",
+        "precondition": "H02.args.args.narrow"
+      }
+    },
+    {
+      "case_id": "H02.args.scenario.parity-task-sources",
+      "owner_task": "H02.args",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "The launch is --scenario parity-task-sources at ~/work/poly. The header is Node project · yarn. The finder shows yarn dev from package.json (vite), just build from .justfile, make deploy-prod from Makefile, and Taskfile.yaml with a discovery diagnostic (mapping values are not allowed, or no task was invented). Those task rows have no argument spec. The arguments form opened on this launch is Clone a GitHub repository…, which this world lists. Inspect 12 GB, Start development ecosystem, ~/work/acme, ~/work/engine, apps/frontend, and Emit a mixed stream stay off the screen. Esc returns to the clone row. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "4f7b6b1389635fd15553fe20756b748b6727dd74",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "parity-task-sources",
+      "action_sequence": "Launch the application with scenario parity-task-sources and exercise the surface owned by H02.args.",
+      "expected_results": "The visible fixture data belongs to parity-task-sources.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

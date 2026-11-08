@@ -137,6 +137,8 @@ const BRANCHES: &[&str] = &[
     "release/4.2",
 ];
 
+const MULTI_ROWS: [&str; 4] = ["Row 1", "Row 2", "Row 3", "Row 4"];
+
 const FETCH_TICKS: u32 = 3;
 
 pub struct PickersPage {
@@ -255,23 +257,22 @@ impl Rows {
                     .collect(),
             ),
             Kind::Multi | Kind::MultiSearch => {
-                let preserve = p.checked().to_vec();
-                let items: Vec<Item> = ["Row1", "Row2", "Row3", "Row4"]
+                let items: Vec<Item> = MULTI_ROWS
                     .iter()
                     .enumerate()
                     .filter(|(_, l)| kind == Kind::Multi || fuzzy(l, &q).is_some())
                     .map(|(i, l)| {
-                        let mut it = Item::new(*l).detail(format!("multi row {}", i + 1));
+                        let mut it = Item::new(*l)
+                            .key(ItemKey::text(l))
+                            .detail(format!("multi row {}", i + 1));
                         if i == 1 {
                             it = it.reason("Unavailable row");
                         }
                         it
                     })
                     .collect();
-                p.set_items(items);
-                if kind == Kind::MultiSearch {
-                    p.list.checked = preserve;
-                }
+                p.refresh_items_by_key(items)
+                    .expect("showcase multi-picker rows have unique keys");
             }
             Kind::Remote => match self.fetching {
                 Some(_) => {
@@ -438,13 +439,13 @@ impl PickersPage {
             Kind::Multi => {
                 let mut p = Picker::new(ID.sub("picker.multi"), "Multi select")
                     .width(56)
-                    .multi_select(true);
+                    .multi_select_by_key(true);
                 p.set_searchable(false);
                 p
             }
             Kind::MultiSearch => Picker::new(ID.sub("picker.multisearch"), "Multi search")
                 .width(56)
-                .multi_select(true),
+                .multi_select_by_key(true),
         };
         p.hints = match kind {
             Kind::Quick => {
@@ -455,7 +456,7 @@ impl PickersPage {
             Kind::Commands => "↑↓ Move · Enter Run · Esc Close",
             Kind::Remote => "↑↓ Move · Enter Check out · r Retry · Esc Close",
             Kind::Multi => "Space Toggle · Enter Confirm · Esc Close",
-            Kind::MultiSearch => "Type Filter · Space Toggle · Enter Confirm · Esc Close",
+            Kind::MultiSearch => "Type Filter · Ctrl+Space Toggle · Enter Confirm · Esc Close",
         }
         .to_owned();
         let mut p = self.style(p, anchor);
@@ -496,17 +497,21 @@ impl PickersPage {
                     ));
                 }
             }
-            PickerAction::ChosenMany(indices) => {
-                let labels: Vec<String> = indices
+            PickerAction::ChosenMany(_indices) => {
+                let keys = picker
+                    .as_ref()
+                    .map(|p| p.selected_keys().to_vec())
+                    .unwrap_or_default();
+                let labels: Vec<String> = keys
                     .iter()
-                    .map(|&i| {
-                        ["Row1", "Row2", "Row3", "Row4"]
-                            .get(i)
-                            .map(|s| s.to_string())
-                            .unwrap_or_else(|| format!("#{i}"))
+                    .filter_map(|key| {
+                        MULTI_ROWS
+                            .iter()
+                            .find(|label| ItemKey::text(label) == *key)
+                            .map(|label| (*label).to_owned())
                     })
                     .collect();
-                self.chosen = Some((labels.join(", "), format!("{} selected", indices.len())));
+                self.chosen = Some((labels.join(", "), format!("{} selected", labels.len())));
                 cx.status(format!("ChoseMany: {}", labels.join(", ")));
             }
             PickerAction::Secondary(i) => {

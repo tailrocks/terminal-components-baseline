@@ -1,0 +1,36 @@
+{
+  "task_id": "J01.purge",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j01_purge.rs",
+    "docs/testing/cases/J01.purge.json",
+    "tests/functional/baselines/pre_refactor/J01.purge/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/manager.rs"
+  ],
+  "coverage_rows": [
+    "J01.purge.route",
+    "J01.purge.purge"
+  ],
+  "checkpoints": [
+    "J01.purge.purge.120x40"
+  ],
+  "acceptance": "Purge accepts only the exact instance token.",
+  "status": "queued",
+  "architecture_refactor": false
+}

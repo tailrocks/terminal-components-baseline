@@ -1,0 +1,75 @@
+{
+  "task_id": "S10.accountsusage",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s10_accountsusage.rs",
+    "docs/testing/cases/S10.accountsusage.json",
+    "tests/functional/baselines/pre_refactor/S10.accountsusage/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/accounts_usage.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.accountsusage.route",
+    "sc.accountsusage.playground",
+    "sc.accountsusage.playground.120x40",
+    "sc.accountsusage.playground.80x24",
+    "sc.accountsusage.options",
+    "sc.accountsusage.options.120x40",
+    "sc.accountsusage.options.80x24",
+    "sc.accountsusage.states",
+    "sc.accountsusage.states.120x40",
+    "sc.accountsusage.states.80x24",
+    "sc.accountsusage.specimen.rest",
+    "sc.accountsusage.specimen.hover",
+    "sc.accountsusage.specimen.pressed",
+    "sc.accountsusage.specimen.focused",
+    "sc.accountsusage.specimen.focused_hover",
+    "sc.accountsusage.specimen.selected",
+    "sc.accountsusage.specimen.disabled",
+    "sc.accountsusage.specimen.busy",
+    "sc.accountsusage.specimen.error",
+    "sc.accountsusage.specimen.editing",
+    "sc.accountsusage.specimen.empty",
+    "sc.accountsusage.specimen.loading",
+    "sc.accountsusage.specimen.overflow",
+    "sc.accountsusage.specimen.narrow",
+    "sc.accountsusage.compare-levels",
+    "opt.accountsusage.width",
+    "opt.accountsusage.visual",
+    "opt.accountsusage.offline",
+    "opt.accountsusage.warnings",
+    "sc.accountsusage.accounts"
+  ],
+  "checkpoints": [
+    "sc.accountsusage.playground.120x40",
+    "sc.accountsusage.playground.80x24",
+    "sc.accountsusage.options.120x40",
+    "sc.accountsusage.options.80x24",
+    "sc.accountsusage.states.120x40",
+    "sc.accountsusage.states.80x24",
+    "sc.accountsusage.compare-levels",
+    "sc.accountsusage.accounts"
+  ],
+  "acceptance": "Open Accounts & usage by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

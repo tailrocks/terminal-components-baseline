@@ -1,0 +1,124 @@
+{
+  "task_id": "H02.reload",
+  "cases": [
+    {
+      "case_id": "H02.reload.route",
+      "owner_task": "H02.reload",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla parity-custom-actions at 120×40 in truecolor with reduced motion and HOLLA_NO_HISTORY=1 opens the finder. The launch arguments are the entry. Pasting Custom action configuration selects that row (Results · 1). Enter opens Custom actions for ~/work/team/.holla.toml. Esc returns to the same finder row. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "0ca07c45ce30ddf909057b7ef71b5b106dfb3407",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H02.reload",
+      "entry_path": "launch holla --scenario parity-custom-actions --color truecolor --motion reduced at 120x40; paste Custom action configuration; Enter",
+      "return_path": "Esc returns to Custom action configuration; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H02.reload.reload",
+      "owner_task": "H02.reload",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On Custom actions, r re-reads the current simulated file. The status is Re-reading the configuration files · trust is re-checked by digest. deploy.preview, wipe, and multi stay listed, trust stays Moved, the diagnostics stay, and no activity starts. The open page is captured at 120×40, then at 80×24, and the narrow shot is taken before the terminal returns to 120×40. u revokes the digest: the status is Trust revoked · the file must be reviewed again before anything runs, trust becomes Untrusted, and the same action ids remain. Esc returns to the finder row that opened the page. Ctrl+Q exits 0. A reload failure is not reachable: Go::Reload in src/bin/holla/app.rs re-parses the same bytes and has no error path. TrustStore::save_failure in src/bin/holla/domain/custom.rs is only read from approve, and this scenario never assigns it. The trust confirm control is not pressed, so approve does not call run_item.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "0ca07c45ce30ddf909057b7ef71b5b106dfb3407",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h02_reload/h02_reload_reload_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h02_reload/h02_reload_reload_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Change trust, revoke it, and reload. Use the fixture's reload failure.",
+      "expected_results": "Failure leaves the current action selected and starts nothing.",
+      "forbidden_effects": "Reload runs the action.",
+      "checkpoint_ids": [
+        "H02.reload.reload.120x40",
+        "H02.reload.reload.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-custom-actions",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "9713b55298984a6e60149229c05b71c840e4606d6d1b0c5de51bf3e9ee745aee",
+        "expect_baseline": "missing",
+        "precondition": "H02.reload.reload.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "parity-custom-actions",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "af8657e2e9e6ae4c4bef7ed60a887528a39ce424e32fce883264413b049ed6b1",
+        "expect_baseline": "missing",
+        "precondition": "H02.reload.reload.narrow"
+      }
+    }
+  ]
+}

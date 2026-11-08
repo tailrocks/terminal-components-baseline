@@ -1,0 +1,45 @@
+{
+  "task_id": "X02.suspend",
+  "cases": [
+    {
+      "case_id": "X02.suspend.route",
+      "owner_task": "X02.suspend",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "showcase --page overview opens Overview through parse_page and App::open_page in src/bin/showcase/main.rs. The settled screen is Playground, with Tokens and principles behind every component and the live widget, at 120×40. OverviewPage in src/bin/showcase/pages/overview.rs owns that page. finish sends Ctrl+Q. QuitKeys::classify in src/ui/leave.rs returns LeaveKey::Quit for Ctrl+Q, and the process exits 0. Launch::new leaves the clock off.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7084759798c8d6b8b96396485b5e8fafcc2439db",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X02.suspend",
+      "entry_path": "showcase --page overview --color truecolor --motion reduced",
+      "return_path": "Overview stays up, then finish sends Ctrl+Q and the process exits 0"
+    },
+    {
+      "case_id": "X02.suspend.suspend",
+      "owner_task": "X02.suspend",
+      "application": "cross",
+      "kind": "transition",
+      "result": "BLOCKED",
+      "disposition_reason": "src/runtime.rs job_control installs on_tstp for SIGTSTP, which is 18 on macOS. The handler only stores a flag. The event loop calls TerminalSession::suspend when take_request is set. suspend leaves the terminal, stop_self raises SIGTSTP, and reenter restores the screen. tests/functional/support.rs keeps App.session private, so a case cannot call session.execute. The operation this probe can send is Operation::Key through App::key. The only public Operation::Signal is kill_child with name KILL, which terminates the child, and this case does not call it. tuiscotti-tui-test 0.2.1 Pty::signal accepts INT by writing a Ctrl-C byte, and TERM, KILL, and QUIT by killing the child. TSTP and CONT return unsupported signal. There is no public continue. App::key(\"ctrl+z\") on showcase --page overview at 120×40 left the process running. For 800ms the screen stayed Playground, with Tokens and principles behind every component and the live widget, and without App shell. A following ] still opened Chrome, which showed Brand lockup and App shell › and hid the overview blurb, so the child was not stopped. finish then exited 0. A process that stays in the UI did not suspend, and a killed process is not a resume. No baseline was captured.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "7084759798c8d6b8b96396485b5e8fafcc2439db",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": null,
+      "action_sequence": "Launch showcase --page overview --color truecolor --motion reduced at 120×40 with the clock off. Send ctrl+z through App::key. The screen stays on Overview. Send ]. Chrome opens. finish exits 0. Do not send KILL.",
+      "expected_results": "The screen and modes return only after a real stop and continue. App::key(\"ctrl+z\") leaves the process running on Overview. A following ] still opens Chrome, and finish exits 0. If the API cannot suspend, the row stays BLOCKED with the API evidence.",
+      "forbidden_effects": "A killed process is reported as resume.",
+      "checkpoint_ids": [
+        "X02.suspend.suspend.120x40",
+        "X02.suspend.suspend.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos"
+    }
+  ]
+}

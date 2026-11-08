@@ -1,0 +1,182 @@
+{
+  "task_id": "T01.connections",
+  "cases": [
+    {
+      "case_id": "T01.connections.route",
+      "owner_task": "T01.connections",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no page flag opens the connections screen at 120 by 40. The list shows six saved connections and the Filter connections placeholder, and the detail is Local PostgreSQL at localhost:5432. Ctrl+Q exits.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d8583147e37e5f4ac31da41b507956148aaa01b7",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_connections/t01_connections_route_120x40.tui.pb"
+      ],
+      "route": "T01.connections",
+      "entry_path": "tablepro --color truecolor --motion paused at 120x40, with no --page flag",
+      "return_path": "Ctrl+Q exits from the connections screen",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d4f64b306749c123818ae2180207c7e0bd3d3479c0cd806cdee0b37dfd2a2386",
+        "expect_baseline": "missing",
+        "precondition": "T01.connections.route 120x40"
+      }
+    },
+    {
+      "case_id": "T01.connections.select",
+      "owner_task": "T01.connections",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Down selects Scratch and replaces localhost:5432 with ~/scratch.db. A click selects Analytics, showing analytics.acme.io and warehouse. Filtering to Production, then to no rows, then clearing the search, keeps the Analytics detail. A click on Production then shows prod-db-1.acme.io and acme_prod, and analytics.acme.io is gone.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d8583147e37e5f4ac31da41b507956148aaa01b7",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_connections/t01_connections_select_120x40.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "At 120x40, move down to Scratch, click Analytics, filter to Production, filter until no rows remain, clear the search, then click Production.",
+      "expected_results": "A leaf selection changes the detail host. A filter that leaves the cursor on a group, or leaves no rows, keeps the previous detail. Empty search does not switch the host.",
+      "forbidden_effects": "The Production frame shows analytics.acme.io as the detail host.",
+      "checkpoint_ids": [
+        "T01.connections.select.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "e3587b287943b88c89c732e38ab91e8893fca1cf12c032d24c5646d67bc44d27",
+        "expect_baseline": "missing",
+        "precondition": "T01.connections.select.120x40"
+      }
+    },
+    {
+      "case_id": "T01.connections.status",
+      "owner_task": "T01.connections",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Connecting Analytics with motion paused stays on Opening SSH tunnel and keeps the Analytics detail. With motion reduced, Staging ends at Authentication failed and Analytics ends at Could not reach the host, and neither opens Query 1. Selecting Production shows prod-db-1.acme.io and drops the Analytics failure.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "d8583147e37e5f4ac31da41b507956148aaa01b7",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t01_connections/t01_connections_status_120x40.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "At 120x40 with motion paused, select Analytics and connect, and capture that frame before leaving it. In a separate launch with motion reduced, connect Staging, then Analytics, then select Production.",
+      "expected_results": "The paused frame is Opening SSH tunnel for Analytics. The finished Analytics failure is Could not reach the host. Production does not show that failure.",
+      "forbidden_effects": "The paused frame shows Could not reach the host, Authentication failed, Reconnect, Authenticating, Loading schema, or Query 1. The finished Analytics frame shows Query 1. The Production frame shows Could not reach the host.",
+      "checkpoint_ids": [
+        "T01.connections.status.120x40"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "paused",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "paused"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "b5d29551429856da77f7f96f675b4c26725c5480d1f328f9bcf4dff591ba2110",
+        "expect_baseline": "missing",
+        "precondition": "T01.connections.status.120x40"
+      }
+    }
+  ]
+}

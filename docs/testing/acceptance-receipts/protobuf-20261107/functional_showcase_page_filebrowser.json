@@ -1,0 +1,38 @@
+{
+  "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+  "toolchain": {
+    "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "1.99.1 (5f94df478 2026-08-27)",
+    "nextest": "0.9.148",
+    "tuiscotti_cli": "0.4.0",
+    "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+    "tuiscotti_tui_test": "0.2.1",
+    "mise": "2026.10.25",
+    "velnor_actions": "0.1.70",
+    "host": "aarch64-apple-darwin"
+  },
+  "binary_path": "/private/tmp/tcb-pr2-reference-capture-fec3884-20261106/tests/functional/reference-bins/aarch64-apple-darwin/showcase",
+  "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+  "fixture_args": [
+    "--page",
+    "filebrowser",
+    "--motion",
+    "paused",
+    "--color",
+    "truecolor"
+  ],
+  "env": {
+    "TERM": "xterm-256color",
+    "COLORTERM": "truecolor",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "TZ": "UTC",
+    "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+    "HOLLA_NO_HISTORY": "1"
+  },
+  "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+  "candidate_sha256": "6694a00d3209e8d343c72fc7089df41957e656265427d9c1974e9745df4d2716",
+  "expect_baseline": "missing",
+  "precondition": "settled bd5c3b4a086bc909"
+}

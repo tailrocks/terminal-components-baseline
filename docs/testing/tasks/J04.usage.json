@@ -1,0 +1,37 @@
+{
+  "task_id": "J04.usage",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j04_usage.rs",
+    "docs/testing/cases/J04.usage.json",
+    "tests/functional/baselines/pre_refactor/J04.usage/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/usage.rs",
+    "src/bin/jackin/domain/usage.rs"
+  ],
+  "coverage_rows": [
+    "J04.usage.route",
+    "J04.usage.usage"
+  ],
+  "checkpoints": [
+    "J04.usage.usage.120x40"
+  ],
+  "acceptance": "Usage overview, provider, and account views keep last-good values after a failed refresh.",
+  "status": "queued",
+  "architecture_refactor": false
+}

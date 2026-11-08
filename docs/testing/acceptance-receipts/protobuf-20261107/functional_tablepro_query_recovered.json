@@ -1,0 +1,38 @@
+{
+  "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+  "toolchain": {
+    "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "1.99.1 (5f94df478 2026-08-27)",
+    "nextest": "0.9.148",
+    "tuiscotti_cli": "0.4.0",
+    "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+    "tuiscotti_tui_test": "0.2.1",
+    "mise": "2026.10.25",
+    "velnor_actions": "0.1.70",
+    "host": "aarch64-apple-darwin"
+  },
+  "binary_path": "/private/tmp/tcb-pr2-reference-capture-fec3884-20261106/tests/functional/reference-bins/aarch64-apple-darwin/tablepro",
+  "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+  "fixture_args": [
+    "--connect",
+    "Local PostgreSQL",
+    "--motion",
+    "reduced",
+    "--color",
+    "truecolor"
+  ],
+  "env": {
+    "TERM": "xterm-256color",
+    "COLORTERM": "truecolor",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "TZ": "UTC",
+    "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+    "HOLLA_NO_HISTORY": "1"
+  },
+  "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+  "candidate_sha256": "877452faa9ac81a70fedca44db84deb692a42a4222df331c768c6242fb74edb5",
+  "expect_baseline": "ed9b89699ee57340d92bc47bd37169b523bd39c321cda73d1b55bccf07543c0b",
+  "precondition": "settled 9e93412a9a44c59d"
+}

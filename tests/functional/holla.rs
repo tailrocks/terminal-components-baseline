@@ -1,5 +1,4 @@
-use super::bins::HOLLA;
-use super::support::{App, find, text};
+use super::support::{App, HOLLA, find, text};
 
 fn holla(name: &str, scenario: &str) -> App {
     App::new(
@@ -19,6 +18,24 @@ fn holla(name: &str, scenario: &str) -> App {
     )
 }
 
+fn holla_paused(name: &str) -> App {
+    App::new(
+        name,
+        HOLLA,
+        &[
+            "--scenario",
+            "first-use",
+            "--motion",
+            "paused",
+            "--frame",
+            "40",
+        ],
+        120,
+        40,
+        "truecolor",
+    )
+}
+
 #[test]
 fn holla_finder_search_runs_selected_task_and_records_result() {
     let app = holla("holla-finder-history", "parity-history");
@@ -26,7 +43,6 @@ fn holla_finder_search_runs_selected_task_and_records_result() {
     app.paste("cargo check");
     app.wait_text("▎ cargo check");
     app.key("enter");
-    app.advance_clock(1_500);
     let done = app.wait_screen("successful task result", |s| {
         let t = text(s);
         t.contains("succeeded") && t.contains("exit 0") && t.contains("Finished `dev` profile")
@@ -139,7 +155,6 @@ fn holla_trust_cancel_then_run_uses_the_child_directory() {
     app.key("enter");
     app.wait_text("arguments");
     app.key("ctrl+s");
-    app.advance_clock(2_500);
     let launched = app.wait_screen("frontend test has its own activity and output", |screen| {
         let visible = text(screen);
         visible
@@ -255,13 +270,12 @@ fn holla_browser_hidden_files_preview_scroll_and_bad_path_recovery() {
 
 #[test]
 fn holla_first_use_idle_and_no_results() {
-    let app = holla("holla-first-use", "first-use");
+    let app = holla_paused("holla-first-use-paused");
     app.wait_text("Search actions and resources");
     app.type_text("zzzzqq");
-    let none = app.wait_screen("no results for nonsense query", |s| {
-        text(s).contains("No matches for “zzzzqq”") && !text(s).contains("cargo check")
-    });
-    assert!(!text(&none).contains("Search actions and resources"));
+    let none = app.wait_text("No matches for “zzzzqq”");
+    assert!(text(&none).contains("Esc clears the query"));
+    assert!(!text(&none).contains("cargo check"));
     app.key("escape");
     app.wait_text("Search actions and resources");
     app.visual("functional/holla_first_use_idle");
@@ -270,7 +284,7 @@ fn holla_first_use_idle_and_no_results() {
 
 #[test]
 fn holla_help_overlay() {
-    let app = holla("holla-help", "first-use");
+    let app = holla_paused("holla-help-paused");
     app.wait_text("Search actions and resources");
     app.key("f1");
     app.wait_text("Key reference");
@@ -281,7 +295,8 @@ fn holla_help_overlay() {
 }
 
 #[test]
-fn holla_second_gate_wrong_phrase_stays_then_exact_phrase_executes() {
+fn holla_second_gate_wrong_phrase_stays_then_reconfirm_executes() {
+    const PHRASE: &str = "I UNDERSTAND: REMOVE ALL DOCKER DATA ON devbox";
     let app = holla("holla-second-gate-execute", "docker-cleanup");
     app.wait_text("Clean Docker completely");
     app.key("enter");
@@ -301,15 +316,52 @@ fn holla_second_gate_wrong_phrase_stays_then_exact_phrase_executes() {
         text(s).contains("gate 2 of 2")
     });
     assert!(!text(&still).contains("Cancelled"));
+    assert!(!text(&still).contains("7 succeeded"));
 
     app.key("ctrl+u");
-    app.paste("I UNDERSTAND: REMOVE ALL DOCKER DATA ON devbox");
+    app.paste(PHRASE);
     app.key("enter");
-    let executed = app.wait_screen("exact phrase executes the plan", |s| {
-        !text(s).contains("gate 2 of 2")
-    });
-    assert!(!text(&executed).contains("Cancelled · nothing was executed"));
+    let invalidated = app.wait_text("confirmation invalidated, review again");
+    assert!(text(&invalidated).contains("gate 1 of 2"));
+    assert!(text(&invalidated).contains("tmp-shell-3"));
+    assert!(!text(&invalidated).contains("7 succeeded"));
+    assert!(!text(&invalidated).contains("finished · 7 ok"));
     app.visual("functional/holla_second_gate_execute");
+
+    app.key("right");
+    app.key("enter");
+    app.wait_screen("second gate after the plan change", |s| {
+        text(s).contains("gate 2 of 2")
+    });
+    app.paste(PHRASE);
+    app.key("enter");
+    app.wait_text("Stop running containers");
+    let executed = app.wait_screen_for(
+        "exact phrase finishes the docker plan",
+        std::time::Duration::from_secs(20),
+        |s| {
+            let t = text(s);
+            t.contains("finished · 7 ok") && t.contains("7 succeeded")
+        },
+    );
+    for step in [
+        "Stop running containers",
+        "Remove containers",
+        "Remove unused images",
+        "Prune networks",
+        "Prune volumes",
+        "Prune builder and Buildx c",
+        "Rescan and report",
+    ] {
+        assert!(
+            text(&executed).contains(step),
+            "finished plan shows {step}:\n{}",
+            text(&executed)
+        );
+    }
+    assert!(text(&executed).contains("Docker disk usage"));
+    assert!(!text(&executed).contains("Cancelled · nothing was executed"));
+    assert!(!text(&executed).contains("gate 2 of 2"));
     app.finish();
 }
 
@@ -355,18 +407,31 @@ fn holla_disk_tree_and_plan_review_flows() {
 #[test]
 fn holla_launch_failure_state_is_visible() {
     let app = holla("holla-launch-failure", "launch-failure");
-    app.wait_screen("failed activity state", |s| {
-        let t = text(s).to_lowercase();
-        t.contains("fail") || t.contains("exit") || t.contains("search actions")
-    });
-    app.settle();
+    let failed = app.wait_text("frontend dev · failed");
+    assert!(text(&failed).contains("exit 1"));
+    assert!(text(&failed).contains("frontend dev"));
+    assert!(!text(&failed).contains("Search actions and resources"));
     app.visual("functional/holla_launch_failure");
     app.finish();
 }
 
 #[test]
 fn holla_resize_finder_recovers() {
-    let app = holla("holla-resize", "parity-browser");
+    let app = App::new(
+        "holla-resize",
+        HOLLA,
+        &[
+            "--scenario",
+            "parity-browser",
+            "--motion",
+            "reduced",
+            "--frame",
+            "40",
+        ],
+        120,
+        40,
+        "truecolor",
+    );
     app.wait_text("Search actions and resources");
     app.paste("Browse ~/work/site");
     app.wait_text("▎ Browse ~/work/site");
@@ -374,8 +439,9 @@ fn holla_resize_finder_recovers() {
     app.wait_text("16 entries");
     app.resize(80, 24);
     app.wait_screen("files still listed at 80x24", |s| {
-        s.cols() == 80 && text(s).contains("16 entries")
+        s.cols() == 80 && s.rows() == 24 && text(s).contains("16 entries")
     });
+    app.visual("functional/holla_browser_80x24");
     app.resize(120, 40);
     app.wait_screen("files still listed at 120x40", |s| {
         s.cols() == 120 && text(s).contains("16 entries")

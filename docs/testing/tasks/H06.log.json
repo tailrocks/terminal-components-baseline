@@ -1,0 +1,37 @@
+{
+  "task_id": "H06.log",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h06_log.rs",
+    "docs/testing/cases/H06.log.json",
+    "tests/functional/baselines/pre_refactor/H06.log/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/domain/cleanup.rs",
+    "src/bin/holla/app.rs"
+  ],
+  "coverage_rows": [
+    "H06.log.route",
+    "H06.log.log"
+  ],
+  "checkpoints": [
+    "H06.log.log.120x40"
+  ],
+  "acceptance": "Log failure is visible and recovery does not claim a missing log entry.",
+  "status": "queued",
+  "architecture_refactor": false
+}

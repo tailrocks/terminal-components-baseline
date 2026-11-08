@@ -1,0 +1,38 @@
+{
+  "task_id": "H02.args",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h02_args.rs",
+    "docs/testing/cases/H02.args.json",
+    "tests/functional/baselines/pre_refactor/H02.args/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/review.rs",
+    "src/bin/holla/domain/scripts.rs"
+  ],
+  "coverage_rows": [
+    "H02.args.route",
+    "H02.args.args",
+    "H02.args.scenario.parity-task-sources"
+  ],
+  "checkpoints": [
+    "H02.args.args.120x40"
+  ],
+  "acceptance": "Required, choice, and secret arguments reject invalid input and do not reveal the secret.",
+  "status": "queued",
+  "architecture_refactor": false
+}

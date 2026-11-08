@@ -1,0 +1,142 @@
+{
+  "task_id": "J05.outro",
+  "cases": [
+    {
+      "case_id": "J05.outro.route",
+      "owner_task": "J05.outro",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario outro-last --color truecolor --motion reduced at 120×40. world_for(OutroLast) in src/bin/jackin/domain/fixtures.rs marks jk-9b02 CleanExited, removes its daemon, calls refresh_snapshots and sync_arbiter, and sets arbiter.entered_at_ms to -8_040_000. start in src/bin/jackin/app.rs then Go::Attach attaches jk-7f3a. populated in src/bin/jackin/domain/fixtures.rs gives that instance uncommitted 2 and unpushed 1, so Instance::is_dirty in src/bin/jackin/domain/instance.rs is true. Ctrl+Q calls request_exit in src/bin/jackin/screens/capsule.rs, which opens Unsaved work — quit? and does not open Quit jackin❯?. The radio starts on Start a new agent. Two Downs then Enter, while the radio is focused, call ChoiceDialog::fire_default in src/widgets/choice_dialog.rs and fire the primary Choose button with that row. Row 2 is Quit & keep changes and calls end_instance(false), which is Go::InstanceEnded. That removes the instance and calls leave_construct in src/bin/jackin/app.rs. request_exit in src/bin/jackin/arbiter.rs sees Ok(0). World::now_ms in src/bin/jackin/sim/world.rs is clock.now_ms, and SimClock::new in src/clock.rs starts now_ms at 0, so elapsed is 8040 seconds. format_universe_duration in src/bin/jackin/rain.rs renders 2 hours 14 minutes, and OutroState::caption is You were in the Construct for 2 hours 14 minutes. Reduced render_outro draws that caption and hint Enter Close while tick < REDUCED_HOLD (45). Enter calls OutroState::skip, sets shell.quit, and the process exits 0. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "447f4aee149ff1c436d2be5fef7b68275652fa9f",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J05.outro",
+      "entry_path": "jackin --scenario outro-last --color truecolor --motion reduced at 120x40, then Ctrl+Q, Down, Down, Enter on Quit & keep changes",
+      "return_path": "Enter skips the outro; the process exits 0"
+    },
+    {
+      "case_id": "J05.outro.outro",
+      "owner_task": "J05.outro",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The last-instance exit follows the route. The checkpoints are the first frame that contains You were in the Construct for 2 hours 14 minutes, at 120×40 and then at 80×24 after resize(80, 24), before resize(120, 40) and before Enter. Motion::Reduced in src/bin/jackin/rain.rs keeps OutroPhase::Caption while tick < REDUCED_HOLD, so reduced motion does not skip the outro. Enter calls OutroState::skip and the process exits 0, which is the restored terminal. A separate launch uses --scenario capsule-multi. world_for in src/bin/jackin/domain/fixtures.rs leaves jk-9b02 Running, so after ending jk-7f3a, sync_arbiter in src/bin/jackin/sim/world.rs reports one running instance. request_exit in src/bin/jackin/arbiter.rs returns StillInside { remaining: 1 }. leave_construct in src/bin/jackin/app.rs paints Still inside the Construct · 1 instance remains through plural in src/ui/text.rs. You were in the Construct stays absent through that quit. No baseline is captured for the non-last exit. --frame is not used.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "447f4aee149ff1c436d2be5fef7b68275652fa9f",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j05_outro/j05_outro_outro_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j05_outro/j05_outro_outro_narrow.tui.pb"
+      ],
+      "scenario": [
+        "outro-last"
+      ],
+      "action_sequence": "Exit the last instance and exit when another instance remains.",
+      "expected_results": "Outro appears only for the last instance. The terminal is restored.",
+      "forbidden_effects": "A non-last exit shows Outro.",
+      "checkpoint_ids": [
+        "J05.outro.outro.120x40",
+        "J05.outro.outro.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "outro-last",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "670c655ea36cabec7174300a455110b8ba36b57672d7030b7efb98ba0b7dac7c",
+        "expect_baseline": "missing",
+        "precondition": "J05.outro.outro.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "outro-last",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "1a96ac572b1b6c727390329d307f2de7818a4ffeaa0e00da29b1cfc373532318",
+        "expect_baseline": "missing",
+        "precondition": "J05.outro.outro.narrow"
+      }
+    },
+    {
+      "case_id": "J05.outro.scenario.outro-last",
+      "owner_task": "J05.outro",
+      "application": "jackin",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario outro-last --color truecolor --motion reduced shows the populated fixture on the capsule before quit. populated in src/bin/jackin/domain/fixtures.rs sets the workspace name payments-platform and branch feature/settlement-backoff on jk-7f3a. draw_identity in src/bin/jackin/screens/capsule.rs shows payments-platform › the-architect. The branch string is in the shell pane transcript in src/bin/jackin/sim/pty.rs. The test asserts those two strings and does not assert another scenario's identities.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "447f4aee149ff1c436d2be5fef7b68275652fa9f",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "outro-last",
+      "action_sequence": "Launch the application with scenario outro-last and exercise the surface owned by J05.outro.",
+      "expected_results": "The visible fixture data belongs to outro-last.",
+      "forbidden_effects": "The journey asserts a different scenario's identities."
+    }
+  ]
+}

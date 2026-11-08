@@ -1,0 +1,102 @@
+{
+  "schema": "refactor-coverage.v1",
+  "summary": {
+    "showcase_routes": 1,
+    "showcase_sections": 1,
+    "showcase_section_sizes": 1,
+    "option_rows": 1,
+    "holla_scenarios": 1,
+    "jackin_scenarios": 0,
+    "denominators": {
+      "route": 1,
+      "section": 1,
+      "section-size": 1,
+      "state": 1,
+      "transition": 1,
+      "option": 1,
+      "scenario": 1
+    }
+  },
+  "rows": [
+    {
+      "case_id": "route.overview",
+      "kind": "route",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "Listed in the miniature inventory. The passing checkpoint is the section-size row.",
+      "application": "showcase",
+      "route": "overview",
+      "baseline_id": "functional/one"
+    },
+    {
+      "case_id": "section.overview",
+      "kind": "section",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "Listed in the miniature inventory. The passing checkpoint is the section-size row.",
+      "application": "showcase",
+      "route": "overview",
+      "section_or_overlay": "playground"
+    },
+    {
+      "case_id": "sc.overview.playground.120x40",
+      "kind": "section-size",
+      "result": "PASS",
+      "application": "showcase",
+      "route": "overview",
+      "section_or_overlay": "playground",
+      "checkpoint_ids": [
+        "sc.overview.playground.120x40"
+      ],
+      "baseline_id": "functional/one"
+    },
+    {
+      "case_id": "state.overview.rest",
+      "kind": "state",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "Listed in the miniature inventory. The passing checkpoint is the section-size row.",
+      "application": "showcase",
+      "route": "overview",
+      "section_or_overlay": "states"
+    },
+    {
+      "case_id": "opt.shell.color",
+      "kind": "option",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "Listed in the miniature inventory. The passing checkpoint is the section-size row.",
+      "application": "showcase",
+      "route": "shell"
+    },
+    {
+      "case_id": "transition.overview",
+      "kind": "transition",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "Listed in the miniature inventory. The passing checkpoint is the section-size row.",
+      "application": "showcase",
+      "checkpoint_ids": [
+        "transition.overview.120x40"
+      ]
+    },
+    {
+      "case_id": "scenario.holla.first-use",
+      "kind": "scenario",
+      "result": "NOT_APPLICABLE",
+      "disposition_reason": "Listed in the miniature inventory. The passing checkpoint is the section-size row.",
+      "application": "holla",
+      "scenario": "first-use"
+    }
+  ],
+  "current_tests": [
+    {
+      "test_name": "showcase::miniature",
+      "result": "PASS"
+    }
+  ],
+  "current_baselines": [
+    {
+      "path": "functional/one.tui.pb",
+      "test_id": "functional/one",
+      "active": true,
+      "cols": 120,
+      "rows": 40
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "tuiscotti.cli.v1",
+  "command": "accept",
+  "status": "pass",
+  "test_id": "pre_refactor/j05_launch/j05_launch_stages_120x40",
+  "reason": null,
+  "candidate_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-reference-evidence-20261108/evidence/functional/j05-launch-stages-failure-76587-1794121166527829000-1/reference-candidates/pre_refactor_j05_launch_j05_launch_stages_120x40.tui.pb"
+  },
+  "candidate_sha256": "5965272bfe5e6cc66b3758468b0f33442b17672fe2ef503386a56f7ce8717f72",
+  "baseline_sha256": "5965272bfe5e6cc66b3758468b0f33442b17672fe2ef503386a56f7ce8717f72",
+  "output_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/baselines/pre_refactor/j05_launch/j05_launch_stages_120x40.tui.pb"
+  },
+  "error_code": null
+}

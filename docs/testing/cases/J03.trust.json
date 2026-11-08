@@ -1,0 +1,124 @@
+{
+  "task_id": "J03.trust",
+  "cases": [
+    {
+      "case_id": "J03.trust.route",
+      "owner_task": "J03.trust",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. Space dismisses Stand up, operator only when that line is showing. From the manager, s calls Go::Settings in src/bin/jackin/app.rs. SettingsScreen::enter in src/bin/jackin/screens/settings.rs focuses the tab strip, and the crumb is Settings › global › General. ] four times calls set_tab, and TAB_NAMES is General, Mounts, Environments, Agents, Trust, so the crumb is Settings › global › Trust. render_trust paints the page title Role sources. global() in src/bin/jackin/domain/fixtures.rs stores github.com/chainargos/roles as kind git, trusted true, with 4 roles, and the row paints [✓] trusted. The test does not toggle a row. Esc from the tab strip calls leave. change_count is 0, so Unsaved changes stays closed and the manager returns. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "609c9e8ba1b99c2afd3d701616109c7ea47d9e46",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J03.trust",
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; s; ] four times",
+      "return_path": "Esc from a clean Trust tab returns to the manager; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J03.trust.trust",
+      "owner_task": "J03.trust",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Enter from the tab strip focuses the trust list through body_focus in src/bin/jackin/screens/settings.rs. The first fixture row in global() in src/bin/jackin/domain/fixtures.rs is github.com/chainargos/roles, kind git, trusted true, 4 roles, and render_trust paints [✓] trusted. Space calls trust_key, which flips trusted and sets the status github.com/chainargos/roles · untrusted · save to apply. The row paints a warning • and [ ] untrusted. strip_right paints • 1 change. GlobalConfig::change_count in src/bin/jackin/sim/world.rs counts that one trust row. Nothing is written yet. The checkpoint is that dirty Trust page, before Esc and before Save. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Unsaved changes is absent. Settings saved is absent. The status sentence is timed, so the test asserts it while it is visible and then shoots the stable dirty list. The untrusted mark and • 1 change remain in both captures. Esc from the tab strip calls leave. change_count is 1, so the dialog title is Unsaved changes. The buttons are Cancel, Discard, and Save, and Cancel is focused. Activating Discard sets the status Discarded 1 change in on_layer_result and returns to the manager. Reopening Trust shows github.com/chainargos/roles as [✓] trusted and • 1 change is absent, so Discard did not save. Space toggles the same row to untrusted again. Ctrl+S calls open_preview. The dialog title is Save settings. The Trust fact includes github.com/chainargos/roles → untrusted. The confirm button is Save, not Clean up & save… or Save anyway. Activating Save calls start_save, which schedules GlobalSaved at 900 ms, and the wall clock reaches Settings saved, then the manager. Reopening Trust shows the same source as [ ] untrusted.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "609c9e8ba1b99c2afd3d701616109c7ea47d9e46",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j03_trust/j03_trust_trust_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_trust/j03_trust_trust_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Change a trust value, Discard on one attempt, and Save on another.",
+      "expected_results": "Discard restores the old value. Save reopens with the new value.",
+      "forbidden_effects": "Discard saves the change.",
+      "checkpoint_ids": [
+        "J03.trust.trust.120x40",
+        "J03.trust.trust.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "4c6e53abc6e1f00c8bddeac27a8127cc8ac45cdcf0a9366f9ec9b3b4136b00e6",
+        "expect_baseline": "missing",
+        "precondition": "J03.trust.trust.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "51d6c44d220e66d7dfad840479a585cab06a228af7705eaaecd9fa403412b579",
+        "expect_baseline": "missing",
+        "precondition": "J03.trust.trust.narrow"
+      }
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "task_id": "X01.input",
+  "cases": [
+    {
+      "case_id": "X01.input.route",
+      "owner_task": "X01.input",
+      "application": "cross",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "showcase --page dialogs opens the Dialogs page in src/bin/showcase/pages/dialogs.rs. The Rename task… button opens Dialog::prompt titled Rename task, whose body is the Task name field. Esc dismisses that dialog through Dialog::on_key in src/widgets/dialog.rs, and DialogsPage::result_line records Cancelled. The page keeps Migrate sessions table. finish then sends Ctrl+Q and the process exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "95bc0b2ae240a1b01703932d9b60995bb9da564a",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "X01.input",
+      "entry_path": "showcase --page dialogs --color truecolor --motion reduced, then the Rename task… button",
+      "return_path": "Esc cancels the Rename task dialog back to Dialogs, then finish sends Ctrl+Q and the process exits 0"
+    },
+    {
+      "case_id": "X01.input.input",
+      "owner_task": "X01.input",
+      "application": "cross",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "KeyRouter::paste in src/shell/router.rs gives the paste to layer_paste, and page_paste runs only when no layer claims it. Showcase::layer_paste in src/bin/showcase/app.rs delivers the paste to the top layer. Dialog::on_paste in src/widgets/dialog.rs inserts into the prompt field. The Rename task dialog is that field, opened from src/bin/showcase/pages/dialogs.rs. A bracketed paste of qx01paste replaces the selected name in the field. The page label Task: Migrate sessions table does not gain it, Nothing yet stays, and Renamed to does not appear while the dialog is open. A single-line Editor::paste in src/widgets/edit.rs joins a newline with a space, so alpha and beta paint as alpha beta. A λ paste stays in the field. Pasted q and Ctrl+Q paint as qCtrl+Q, the process keeps running, and that text does not quit or leave the dialog. On macOS, FieldKeys::Emacs in src/core/edit.rs binds ctrl+w to Cut. App::key ctrl+w clears the selected name and does not insert w. The page label keeps Migrate sessions table. KeyboardProtocol in src/core/keyboard.rs reads JUNIE_TUI_KEYBOARD_PROTOCOL. With off, and with the default, a typed z still replaces the selected name. The 120×40 and 80×24 frames are one session after that token paste, then a resize, with no nudge. Both show Rename task and qx01paste, and neither shows Renamed to.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "95bc0b2ae240a1b01703932d9b60995bb9da564a",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/x01_input/x01_input_input_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/x01_input/x01_input_input_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Send a modified key, a bracketed paste, multiline paste, control-like text, and Unicode. Paste while a modal is open.",
+      "expected_results": "The modal receives the paste. The page underneath does not.",
+      "forbidden_effects": "Control-like paste text is executed as a shortcut.",
+      "checkpoint_ids": [
+        "X01.input.input.120x40",
+        "X01.input.input.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "dialogs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "ddc1ecfde2ec844bd9be2fe61fe84457de76cc6cf07b84f78eb1fc172cfbd23f",
+        "expect_baseline": "missing",
+        "precondition": "X01.input.input.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/showcase",
+        "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+        "fixture_args": [
+          "--page",
+          "dialogs",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "d5322187e54423b943b13ebb5c0e942506dfb4e85d93e142548c1bac8758d96a",
+        "expect_baseline": "missing",
+        "precondition": "X01.input.input.narrow"
+      }
+    }
+  ]
+}

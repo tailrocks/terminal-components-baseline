@@ -1,0 +1,75 @@
+{
+  "task_id": "S06.progress",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s06_progress.rs",
+    "docs/testing/cases/S06.progress.json",
+    "tests/functional/baselines/pre_refactor/S06.progress/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/progress.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.progress.route",
+    "sc.progress.playground",
+    "sc.progress.playground.120x40",
+    "sc.progress.playground.80x24",
+    "sc.progress.options",
+    "sc.progress.options.120x40",
+    "sc.progress.options.80x24",
+    "sc.progress.states",
+    "sc.progress.states.120x40",
+    "sc.progress.states.80x24",
+    "sc.progress.specimen.rest",
+    "sc.progress.specimen.hover",
+    "sc.progress.specimen.pressed",
+    "sc.progress.specimen.focused",
+    "sc.progress.specimen.focused_hover",
+    "sc.progress.specimen.selected",
+    "sc.progress.specimen.disabled",
+    "sc.progress.specimen.busy",
+    "sc.progress.specimen.error",
+    "sc.progress.specimen.editing",
+    "sc.progress.specimen.empty",
+    "sc.progress.specimen.loading",
+    "sc.progress.specimen.overflow",
+    "sc.progress.specimen.narrow",
+    "sc.progress.compare-levels",
+    "opt.progress.label_width",
+    "opt.progress.reserve_value",
+    "opt.progress.meter_visual",
+    "opt.progress.stale_style",
+    "sc.progress.progress"
+  ],
+  "checkpoints": [
+    "sc.progress.playground.120x40",
+    "sc.progress.playground.80x24",
+    "sc.progress.options.120x40",
+    "sc.progress.options.80x24",
+    "sc.progress.states.120x40",
+    "sc.progress.states.80x24",
+    "sc.progress.compare-levels",
+    "sc.progress.progress"
+  ],
+  "acceptance": "Open Progress by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

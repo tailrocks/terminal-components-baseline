@@ -1,0 +1,120 @@
+{
+  "task_id": "T05.disconnect",
+  "cases": [
+    {
+      "case_id": "T05.disconnect.route",
+      "owner_task": "T05.disconnect",
+      "application": "tablepro",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "TablePro with no --page flag opens Connections at 120×40 in truecolor with reduced motion. A click on Development shows host dev-db.internal.acme.io and database acme_dev. Connect finishes on Query 1 in catalog acme_prod › public, with placeholder Type SQL and status ✓ Connected to Development, and the screen does not say Loading schema. The disconnect dialog is absent. Ctrl+Q exits 0. The test does not inject focus.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "a64ab162ba4bd2ff1ac80dc70d5c609297c980a9",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "T05.disconnect",
+      "entry_path": "launch tablepro --color truecolor --motion reduced at 120x40 with no --page flag; click Development; click Connect",
+      "return_path": "Ctrl+Q exits"
+    },
+    {
+      "case_id": "T05.disconnect.disconnect",
+      "owner_task": "T05.disconnect",
+      "application": "tablepro",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "On a clean Development session, clicking TablePro opens the app menu (Open tabs…, Disconnect, Quit TablePro). Choosing Disconnect returns to Connections at once, with status Disconnected from Development, and does not open Disconnect from Development?. Reconnecting, Query 1 receives SELECT 't05_disconnect_keep' AS marker. The first Esc dismisses the completion popup over marketing_opt_in. The next Esc leaves the editor and keeps the statement. Choosing Disconnect again opens Disconnect from Development? with body 1 unsaved query will be lost. The actions are ▎Cancel and Disconnect. The open dialog is captured at 120×40, then at 80×24 while it is still up, and only then does the terminal return to 120×40. Enter on Cancel closes the dialog, keeps the statement, and keeps Connected to Development. Choosing Disconnect again, Right, and Enter on Disconnect returns to Connections, shows Disconnected from Development, and the statement is gone. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "a64ab162ba4bd2ff1ac80dc70d5c609297c980a9",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/t05_disconnect/t05_disconnect_disconnect_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/t05_disconnect/t05_disconnect_disconnect_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Disconnect with a clean session, then with dirty SQL or pending table edits. Cancel, then confirm on a later attempt.",
+      "expected_results": "Cancel keeps the connection, the SQL, and the pending values.",
+      "forbidden_effects": "Cancel returns to the connection list.",
+      "checkpoint_ids": [
+        "T05.disconnect.disconnect.120x40",
+        "T05.disconnect.disconnect.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "fc62bfc922179356030bf28b532429140097561bbb78eeacd7ea201314700d38",
+        "expect_baseline": "missing",
+        "precondition": "T05.disconnect.disconnect.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/tablepro",
+        "binary_sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+        "fixture_args": [
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "fd81ed78f6ec56b6a8babcf2389e81260d41688a956fd6dd92f2dd16d383be58",
+        "expect_baseline": "missing",
+        "precondition": "T05.disconnect.disconnect.narrow"
+      }
+    }
+  ]
+}

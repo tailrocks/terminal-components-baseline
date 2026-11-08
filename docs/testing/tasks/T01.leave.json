@@ -1,0 +1,37 @@
+{
+  "task_id": "T01.leave",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/t01_leave.rs",
+    "docs/testing/cases/T01.leave.json",
+    "tests/functional/baselines/pre_refactor/T01.leave/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/tablepro/connections.rs",
+    "src/bin/tablepro/app.rs"
+  ],
+  "coverage_rows": [
+    "T01.leave.route",
+    "T01.leave.guards"
+  ],
+  "checkpoints": [
+    "T01.leave.guards.120x40"
+  ],
+  "acceptance": "Every dirty leave path can Stay, Discard, or Save, and invalid Save from the dialog preserves the original.",
+  "status": "queued",
+  "architecture_refactor": false
+}

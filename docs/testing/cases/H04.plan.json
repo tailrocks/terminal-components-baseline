@@ -1,0 +1,142 @@
+{
+  "task_id": "H04.plan",
+  "cases": [
+    {
+      "case_id": "H04.plan.route",
+      "owner_task": "H04.plan",
+      "application": "holla",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "Holla --scenario upgrade-plan --color truecolor --motion reduced at 120×40 with history off opens the Upgrade everything review on devbox. The intent is upgrade Debian packages and global mise tools on devbox. Esc is ignored by PlanReviewPage::on_key and is shell Back, so the finder returns and Plan discarded · nothing was executed is absent. Pasting Upgrade everything on this system selects that catalog row, which launches Launch::Plan { plan: \"upgrade\" }, and Enter opens the same review. Esc returns to that finder row, still without the discard status. Ctrl+Q exits 0 and does not raise Stop and quit.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "c9678b989cb61bcae0c62434587b602494a06fce",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "H04.plan",
+      "entry_path": "launch holla --scenario upgrade-plan --color truecolor --motion reduced at 120x40; Esc to the finder; paste Upgrade everything on this system; Enter",
+      "return_path": "Esc returns to the finder row; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "H04.plan.plan",
+      "owner_task": "H04.plan",
+      "application": "holla",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "plan_upgrade is Upgrade everything on devbox: 8 steps, 6 required and 2 optional, estimate ~16 s. Space on Preflight is refused with 01 Preflight is required by the plan and cannot be excluded because Plan::toggle returns false when the step is not optional. Space on 06 Upgrade selected mise tools excludes it and blocks 08, which is after steps 3 and 5, so the status is 06 excluded · 08 now blocked. u restores 06. Space on 07 Package cleanup reports 07 excluded · nothing depends on it. Excluding both optional steps still leaves the required steps, so confirm_plan does not return early: Nothing to run: every step is excluded stays absent and the start dialog still opens. Review buttons are Cancel and Confirm plan. x sets Plan discarded · nothing was executed and pops. c calls Go::ConfirmPlan. plan_upgrade never calls .phrase(), so phrase is None and the if p.phrase.is_some() branch that pushes the typed Review gate is not used. The dialog title is Start upgrade everything?, the confirm button is Start plan, and Dialog::facts puts Cancel first. confirm_plan sets initial_focus to actions[0], so Cancel starts focused. There is no ack field and no phrase to type. plan_upgrade never calls .drift(), and gate2_confirmed shows Plan changed · {drift} · confirmation invalidated, review again only when drift is Some. That string, tmp-shell-3, and REMOVE ALL DOCKER DATA stay absent. The open dialog, before Start and before Cancel, is the visual checkpoint at 120×40 and at 80×24. The cancel body wraps onto two rows. After the resize back to 120, Enter on Cancel dismisses it and Upgrade everything started stays absent. A separate start moves to Start plan. The status is Upgrade everything started. Reduced motion keeps the clock running. The mise step fails and the simulator appends exit status 1 when the step fails. PlanTab::status then shows finished · 6 ok · 1 failed. Outdated tools is visible and is not activated. r on the failed step sets fails to false and the status contains 06 retrying · succeeded work is not repeated. retry does not call arm, so $ sudo apt-get update and $ mise upgrade --exclude go each still occur once. ctrl+c opens Cancel the remaining steps? with Keep running focused. Enter leaves the plan running. Confirming Cancel remaining uses Plan::cancel_remaining: 08 Final verification shows cancelled, and the status is Remaining steps cancelled · running steps finish. The tab is not closed with x.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "c9678b989cb61bcae0c62434587b602494a06fce",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/h04_plan/h04_plan_plan_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/h04_plan/h04_plan_plan_narrow.tui.pb"
+      ],
+      "scenario": [
+        "upgrade-plan"
+      ],
+      "action_sequence": "Open the start dialog and shoot it at 120×40 and 80×24, then dismiss it. Refuse a required step, exclude and restore both optional steps, and confirm again. Discard with x, reopen, and start. Wait until the mise step fails, retry it, keep running, then cancel the remaining steps.",
+      "expected_results": "The started plan is the reviewed plan. Cancel on the start dialog does not start it. A succeeded step's command is not repeated after retry. Ready and waiting steps become cancelled; completed steps stay.",
+      "forbidden_effects": "A typed phrase starts this plan. Drift text from the docker-cleanup plan appears. The running plan tab is snapshotted.",
+      "checkpoint_ids": [
+        "H04.plan.plan.120x40",
+        "H04.plan.plan.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "upgrade-plan",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "3565e1702dff4b7fb2aa33ab804e40c7c6901cd8b0776e9267972317a3bccaae",
+        "expect_baseline": "missing",
+        "precondition": "H04.plan.plan.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/holla",
+        "binary_sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+        "fixture_args": [
+          "--scenario",
+          "upgrade-plan",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "80499f0cd4f669e9e33ac3142e844b8279140614409806d1b7da642a84b405d5",
+        "expect_baseline": "missing",
+        "precondition": "H04.plan.plan.narrow"
+      }
+    },
+    {
+      "case_id": "H04.plan.scenario.upgrade-plan",
+      "owner_task": "H04.plan",
+      "application": "holla",
+      "kind": "scenario",
+      "result": "PASS",
+      "disposition_reason": "The painted fixture is upgrade-plan on devbox: the review intent is the Debian and mise upgrade, and the start dialog shows 14 upgradable · 2 security, 4 outdated global tools · go excluded, and required after the kernel upgrade. prod-eu-1, tmp-shell-3, ~/work/repos, REMOVE ALL DOCKER DATA, and Plan changed stay absent. Esc dismisses the dialog and Upgrade everything started stays absent.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "c9678b989cb61bcae0c62434587b602494a06fce",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "scenario": "upgrade-plan",
+      "action_sequence": "Launch holla with scenario upgrade-plan, open the start dialog, then dismiss it.",
+      "expected_results": "The visible fixture data belongs to upgrade-plan: devbox and the Debian/mise upgrade.",
+      "forbidden_effects": "The journey shows prod-eu-1, tmp-shell-3, or parity-git-batch paths."
+    }
+  ]
+}

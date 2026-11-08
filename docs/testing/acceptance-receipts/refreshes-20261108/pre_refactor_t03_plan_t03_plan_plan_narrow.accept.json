@@ -1,0 +1,18 @@
+{
+  "schema": "tuiscotti.cli.v1",
+  "command": "accept",
+  "status": "pass",
+  "test_id": "pre_refactor/t03_plan/t03_plan_plan_narrow",
+  "reason": null,
+  "candidate_path": {
+    "encoding": "utf8",
+    "value": "target/functional/t03-plan-bodies-65050-1794116184090558000-0/reference-candidates/pre_refactor_t03_plan_t03_plan_plan_narrow.tui.pb"
+  },
+  "candidate_sha256": "1d1bead5ba880bdcc29fe3b87d05f93786dbd1e3d69fdb1b2cbf5ca8f2be0a10",
+  "baseline_sha256": "1d1bead5ba880bdcc29fe3b87d05f93786dbd1e3d69fdb1b2cbf5ca8f2be0a10",
+  "output_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/baselines/pre_refactor/t03_plan/t03_plan_plan_narrow.tui.pb"
+  },
+  "error_code": null
+}

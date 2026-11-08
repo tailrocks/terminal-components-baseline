@@ -1,0 +1,83 @@
+{
+  "task_id": "S02.buttons",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s02_buttons.rs",
+    "docs/testing/cases/S02.buttons.json",
+    "tests/functional/baselines/pre_refactor/S02.buttons/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/buttons.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.buttons.route",
+    "sc.buttons.playground",
+    "sc.buttons.playground.120x40",
+    "sc.buttons.playground.80x24",
+    "sc.buttons.options",
+    "sc.buttons.options.120x40",
+    "sc.buttons.options.80x24",
+    "sc.buttons.states",
+    "sc.buttons.states.120x40",
+    "sc.buttons.states.80x24",
+    "sc.buttons.specimen.rest",
+    "sc.buttons.specimen.hover",
+    "sc.buttons.specimen.pressed",
+    "sc.buttons.specimen.focused",
+    "sc.buttons.specimen.focused_hover",
+    "sc.buttons.specimen.selected",
+    "sc.buttons.specimen.disabled",
+    "sc.buttons.specimen.busy",
+    "sc.buttons.specimen.error",
+    "sc.buttons.specimen.editing",
+    "sc.buttons.specimen.empty",
+    "sc.buttons.specimen.loading",
+    "sc.buttons.specimen.overflow",
+    "sc.buttons.specimen.narrow",
+    "sc.buttons.compare-levels",
+    "opt.buttons.focus_visible",
+    "opt.buttons.toolbar_focus",
+    "opt.buttons.row_align",
+    "opt.buttons.row_overflow",
+    "opt.buttons.row_gap",
+    "opt.buttons.row_width",
+    "opt.buttons.row_wrap",
+    "opt.buttons.next_message",
+    "opt.buttons.icon_pad",
+    "opt.buttons.icon_danger",
+    "opt.buttons.label_width",
+    "opt.buttons.focus_mark",
+    "sc.buttons.press"
+  ],
+  "checkpoints": [
+    "sc.buttons.playground.120x40",
+    "sc.buttons.playground.80x24",
+    "sc.buttons.options.120x40",
+    "sc.buttons.options.80x24",
+    "sc.buttons.states.120x40",
+    "sc.buttons.states.80x24",
+    "sc.buttons.compare-levels",
+    "sc.buttons.press"
+  ],
+  "acceptance": "Open Buttons by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

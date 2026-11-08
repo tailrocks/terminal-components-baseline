@@ -1,0 +1,42 @@
+{
+  "task_id": "X03.motion",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "J05.intro",
+    "J05.handoff",
+    "J05.outro",
+    "S06.progress"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x03_motion.rs",
+    "docs/testing/cases/X03.motion.json",
+    "tests/functional/baselines/pre_refactor/X03.motion/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/motion.rs",
+    "src/bin/jackin/rain.rs",
+    "src/bin/showcase/app.rs"
+  ],
+  "coverage_rows": [
+    "X03.motion.route",
+    "X03.motion.motion"
+  ],
+  "checkpoints": [
+    "X03.motion.motion.120x40"
+  ],
+  "acceptance": "Full, reduced, and paused motion are distinct where the app implements them. A transient that cannot be frozen stays BLOCKED.",
+  "status": "queued",
+  "architecture_refactor": false
+}

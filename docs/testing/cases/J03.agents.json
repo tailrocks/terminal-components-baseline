@@ -1,0 +1,124 @@
+{
+  "task_id": "J03.agents",
+  "cases": [
+    {
+      "case_id": "J03.agents.route",
+      "owner_task": "J03.agents",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. Space dismisses Stand up, operator only when that line is showing. From the manager, s is JackinCmd::Settings in src/bin/jackin/app.rs. SettingsScreen::enter in src/bin/jackin/screens/settings.rs focuses the tab strip, and the crumb is Settings › global › General. ] three times calls set_tab. TAB_NAMES is General, Mounts, Environments, Agents, Trust, so the crumb is Settings › global › Agents and draw_agents paints Agent runtime mode. global() in src/bin/jackin/domain/fixtures.rs leaves Claude Code on AuthMode::Sync, Codex on ApiKey, and Kimi Code on Ignore. The test does not press Space, so agents_key does not run. Esc from the tab strip calls leave. change_count is 0, so Unsaved changes stays closed. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "bb83db161430c1d4625fb721d0e7577ba394773d",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J03.agents",
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; s; ]; ]; ]",
+      "return_path": "Esc from a clean Agents tab returns to the manager; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J03.agents.agents",
+      "owner_task": "J03.agents",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "Enter from the tab strip focuses body_focus AGENTS in src/bin/jackin/screens/settings.rs. The cursor starts on Claude Code. global() in src/bin/jackin/domain/fixtures.rs sets Claude Code to AuthMode::Sync. Space calls agents_key, and Agent::auth_modes in src/bin/jackin/domain/agent.rs puts ApiKey next. mode_label in src/bin/jackin/screens/config.rs paints api key. The status is Claude Code · api key · save to apply until StatusLine::expire in src/shell/status.rs clears it. The row keeps a warning • and the mode api key. strip_right paints • 1 change. Settings saved and Save settings are absent, so finish_save has not copied pending into the world. The checkpoint is that dirty Agents page, before Ctrl+S. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Both captures still show api key, the row •, and • 1 change. Ctrl+S calls open_preview. The dialog title is Save settings. The Agents fact is Claude Code → api key. The confirm button is Save. Cancel is focused, and activating Save calls start_save, which schedules GlobalSaved at 900 ms. The wall clock reaches Settings saved, then the manager. Reopening Agents shows Claude Code on api key, Codex still on api key, and Kimi Code still on ignore.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "bb83db161430c1d4625fb721d0e7577ba394773d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_agents/j03_agents_agents_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Cycle Claude Code from sync to api key, save settings, then reopen Agents.",
+      "expected_results": "The dirty count includes the one mode change, and reopen shows it.",
+      "forbidden_effects": "The change is stored before Save.",
+      "checkpoint_ids": [
+        "J03.agents.agents.120x40",
+        "J03.agents.agents.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "5ece6ce2e63e510e1fb6ceb926d9bbe0cd7a159a999e45e89a5d60a3445914e0",
+        "expect_baseline": "missing",
+        "precondition": "J03.agents.agents.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "0b22cdd179d228e70c9de92f30cc84959d4c6e08e12b3c5367618920541b4194",
+        "expect_baseline": "missing",
+        "precondition": "J03.agents.agents.narrow"
+      }
+    }
+  ]
+}

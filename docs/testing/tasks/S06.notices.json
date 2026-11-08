@@ -1,0 +1,79 @@
+{
+  "task_id": "S06.notices",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s06_notices.rs",
+    "docs/testing/cases/S06.notices.json",
+    "tests/functional/baselines/pre_refactor/S06.notices/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/notices.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.notices.route",
+    "sc.notices.playground",
+    "sc.notices.playground.120x40",
+    "sc.notices.playground.80x24",
+    "sc.notices.options",
+    "sc.notices.options.120x40",
+    "sc.notices.options.80x24",
+    "sc.notices.states",
+    "sc.notices.states.120x40",
+    "sc.notices.states.80x24",
+    "sc.notices.specimen.rest",
+    "sc.notices.specimen.hover",
+    "sc.notices.specimen.pressed",
+    "sc.notices.specimen.focused",
+    "sc.notices.specimen.focused_hover",
+    "sc.notices.specimen.selected",
+    "sc.notices.specimen.disabled",
+    "sc.notices.specimen.busy",
+    "sc.notices.specimen.error",
+    "sc.notices.specimen.editing",
+    "sc.notices.specimen.empty",
+    "sc.notices.specimen.loading",
+    "sc.notices.specimen.overflow",
+    "sc.notices.specimen.narrow",
+    "sc.notices.compare-levels",
+    "opt.notices.kind",
+    "opt.notices.detail",
+    "opt.notices.hint",
+    "opt.notices.max_lines",
+    "opt.notices.message_lines",
+    "opt.notices.detail_tone",
+    "opt.notices.mark_cut",
+    "opt.notices.width",
+    "sc.notices.notices"
+  ],
+  "checkpoints": [
+    "sc.notices.playground.120x40",
+    "sc.notices.playground.80x24",
+    "sc.notices.options.120x40",
+    "sc.notices.options.80x24",
+    "sc.notices.states.120x40",
+    "sc.notices.states.80x24",
+    "sc.notices.compare-levels",
+    "sc.notices.notices"
+  ],
+  "acceptance": "Open Notices by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

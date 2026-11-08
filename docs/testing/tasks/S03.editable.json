@@ -1,0 +1,83 @@
+{
+  "task_id": "S03.editable",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s03_editable.rs",
+    "docs/testing/cases/S03.editable.json",
+    "tests/functional/baselines/pre_refactor/S03.editable/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/editable.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.editable.route",
+    "sc.editable.playground",
+    "sc.editable.playground.120x40",
+    "sc.editable.playground.80x24",
+    "sc.editable.options",
+    "sc.editable.options.120x40",
+    "sc.editable.options.80x24",
+    "sc.editable.states",
+    "sc.editable.states.120x40",
+    "sc.editable.states.80x24",
+    "sc.editable.specimen.rest",
+    "sc.editable.specimen.hover",
+    "sc.editable.specimen.pressed",
+    "sc.editable.specimen.focused",
+    "sc.editable.specimen.focused_hover",
+    "sc.editable.specimen.selected",
+    "sc.editable.specimen.disabled",
+    "sc.editable.specimen.busy",
+    "sc.editable.specimen.error",
+    "sc.editable.specimen.editing",
+    "sc.editable.specimen.empty",
+    "sc.editable.specimen.loading",
+    "sc.editable.specimen.overflow",
+    "sc.editable.specimen.narrow",
+    "sc.editable.compare-levels",
+    "opt.editable.rows",
+    "opt.editable.type_ahead",
+    "opt.editable.affordance",
+    "opt.editable.overflow_marks",
+    "opt.editable.numeric",
+    "opt.editable.nav",
+    "opt.editable.keymap",
+    "opt.editable.horizontal",
+    "opt.editable.reveal",
+    "opt.editable.track_click",
+    "opt.editable.blur_action",
+    "opt.editable.header_labels",
+    "sc.editable.cells"
+  ],
+  "checkpoints": [
+    "sc.editable.playground.120x40",
+    "sc.editable.playground.80x24",
+    "sc.editable.options.120x40",
+    "sc.editable.options.80x24",
+    "sc.editable.states.120x40",
+    "sc.editable.states.80x24",
+    "sc.editable.compare-levels",
+    "sc.editable.cells"
+  ],
+  "acceptance": "Open Editable by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

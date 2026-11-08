@@ -1,0 +1,39 @@
+{
+  "task_id": "H05.scan",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h05_scan.rs",
+    "docs/testing/cases/H05.scan.json",
+    "tests/functional/baselines/pre_refactor/H05.scan/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/disk.rs",
+    "src/bin/holla/sim/world.rs"
+  ],
+  "coverage_rows": [
+    "H05.scan.route",
+    "H05.scan.scan",
+    "H05.scan.scenario.parity-disk-scan",
+    "H05.scan.scenario.disk-cleanup"
+  ],
+  "checkpoints": [
+    "H05.scan.scan.120x40"
+  ],
+  "acceptance": "Scan start, progress, partial data, completion, cancellation, cache, and partial errors are distinct.",
+  "status": "queued",
+  "architecture_refactor": false
+}

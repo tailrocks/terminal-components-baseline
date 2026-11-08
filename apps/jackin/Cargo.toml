@@ -32,6 +32,7 @@ clap = { workspace = true, optional = true }
 ratatui = { workspace = true }
 
 [dev-dependencies]
+jackin-console = { path = ".", default-features = false, features = ["demo"] }
 tui-test = { workspace = true }
 tuiscotti-latest = { workspace = true }
 serde_json = { workspace = true }

@@ -1,0 +1,30 @@
+{
+  "task_id": "G04",
+  "wave": "B",
+  "kind": "prerequisite",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G01",
+    "G03"
+  ],
+  "owned_files": [
+    "scripts/check-refactor-coverage.py",
+    "docs/testing/coverage-schema.json"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    "AGENTS.md",
+    "docs/GOAL.md",
+    "docs/functional-testing.md",
+    "tests/functional/support.rs",
+    "src/catalog.rs"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "Controlled fixtures fail when a route, test, checkpoint receipt, or baseline is removed, and when a required result is not PASS. The full repository inventory is not required to pass in G04.",
+  "status": "queued",
+  "architecture_refactor": false
+}

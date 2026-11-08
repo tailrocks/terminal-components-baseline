@@ -1,0 +1,37 @@
+{
+  "task_id": "H05.previews",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/h05_previews.rs",
+    "docs/testing/cases/H05.previews.json",
+    "tests/functional/baselines/pre_refactor/H05.previews/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/holla/screens/files.rs",
+    "src/bin/holla/sim/fs.rs"
+  ],
+  "coverage_rows": [
+    "H05.previews.route",
+    "H05.previews.preview"
+  ],
+  "checkpoints": [
+    "H05.previews.preview.120x40"
+  ],
+  "acceptance": "Each fixture preview type is distinct, and the file list does not move when the preview scrolls.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,40 @@
+{
+  "task_id": "X03.focus",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "S04.lists",
+    "S05.dialogs"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x03_focus.rs",
+    "docs/testing/cases/X03.focus.json",
+    "tests/functional/baselines/pre_refactor/X03.focus/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/theme.rs",
+    "src/ui/ctx.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "X03.focus.route",
+    "X03.focus.focus"
+  ],
+  "checkpoints": [
+    "X03.focus.focus.120x40"
+  ],
+  "acceptance": "Exactly one live focus gutter exists. Covered selection is neutral. Owner cursors use fill.",
+  "status": "queued",
+  "architecture_refactor": false
+}

@@ -1,0 +1,26 @@
+spawn /private/tmp/tcb-pr2-reference-evidence-20261108/tests/functional/reference-bins/aarch64-apple-darwin/showcase ["--page", "quit", "--color", "truecolor", "--motion", "reduced"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible Run export 1e63cbb298bc6047
+checkpoint 001: settled 1e63cbb298bc6047
+mouse Press { x: 59, y: 12, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+mouse Release { x: 59, y: 12, options: MouseOptions { button: Left, alt: false, ctrl: false, shift: false } }
+checkpoint 002: export running a22b0d8c73999918
+key ctrl+q
+checkpoint 003: still running 0983af1d9d0dfdcb
+resize 121x40
+checkpoint 004: nudge 0d88b306e48e9c8a
+resize 120x40
+checkpoint 005: nudge restored caa3b6a55baf77f0
+checkpoint 006: settled 39803ac2e6fc7789
+resize 80x24
+checkpoint 007: guard at 80x24 6ab896763a226607
+resize 81x24
+checkpoint 008: nudge a3ec04c9bb9e3326
+resize 80x24
+checkpoint 009: nudge restored 6a40754c83d88ab6
+checkpoint 010: settled 6ab896763a226607
+resize 120x40
+checkpoint 011: guard back at 120x40 39803ac2e6fc7789
+key right
+checkpoint 012: confirm focused f39944c7e6ed7b0b
+key enter
+observed exit 0

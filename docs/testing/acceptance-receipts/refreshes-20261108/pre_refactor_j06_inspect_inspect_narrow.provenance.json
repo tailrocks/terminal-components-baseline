@@ -1,0 +1,50 @@
+{
+  "schema": "tcb.baseline-refresh-provenance.v1",
+  "test_id": "pre_refactor/j06_inspect/j06_inspect_inspect_narrow",
+  "acceptance": {
+    "expected_baseline_sha256": "11ea78ad464e45710ffcee5ba3c7a397ca2260129ba338214a1028de76fdeac1",
+    "candidate_sha256": "d8e0199cf4131d73fcf7f46f0fba9c3a65cf35f3e2d70c00d214ccb5e038102c",
+    "accepted_baseline_sha256": "d8e0199cf4131d73fcf7f46f0fba9c3a65cf35f3e2d70c00d214ccb5e038102c",
+    "transaction_receipt": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_inspect_inspect_narrow.accept.json"
+  },
+  "previous_baseline": {
+    "sha256": "11ea78ad464e45710ffcee5ba3c7a397ca2260129ba338214a1028de76fdeac1",
+    "preserved_bytes": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j06_inspect/j06_inspect_inspect_narrow.tui.pb",
+    "historical_json_sha256": "8e9cda80b553cce9cd4008c09f938f7232a7a518b8fa94c55c1c3ff989e33387"
+  },
+  "candidate": {
+    "sha256": "d8e0199cf4131d73fcf7f46f0fba9c3a65cf35f3e2d70c00d214ccb5e038102c",
+    "sample": "target/functional/j06-inspect-inspect-27276-1794094693393991000-0/check-artifacts/pre_refactor/j06_inspect/j06_inspect_inspect_narrow/d8e0199cf4131d73fcf7f46f0fba9c3a65cf35f3e2d70c00d214ccb5e038102c/sample.tui.pb",
+    "session": "target/functional/j06-inspect-inspect-27276-1794094693393991000-0/session.json",
+    "actions": "target/functional/j06-inspect-inspect-27276-1794094693393991000-0/actions.txt",
+    "binary": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/debug/jackin-preview",
+    "binary_sha256": "90a087c7c43e84267ad53d1257a75ecfba12e88f24d3769d845c597f0a6ca18b",
+    "fixture_args": [
+      "--scenario",
+      "returning"
+    ],
+    "color": "truecolor",
+    "motion": "reduced",
+    "clock": false,
+    "size": [
+      80,
+      24
+    ],
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
+  },
+  "observed_delta": {
+    "changed_cells": 78,
+    "dimensions": "80x24",
+    "header": "v switches to side-by-side",
+    "footer": "\u2191\u2193 Scroll \u00b7 drag Select \u00b7 y Copy \u00b7 v Show side by side \u00b7 Esc Back to list",
+    "remaining_screen": "matches frozen sample",
+    "semantic_assertions_before_capture": "passed"
+  },
+  "source_context": {
+    "git_head": "9409215747997a473dab138b974c5a718fcf1271",
+    "cargo_lock_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j06_inspect/j06_inspect_inspect_narrow.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_inspect_inspect_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_inspect_inspect_narrow.provenance.json"
+}

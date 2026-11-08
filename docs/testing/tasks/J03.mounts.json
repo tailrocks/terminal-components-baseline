@@ -1,0 +1,38 @@
+{
+  "task_id": "J03.mounts",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "J02.mounts"
+  ],
+  "owned_files": [
+    "tests/functional/cases/j03_mounts.rs",
+    "docs/testing/cases/J03.mounts.json",
+    "tests/functional/baselines/pre_refactor/J03.mounts/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/jackin/screens/settings.rs",
+    "src/bin/jackin/screens/config.rs"
+  ],
+  "coverage_rows": [
+    "J03.mounts.route",
+    "J03.mounts.mounts"
+  ],
+  "checkpoints": [
+    "J03.mounts.mounts.120x40"
+  ],
+  "acceptance": "Global mounts use the shared form and are distinct from workspace mounts.",
+  "status": "queued",
+  "architecture_refactor": false
+}

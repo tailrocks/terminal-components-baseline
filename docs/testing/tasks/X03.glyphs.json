@@ -1,0 +1,38 @@
+{
+  "task_id": "X03.glyphs",
+  "wave": "D",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05",
+    "S02.buttons"
+  ],
+  "owned_files": [
+    "tests/functional/cases/x03_glyphs.rs",
+    "docs/testing/cases/X03.glyphs.json",
+    "tests/functional/baselines/pre_refactor/X03.glyphs/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/theme.rs",
+    "src/cli.rs"
+  ],
+  "coverage_rows": [
+    "X03.glyphs.route",
+    "X03.glyphs.glyphs"
+  ],
+  "checkpoints": [
+    "X03.glyphs.glyphs.120x40"
+  ],
+  "acceptance": "Unicode and ASCII modes render the same component family with their own glyphs.",
+  "status": "queued",
+  "architecture_refactor": false
+}

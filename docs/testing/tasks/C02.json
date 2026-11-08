@@ -1,0 +1,25 @@
+{
+  "task_id": "C02",
+  "wave": "F",
+  "kind": "closing",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "C01"
+  ],
+  "owned_files": [
+    "docs/testing/probe-receipts/"
+  ],
+  "forbidden_shared_edits": [
+    "src/"
+  ],
+  "source_inputs": [
+    ".velnor/config.toml",
+    "docs/ci.md"
+  ],
+  "coverage_rows": [],
+  "checkpoints": [],
+  "acceptance": "Each mandatory sensitivity probe fails at its intended detector and passes after the temporary defect is removed. No probe baseline is accepted.",
+  "status": "queued",
+  "architecture_refactor": false
+}

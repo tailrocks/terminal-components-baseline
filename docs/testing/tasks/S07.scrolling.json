@@ -1,0 +1,82 @@
+{
+  "task_id": "S07.scrolling",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s07_scrolling.rs",
+    "docs/testing/cases/S07.scrolling.json",
+    "tests/functional/baselines/pre_refactor/S07.scrolling/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/scrolling.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.scrolling.route",
+    "sc.scrolling.playground",
+    "sc.scrolling.playground.120x40",
+    "sc.scrolling.playground.80x24",
+    "sc.scrolling.options",
+    "sc.scrolling.options.120x40",
+    "sc.scrolling.options.80x24",
+    "sc.scrolling.states",
+    "sc.scrolling.states.120x40",
+    "sc.scrolling.states.80x24",
+    "sc.scrolling.specimen.rest",
+    "sc.scrolling.specimen.hover",
+    "sc.scrolling.specimen.pressed",
+    "sc.scrolling.specimen.focused",
+    "sc.scrolling.specimen.focused_hover",
+    "sc.scrolling.specimen.selected",
+    "sc.scrolling.specimen.disabled",
+    "sc.scrolling.specimen.busy",
+    "sc.scrolling.specimen.error",
+    "sc.scrolling.specimen.editing",
+    "sc.scrolling.specimen.empty",
+    "sc.scrolling.specimen.loading",
+    "sc.scrolling.specimen.overflow",
+    "sc.scrolling.specimen.narrow",
+    "sc.scrolling.compare-levels",
+    "opt.scrolling.context",
+    "opt.scrolling.follow",
+    "opt.scrolling.track_click",
+    "opt.scrolling.hbar",
+    "opt.scrolling.columns",
+    "opt.scrolling.profile",
+    "opt.scrolling.type_ahead",
+    "opt.scrolling.timeout",
+    "opt.scrolling.precedence",
+    "opt.scrolling.wrap",
+    "opt.scrolling.skip_disabled",
+    "sc.scrolling.scroll"
+  ],
+  "checkpoints": [
+    "sc.scrolling.playground.120x40",
+    "sc.scrolling.playground.80x24",
+    "sc.scrolling.options.120x40",
+    "sc.scrolling.options.80x24",
+    "sc.scrolling.states.120x40",
+    "sc.scrolling.states.80x24",
+    "sc.scrolling.compare-levels",
+    "sc.scrolling.scroll"
+  ],
+  "acceptance": "Open Scrolling by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

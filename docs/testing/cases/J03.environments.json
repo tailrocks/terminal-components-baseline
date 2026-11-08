@@ -1,0 +1,124 @@
+{
+  "task_id": "J03.environments",
+  "cases": [
+    {
+      "case_id": "J03.environments.route",
+      "owner_task": "J03.environments",
+      "application": "jackin",
+      "kind": "route",
+      "result": "PASS",
+      "disposition_reason": "jackin --scenario returning --color truecolor --motion reduced at 120×40. Space dismisses Stand up, operator only when that line is showing. From the manager, s calls Go::Settings in src/bin/jackin/app.rs. Settings opens on General. ] twice calls set_tab in src/bin/jackin/screens/settings.rs. TAB_NAMES is General, Mounts, Environments, Agents, Trust, so the crumb is Settings › global › Environments. global() in src/bin/jackin/domain/fixtures.rs stores GH_TOKEN as a 1Password reference, EDITOR as plain nvim, and CARGO_NET_GIT_FETCH_WITH_CLI as plain true. env_rows in src/bin/jackin/screens/config.rs paints GH_TOKEN with a 16-asterisk mask and an [op] path, and EDITOR as four asterisks with source plain. Esc calls leave in settings.rs. change_count is 0, so Unsaved changes stays closed. Ctrl+Q exits 0.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "ab0f077ce3f2f7c408592f9fe7fa1fbc7c07eb5d",
+      "evidence_paths": [],
+      "baseline_paths": [],
+      "route": "J03.environments",
+      "entry_path": "jackin --scenario returning --color truecolor --motion reduced at 120x40; s; ] ]",
+      "return_path": "Esc from a clean Environments tab returns to the manager; Ctrl+Q exits 0"
+    },
+    {
+      "case_id": "J03.environments.env",
+      "owner_task": "J03.environments",
+      "application": "jackin",
+      "kind": "transition",
+      "result": "PASS",
+      "disposition_reason": "The checkpoint is the open New global environment key form from open_env_form in src/bin/jackin/screens/config.rs, after the key REVIEW_NOTE and the masked plain value are typed, before Save. build_rows skips the Global header because folded is None, so Home lands on GH_TOKEN. a on that row calls open_env_form with role None. Scope::label is global, so the title is New global environment key. n only edits a mount row. The value field is masked with reveal_tail(4) in src/widgets/input.rs, so desk-note-91 stays unpainted and the blurred field shows the tail e-91. The shot is 120×40, then 80×24, and the narrow shot is taken before the terminal returns to 120×40. Settings saved and Save settings are absent on that form. FormDialog::take_result in src/ui/layers.rs closes on FormAction::Save before save_env runs. save_env stores REVIEW_NOTE on the pending global env and paints REVIEW_NOTE · added · save to apply. mask() in src/bin/jackin/domain/workspace.rs paints twelve asterisks. The second form chooses Host environment variable. form_changed shows the Host variable field, and save_env stores EnvValue::HostEnv, painting OPS_REF · added · save to apply. env_rows paints $OPS_REF and host env. Ctrl+S calls open_preview in src/bin/jackin/screens/settings.rs. The dialog title is Save settings and the confirm button is Save. Clean up & save… and Save anyway are absent. Confirm Save calls start_save, which schedules GlobalSaved at 900 ms, and the wall clock reaches Settings saved, then the manager. Reopening Environments shows REVIEW_NOTE masked as plain and OPS_REF as a host reference, plus GH_TOKEN, EDITOR, and CARGO_NET_GIT_FETCH_WITH_CLI. Key e on payments-platform calls Go::Editor. Three ] presses follow TAB_NAMES in src/bin/jackin/screens/editor.rs to Environments. DATABASE_URL from fixtures.rs is still present. REVIEW_NOTE and OPS_REF are absent there.",
+      "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "execution_commit": "ab0f077ce3f2f7c408592f9fe7fa1fbc7c07eb5d",
+      "evidence_paths": [],
+      "baseline_paths": [
+        "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_120x40.tui.pb",
+        "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_narrow.tui.pb"
+      ],
+      "scenario": null,
+      "action_sequence": "Add REVIEW_NOTE as masked plain text, add OPS_REF as a host environment variable, save settings, then open the payments-platform Environments tab.",
+      "expected_results": "Reopen shows the global key and a masked or referenced value.",
+      "forbidden_effects": "Either new key appears in the workspace environment list.",
+      "checkpoint_ids": [
+        "J03.environments.env.120x40",
+        "J03.environments.env.narrow"
+      ],
+      "terminal_columns": 120,
+      "terminal_rows": 40,
+      "color_mode": "truecolor",
+      "motion_mode": "reduced",
+      "client_platform": "macos",
+      "acceptance_receipt": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "fc2db3f1d52cf428547036f28676feae94e450fd2f5bbb607338b9a26b9578e3",
+        "expect_baseline": "missing",
+        "precondition": "J03.environments.env.120x40"
+      },
+      "acceptance_receipt_also": {
+        "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+        "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+        "toolchain": {
+          "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+          "cargo": "1.99.1 (5f94df478 2026-08-27)",
+          "nextest": "0.9.148",
+          "tuiscotti_cli": "0.4.0",
+          "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+          "tuiscotti_tui_test": "0.2.1",
+          "mise": "2026.10.25",
+          "velnor_actions": "0.1.70",
+          "host": "aarch64-apple-darwin"
+        },
+        "binary_path": "/Users/donbeave/Projects/tailrocks/reference-binaries-fffe002/jackin",
+        "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+        "fixture_args": [
+          "--scenario",
+          "returning",
+          "--color",
+          "truecolor",
+          "--motion",
+          "reduced"
+        ],
+        "env": {
+          "TERM": "xterm-256color",
+          "COLORTERM": "truecolor",
+          "LANG": "C.UTF-8",
+          "LC_ALL": "C.UTF-8",
+          "TZ": "UTC",
+          "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+          "HOLLA_NO_HISTORY": "1"
+        },
+        "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+        "candidate_sha256": "add6aeb016e993b56e158fede300090ae83490851445c12486f613225bec49b9",
+        "expect_baseline": "missing",
+        "precondition": "J03.environments.env.narrow"
+      }
+    }
+  ]
+}

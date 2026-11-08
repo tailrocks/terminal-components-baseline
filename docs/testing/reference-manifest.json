@@ -1,0 +1,149 @@
+{
+  "schema": "reference-manifest.v1",
+  "reference_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "branch": "main",
+  "remote_default": "origin/main",
+  "design_interaction_polish": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "main": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "audited_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "visual_baseline_tag": null,
+  "visual_baseline_release": null,
+  "visual_baseline_note": "Remote advertised no tags and no visual-baseline release during this run. The tag was not created.",
+  "lockfile_sha256": "924da8b2cf72e2ed3151abff9c399fc9591e33b840f7002cbbe63cdfa4848091",
+  "toolchain": {
+    "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "1.99.1 (5f94df478 2026-08-27)",
+    "nextest": "0.9.148",
+    "tuiscotti_cli": "0.4.0",
+    "tuiscotti_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+    "tuiscotti_tui_test": "0.2.1",
+    "mise": "2026.10.25",
+    "velnor_actions": "0.1.70",
+    "host": "aarch64-apple-darwin"
+  },
+  "comparator": {
+    "name": "tuiscotti FrozenStore state comparison",
+    "rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+    "fields": [
+      "cols",
+      "rows",
+      "scope",
+      "viewport_origin",
+      "palette",
+      "default_foreground",
+      "default_background",
+      "default_cursor",
+      "cursor.col",
+      "cursor.row",
+      "cursor.in_capture",
+      "cursor.visible",
+      "cursor.shape",
+      "cursor.color",
+      "cursor.blink",
+      "title",
+      "cells"
+    ]
+  },
+  "environment": {
+    "TERM": "xterm-256color",
+    "COLORTERM": "truecolor",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "TZ": "UTC",
+    "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+    "HOLLA_NO_HISTORY": "1"
+  },
+  "binaries": {
+    "showcase": {
+      "path": "tests/functional/reference-bins/aarch64-apple-darwin/showcase",
+      "worktree": "",
+      "sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+      "built_from": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "platforms": {
+        "aarch64-apple-darwin": {
+          "path": "tests/functional/reference-bins/aarch64-apple-darwin/showcase",
+          "sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b"
+        },
+        "x86_64-unknown-linux-gnu": {
+          "path": "tests/functional/reference-bins/x86_64-unknown-linux-gnu/showcase",
+          "sha256": "c6cac7998489a8ed6bb427c126e25a3a8bb1027823809beb578c3cec28bebf4a"
+        }
+      }
+    },
+    "tablepro": {
+      "path": "tests/functional/reference-bins/aarch64-apple-darwin/tablepro",
+      "worktree": "",
+      "sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186",
+      "built_from": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "platforms": {
+        "aarch64-apple-darwin": {
+          "path": "tests/functional/reference-bins/aarch64-apple-darwin/tablepro",
+          "sha256": "018f598830a0c6ea8912660be87dc16cb40b2c2fcd58f1867dab3ea4eb57a186"
+        },
+        "x86_64-unknown-linux-gnu": {
+          "path": "tests/functional/reference-bins/x86_64-unknown-linux-gnu/tablepro",
+          "sha256": "02567d634afa9af1a555c654f917c4cb0636d35016897adad5ed03288f6a28f7"
+        }
+      }
+    },
+    "holla": {
+      "path": "tests/functional/reference-bins/aarch64-apple-darwin/holla",
+      "worktree": "",
+      "sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5",
+      "built_from": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "platforms": {
+        "aarch64-apple-darwin": {
+          "path": "tests/functional/reference-bins/aarch64-apple-darwin/holla",
+          "sha256": "2ea3328773dce7ab202de90711341081aba74f0001d3d05f80ff1812e4bb40d5"
+        },
+        "x86_64-unknown-linux-gnu": {
+          "path": "tests/functional/reference-bins/x86_64-unknown-linux-gnu/holla",
+          "sha256": "7a0c8edd7a5f656ecaa861016f3487d1a88f9e4ba77c11c028baf127e53d6f7a"
+        }
+      }
+    },
+    "jackin": {
+      "path": "tests/functional/reference-bins/aarch64-apple-darwin/jackin",
+      "worktree": "",
+      "sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+      "built_from": "fffe002e936d3621f22f9132144066a1374d5d74",
+      "platforms": {
+        "aarch64-apple-darwin": {
+          "path": "tests/functional/reference-bins/aarch64-apple-darwin/jackin",
+          "sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb"
+        },
+        "x86_64-unknown-linux-gnu": {
+          "path": "tests/functional/reference-bins/x86_64-unknown-linux-gnu/jackin",
+          "sha256": "5fb58a3679191ef0e939d02bed8579519f320fe48d62bac60f78b6f306459f0c"
+        }
+      }
+    }
+  },
+  "existing_suite": {
+    "status": "PASS",
+    "nextest_list_count": 93,
+    "partitions": [
+      {
+        "filter": "test(/holla_/)",
+        "ran": 11,
+        "passed": 11,
+        "skipped": 82,
+        "seconds": 8.259
+      },
+      {
+        "filter": "not test(/holla_/)",
+        "ran": 82,
+        "passed": 82,
+        "skipped": 11,
+        "seconds": 56.631
+      }
+    ],
+    "union": "93 tests, 93 passed, 0 failed. Skips are the other partition."
+  },
+  "acceptance": {
+    "script": "scripts/accept-baseline.py",
+    "candidate_gate_env": "FUNCTIONAL_CANDIDATE_GATE",
+    "session_file": "session.json",
+    "dispositions": "docs/testing/baseline-dispositions.json"
+  }
+}

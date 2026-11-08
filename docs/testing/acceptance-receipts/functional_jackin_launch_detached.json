@@ -1,0 +1,41 @@
+{
+  "source_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+  "toolchain": {
+    "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+    "cargo": "1.99.1 (5f94df478 2026-08-27)",
+    "nextest": "0.9.148",
+    "tuiscotti_cli": "0.4.0",
+    "tuiscotti_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+    "tuiscotti_tui_test": "0.2.1",
+    "mise": "2026.10.25",
+    "velnor_actions": "0.1.70",
+    "host": "aarch64-apple-darwin"
+  },
+  "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/f9591a22a420d4cc784ef809516104161683d0d6f52e5cb84def644b82a51656/reference-bins/jackin",
+  "binary_sha256": "bdb8b27fb925ec10d7511013d0ab82fad4faf5b0c27797aca87eebf2f0802ceb",
+  "fixture_args": [
+    "--scenario",
+    "returning",
+    "--motion",
+    "paused",
+    "--frame",
+    "40",
+    "--color",
+    "truecolor"
+  ],
+  "env": {
+    "TERM": "xterm-256color",
+    "COLORTERM": "truecolor",
+    "LANG": "C.UTF-8",
+    "LC_ALL": "C.UTF-8",
+    "TZ": "UTC",
+    "JUNIE_TUI_CLIENT_PLATFORM": "macos",
+    "HOLLA_NO_HISTORY": "1",
+    "JUNIE_TUI_TEST_CLOCK": "1"
+  },
+  "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+  "candidate_sha256": "997c72b3c87ed68c49a38d33218d200625092bb26f361d84aad976c328ee771c",
+  "expect_baseline": "missing",
+  "precondition": "manager after detaching the live capsule"
+}

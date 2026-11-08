@@ -1,0 +1,79 @@
+{
+  "task_id": "S09.queryworkbench",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s09_queryworkbench.rs",
+    "docs/testing/cases/S09.queryworkbench.json",
+    "tests/functional/baselines/pre_refactor/S09.queryworkbench/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/query_workbench.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.queryworkbench.route",
+    "sc.queryworkbench.playground",
+    "sc.queryworkbench.playground.120x40",
+    "sc.queryworkbench.playground.80x24",
+    "sc.queryworkbench.options",
+    "sc.queryworkbench.options.120x40",
+    "sc.queryworkbench.options.80x24",
+    "sc.queryworkbench.states",
+    "sc.queryworkbench.states.120x40",
+    "sc.queryworkbench.states.80x24",
+    "sc.queryworkbench.specimen.rest",
+    "sc.queryworkbench.specimen.hover",
+    "sc.queryworkbench.specimen.pressed",
+    "sc.queryworkbench.specimen.focused",
+    "sc.queryworkbench.specimen.focused_hover",
+    "sc.queryworkbench.specimen.selected",
+    "sc.queryworkbench.specimen.disabled",
+    "sc.queryworkbench.specimen.busy",
+    "sc.queryworkbench.specimen.error",
+    "sc.queryworkbench.specimen.editing",
+    "sc.queryworkbench.specimen.empty",
+    "sc.queryworkbench.specimen.loading",
+    "sc.queryworkbench.specimen.overflow",
+    "sc.queryworkbench.specimen.narrow",
+    "sc.queryworkbench.compare-levels",
+    "opt.queryworkbench.explorer",
+    "opt.queryworkbench.explorer_width",
+    "opt.queryworkbench.editor_share",
+    "opt.queryworkbench.allow_new",
+    "opt.queryworkbench.close_reveal",
+    "opt.queryworkbench.read_only",
+    "opt.queryworkbench.result",
+    "opt.queryworkbench.env",
+    "sc.queryworkbench.queries"
+  ],
+  "checkpoints": [
+    "sc.queryworkbench.playground.120x40",
+    "sc.queryworkbench.playground.80x24",
+    "sc.queryworkbench.options.120x40",
+    "sc.queryworkbench.options.80x24",
+    "sc.queryworkbench.states.120x40",
+    "sc.queryworkbench.states.80x24",
+    "sc.queryworkbench.compare-levels",
+    "sc.queryworkbench.queries"
+  ],
+  "acceptance": "Open Query workbench by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}

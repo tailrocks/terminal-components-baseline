@@ -1,0 +1,75 @@
+{
+  "task_id": "S10.readonlyreport",
+  "wave": "C",
+  "kind": "leaf",
+  "model": "Grok 4.7",
+  "reference_commit": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "dependencies": [
+    "G03",
+    "G04",
+    "G05"
+  ],
+  "owned_files": [
+    "tests/functional/cases/s10_readonlyreport.rs",
+    "docs/testing/cases/S10.readonlyreport.json",
+    "tests/functional/baselines/pre_refactor/S10.readonlyreport/"
+  ],
+  "forbidden_shared_edits": [
+    "tests/functional/support.rs",
+    "tests/functional/main.rs",
+    "tests/functional/cases/mod.rs",
+    "docs/testing/refactor-coverage.json",
+    "src/"
+  ],
+  "source_inputs": [
+    "src/bin/showcase/pages/readonly_report.rs",
+    "src/bin/showcase/options.rs",
+    "src/bin/showcase/pages/template.rs",
+    "src/ui/specimen.rs"
+  ],
+  "coverage_rows": [
+    "sc.readonlyreport.route",
+    "sc.readonlyreport.playground",
+    "sc.readonlyreport.playground.120x40",
+    "sc.readonlyreport.playground.80x24",
+    "sc.readonlyreport.options",
+    "sc.readonlyreport.options.120x40",
+    "sc.readonlyreport.options.80x24",
+    "sc.readonlyreport.states",
+    "sc.readonlyreport.states.120x40",
+    "sc.readonlyreport.states.80x24",
+    "sc.readonlyreport.specimen.rest",
+    "sc.readonlyreport.specimen.hover",
+    "sc.readonlyreport.specimen.pressed",
+    "sc.readonlyreport.specimen.focused",
+    "sc.readonlyreport.specimen.focused_hover",
+    "sc.readonlyreport.specimen.selected",
+    "sc.readonlyreport.specimen.disabled",
+    "sc.readonlyreport.specimen.busy",
+    "sc.readonlyreport.specimen.error",
+    "sc.readonlyreport.specimen.editing",
+    "sc.readonlyreport.specimen.empty",
+    "sc.readonlyreport.specimen.loading",
+    "sc.readonlyreport.specimen.overflow",
+    "sc.readonlyreport.specimen.narrow",
+    "sc.readonlyreport.compare-levels",
+    "opt.readonlyreport.offline",
+    "opt.readonlyreport.visual",
+    "opt.readonlyreport.notices",
+    "opt.readonlyreport.copyable",
+    "sc.readonlyreport.report"
+  ],
+  "checkpoints": [
+    "sc.readonlyreport.playground.120x40",
+    "sc.readonlyreport.playground.80x24",
+    "sc.readonlyreport.options.120x40",
+    "sc.readonlyreport.options.80x24",
+    "sc.readonlyreport.states.120x40",
+    "sc.readonlyreport.states.80x24",
+    "sc.readonlyreport.compare-levels",
+    "sc.readonlyreport.report"
+  ],
+  "acceptance": "Open Read-only report by --page, by keyboard, and by pointer. Visit Playground, Options, and States at 120x40 and 80x24. Change one visible option and assert its effect. Cover the route interactions. Capture the narrow layout before growing the terminal. Each assertion names the exact visible result and the forbidden effect.",
+  "status": "queued",
+  "architecture_refactor": false
+}
