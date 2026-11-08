@@ -15,7 +15,7 @@ use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{
-    App, HOLLA, JACKIN, Launch, SHOWCASE, TABLEPRO, find_all, row_text, text, try_launch,
+    App, HOLLA, Launch, SHOWCASE, TABLEPRO, find_all, row_text, text, try_launch,
 };
 
 const PAGE: &str = "Quit & leave";
@@ -48,23 +48,6 @@ const QUIT_HOLLA: &str = "Quit holla";
 const STOP_QUIT: &str = "Stop and quit";
 const HOLLA_RUNNING: &str = "still running";
 
-const PAYMENTS: &str = "payments-platform";
-const INFRA: &str = "infra-control-plane";
-const CLEAN_ID: &str = "9b02";
-const DIRTY_ID: &str = "7f3a";
-const CURRENT: &str = "Current directory";
-const WORKSPACES: &str = "Workspaces";
-const CLEAN_IDENTITY: &str = "infra-control-plane › sre";
-const CLEAN_QUIT: &str = "Quit jackin❯?";
-const FORCE_STOP: &str = "force-stops the container";
-const UNSAVED: &str = "Unsaved work — quit?";
-const CLEAN_LIFE: &str = "The final session ended cleanly";
-const NO_OUTRO: &str = "returning to host without the outro";
-const STILL_INSIDE: &str = "Still inside the Construct";
-const LAUNCH_VERSION: &str = "Claude Code v2.1.14";
-const LAUNCH_PANE: &str = "Ctrl+B Pane commands";
-const LAUNCH_TAB: &str = "Claude Code (Work)";
-
 const WIDE_ID: &str = "pre_refactor/x02_exit/x02_exit_exit_120x40";
 const NARROW_ID: &str = "pre_refactor/x02_exit/x02_exit_exit_narrow";
 
@@ -93,10 +76,6 @@ fn open_holla(name: &str, scenario: &str) -> App {
     let app = open_bin(name, HOLLA, &["--scenario", scenario]);
     app.wait_text(HOLLA_QUERY);
     app
-}
-
-fn open_jackin(name: &str, scenario: &str) -> App {
-    open_bin(name, JACKIN, &["--scenario", scenario])
 }
 
 fn require(screen: &TerminalSnapshot, needle: &str) {
@@ -331,62 +310,6 @@ fn table_quit(screen: &TerminalSnapshot) -> bool {
         && !visible.contains("Discard")
 }
 
-fn focused_line(screen: &TerminalSnapshot) -> String {
-    (0..screen.rows())
-        .map(|row| row_text(screen, row))
-        .find(|line| line.contains('▎'))
-        .unwrap_or_default()
-}
-
-fn focused_workspace(screen: &TerminalSnapshot, name: &str) -> bool {
-    let line = focused_line(screen);
-    line.contains(name) && (line.contains('▸') || line.contains('▾')) && !line.contains(CURRENT)
-}
-
-fn select_clean(app: &App) {
-    app.wait_screen("manager", |screen| {
-        text(screen).contains(CURRENT) && text(screen).contains(WORKSPACES)
-    });
-    app.key("down");
-    app.wait_screen("payments-platform", |screen| {
-        focused_workspace(screen, PAYMENTS) && !focused_line(screen).contains('▾')
-    });
-    app.key("down");
-    app.wait_screen("infra-control-plane", |screen| {
-        focused_workspace(screen, INFRA) && !focused_line(screen).contains('▾')
-    });
-    app.key("right");
-    app.wait_screen("expanded infra", |screen| {
-        focused_line(screen).contains('▾')
-            && focused_line(screen).contains(INFRA)
-            && text(screen).contains(CLEAN_ID)
-    });
-    app.key("down");
-    app.wait_screen("clean instance", |screen| {
-        let line = focused_line(screen);
-        line.contains(CLEAN_ID) && line.contains("sre") && !line.contains(DIRTY_ID)
-    });
-}
-
-fn clean_capsule(screen: &TerminalSnapshot) -> bool {
-    let visible = text(screen);
-    visible.contains(CLEAN_IDENTITY)
-        && visible.contains("Ctrl+Q")
-        && !visible.contains(UNSAVED)
-        && !visible.contains(CLEAN_QUIT)
-        && !visible.contains(WORKSPACES)
-}
-
-fn jackin_quit(screen: &TerminalSnapshot) -> bool {
-    let visible = text(screen);
-    visible.contains(CLEAN_QUIT)
-        && visible.contains(FORCE_STOP)
-        && visible.contains("Quit")
-        && visible.contains("Cancel")
-        && !visible.contains(UNSAVED)
-        && !visible.contains(CLEAN_LIFE)
-}
-
 fn showcase_route() {
     let app = open_showcase("x02-exit-route", &["--page", "quit"]);
     let page = app.wait_text(CLASSIFY);
@@ -544,84 +467,6 @@ fn holla_guard() {
     app.finish();
 }
 
-fn jackin_attached() {
-    let app = open_jackin("x02-exit-jackin-attached", "hard-cases");
-    select_clean(&app);
-    app.key("enter");
-    let capsule = app.wait_screen("clean capsule", clean_capsule);
-    require(&capsule, CLEAN_IDENTITY);
-    refuse(&capsule, UNSAVED);
-    app.key("ctrl+q");
-    let dialog = app.wait_screen("quit jackin", jackin_quit);
-    see(
-        &dialog,
-        &[CLEAN_QUIT, FORCE_STOP, "Cancel"],
-        &[UNSAVED, CLEAN_LIFE],
-    );
-    assert!(
-        focused(&dialog, "Cancel"),
-        "Cancel is not focused\n{}",
-        text(&dialog)
-    );
-    confirm_focused(&app, "Quit", "Cancel", jackin_quit);
-    let manager = app.wait_screen("clean instance ended", |screen| {
-        let visible = text(screen);
-        visible.contains(CLEAN_LIFE)
-            && visible.contains(NO_OUTRO)
-            && visible.contains(CLEAN_ID)
-            && !visible.contains(CLEAN_QUIT)
-            && !visible.contains(UNSAVED)
-    });
-    assert!(
-        app.child_running(),
-        "confirming the clean instance quit the process"
-    );
-    see(
-        &manager,
-        &[CLEAN_LIFE, NO_OUTRO, WORKSPACES],
-        &[CLEAN_QUIT, UNSAVED],
-    );
-    app.finish();
-}
-
-fn launch_capsule(screen: &TerminalSnapshot) -> bool {
-    let visible = text(screen);
-    visible.contains(LAUNCH_VERSION)
-        && visible.contains(LAUNCH_PANE)
-        && visible.contains(LAUNCH_TAB)
-        && !visible.contains(CLEAN_QUIT)
-        && !visible.contains(UNSAVED)
-}
-
-fn jackin_launch() {
-    let app = open_jackin("x02-exit-jackin-launch", "launch-running");
-    let capsule = app.wait_screen("launched capsule", launch_capsule);
-    require(&capsule, LAUNCH_VERSION);
-    refuse(&capsule, UNSAVED);
-    app.key("ctrl+q");
-    let dialog = app.wait_screen("quit launched capsule", jackin_quit);
-    see(
-        &dialog,
-        &[CLEAN_QUIT, FORCE_STOP],
-        &[UNSAVED, CLEAN_LIFE, STILL_INSIDE],
-    );
-    confirm_focused(&app, "Quit", "Cancel", jackin_quit);
-    let manager = app.wait_screen("launch returned", |screen| {
-        let visible = text(screen);
-        visible.contains(STILL_INSIDE)
-            && visible.contains(WORKSPACES)
-            && !visible.contains(CLEAN_QUIT)
-            && !visible.contains(LAUNCH_PANE)
-    });
-    assert!(
-        app.child_running(),
-        "confirming the launched capsule quit the process"
-    );
-    require(&manager, STILL_INSIDE);
-    refuse(&manager, CLEAN_QUIT);
-    app.finish();
-}
-
 #[test]
 fn x02_exit_route() {
     showcase_route();
@@ -634,6 +479,4 @@ fn x02_exit_exit() {
     tablepro_guard();
     holla_clean();
     holla_guard();
-    jackin_attached();
-    jackin_launch();
 }

@@ -1,0 +1,45 @@
+{
+  "schema": "tcb.baseline-refresh-provenance.v1",
+  "test_id": "pre_refactor/h01_finder/h01_finder_discovery_120x40",
+  "acceptance": {
+    "command": "tuiscotti accept --json",
+    "expected_baseline_sha256": "95c32b7df58be123f24abd09d95049ef2b1deaea82016209ccb8e718cab62735",
+    "candidate_sha256": "6269f9163db0b69efadf3237f8eace2f64b290c9539f8fe3d7c459ec3c86c6ab",
+    "accepted_baseline_sha256": "6269f9163db0b69efadf3237f8eace2f64b290c9539f8fe3d7c459ec3c86c6ab",
+    "transaction_receipt": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_h01_finder_discovery_120x40.accept.json"
+  },
+  "candidate": {
+    "path": "target/functional/h01-finder-discovery-wide-48008-1794092042180355000-5/check-artifacts/pre_refactor/h01_finder/h01_finder_discovery_120x40/6269f9163db0b69efadf3237f8eace2f64b290c9539f8fe3d7c459ec3c86c6ab/sample.tui.pb",
+    "sha256": "6269f9163db0b69efadf3237f8eace2f64b290c9539f8fe3d7c459ec3c86c6ab",
+    "evidence_directory": "target/functional/h01-finder-discovery-wide-48008-1794092042180355000-5",
+    "session": "target/functional/h01-finder-discovery-wide-48008-1794092042180355000-5/session.json",
+    "binary": "target/functional/h01-finder-discovery-wide-48008-1794092042180355000-5/binary.json",
+    "producer_mode": "candidate",
+    "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/debug/holla",
+    "binary_sha256": "c49303fad89f48ffd08977dd3c45c9bd091db129aa3d3c1603298b94f7abba5b",
+    "fixture_args": ["--scenario", "parity-discovery"],
+    "color": "truecolor",
+    "motion": "reduced",
+    "clock": false,
+    "size": [120, 40],
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
+  },
+  "source_context": {
+    "git_head": "9409215747997a473dab138b974c5a718fcf1271",
+    "working_tree_diff_sha256": "bfca95758fd6ed01411a5f81c5b6b646fd64d7f95e154563f659b3d078548618",
+    "cargo_lock_sha256_at_acceptance": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "source_identity_note": "The session identifies a candidate-mode Holla executable; its binary SHA and args are recorded above. No historical reference binary identity is asserted for this capture."
+  },
+  "history": {
+    "superseded_baseline": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/h01_finder/h01_finder_discovery_120x40.tui.pb",
+    "superseded_baseline_sha256": "95c32b7df58be123f24abd09d95049ef2b1deaea82016209ccb8e718cab62735",
+    "historical_json": "tests/functional/baselines/pre_refactor/h01_finder/h01_finder_discovery_120x40.tui.json",
+    "historical_json_sha256": "ccef80503031a3f794522820160ce9d112051ead9f84dc2e193b915400aa1d2f",
+    "historical_json_modified": false
+  },
+  "selection": {
+    "rule": "Select the exact PB emitted by the passing current-source producer run; no alternative candidate was used.",
+    "behavioral_assertions": "The preceding parity-discovery states, identity preservation, search, empty-result, and selection assertions passed before the final wide visual checkpoint.",
+    "difference": "Current producer's captured wide finder frame differs from the previously accepted historical PB; the frozen JSON remains unchanged."
+  }
+}

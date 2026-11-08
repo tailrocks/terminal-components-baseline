@@ -101,6 +101,32 @@ pub trait FileSource {
     }
 }
 
+impl<S: FileSource + ?Sized> FileSource for Box<S> {
+    fn list(&self, dir: &str) -> Result<Vec<FileEntry>, String> {
+        (**self).list(dir)
+    }
+
+    fn is_dir(&self, path: &str) -> bool {
+        (**self).is_dir(path)
+    }
+
+    fn home(&self) -> Option<String> {
+        (**self).home()
+    }
+
+    fn parent(&self, path: &str) -> Option<String> {
+        (**self).parent(path)
+    }
+
+    fn display(&self, path: &str) -> String {
+        (**self).display(path)
+    }
+
+    fn expand(&self, typed: &str) -> String {
+        (**self).expand(typed)
+    }
+}
+
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct MemorySource {
     pub entries: Vec<FileEntry>,
@@ -979,6 +1005,16 @@ impl FileBrowser {
         y += list_h + 1;
         if let Some(c) = self.checkbox.as_mut() {
             c.render(Rect::new(inner.x - 1, y, inner.width + 1, 1), buf, ctx, bg);
+            if let Some(reason) = c.control.reason() {
+                let x = inner.x - 1 + c.width() + 2;
+                let room = Rect::new(x, y, inner.right().saturating_sub(x), 1);
+                buf.set_string(
+                    x,
+                    y,
+                    crate::ui::reveal::cut(room, &reason.text),
+                    t.muted().bg(bg),
+                );
+            }
             y += 1;
         }
         if let Some(e) = &self.error {

@@ -32,9 +32,7 @@ use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, SnapshotUnderline, TerminalSnapshot};
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{
-    App, HOLLA, JACKIN, Launch, Point, SHOWCASE, TABLEPRO, find_all, text, try_launch,
-};
+use crate::support::{App, HOLLA, Launch, Point, SHOWCASE, TABLEPRO, find_all, text, try_launch};
 
 const BOLD: u8 = 1;
 const DIM: u8 = 2;
@@ -631,21 +629,6 @@ fn holla_tab_rule() {
     kill(&app);
 }
 
-fn jackin_seam() {
-    let app = open(
-        "x03-chrome-jackin",
-        JACKIN,
-        &["--scenario", "hard-cases"],
-        "truecolor",
-    );
-    let before = app.wait_text("Current directory");
-    let (rest, hover, pressed) = seam_states("truecolor", canvas());
-    let run = column_that_thickens(&app, &before, white30(), canvas());
-    let _dragged = cycle_column(&app, &before, run, &rest, &hover, &pressed, false);
-    app.up(Point { x: run.x, y: run.y });
-    kill(&app);
-}
-
 fn green_run(screen: &TerminalSnapshot) -> Option<Run> {
     let runs: Vec<_> = vertical_runs(screen, THUMB, green(), surface())
         .into_iter()
@@ -808,6 +791,5 @@ fn x03_chrome_chrome() {
     showcase_seam("nocolor");
     tablepro_borders();
     holla_tab_rule();
-    jackin_seam();
     checkpoint();
 }

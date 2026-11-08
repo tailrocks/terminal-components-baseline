@@ -844,6 +844,8 @@ fn refresh_copy_and_next_pages() {
     );
 
     click_button(&app, "Disk cleanup");
+    app.move_to(Point { x: 0, y: 0 });
+    app.settle();
     let disk = app.wait_text(DISK);
     see(
         &disk,

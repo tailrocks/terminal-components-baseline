@@ -13,6 +13,14 @@ pub(crate) fn expand_tabs(text: &str) -> std::borrow::Cow<'_, str> {
     }
 }
 
+pub fn capitalize(s: &str) -> String {
+    let mut chars = s.chars();
+    match chars.next() {
+        Some(first) => first.to_uppercase().chain(chars).collect(),
+        None => String::new(),
+    }
+}
+
 pub fn width(s: &str) -> usize {
     UnicodeWidthStr::width(s)
 }

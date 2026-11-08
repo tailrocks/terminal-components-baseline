@@ -405,6 +405,7 @@ fn open_new_mount(app: &App) -> TerminalSnapshot {
 
 fn add_field_notes(app: &App) {
     prepare_mount(app, DEST_FIELD);
+    app.key("enter");
     submit_form(app);
     let added = app.wait_screen("field notes added", |screen| {
         text(screen).contains(ADDED_FIELD) && form_closed(screen)
@@ -472,15 +473,32 @@ fn j02_mounts_mounts() {
 
     open_new_mount(&app);
     set_destination(&app, PLACEHOLDER, DEST_PLATFORM);
+    // Commit the focused text input before clicking Save.
+    app.key("enter");
     submit_form(&app);
-    let missing_host = app.wait_screen("missing host dropped", |screen| {
+    let missing_host = app.wait_screen("missing host rejected", |screen| {
+        text(screen).contains(NEW_MOUNT)
+            && text(screen).contains(NEED_HOST)
+            && text(screen).contains(NOT_CHOSEN)
+    });
+    assert!(
+        !text(&missing_host).contains(ADDED_CONFLICT),
+        "missing host was accepted\n{}",
+        text(&missing_host)
+    );
+    app.key("escape");
+    let missing_host_dismissed = app.wait_screen("missing host cancelled", |screen| {
         form_closed(screen) && errors_dropped(screen) && original_mounts(screen)
     });
     assert!(
-        !text(&missing_host).contains(ADDED_CONFLICT) && !text(&missing_host).contains(NEW_MOUNT),
-        "missing host stored a row\n{}",
-        text(&missing_host)
+        !text(&missing_host_dismissed).contains(ADDED_CONFLICT)
+            && mount_count(&missing_host_dismissed, DEST_PLATFORM) == 1,
+        "invalid mount changed the workspace\n{}",
+        text(&missing_host_dismissed)
     );
+    app.wait_screen("cancel status clears", |screen| {
+        !text(screen).contains("Cancelled · nothing changed")
+    });
 
     prepare_mount(&app, DEST_PLATFORM);
     let wide = app.wait_screen("conflict form", prepared_form);
@@ -497,27 +515,48 @@ fn j02_mounts_mounts() {
         screen.cols() == 120 && screen.rows() == 40 && prepared_form(screen)
     });
 
+    app.key("enter");
     submit_form(&app);
-    let conflict = app.wait_screen("conflict dropped", |screen| {
-        form_closed(screen) && errors_dropped(screen) && original_mounts(screen)
+    let conflict = app.wait_screen("duplicate mount rejected", |screen| {
+        text(screen).contains(NEW_MOUNT) && text(screen).contains("already a mount destinati")
     });
     assert!(
         !text(&conflict).contains(ADDED_CONFLICT),
-        "conflict stored a row\n{}",
+        "conflicting mount was accepted\n{}",
         text(&conflict)
     );
     assert_eq!(mount_count(&conflict, DEST_PLATFORM), 1);
-
-    prepare_mount(&app, DEST_NOTES_BARE);
-    submit_form(&app);
-    let invalid = app.wait_screen("relative destination dropped", |screen| {
+    app.key("escape");
+    let conflict_dismissed = app.wait_screen("duplicate mount cancelled", |screen| {
         form_closed(screen) && errors_dropped(screen) && original_mounts(screen)
     });
+    assert_eq!(mount_count(&conflict_dismissed, DEST_PLATFORM), 1);
+    app.wait_screen("conflict status clears", |screen| {
+        !text(screen).contains("Cancelled · nothing changed")
+    });
+
+    prepare_mount(&app, DEST_NOTES_BARE);
+    app.key("enter");
+    submit_form(&app);
+    let invalid = app.wait_screen("relative destination rejected", |screen| {
+        text(screen).contains(NEW_MOUNT)
+            && text(screen).contains("Destination must be an absolute path")
+    });
     assert!(
-        !text(&invalid).contains(ADDED_BARE) && !mount_listed(&invalid, DEST_NOTES),
-        "invalid path stored\n{}",
+        !text(&invalid).contains(ADDED_BARE)
+            && !mount_listed(&invalid, DEST_NOTES)
+            && mount_count(&invalid, DEST_PLATFORM) == 1,
+        "invalid path changed the mount list\n{}",
         text(&invalid)
     );
+    app.key("escape");
+    let invalid_dismissed = app.wait_screen("relative destination cancelled", |screen| {
+        form_closed(screen) && errors_dropped(screen) && original_mounts(screen)
+    });
+    assert_eq!(mount_count(&invalid_dismissed, DEST_PLATFORM), 1);
+    app.wait_screen("invalid status clears", |screen| {
+        !text(screen).contains("Cancelled · nothing changed")
+    });
 
     add_field_notes(&app);
 
@@ -528,23 +567,33 @@ fn j02_mounts_mounts() {
     });
     require(&editing, DEST_FIELD);
     set_destination(&app, DEST_FIELD, DEST_LIBS);
+    app.key("enter");
     submit_form(&app);
-    let edit_conflict = app.wait_screen("edit conflict dropped", |screen| {
+    app.wait_screen("edit conflict rejected", |screen| {
+        text(screen).contains("Edit mount") && text(screen).contains("already a mount destinati")
+    });
+    app.key("escape");
+    let edit_conflict_dismissed = app.wait_screen("edit conflict cancelled", |screen| {
         form_closed(screen)
             && errors_dropped(screen)
             && mount_listed(screen, DEST_FIELD)
-            && !text(screen).contains("updated")
+            && mount_listed(screen, DEST_LIBS)
     });
     assert!(
-        mount_listed(&edit_conflict, DEST_PLATFORM) && mount_listed(&edit_conflict, DEST_LIBS),
+        mount_listed(&edit_conflict_dismissed, DEST_PLATFORM)
+            && mount_listed(&edit_conflict_dismissed, DEST_LIBS),
         "row after a rejected edit\n{}",
-        text(&edit_conflict)
+        text(&edit_conflict_dismissed)
     );
+    app.wait_screen("edit conflict status clears", |screen| {
+        !text(screen).contains("Cancelled · nothing changed")
+    });
 
     focus_row(&app, DEST_FIELD);
     app.key("enter");
     app.wait_screen("edit again", |screen| text(screen).contains(EDIT_FIELD));
     set_destination(&app, DEST_FIELD, DEST_RENAMED);
+    app.key("enter");
     submit_form(&app);
     let renamed = app.wait_screen("renamed", |screen| text(screen).contains(UPDATED));
     assert!(

@@ -167,7 +167,10 @@ impl<R: From<LayerResult> + 'static, W: ?Sized + 'static> Layer<R, W> for Picker
         let ev = self.pending.take()?;
         let closes = matches!(
             ev,
-            PickerAction::Chosen(_) | PickerAction::ChosenAlt(_) | PickerAction::Cancelled
+            PickerAction::Chosen(_)
+                | PickerAction::ChosenAlt(_)
+                | PickerAction::ChosenMany(_)
+                | PickerAction::Cancelled
         );
         Some(out(LayerResult::Picker(ev), closes))
     }

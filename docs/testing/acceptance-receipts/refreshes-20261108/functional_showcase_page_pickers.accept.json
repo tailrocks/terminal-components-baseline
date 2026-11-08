@@ -1,0 +1,18 @@
+{
+  "schema": "tuiscotti.cli.v1",
+  "command": "accept",
+  "status": "pass",
+  "test_id": "functional/showcase_page_pickers",
+  "reason": null,
+  "candidate_path": {
+    "encoding": "utf8",
+    "value": "target/functional/showcase-page-pickers-19892-1794099545892823000-0/check-artifacts/functional/showcase_page_pickers/e8d3191b9b24bdabb2ab2c2442ae59b628b7a9075f3d0e5ccd4d930f4d8687c4/sample.tui.pb"
+  },
+  "candidate_sha256": "e8d3191b9b24bdabb2ab2c2442ae59b628b7a9075f3d0e5ccd4d930f4d8687c4",
+  "baseline_sha256": "e8d3191b9b24bdabb2ab2c2442ae59b628b7a9075f3d0e5ccd4d930f4d8687c4",
+  "output_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/baselines/functional/showcase_page_pickers.tui.pb"
+  },
+  "error_code": null
+}

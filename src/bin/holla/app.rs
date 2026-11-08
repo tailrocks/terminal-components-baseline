@@ -178,7 +178,7 @@ impl App {
         for _ in 0..frame {
             app.on_tick();
         }
-        app.world.clock.running = running;
+        app.world.clock.running = running && !app.shell.test_requests;
         app
     }
 
@@ -1387,6 +1387,10 @@ impl App {
             match r {
                 Request::Status(s, tone) => self.set_status(&s, tone),
                 Request::StatusAs(s, kind) => self.set_status(&s, kind.tone()),
+                Request::Sticky(s) => {
+                    let now = self.world.clock.now();
+                    self.shell.status.sticky_at(s, now);
+                }
                 Request::Progress(s, job) => {
                     let now = self.world.clock.now();
                     self.shell.status.progress_at(job, s, now);
@@ -2405,7 +2409,7 @@ impl App {
             .write(false);
         let copied = clipboard.copy(&value);
         match copied {
-            shell::Copied::Copied { .. } => {
+            shell::Copied::Copied { .. } | shell::Copied::Requested { .. } => {
                 let shown = truncate(&value.replace('\n', " · "), 40);
                 self.world.clipboard = Some(value);
                 self.clipboard_gen += 1;
@@ -2999,6 +3003,14 @@ impl shell::App for App {
     }
     fn on_input(&mut self, input: Input) -> Outcome {
         self.handle_input(input)
+    }
+    fn advance_clock(&mut self, ms: u64) -> Option<Outcome> {
+        Some(junie_tui::clock::run_step(
+            self,
+            |a| &mut a.world.clock,
+            ms,
+            Self::on_tick,
+        ))
     }
     fn on_blur(&mut self, ch: FocusChange) -> Outcome {
         self.blur_all(ch)

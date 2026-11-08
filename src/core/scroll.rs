@@ -1,3 +1,5 @@
+use std::cell::Cell;
+
 use ratatui::layout::{Position, Rect};
 
 use crate::core::hit::{Axis, Bar};
@@ -295,6 +297,12 @@ pub enum TrackClick {
     Page,
 }
 
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+struct AppPolicy {
+    click: TrackClick,
+    hscroll: HScroll,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HScroll {
     pub enabled: bool,
@@ -358,8 +366,6 @@ pub struct ScrollPane {
 
     pub columns: bool,
 
-    v_click: TrackClick,
-
     v_track: Rect,
 
     h_track: Rect,
@@ -373,6 +379,8 @@ pub struct ScrollPane {
     col_avail: u16,
 
     col_reveal: Option<(usize, usize)>,
+
+    app: Cell<AppPolicy>,
 }
 
 impl std::ops::Deref for ScrollPane {
@@ -442,13 +450,21 @@ impl ScrollPane {
     }
 
     pub fn begin(&mut self, app_click: TrackClick) {
-        self.v_click = self.track_click.unwrap_or(app_click);
+        self.note_policy(app_click, self.app_hscroll());
         self.v_track = Rect::ZERO;
         self.h_track = Rect::ZERO;
     }
 
+    pub fn note_policy(&self, click: TrackClick, hscroll: HScroll) {
+        self.app.set(AppPolicy { click, hscroll });
+    }
+
+    pub fn app_hscroll(&self) -> HScroll {
+        self.app.get().hscroll
+    }
+
     pub fn v_click(&self) -> TrackClick {
-        self.v_click
+        self.track_click.unwrap_or(self.app.get().click)
     }
 
     pub fn v_track(&self) -> Rect {
@@ -595,7 +611,7 @@ impl ScrollPane {
 
     pub fn press_on(&mut self, axis: Axis, pos: Position) -> Response<()> {
         let (track, click) = match axis {
-            Axis::Vertical => (self.v_track, self.v_click),
+            Axis::Vertical => (self.v_track, self.v_click()),
             Axis::Horizontal => (self.h_track, self.h_cfg.track_click),
         };
         if track.is_empty() {
@@ -663,6 +679,7 @@ impl ScrollPane {
     }
 
     pub fn bar(&mut self, bar: &Bar, pos: Position, pressed: bool) -> Response<()> {
+        self.set_track(bar.owner, bar.axis, bar.track);
         if pressed {
             self.press_on(bar.axis, pos)
         } else {

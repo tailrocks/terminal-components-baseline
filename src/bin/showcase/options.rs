@@ -278,6 +278,11 @@ pub fn page_options(page: PageId) -> &'static [Opt] {
         PageId::Scrolling => SCROLLING,
         PageId::Diff => DIFF,
         PageId::Terminal => TERMINAL,
+        PageId::TerminalPane => TERMINAL_PANE,
+        PageId::TerminalViewport => TERMINAL_VIEWPORT,
+        PageId::FixedControls => FIXED_CONTROLS,
+        PageId::ListDetail => LIST_DETAIL,
+        PageId::FixedDialogs => FIXED_DIALOGS,
         PageId::QueryWorkbench => QUERY_WORKBENCH,
         PageId::Connections => CONNECTIONS,
         PageId::Finder => FINDER,
@@ -1726,12 +1731,60 @@ pub static TERMINAL: &[Opt] = &[
     ),
 ];
 
+pub static FIXED_CONTROLS: &[Opt] = &[
+    Opt::new("fixedcontrols.state", "Controls", &["fixed", "live"]),
+    Opt::new("fixedcontrols.status", "Reason status", &["5 s", "sticky"]),
+];
+
+pub static FIXED_DIALOGS: &[Opt] = &[Opt::new(
+    "fixeddialogs.state",
+    "Choices",
+    &["fixed", "live"],
+)];
+
+pub static LIST_DETAIL: &[Opt] = &[
+    Opt::new("listdetail.data", "Jobs", &["five", "none"]),
+    Opt::new("listdetail.actions", "Actions", &["shown", "hidden"]),
+];
+
+pub static TERMINAL_PANE: &[Opt] = &[
+    Opt::new(
+        "terminalpane.fixture",
+        "Fixture",
+        &["session", "fullscreen", "split", "midstream"],
+    ),
+    Opt::new("terminalpane.size", "Size", &["80x24", "40x12", "20x6"]).default(1),
+    Opt::new("terminalpane.colour", "Colour", OFF_ON).default(1),
+    Opt::new("terminalpane.focused", "Focused", OFF_ON).default(1),
+    Opt::new(
+        "terminalpane.replay",
+        "Replay start",
+        &[
+            "stream start",
+            "inside a CSI sequence",
+            "inside an OSC sequence",
+            "inside a UTF-8 character",
+        ],
+    ),
+];
+
+pub static TERMINAL_VIEWPORT: &[Opt] = &[
+    Opt::new(
+        "terminalviewport.fixture",
+        "Fixture",
+        &["history", "fullscreen", "empty"],
+    ),
+    Opt::new(
+        "terminalviewport.pointer_select",
+        "Pointer selects",
+        &["default", "no-drag", "no-word", "no-line", "by-word", "off"],
+    ),
+];
+
 pub fn all() -> impl Iterator<Item = &'static Opt> {
-    SHELL.iter().chain(
-        crate::app::NAV_ENTRIES
-            .iter()
-            .flat_map(|e| page_options(e.id).iter()),
-    )
+    SHELL
+        .iter()
+        .chain(crate::app::entries().flat_map(|e| page_options(e.id).iter()))
 }
 
 pub fn find(key: &str) -> Option<&'static Opt> {

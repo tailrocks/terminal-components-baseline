@@ -1,3 +1,6 @@
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+
 use crate::clock::Moment;
 use crate::core::event::{Input, MouseKind};
 use crate::theme::Tone;
@@ -10,6 +13,8 @@ struct Message<P> {
     payload: P,
 
     job: Option<JobKey>,
+
+    sticky: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -25,13 +30,23 @@ impl JobKey {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone)]
 pub struct StatusLine<P = ()> {
     message: Option<Message<P>>,
     ttl_ms: u64,
 
     now: Moment,
+
+    revision: u64,
 }
+
+impl<P: PartialEq> PartialEq for StatusLine<P> {
+    fn eq(&self, other: &Self) -> bool {
+        self.message == other.message && self.ttl_ms == other.ttl_ms && self.now == other.now
+    }
+}
+
+impl<P: Eq> Eq for StatusLine<P> {}
 
 impl<P> Default for StatusLine<P> {
     fn default() -> Self {
@@ -47,7 +62,12 @@ impl<P> StatusLine<P> {
             message: None,
             ttl_ms: Self::DEFAULT_TTL_MS,
             now: Moment::ZERO,
+            revision: 0,
         }
+    }
+
+    pub const fn revision(&self) -> u64 {
+        self.revision
     }
 
     pub const fn ttl_ms(mut self, ms: u64) -> Self {
@@ -59,20 +79,15 @@ impl<P> StatusLine<P> {
         self.now = self.now.max(now);
     }
 
-    pub fn set_with(&mut self, text: impl Into<String>, tone: Tone, payload: P) {
-        self.message = Some(Message {
-            text: text.into(),
-            tone,
-            at: self.now,
-            payload,
-            job: None,
-        });
+    pub fn is_sticky(&self) -> bool {
+        self.message.as_ref().is_some_and(|m| m.sticky)
     }
 
     pub fn end_job(&mut self, job: JobKey) -> bool {
         let showing = self.message.as_ref().is_some_and(|m| m.job == Some(job));
         if showing {
             self.message = None;
+            self.revision += 1;
         }
         showing
     }
@@ -81,13 +96,10 @@ impl<P> StatusLine<P> {
         self.message.as_ref().and_then(|m| m.job)
     }
 
-    pub fn set_with_at(&mut self, text: impl Into<String>, tone: Tone, payload: P, now: Moment) {
-        self.observe(now);
-        self.set_with(text, tone, payload)
-    }
-
     pub fn clear(&mut self) -> bool {
-        self.message.take().is_some()
+        let cleared = self.message.take().is_some();
+        self.revision += u64::from(cleared);
+        cleared
     }
 
     pub fn get(&self) -> Option<(&str, Tone)> {
@@ -125,9 +137,10 @@ impl<P> StatusLine<P> {
         let due = self
             .message
             .as_ref()
-            .is_some_and(|m| m.tone != Tone::Error && now.since(m.at) >= self.ttl_ms);
+            .is_some_and(|m| m.tone != Tone::Error && !m.sticky && now.since(m.at) >= self.ttl_ms);
         if due {
             self.message = None;
+            self.revision += 1;
         }
         due
     }
@@ -139,17 +152,49 @@ impl<P> StatusLine<P> {
                 m.kind,
                 MouseKind::Down | MouseKind::Secondary | MouseKind::Middle
             ),
-            Input::Tick | Input::Resize(..) => false,
+            Input::Tick | Input::Resize(..) | Input::External(_) => false,
         };
-        if acts && self.is_error() {
+        if acts && (self.is_error() || self.is_sticky()) {
             self.message = None;
+            self.revision += 1;
             return true;
         }
         false
     }
 }
 
-impl<P: Default> StatusLine<P> {
+impl<P: PartialEq> StatusLine<P> {
+    pub fn set_with(&mut self, text: impl Into<String>, tone: Tone, payload: P) {
+        let text = text.into();
+        let shown = self
+            .message
+            .as_ref()
+            .is_some_and(|m| m.text == text && m.tone == tone && m.payload == payload);
+        self.revision += u64::from(!shown);
+        self.message = Some(Message {
+            text,
+            tone,
+            at: self.now,
+            payload,
+            job: None,
+            sticky: false,
+        });
+    }
+
+    pub fn set_sticky_with(&mut self, text: impl Into<String>, payload: P) {
+        self.set_with(text, Tone::Secondary, payload);
+        if let Some(m) = self.message.as_mut() {
+            m.sticky = true;
+        }
+    }
+
+    pub fn set_with_at(&mut self, text: impl Into<String>, tone: Tone, payload: P, now: Moment) {
+        self.observe(now);
+        self.set_with(text, tone, payload)
+    }
+}
+
+impl<P: Default + PartialEq> StatusLine<P> {
     pub fn set(&mut self, text: impl Into<String>, tone: Tone) {
         self.set_with(text, tone, P::default())
     }
@@ -157,6 +202,15 @@ impl<P: Default> StatusLine<P> {
     pub fn set_at(&mut self, text: impl Into<String>, tone: Tone, now: Moment) {
         self.observe(now);
         self.set(text, tone)
+    }
+
+    pub fn sticky(&mut self, text: impl Into<String>) {
+        self.set_sticky_with(text, P::default())
+    }
+
+    pub fn sticky_at(&mut self, text: impl Into<String>, now: Moment) {
+        self.observe(now);
+        self.sticky(text)
     }
 
     pub fn error(&mut self, text: impl Into<String>) {
@@ -173,5 +227,18 @@ impl<P: Default> StatusLine<P> {
     pub fn progress_at(&mut self, job: JobKey, text: impl Into<String>, now: Moment) {
         self.observe(now);
         self.progress(job, text)
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct StopHandle(Arc<AtomicBool>);
+
+impl StopHandle {
+    pub fn stop(&self) {
+        self.0.store(true, Ordering::SeqCst);
+    }
+
+    pub fn is_stopped(&self) -> bool {
+        self.0.load(Ordering::SeqCst)
     }
 }

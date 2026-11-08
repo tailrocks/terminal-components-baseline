@@ -275,6 +275,12 @@ pub struct PropsList {
     pub sheet: Sheet,
 
     pub keymap: KeyMap<PropsCmd>,
+
+    /// Whether a prop marked `Prop::wrap` shows on as many rows as its value
+    /// needs. Off, the value stays on its row and the reveal shows the rest.
+    wrapping: bool,
+
+    reveal_cursor: bool,
 }
 
 impl std::ops::Deref for PropsList {
@@ -346,7 +352,14 @@ impl PropsList {
             scrollbar_gap: scrollbar::GAP,
             sheet: Sheet::default(),
             keymap: PropsCmd::default_keymap(),
+            wrapping: false,
+            reveal_cursor: false,
         }
+    }
+
+    pub(crate) fn wrapping(mut self) -> Self {
+        self.wrapping = true;
+        self
     }
 
     pub fn track_click(mut self, click: crate::core::scroll::TrackClick) -> Self {
@@ -390,6 +403,7 @@ impl PropsList {
     fn set_cursor(&mut self, i: usize) {
         self.core.cursor = i.min(self.props.len().saturating_sub(1));
         self.core.scroll.ensure_visible(self.core.cursor);
+        self.reveal_cursor = true;
     }
 
     pub fn on_key(&mut self, key: &Key) -> (Outcome, Option<PropsAction>) {
@@ -474,6 +488,78 @@ impl PropsList {
         }
     }
 
+    fn value_width(geo: Geometry, x: u16, p: &Prop) -> usize {
+        let vx = x + 2 + geo.label_w;
+        geo.value_right
+            .saturating_sub(vx + Self::hint_width(p, p.copyable)) as usize
+    }
+
+    /// The lines of a prop that wraps; `None` for one that stays on a row.
+    fn wrapped_lines(&self, p: &Prop, geo: Geometry, x: u16) -> Option<Vec<String>> {
+        (self.wrapping && p.wrap)
+            .then(|| crate::ui::text::wrap(&p.value, Self::value_width(geo, x, p).max(4)))
+    }
+
+    /// The rows the wrapping props take beyond their first.
+    fn wrap_extra(&self, geo: Geometry, x: u16) -> usize {
+        self.props
+            .iter()
+            .filter_map(|p| self.wrapped_lines(p, geo, x))
+            .map(|lines| lines.len().saturating_sub(1))
+            .sum()
+    }
+
+    fn rows_of(&self, geo: Geometry, x: u16, i: usize) -> usize {
+        self.wrapped_lines(&self.props[i], geo, x)
+            .map_or(1, |lines| lines.len().max(1))
+    }
+
+    /// How many props from `offset` fit in `height` rows, each at the rows it
+    /// takes. Props scrolled out of the window cost nothing.
+    fn props_fitting(&self, geo: Geometry, x: u16, offset: usize, height: usize) -> usize {
+        let mut rows = 0;
+        let mut fitting = 0;
+        for i in offset..self.props.len() {
+            let h = self.rows_of(geo, x, i);
+            if fitting > 0 && rows + h > height {
+                break;
+            }
+            rows += h;
+            fitting += 1;
+        }
+        fitting.max(1)
+    }
+
+    fn first_showing(&self, geo: Geometry, x: u16, cursor: usize, height: usize) -> usize {
+        let mut rows = 0;
+        let mut first = cursor;
+        for i in (0..=cursor).rev() {
+            rows += self.rows_of(geo, x, i);
+            if i != cursor && rows > height {
+                break;
+            }
+            first = i;
+        }
+        first
+    }
+
+    fn fit_viewport(&mut self, geo: Geometry, area: Rect, reserved: usize, reveal: bool) {
+        let height = (area.height as usize).saturating_sub(reserved).max(1);
+        if reveal && self.core.cursor < self.props.len() {
+            let first = self.first_showing(geo, area.x, self.core.cursor, height);
+            self.core.scroll.offset = self.core.scroll.offset.max(first);
+        }
+        let fitting = self.props_fitting(geo, area.x, self.core.scroll.offset, height);
+        self.core.scroll.set_viewport(fitting);
+    }
+
+    /// The height that shows every prop whole in a list `width` columns wide.
+    pub(crate) fn height_at(&self, width: u16) -> u16 {
+        let area = Rect::new(0, 0, width, 1);
+        let geo = self.geometry(area, area);
+        (self.props.len() + self.wrap_extra(geo, 0)) as u16
+    }
+
     fn inline_rows(
         &mut self,
         ctx: &mut RenderCtx,
@@ -481,6 +567,9 @@ impl PropsList {
         room: u16,
     ) -> Option<Vec<RevealLine>> {
         let p = self.props.get(self.core.cursor)?;
+        if self.wrapping && p.wrap {
+            return None;
+        }
         let vx = self.area.x + 2 + geo.label_w;
         let vw = geo
             .value_right
@@ -501,6 +590,7 @@ impl PropsList {
         let focused = ctx.interaction.focused(self.id);
         self.core.reveal.begin(ctx);
         self.core.scroll.set_content(self.props.len());
+        let offset = self.core.scroll.offset;
         self.core.scroll.set_viewport(area.height as usize);
         let n = self.props.len();
 
@@ -513,18 +603,34 @@ impl PropsList {
         {
             return;
         }
+        let reveal = std::mem::take(&mut self.reveal_cursor);
         let mut has_sb = self.core.scroll.overflows();
         let mut sp = scrollbar::split(area, has_sb, self.scrollbar_gap);
         let mut geo = self.geometry(sp.body, sp.content);
+        let wraps = self.wrap_extra(geo, area.x) > 0;
+        if wraps {
+            self.core.scroll.offset = offset;
+            self.fit_viewport(geo, area, 0, reveal);
+            if self.core.scroll.overflows() != has_sb {
+                has_sb = self.core.scroll.overflows();
+                sp = scrollbar::split(area, has_sb, self.scrollbar_gap);
+                geo = self.geometry(sp.body, sp.content);
+                self.fit_viewport(geo, area, 0, reveal);
+            }
+        }
 
         let mut expanded = None;
         if focused {
             expanded = self.inline_rows(ctx, geo, area.height);
             if let Some(rows) = &expanded {
                 let extra = rows.len().saturating_sub(1);
-                self.core
-                    .scroll
-                    .set_viewport((area.height as usize).saturating_sub(extra).max(1));
+                if wraps {
+                    self.fit_viewport(geo, area, extra, reveal);
+                } else {
+                    self.core
+                        .scroll
+                        .set_viewport((area.height as usize).saturating_sub(extra).max(1));
+                }
                 self.core.scroll.ensure_visible(self.core.cursor);
                 if self.core.scroll.overflows() != has_sb {
                     has_sb = self.core.scroll.overflows();
@@ -549,7 +655,15 @@ impl PropsList {
             let rid = self.row_id(i);
             let mut s = ctx.child_state(self.id, rid, i == self.core.cursor);
             s.focused = focused && i == self.core.cursor;
-            let block = expanded.as_ref().filter(|_| i == self.core.cursor);
+            let wrapped = self.wrapped_lines(p, geo, area.x).map(|lines| {
+                lines
+                    .into_iter()
+                    .map(|text| RevealLine { text, more: false })
+                    .collect::<Vec<_>>()
+            });
+            let block = wrapped
+                .as_ref()
+                .or_else(|| expanded.as_ref().filter(|_| i == self.core.cursor));
             let h = block
                 .map_or(1, |r| r.len() as u16)
                 .clamp(1, area.bottom() - y);

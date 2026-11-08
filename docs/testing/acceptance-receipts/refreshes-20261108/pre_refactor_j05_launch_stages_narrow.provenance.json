@@ -1,0 +1,67 @@
+{
+  "schema": "tcb.baseline-refresh-provenance.v1",
+  "test_id": "pre_refactor/j05_launch/j05_launch_stages_narrow",
+  "acceptance": {
+    "command": "tuiscotti accept --json",
+    "cli_path": "/Users/donbeave/.local/share/mise/installs/cargo-https-github-com-tailrocks-tuiscotti/rev-92ef2d9ee082b35f68e066c5129fedbf07675a80/bin/tuiscotti",
+    "cli_sha256": "4233b4a75a6483251614550441688ad0b0acdd213cb2c719319abf58bfeda356",
+    "cli_version": "tuiscotti 0.4.0",
+    "expected_baseline_sha256": "a11c50f328a44157e48b9003b760472057b96805683fa7d81a7f009769bac843",
+    "candidate_sha256": "438496cfa8b31e9435c8f070aaf50710767674d3b90f0b4ed8bc06eb7d1380f3",
+    "accepted_baseline_sha256": "438496cfa8b31e9435c8f070aaf50710767674d3b90f0b4ed8bc06eb7d1380f3",
+    "transaction_receipt": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_launch_stages_narrow.accept.json"
+  },
+  "candidate": {
+    "path": "target/functional/j05-launch-stages-failure-42524-1794098223610058000-1/check-artifacts/pre_refactor/j05_launch/j05_launch_stages_narrow/438496cfa8b31e9435c8f070aaf50710767674d3b90f0b4ed8bc06eb7d1380f3/sample.tui.pb",
+    "sha256": "438496cfa8b31e9435c8f070aaf50710767674d3b90f0b4ed8bc06eb7d1380f3",
+    "evidence_directory": "target/functional/j05-launch-stages-failure-42524-1794098223610058000-1",
+    "session": "target/functional/j05-launch-stages-failure-42524-1794098223610058000-1/session.json",
+    "binary": "target/functional/j05-launch-stages-failure-42524-1794098223610058000-1/binary.json",
+    "actions": "target/functional/j05-launch-stages-failure-42524-1794098223610058000-1/actions.txt",
+    "producer_mode": "candidate",
+    "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/debug/jackin-preview",
+    "binary_sha256": "e6a749862bbd0fc0859ed778c220fa596eb07a4c7e554417e1746727ab3553a5",
+    "fixture_args": [
+      "--scenario",
+      "launch-failure"
+    ],
+    "color": "truecolor",
+    "motion": "reduced",
+    "clock": false,
+    "size": [
+      80,
+      24
+    ],
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+    "capture_count": 1,
+    "visual_state_diff_cell_total": 466,
+    "selection_reason": "fresh current-source failure dialog capture after the producer reached the expected network-failure checkpoint"
+  },
+  "source_context": {
+    "git_head": "9409215747997a473dab138b974c5a718fcf1271",
+    "test_source_path": "tests/functional/cases/j05_launch.rs",
+    "test_source_sha256": "fad6d279f34f714043fadc9a734d6bd72fe4dbfd650f8716f531ef607934a17e",
+    "product_source_path": "apps/jackin/src/screens/cockpit.rs",
+    "product_source_sha256": "8a134d989c9c141a3324f432ef6cf0436e234d688af96805ee69d56d385372dd",
+    "candidate_source_cargo_lock_path": "Cargo.lock",
+    "candidate_source_cargo_lock_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "candidate_build_invocation": "mise exec -- cargo nextest run -p jackin-console --test functional -E test(j05_launch_stages) --locked --offline",
+    "reference_manifest_path": "docs/testing/reference-manifest.json",
+    "reference_manifest_sha256": "d8aabe881c188520e53960efe3cedffb77b1b7a7bf763f6138c69858db01cc70",
+    "reference_manifest_lockfile_sha256": "924da8b2cf72e2ed3151abff9c399fc9591e33b840f7002cbbe63cdfa4848091",
+    "session_lockfile_sha256_semantics": "session.json lockfile_sha256 records pinned reference identity; candidate source Cargo.lock SHA is recorded separately."
+  },
+  "history": {
+    "superseded_baseline": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j05_launch/j05_launch_stages_narrow.tui.pb",
+    "superseded_baseline_sha256": "a11c50f328a44157e48b9003b760472057b96805683fa7d81a7f009769bac843",
+    "historical_json": "tests/functional/baselines/pre_refactor/j05_launch/j05_launch_stages_narrow.tui.json",
+    "historical_json_sha256": "dc9a2e471e59b783b6dee808132d374af4f75e2feaa39a5b75bb4cee3d1b6690",
+    "historical_json_modified": false
+  },
+  "selection": {
+    "policy": "accept exact current-source producer candidate after review of the full modal state and failure-stage assertions",
+    "candidate_count": 1,
+    "distinct_visual_diff_signatures": 1,
+    "material_delta": "current cockpit InfoDialog wraps the Network Next step into two lines at these widths; the larger dialog shifts up one row and shows the full recovery instruction. Frozen history truncated the instruction to one line. Wide still asserts the complete network failure and capsule-not-started state; narrow asserts the visible failure title, summary, Network stage, daemon/network error fragments, and Close affordance. No pixel comparison."
+  }
+}

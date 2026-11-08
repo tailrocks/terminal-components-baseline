@@ -24,9 +24,7 @@ use std::path::PathBuf;
 use tui_test::{SnapshotColor, TerminalSnapshot};
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{
-    App, HOLLA, JACKIN, Launch, Point, SHOWCASE, TABLEPRO, find_all, text, try_launch,
-};
+use crate::support::{App, HOLLA, Launch, Point, SHOWCASE, TABLEPRO, find_all, text, try_launch};
 
 const BAR: &str = "▎";
 const FOCUS_TITLE: &str = "Focus & navigation";
@@ -395,15 +393,6 @@ fn other_shells() {
         "Search actions",
         |hit, bar| hit.y == bar.y && hit.x > bar.x,
     );
-    let app = open("x03-focus-jackin", JACKIN, &["--scenario", "hard-cases"]);
-    let screen = app.wait_text("Current directory");
-    let bar = one_bar(&screen);
-    let row = labeled(&screen, "Current directory", |hit| hit.y == bar.y);
-    assert!(row.x > bar.x);
-    assert_eq!(paint(&screen, row), (phosphor(), accent_bg()));
-    assert!(app.child_running(), "jackin exited before the assertion");
-    app.kill_child();
-    assert!(!app.child_running(), "jackin child still running");
 }
 
 fn route() {

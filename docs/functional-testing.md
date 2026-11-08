@@ -20,13 +20,19 @@ Install the repository's pinned tools, then run:
 
 ```sh
 mise install
-cargo nextest run --locked --test functional --no-tests fail
+cargo nextest run --locked --workspace --profile functional --no-tests fail
 ```
 
-The named profile is convenient for CI and retains a JUnit report:
+This is the command CI runs in `suite-functional`. The profile selects
+the `functional` target of the workspace crates and retains a JUnit
+report. The `functional` target of `jackin-console` needs the feature
+`demo`, which is off by default, so this command runs the root journeys
+only. Add `--all-features` to include the jackin journeys; CI runs them in
+`Rust / jackin-console` (see [CI](ci.md#the-demo-feature)). To run the
+target without the profile:
 
 ```sh
-cargo nextest run --locked --workspace --profile functional --no-tests fail
+cargo nextest run --locked --test functional --no-tests fail
 ```
 
 Filter one journey during development, without hiding missing tests:
@@ -37,9 +43,11 @@ cargo nextest run --locked --test functional --no-tests fail \
 ```
 
 These tests are ordinary, non-ignored integration tests. They also run in the
-existing default Nextest gate. Do not add `#[ignore]`, a missing-baseline early
-return, or an environment flag that silently turns a requested case into
-success. No baseline approval is needed to run this target. Linux and macOS
+existing default Nextest gate. Do not add a missing-baseline early return or
+an environment flag that silently turns a requested case into success. The one
+allowed `#[ignore]` is a quarantine of a flaky test: its reason names the
+tracking entry in `docs/P9.3-red-green.md`, and the entry names the cause and
+the fix that removes the `#[ignore]`. No baseline approval is needed to run this target. Linux and macOS
 are the supported test hosts; Windows requires separate application/runtime
 qualification, not just a compatible test library.
 
@@ -55,19 +63,21 @@ split larger existing gates as necessary.
 | Tool | Verified identity | Role |
 | --- | --- | --- |
 | Live driver | Registry `tuiscotti-tui-test = "=0.2.1"` (crate `tui_test`) | The only live driver: checked mouse/keyboard input, native PTY launch, owned terminal snapshots, bounded waits. |
-| Visual gate | Latest Tuiscotti main `d8d54155947f6303a41dfd6079b53c0abc16f29a` (renamed dev-dependency `tuiscotti-latest`, 0.4.0) | Offline frozen check: every functional test ends with `App::visual("<id>")`, a `FrozenStore` check that asserts `is_pass()`. A missing or changed baseline fails. |
+| Visual gate | Latest Tuiscotti main `92ef2d9ee082b35f68e066c5129fedbf07675a80` (renamed dev-dependency `tuiscotti-latest`, 0.4.0) | Offline frozen check: every functional test ends with `App::visual("<id>")`, a `FrozenStore` check that asserts `is_pass()`. A missing or changed baseline fails. |
 | Tuiscotti CLI (latest, built from the pinned rev) | `tuiscotti accept --candidate <sample> --candidate-sha256 <sha> --expect-baseline missing --baselines tests/functional/baselines` | The only way a baseline is approved. Tests never approve baselines. |
 
 ```toml
 [dev-dependencies]
 tui-test = { package = "tuiscotti-tui-test", version = "=0.2.1" }
-tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/tuiscotti", rev = "d8d54155947f6303a41dfd6079b53c0abc16f29a" }
+tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/tuiscotti", rev = "92ef2d9ee082b35f68e066c5129fedbf07675a80" }
 ```
 
 The legacy Tuiscotti 0.2 live API (git rev `a1ea27f`), `libtest-mimic` and
 the old `sha2` oracle pin are removed: nothing in the repository references
-them. No test constructs widgets or application state in-process, and no
-test calls event handlers directly. The immutable `visual-baseline` git
+them. No functional test constructs widgets or application state
+in-process, and none calls event handlers directly. The only in-process
+tests are the data tests described under
+[Library data tests](#library-data-tests). The immutable `visual-baseline` git
 tag and its release are untouched; they remain a historical visual oracle,
 not a test gate.
 
@@ -83,10 +93,45 @@ over 702 frozen scenarios in `snapshots/`) is deleted, together with its
 oracle, scenario tables and the `baselines/oracle` pin. Its contract —
 "this screen looks like the approved frame" — is now carried per journey
 by the `App::visual` frozen check at the end of every functional test,
-with one approved `.tui.pb` baseline per active test in
-`tests/functional/baselines/functional/`. Historical JSON records remain
-review provenance and are not read as active baselines. The frozen
-`visual-baseline` tag is not moved, deleted or retargeted.
+with one approved protobuf `.tui.pb` baseline per test in
+`tests/functional/baselines/`. The frozen `visual-baseline` tag is not
+moved, deleted or retargeted.
+
+## Library data tests
+
+`apps/jackin/tests/*.rs` (beside the `functional/` journeys) prove the
+data API that `jackin-console` offers another crate: `World::new`,
+`Snapshot`, the time source, external messages, `Vocabulary`, the
+account, launch-role and wizard data. They build the real `App` and
+`World` from the `demo` feature, drive it with keys through the
+`Application` trait, render into a test buffer and assert text and
+state. The tests of the library's own types live in the library's root
+`tests/` directory instead: `fixed.rs` and `reason.rs` (the fixed
+control state and the reason widths, rendered into a test buffer and
+driven with keys and clicks), `shell.rs` (the refusal slot and the
+redraw rule, through a minimal `shell::App` in `tests/common/mod.rs`)
+and `status.rs` (the sticky status line). No test of a `junie-tui` type
+lives in `apps/jackin/tests`. These tests add no visual baseline and are
+not journeys: a user-visible flow still needs a functional journey.
+`cargo nextest run --all-features --all-targets` runs them, and so do the
+`Rust / junie-tui` and `Rust / jackin-console` CI jobs
+(`nextest run --profile ci --package <crate> --all-features`); the `functional` suite
+does not.
+
+Three files prove the packaging rule that the demo is off by default.
+`product_mode.rs` compiles only without `demo`: it builds a `World` from
+a test `Backend`, renders the manager and applies a pushed `Snapshot`, so
+the product shape is run, not only built. `product_manifest.rs` reads
+`cargo metadata` and fails when `default` is not empty, `clap` is not
+optional, `demo` or `product` change, or the `jackin-preview` binary or
+the `functional` target loses `required-features = ["demo"]`.
+`library_has_no_demo.rs` lexes `apps/jackin/src` outside `fixtures/`,
+`sim/` and `bin/` and fails on a demo name or literal; its `PENDING` list
+holds the demo items that later P9.3 steps still move, and a row that no
+longer matches fails.
+
+Each test has a named break (a one-edit change to the library that must
+turn it red) recorded in [P9.3 red and green](P9.3-red-green.md).
 
 ## The test boundary
 
@@ -116,10 +161,28 @@ effects, and teardown; preserve the same terminal interaction layer.
 
 Use `--motion paused --frame <n>` for held-state and static view tests.
 Holla and TablePro asynchronous operations need normal/reduced motion.
-Jackin additionally supports opt-in `JUNIE_TUI_TEST_CLOCK=1`; the helper's
-`advance_clock(ms)` sends its documented bracketed-paste clock request. Do
-not assume every application implements that clock. Never send clock input
-as a substitute for a domain interaction.
+Jackin and Holla additionally support opt-in `JUNIE_TUI_TEST_CLOCK=1`, which
+the helper always sets: wall time then never moves the simulated clock (so a
+relative label such as "live · 3 s ago" cannot drift under load), and the
+helper's `advance_clock(ms)` sends its documented bracketed-paste clock
+request to step it. A Holla journey that waits for a task or activity to
+progress calls `advance_clock` first. TablePro steps only its status line
+(the 5 s lifetime of a message) this way; its pointer timers and every
+showcase timer stay on wall time. Do not assume every application
+implements that clock. Never send clock input as a substitute for a domain
+interaction.
+
+Every read of the screen by the helper (`screen`, the `wait_*` predicates,
+`settle`, `stable_screen`) begins with a fence: the helper pastes
+`junie-tui:fence`, and under the same opt-in the shell answers it with a BEL
+after the frame of every input written before it. The helper returns when the
+terminal's bell count rises, so a snapshot shows every action sent so far as
+handled. The writes stay as asynchronous as before (a key and the next mouse
+move may share one frame, as in a real terminal). Without the fence a wait that
+one frame of a multi-input gesture already satisfies, or a `settle()` that
+reads 150 ms of quiet before the application has read its input, passes or
+fails by machine load. Write a wait for the state the action produces, not for
+a state the frame before it also has.
 
 ## Write one journey around observable contracts
 
@@ -266,7 +329,7 @@ adds its journey here and in the showcase in the same change.
 
 | Application | Reference journeys |
 | --- | --- |
-| Showcase | Button rest/hover/held/release/cancel/disabled/toggle in truecolor, 256, 16, monochrome and `NO_COLOR`, plus literal held colours and one focus gutter; wheel routing (adjacent panes, grid with unchanged sidebar); checks/radios (mixed, disabled group, exclusivity), tabs selection-vs-focus, select/menu light-dismiss and Escape dismissal, lists (selection, keyboard, multi-select toggle), trees (expand/collapse, file selection), inputs (edit/apply/Escape-revert), dialogs (open/Escape-cancel), table header sort, forms required validation, scrollbar thumb drag, splitter seam drag, keyboard activation, popover/help resize with focus return. |
+| Showcase | Button rest/hover/held/release/cancel/disabled/toggle in truecolor, 256, 16, monochrome and `NO_COLOR`, plus literal held colours and one focus gutter; wheel routing (adjacent panes, grid with unchanged sidebar); checks/radios (mixed, disabled group, exclusivity), tabs selection-vs-focus, select/menu light-dismiss and Escape dismissal, lists (selection, keyboard, multi-select toggle), trees (expand/collapse, file selection), inputs (edit/apply/Escape-revert), dialogs (open/Escape-cancel), table header sort, forms required validation, scrollbar thumb drag, splitter seam drag, keyboard activation, popover/help resize with focus return. Multi-search pickers preserve spaces typed in the filter; Ctrl+Space toggles the focused result and Enter reports the selected labels. |
 | TablePro | Authentication failure, retry, and recovery by choosing another connection; write-confirmation outside-click policy, cancel/retry, wrong token, disabled Execute, correct token, held Execute, completed operation; dirty-tab close guard via Ctrl+W and the tab picker (cancel preserves SQL, confirm closes only the requested tab), filtered picker, clean-tab immediate close. The backend is simulated: assertions check the next in-app consequence, never a real PostgreSQL effect. |
 | Holla | Child-directory task search, trust cancel/confirm, arguments and simulated task output; finder search → run → history; second-gate cancellation with an empty-activity acknowledgement; hidden-file toggling, preview wheel movement with unchanged file list, bad-path recovery and reopening. The backend is simulated. |
 | Jackin | Workspace mount save with pointer states and reopened values; editor cancel/discard/reopen; account required-field, masked save, canceled/confirmed removal with filtered-list absence; launch → detach → reconnect; help ownership and focus restoration. The backend is simulated. |
@@ -304,12 +367,11 @@ sizes and colors does not replace distinct domain journeys.
 ## CI and failure evidence
 
 The source configuration is [.velnor/config.toml](../.velnor/config.toml)
-(`compile_driver = "cargo"`: Velnor's mbx driver requires host-seeded
-tool caches that GitHub-hosted runners do not provide, so CI builds with
-cargo directly; local builds run through mr-boxington via the mise
-postinstall `mbx setup`). The dedicated functional suite runs on PRs and
-branch pushes and can be selected manually with `tier=functional`. Its
-generated command is:
+(`compile_driver = "mbx"`: CI and local builds both run cargo through
+mr-boxington; local setup is the mise postinstall `mbx setup`). The
+dedicated functional suite runs on PRs and branch pushes and can be
+selected manually with `tier=functional`. Its generated command, run
+through `mbx`, is:
 
 ```sh
 cargo nextest run --workspace --no-tests fail --profile functional
@@ -327,9 +389,9 @@ session and removes the child home after assertion failure. A cleanup kill
 does not count as a successful application exit.
 
 Velnor generates the workflows; change its configuration and run
-`velnor-actions generate`, never hand-edit generated YAML. Require the
-dedicated `suite-functional` check in branch protection so the functional
-gate is a separate merge gate, not only part of the aggregate job.
+`velnor-actions generate`, never hand-edit generated YAML. The suite sets
+`required = true`, so the aggregate `Required` check needs
+`suite-functional`. `Required` is the check to require in branch protection.
 
 On a failure, read the action trace and the last frame first. Classify the
 failure as an incorrect locator/precondition, input-mode/routing failure,
@@ -392,7 +454,7 @@ test-module removal).
 - [Microsoft tui-test 0.1.1 release][upstream-release].
 - [Upstream checked-input contribution #282][upstream-checked].
 
-[tuiscotti-readme]: https://github.com/tailrocks/tuiscotti/blob/d8d54155947f6303a41dfd6079b53c0abc16f29a/README.md
+[tuiscotti-readme]: https://github.com/tailrocks/tuiscotti/blob/92ef2d9ee082b35f68e066c5129fedbf07675a80/README.md
 [fork-package]: https://github.com/tailrocks/tui-test/blob/7abeac8478aa9c05ec7bef93afb10209cc348bec/crates/tui-test/Cargo.toml
 [fork-session]: https://github.com/tailrocks/tui-test/blob/7abeac8478aa9c05ec7bef93afb10209cc348bec/crates/tui-test/src/runtime.rs
 [fork-checked]: https://github.com/tailrocks/tui-test/blob/7abeac8478aa9c05ec7bef93afb10209cc348bec/crates/tui-test/src/session.rs
@@ -405,8 +467,8 @@ test-module removal).
 
 ## The standard for every functional test
 
-Every test in this target follows one standardized pattern, with no
-exceptions and no legacy-API tests:
+Every test in this target follows one standardized pattern, with the one
+exception below and no legacy-API tests:
 
 1. Launch the real executable through the shared `support::App` harness
    (`tui_test` / `tuiscotti-tui-test =0.2.1`, isolated environment, bounded
@@ -415,10 +477,11 @@ exceptions and no legacy-API tests:
    steps (hover/held/release, cancellation, focus, neighbouring panes).
 3. End with `app.visual("<test-id>")`: the live screen is frozen as a
    Tuiscotti state sample and compared with `FrozenStore` from latest
-   Tuiscotti (`tuiscotti-latest`, main `d8d5415`). The test asserts
-   `outcome.is_pass()`; a missing or changed baseline fails. Baselines for
-   all 93 tests live in `tests/functional/baselines/` and were approved
-   once with the Tuiscotti CLI `accept` command — tests never approve.
+   Tuiscotti (`tuiscotti-latest`, main `92ef2d9`). The test asserts
+   `outcome.is_pass()`; a missing or changed baseline fails. A baseline
+   for every test that ends in `visual` lives in `tests/functional/baselines/`;
+   each was approved once with the Tuiscotti CLI `accept` command — tests
+   never approve.
    Checkpoints sit on deterministic screens (after `settle()`, not on
    cycling status words or mid-flash frames). `App::visual` additionally
    requires two identical consecutive cell fingerprints (cells + cursor)
@@ -426,17 +489,35 @@ exceptions and no legacy-API tests:
    relative-time readout wait for that element to fade or freeze the
    app clock (`--motion paused`) first.
 
+The one exception: a key test of a page that asserts refusals, reasons and
+status expiry may end with `app.finish()` and no baseline. P9.3 design v6
+section 5.2 (last paragraph) requires one such test per refusal in each B4
+step, "a PTY test that passes or fails without a baseline file". The
+fixed-controls tests `showcase_fixed_controls_*` are of this kind; the page
+itself has the baseline `showcase_page_fixedcontrols`, and the focused,
+refused state has `showcase_fixedcontrols_focused_refused`. Other tests
+already end without a baseline (for example
+`tablepro_connect_development_opens_workbench` and
+`jackin_roles_add_role`). The jackin editor key tests `jackin_fixed_*` (P9.3 B4a, one per
+refusal on `Scenario::OpenshellFixed`) read each reason from
+`Fixed::openshell()`, and four of them also freeze a baseline. The B4c key tests (`jackin_fixed_account_*`, `jackin_fixed_browser_*`, `jackin_fixed_wizard_*`, `jackin_fixed_palette_*`, `jackin_fixed_file_menu_*`) follow the same rule and freeze 13 more baselines.
+
 The legacy Tuiscotti 0.2 dependency is removed entirely; nothing in the
 repository uses it.
 
 ## Suite composition
 
 Tests live one module per application — `showcase.rs`, `tablepro.rs`,
-`holla.rs`, `jackin.rs` — plus cross-cutting `lifecycle.rs` (resize and
+`holla.rs` in `tests/functional`, and `jackin.rs` in
+`apps/jackin/tests/functional` (the `jackin-console` crate, because the test
+needs `CARGO_BIN_EXE_jackin`) — plus cross-cutting `lifecycle.rs` (resize and
 overlay ownership) and `visual.rs` (strict frozen check), all on the
-single shared harness in `support.rs`.
+single shared harness in `tests/functional/support.rs`. The jackin test
+crate includes that file with `#[path]`; each crate keeps its approved
+baselines under its own `tests/functional/baselines`, and evidence goes to
+the workspace `target/functional` for both.
 
-`visual.rs` uses latest Tuiscotti main `d8d5415` (0.4.0, renamed dev-dependency
+`visual.rs` uses latest Tuiscotti main `92ef2d9` (0.4.0, renamed dev-dependency
 `tuiscotti-latest`): a live `tui_test` snapshot is checked with
 `FrozenStore::check` and the test asserts `outcome.is_pass()` — an `Ok` result
 alone is not a pass, and a missing baseline fails. The approved baseline lives

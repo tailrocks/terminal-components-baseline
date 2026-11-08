@@ -25,9 +25,7 @@ use std::time::{Duration, Instant};
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{
-    App, HOLLA, JACKIN, Launch, SHOWCASE, TABLEPRO, find, row_text, text, try_launch,
-};
+use crate::support::{App, HOLLA, Launch, SHOWCASE, TABLEPRO, find, row_text, text, try_launch};
 
 const TITLE: &str = "Status & hints";
 const BLURB: &str = "The footer hint bar";
@@ -275,44 +273,6 @@ fn full_turns() {
     kill(&app);
 }
 
-fn jackin_clock() {
-    let app = open(
-        "x03-motion-jackin",
-        JACKIN,
-        &["--scenario", "launch-failure"],
-        "paused",
-        true,
-    );
-    let before = app.wait_text("Preparing launch");
-    require(&before, "Preparing launch");
-    assert!(
-        !text(&before).contains("Resolving launch identity"),
-        "identity resolved before the clock step\n{}",
-        text(&before)
-    );
-    app.advance_clock(33);
-    let after = app.wait_text("Resolving launch identity");
-    require(&after, "Resolving launch identity");
-    assert!(
-        !text(&after).contains("Preparing launch"),
-        "preparing line stayed\n{}",
-        text(&after)
-    );
-    assert!(
-        !text(&after).contains("junie-tui:advance-clock:"),
-        "clock paste stayed on screen\n{}",
-        text(&after)
-    );
-    std::thread::sleep(Duration::from_millis(200));
-    let again = app.screen();
-    assert_eq!(after, again, "jackin frame changed after the clock step");
-    assert!(
-        !text(&again).contains("junie-tui:advance-clock:"),
-        "clock paste stayed on screen"
-    );
-    kill(&app);
-}
-
 fn tablepro_rest() {
     let paused = open("x03-motion-tablepro", TABLEPRO, &[], "paused", false);
     let screen = stable(&paused, "tablepro", |screen| {
@@ -394,7 +354,6 @@ fn x03_motion_motion() {
     frame_select();
     reduced();
     full_turns();
-    jackin_clock();
     tablepro_rest();
     holla_sources();
     checkpoint();

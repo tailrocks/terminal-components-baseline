@@ -1,4 +1,5 @@
-use super::support::{App, Point, SHOWCASE, find, text};
+use super::bins::SHOWCASE;
+use super::support::{App, Point, find, text};
 
 #[test]
 fn showcase_help_survives_shrink_and_growth_and_returns_focus() {

@@ -328,8 +328,32 @@ fn g05_approved_binary_manifest_matches_active_samples() {
         .join("docs/testing/acceptance-receipts/historical-binary-20261108/transactions.jsonl");
     let historical = std::fs::read_to_string(&historical_path)
         .unwrap_or_else(|error| panic!("{}: {error}", historical_path.display()));
+    let refresh_manifest_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("docs/testing/baseline-refreshes-20261108.tsv");
+    let refresh_manifest = std::fs::read_to_string(&refresh_manifest_path)
+        .unwrap_or_else(|error| panic!("{}: {error}", refresh_manifest_path.display()));
+    let mut refresh_lines = refresh_manifest.lines();
+    assert_eq!(
+        refresh_lines.next(),
+        Some(
+            "test_id\tactive_baseline_path\tactive_sha256\tprevious_sha256\tprevious_archive_path\tacceptance_receipt\tprovenance_path"
+        )
+    );
+    let mut refreshes = std::collections::BTreeMap::new();
+    for line in refresh_lines {
+        let fields: Vec<String> = line.split('\t').map(str::to_owned).collect();
+        assert_eq!(fields.len(), 7, "{line}");
+        assert!(
+            refreshes
+                .insert(fields[0].clone(), fields[1..].to_vec())
+                .is_none(),
+            "duplicate refresh {}",
+            fields[0]
+        );
+    }
     let mut historical_ids = std::collections::BTreeSet::new();
     let mut historical_paths = std::collections::BTreeSet::new();
+    let mut refreshed_ids = std::collections::BTreeSet::new();
     let mut historical_count = 0;
     for line in historical.lines() {
         let receipt: Value = serde_json::from_str(line).expect("historical transaction receipt");
@@ -358,13 +382,82 @@ fn g05_approved_binary_manifest_matches_active_samples() {
         );
         let path = root.join(relative);
         let expected_sha = receipt["baseline_sha256"].as_str().expect("baseline SHA");
-        assert_eq!(file_sha256(&path), expected_sha, "{test_id}");
+        let sample_path = if file_sha256(&path) == expected_sha {
+            path
+        } else {
+            let fields = refreshes.get(test_id).unwrap_or_else(|| {
+                panic!("historical sample changed without an explicit refresh record: {test_id}")
+            });
+            let [
+                active_baseline,
+                active_sha,
+                previous_sha,
+                archive_path,
+                receipt_path,
+                provenance_path,
+            ] = fields.as_slice()
+            else {
+                unreachable!("refresh field count checked")
+            };
+            assert_eq!(active_baseline, baseline_path, "{test_id}");
+            assert_eq!(previous_sha, expected_sha, "{test_id}");
+            assert_eq!(
+                file_sha256(&path),
+                active_sha.as_str(),
+                "active refreshed sample {test_id}"
+            );
+            let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+            let archive = repo_root.join(archive_path);
+            assert_eq!(
+                file_sha256(&archive),
+                expected_sha,
+                "archived historical sample {test_id}"
+            );
+            let refresh_receipt_path = repo_root.join(receipt_path);
+            let refresh_receipt: Value = serde_json::from_slice(
+                &std::fs::read(&refresh_receipt_path)
+                    .unwrap_or_else(|error| panic!("{}: {error}", refresh_receipt_path.display())),
+            )
+            .expect("baseline refresh CLI receipt");
+            assert_eq!(refresh_receipt["schema"].as_str(), Some("tuiscotti.cli.v1"));
+            assert_eq!(refresh_receipt["command"].as_str(), Some("accept"));
+            assert_eq!(refresh_receipt["status"].as_str(), Some("pass"));
+            assert_eq!(refresh_receipt["test_id"].as_str(), Some(test_id));
+            assert_eq!(
+                refresh_receipt["candidate_sha256"].as_str(),
+                Some(active_sha.as_str())
+            );
+            assert_eq!(
+                refresh_receipt["baseline_sha256"].as_str(),
+                Some(active_sha.as_str())
+            );
+            let provenance_path = repo_root.join(provenance_path);
+            let provenance: Value = serde_json::from_slice(
+                &std::fs::read(&provenance_path)
+                    .unwrap_or_else(|error| panic!("{}: {error}", provenance_path.display())),
+            )
+            .expect("baseline refresh provenance");
+            assert_eq!(provenance["test_id"].as_str(), Some(test_id));
+            let provenance_previous_sha = provenance["acceptance"]["expected_baseline_sha256"]
+                .as_str()
+                .or_else(|| provenance["previous_baseline"]["sha256"].as_str());
+            let provenance_active_sha = provenance["acceptance"]["accepted_baseline_sha256"]
+                .as_str()
+                .or_else(|| provenance["candidate"]["sha256"].as_str());
+            assert_eq!(provenance_previous_sha, Some(previous_sha.as_str()));
+            assert_eq!(provenance_active_sha, Some(active_sha.as_str()));
+            assert!(
+                refreshed_ids.insert(test_id.to_string()),
+                "duplicate refresh use {test_id}"
+            );
+            archive
+        };
         assert!(
-            std::fs::read(&path)
+            std::fs::read(&sample_path)
                 .expect("historical sample")
                 .starts_with(b"TUISCPB\0")
         );
-        let sample = read_disposition_sample(&path);
+        let sample = read_disposition_sample(&sample_path);
         assert_eq!(sample.test_id(), test_id, "{test_id}");
 
         let historical_json = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(
@@ -434,6 +527,11 @@ fn g05_approved_binary_manifest_matches_active_samples() {
         historical_count += 1;
     }
     assert_eq!(historical_count, 1868);
+    assert_eq!(
+        refreshed_ids.len(),
+        refreshes.len(),
+        "unused baseline refresh record"
+    );
     fn collect_pb_paths(root: &Path, dir: &Path, paths: &mut std::collections::BTreeSet<PathBuf>) {
         for entry in std::fs::read_dir(dir).expect("read active baseline directory") {
             let path = entry.expect("baseline entry").path();
@@ -450,6 +548,77 @@ fn g05_approved_binary_manifest_matches_active_samples() {
     }
     let mut actual_paths = std::collections::BTreeSet::new();
     collect_pb_paths(&root, &root, &mut actual_paths);
+    let inherited_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("docs/testing/acceptance-receipts/inherited-main-20261108");
+    let inherited_manifest_path = inherited_root.join("baselines.tsv");
+    let inherited_manifest = std::fs::read_to_string(&inherited_manifest_path)
+        .unwrap_or_else(|error| panic!("{}: {error}", inherited_manifest_path.display()));
+    let mut inherited_lines = inherited_manifest.lines();
+    assert_eq!(
+        inherited_lines.next(),
+        Some("test_id\tbaseline_path\tsha256\tsource_commit\tapproval_receipts")
+    );
+    let inherited_receipts_path = inherited_root.join("receipts.jsonl");
+    let inherited_receipts_text = std::fs::read_to_string(&inherited_receipts_path)
+        .unwrap_or_else(|error| panic!("{}: {error}", inherited_receipts_path.display()));
+    let mut inherited_receipts = std::collections::BTreeMap::new();
+    for line in inherited_receipts_text.lines() {
+        let receipt: Value = serde_json::from_str(line).expect("inherited main approval receipt");
+        let test_id = receipt["test_id"]
+            .as_str()
+            .expect("inherited main test ID")
+            .to_owned();
+        assert!(
+            inherited_receipts
+                .insert(test_id.clone(), receipt)
+                .is_none(),
+            "duplicate inherited receipt {test_id}"
+        );
+    }
+    let mut inherited_paths = std::collections::BTreeSet::new();
+    for line in inherited_lines {
+        let fields: Vec<_> = line.split('\t').collect();
+        assert_eq!(fields.len(), 5, "{line}");
+        let [
+            test_id,
+            baseline_path,
+            expected_sha,
+            source_commit,
+            receipts_path,
+        ] = fields.as_slice()
+        else {
+            unreachable!("field count checked")
+        };
+        assert_eq!(
+            *source_commit, "1d7f63dbb13ecb2bf3e3295e7a296dc2080a62b1",
+            "inherited main source for {test_id}"
+        );
+        assert_eq!(
+            *receipts_path,
+            "docs/testing/acceptance-receipts/inherited-main-20261108/receipts.jsonl"
+        );
+        let relative = Path::new(baseline_path)
+            .strip_prefix("tests/functional/baselines/")
+            .expect("inherited baseline path under root");
+        assert!(
+            inherited_paths.insert(relative.to_path_buf()),
+            "duplicate inherited path {baseline_path}"
+        );
+        let path = root.join(relative);
+        assert_eq!(file_sha256(&path), *expected_sha, "{test_id}");
+        let receipt = inherited_receipts
+            .get(*test_id)
+            .unwrap_or_else(|| panic!("missing inherited main approval receipt for {test_id}"));
+        assert_eq!(receipt["schema"].as_str(), Some("tuiscotti.cli.v1"));
+        assert_eq!(receipt["command"].as_str(), Some("accept"));
+        assert_eq!(receipt["status"].as_str(), Some("pass"));
+        assert_eq!(receipt["candidate_sha256"].as_str(), Some(*expected_sha));
+        assert_eq!(receipt["baseline_sha256"].as_str(), Some(*expected_sha));
+        assert_eq!(receipt["test_id"].as_str(), Some(*test_id));
+    }
+    assert_eq!(inherited_paths.len(), 17, "inherited main baseline count");
+    assert_eq!(inherited_receipts.len(), inherited_paths.len());
+    paths.extend(inherited_paths);
     paths.extend(historical_paths);
     assert_eq!(actual_paths, paths);
 }

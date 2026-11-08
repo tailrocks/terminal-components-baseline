@@ -9,7 +9,7 @@ use crate::core::intent::Phase;
 use crate::core::keymap::{Nav, NavKeys};
 use crate::core::pointer::PointerEvent;
 use crate::core::response::Response;
-use crate::core::scroll::ScrollState;
+use crate::core::scroll::{ScrollState, TrackClick};
 use crate::ui::ctx::{RenderCtx, VisualState, fill};
 use crate::widgets::scrollbar;
 
@@ -89,7 +89,6 @@ pub struct NavList {
 
     pub inactive_selection: Option<crate::theme::InactiveSelection>,
     area: Rect,
-    track: Rect,
 }
 
 impl NavList {
@@ -106,7 +105,6 @@ impl NavList {
             scroll: ScrollState::default(),
             inactive_selection: None,
             area: Rect::ZERO,
-            track: Rect::ZERO,
         }
     }
 
@@ -353,11 +351,6 @@ impl NavList {
             }
         }
         ctx.scrollable(self.id, area);
-        self.track = if has_sb {
-            Rect::new(area.right() - 1, area.y, 1, area.height)
-        } else {
-            Rect::ZERO
-        };
         if has_sb {
             crate::ui::fade::scroll_edges_except(
                 buf,
@@ -484,16 +477,11 @@ impl crate::core::pointer::MouseTarget for NavList {
                 _ => Response::ignored(),
             };
         }
-        if ev.id == bar {
-            return match ev.phase() {
-                Some(Phase::Click) => {
-                    Self::scrolled(scrollbar::press(self.track, ev.pos(), &mut self.scroll)).into()
-                }
-                Some(Phase::Drag) => {
-                    Self::scrolled(scrollbar::drag(self.track, ev.pos(), &mut self.scroll)).into()
-                }
-                _ => Response::ignored(),
-            };
+        if ev.id == bar
+            && let Some(o) =
+                scrollbar::pointer(ev, self.id, &mut self.scroll, TrackClick::default())
+        {
+            return o.into();
         }
         match ev.index_of(Part::ROW) {
             Some(i) if ev.is(Phase::Click) && i < self.items.len() => {

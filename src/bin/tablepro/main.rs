@@ -64,6 +64,6 @@ fn main() -> std::io::Result<()> {
         app.connect(i);
     }
     app.set_motion(cli.common.motion(NO_MOTION_ENV), cli.common.frame);
-    app.shell.clipboard.install();
+    app.shell.set_clipboard(junie_tui::shell::Clipboard::new());
     junie_tui::shell::run(&mut app)
 }

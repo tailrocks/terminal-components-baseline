@@ -18,9 +18,8 @@ test_runner = "cargo_nextest"
 
 run_ignored = "default"
 
-# Profile ci excludes binary(functional), and that binary is the only
-# one that contains tests. Run 41783685777 then reported 0 tests and
-# nextest exited 4. The suite job owns those tests.
+# Eight hash shards run concurrently. The functional suite uses PTYs,
+# so eight test threads fill the runner's eight PTY slots.
 allow_empty_test_suite = true
 
 [discovery]
@@ -41,9 +40,6 @@ options = ["functional"]
 id = "functional"
 profile = "functional"
 run_ignored = "default"
-# One job of 1096 PTY tests was cancelled at the 15-minute limit
-# (run 41781135706). Eight hash shards run at once. test_threads 8
-# fills the pty group (max-threads 8, each test threads-required 2).
 partitions = 8
 build = "inline"
 timeout_minutes = 15
@@ -52,3 +48,14 @@ triggers = ["pull_request", "push", "workflow_dispatch"]
 required = true
 dispatch_inputs = { tier = ["functional"] }
 artifacts = [{ name = "functional-terminal-evidence", paths = ["target/functional", "target/nextest/functional"], when = "always", retention_days = 14 }]
+
+[[stacks.rust.configurations]]
+name = "default"
+features = ["default"]
+all_features = true
+target = "host"
+
+[[stacks.rust.configurations]]
+name = "product"
+features = ["product"]
+target = "host"

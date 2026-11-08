@@ -15,7 +15,7 @@ use std::time::{Duration, Instant};
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{App, HOLLA, JACKIN, Launch, SHOWCASE, TABLEPRO, text, try_launch};
+use crate::support::{App, HOLLA, Launch, SHOWCASE, TABLEPRO, text, try_launch};
 
 const HELP_EXIT: i32 = 0;
 const ERROR_EXIT: i32 = 2;
@@ -23,12 +23,9 @@ const SHOWCASE_ABOUT: &str = "Junie-tui — Junie-inspired Ratatui design system
 const TABLEPRO_ABOUT: &str = "TablePro — terminal database workbench on the Junie design system";
 const HOLLA_ABOUT: &str =
     "Holla — this folder, this host, right now (deterministic preview on the Junie design system)";
-const JACKIN_ABOUT: &str =
-    "Jackin-preview — Jackin redesigned on the Junie design system (deterministic preview)";
 const SHOWCASE_UI: &str = "Tokens and principles behind every component";
 const TABLEPRO_UI: &str = "Local PostgreSQL";
 const HOLLA_UI: &str = "Search actions and resources";
-const JACKIN_UI: &str = "Workspaces";
 const HELP_TAIL: &str = "q quit";
 const HELP_PRINT: &str = "Print help (see a summary with '-h')";
 const HELP_FRAME: &str = "Frame:     with --motion paused, the exact tick to render";
@@ -194,7 +191,6 @@ fn x01_cli_cli() {
         TABLEPRO_UI,
     );
     help_of("x01-cli-help-holla", HOLLA, HOLLA_ABOUT, HOLLA_UI);
-    help_of("x01-cli-help-jackin", JACKIN, JACKIN_ABOUT, JACKIN_UI);
 
     rejected(
         "x01-cli-page-short",
@@ -222,15 +218,6 @@ fn x01_cli_cli() {
         40,
         "unknown scenario \"not-a-scenario\"",
         HOLLA_UI,
-    );
-    rejected(
-        "x01-cli-jackin-scenario",
-        JACKIN,
-        &["--scenario", "not-a-scenario"],
-        120,
-        40,
-        "unknown scenario \"not-a-scenario\"",
-        JACKIN_UI,
     );
     rejected(
         "x01-cli-tablepro-connect",

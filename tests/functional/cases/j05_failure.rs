@@ -5,7 +5,6 @@
 //! Tuiscotti test ids are `[a-z0-9_-]` segments, so the directory is
 //! `pre_refactor/j05_failure/`.
 
-use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
@@ -77,8 +76,28 @@ fn failure_open(screen: &TerminalSnapshot) -> bool {
         && !visible.contains(DIRECTORY)
 }
 
+fn failure_open_narrow(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(TITLE)
+        && visible.contains(SUMMARY)
+        && visible.contains(STAGE)
+        && visible.contains("network jackin-net")
+        && visible.contains("found")
+        && !visible.contains(HARDLINE)
+        && !visible.contains(RESOLVING)
+        && !visible.contains("Docker build failed")
+        && !visible.contains("Credential check failed")
+        && !visible.contains(DIRECTORY)
+}
+
 fn failure_at(screen: &TerminalSnapshot, cols: u32, rows: u32) -> bool {
-    screen.cols() == cols && screen.rows() == rows && failure_open(screen)
+    screen.cols() == cols
+        && screen.rows() == rows
+        && if cols < 100 {
+            failure_open_narrow(screen)
+        } else {
+            failure_open(screen)
+        }
 }
 
 fn stages_without_dialog(visible: &str) -> bool {
@@ -131,7 +150,7 @@ fn shot(app: &App, checkpoint: &str, cols: u32, rows: u32) {
 }
 
 fn frame_matches(app: &App, screen: &TerminalSnapshot, test_id: &str) -> bool {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let root = crate::support::workspace_root().join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
         screen.clone(),
@@ -194,6 +213,7 @@ fn launch_from_manager(app: &App, workspace_downs: u8, agent_downs: u8) {
     for _ in 0..agent_downs {
         app.key("down");
     }
+    app.key("space");
     app.key("enter");
     app.wait_screen("cockpit", |screen| text(screen).contains("Loading"));
 }
@@ -288,6 +308,11 @@ fn j05_failure_failure() {
     plain.wait_screen("plain button", |screen| {
         row_has(screen, "▎Enter plain text instead") && text(screen).contains(CRED_TITLE)
     });
+    plain.key("enter");
+    plain.wait_screen("plain-text key form", |screen| {
+        text(screen).contains("Plain-text key") && text(screen).contains("API key *")
+    });
+    plain.type_text("functional-test-key");
     plain.key("enter");
     let typed = plain.wait_screen("plain text key", |screen| {
         let visible = text(screen);

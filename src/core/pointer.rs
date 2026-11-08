@@ -661,20 +661,37 @@ fn hit_of(hits: &HitRegistry, id: WidgetId) -> Hit {
     })
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum BarPhase {
+    Press,
+    Drag,
+    Release,
+}
+
+impl BarPhase {
+    pub(crate) fn of(ev: &PointerEvent) -> Option<Self> {
+        match ev.phase()? {
+            Phase::Press => Some(Self::Press),
+            Phase::Drag | Phase::DragStart => Some(Self::Drag),
+            Phase::Click | Phase::Release | Phase::DragEnd => Some(Self::Release),
+            _ => None,
+        }
+    }
+}
+
 pub fn scroll_input<S: Scrollable + ?Sized>(w: &mut S, ev: &PointerEvent) -> Option<Response<()>> {
     if let Some((axis, delta)) = ev.wheel() {
         return Some(w.wheel(axis, delta));
     }
     let bar = ev.bar.filter(|b| b.owner == ev.owner())?;
-    match ev.phase()? {
-        Phase::Press => Some(w.bar_input(&bar, ev.pos(), true)),
-        Phase::Drag | Phase::DragStart => Some(w.bar_input(&bar, ev.pos(), false)),
-        Phase::Click | Phase::Release | Phase::DragEnd => {
+    Some(match BarPhase::of(ev)? {
+        BarPhase::Press => w.bar_input(&bar, ev.pos(), true),
+        BarPhase::Drag => w.bar_input(&bar, ev.pos(), false),
+        BarPhase::Release => {
             w.pane().release();
-            Some(Response::consumed())
+            Response::consumed()
         }
-        _ => None,
-    }
+    })
 }
 
 pub trait MouseTarget {

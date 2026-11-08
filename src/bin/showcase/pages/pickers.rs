@@ -35,15 +35,19 @@ enum Kind {
     Level,
     Commands,
     Remote,
+    Multi,
+    MultiSearch,
 }
 
 impl Kind {
-    const ALL: [Kind; 5] = [
+    const ALL: [Kind; 7] = [
         Kind::Quick,
         Kind::Tabs,
         Kind::Level,
         Kind::Commands,
         Kind::Remote,
+        Kind::Multi,
+        Kind::MultiSearch,
     ];
 }
 
@@ -132,6 +136,8 @@ const BRANCHES: &[&str] = &[
     "chore/uuid-sessions",
     "release/4.2",
 ];
+
+const MULTI_ROWS: [&str; 4] = ["Row 1", "Row 2", "Row 3", "Row 4"];
 
 const FETCH_TICKS: u32 = 3;
 
@@ -250,6 +256,24 @@ impl Rows {
                     })
                     .collect(),
             ),
+            Kind::Multi | Kind::MultiSearch => {
+                let items: Vec<Item> = MULTI_ROWS
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, l)| kind == Kind::Multi || fuzzy(l, &q).is_some())
+                    .map(|(i, l)| {
+                        let mut it = Item::new(*l)
+                            .key(ItemKey::text(l))
+                            .detail(format!("multi row {}", i + 1));
+                        if i == 1 {
+                            it = it.reason("Unavailable row");
+                        }
+                        it
+                    })
+                    .collect();
+                p.refresh_items_by_key(items)
+                    .expect("showcase multi-picker rows have unique keys");
+            }
             Kind::Remote => match self.fetching {
                 Some(_) => {
                     p.set_items(vec![]);
@@ -297,6 +321,8 @@ impl PickersPage {
                 Button::secondary(ID.sub("level"), "Choose a level"),
                 Button::secondary(ID.sub("commands"), "Run command"),
                 Button::secondary(ID.sub("remote"), "Remote branch"),
+                Button::secondary(ID.sub("multi"), "Multi select"),
+                Button::secondary(ID.sub("multisearch"), "Multi search"),
             ],
             open: None,
             scope: Scope::All,
@@ -410,6 +436,16 @@ impl PickersPage {
                 p.set_searchable(false);
                 p
             }
+            Kind::Multi => {
+                let mut p = Picker::new(ID.sub("picker.multi"), "Multi select")
+                    .width(56)
+                    .multi_select_by_key(true);
+                p.set_searchable(false);
+                p
+            }
+            Kind::MultiSearch => Picker::new(ID.sub("picker.multisearch"), "Multi search")
+                .width(56)
+                .multi_select_by_key(true),
         };
         p.hints = match kind {
             Kind::Quick => {
@@ -419,6 +455,8 @@ impl PickersPage {
             Kind::Level => "↑↓ Move · Enter Set level · Esc Keep",
             Kind::Commands => "↑↓ Move · Enter Run · Esc Close",
             Kind::Remote => "↑↓ Move · Enter Check out · r Retry · Esc Close",
+            Kind::Multi => "Space Toggle · Enter Confirm · Esc Close",
+            Kind::MultiSearch => "Type Filter · Ctrl+Space Toggle · Enter Confirm · Esc Close",
         }
         .to_owned();
         let mut p = self.style(p, anchor);
@@ -458,6 +496,23 @@ impl PickersPage {
                         it.label
                     ));
                 }
+            }
+            PickerAction::ChosenMany(_indices) => {
+                let keys = picker
+                    .as_ref()
+                    .map(|p| p.selected_keys().to_vec())
+                    .unwrap_or_default();
+                let labels: Vec<String> = keys
+                    .iter()
+                    .filter_map(|key| {
+                        MULTI_ROWS
+                            .iter()
+                            .find(|label| ItemKey::text(label) == *key)
+                            .map(|label| (*label).to_owned())
+                    })
+                    .collect();
+                self.chosen = Some((labels.join(", "), format!("{} selected", labels.len())));
+                cx.status(format!("ChoseMany: {}", labels.join(", ")));
             }
             PickerAction::Secondary(i) => {
                 if kind == Kind::Tabs && i < self.tabs.len() && self.tabs.len() > 1 {

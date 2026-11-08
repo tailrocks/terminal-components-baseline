@@ -24,7 +24,7 @@ use std::path::PathBuf;
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{App, HOLLA, JACKIN, Launch, SHOWCASE, TABLEPRO, row_text, text, try_launch};
+use crate::support::{App, HOLLA, Launch, SHOWCASE, TABLEPRO, row_text, text, try_launch};
 
 const TITLE: &str = "Text areas";
 const BLURB: &str = "Multi-line editing, Unicode cursor motion, horizontal and vertical scrolling";
@@ -469,39 +469,6 @@ fn holla() {
     kill(&app);
 }
 
-fn jackin() {
-    let app = open(
-        "x03-glyphs-jackin",
-        JACKIN,
-        &["--scenario", "hard-cases", "--glyphs", "ascii"],
-    );
-    let page = app.wait_screen("jackin ascii", |screen| {
-        text(screen).contains("Current directory")
-            && count(screen, HEAVY) == 0
-            && count(screen, BAR) == 0
-            && count(screen, RULE) == 0
-            && screen
-                .cell_at(3, 3)
-                .is_some_and(|cell| cell.text() == GUTTER)
-    });
-    require(&page, "Current directory");
-    assert_ascii_forbidden(&page);
-    assert_eq!(count(&page, RULE), 0, "unicode seam\n{}", text(&page));
-    assert_eq!(
-        count(&page, THUMB),
-        0,
-        "jackin painted a thumb\n{}",
-        text(&page)
-    );
-    assert_ink(&page, 3, 3, GUTTER, green(), nav());
-    assert!(
-        count(&page, GUTTER) > 1,
-        "jackin painted no resting rule\n{}",
-        text(&page)
-    );
-    kill(&app);
-}
-
 fn checkpoint() {
     let app = open(
         "x03-glyphs-checkpoint",
@@ -533,6 +500,5 @@ fn x03_glyphs_glyphs() {
     splits("unicode");
     tablepro();
     holla();
-    jackin();
     checkpoint();
 }

@@ -9,7 +9,6 @@
 //! `returning` leaves `save_fails_once` false, so the first save succeeds.
 //! `create` does not write the file. The editor preview does.
 
-use std::path::PathBuf;
 use std::time::Duration;
 
 use tui_test::TerminalSnapshot;
@@ -231,7 +230,7 @@ fn nudge(app: &App, quiet_frame: impl Fn(&TerminalSnapshot) -> bool) {
 }
 
 fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let root = crate::support::workspace_root().join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
         screen.clone(),

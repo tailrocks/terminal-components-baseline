@@ -277,17 +277,21 @@ fn restore(buf: &mut TextBuffer, s: Snap) {
 pub mod clipboard {
     use std::cell::RefCell;
 
-    type Hook = Box<dyn Fn(&str)>;
+    type Hook = (u64, Box<dyn Fn(&str)>);
 
     thread_local! {
         static TEXT: RefCell<Option<String>> = const { RefCell::new(None) };
         static HOOK: RefCell<Option<Hook>> = const { RefCell::new(None) };
     }
 
-    pub fn copy(text: &str) {
+    pub(crate) fn store(text: &str) {
         TEXT.with(|t| *t.borrow_mut() = Some(text.to_owned()));
+    }
+
+    pub fn copy(text: &str) {
+        store(text);
         HOOK.with(|h| {
-            if let Some(f) = h.borrow().as_ref() {
+            if let Some((_, f)) = h.borrow().as_ref() {
                 f(text);
             }
         });
@@ -297,11 +301,16 @@ pub mod clipboard {
         TEXT.with(|t| t.borrow().clone())
     }
 
-    pub fn set_hook(hook: impl Fn(&str) + 'static) {
-        HOOK.with(|h| *h.borrow_mut() = Some(Box::new(hook)));
+    pub fn set_hook(owner: u64, hook: impl Fn(&str) + 'static) {
+        HOOK.with(|h| *h.borrow_mut() = Some((owner, Box::new(hook))));
     }
 
-    pub fn clear_hook() {
-        HOOK.with(|h| *h.borrow_mut() = None);
+    pub fn clear_hook(owner: u64) {
+        HOOK.with(|h| {
+            let mut slot = h.borrow_mut();
+            if slot.as_ref().is_some_and(|(o, _)| *o == owner) {
+                *slot = None;
+            }
+        });
     }
 }

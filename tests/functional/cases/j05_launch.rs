@@ -6,7 +6,6 @@
 //! clock. `Launch::new` leaves the clock off. `App::new` would enable it for
 //! jackin.
 
-use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
@@ -28,7 +27,7 @@ const FAILED_SETUP: &str = "failed setup";
 const NOTHING: &str = "nothing to attach to";
 const RECORD: &str = "b5df";
 const STILL_TWO: &str = "2 instances still running in the Construct";
-const STILL_THREE: &str = "3 instances still running in the Construct";
+const THREE_RUNNING: &str = "3 running";
 const CRED_TITLE: &str = "Credential source unavailable";
 const OP_LOCKED: &str = "1Password locked: unlock the app and retry";
 const PAUSED_HEAD: &str = "The launch is paused";
@@ -75,13 +74,20 @@ fn open(name: &str, scenario: &str) -> App {
 
 fn failure_at(screen: &TerminalSnapshot, cols: u32, rows: u32) -> bool {
     let visible = text(screen);
+    let failure_visible = if cols < 100 {
+        visible.contains("network: attach jackin-net")
+            && visible.contains("docker: Error response from daemon")
+            && visible.contains("found")
+            && visible.contains("Close")
+    } else {
+        visible.contains(DOCKER) && visible.contains(CAPSULE_NOT_STARTED)
+    };
     screen.cols() == cols
         && screen.rows() == rows
         && visible.contains(FAILED)
         && visible.contains(SUMMARY)
         && visible.contains("Network")
-        && visible.contains(DOCKER)
-        && visible.contains(CAPSULE_NOT_STARTED)
+        && failure_visible
         && !visible.contains(RESOLVING)
         && !visible.contains(VERSION)
 }
@@ -137,7 +143,7 @@ fn shot(app: &App, checkpoint: &str, accept: impl Fn(&TerminalSnapshot) -> bool)
 }
 
 fn frame_mismatch(app: &App, screen: &TerminalSnapshot, test_id: &str) -> Option<String> {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let root = crate::support::workspace_root().join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
         screen.clone(),
@@ -234,6 +240,7 @@ fn j05_launch_stages() {
         text(screen).contains(ARCHITECT_PICKER)
     });
     cred.key("down");
+    cred.key("space");
     cred.key("enter");
     let locked = cred.wait_screen("credentials locked", |screen| {
         let visible = text(screen);
@@ -252,7 +259,7 @@ fn j05_launch_stages() {
         visible.contains(DIRECTORY)
             && visible.contains(FAILED_SETUP)
             && visible.contains(NOTHING)
-            && visible.contains(STILL_THREE)
+            && visible.contains(THREE_RUNNING)
             && !visible.contains(CRED_TITLE)
             && !visible.contains(VERSION)
     });
@@ -274,6 +281,7 @@ fn j05_launch_stages() {
     });
     blocked.key("enter");
     blocked.wait_screen("sre picker", |screen| text(screen).contains(SRE_PICKER));
+    blocked.key("space");
     blocked.key("enter");
     let side = blocked.wait_screen("sidecar blocked", |screen| {
         let visible = text(screen);
@@ -298,7 +306,7 @@ fn j05_launch_stages() {
         let visible = text(screen);
         visible.contains(DIRECTORY)
             && visible.contains(FAILED_SETUP)
-            && visible.contains(STILL_THREE)
+            && visible.contains(THREE_RUNNING)
             && !visible.contains(BLOCKED)
             && !visible.contains(VERSION)
     });

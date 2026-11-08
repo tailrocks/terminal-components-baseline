@@ -8,7 +8,6 @@
 //! nudge. `Launch::new` leaves the clock off. `App::new` would enable it for
 //! jackin.
 
-use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
@@ -106,7 +105,7 @@ fn shot(app: &App, checkpoint: &str, accept: impl Fn(&TerminalSnapshot) -> bool)
 }
 
 fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let root = crate::support::workspace_root().join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
         screen.clone(),

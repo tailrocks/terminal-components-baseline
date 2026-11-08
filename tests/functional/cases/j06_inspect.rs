@@ -10,7 +10,6 @@
 //! that order because `uncommitted` is already 2, so the compact cursor starts
 //! on `mod.rs`.
 
-use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
@@ -363,7 +362,7 @@ fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
     )
     .expect("build Tuiscotti state sample");
     let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let root = crate::support::workspace_root().join("tests/functional/baselines");
     let artifacts = app.evidence_dir().join("check-artifacts");
     let store = tuiscotti_latest::check::FrozenStore::new(&root, &artifacts)
         .expect("open Tuiscotti frozen store");

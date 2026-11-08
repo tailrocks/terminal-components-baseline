@@ -1,0 +1,264 @@
+use crate::backend::{ChangeSet, ChangedFile, DiffLine, DiffStatus, Hunk};
+
+fn seed(instance_id: &str) -> u64 {
+    instance_id.bytes().fold(0xcbf2_9ce4_8422_2325u64, |h, b| {
+        (h ^ b as u64).wrapping_mul(0x0100_0000_01b3)
+    })
+}
+
+fn ext(path: &str) -> &str {
+    path.rsplit('.').next().unwrap_or("")
+}
+
+fn c(s: &str) -> DiffLine {
+    DiffLine::context(s)
+}
+fn a(s: &str) -> DiffLine {
+    DiffLine::add(s)
+}
+fn r(s: &str) -> DiffLine {
+    DiffLine::remove(s)
+}
+
+fn hunks_for(path: &str, k: u64) -> Vec<Hunk> {
+    let base = 8 + (k % 7) as usize * 5;
+    match ext(path) {
+        "rs" if path.contains("retry") => vec![
+            Hunk {
+                old_start: base,
+                new_start: base,
+                lines: vec![
+                    c("use std::time::Duration;"),
+                    a("use rand::Rng;"),
+                    c(""),
+                    c("pub struct RetryPolicy {"),
+                    r("    pub attempts: u32,"),
+                    a("    pub max_attempts: u32,"),
+                    a("    pub base_delay: Duration,"),
+                    c("}"),
+                ],
+            },
+            Hunk {
+                old_start: base + 30,
+                new_start: base + 32,
+                lines: vec![
+                    c("    pub fn delay_for(&self, attempt: u32) -> Duration {"),
+                    r("        self.base_delay"),
+                    a("        let factor = 2u32.saturating_pow(attempt.min(5));"),
+                    a("        let jitter = rand::thread_rng().gen_range(0..250);"),
+                    a("        self.base_delay * factor + Duration::from_millis(jitter)"),
+                    c("    }"),
+                ],
+            },
+            Hunk {
+                old_start: base + 58,
+                new_start: base + 63,
+                lines: vec![
+                    c("        loop {"),
+                    r("            if attempt >= self.attempts {"),
+                    a("            if attempt >= self.max_attempts {"),
+                    c("                return Err(SettleError::Exhausted(attempt));"),
+                    c("            }"),
+                ],
+            },
+        ],
+        "rs" if path.contains("config") => vec![Hunk {
+            old_start: base + 4,
+            new_start: base + 4,
+            lines: vec![
+                c("#[derive(Debug, Clone, Deserialize)]"),
+                c("pub struct SettlementConfig {"),
+                c("    pub batch_size: usize,"),
+                r("    pub retry_attempts: u32,"),
+                a("    pub retry_max_attempts: u32,"),
+                a("    #[serde(default = \"default_backoff_ms\")]"),
+                a("    pub retry_backoff_ms: u64,"),
+                c("}"),
+                a(""),
+                a("fn default_backoff_ms() -> u64 {"),
+                a("    200"),
+                a("}"),
+            ],
+        }],
+        "rs" => vec![Hunk {
+            old_start: base,
+            new_start: base,
+            lines: vec![
+                c("pub mod config;"),
+                c("pub mod retry;"),
+                a("pub mod backoff;"),
+                c(""),
+                r("pub use retry::RetryPolicy;"),
+                a("pub use retry::{RetryPolicy, SettleError};"),
+            ],
+        }],
+        "toml" => vec![Hunk {
+            old_start: base,
+            new_start: base,
+            lines: vec![
+                c("[dependencies]"),
+                c("serde = { version = \"1\", features = [\"derive\"] }"),
+                a("rand = \"0.8\""),
+                r("tokio = { version = \"1.36\", features = [\"full\"] }"),
+                a("tokio = { version = \"1.38\", features = [\"full\"] }"),
+            ],
+        }],
+        "md" => vec![Hunk {
+            old_start: base,
+            new_start: base,
+            lines: vec![
+                c("## Retries"),
+                c(""),
+                r("Failed batches are retried three times immediately."),
+                a("Failed batches back off exponentially (200 ms base, 5 attempts,"),
+                a("jitter up to 250 ms) before the batch is marked exhausted."),
+            ],
+        }],
+        "tsx" | "ts" => vec![Hunk {
+            old_start: base,
+            new_start: base,
+            lines: vec![
+                c("export function SkeletonRow({ columns }: Props) {"),
+                r("  return <tr className=\"skeleton\">{columns.map(() => <td />)}</tr>;"),
+                a("  return ("),
+                a("    <tr className=\"skeleton\" aria-busy=\"true\">"),
+                a("      {columns.map((c) => <td key={c.id} style={{ width: c.width }} />)}"),
+                a("    </tr>"),
+                a("  );"),
+                c("}"),
+            ],
+        }],
+        "yml" | "yaml" => vec![Hunk {
+            old_start: base,
+            new_start: base,
+            lines: vec![
+                c("      - name: Build release"),
+                r("        run: cargo build --release"),
+                a("        run: cargo build --release --locked"),
+                a("      - name: Verify signatures"),
+                a("        run: ./scripts/verify-signatures.sh"),
+            ],
+        }],
+        "tf" => vec![Hunk {
+            old_start: base,
+            new_start: base,
+            lines: vec![
+                c("resource \"google_container_node_pool\" \"primary\" {"),
+                r("  node_count = 3"),
+                a("  node_count = 5"),
+                c("  autoscaling {"),
+                r("    max_node_count = 6"),
+                a("    max_node_count = 10"),
+                c("  }"),
+            ],
+        }],
+        _ => vec![Hunk {
+            old_start: base,
+            new_start: base,
+            lines: vec![c("# settings"), r("timeout = 30"), a("timeout = 45")],
+        }],
+    }
+}
+
+fn added_file() -> ChangedFile {
+    ChangedFile {
+        path: "src/settlement/backoff.rs".into(),
+        status: DiffStatus::Added,
+        hunks: vec![Hunk {
+            old_start: 0,
+            new_start: 1,
+            lines: vec![
+                a("//! Exponential backoff with bounded jitter."),
+                a(""),
+                a("use std::time::Duration;"),
+                a(""),
+                a("pub struct Backoff {"),
+                a("    base: Duration,"),
+                a("    cap: u32,"),
+                a("}"),
+                a(""),
+                a("impl Backoff {"),
+                a("    pub fn exponential(base: Duration, cap: u32) -> Self {"),
+                a("        Self { base, cap }"),
+                a("    }"),
+                a("}"),
+            ],
+        }],
+    }
+}
+
+fn deleted_file() -> ChangedFile {
+    ChangedFile {
+        path: "docs/legacy-retry.md".into(),
+        status: DiffStatus::Deleted,
+        hunks: vec![Hunk {
+            old_start: 1,
+            new_start: 0,
+            lines: vec![
+                r("# Legacy retry notes"),
+                r(""),
+                r("Retries happen inline, three times, with no delay."),
+                r("Superseded by the backoff policy in `src/settlement/retry.rs`."),
+            ],
+        }],
+    }
+}
+
+fn renamed_file() -> ChangedFile {
+    ChangedFile {
+        path: "tests/settlement_retry.rs".into(),
+        status: DiffStatus::Renamed {
+            from: "tests/retry.rs".into(),
+        },
+        hunks: vec![Hunk {
+            old_start: 3,
+            new_start: 3,
+            lines: vec![
+                c("#[test]"),
+                r("fn retries_three_times() {"),
+                a("fn backs_off_and_caps_at_five() {"),
+                c("    let policy = RetryPolicy::default();"),
+                r("    assert_eq!(policy.attempts, 3);"),
+                a("    assert_eq!(policy.max_attempts, 5);"),
+                a("    assert!(policy.delay_for(4) > policy.delay_for(1));"),
+                c("}"),
+            ],
+        }],
+    }
+}
+
+pub fn changes_for(
+    instance_id: &str,
+    touched: &[String],
+    uncommitted: usize,
+    unpushed: usize,
+) -> ChangeSet {
+    let k = seed(instance_id);
+    let mut files: Vec<ChangedFile> = vec![];
+    let mut seen = std::collections::BTreeSet::new();
+    for (i, path) in touched.iter().enumerate() {
+        if !seen.insert(path.clone()) {
+            continue;
+        }
+        files.push(ChangedFile {
+            path: path.clone(),
+            status: DiffStatus::Modified,
+            hunks: hunks_for(path, k.wrapping_add(i as u64)),
+        });
+    }
+    let extras = [added_file, deleted_file, renamed_file];
+    let mut e = 0;
+    while files.len() < uncommitted && e < extras.len() {
+        let f = extras[e]();
+        if seen.insert(f.path.clone()) {
+            files.push(f);
+        }
+        e += 1;
+    }
+    ChangeSet {
+        files,
+        unpushed,
+        omitted: 0,
+        unread: vec![],
+    }
+}

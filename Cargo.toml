@@ -9,7 +9,21 @@ license = "MIT"
 default-run = "showcase"
 
 [workspace]
-members = ["."]
+members = [".", "apps/jackin"]
+default-members = [".", "apps/jackin"]
+
+[workspace.dependencies]
+clap = { version = "4.6", features = ["derive"] }
+ratatui = { version = "0.30", features = ["crossterm_0_29"] }
+serde_json = "1"
+tui-test = { package = "tuiscotti-tui-test", version = "=0.2.1" }
+tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/tuiscotti", rev = "92ef2d9ee082b35f68e066c5129fedbf07675a80" }
+
+[features]
+default = ["cli", "terminal"]
+cli = ["dep:clap"]
+terminal = ["dep:termpane"]
+product = ["terminal"]
 
 [lib]
 name = "junie_tui"
@@ -20,27 +34,28 @@ doctest = false
 [[bin]]
 name = "showcase"
 path = "src/bin/showcase/main.rs"
+required-features = ["cli", "terminal"]
 
 [[bin]]
 name = "tablepro"
 path = "src/bin/tablepro/main.rs"
-
-[[bin]]
-name = "jackin"
-path = "src/bin/jackin/main.rs"
+required-features = ["cli"]
 
 [[bin]]
 name = "holla"
 path = "src/bin/holla/main.rs"
+required-features = ["cli"]
 
 [[test]]
 name = "functional"
 path = "tests/functional/main.rs"
+required-features = ["cli", "terminal"]
 
 [dependencies]
-clap = { version = "4.6", features = ["derive"] }
-ratatui = { version = "0.30", features = ["crossterm_0_29"] }
-unicode-width = "0.2"
+clap = { workspace = true, optional = true }
+termpane = { git = "https://github.com/tailrocks/termpane", rev = "46cc0977d8ee95d5284f75080d507ca2d116c007", optional = true, default-features = false }
+ratatui = { workspace = true }
+unicode-width = "0.2.3"
 unicode-segmentation = "1"
 
 [target.'cfg(unix)'.dependencies]
@@ -49,10 +64,10 @@ libc = "0.2"
 
 [dev-dependencies]
 
-tui-test = { package = "tuiscotti-tui-test", version = "=0.2.1" }
+tui-test = { workspace = true }
 
-tuiscotti-latest = { package = "tuiscotti", git = "https://github.com/tailrocks/tuiscotti", rev = "92ef2d9ee082b35f68e066c5129fedbf07675a80" }
-serde_json = "1"
+tuiscotti-latest = { workspace = true }
+serde_json = { workspace = true }
 
 [profile.dev.package."*"]
 opt-level = 3

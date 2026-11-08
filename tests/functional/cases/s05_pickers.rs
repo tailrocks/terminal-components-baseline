@@ -138,15 +138,51 @@ fn assert_toggle(screen: &TerminalSnapshot, label: &str, state: &str) {
     );
 }
 
+fn normalized_readout_rows(screen: &TerminalSnapshot) -> Vec<String> {
+    (0..screen.rows())
+        .map(|row| {
+            row_text(screen, row)
+                .replace(['│', '┃'], " ")
+                .split_whitespace()
+                .collect::<Vec<_>>()
+                .join(" ")
+        })
+        .collect()
+}
+
+fn readout_contains(rows: &[String], phrase: &str) -> bool {
+    let phrase = phrase.split_whitespace().collect::<Vec<_>>().join(" ");
+    let rows = rows
+        .iter()
+        .map(|row| {
+            row.replace(['│', '┃'], " ")
+                .split_whitespace()
+                .collect::<Vec<_>>()
+                .join(" ")
+        })
+        .collect::<Vec<_>>();
+    if rows.iter().any(|row| row.contains(&phrase)) {
+        return true;
+    }
+
+    let words = phrase.split_whitespace().collect::<Vec<_>>();
+    (1..words.len()).any(|split| {
+        let prefix = words[..split].join(" ");
+        let suffix = words[split..].join(" ");
+        rows.windows(2)
+            .any(|pair| pair[0].ends_with(&prefix) && pair[1].starts_with(&suffix))
+    })
+}
+
 fn assert_readout(screen: &TerminalSnapshot, skip: &[&str], present: &str, absent: &str) {
-    let visible = flat(screen);
+    let rows = normalized_readout_rows(screen);
     assert!(
-        visible.contains(present),
+        readout_contains(&rows, present),
         "readout missing {present:?}\n{}",
         text(screen)
     );
     assert!(
-        !visible.contains(absent),
+        !readout_contains(&rows, absent),
         "readout still shows {absent:?}\n{}",
         text(screen)
     );
@@ -155,11 +191,31 @@ fn assert_readout(screen: &TerminalSnapshot, skip: &[&str], present: &str, absen
             continue;
         }
         assert!(
-            visible.contains(fragment),
+            readout_contains(&rows, fragment),
             "another option changed; missing {fragment:?}\n{}",
             text(screen)
         );
     }
+}
+
+#[test]
+fn readout_match_requires_the_complete_wrapped_phrase() {
+    let wrapped = vec![
+        "No matches — Esc clears the │".to_owned(),
+        "┃ search”".to_owned(),
+    ];
+    assert!(readout_contains(&wrapped, EMPTY_TEXT));
+    assert!(!readout_contains(
+        &wrapped,
+        "No matches — Esc clears the search” (stale)"
+    ));
+
+    let separated = vec![
+        "No matches — Esc clears the".to_owned(),
+        "unrelated readout".to_owned(),
+        "search”".to_owned(),
+    ];
+    assert!(!readout_contains(&separated, EMPTY_TEXT));
 }
 
 /// Grid labels sit under the legend. The legend itself contains "focused".

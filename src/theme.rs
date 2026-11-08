@@ -1172,7 +1172,7 @@ impl Theme {
             Kind::Button(ButtonKind::Primary) => Plane::Accent,
             Kind::Button(ButtonKind::Subtle) => plane,
             Kind::Button(_) | Kind::Chip => Plane::Raised,
-            Kind::CursorRow(CursorStyle::Fill) if s.focused && !s.disabled => {
+            Kind::CursorRow(CursorStyle::Fill) if s.focused && (!s.disabled || s.fixed) => {
                 if s.error {
                     Plane::HighlightDanger
                 } else {
@@ -1194,7 +1194,12 @@ impl Theme {
             } else {
                 self.ladder(body).rest
             };
-            let bg = rest;
+            let fixed_fill = s.fixed && s.focused && kind == Kind::CursorRow(CursorStyle::Fill);
+            let bg = if fixed_fill {
+                self.ladder(Plane::Highlight).rest
+            } else {
+                rest
+            };
             let mut fg = self.disabled;
             let mut dim = m.disabled;
             if fg == bg {
@@ -1207,10 +1212,22 @@ impl Theme {
             } else {
                 style = style.bg(bg);
             }
+            let bar = s.fixed
+                && s.focused
+                && !matches!(
+                    kind,
+                    Kind::CursorRow(CursorStyle::Fill) | Kind::Close | Kind::Field
+                );
             return Interactive {
                 style,
-                gutter: " ",
-                gutter_style: Style::new().fg(bg).bg(bg),
+                gutter: if bar { self.glyphs.focus_bar } else { " " },
+                gutter_style: Style::new()
+                    .fg(if bar {
+                        self.legible_mark(self.focus, bg)
+                    } else {
+                        bg
+                    })
+                    .bg(bg),
                 on_fill: false,
             };
         }
@@ -1487,7 +1504,7 @@ impl Theme {
     }
 
     pub fn gutter_symbol(&self, s: VisualState) -> &'static str {
-        if s.focused && !s.disabled {
+        if s.focused && (!s.disabled || s.fixed) {
             self.glyphs.focus_bar
         } else {
             " "
@@ -1495,7 +1512,7 @@ impl Theme {
     }
 
     pub fn gutter(&self, s: VisualState, bg: Color, on_accent: bool) -> Style {
-        let fg = if !s.focused || s.disabled {
+        let fg = if !s.focused || (s.disabled && !s.fixed) {
             bg
         } else if on_accent {
             self.text_on_accent

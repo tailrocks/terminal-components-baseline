@@ -17,7 +17,7 @@ use tui_test::{SnapshotColor, TerminalSnapshot};
 use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{
-    App, HOLLA, JACKIN, Launch, SHOWCASE, TABLEPRO, find_all, row_text, text, try_launch,
+    App, HOLLA, Launch, SHOWCASE, TABLEPRO, find_all, row_text, text, try_launch,
 };
 
 const IDENTITY: &str = "Tokens and principles behind every component";
@@ -34,9 +34,6 @@ const SPINNER: &str = "⠋";
 const RUNNER: &str = "Waiting for the test runner";
 const DISCOVERING: &str = "discovering";
 const HOLLA_READY: &str = "Search actions";
-const CAPTION: &str = "Knock, knock, operator.";
-const CONTINUE: &str = "Continue";
-const SKIP: &str = "Skip";
 const HOST: &str = "dev-db.internal.acme.io";
 const PHASES: [&str; 3] = ["Opening SSH tunnel", "Authenticating", "Loading schema"];
 const WIDE_ID: &str = "pre_refactor/x01_env/x01_env_env_120x40";
@@ -251,13 +248,6 @@ fn assert_nocolor_each_app() {
     assert_plain_accent("showcase", SHOWCASE, OVERVIEW, ACCENT, FOCUS);
     assert_plain_accent("holla", HOLLA, HOLLA_READY, ACCENT, FOCUS);
     assert_plain_accent("tablepro", TABLEPRO, "Filter connections", ACCENT, FOCUS);
-    assert_plain_accent(
-        "jackin",
-        JACKIN,
-        CAPTION,
-        SnapshotColor::Rgb(255, 255, 255),
-        CAPTION,
-    );
 }
 
 fn assert_color_flag_with_nocolor() {
@@ -310,24 +300,6 @@ fn holla_discovering(name: &str, motion: Option<&str>, value: Option<&str>) -> b
     let discovering = text(&screen).contains(DISCOVERING);
     app.kill_child();
     discovering
-}
-
-fn jackin_reduced_caption(name: &str, motion: Option<&str>, value: Option<&str>) -> bool {
-    let env = motion_env("JACKIN_NO_MOTION", value);
-    let app = open(name, JACKIN, &[], Some("truecolor"), motion, &env);
-    let screen = app.wait_screen(name, |screen| {
-        let visible = text(screen);
-        visible.contains(CAPTION) || visible.contains(SKIP)
-    });
-    let reduced = text(&screen).contains(CAPTION) && text(&screen).contains(CONTINUE);
-    if reduced {
-        refuse(&screen, SKIP);
-    } else {
-        require(&screen, SKIP);
-        refuse(&screen, CAPTION);
-    }
-    app.kill_child();
-    reduced
 }
 
 fn spinner_near(screen: &TerminalSnapshot, label: &str) -> Option<String> {
@@ -413,27 +385,6 @@ fn assert_motion() {
     ));
     assert!(holla_discovering(
         "x01-env-motion-holla-zero",
-        None,
-        Some("0")
-    ));
-
-    assert!(jackin_reduced_caption(
-        "x01-env-motion-jackin-reduced",
-        Some("reduced"),
-        None
-    ));
-    assert!(jackin_reduced_caption(
-        "x01-env-motion-jackin-env",
-        None,
-        Some("1")
-    ));
-    assert!(!jackin_reduced_caption(
-        "x01-env-motion-jackin-full",
-        Some("full"),
-        Some("1")
-    ));
-    assert!(!jackin_reduced_caption(
-        "x01-env-motion-jackin-zero",
         None,
         Some("0")
     ));

@@ -366,7 +366,7 @@ fn j04_usage_route() {
         for _ in 0..40 {
             let screen = app.screen();
             let visible = text(&screen);
-            if visible.contains(WORK) && visible.contains("76%") && visible.contains("· current ·")
+            if visible.contains(WORK) && visible.contains("77%") && visible.contains("· current ·")
             {
                 no_secrets(&screen);
                 break 'work screen;
@@ -375,7 +375,7 @@ fn j04_usage_route() {
                 let settled = app.wait_screen("work became current", |screen| {
                     let visible = text(screen);
                     visible.contains(WORK)
-                        && visible.contains("76%")
+                        && visible.contains("77%")
                         && visible.contains("· current ·")
                         && !visible.contains(STALE)
                 });
@@ -526,12 +526,16 @@ fn j04_usage_usage() {
         visible.contains(RATE) && visible.contains("57%") && !visible.contains("refreshing")
     });
     app.key("escape");
-    let current = up_until(&app, "refresh succeeded", |visible| {
-        visible.contains(WORK)
-            && visible.contains("76%")
-            && visible.contains("· current ·")
-            && !visible.contains("stale")
+    let current = up_until(&app, "refreshed work account", |visible| {
+        visible.contains("Usage › Claude › Work") && visible.contains(SAFE_OP)
     });
+    assert!(
+        text(&current).contains("· current ·")
+            && text(&current).contains("77%")
+            && !text(&current).contains("stale"),
+        "work refresh outcome\n{}",
+        text(&current)
+    );
     no_secrets(&current);
     down_until(&app, "failed go", |visible| {
         visible.contains(GO) && visible.contains(RATE) && visible.contains("57%")

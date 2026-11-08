@@ -4,16 +4,25 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
+use junie_tui::clock::TestRequest;
 use tui_test::{
     CheckedMouseAction, KeyAction, LaunchEnvMode, LaunchOptions, MouseOptions, OpenOptions,
     Operation, OperationResult, RunOptions, Session, SnapshotCell, SnapshotScope, TerminalSnapshot,
     WaitQuietOptions,
 };
 
-pub const SHOWCASE: &str = env!("CARGO_BIN_EXE_showcase");
-pub const TABLEPRO: &str = env!("CARGO_BIN_EXE_tablepro");
-pub const HOLLA: &str = env!("CARGO_BIN_EXE_holla");
-pub const JACKIN: &str = env!("CARGO_BIN_EXE_jackin");
+pub const SHOWCASE: &str = match option_env!("CARGO_BIN_EXE_showcase") {
+    Some(path) => path,
+    None => "",
+};
+pub const TABLEPRO: &str = match option_env!("CARGO_BIN_EXE_tablepro") {
+    Some(path) => path,
+    None => "",
+};
+pub const HOLLA: &str = match option_env!("CARGO_BIN_EXE_holla") {
+    Some(path) => path,
+    None => "",
+};
 const TIMEOUT: Duration = Duration::from_secs(10);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -127,7 +136,10 @@ impl App {
         launch.color = Some(color.to_string());
         // Only jackin overrides `advance_clock` (src/bin/jackin/app.rs). Elsewhere the
         // paste falls through to `on_input` (src/shell/app.rs), so the clock stays off.
-        launch.clock = Path::new(bin).file_name().and_then(|file| file.to_str()) == Some("jackin");
+        launch.clock = Path::new(bin)
+            .file_name()
+            .and_then(|file| file.to_str())
+            .is_some_and(|name| matches!(name, "jackin" | "jackin-preview"));
         try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
     }
 
@@ -185,6 +197,14 @@ impl App {
         }
     }
 
+    pub fn wait_text_after_animation(&self, needle: &str, animation: Duration) -> TerminalSnapshot {
+        self.wait_screen_for(
+            &format!("visible {needle}"),
+            TIMEOUT + animation,
+            |screen| text(screen).contains(needle),
+        )
+    }
+
     pub fn stable_screen(&self) -> TerminalSnapshot {
         let deadline = Instant::now() + Duration::from_secs(5);
         self.assert_running("stability");
@@ -211,7 +231,7 @@ impl App {
     }
 
     pub fn visual(&self, test_id: &str) {
-        let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+        let root = baseline_root(test_id);
         let outcome = self.check_visual_with_precondition(&root, test_id, "");
         // The cells are the accepted paint. A hidden cursor parks on another
         // column of an otherwise equal frame.
@@ -261,7 +281,7 @@ impl App {
     }
 
     fn compare_frame(&self, test_id: &str, screen: &TerminalSnapshot) {
-        let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+        let root = baseline_root(test_id);
         let sample = tuiscotti_latest::sample::Sample::state(
             test_id,
             screen.clone(),
@@ -423,7 +443,7 @@ impl App {
             self.log("clock refused".to_string());
             return;
         }
-        self.paste(&format!("junie-tui:advance-clock:{milliseconds}"));
+        self.paste(&TestRequest::advance(milliseconds));
     }
 
     pub fn move_to(&self, point: Point) {
@@ -827,9 +847,36 @@ fn evidence_directory(name: &str) -> PathBuf {
         .expect("system clock")
         .as_nanos();
     let seq = SEQ.fetch_add(1, Ordering::Relaxed);
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+    workspace_root()
         .join("target/functional")
         .join(format!("{name}-{}-{nanos}-{seq}", std::process::id()))
+}
+
+fn baseline_root(test_id: &str) -> PathBuf {
+    if test_id.starts_with("pre_refactor/") {
+        workspace_root().join("tests/functional/baselines")
+    } else {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines")
+    }
+}
+
+pub fn workspace_root() -> PathBuf {
+    let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    if manifest.join("Cargo.toml").is_file() && manifest.join("apps/jackin/Cargo.toml").is_file() {
+        return manifest;
+    }
+    let workspace = manifest.join("../..");
+    if manifest.join("Cargo.toml").is_file()
+        && manifest.join("src").is_dir()
+        && workspace.join("Cargo.toml").is_file()
+        && workspace.join("apps/jackin/Cargo.toml").is_file()
+    {
+        return workspace.canonicalize().expect("app workspace root");
+    }
+    panic!(
+        "CARGO_MANIFEST_DIR is neither the workspace root nor apps/jackin: {}",
+        manifest.display()
+    );
 }
 
 fn child_args(launch: &Launch) -> Vec<String> {
@@ -901,7 +948,7 @@ struct Manifest {
 }
 
 fn manifest_path() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("docs/testing/reference-manifest.json")
+    workspace_root().join("docs/testing/reference-manifest.json")
 }
 
 fn required_str(value: &serde_json::Value, key: &str) -> String {
@@ -936,7 +983,7 @@ pub fn reference_binary(name: &str) -> PathBuf {
     let path = value["binaries"][name]["platforms"][host]["path"]
         .as_str()
         .unwrap_or_else(|| panic!("reference path for {name} on {host}"));
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(path)
+    workspace_root().join(path)
 }
 
 pub fn reference_digest(name: &str) -> String {

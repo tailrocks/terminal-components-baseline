@@ -14,9 +14,7 @@ use std::time::Duration;
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{
-    App, HOLLA, JACKIN, Launch, Point, SHOWCASE, TABLEPRO, find_all, text, try_launch,
-};
+use crate::support::{App, HOLLA, Launch, Point, SHOWCASE, TABLEPRO, find_all, text, try_launch};
 
 const TOO_SMALL: &str = "Terminal too small";
 const MIN_WIDTH: u16 = 72;
@@ -333,12 +331,6 @@ fn x02_resize_resize() {
         HOLLA,
         &["--scenario", "first-use"],
         "Analyze disk usage",
-    );
-    app_bounds(
-        "x02-resize-jackin",
-        JACKIN,
-        &["--scenario", "first-use"],
-        "Knock, knock, operator.",
     );
     delete_dialog_survives();
     pipeline_output_survives();

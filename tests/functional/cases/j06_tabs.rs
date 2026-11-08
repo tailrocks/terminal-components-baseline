@@ -5,7 +5,6 @@
 //! do not nudge. `Launch::new` leaves the clock off. `App::new` would enable
 //! it for jackin.
 
-use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
@@ -156,7 +155,10 @@ fn prefix(app: &App, cmd: &str) {
 fn pick(app: &App, title: &str, downs: usize, started: &str) {
     app.wait_screen(title, |screen| {
         let visible = text(screen);
-        visible.contains(title) && visible.contains("Shell") && visible.contains("zsh")
+        visible.contains(title)
+            && visible.contains("Type to search…")
+            && visible.contains("Shell")
+            && visible.contains("zsh")
     });
     for _ in 0..downs {
         app.key("down");
@@ -164,7 +166,9 @@ fn pick(app: &App, title: &str, downs: usize, started: &str) {
     app.key("enter");
     app.wait_screen(started, |screen| {
         let visible = text(screen);
-        visible.contains(started) && !visible.contains(title)
+        visible.contains(started)
+            && !visible.contains(title)
+            && (started != STARTED_OPEN || !visible.contains(STARTED_GROK))
     });
 }
 
@@ -259,7 +263,7 @@ fn shot(app: &App, checkpoint: &str, accept: impl Fn(&TerminalSnapshot) -> bool)
 }
 
 fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let root = crate::support::workspace_root().join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
         screen.clone(),
@@ -403,11 +407,18 @@ fn j06_tabs_layout() {
     app.wait_screen("capsule", capsule_ready);
 
     prefix(&app, "c");
-    pick(&app, "New tab", 4, STARTED_SHELL);
+    pick(&app, "New tab", 5, STARTED_SHELL);
     app.type_text(SHELL_MARK);
     let shell = app.wait_screen("shell marker", |screen| in_body(screen, SHELL_MARK));
     require(&shell, STARTED_SHELL);
     assert!(in_body(&shell, SHELL_PROMPT));
+    let restored_status = app.wait_screen("launch status expires", |screen| {
+        let visible = text(screen);
+        in_body(screen, SHELL_MARK)
+            && !visible.contains(STARTED_SHELL)
+            && visible.contains("no account · shell")
+    });
+    require(&restored_status, "no account · shell");
     prefix(&app, "z");
     app.wait_screen("one pane zoom", |screen| text(screen).contains(ONE_PANE));
     prefix(&app, "H");
@@ -423,7 +434,7 @@ fn j06_tabs_layout() {
     prefix(&app, "c");
     pick(&app, "New tab", 3, STARTED_GROK);
     let grok = app.wait_screen("grok tab", |screen| in_body(screen, GROK_BODY));
-    require(&grok, STARTED_GROK);
+    require(&grok, GROK_BODY);
     refuse(&grok, "could not start");
     prefix(&app, "4");
     app.wait_screen("shell survived", |screen| {
@@ -445,14 +456,14 @@ fn j06_tabs_layout() {
     });
 
     prefix(&app, "5");
-    app.wait_screen("grok returned", |screen| {
+    app.wait_screen("Grok returned", |screen| {
         in_body(screen, GROK_BODY) && !in_body(screen, SHELL_MARK)
     });
     app.type_text(KEEP);
     app.wait_screen("keep marker", |screen| in_body(screen, KEEP));
 
     prefix(&app, "%");
-    pick(&app, "Split → Right", 4, STARTED_SHELL);
+    pick(&app, "Split → Right", 5, STARTED_SHELL);
     let split_right = app.wait_screen("split right", |screen| in_body(screen, KEEP));
     require(&split_right, KEEP);
     app.type_text(RIGHT);
@@ -460,7 +471,7 @@ fn j06_tabs_layout() {
     assert_separated(&right, KEEP, RIGHT);
 
     prefix(&app, "\"");
-    pick(&app, "Split ↓ Below", 4, STARTED_SHELL);
+    pick(&app, "Split ↓ Below", 5, STARTED_SHELL);
     let split_below = app.wait_screen("split below", |screen| {
         in_body(screen, KEEP) && in_body(screen, RIGHT)
     });

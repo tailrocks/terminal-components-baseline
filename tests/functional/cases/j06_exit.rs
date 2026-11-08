@@ -9,7 +9,6 @@
 //! `src/bin/jackin/screens/capsule.rs`. `Route::Capsule` is capturing, so
 //! that handler runs before the shell quit chord in `src/shell/router.rs`.
 
-use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
@@ -390,7 +389,7 @@ fn shot(app: &App, checkpoint: &str, accept: impl Fn(&TerminalSnapshot) -> bool)
 }
 
 fn frame_mismatch(app: &App, screen: &TerminalSnapshot, test_id: &str) -> Option<String> {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let root = crate::support::workspace_root().join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
         screen.clone(),

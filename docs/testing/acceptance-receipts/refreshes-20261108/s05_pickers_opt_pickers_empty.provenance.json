@@ -1,0 +1,24 @@
+{
+  "schema": "tcb.baseline-refresh.v1",
+  "test_id": "pre_refactor/s05_pickers/opt_pickers_empty",
+  "reason": "The current producer paints the selected Pickers navigation section with its current nested navigation layout; this differs from the frozen legacy navigation captured before the UI change. The test semantic assertions passed before its final visual comparison.",
+  "observed_delta": {
+    "changed_cells": 1704,
+    "dimensions": "120x40",
+    "legacy": "Separate Overlays child rows for Dialogs, Pickers, Dialog kinds, Popups & tooltips, and File browser.",
+    "candidate": "Current selected Pickers section includes Dialogs / Multi select / Multi search inline and omits the former child rows; Feedback and following sections move upward."
+  },
+  "previous_baseline": {
+    "sha256": "a258baed664fe9b4b35d4d2eb8c3127734c140d264fe7bcf01b24be4bc341beb",
+    "preserved_bytes": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/s05_pickers/opt_pickers_empty.tui.pb",
+    "prior_transaction": "docs/testing/acceptance-receipts/historical-binary-20261108/transactions.jsonl"
+  },
+  "candidate": {
+    "sha256": "3b1b7665accf1c73855a307450b265f70103c045f37f15058009ca099f24b5de",
+    "sample": "target/functional/s05-empty-18855-1794088206988891000-0/check-artifacts/pre_refactor/s05_pickers/opt_pickers_empty/3b1b7665accf1c73855a307450b265f70103c045f37f15058009ca099f24b5de/sample.tui.pb",
+    "session": "target/functional/s05-empty-18855-1794088206988891000-0/session.json",
+    "actions": "target/functional/s05-empty-18855-1794088206988891000-0/actions.txt"
+  },
+  "acceptance_receipt": "docs/testing/acceptance-receipts/refreshes-20261108/s05_pickers_opt_pickers_empty.accept.json",
+  "active_baseline": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_empty.tui.pb"
+}

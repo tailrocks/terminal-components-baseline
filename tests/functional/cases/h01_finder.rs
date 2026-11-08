@@ -226,14 +226,12 @@ fn finder_discovery_keeps_the_selected_identity() {
     // The preview age is tick * 80ms and leaves "0 s ago" after 12 ticks.
     // Capture the wide frame on a fresh process before that tick.
     let wide_app = open("h01-finder-discovery-wide", "parity-discovery");
-    let wide = wide_app.wait_screen("discovery at 0s", |screen| {
+    wide_app.visual_while(&visual_id(WIDE), |screen| {
         screen.cols() == 120
             && screen.rows() == 40
             && open_surface(screen)
             && text(screen).contains("live · 0 s ago")
     });
-    assert!(open_surface(&wide));
-    wide_app.visual(&visual_id(WIDE));
     wide_app.finish();
 
     let app = open("h01-finder-discovery", "parity-discovery");

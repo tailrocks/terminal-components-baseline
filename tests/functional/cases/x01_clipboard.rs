@@ -13,7 +13,7 @@ use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
 use crate::support::{
-    App, HOLLA, JACKIN, Launch, Point, SHOWCASE, TABLEPRO, find_all, row_text, text, try_launch,
+    App, HOLLA, Launch, Point, SHOWCASE, TABLEPRO, find_all, row_text, text, try_launch,
 };
 
 const REPORT: &str = "Copied the report (13 lines)";
@@ -23,9 +23,8 @@ const FOLDER_OK: &str =
 const OSC_OFF: &str =
     "Not copied · this terminal does not accept OSC 52 · no system clipboard is wired";
 const LONG_PATH: &str = "/Users/alex/Library/Mobile Documents/com~apple~CloudDocs/cloud-only.txt";
-const TOO_LARGE: &str = "Not copied · 96 encoded bytes exceed the terminal's 64 byte OSC 52 limit";
+const TOO_LARGE: &str = "Not copied · 71 bytes exceed the terminal's 64 byte OSC 52 limit";
 const QUERY: &str = "Copied query";
-const RUN_ID: &str = "Copied 21 characters · run-202609030914-b5df";
 const WIDE_ID: &str = "pre_refactor/x01_clipboard/x01_clipboard_copy_120x40";
 const NARROW_ID: &str = "pre_refactor/x01_clipboard/x01_clipboard_copy_narrow";
 
@@ -240,37 +239,10 @@ fn holla_too_large() {
     app.key("enter");
     app.wait_text("Jumped to");
     app.key("y");
-    let copied = app.wait_text("encoded bytes exceed");
+    let copied = app.wait_text("71 bytes exceed the terminal's 64 byte OSC 52 limit");
     assert!(app.child_running(), "oversized copy stopped holla");
     require(&copied, TOO_LARGE);
     refuse(&copied, "Copied ");
-    app.kill_child();
-}
-
-fn jackin_copy() {
-    let app = open(
-        "x01-clipboard-jackin",
-        JACKIN,
-        &["--scenario", "launch-failure"],
-    );
-    app.wait_text("Launch failed");
-    app.wait_text("run-202609030914-b5df");
-    app.key("down");
-    app.key("y");
-    let copied = app.wait_screen("run id copied", |screen| {
-        text(screen).contains(RUN_ID) && text(screen).contains("Launch failed")
-    });
-    assert!(app.child_running(), "jackin copy stopped the process");
-    require(&copied, RUN_ID);
-    refuse(&copied, "Not copied");
-    app.key("ctrl+c");
-    thread::sleep(Duration::from_millis(200));
-    assert!(
-        app.child_running(),
-        "ctrl+c quit jackin while the failure dialog was open\n{}",
-        text(&app.screen())
-    );
-    require(&app.screen(), "Launch failed");
     app.kill_child();
 }
 
@@ -335,6 +307,5 @@ fn x01_clipboard_copy() {
     holla_supported();
     holla_unsupported();
     holla_too_large();
-    jackin_copy();
     checkpoints();
 }

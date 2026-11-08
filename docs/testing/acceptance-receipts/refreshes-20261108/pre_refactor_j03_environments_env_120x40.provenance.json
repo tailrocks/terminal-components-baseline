@@ -1,0 +1,64 @@
+{
+  "schema": "tcb.baseline-refresh-provenance.v1",
+  "test_id": "pre_refactor/j03_environments/j03_environments_env_120x40",
+  "acceptance": {
+    "command": "tuiscotti accept --json",
+    "cli_path": "/Users/donbeave/.local/share/mise/installs/cargo-https-github-com-tailrocks-tuiscotti/rev-92ef2d9ee082b35f68e066c5129fedbf07675a80/bin/tuiscotti",
+    "cli_sha256": "4233b4a75a6483251614550441688ad0b0acdd213cb2c719319abf58bfeda356",
+    "cli_version": "tuiscotti 0.4.0",
+    "expected_baseline_sha256": "697b081d280917584d630e8d6b2df50e4131e4d3f70b1585b934108ed66a611d",
+    "candidate_sha256": "56f36a76b8ba16acfafba6923676cf46de3a10ef8a547d6f920c746d604235da",
+    "accepted_baseline_sha256": "56f36a76b8ba16acfafba6923676cf46de3a10ef8a547d6f920c746d604235da",
+    "transaction_receipt": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j03_environments_env_120x40.accept.json"
+  },
+  "candidate": {
+    "path": "target/functional/j03-environments-env-50122-1794097152948972000-0/check-artifacts/pre_refactor/j03_environments/j03_environments_env_120x40/56f36a76b8ba16acfafba6923676cf46de3a10ef8a547d6f920c746d604235da/sample.tui.pb",
+    "sha256": "56f36a76b8ba16acfafba6923676cf46de3a10ef8a547d6f920c746d604235da",
+    "evidence_directory": "target/functional/j03-environments-env-50122-1794097152948972000-0",
+    "session": "target/functional/j03-environments-env-50122-1794097152948972000-0/session.json",
+    "binary": "target/functional/j03-environments-env-50122-1794097152948972000-0/binary.json",
+    "actions": "target/functional/j03-environments-env-50122-1794097152948972000-0/actions.txt",
+    "producer_mode": "candidate",
+    "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/debug/jackin-preview",
+    "binary_sha256": "e6a749862bbd0fc0859ed778c220fa596eb07a4c7e554417e1746727ab3553a5",
+    "fixture_args": [
+      "--scenario",
+      "returning"
+    ],
+    "color": "truecolor",
+    "motion": "reduced",
+    "clock": false,
+    "size": [
+      120,
+      40
+    ],
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80",
+    "capture_count": 1,
+    "selection_reason": "exact fresh binary candidate from the passing current-source form checkpoint; required Key marker is visible"
+  },
+  "source_context": {
+    "git_head": "9409215747997a473dab138b974c5a718fcf1271",
+    "test_source_path": "tests/functional/cases/j03_environments.rs",
+    "test_source_sha256": "3302e18f7e93a91936a18e094adbc13a6c90fb1ff853a6277b2ebd8cf60d759e",
+    "candidate_source_cargo_lock_path": "Cargo.lock",
+    "candidate_source_cargo_lock_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "candidate_build_invocation": "mise exec -- cargo nextest run -p jackin-console --test functional -E test(j03_environments_env) --locked --offline",
+    "reference_manifest_path": "docs/testing/reference-manifest.json",
+    "reference_manifest_sha256": "d8aabe881c188520e53960efe3cedffb77b1b7a7bf763f6138c69858db01cc70",
+    "reference_manifest_lockfile_sha256": "924da8b2cf72e2ed3151abff9c399fc9591e33b840f7002cbbe63cdfa4848091",
+    "session_lockfile_sha256_semantics": "session.json lockfile_sha256 records pinned reference identity; candidate source Cargo.lock SHA is recorded separately."
+  },
+  "history": {
+    "superseded_baseline": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j03_environments/j03_environments_env_120x40.tui.pb",
+    "superseded_baseline_sha256": "697b081d280917584d630e8d6b2df50e4131e4d3f70b1585b934108ed66a611d",
+    "historical_json": "tests/functional/baselines/pre_refactor/j03_environments/j03_environments_env_120x40.tui.json",
+    "historical_json_sha256": "fc2db3f1d52cf428547036f28676feae94e450fd2f5bbb607338b9a26b9578e3",
+    "historical_json_modified": false
+  },
+  "selection": {
+    "policy": "accept exact fresh producer candidate after reviewing state diff and source-required field behavior",
+    "candidate_count": 1,
+    "distinct_visual_diff_signatures": 1,
+    "material_delta": "required Key marker (*) and eight adjacent label cells shift from current source-required field label; 9 state cells changed. No pixel comparison."
+  }
+}

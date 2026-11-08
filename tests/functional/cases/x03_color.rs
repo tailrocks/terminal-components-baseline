@@ -15,9 +15,7 @@ use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, SnapshotUnderline, TerminalSnapshot};
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{
-    App, HOLLA, JACKIN, Launch, Point, SHOWCASE, TABLEPRO, find_all, text, try_launch,
-};
+use crate::support::{App, HOLLA, Launch, Point, SHOWCASE, TABLEPRO, find_all, text, try_launch};
 
 const BOLD: u8 = 1;
 const DIM: u8 = 2;
@@ -32,7 +30,6 @@ const DISABLED: &str = "Disabled primary";
 const VERBOSE: &str = "Verbose";
 const CONNECT: &str = "Connect";
 const STAY: &str = "Stay";
-const LAUNCH: &str = "Launch";
 
 const WIDE_ID: &str = "pre_refactor/x03_color/x03_color_matrix_120x40";
 const NARROW_ID: &str = "pre_refactor/x03_color/x03_color_matrix_narrow";
@@ -392,60 +389,6 @@ fn stay_states(color: &str) {
     app.kill_child();
 }
 
-fn launch_ink(color: &str) -> (Ink, Ink, Ink) {
-    match color {
-        "truecolor" => (
-            ink(rgb(255, 255, 255), rgb(39, 39, 42), 0),
-            ink(rgb(255, 255, 255), rgb(55, 55, 61), 0),
-            ink(rgb(255, 255, 255), rgb(74, 74, 82), BOLD),
-        ),
-        "256" => (
-            ink(idx(231), idx(235), 0),
-            ink(idx(231), idx(238), 0),
-            ink(idx(231), idx(240), BOLD),
-        ),
-        "16" | "none" => (
-            ink(idx(0), idx(8), 0),
-            ink(idx(0), idx(8), UNDER),
-            ink(idx(0), idx(8), BOLD | INVERSE),
-        ),
-        "nocolor" => {
-            let plain = SnapshotColor::Default;
-            (
-                ink(plain, plain, 0),
-                ink(plain, plain, UNDER),
-                ink(plain, plain, BOLD | INVERSE),
-            )
-        }
-        _ => unreachable!("colour {color}"),
-    }
-}
-
-fn launch_states(color: &str) {
-    let app = open(
-        &format!("x03-color-jackin-{color}"),
-        JACKIN,
-        &["--scenario", "hard-cases"],
-        color,
-    );
-    // The detail facts paint before the action row. "Edit" is on that row.
-    let screen = app.wait_screen("workspace actions", |screen| {
-        let visible = text(screen);
-        visible.contains("Current directory")
-            && visible.contains("Launch")
-            && visible.contains("Edit")
-    });
-    require(&screen, "Edit");
-    let launch = one(&screen, LAUNCH);
-    let (rest, hover, pressed) = launch_ink(color);
-    distinct(
-        &format!("jackin {color}"),
-        &[("rest", rest), ("hover", hover), ("pressed", pressed)],
-    );
-    gesture(&app, launch, rest, hover, pressed);
-    app.kill_child();
-}
-
 fn buttons_up(screen: &TerminalSnapshot) -> bool {
     let visible = text(screen);
     visible.contains(PAGE)
@@ -567,7 +510,6 @@ fn x03_color_matrix() {
         showcase_states(color);
         connect_states(color);
         stay_states(color);
-        launch_states(color);
     }
     checkpoint();
 }

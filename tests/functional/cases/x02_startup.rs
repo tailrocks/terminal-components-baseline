@@ -13,9 +13,7 @@ use std::time::Duration;
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{
-    App, HOLLA, JACKIN, Launch, Point, SHOWCASE, TABLEPRO, row_text, text, try_launch,
-};
+use crate::support::{App, HOLLA, Launch, Point, SHOWCASE, TABLEPRO, row_text, text, try_launch};
 
 const LISTS: &str = "Navigation › Lists";
 const CHOSEN: &str = "Chosen: Rust";
@@ -34,9 +32,6 @@ const FILTER: &str = "Filter connections";
 const DISK: &str = "Analyze disk usage";
 const BTM: &str = "Open btm";
 const SEARCH: &str = "Search actions";
-const KNOCK: &str = "Knock, knock, operator.";
-const CONTINUE: &str = "Continue";
-const DIRECTORY: &str = "Current directory";
 const WIDE_ID: &str = "pre_refactor/x02_startup/x02_startup_start_120x40";
 const NARROW_ID: &str = "pre_refactor/x02_startup/x02_startup_start_narrow";
 
@@ -304,31 +299,6 @@ fn holla_first_key() {
     app.kill_child();
 }
 
-fn jackin_first_key() {
-    let app = open(
-        "x02-startup-jackin",
-        JACKIN,
-        &["--scenario", "first-use"],
-        &[],
-    );
-    let start = app.wait_text(KNOCK);
-    require(&start, CONTINUE);
-    refuse(&start, DIRECTORY);
-    assert!(app.child_running(), "jackin stopped during startup");
-    app.key("down");
-    thread::sleep(Duration::from_millis(200));
-    let stayed = app.screen();
-    require(&stayed, KNOCK);
-    require(&stayed, CONTINUE);
-    refuse(&stayed, DIRECTORY);
-    assert!(
-        app.child_running(),
-        "first down stopped jackin\n{}",
-        text(&stayed)
-    );
-    app.kill_child();
-}
-
 #[test]
 fn x02_startup_route() {
     let app = open("x02-startup-route", SHOWCASE, &["--page", "lists"], &[]);
@@ -343,7 +313,6 @@ fn x02_startup_route() {
 fn x02_startup_start() {
     tablepro_first_key();
     holla_first_key();
-    jackin_first_key();
     delay_still_moves("x02-startup-delay", Some("80"));
     delay_still_moves("x02-startup-delay-bad", Some("nope"));
     showcase_burst();

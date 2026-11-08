@@ -944,6 +944,57 @@ page_test!(showcase_page_celleditors, "celleditors", "Cell editors");
 page_test!(showcase_page_columns, "columns", "Columns");
 page_test!(showcase_page_sidebars, "sidebars", "Sidebars");
 page_test!(showcase_page_pickers, "pickers", "Pickers");
+
+#[test]
+fn showcase_multi_picker_modes_filter_disabled_and_report_selection() {
+    let app = App::new(
+        "showcase-multi-pickers",
+        SHOWCASE,
+        &["--page", "pickers", "--motion", "paused"],
+        120,
+        40,
+        "truecolor",
+    );
+    app.click_text("Multi select");
+    app.wait_screen("multi picker shows the disabled row", |screen| {
+        let visible = text(screen);
+        visible.contains("Space Toggle")
+            && visible.contains("Row 1")
+            && visible.contains("Row 2")
+            && visible.contains("Row 3")
+    });
+    app.key("space");
+    app.key("down");
+    app.key("space");
+    app.key("enter");
+    let chosen = app.wait_text("ChoseMany: Row 1, Row 3");
+    assert!(text(&chosen).contains("2 selected"));
+    assert!(!text(&chosen).contains("Row 2, Row 3"));
+
+    app.click_text("Multi search");
+    app.wait_text("Type Filter · Ctrl+Space Toggle · Enter Confirm");
+    app.type_text("Row 3");
+    app.wait_screen("search filters to the third row", |screen| {
+        (0..screen.rows()).any(|row| {
+            let line = row_text(screen, row);
+            line.contains("Row 3") && line.contains("multi row 3")
+        })
+    });
+    app.key("ctrl+space");
+    app.key("escape");
+    app.type_text("Row 4");
+    app.wait_screen("search filters to the fourth row", |screen| {
+        (0..screen.rows()).any(|row| {
+            let line = row_text(screen, row);
+            line.contains("Row 4") && line.contains("multi row 4")
+        })
+    });
+    app.key("ctrl+space");
+    app.key("enter");
+    let searched = app.wait_text("ChoseMany: Row 3, Row 4");
+    assert!(text(&searched).contains("2 selected"));
+    app.finish();
+}
 page_test!(showcase_page_dialogkinds, "dialogkinds", "Dialog kinds");
 page_test!(showcase_page_filebrowser, "filebrowser", "File browser");
 page_test!(showcase_page_progress, "progress", "Progress");

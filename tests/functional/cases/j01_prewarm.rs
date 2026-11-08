@@ -8,7 +8,6 @@
 //! frame that still paints the in-progress text. A nudge sleeps and would
 //! spend the 2400 ms window, so these shots do not nudge.
 
-use std::path::PathBuf;
 use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
@@ -161,7 +160,7 @@ fn narrow_frame(screen: &TerminalSnapshot) -> bool {
 }
 
 fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) -> Result<(), String> {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines");
+    let root = crate::support::workspace_root().join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,
         screen.clone(),
