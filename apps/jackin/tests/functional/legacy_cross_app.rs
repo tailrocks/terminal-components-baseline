@@ -1,10 +1,43 @@
 use std::thread;
 use std::time::{Duration, Instant};
 
+use jackin_console::app::Route;
+use jackin_console::fixtures::{Scenario, app_for};
+use junie_tui::core::event::{Input, Key, Outcome};
+use junie_tui::motion::Motion;
+use junie_tui::shell::App as ShellApp;
+use junie_tui::theme::Theme;
+use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use tui_test::terminal::cell::Attrs;
 use tui_test::{SnapshotColor, SnapshotUnderline, TerminalSnapshot};
 
 use super::support::{App, JACKIN, Launch, Point, text, try_launch};
+
+#[test]
+fn intro_enter_is_consumed_for_exactly_the_first_three_ticks() {
+    let mut app = app_for(Scenario::FirstUse, Motion::Reduced, 0, Theme::junie());
+    let enter = Input::Key(Key {
+        code: KeyCode::Enter,
+        mods: KeyModifiers::NONE,
+    });
+
+    assert_eq!(app.route(), Route::Intro);
+    assert_eq!(
+        ShellApp::on_input(&mut app, enter.clone()),
+        Outcome::Consumed
+    );
+    for _ in 0..3 {
+        assert_eq!(app.route(), Route::Intro);
+        assert_eq!(
+            ShellApp::on_input(&mut app, enter.clone()),
+            Outcome::Consumed
+        );
+        ShellApp::on_input(&mut app, Input::Tick);
+    }
+    assert_eq!(app.route(), Route::Intro);
+    assert_eq!(ShellApp::on_input(&mut app, enter), Outcome::Changed);
+    assert_eq!(app.route(), Route::Manager);
+}
 
 fn configured_launch(
     name: &str,
