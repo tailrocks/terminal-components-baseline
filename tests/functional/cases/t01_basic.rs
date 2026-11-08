@@ -43,6 +43,7 @@ fn open() -> App {
     launch.rows = 40;
     launch.color = Some("truecolor".to_string());
     launch.motion = Some("reduced".to_string());
+    launch.clock = true;
     let app = try_launch(launch).unwrap_or_else(|error| panic!("{error}"));
     app.wait_text("Filter connections");
     app
