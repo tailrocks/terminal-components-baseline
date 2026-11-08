@@ -1277,6 +1277,7 @@ pub static POPUPS_TOOLTIPS: &[Opt] = &[
 ];
 
 pub static PICKERS: &[Opt] = &[
+    Opt::new("pickers.toggle", "Multi toggle key", &["default", "vim"]),
     Opt::new("pickers.width", "Width", &["auto", "48", "96"]),
     Opt::new("pickers.max_rows", "Max rows", &["12", "6"]),
     Opt::new("pickers.placement", "Placement", &["center", "below"]),

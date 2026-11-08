@@ -395,11 +395,15 @@ impl Page for PaneTreePage {
                 .hints()
                 .into_iter()
                 .map(|h| {
+                    let key = match h.key {
+                        std::borrow::Cow::Borrowed(key) => key,
+                        std::borrow::Cow::Owned(_) => "",
+                    };
                     let action = match h.action {
                         std::borrow::Cow::Borrowed(s) => s,
                         std::borrow::Cow::Owned(_) => "",
                     };
-                    (h.key, action)
+                    (key, action)
                 })
                 .collect();
         }

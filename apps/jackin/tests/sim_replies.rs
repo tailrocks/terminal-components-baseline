@@ -14,6 +14,8 @@ fn name(effect: &Effect) -> &'static str {
         Effect::SaveAccounts { .. } => "SaveAccounts",
         Effect::DeleteWorkspace { .. } => "DeleteWorkspace",
         Effect::Restore { .. } => "Restore",
+        Effect::PowerStart { .. } => "PowerStart",
+        Effect::PowerStop { .. } => "PowerStop",
         Effect::TrustRole { .. } => "TrustRole",
         Effect::Prewarm { .. } => "Prewarm",
         Effect::Stop { .. } => "Stop",
@@ -35,12 +37,14 @@ fn name(effect: &Effect) -> &'static str {
     }
 }
 
-const ALL: [&str; 23] = [
+const ALL: [&str; 25] = [
     "SaveWorkspace",
     "SaveGlobal",
     "SaveAccounts",
     "DeleteWorkspace",
     "Restore",
+    "PowerStart",
+    "PowerStop",
     "TrustRole",
     "Prewarm",
     "Stop",
@@ -64,7 +68,7 @@ const ALL: [&str; 23] = [
 fn samples(world: &World) -> Vec<Effect> {
     let workspace = world.workspaces[0].clone();
     let account = world.accounts.accounts[0].clone();
-    let instance = world.instances[0].id.clone();
+    let instance = world.instances[0].id().clone();
     let doc = world
         .surfaces
         .roles
@@ -89,6 +93,12 @@ fn samples(world: &World) -> Vec<Effect> {
         },
         Effect::DeleteWorkspace { id: workspace.id },
         Effect::Restore {
+            instance: instance.clone(),
+        },
+        Effect::PowerStart {
+            instance: instance.clone(),
+        },
+        Effect::PowerStop {
             instance: instance.clone(),
         },
         Effect::TrustRole {

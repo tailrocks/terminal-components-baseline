@@ -89,7 +89,7 @@ pub fn role(r: &mut RoleEntry) {
 }
 
 pub fn instance(i: &mut Instance) {
-    i.workdir = PROJECT_DIR.into();
+    i.workdir = Some(PROJECT_DIR.into());
 }
 
 pub fn surfaces(s: &mut Surfaces) {

@@ -65,6 +65,7 @@ pub fn press(app: &mut App, keys: &str) {
             "right" => KeyCode::Right,
             "left" => KeyCode::Left,
             "tab" => KeyCode::Tab,
+            "insert" => KeyCode::Insert,
             "space" => KeyCode::Char(' '),
             c if c.chars().count() == 1 => KeyCode::Char(c.chars().next().expect("one char")),
             other => panic!("unknown key {other}"),

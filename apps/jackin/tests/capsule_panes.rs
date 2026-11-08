@@ -10,7 +10,8 @@ use capsule_support::*;
 use jackin_console::domain::account::{Account, CredentialSource, Lifecycle};
 use jackin_console::domain::agent::{Agent, Provider};
 use jackin_console::domain::instance::{
-    AgentState, DaemonSnapshot, InstanceStatus, SessionRecord, SessionStatus,
+    AgentState, DaemonSnapshot, InstanceEntry, InstanceId, InstanceStatus, SessionRecord,
+    SessionStatus,
 };
 use jackin_console::domain::workspace::Workspace;
 use jackin_console::panes::PanePolicy;
@@ -57,7 +58,7 @@ fn daemon_is_built_by_attach() {
     assert_eq!(daemon.panes.len(), 1);
     assert_eq!(
         *rig.backend.requests.lock().expect("requests"),
-        [PaneRequest::new(INSTANCE, Some(Agent::Codex), None)],
+        [PaneRequest::new(&instance_id(), Some(Agent::Codex), None)],
         "the pane comes from what the backend asks for"
     );
     let first = rig.squashed();
@@ -116,7 +117,7 @@ fn new_tab_asks_the_backend_for_a_shell_pane() {
     rig.press("enter");
     let requests = rig.backend.requests.lock().expect("requests").clone();
     assert_eq!(requests.len(), 2);
-    assert_eq!(requests[1], PaneRequest::new(INSTANCE, None, None));
+    assert_eq!(requests[1], PaneRequest::new(&instance_id(), None, None));
     assert_eq!(rig.daemon().tabs.len(), 2);
 
     rig.advance(80);
@@ -396,7 +397,7 @@ fn a_split_whose_focused_pane_vanished_starts_nothing() {
     rig.app
         .world
         .daemons
-        .get_mut(INSTANCE)
+        .get_mut(&instance_id())
         .expect("the daemon")
         .tabs[0]
         .focused = gone;
@@ -411,7 +412,7 @@ fn a_split_whose_focused_pane_vanished_starts_nothing() {
     let sessions = rig
         .app
         .world
-        .instance(INSTANCE)
+        .instance(&instance_id())
         .expect("instance")
         .sessions
         .clone();
@@ -423,7 +424,13 @@ fn the_manager_shows_the_state_a_pane_reached_while_detached() {
     let mut rig = Rig::new();
     rig.attach();
     rig.press("ctrl+b d");
-    let state = |rig: &Rig| match &rig.app.world.instance(INSTANCE).expect("instance").daemon {
+    let state = |rig: &Rig| match &rig
+        .app
+        .world
+        .instance(&instance_id())
+        .expect("instance")
+        .daemon
+    {
         DaemonSnapshot::Tabs(tabs) => tabs[0].panes[0].state,
         other => panic!("{other:?}"),
     };
@@ -435,14 +442,20 @@ fn the_manager_shows_the_state_a_pane_reached_while_detached() {
 
 fn with_session(rig: &Rig, id: &str) -> Snapshot {
     let mut snapshot = snapshot_of(&rig.app.world);
-    for i in snapshot.instances.iter_mut().filter(|i| i.id == INSTANCE) {
-        i.sessions = Ok(vec![SessionRecord {
-            id: id.into(),
-            agent: None,
-            label: "Shell".into(),
-            status: SessionStatus::Active,
-            started_secs: 1_788_401_700,
-        }]);
+    for entry in snapshot
+        .instances
+        .iter_mut()
+        .filter(|entry| entry.id() == &instance_id())
+    {
+        if let Some(i) = entry.as_available_mut() {
+            i.sessions = Ok(vec![SessionRecord {
+                id: id.into(),
+                agent: None,
+                label: "Shell".into(),
+                status: SessionStatus::Active,
+                started_secs: 1_788_401_700,
+            }]);
+        }
     }
     snapshot
 }
@@ -450,7 +463,7 @@ fn with_session(rig: &Rig, id: &str) -> Snapshot {
 fn session_ids(rig: &Rig) -> Vec<String> {
     rig.app
         .world
-        .instance(INSTANCE)
+        .instance(&instance_id())
         .expect("instance")
         .sessions
         .clone()
@@ -488,7 +501,7 @@ fn a_new_session_asks_the_backend_for_the_session_list_at_once() {
     rig.attach();
 
     rig.app.go(Go::NewSession {
-        instance: INSTANCE.into(),
+        instance: instance_id(),
         agent: Some(Agent::Codex),
         account: None,
     });
@@ -536,9 +549,9 @@ fn a_tick_that_changes_one_daemon_leaves_the_snapshots_of_the_others() {
     const OTHER: &str = "jk-zzz";
     let mut rig = Rig::with(PanePolicy::default(), |w| {
         let mut other = instance();
-        other.id = OTHER.into();
-        w.instances.push(other);
-        w.open_first_session(OTHER);
+        other.id = InstanceId::simulated(OTHER);
+        w.instances.push(InstanceEntry::available(other));
+        w.open_first_session(&InstanceId::simulated(OTHER));
     });
     rig.advance(80);
     assert_eq!(rig.bench.opened(), 1);
@@ -546,12 +559,22 @@ fn a_tick_that_changes_one_daemon_leaves_the_snapshots_of_the_others() {
     rig.bench.push(0, LinkEvent::Lease(Lease::Owner));
     rig.advance(900);
 
-    rig.app.world.instance_mut(OTHER).expect("instance").daemon = DaemonSnapshot::Unavailable;
+    rig.app
+        .world
+        .instance_mut(&InstanceId::simulated(OTHER))
+        .expect("instance")
+        .daemon = DaemonSnapshot::Unavailable;
     rig.bench.push(0, LinkEvent::Exited(Some(0)));
     rig.advance(400);
 
-    let snapshot =
-        |rig: &Rig, id: &str| rig.app.world.instance(id).expect("instance").daemon.clone();
+    let snapshot = |rig: &Rig, id: &str| {
+        rig.app
+            .world
+            .instance(&InstanceId::simulated(id))
+            .expect("instance")
+            .daemon
+            .clone()
+    };
     assert!(
         matches!(snapshot(&rig, INSTANCE), DaemonSnapshot::Tabs(_)),
         "the daemon that changed is read again"
@@ -570,12 +593,12 @@ fn a_new_session_in_a_stopped_instance_is_refused() {
     let panes = rig.daemon().panes.len();
     rig.app
         .world
-        .instance_mut(INSTANCE)
+        .instance_mut(&instance_id())
         .expect("instance")
         .status = InstanceStatus::RestoreAvailable;
 
     rig.app.go(Go::NewSession {
-        instance: INSTANCE.into(),
+        instance: instance_id(),
         agent: Some(Agent::Codex),
         account: None,
     });
@@ -628,7 +651,7 @@ fn a_new_pane_is_refused_when_the_chosen_account_became_unusable() {
             .preferred
             .insert(Provider::OpenAi, "acct-a".into());
         w.workspaces.push(ws);
-        w.instance_mut(INSTANCE).expect("instance").workspace = Some(1);
+        w.instance_mut(&instance_id()).expect("instance").workspace = Some(1);
     });
     rig.attach();
     let panes = rig.daemon().panes.len();
@@ -677,7 +700,7 @@ fn a_new_pane_leaves_the_session_list_to_the_backend() {
     rig.advance(160);
     assert_eq!(rig.daemon().tabs.len(), 2);
 
-    let record = rig.app.world.instance(INSTANCE).expect("instance");
+    let record = rig.app.world.instance(&instance_id()).expect("instance");
     assert_eq!(
         record.sessions,
         Ok(Vec::new()),

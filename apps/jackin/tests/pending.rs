@@ -771,7 +771,7 @@ fn inspect_changes_waits_for_the_backend() {
     let [Effect::ReadChanges { instance, .. }] = reads.as_slice() else {
         panic!("one ReadChanges expected, got {:?}", backend.seen());
     };
-    assert!(instance.starts_with("jk-"), "{instance}");
+    assert!(instance.sandbox_name.starts_with("jk-"), "{instance}");
     assert_eq!(status(&app), "Reading changes…");
     assert!(!screen(&mut app).contains("Inspect changes ·"));
 

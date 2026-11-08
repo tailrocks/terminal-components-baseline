@@ -104,7 +104,7 @@ pub const EDIT_CELL: [Hint; 3] = [
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Hint {
-    pub key: &'static str,
+    pub key: Cow<'static, str>,
     pub action: Cow<'static, str>,
 
     pub priority: HintPriority,
@@ -121,9 +121,9 @@ pub enum HintPriority {
 }
 
 impl Hint {
-    pub fn new(key: &'static str, action: impl Into<Cow<'static, str>>) -> Self {
+    pub fn new(key: impl Into<Cow<'static, str>>, action: impl Into<Cow<'static, str>>) -> Self {
         Self {
-            key,
+            key: key.into(),
             action: action.into(),
             priority: HintPriority::Auto,
         }
@@ -142,7 +142,7 @@ impl Hint {
         match self.priority {
             HintPriority::Pinned => true,
             HintPriority::Normal => false,
-            HintPriority::Auto => style.pinned_keys.contains(&self.key),
+            HintPriority::Auto => style.pinned_keys.contains(&self.key.as_ref()),
         }
     }
 }
@@ -164,7 +164,7 @@ pub fn deliverable_line(line: &str) -> std::borrow::Cow<'_, str> {
 
 pub const fn hint(key: &'static str, action: &'static str) -> Hint {
     Hint {
-        key,
+        key: Cow::Borrowed(key),
         action: Cow::Borrowed(action),
         priority: HintPriority::Auto,
     }
@@ -215,7 +215,7 @@ pub fn render_aligned(
 const GAP: u16 = 2;
 
 fn hint_width(h: &Hint, compact: bool) -> u16 {
-    let kw = crate::ui::text::width(&normalize_key(h.key)) as u16;
+    let kw = crate::ui::text::width(&normalize_key(h.key.as_ref())) as u16;
     if compact {
         kw
     } else {
@@ -590,7 +590,7 @@ fn render_right(
     }
     for &i in &keep {
         let h = &hints[i];
-        let key = normalize_key(h.key);
+        let key = normalize_key(h.key.as_ref());
         let key = t.glyphs.key_label(&key);
         let kw = crate::ui::text::width(&key) as u16;
         buf.set_string(x, area.y, &key, t.key_hint_key());

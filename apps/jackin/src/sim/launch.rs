@@ -5,12 +5,13 @@ use junie_tui::widgets::steps::StepState;
 use crate::backend::{OnePassword, OpSession, PlainKey};
 use crate::domain::account::{AccountId, masked};
 use crate::domain::agent::Agent;
-use crate::domain::instance::{DaemonSnapshot, Instance, InstanceStatus};
-use crate::domain::instance::{ID_PREFIX, instance_id};
+use crate::domain::instance::InstanceId;
+use crate::domain::instance::{DaemonSnapshot, Instance, InstanceEntry, InstanceStatus};
 use crate::domain::launch::{
     EmptyLanding, LaunchContent, LaunchFailure, LaunchWords, NextStep, RefusalReason, RefusalWords,
     StageKind, StageList, StageSpec,
 };
+use crate::domain::tuple::{AccountRequirement, TupleIdentity};
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
     EnvAnswer, EnvQuestion, FailedLaunch, LaunchEvent, LaunchFeed, LaunchTarget, ReadyInstance,
@@ -67,6 +68,11 @@ pub const BUILD_LOG: [&str; 44] = [
     "#13 DONE 0.0s",
     "#14 exporting to image",
 ];
+
+fn next_instance_id(w: &World) -> InstanceId {
+    let n = w.instances.len() as u32 + 0x7f3a + 0x1234 * 3;
+    InstanceId::simulated(format!("jk-{:04x}", n & 0xffff))
+}
 
 fn stages() -> StageList {
     StageList::new(
@@ -227,6 +233,7 @@ pub enum Opening {
 /// them.
 pub fn validate_tuples(w: &World, target: &LaunchTarget) -> Option<RefusalReason> {
     use crate::domain::tuple::TupleState;
+    let matrix_present = !w.surfaces.tuples.is_empty();
     if target.instances.is_empty() {
         return Some(RefusalReason::TupleNotLaunchable {
             agent: Agent::Codex,
@@ -246,37 +253,88 @@ pub fn validate_tuples(w: &World, target: &LaunchTarget) -> Option<RefusalReason
             });
         }
         seen.push(choice.agent);
-        let offer = w
-            .surfaces
-            .tuples
-            .iter()
-            .find(|o| o.agent == choice.agent && o.provider == choice.provider);
-        let Some(offer) = offer else {
+        let identity = TupleIdentity::new(choice.agent, choice.provider);
+        let offer = matrix_present
+            .then(|| {
+                w.surfaces
+                    .tuples
+                    .iter()
+                    .find(|o| o.agent == identity.agent && o.provider == identity.provider)
+            })
+            .flatten();
+        if matrix_present && offer.is_none() {
             return Some(RefusalReason::TupleNotLaunchable {
                 agent: choice.agent,
                 provider: choice.provider,
                 state: TupleState::Unavailable,
                 reason: Some("unknown tuple".into()),
             });
-        };
-        if offer.state != TupleState::Supported {
+        }
+        if let Some(offer) = offer {
+            if offer.state != TupleState::Supported {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.state,
+                    reason: offer.reason.clone(),
+                });
+            }
+            if !offer.allowed_models.is_empty() && !offer.allowed_models.contains(&choice.model) {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.state,
+                    reason: Some("unknown model".into()),
+                });
+            }
+        } else if choice.provider != choice.agent.provider() || !choice.model.is_empty() {
             return Some(RefusalReason::TupleNotLaunchable {
                 agent: choice.agent,
                 provider: choice.provider,
-                state: offer.state,
-                reason: offer.reason.clone(),
+                state: TupleState::Unavailable,
+                reason: Some("no tuple offer is available".into()),
             });
         }
-        if !choice.model.is_empty()
-            && !offer.allowed_models.is_empty()
-            && !offer.allowed_models.contains(&choice.model)
-        {
+        let workspace = target.workspace.and_then(|id| w.workspace(id));
+        let account_offer = if matrix_present {
+            w.offer_for_provider(choice.agent, choice.provider, workspace, Some(&target.role))
+        } else {
+            w.offer_for(choice.agent, workspace, Some(&target.role))
+        };
+        if let Some(reason) = account_offer.blocked {
             return Some(RefusalReason::TupleNotLaunchable {
                 agent: choice.agent,
                 provider: choice.provider,
-                state: offer.state,
-                reason: Some("unknown model".into()),
+                state: offer.map_or(TupleState::Unavailable, |offer| offer.state),
+                reason: Some(reason),
             });
+        }
+        match &choice.account {
+            Some(account)
+                if account_offer.accounts.contains(account)
+                    && w.accounts
+                        .get(account)
+                        .is_some_and(|registered| registered.provider == choice.provider) => {}
+            Some(_) => {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.map_or(TupleState::Unavailable, |offer| offer.state),
+                    reason: Some("account is not eligible for this provider".into()),
+                });
+            }
+            None if matrix_present
+                && w.backend.account_requirement(identity) == AccountRequirement::Optional
+                && account_offer.accounts.is_empty()
+                && !account_offer.configured => {}
+            None => {
+                return Some(RefusalReason::TupleNotLaunchable {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    state: offer.map_or(TupleState::Unavailable, |offer| offer.state),
+                    reason: Some("an eligible provider account is required".into()),
+                });
+            }
         }
     }
     None
@@ -329,11 +387,12 @@ pub struct SimLaunch {
     asking: bool,
     run_id: String,
     container: String,
-    instance_id: String,
+    instance_id: InstanceId,
     workspace: Option<WorkspaceId>,
     role: String,
     agent: Agent,
     account: Option<AccountId>,
+    choices: Vec<crate::domain::tuple::InstanceChoice>,
     accounts: Vec<AccountId>,
     tick: u64,
     stage_start: u64,
@@ -343,11 +402,6 @@ pub struct SimLaunch {
     credential_retried: bool,
     build_lines_emitted: usize,
     content: Arc<LaunchContent>,
-}
-
-fn next_instance_id(w: &World) -> String {
-    let n = w.instances.len() as u32 + 0x7f3a + 0x1234 * 3;
-    instance_id(&format!("{:04x}", n & 0xffff))
 }
 
 fn workspace_name(w: &World, workspace: Option<WorkspaceId>) -> String {
@@ -367,7 +421,7 @@ impl SimLaunch {
     ) -> Self {
         let wsname = workspace_name(w, target.workspace);
         let instance_id = next_instance_id(w);
-        let suffix = instance_id.trim_start_matches(ID_PREFIX).to_owned();
+        let suffix = instance_id.short_suffix();
         let container = match content.name_slug {
             Some(n) => {
                 let slug = junie_tui::ui::text::clip(&wsname, n);
@@ -396,6 +450,7 @@ impl SimLaunch {
             role: target.role.clone(),
             agent: target.agent(),
             account: target.account(),
+            choices: target.instances.clone(),
             accounts: launch_accounts(w, target, &content),
             tick: 0,
             stage_start: 0,
@@ -408,16 +463,16 @@ impl SimLaunch {
         }
     }
 
-    fn record(&self, w: &World, status: InstanceStatus) -> Instance {
+    fn record(&self, w: &World, status: InstanceStatus) -> InstanceEntry {
         let now = w.now_secs();
         let wsname = workspace_name(w, self.workspace);
         let repo = w.github.iter().find(|r| r.full_name.ends_with(&wsname));
-        Instance {
+        InstanceEntry::available(Instance {
             id: self.instance_id.clone(),
             container: format!("jackin-{wsname}"),
             workspace: self.workspace,
-            workdir: format!("/workspace/{wsname}"),
-            role: self.role.clone(),
+            workdir: Some(format!("/workspace/{wsname}")),
+            role: Some(self.role.clone()),
             agent: self.agent,
             status,
             created_secs: now,
@@ -433,16 +488,20 @@ impl SimLaunch {
             github: repo.map(Into::into),
             uncommitted: 0,
             unpushed: 0,
-            agents: vec![crate::domain::instance::AgentInstanceView {
-                agent: self.agent,
-                provider: self.agent.provider(),
-                account: self.account.clone(),
-                model: String::new(),
-                branch: None,
-                state: crate::domain::instance::AgentState::Idle,
-            }],
+            agents: self
+                .choices
+                .iter()
+                .map(|choice| crate::domain::instance::AgentInstanceView {
+                    agent: choice.agent,
+                    provider: choice.provider,
+                    account: choice.account.clone(),
+                    model: choice.model.clone(),
+                    branch: None,
+                    state: crate::domain::instance::AgentState::Idle,
+                })
+                .collect(),
             task: None,
-        }
+        })
     }
 
     fn resume(&mut self) {
@@ -597,6 +656,18 @@ impl LaunchFeed for SimLaunch {
 
     fn use_plain_text(&mut self, _key: PlainKey) -> Option<TypedKey> {
         self.account = None;
+        let replaced = self
+            .choices
+            .first_mut()
+            .and_then(|lead| lead.account.take());
+        if let Some(replaced) = replaced
+            && !self
+                .choices
+                .iter()
+                .any(|choice| choice.account.as_ref() == Some(&replaced))
+        {
+            self.accounts.retain(|account| account != &replaced);
+        }
         self.resume();
         Some(TypedKey {
             origin: format!("plain text · masked API key · {}", masked("Q1zx")),
@@ -608,7 +679,7 @@ impl LaunchFeed for SimLaunch {
         self.asking = false;
     }
 
-    fn cancel(&mut self, world: &World) -> Option<Instance> {
+    fn cancel(&mut self, world: &World) -> Option<InstanceEntry> {
         self.ended = true;
         if self.asking {
             return None;

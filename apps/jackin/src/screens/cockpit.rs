@@ -31,7 +31,7 @@ use crate::backend::PlainKey;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::docker::DockerCapability;
-use crate::domain::instance::{Instance, InstanceStatus};
+use crate::domain::instance::{InstanceEntry, InstanceStatus};
 use crate::domain::launch::{LaunchContent, LaunchFailure, NextStep, RefusalReason, StageKind};
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::shown::shown;
@@ -130,7 +130,7 @@ pub struct CockpitScreen {
     pub tick: u64,
     pub motion: Motion,
     pub frozen_at: Option<u64>,
-    pub instance_id: Option<String>,
+    pub instance_id: Option<crate::domain::instance::InstanceId>,
     pub handoff_requested: bool,
     pub failure_shown: bool,
     log_area: Rect,
@@ -215,17 +215,25 @@ impl CockpitScreen {
     }
 
     fn credential_origin(&self, w: &World) -> (String, String, Tone) {
-        let (origin, val, tone) = self.credential_origin_for(self.account.as_deref(), w);
+        let account = self
+            .account
+            .as_deref()
+            .filter(|id| w.accounts.get(id).is_some())
+            .or_else(|| {
+                self.accounts
+                    .iter()
+                    .find(|id| w.accounts.get(id).is_some())
+                    .map(String::as_str)
+            });
+        let (origin, val, tone) = self.credential_origin_for(account, w);
         let others: Vec<String> = self
             .accounts
             .iter()
-            .filter(|id| Some(id.as_str()) != self.account.as_deref())
+            .filter(|id| Some(id.as_str()) != account)
             .filter_map(|id| w.accounts.get(id))
             .map(|a| a.title())
             .collect();
-        let primary = self
-            .account
-            .as_ref()
+        let primary = account
             .and_then(|id| w.accounts.get(id))
             .map(|a| format!("{} ({})", a.title(), a.source.origin_label()))
             .unwrap_or_else(|| origin.clone());
@@ -358,22 +366,28 @@ impl CockpitScreen {
                 LaunchEvent::Ready(ready) => {
                     let ReadyInstance { instance, run_id } = *ready;
                     self.ready_run_id = Some(run_id);
-                    if instance.status == InstanceStatus::Running {
+                    if instance
+                        .as_available()
+                        .is_some_and(|available| available.status == InstanceStatus::Running)
+                    {
                         self.progress.done = true;
                         self.activity = self.content.words.ready_activity.clone();
-                        let id = instance.id.clone();
-                        w.admit(instance);
+                        let id = instance.id().clone();
+                        w.admit_entry(instance);
                         self.handoff_requested = true;
                         cx.go(Go::Attach {
                             instance: id,
                             pane: None,
                         });
                     } else {
+                        let status = instance
+                            .as_available()
+                            .map_or("metadata unavailable", |available| available.status.label());
                         let failure = LaunchFailure {
                             stage: self.content.stages.len().saturating_sub(1),
                             summary: fill_in(
                                 &self.content.words.ready_not_running,
-                                &[("status", instance.status.label())],
+                                &[("status", status)],
                             ),
                             next_step: NextStep::RunDoctor,
                             detail: Vec::new(),
@@ -390,7 +404,7 @@ impl CockpitScreen {
     fn fail(
         &mut self,
         failure: LaunchFailure,
-        instance: Option<Instance>,
+        instance: Option<InstanceEntry>,
         w: &mut World,
         cx: &mut Cx,
     ) {
@@ -399,8 +413,8 @@ impl CockpitScreen {
         self.log_open = false;
         self.progress.failure = Some(failure);
         if let Some(record) = instance {
-            self.instance_id = Some(record.id.clone());
-            w.admit(record);
+            self.instance_id = Some(record.id().clone());
+            w.admit_entry(record);
         }
         self.open_failure(w, cx);
     }
@@ -628,8 +642,8 @@ impl CockpitScreen {
     fn abandon(&mut self, w: &mut World) {
         self.progress.cancelled = true;
         if let Some(record) = self.feed.cancel(w) {
-            self.instance_id = Some(record.id.clone());
-            w.admit(record);
+            self.instance_id = Some(record.id().clone());
+            w.admit_entry(record);
         }
     }
 

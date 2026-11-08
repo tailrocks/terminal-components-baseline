@@ -950,6 +950,7 @@ dependencies = [
  "serde_json",
  "tuiscotti",
  "tuiscotti-tui-test",
+ "unicode-segmentation",
 ]
 
 [[package]]
@@ -981,6 +982,7 @@ dependencies = [
  "libc",
  "ratatui",
  "serde_json",
+ "syn 3.0.9",
  "termpane",
  "tuiscotti",
  "tuiscotti-tui-test",

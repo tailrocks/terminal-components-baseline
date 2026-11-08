@@ -450,7 +450,7 @@ fn a_dialog_does_not_offer_a_fixed_action() {
             .hints(Some(ok))
             .iter()
             .filter(|h| h.action == "Disable")
-            .map(|h| h.key)
+            .map(|h| h.key.clone())
             .collect::<Vec<_>>()
     };
     assert_eq!(offers(&confirm_dialog(false)), ["Enter", "y"]);

@@ -1,0 +1,14 @@
+version = 2
+checker_version = 2
+mise_version = "2026.11.4"
+python_version = "3.15.2"
+python_backend = "core:python"
+python_macos_arm64_sha256 = "1b1b03fca8aa351698403f3d100ee83db7a5d99748fc7707681ac31a6a846ad9"
+python_linux_x64_sha256 = "7b03163a980c607ba8194709d4a4086735a7a9c488cc475b098157306927b36b"
+trusted_seed_commit = "106c84d28b41d340128031760af416b7df83e9c1"
+trusted_seed_tree = "9e1cfbdbf9114d38dd6474e9ae3570779928bd64"
+trusted_lock_sha256 = "4acfd9a5b7669e48d9ce210063c460fb23e459c9bfa6f8b1b3e0e183578d3775"
+trusted_metadata_pack_sha256 = "ef142ca2c05b0946afaf85cf120813ec5690844fea4f7aa02f1a63b38581e140"
+trusted_metadata_object_list_sha256 = "83fb1921111a981a454ef85f75fdda535c635062e262238979f3a7be0e4dd24d"
+inventory_helper_sha256 = "0541173812097cd6ac4deb065a7e45b6960ddcf26369eb3fd32805a0b66f33eb"
+trusted_seed_cargo_policy_sha256 = "1509668e924122976da7fc4473186b7746f9f48e6ac05359d5920e2bd3362847"

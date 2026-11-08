@@ -4,7 +4,7 @@ use crate::backend::{OnePassword, PlainKey};
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
 use crate::domain::docker::DockerCapability;
-use crate::domain::instance::Instance;
+use crate::domain::instance::InstanceEntry;
 use crate::domain::launch::{LaunchContent, LaunchFailure, RefusalReason};
 use crate::domain::workspace::WorkspaceId;
 use crate::world::World;
@@ -30,7 +30,7 @@ impl LaunchTarget {
 /// made it.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReadyInstance {
-    pub instance: Instance,
+    pub instance: InstanceEntry,
     pub run_id: String,
 }
 
@@ -39,7 +39,7 @@ pub struct ReadyInstance {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FailedLaunch {
     pub failure: LaunchFailure,
-    pub instance: Option<Instance>,
+    pub instance: Option<InstanceEntry>,
 }
 
 /// A value the launch asks the operator for before it starts: the variable,
@@ -132,7 +132,7 @@ pub trait LaunchFeed: std::fmt::Debug + Send {
     /// The operator ended the launch. The record the backend kept of the
     /// launch, if it kept one. A backend that must wait for the sandbox
     /// returns `None` and sends the record later as `Msg::LaunchCancelled`.
-    fn cancel(&mut self, world: &World) -> Option<Instance>;
+    fn cancel(&mut self, world: &World) -> Option<InstanceEntry>;
 }
 
 /// The accounts a launch offers: the usable ones the workspace enables, with
@@ -144,7 +144,7 @@ pub fn launch_accounts(
     content: &LaunchContent,
 ) -> Vec<AccountId> {
     let workspace = target.workspace.and_then(|id| w.workspace(id));
-    let mut accounts: Vec<AccountId> = workspace
+    let accounts: Vec<AccountId> = workspace
         .map(|x| {
             x.effective_accounts(&w.accounts)
                 .into_iter()
@@ -153,16 +153,28 @@ pub fn launch_accounts(
                 .collect()
         })
         .unwrap_or_default();
-    if let Some(a) = &target.account()
-        && !accounts.contains(a)
+    let mut selected: Vec<AccountId> = Vec::new();
+    for account in target
+        .instances
+        .iter()
+        .filter_map(|choice| choice.account.as_ref())
     {
-        accounts.insert(0, a.clone());
+        if !accounts.contains(account) && !selected.contains(account) {
+            selected.push(account.clone());
+        }
     }
+    selected.extend(accounts);
+    let mut accounts = selected;
     if content.agent_provider_only {
+        let providers: Vec<_> = target
+            .instances
+            .iter()
+            .map(|choice| choice.provider)
+            .collect();
         accounts.retain(|id| {
             w.accounts
                 .get(id)
-                .is_some_and(|a| a.provider == target.agent().provider())
+                .is_some_and(|account| providers.contains(&account.provider))
         });
     }
     accounts

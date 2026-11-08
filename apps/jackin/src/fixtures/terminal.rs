@@ -6,6 +6,7 @@ use std::sync::Arc;
 use junie_tui::ui::layout::SplitDir;
 
 use crate::domain::agent::Agent;
+use crate::domain::instance::InstanceId;
 use crate::panes::{
     Daemon, FailNext, LinkFault, PaneBody, PaneNode, PaneRequest, PaneSpawn, PaneTiming,
     TerminalPane,
@@ -44,12 +45,13 @@ pub fn capsule_terminal(w: &mut World) {
     super::surfaces::fixed(w);
     let timing = w.backend.pane_timing();
     let now = w.now_ms();
+    let instance = InstanceId::simulated(INSTANCE);
     let codex = PaneRequest::new(
-        INSTANCE,
+        &instance,
         Some(Agent::Codex),
         Some("acct-codex-primary".into()),
     );
-    let shell = PaneRequest::new(INSTANCE, None, None);
+    let shell = PaneRequest::new(&instance, None, None);
     let mut d = Daemon::new("payments-platform");
 
     d.new_tab(
@@ -132,8 +134,13 @@ pub fn capsule_terminal(w: &mut World) {
     label(&mut d, 6, "failed");
 
     d.active = 0;
-    w.daemons.insert(INSTANCE.into(), d);
-    if let Some(i) = w.instances.iter_mut().find(|i| i.id == INSTANCE) {
+    w.daemons.insert(instance.clone(), d);
+    if let Some(i) = w
+        .instances
+        .iter_mut()
+        .find(|entry| entry.id() == &instance)
+        .and_then(crate::domain::instance::InstanceEntry::as_available_mut)
+    {
         i.agents = vec![
             crate::domain::instance::AgentInstanceView {
                 agent: Agent::Codex,

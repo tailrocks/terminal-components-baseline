@@ -1,17 +1,46 @@
 use std::borrow::Cow;
 
+use crate::core::event::ClientPlatform;
 use crate::core::id::WidgetId;
-use crate::core::keymap::{Actions, KeyBinding, NavKeys};
+use crate::core::keymap::{Actions, KeyBinding, KeyboardCapabilities, NavKeys};
 use crate::widgets::keyhint::{Hint, HintPriority};
 
-#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HintCx {
     pub focus: Option<WidgetId>,
+    pub platform: ClientPlatform,
+    pub keyboard: KeyboardCapabilities,
+}
+
+impl Default for HintCx {
+    fn default() -> Self {
+        Self::current(None)
+    }
 }
 
 impl HintCx {
-    pub const fn new(focus: Option<WidgetId>) -> Self {
-        Self { focus }
+    pub const fn with_environment(
+        focus: Option<WidgetId>,
+        platform: ClientPlatform,
+        keyboard: KeyboardCapabilities,
+    ) -> Self {
+        Self {
+            focus,
+            platform,
+            keyboard,
+        }
+    }
+
+    pub fn current(focus: Option<WidgetId>) -> Self {
+        Self {
+            focus,
+            platform: ClientPlatform::current(),
+            keyboard: KeyboardCapabilities::current(),
+        }
+    }
+
+    pub fn new(focus: Option<WidgetId>) -> Self {
+        Self::current(focus)
     }
 }
 
@@ -86,7 +115,7 @@ pub fn nav_bindings(nav: &NavKeys, type_ahead: bool) -> Vec<Binding> {
 }
 
 pub const TYPE_TO_JUMP: Hint = Hint {
-    key: "Type",
+    key: Cow::Borrowed("Type"),
     action: Cow::Borrowed("to jump"),
     priority: HintPriority::Normal,
 };

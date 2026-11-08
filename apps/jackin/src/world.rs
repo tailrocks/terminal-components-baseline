@@ -12,7 +12,9 @@ use crate::domain::account::{
 };
 use crate::domain::agent::{Agent, AuthMode, Provider};
 use crate::domain::doctor::{DoctorFailure, DoctorReport};
-use crate::domain::instance::{DaemonSnapshot, Instance, InstanceId, InstanceStatus, RepoRef};
+use crate::domain::instance::{
+    DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus, RepoRef,
+};
 use crate::domain::reason::{IssueReason, UsageReason};
 use crate::domain::role::{
     AccountOrder, DEFAULT_ROLE_UNUSABLE, LaunchRole, LaunchRoleRule, NO_DEFAULT_ROLE,
@@ -36,6 +38,7 @@ pub mod job {
     pub const ROLE_LOAD: JobKey = JobKey::new("role.load");
     pub const PREWARM: JobKey = JobKey::new("prewarm");
     pub const STOP: JobKey = JobKey::new("instance.stop");
+    pub const POWER: JobKey = JobKey::new("instance.power");
     pub const PURGE: JobKey = JobKey::new("instance.purge");
     pub const ACCOUNT_VALIDATE: JobKey = JobKey::new("account.validate");
     pub const ROLE_CHECK: JobKey = JobKey::new("role.check");
@@ -187,6 +190,14 @@ pub enum Msg {
         instance: InstanceId,
         result: Result<Box<Snapshot>, String>,
     },
+    PowerStarted {
+        instance: InstanceId,
+        result: Result<Box<Snapshot>, String>,
+    },
+    PowerStopped {
+        instance: InstanceId,
+        result: Result<Box<Snapshot>, String>,
+    },
     Purged {
         instance: InstanceId,
         result: Result<Box<Snapshot>, String>,
@@ -217,7 +228,7 @@ pub enum Msg {
     /// The record of a cancelled launch, from a backend that had to wait for
     /// the sandbox before it could say what the cancel left behind.
     LaunchCancelled {
-        instance: Box<Instance>,
+        instance: Box<InstanceEntry>,
     },
     RoleChecked {
         ticket: Ticket,
@@ -275,6 +286,7 @@ impl Msg {
             Msg::RoleLoaded { .. } => Some(job::ROLE_LOAD),
             Msg::Prewarmed { .. } => Some(job::PREWARM),
             Msg::Stopped { .. } => Some(job::STOP),
+            Msg::PowerStopped { .. } | Msg::PowerStarted { .. } => Some(job::POWER),
             Msg::Purged { .. } => Some(job::PURGE),
             Msg::AccountValidated { .. } => Some(job::ACCOUNT_VALIDATE),
             Msg::RoleChecked { .. } => Some(job::ROLE_CHECK),
@@ -353,7 +365,7 @@ pub struct World {
     pub cwd: String,
     pub workspaces: Vec<Workspace>,
     pub roles: Vec<RoleEntry>,
-    pub instances: Vec<Instance>,
+    pub instances: Vec<InstanceEntry>,
     pub daemons: BTreeMap<InstanceId, Daemon>,
     pub global: GlobalConfig,
     pub accounts: AccountRegistry,
@@ -402,7 +414,7 @@ pub enum TimeSource {
 pub struct Snapshot {
     pub workspaces: Vec<Workspace>,
     pub roles: Vec<RoleEntry>,
-    pub instances: Vec<Instance>,
+    pub instances: Vec<InstanceEntry>,
     pub global: GlobalConfig,
     pub accounts: AccountRegistry,
     pub surfaces: Surfaces,
@@ -420,7 +432,7 @@ pub struct WorldParts {
     pub cwd: String,
     pub workspaces: Vec<Workspace>,
     pub roles: Vec<RoleEntry>,
-    pub instances: Vec<Instance>,
+    pub instances: Vec<InstanceEntry>,
     pub global: GlobalConfig,
     pub accounts: AccountRegistry,
     pub op: Box<dyn OnePassword>,
@@ -536,7 +548,7 @@ impl World {
         daemon
     }
 
-    pub fn open_first_session(&mut self, instance: &str) {
+    pub fn open_first_session(&mut self, instance: &InstanceId) {
         if self.daemons.contains_key(instance) {
             return;
         }
@@ -550,7 +562,7 @@ impl World {
         for request in requests {
             d.new_tab(&request, now, |spawn| backend.spawn_pane(&request, spawn));
         }
-        self.daemons.insert(instance.to_owned(), d);
+        self.daemons.insert(instance.clone(), d);
         refresh_snapshots(self);
         self.sync_arbiter();
     }
@@ -774,7 +786,7 @@ impl World {
                     self.saved_ticket = *ticket;
                 }
             }
-            Msg::LaunchCancelled { instance } => self.record((**instance).clone()),
+            Msg::LaunchCancelled { instance } => self.admit_entry((**instance).clone()),
             Msg::AccountRefreshed {
                 account,
                 source,
@@ -876,11 +888,11 @@ impl World {
         }
         let mut changed = Vec::new();
         for (id, d) in self.daemons.iter_mut() {
-            if self
-                .instances
-                .iter()
-                .any(|i| i.id == *id && i.status == InstanceStatus::Running)
-                && d.tick(now)
+            if self.instances.iter().any(|entry| {
+                entry
+                    .as_available()
+                    .is_some_and(|i| i.id == *id && i.status == InstanceStatus::Running)
+            }) && d.tick(now)
             {
                 changed.push(id.clone());
             }
@@ -893,7 +905,7 @@ impl World {
     }
 
     /// Drains the pane of a wake. Whether it has anything new to draw.
-    pub fn wake_pane(&mut self, instance: &str, pane: PaneId) -> bool {
+    pub fn wake_pane(&mut self, instance: &InstanceId, pane: PaneId) -> bool {
         let now = self.now_ms();
         self.daemons
             .get_mut(instance)
@@ -934,26 +946,37 @@ impl World {
         self.workspace(id)?.github.as_ref()
     }
 
-    pub fn instance(&self, id: &str) -> Option<&Instance> {
-        self.instances.iter().find(|i| i.id == id)
+    pub fn instance(&self, id: &InstanceId) -> Option<&Instance> {
+        self.instances
+            .iter()
+            .find(|entry| entry.id() == id)
+            .and_then(InstanceEntry::as_available)
     }
 
-    pub fn instance_mut(&mut self, id: &str) -> Option<&mut Instance> {
-        self.instances.iter_mut().find(|i| i.id == id)
+    pub fn instance_mut(&mut self, id: &InstanceId) -> Option<&mut Instance> {
+        self.instances
+            .iter_mut()
+            .find(|entry| entry.id() == id)
+            .and_then(InstanceEntry::as_available_mut)
     }
 
-    /// Adds an instance a backend recorded.
+    pub fn entry(&self, id: &InstanceId) -> Option<&InstanceEntry> {
+        self.instances.iter().find(|entry| entry.id() == id)
+    }
+
     pub fn admit(&mut self, instance: Instance) {
-        self.instances.push(instance);
-        self.sync_arbiter();
+        self.admit_entry(InstanceEntry::available(instance));
     }
 
-    /// Adds an instance a backend recorded, or replaces the row a refresh
-    /// already brought in for it.
-    fn record(&mut self, instance: Instance) {
-        match self.instances.iter_mut().find(|i| i.id == instance.id) {
-            Some(known) => *known = instance,
-            None => self.instances.push(instance),
+    pub fn admit_entry(&mut self, entry: InstanceEntry) {
+        if let Some(index) = self
+            .instances
+            .iter()
+            .position(|known| known.id() == entry.id())
+        {
+            self.instances[index] = entry;
+        } else {
+            self.instances.push(entry);
         }
         self.sync_arbiter();
     }
@@ -961,21 +984,42 @@ impl World {
     pub fn running_count(&self) -> usize {
         self.instances
             .iter()
-            .filter(|i| i.status == InstanceStatus::Running)
+            .filter(|entry| entry_is_running(entry))
+            .count()
+    }
+
+    pub fn running_count_of(&self, ws: Option<WorkspaceId>) -> usize {
+        self.entries_of(ws)
+            .into_iter()
+            .filter(|entry| entry_is_running(entry))
             .count()
     }
 
     pub fn running(&self) -> Vec<&Instance> {
         self.instances
             .iter()
+            .filter_map(InstanceEntry::as_available)
             .filter(|i| i.status == InstanceStatus::Running)
             .collect()
     }
 
     pub fn instances_of(&self, ws: Option<WorkspaceId>) -> Vec<&Instance> {
+        self.entries_of(ws)
+            .into_iter()
+            .filter_map(InstanceEntry::as_available)
+            .filter(|i| !i.status.hidden())
+            .collect()
+    }
+
+    pub fn entries_of(&self, ws: Option<WorkspaceId>) -> Vec<&InstanceEntry> {
         self.instances
             .iter()
-            .filter(|i| i.workspace == ws && !i.status.hidden())
+            .filter(|entry| entry.workspace_id() == ws)
+            .filter(|entry| {
+                entry
+                    .as_available()
+                    .is_none_or(|instance| !instance.status.hidden())
+            })
             .collect()
     }
 
@@ -1050,7 +1094,16 @@ impl World {
         ws: Option<&Workspace>,
         role: Option<&str>,
     ) -> AgentOffer {
-        let provider = agent.provider();
+        self.offer_for_provider(agent, agent.provider(), ws, role)
+    }
+
+    pub fn offer_for_provider(
+        &self,
+        agent: Agent,
+        provider: crate::domain::agent::Provider,
+        ws: Option<&Workspace>,
+        role: Option<&str>,
+    ) -> AgentOffer {
         let mut ready: Vec<AccountId> = vec![];
         let mut blocked: Vec<(AccountId, String)> = vec![];
         match ws {
@@ -1213,6 +1266,13 @@ impl World {
     }
 }
 
+fn entry_is_running(entry: &InstanceEntry) -> bool {
+    match entry {
+        InstanceEntry::Available(instance) => instance.status == InstanceStatus::Running,
+        InstanceEntry::Unavailable(instance) => instance.phase.ready(),
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 pub enum LaunchSource<'a> {
     Row(Option<&'a Workspace>),
@@ -1227,6 +1287,12 @@ pub struct AgentOffer {
     pub blocked: Option<String>,
 
     pub configured: bool,
+}
+
+impl AgentOffer {
+    pub fn has_usable_account(&self) -> bool {
+        self.blocked.is_none() && !self.accounts.is_empty()
+    }
 }
 
 pub fn expand(home: &str, path: &str) -> String {
@@ -1258,7 +1324,7 @@ pub fn mask_path(home: &str, path: &str) -> String {
     }
 }
 
-pub fn refresh_snapshot(w: &mut World, id: &str) {
+pub fn refresh_snapshot(w: &mut World, id: &InstanceId) {
     let Some(snapshot) = w.daemons.get(id).map(Daemon::snapshot) else {
         return;
     };
@@ -1268,12 +1334,14 @@ pub fn refresh_snapshot(w: &mut World, id: &str) {
 }
 
 pub fn refresh_snapshots(w: &mut World) {
-    let ids: Vec<String> = w.daemons.keys().cloned().collect();
+    let ids: Vec<InstanceId> = w.daemons.keys().cloned().collect();
     for id in &ids {
         refresh_snapshot(w, id);
     }
-    for i in w.instances.iter_mut() {
-        if i.status != InstanceStatus::Running {
+    for entry in w.instances.iter_mut() {
+        if let Some(i) = entry.as_available_mut()
+            && i.status != InstanceStatus::Running
+        {
             i.daemon = DaemonSnapshot::Unavailable;
         }
     }

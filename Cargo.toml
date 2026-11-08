@@ -63,6 +63,7 @@ unicode-segmentation = "1"
 libc = "0.2"
 
 [dev-dependencies]
+syn = { version = "3.0.9", features = ["full", "visit"] }
 
 tui-test = { workspace = true }
 

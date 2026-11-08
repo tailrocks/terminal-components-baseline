@@ -253,7 +253,11 @@ pub fn fixed(w: &mut World) {
         }
     }
     w.roles.iter_mut().for_each(openshell::role);
-    w.instances.iter_mut().for_each(openshell::instance);
+    w.instances.iter_mut().for_each(|entry| {
+        if let Some(instance) = entry.as_available_mut() {
+            openshell::instance(instance);
+        }
+    });
     for ws in &mut w.workspaces {
         openshell::workspace(ws, &format!("~/src/{}", ws.name), &w.accounts);
         if ws.name == "release-automation" {

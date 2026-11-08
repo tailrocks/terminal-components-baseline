@@ -603,6 +603,8 @@ pub fn script(agent: Option<Agent>, workspace: &str) -> Vec<Step> {
         | Some(Agent::Omp) => vec![
             Step::State(AgentState::Working),
             e(0, mixed(&[("agent ready", Tone::Normal)])),
+            Step::State(AgentState::Done),
+            Step::Await,
         ],
         None => {
             let p = format!("{workspace} ❯ ");

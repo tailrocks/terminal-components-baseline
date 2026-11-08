@@ -4,7 +4,7 @@ mod common;
 
 use common::*;
 use jackin_console::app::{App, Route};
-use jackin_console::domain::instance::InstanceStatus;
+use jackin_console::domain::instance::{InstanceEntry, InstanceStatus};
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
 use junie_tui::core::event::Input;
 use junie_tui::motion::Motion;
@@ -64,8 +64,11 @@ fn x_cancels_a_blocked_launch_and_keeps_its_record() {
     press(&mut app, "right enter");
     assert_eq!(app.route(), Route::Manager);
     assert_eq!(app.world.instances.len(), before + 1);
-    let record = app.world.instances.last().expect("the launch's record");
-    assert_eq!(record.role, "sre");
+    let InstanceEntry::Available(record) = app.world.instances.last().expect("the launch's record")
+    else {
+        panic!("the simulator launch has verified metadata");
+    };
+    assert_eq!(record.role.as_deref(), Some("sre"));
     assert_eq!(record.workspace, Some(2));
     assert_eq!(record.status, InstanceStatus::FailedSetup);
 }

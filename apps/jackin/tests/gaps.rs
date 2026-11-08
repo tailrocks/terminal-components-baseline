@@ -17,7 +17,7 @@ use jackin_console::domain::docker::{EngineEndpoint, EngineState};
 use jackin_console::domain::doctor::{
     DoctorCheck, DoctorFailure, DoctorReport, DoctorState, DoctorSurface,
 };
-use jackin_console::domain::instance::{Instance, instance_id};
+use jackin_console::domain::instance::{Instance, InstanceEntry, InstanceId};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::domain::vocabulary::{Notice, Unbuilt, Vocabulary};
@@ -742,11 +742,15 @@ fn live_world_with_engine(endpoint: EngineEndpoint) -> World {
 
 #[test]
 fn instance_ids_carry_the_prefix_the_baseline_owns() {
-    assert_eq!(instance_id("5b0x"), "jk-5b0x");
+    let id = InstanceId::simulated("jk-5b0x");
+    assert_eq!(id.short_label(), "jk-5b0x");
     let mut world = world_for(Scenario::Returning);
-    let mut instance = world.instances[0].clone();
-    instance.id = instance_id("5b0x");
-    world.instances = vec![instance];
+    let mut instance = world.instances[0]
+        .as_available()
+        .expect("available instance")
+        .clone();
+    instance.id = id;
+    world.instances = vec![InstanceEntry::available(instance)];
     let mut app = app_with(Scenario::Returning, world);
     let shown = screen(&mut app);
     has(&shown, "5b0x");

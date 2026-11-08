@@ -2,6 +2,21 @@ use crate::core::event::{ClientPlatform, Key};
 use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct KeyboardCapabilities {
+    pub alt: bool,
+    pub super_key: bool,
+}
+
+impl KeyboardCapabilities {
+    pub fn current() -> Self {
+        Self {
+            alt: crate::core::keyboard::alt_delivered(),
+            super_key: crate::core::keyboard::super_delivered(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Nav {
     Up,
     Down,
@@ -170,17 +185,24 @@ impl KeyBinding {
     }
 
     pub fn deliverable(&self) -> bool {
-        use crate::core::keyboard::{alt_delivered, super_delivered};
-        (!self.mods.contains(KeyModifiers::SUPER) || super_delivered())
-            && (!self.mods.contains(KeyModifiers::ALT) || alt_delivered())
-            && (!self.alt_stand_in || !alt_delivered())
+        self.deliverable_with(KeyboardCapabilities::current())
+    }
+
+    pub fn deliverable_with(&self, capabilities: KeyboardCapabilities) -> bool {
+        (!self.mods.contains(KeyModifiers::SUPER) || capabilities.super_key)
+            && (!self.mods.contains(KeyModifiers::ALT) || capabilities.alt)
+            && (!self.alt_stand_in || !capabilities.alt)
     }
 
     pub fn matches(&self, key: &Key) -> bool {
+        self.matches_with(key, KeyboardCapabilities::current())
+    }
+
+    pub fn matches_with(&self, key: &Key, capabilities: KeyboardCapabilities) -> bool {
         if self.code != key.code {
             return false;
         }
-        if self.alt_stand_in && crate::core::keyboard::alt_delivered() {
+        if self.alt_stand_in && capabilities.alt {
             return false;
         }
         if matches!(self.code, KeyCode::Char(_)) {
@@ -280,6 +302,18 @@ pub fn lookup<A: Copy>(map: &[(KeyBinding, A)], key: &Key) -> Option<A> {
     map.iter().find(|(b, _)| b.matches(key)).map(|&(_, a)| a)
 }
 
+pub fn lookup_with<A: Copy>(
+    map: &[(KeyBinding, A)],
+    key: &Key,
+    capabilities: KeyboardCapabilities,
+) -> Option<A> {
+    map.iter()
+        .find(|(binding, _)| {
+            binding.deliverable_with(capabilities) && binding.matches_with(key, capabilities)
+        })
+        .map(|&(_, action)| action)
+}
+
 pub fn unassigned_chord<A: Copy>(key: &Key, map: &[(KeyBinding, A)]) -> bool {
     matches!(key.code, KeyCode::Char(_)) && key.chord() && lookup(map, key).is_none()
 }
@@ -295,6 +329,16 @@ pub fn deliverable_binding_for<A: PartialEq>(
     map.iter()
         .find(|(b, a)| *a == action && b.deliverable())
         .map(|&(b, _)| b)
+}
+
+pub fn deliverable_binding_for_with<A: PartialEq>(
+    map: &[(KeyBinding, A)],
+    action: A,
+    capabilities: KeyboardCapabilities,
+) -> Option<KeyBinding> {
+    map.iter()
+        .find(|(binding, candidate)| *candidate == action && binding.deliverable_with(capabilities))
+        .map(|&(binding, _)| binding)
 }
 
 pub fn label_for<A: PartialEq>(map: &[(KeyBinding, A)], action: A) -> Option<String> {

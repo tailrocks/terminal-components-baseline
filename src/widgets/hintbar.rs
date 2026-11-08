@@ -80,7 +80,7 @@ impl HintKeys {
         use ratatui::style::{Modifier, Style};
         let mut keys = vec![None; hints.len()];
         for (i, cell) in spots {
-            let Some(key) = hints.get(i).and_then(|h| keyhint::key_of(h.key)) else {
+            let Some(key) = hints.get(i).and_then(|h| keyhint::key_of(h.key.as_ref())) else {
                 continue;
             };
             keys[i] = Some(key);

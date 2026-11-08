@@ -14,7 +14,7 @@ use jackin_console::domain::doctor::{DoctorState, DoctorSurface};
 use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::fixed_fields::*;
 use jackin_console::domain::instance::{
-    DaemonSnapshot, Instance, InstanceStatus, ManifestError, RepoRef,
+    DaemonSnapshot, Instance, InstanceId, InstanceStatus, ManifestError, RepoRef,
 };
 use jackin_console::domain::openshell::{self, env_edit_block};
 use jackin_console::domain::reason::{IssueReason, UsageReason};
@@ -233,14 +233,12 @@ fn fixed_world_roles() {
 fn fixed_world_instances() {
     let w = world_for(Scenario::OpenshellFixed);
     assert!(!w.instances.is_empty());
-    for i in &w.instances {
+    for entry in &w.instances {
         assert_eq!(
-            instance_fixed(i),
-            InstanceFixed {
-                workdir: PROJECT.into()
+            instance_fixed(entry.as_available().expect("available fixture")),
+            InstanceFixed::Available {
+                workdir: Some(PROJECT.into())
             },
-            "{}",
-            i.id
         );
     }
 }
@@ -280,8 +278,8 @@ fn fixed_world_view_is_the_openshell_constants() {
     assert_eq!(
         view.instances,
         vec![
-            InstanceFixed {
-                workdir: PROJECT.into()
+            InstanceFixed::Available {
+                workdir: Some(PROJECT.into())
             };
             w.instances.len()
         ]
@@ -651,17 +649,20 @@ fn fixed_world_extractor_sees_the_role_and_instance_fields() {
     assert_eq!(role_fixed(&role), RoleFixed { trusted: false }, "trusted");
     role.description = "another".into();
     assert_eq!(role_fixed(&role), RoleFixed { trusted: false }, "Data");
-    let mut instance: Instance = w.instances[0].clone();
-    instance.workdir = PROJECT.into();
-    let want = InstanceFixed {
-        workdir: PROJECT.into(),
+    let mut instance: Instance = w.instances[0]
+        .as_available()
+        .expect("verified fixture")
+        .clone();
+    instance.workdir = Some(PROJECT.into());
+    let want = InstanceFixed::Available {
+        workdir: Some(PROJECT.into()),
     };
     assert_eq!(instance_fixed(&instance), want);
-    instance.workdir = "/workspace/x".into();
+    instance.workdir = Some("/workspace/x".into());
     assert_eq!(
         instance_fixed(&instance),
-        InstanceFixed {
-            workdir: "/workspace/x".into()
+        InstanceFixed::Available {
+            workdir: Some("/workspace/x".into())
         },
         "workdir"
     );
@@ -849,13 +850,16 @@ fn fixed_world_normalizer_sets_the_role_and_instance_fields() {
     role.trusted = false;
     openshell::role(&mut role);
     assert_eq!(role_fixed(&role), RoleFixed { trusted: true });
-    let mut instance: Instance = w.instances[0].clone();
-    instance.workdir = "/workspace/x".into();
+    let mut instance: Instance = w.instances[0]
+        .as_available()
+        .expect("verified fixture")
+        .clone();
+    instance.workdir = Some("/workspace/x".into());
     openshell::instance(&mut instance);
     assert_eq!(
         instance_fixed(&instance),
-        InstanceFixed {
-            workdir: PROJECT.into()
+        InstanceFixed::Available {
+            workdir: Some(PROJECT.into())
         }
     );
 }
@@ -929,11 +933,11 @@ fn probe_account() -> Account {
 
 fn probe_instance() -> Instance {
     Instance {
-        id: "jk-probe".into(),
+        id: InstanceId::simulated("jk-probe"),
         container: "probe-container".into(),
         workspace: Some(42),
-        workdir: "/workspace/probe".into(),
-        role: "probe-role".into(),
+        workdir: Some("/workspace/probe".into()),
+        role: Some("probe-role".into()),
         agent: Agent::Amp,
         status: InstanceStatus::Crashed,
         created_secs: 11,
@@ -1034,7 +1038,7 @@ fn fixed_world_normalizers_leave_data_fields_alone() {
     assert_eq!(
         after,
         Instance {
-            workdir: PROJECT.into(),
+            workdir: Some(PROJECT.into()),
             ..before
         }
     );

@@ -13,7 +13,7 @@ use jackin_console::backend::{Backend, Completion, Effect, Reply};
 use jackin_console::domain::account::{AccountRegistry, Lifecycle};
 use jackin_console::domain::agent::Agent;
 use jackin_console::domain::fixed::Fixed;
-use jackin_console::domain::instance::{Instance, RepoRef};
+use jackin_console::domain::instance::{Instance, InstanceEntry, InstanceId, RepoRef};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::role::{FindingArea, RoleCheckState, RoleFinding};
 use jackin_console::domain::vocabulary::{Rejection, SaveField, Unbuilt, Vocabulary, fill_in};
@@ -213,7 +213,7 @@ fn a_saved_workspace_with_no_instance_opens_its_repo() {
     let bare = Workspace::new(78, "bare", "/workspace/bare");
     world.workspaces.push(solo);
     world.workspaces.push(bare);
-    assert!(world.instances.iter().all(|i| i.workspace != Some(77)));
+    assert!(world.instances.iter().all(|i| i.workspace_id() != Some(77)));
 
     assert_eq!(world.workspace_repo(77), Some(&repo("acme/solo")));
     assert_eq!(world.workspace_repo(78), None);
@@ -238,6 +238,7 @@ fn an_instance_no_longer_supplies_the_workspace_repo() {
         world
             .instances
             .iter()
+            .filter_map(InstanceEntry::as_available)
             .any(|i| i.workspace == Some(id) && i.github.is_some())
     );
     assert_eq!(world.workspace_repo(id), None);
@@ -251,6 +252,7 @@ fn every_demo_workspace_keeps_the_repo_its_instances_gave() {
             let from_instances = world
                 .instances
                 .iter()
+                .filter_map(InstanceEntry::as_available)
                 .filter(|i| i.workspace == Some(ws.id))
                 .find_map(|i| i.github.as_ref());
             assert_eq!(
@@ -397,6 +399,7 @@ fn an_account_gets_its_id_from_the_backend() {
 
 fn two_ready_claude_accounts() -> World {
     let mut world = world_for(Scenario::Returning);
+    world.surfaces.tuples.clear();
     for account in &mut world.accounts.accounts {
         account.default_for_provider = false;
     }
@@ -593,6 +596,7 @@ fn the_user_picks_the_account_when_none_is_preselected() {
 fn a_preselected_account_launches_without_a_second_pick() {
     let backend = Recording::new(no_answer);
     let mut world = world_for(Scenario::Returning);
+    world.surfaces.tuples.clear();
     world.backend = backend.clone();
     let mut app = timed(Scenario::Returning, world);
     press(&mut app, "down enter space enter");
@@ -810,7 +814,7 @@ fn the_simulator_words_a_missing_instance_or_role_from_the_vocabulary() {
     world.surfaces.vocabulary.not_in_roster = "{id} left the roster".into();
     world.surfaces.vocabulary.unknown_role = "no role called {role}".into();
     let restore = Effect::Restore {
-        instance: "jk-nope".into(),
+        instance: InstanceId::simulated("jk-nope"),
     };
     let Msg::Restored { result, .. } = simulated(&restore, &world) else {
         panic!("a Restored reply expected");
@@ -840,7 +844,7 @@ fn refused_purge(world: World) -> String {
     let mut app = timed(Scenario::Returning, world);
     screen(&mut app);
     app.deliver(&Msg::Purged {
-        instance: "jk-c41e".into(),
+        instance: InstanceId::simulated("jk-c41e"),
         result: Err("2 unpushed commits would be lost".into()),
     });
     status(&app)

@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Alexey Zhokhov
+# SPDX-License-Identifier: Apache-2.0
+import base64
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import tomllib
+from pathlib import Path
+
+SEED_COMMIT = "106c84d28b41d340128031760af416b7df83e9c1"
+SEED_TREE = "9e1cfbdbf9114d38dd6474e9ae3570779928bd64"
+MANIFEST_PATHS = ("Cargo.toml", "apps/jackin/Cargo.toml")
+EXPECTED_AGGREGATE = "59f990cee12bba13b31cd3f149442a9486e6e3890819b2abe16ce51d4c0a911e"
+
+
+def git(repository, *arguments):
+    executable = shutil.which("git")
+    if executable is None:
+        raise SystemExit("trusted seed Cargo policy generation requires Git")
+    environment = {
+        "PATH": os.environ.get("PATH", "/usr/bin:/bin"),
+        "HOME": "/tmp",
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": "/dev/null",
+        "GIT_CONFIG_SYSTEM": "/dev/null",
+        "GIT_NO_REPLACE_OBJECTS": "1",
+        "GIT_NO_LAZY_FETCH": "1",
+        "GIT_OPTIONAL_LOCKS": "0",
+        "LC_ALL": "C",
+        "LANG": "C",
+    }
+    try:
+        return subprocess.run(
+            [executable, "-C", str(repository), *arguments],
+            check=True,
+            env=environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        ).stdout
+    except subprocess.CalledProcessError as error:
+        detail = error.stderr.decode("utf-8", "backslashreplace").strip()
+        raise SystemExit(f"trusted seed Cargo policy generation failed: {detail}") from error
+
+
+def main():
+    if len(sys.argv) != 3:
+        raise SystemExit("usage: generate-trusted-seed-cargo-policy.py SEED_REPOSITORY OUTPUT")
+    repository = Path(sys.argv[1]).resolve(strict=True)
+    output = Path(sys.argv[2])
+    if git(repository, "rev-parse", "--verify", f"{SEED_COMMIT}^{{commit}}").decode().strip() != SEED_COMMIT:
+        raise SystemExit("trusted seed Cargo policy source commit differs from the reviewed commit")
+    if git(repository, "rev-parse", "--verify", f"{SEED_COMMIT}^{{tree}}").decode().strip() != SEED_TREE:
+        raise SystemExit("trusted seed Cargo policy source tree differs from the reviewed tree")
+    message = git(repository, "show", "-s", "--format=%B", SEED_COMMIT).decode("utf-8")
+    if "Signed-off-by: Alexey Zhokhov <alexey@zhokhov.com>" not in message.splitlines():
+        raise SystemExit("trusted seed Cargo policy source commit lacks its reviewed sign-off")
+    listing = git(repository, "ls-tree", "-r", "-z", SEED_COMMIT)
+    manifests = {}
+    for entry in listing.split(b"\0"):
+        if not entry:
+            continue
+        header, encoded_path = entry.split(b"\t", 1)
+        mode, kind, object_id = header.split()
+        path = encoded_path.decode("utf-8")
+        if path.rsplit("/", 1)[-1] == "Cargo.toml":
+            if mode != b"100644" or kind != b"blob" or path in manifests:
+                raise SystemExit("trusted seed Cargo policy source contains an unsafe manifest entry")
+            manifests[path] = object_id.decode("ascii")
+    if tuple(sorted(manifests)) != MANIFEST_PATHS:
+        raise SystemExit("trusted seed Cargo policy source manifest path set differs from the reviewed set")
+    entries = []
+    aggregate = hashlib.sha256()
+    for path in MANIFEST_PATHS:
+        data = git(repository, "show", f"{SEED_COMMIT}:{path}")
+        try:
+            tomllib.loads(data.decode("utf-8"))
+        except (UnicodeError, tomllib.TOMLDecodeError) as error:
+            raise SystemExit(f"trusted seed Cargo policy source manifest is invalid TOML: {path}") from error
+        digest = hashlib.sha256(data).hexdigest()
+        aggregate.update(path.encode("utf-8"))
+        aggregate.update(b"\0")
+        aggregate.update(digest.encode("ascii"))
+        aggregate.update(b"\n")
+        entries.append({"path": path, "sha256": digest, "bytes_base64": base64.b64encode(data).decode("ascii")})
+    if aggregate.hexdigest() != EXPECTED_AGGREGATE:
+        raise SystemExit("trusted seed Cargo policy source manifest aggregate differs from the reviewed identity")
+    policy = {
+        "schema": 1,
+        "seed_commit": SEED_COMMIT,
+        "seed_tree": SEED_TREE,
+        "manifest_aggregate_sha256": aggregate.hexdigest(),
+        "manifests": entries,
+    }
+    encoded = (json.dumps(policy, ensure_ascii=True, separators=(",", ":"), sort_keys=True) + "\n").encode("ascii")
+    if len(encoded) > 262144:
+        raise SystemExit("trusted seed Cargo policy artifact exceeds its fixed size bound")
+    output.write_bytes(encoded)
+
+
+if __name__ == "__main__":
+    main()

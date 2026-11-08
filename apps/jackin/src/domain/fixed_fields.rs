@@ -15,7 +15,7 @@
 use super::account::{Account, AccountForm, AccountOrigin, AccountRegistry, EditBlocked};
 use super::agent::{Agent, AgentBlocked, AuthMode};
 use super::fixed::Fixed;
-use super::instance::Instance;
+use super::instance::{Instance, InstanceEntry};
 use super::role::LaunchRoleRule;
 use super::surfaces::Surfaces;
 use super::vocabulary::Vocabulary;
@@ -72,8 +72,9 @@ pub struct RoleFixed {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct InstanceFixed {
-    pub workdir: String,
+pub enum InstanceFixed {
+    Available { workdir: Option<String> },
+    Unavailable,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -269,8 +270,15 @@ pub fn instance_fixed(i: &Instance) -> InstanceFixed {
         agents: _,
         task: _,
     } = i;
-    InstanceFixed {
+    InstanceFixed::Available {
         workdir: workdir.clone(),
+    }
+}
+
+fn instance_entry_fixed(entry: &InstanceEntry) -> InstanceFixed {
+    match entry {
+        InstanceEntry::Available(instance) => instance_fixed(instance),
+        InstanceEntry::Unavailable(_) => InstanceFixed::Unavailable,
     }
 }
 
@@ -304,7 +312,7 @@ pub fn surface_fixed(s: &Surfaces) -> SurfaceFixed {
 fn collect(
     workspaces: &[Workspace],
     roles: &[RoleEntry],
-    instances: &[Instance],
+    instances: &[InstanceEntry],
     global: &GlobalConfig,
     registry: &AccountRegistry,
     surfaces: &Surfaces,
@@ -319,7 +327,7 @@ fn collect(
             .map(|ws| workspace_fixed(ws, registry))
             .collect(),
         roles: roles.iter().map(role_fixed).collect(),
-        instances: instances.iter().map(instance_fixed).collect(),
+        instances: instances.iter().map(instance_entry_fixed).collect(),
         global: global_fixed(global),
         accounts: accounts.iter().map(account_fixed).collect(),
         surfaces: surface_fixed(surfaces),

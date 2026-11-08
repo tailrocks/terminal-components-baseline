@@ -8,6 +8,7 @@ use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
 
 use jackin_console::domain::agent::Agent;
+use jackin_console::domain::instance::InstanceId;
 use jackin_console::domain::vocabulary::{PaneWords, Vocabulary};
 use jackin_console::panes::{
     Lease, LinkEvent, LinkFault, LinkSource, PaneBody, PaneCommand, PaneLink, PanePolicy,
@@ -18,6 +19,10 @@ use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::Rect;
 
 pub const INSTANCE: &str = "jk-test";
+
+pub fn instance_id() -> InstanceId {
+    InstanceId::simulated(INSTANCE)
+}
 
 #[derive(Debug, Default)]
 pub struct LinkLog {
@@ -165,11 +170,11 @@ pub fn words() -> PaneWords {
 }
 
 pub fn codex() -> PaneRequest {
-    PaneRequest::new(INSTANCE, Some(Agent::Codex), None)
+    PaneRequest::new(&instance_id(), Some(Agent::Codex), None)
 }
 
 pub fn shell() -> PaneRequest {
-    PaneRequest::new(INSTANCE, None, None)
+    PaneRequest::new(&instance_id(), None, None)
 }
 
 pub fn pane_for(request: PaneRequest, bench: &Arc<Bench>, policy: PanePolicy) -> TerminalPane {

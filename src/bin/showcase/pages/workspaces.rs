@@ -902,8 +902,10 @@ impl Page for WorkspacesPage {
             _ => vec![("Enter", "Activate")],
         };
         for h in self.md.hints(focus) {
-            if let std::borrow::Cow::Borrowed(a) = h.action {
-                v.push((h.key, a));
+            if let (std::borrow::Cow::Borrowed(key), std::borrow::Cow::Borrowed(action)) =
+                (h.key, h.action)
+            {
+                v.push((key, action));
             }
         }
         v

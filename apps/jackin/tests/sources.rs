@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use common::*;
 use jackin_console::backend::{Backend, Completion, Effect, FileSource};
-use jackin_console::domain::instance::{Instance, InstanceStatus, RepoRef};
+use jackin_console::domain::instance::{Instance, InstanceId, InstanceStatus, RepoRef};
 use jackin_console::domain::launch::LaunchContent;
 use jackin_console::domain::vocabulary::Vocabulary;
 use jackin_console::fixtures::{Scenario, world_for};
@@ -132,9 +132,11 @@ fn capsule_github_comes_from_the_instance() {
     let mut world = world_for(Scenario::CapsuleMulti);
     world.surfaces.vocabulary = Vocabulary::openshell();
     for instance in &mut world.instances {
-        instance.pr = None;
-        instance.branch = Some("main".into());
-        instance.github = Some(other_repo());
+        if let Some(instance) = instance.as_available_mut() {
+            instance.pr = None;
+            instance.branch = Some("main".into());
+            instance.github = Some(other_repo());
+        }
     }
     let mut app = app_with(Scenario::CapsuleMulti, world);
     press(
@@ -157,7 +159,9 @@ fn name_suffix_no_longer_matches() {
             .any(|r| r.full_name.ends_with("payments-platform"))
     );
     for instance in &mut world.instances {
-        instance.github = None;
+        if let Some(instance) = instance.as_available_mut() {
+            instance.github = None;
+        }
     }
     world.workspaces[0].github = None;
     let mut app = app_with(Scenario::Returning, world);
@@ -172,7 +176,9 @@ fn name_suffix_no_longer_matches() {
 fn capsule_name_suffix_no_longer_matches() {
     let mut world = world_for(Scenario::CapsuleMulti);
     for instance in &mut world.instances {
-        instance.github = None;
+        if let Some(instance) = instance.as_available_mut() {
+            instance.github = None;
+        }
     }
     let mut app = app_with(Scenario::CapsuleMulti, world);
     press(
@@ -189,11 +195,17 @@ fn capsule_name_suffix_no_longer_matches() {
 #[test]
 fn daemon_label_from_workspace() {
     let mut world = world_for(Scenario::Returning);
-    let instance = world.instance_mut("jk-7f3a").expect("instance");
+    let instance = world
+        .instance_mut(&InstanceId::simulated("jk-7f3a"))
+        .expect("instance");
     instance.status = InstanceStatus::RestoreAvailable;
-    instance.workdir = "/sandbox/project".into();
+    instance.workdir = Some("/sandbox/project".into());
     let mut app = app_with(Scenario::Returning, world);
     press(&mut app, "down right down r");
-    let daemon = app.world.daemons.get("jk-7f3a").expect("restored daemon");
+    let daemon = app
+        .world
+        .daemons
+        .get(&InstanceId::simulated("jk-7f3a"))
+        .expect("restored daemon");
     assert_eq!(daemon.workspace, "payments-platform");
 }

@@ -1830,20 +1830,111 @@ fn showcase_picker_multi_search_space_edits_query_and_hidden_checked_retained() 
     let start = app.wait_text("Multi search");
     app.click(inside(find(&start, "Multi search")));
     app.wait_text("Row3");
+    assert!(text(&app.settle()).contains("Insert Toggle"));
     app.key("down");
     app.key("down");
     app.click(inside(find(&app.settle(), "Row3")));
     app.type_text("Row1");
     let filtered = app.settle();
     assert!(text(&filtered).contains("Row1"));
+    app.key("insert");
     app.key("space");
     let after_space = app.settle();
     assert!(
         !text(&after_space).contains("ChoseMany"),
         "Space in searchable picker must edit the query, not toggle or confirm"
     );
+    app.key("escape");
+    let unfiltered = app.wait_text("Row3");
+    app.click(inside(find(&unfiltered, "Row1")));
     app.key("enter");
-    app.wait_text("ChoseMany: Row3");
+    let chosen = app.wait_text("ChoseMany: Row3");
+    assert!(text(&chosen).contains("ChosenMany([2])"));
+    assert!(text(&chosen).contains("Row3") && text(&chosen).contains("1 selected"));
+    assert!(!text(&chosen).contains("Text("));
     app.visual("functional/showcase_picker_multi_search");
+    app.finish();
+}
+
+#[test]
+fn showcase_picker_returns_both_named_rows_selected_across_a_filter() {
+    let app = App::new(
+        "showcase-picker-multi-search-labels",
+        SHOWCASE,
+        &["--page", "pickers", "--motion", "paused"],
+        160,
+        50,
+        "truecolor",
+    );
+    let start = app.wait_text("Multi search");
+    app.click(inside(find(&start, "Multi search")));
+    let opened = app.wait_text("Row3");
+    app.click(inside(find(&opened, "Row3")));
+    app.type_text("Row1");
+    let filtered = app.wait_text("Row1");
+    let row1 = find_all(&filtered, "Row1")
+        .into_iter()
+        .find(|point| row_text(&filtered, u32::from(point.y)).contains("multi row 1"))
+        .expect("the filtered Row1 option");
+    app.click(inside(row1));
+    app.key("enter");
+
+    let chosen = app.wait_text("2 selected");
+    let shown = text(&chosen);
+    assert!(
+        !shown.contains("Text("),
+        "opaque item keys leaked into the result:\n{shown}"
+    );
+    assert!(shown.contains("ChoseMany: Row3, Row1"), "{shown}");
+    assert!(shown.contains("2 selected"), "{shown}");
+    app.finish();
+}
+
+#[test]
+fn showcase_picker_reports_group_conflicts_and_keeps_selection() {
+    let app = App::new(
+        "showcase-picker-group-conflict",
+        SHOWCASE,
+        &["--page", "pickers", "--motion", "paused"],
+        160,
+        50,
+        "truecolor",
+    );
+    let start = app.wait_text("Multi select");
+    let multi = find(&start, "Multi select");
+    app.click(inside(multi));
+    let opened = app.wait_text("Row3");
+    let row3 = find(&opened, "Row3");
+    let row4 = find(&opened, "Row4");
+    app.click(inside(row3));
+    app.click(inside(row4));
+
+    let conflict = app.wait_text("Row4 conflicts with selected Row3");
+    let shown = text(&conflict);
+    assert!(
+        shown.contains("Multi select"),
+        "picker must remain open\n{shown}"
+    );
+    assert!(row_text(&conflict, u32::from(row3.y)).contains("✓"));
+    assert!(!row_text(&conflict, u32::from(row4.y)).contains("✓"));
+
+    app.click(inside(row3));
+    let unchecked = app.settle();
+    assert!(!row_text(&unchecked, u32::from(row3.y)).contains("✓"));
+    app.click(inside(row4));
+    let row4_selected = app.settle();
+    assert!(row_text(&row4_selected, u32::from(row4.y)).contains("✓"));
+    app.key("enter");
+    let chose_row4 = app.wait_text("ChoseMany: Row4");
+    assert!(text(&chose_row4).contains("1 selected"));
+
+    app.click(inside(multi));
+    let _reopened = app.wait_text("Row3");
+    app.click(inside(row3));
+    let selected_row3 = app.settle();
+    app.click(inside(find(&selected_row3, "Row1")));
+    app.key("enter");
+    let nonconflicting = app.wait_text("ChoseMany: Row3, Row1");
+    assert!(text(&nonconflicting).contains("2 selected"));
     app.finish();
 }
