@@ -20,5 +20,12 @@
     "actions": "target/functional/s05-empty-18855-1794088206988891000-0/actions.txt"
   },
   "acceptance_receipt": "docs/testing/acceptance-receipts/refreshes-20261108/s05_pickers_opt_pickers_empty.accept.json",
-  "active_baseline": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_empty.tui.pb"
+  "active_baseline": "tests/functional/baselines/pre_refactor/s05_pickers/opt_pickers_empty.tui.pb",
+  "acceptance": {
+    "expected_baseline_sha256": "a258baed664fe9b4b35d4d2eb8c3127734c140d264fe7bcf01b24be4bc341beb",
+    "accepted_baseline_sha256": "3b1b7665accf1c73855a307450b265f70103c045f37f15058009ca099f24b5de"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/s05_pickers/opt_pickers_empty.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/s05_pickers_opt_pickers_empty.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/s05_pickers_opt_pickers_empty.provenance.json"
 }

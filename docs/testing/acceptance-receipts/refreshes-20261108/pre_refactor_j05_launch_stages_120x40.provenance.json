@@ -63,5 +63,11 @@
     "candidate_count": 1,
     "distinct_visual_diff_signatures": 1,
     "material_delta": "current cockpit InfoDialog wraps the Network Next step into two lines at these widths; the larger dialog shifts up one row and shows the full recovery instruction. Frozen history truncated the instruction to one line. Wide still asserts the complete network failure and capsule-not-started state; narrow asserts the visible failure title, summary, Network stage, daemon/network error fragments, and Close affordance. No pixel comparison."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "27ad3192cd75845a66c2d857a9e6e1d0ba3de8eb8b8c65594c012b3795364d83"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j05_launch/j05_launch_stages_120x40.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_launch_stages_120x40.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_launch_stages_120x40.provenance.json"
 }

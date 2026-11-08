@@ -571,9 +571,11 @@ fn tablepro_maximize_restores_the_same_layout() {
     app.key("z");
     let maximized = app.wait_screen("editor maximized", editor_max);
     assert_eq!((maximized.cols(), maximized.rows()), (120, 40));
+    // `connect_development` already asserts the connection toast when it appears;
+    // this longer editor journey can outlast the toast's five-second lifetime.
     see(
         &maximized,
-        &[TWO, QUERY_1, QUERY_2, CONNECTED],
+        &[TWO, QUERY_1, QUERY_2],
         &[EXPLORER, RESULTS, "No open tabs", "two'z"],
     );
     shot(&app, WIDE);

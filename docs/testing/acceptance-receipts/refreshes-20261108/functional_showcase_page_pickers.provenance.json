@@ -56,5 +56,11 @@
     "rule": "Exact candidate sample from the failing current-source functional run; expected baseline digest enforced by the Tuiscotti CLI.",
     "behavioral_assertions": "The page test reached the final visual checkpoint without assertion failures.",
     "difference": "The current Pickers page adds Multi select and Multi search controls next to Dialogs; their descriptions move the picker content down and the right-edge scroll rail narrows content."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "c2f2410faaa05e9c8b81a48c4666a21702d2e933a305005f03b5b01d847ca4d5"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/functional/showcase_page_pickers.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/functional_showcase_page_pickers.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/functional_showcase_page_pickers.provenance.json"
 }

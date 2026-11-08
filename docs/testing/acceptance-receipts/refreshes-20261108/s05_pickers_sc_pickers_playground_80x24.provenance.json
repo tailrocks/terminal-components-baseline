@@ -85,5 +85,11 @@
     "pixel_changed_pixels": 0,
     "pixel_compared_pixels": 0,
     "screen_difference": "At 80x24, the current content adds the Multi select and Multi search controls on rows 10\u201311; the picker description and lower content move down. Top-level navigation labels stay unchanged, and the narrow content layout clips and wraps the following rows."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "c9d48c7eb00ea7b4c5be34d1da3dbc21788db7bac44c854640d44a7c6bd9f258"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/s05_pickers/sc_pickers_playground_80x24.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/s05_pickers_sc_pickers_playground_80x24.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/s05_pickers_sc_pickers_playground_80x24.provenance.json"
 }

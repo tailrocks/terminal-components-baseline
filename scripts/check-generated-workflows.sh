@@ -100,7 +100,8 @@ verified_blob_objects="$temporary_root/verified-blob-objects"
 snapshot_reader="$temporary_root/snapshot-reader.git"
 maximum_snapshot_entries=8192
 maximum_snapshot_blob_bytes=$((16 * 1024 * 1024))
-maximum_snapshot_total_bytes=$((512 * 1024 * 1024))
+maximum_snapshot_total_bytes=$((5 * 512 * 1024 * 1024))
+snapshot_blob_allowlist="$repo_root/scripts/snapshot-large-blob-allowlist.tsv"
 maximum_snapshot_listing_bytes=$((8 * 1024 * 1024))
 maximum_hydration_missing_blobs=1024
 maximum_hydration_total_bytes=$((256 * 1024 * 1024))
@@ -109,8 +110,8 @@ hydration_deadline_file="$temporary_root/blob-hydration-deadline"
 
 trusted_seed_commit=a7413118476128a1c9b4f290277eb91ddf64ea7a
 trusted_lock_sha256=54035a5337e01cd95129b464ffbd0db45e4b0c989a699742efa1f0ab6329046d
-snapshot_lock_sha256=9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a
-snapshot_manifests_sha256=c886c036a93f12af6355d2a9a45a76ed21202971792ce0f921570786a535f5b0
+snapshot_lock_sha256=c3d0a169604e33af6f0288d4be3f8dbdb69c08db73c748d97f44e802142640bf
+snapshot_manifests_sha256=a05ef9aa0b74c5bb2301994ddff8ed5f7eb20f53e905e990cde19587ad063b71
 
 fail_materialization() {
   printf 'generated-workflows: cannot materialize snapshot: %s\n' "$1" >&2
@@ -397,67 +398,9 @@ PY
   else
     git_in_private_snapshot_reader cat-file --batch-check < "$oids" > "$statuses" || return $?
   fi
-  "$python_command" -I -S - "$oids" "$statuses" "$allow_missing" "$maximum_snapshot_blob_bytes" "$maximum_snapshot_total_bytes" "$kind" <<'PY'
-import sys
-from pathlib import Path
-
-oids_path, statuses_path, allow_missing, maximum_blob, maximum_total, kind = sys.argv[1:]
-oids = Path(oids_path).read_text().splitlines()
-statuses = Path(statuses_path).read_text().splitlines()
-if len(oids) != len(statuses):
-    raise SystemExit("generated-workflows: snapshot blob inspection was incomplete")
-missing_allowed = allow_missing == "true"
-total = 0
-for oid, status in zip(oids, statuses, strict=True):
-    fields = status.split()
-    if len(fields) == 2 and fields == [oid, "missing"]:
-        if missing_allowed:
-            continue
-        if kind == "trusted":
-            raise SystemExit("generated-workflows: trusted seed included blob object is unavailable")
-        raise SystemExit("generated-workflows: cannot materialize snapshot: snapshot contains an unavailable blob object")
-    if len(fields) != 3 or fields[0] != oid or fields[1] != "blob" or not fields[2].isdigit():
-        raise SystemExit("generated-workflows: snapshot tree contains an unexpected blob object type")
-    size = int(fields[2])
-    if size > int(maximum_blob):
-        raise SystemExit("generated-workflows: cannot materialize snapshot: snapshot blob exceeds the per-object size limit")
-    total += size
-    if total > int(maximum_total):
-        raise SystemExit("generated-workflows: cannot materialize snapshot: snapshot exceeds the total materialized blob size limit")
-PY
-}
-
-copy_bounded_blob() {
-  local reader=$1
-  local object_id=$2
-  local destination=$3
-  local remaining=$4
-  local program='import sys
-from pathlib import Path
-
-destination, maximum_blob, maximum_total = sys.argv[1:]
-maximum_blob = int(maximum_blob)
-maximum_total = int(maximum_total)
-total = 0
-with Path(destination).open("wb") as output:
-    while True:
-        chunk = sys.stdin.buffer.read(65536)
-        if not chunk:
-            break
-        total += len(chunk)
-        if total > maximum_blob:
-            raise SystemExit("generated-workflows: snapshot blob exceeds the per-object size limit")
-        if total > maximum_total:
-            raise SystemExit("generated-workflows: snapshot exceeds the total materialized blob size limit")
-        output.write(chunk)
-print(total)'
-  local copied
-  if [[ -n "$reader" ]]; then
-    copied=$(git_in_trusted_reader "$reader" cat-file blob "$object_id" | "$python_command" -I -S -c "$program" "$destination" "$maximum_snapshot_blob_bytes" "$remaining") || return $?
-  else
-    copied=$(git_in_private_snapshot_reader cat-file blob "$object_id" | "$python_command" -I -S -c "$program" "$destination" "$maximum_snapshot_blob_bytes" "$remaining") || return $?
-  fi
-  printf '%s\n' "$copied"
+  "$python_command" -I -S "$repo_root/scripts/validate-snapshot-blob-sizes.py" \
+    "$entries" "$statuses" "$allow_missing" "$maximum_snapshot_blob_bytes" \
+    "$maximum_snapshot_total_bytes" "$kind" "$snapshot_blob_allowlist"
 }
 
 project_trusted_tree_entries() {
@@ -965,133 +908,28 @@ validate_snapshot_symlinks() {
   rm -f "$links_file" || return $?
 }
 
-create_parent_directories() {
-  local root=$1
-  local path=$2
-  local parent_path
-  local current
-  local component
-
-  case "$path" in
-    /*|.|..|./*|../*|*/./*|*/.|*/../*|*/..|.git|.git/*|*//*|'')
-      fail_materialization "unsafe path"
-      return 1
-      ;;
-  esac
-
-  parent_path=${path%/*}
-  if [[ "$parent_path" == "$path" ]]; then
-    return 0
-  fi
-
-  current=$root
-  while [[ -n "$parent_path" ]]; do
-    case "$parent_path" in
-      */*)
-        component=${parent_path%%/*}
-        parent_path=${parent_path#*/}
-        ;;
-      *)
-        component=$parent_path
-        parent_path=
-        ;;
-    esac
-    current="$current/$component"
-    if [[ -L "$current" ]]; then
-      fail_materialization "path traverses a symlink"
-      return 1
-    fi
-    if [[ -e "$current" ]]; then
-      if [[ ! -d "$current" ]]; then
-        fail_materialization "path traverses a non-directory"
-        return 1
-      fi
-    else
-      mkdir "$current" || return $?
-    fi
-  done
-}
-
 materialize_tree() {
   local snapshot=$1
   local entries=$2
   local reader=${3-}
-  local entry
-  local header
-  local path
-  local mode
-  local type
-  local object_id
-  local target
-  local link_file
-  local link_target
-  local entry_number=0
-  local materialized_bytes=0
-  local copied_bytes
-
-  while IFS= read -r -d '' entry || [[ -n "$entry" ]]; do
-    header=${entry%%$'\t'*}
-    path=${entry#*$'\t'}
-    mode=${header%% *}
-    header=${header#* }
-    type=${header%% *}
-    object_id=${header#* }
-    entry_number=$((entry_number + 1))
-
-    case "$path" in
-      /*|.|..|./*|../*|*/./*|*/.|*/../*|*/..|.git|.git/*|*//*|'')
-        fail_materialization "unsafe path"
-        return 1
-        ;;
-    esac
-
-    target="$snapshot/$path"
-    create_parent_directories "$snapshot" "$path" || return $?
-    if [[ -e "$target" || -L "$target" ]]; then
-      fail_materialization "duplicate path"
-      return 1
-    fi
-
-    case "$mode:$type" in
-      100644:blob|100755:blob)
-        copied_bytes=$(copy_bounded_blob "$reader" "$object_id" "$target" "$((maximum_snapshot_total_bytes - materialized_bytes))") || {
-          fail_materialization "snapshot contains an unavailable or oversized blob object"
-          return 1
-        }
-        materialized_bytes=$((materialized_bytes + copied_bytes))
-        if [[ "$mode" == 100755 ]]; then
-          chmod 755 "$target" || return $?
-        else
-          chmod 644 "$target" || return $?
-        fi
-        ;;
-      120000:blob)
-        link_file="$temporary_root/link-target-$entry_number"
-        copied_bytes=$(copy_bounded_blob "$reader" "$object_id" "$link_file" "$((maximum_snapshot_total_bytes - materialized_bytes))") || {
-          fail_materialization "snapshot contains an unavailable or oversized blob object"
-          return 1
-        }
-        materialized_bytes=$((materialized_bytes + copied_bytes))
-        if IFS= read -r -d '' link_target < "$link_file"; then
-          fail_materialization "symlink target contains a NUL byte"
-          return 1
-        fi
-        if [[ -z "$link_target" ]]; then
-          fail_materialization "symlink target is empty"
-          return 1
-        fi
-        ln -s "$link_target" "$target" || return $?
-        ;;
-      160000:commit)
-        fail_materialization "snapshot contains unsupported gitlink entries"
-        return 1
-        ;;
-      *)
-        fail_materialization "unsupported entry mode $mode"
-        return 1
-        ;;
-    esac
-  done < "$entries"
+  local reader_kind=snapshot
+  local reader_home=$temporary_root/private-git-home
+  local private_objects=$index_tree_objects
+  if [[ -n "$reader" ]]; then
+    reader_kind=trusted
+    reader_home=$temporary_root/trusted-reader-home
+    private_objects=$trusted_private_objects
+  else
+    reader=$snapshot_reader
+  fi
+  TUISCO_READER_HOME="$reader_home" \
+    TUISCO_GIT_PATH="${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" \
+    TUISCO_MAX_BLOB="$maximum_snapshot_blob_bytes" \
+    TUISCO_MAX_TOTAL="$maximum_snapshot_total_bytes" \
+    "$python_command" -I -S "$repo_root/scripts/materialize-git-tree.py" \
+    "$git_command" "$reader_kind" "$reader" "$private_objects" \
+    "$verified_blob_objects" "$objects" "$entries" \
+    "$temporary_root/tree-blob-status" "$snapshot_blob_allowlist" "$snapshot"
 }
 
 read_snapshot_tool_selection() {
@@ -1968,7 +1806,7 @@ if require_git_sources == "true":
     expected_lock_sha256 = "54035a5337e01cd95129b464ffbd0db45e4b0c989a699742efa1f0ab6329046d"
     tuiscotti_source = "git+https://github.com/tailrocks/tuiscotti?rev=d8d54155947f6303a41dfd6079b53c0abc16f29a#d8d54155947f6303a41dfd6079b53c0abc16f29a"
 else:
-    expected_lock_sha256 = "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a"
+    expected_lock_sha256 = "c3d0a169604e33af6f0288d4be3f8dbdb69c08db73c748d97f44e802142640bf"
     tuiscotti_source = "git+https://github.com/tailrocks/tuiscotti?rev=92ef2d9ee082b35f68e066c5129fedbf07675a80#92ef2d9ee082b35f68e066c5129fedbf07675a80"
 expected_git = {termpane_source, tuiscotti_source}
 registry_source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -87,5 +87,11 @@
     "pixel_changed_pixels": 0,
     "pixel_compared_pixels": 0,
     "screen_difference": "The left navigation label text is unchanged. The current picker content adds the Multi select and Multi search controls beside the Dialogs row, moving the picker description and lower content down; a right-edge scroll rail occupies the final column and shortens the available content width."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "b0b8405404dd07bec7c10f8ae403fb23b999eeb5b89ad98f730b2bceed8dfab3"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/s05_pickers/opt_pickers_width.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/s05_pickers_opt_pickers_width.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/s05_pickers_opt_pickers_width.provenance.json"
 }

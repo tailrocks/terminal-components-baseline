@@ -411,5 +411,11 @@
     "summary": "The stable failure screen now renders the open Network failure dialog over the launch progress rail. The frozen screen has no open dialog and shows the Identity stage timing row. The producer asserts the Network stage, missing jackin-net cause, not-started Capsule, and absence of a successful handoff before capture.",
     "candidate_frame": "6/11 stages complete, one skipped; Sidecar is the frontier behind the open Network failure dialog.",
     "frozen_frame": "Identity stage timing row visible; no failure dialog overlay."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "1619296096dc0c2d7568b113dc4fdab825320b554a0e243a4d527b56cfc47aec"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j05_failure/j05_failure_failure_120x40.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_failure_failure_120x40.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_failure_failure_120x40.provenance.json"
 }

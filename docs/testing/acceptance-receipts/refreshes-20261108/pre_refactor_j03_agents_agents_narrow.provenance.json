@@ -61,5 +61,11 @@
     "candidate_count": 1,
     "distinct_visual_diff_signatures": 1,
     "material_delta": "current supported agent roster adds Muse, Antigravity, MiniMax Code, Mimo Code, and OMP below the six agents in frozen history; existing Claude/Codex/Kimi mode and dirty-state expectations remain satisfied. No pixel comparison."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "7531a667e8bfb1366bce740ba64c8342165ed697e30167aaa585ec49c3eda853"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j03_agents/j03_agents_agents_narrow.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j03_agents_agents_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j03_agents_agents_narrow.provenance.json"
 }

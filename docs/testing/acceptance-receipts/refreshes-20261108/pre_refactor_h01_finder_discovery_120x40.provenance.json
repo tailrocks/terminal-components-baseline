@@ -17,11 +17,17 @@
     "producer_mode": "candidate",
     "binary_path": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/debug/holla",
     "binary_sha256": "c49303fad89f48ffd08977dd3c45c9bd091db129aa3d3c1603298b94f7abba5b",
-    "fixture_args": ["--scenario", "parity-discovery"],
+    "fixture_args": [
+      "--scenario",
+      "parity-discovery"
+    ],
     "color": "truecolor",
     "motion": "reduced",
     "clock": false,
-    "size": [120, 40],
+    "size": [
+      120,
+      40
+    ],
     "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
   },
   "source_context": {
@@ -41,5 +47,11 @@
     "rule": "Select the exact PB emitted by the passing current-source producer run; no alternative candidate was used.",
     "behavioral_assertions": "The preceding parity-discovery states, identity preservation, search, empty-result, and selection assertions passed before the final wide visual checkpoint.",
     "difference": "Current producer's captured wide finder frame differs from the previously accepted historical PB; the frozen JSON remains unchanged."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "95c32b7df58be123f24abd09d95049ef2b1deaea82016209ccb8e718cab62735"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/h01_finder/h01_finder_discovery_120x40.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_h01_finder_discovery_120x40.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_h01_finder_discovery_120x40.provenance.json"
 }

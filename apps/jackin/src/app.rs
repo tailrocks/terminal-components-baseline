@@ -2247,17 +2247,7 @@ impl App {
         } else if !header.is_empty() {
             self.draw_strip(header, buf, ctx, route);
         }
-        if route == Route::Capsule {
-            let status = self
-                .shell
-                .status
-                .get()
-                .map(|(text, tone)| (text.to_owned(), tone));
-            if let Some(capsule) = self.router.capsule_mut() {
-                capsule.set_shell_status(status);
-                capsule.render(body, buf, ctx, &self.world);
-            }
-        } else if let Some(s) = self.router.screen_mut(route) {
+        if let Some(s) = self.router.screen_mut(route) {
             s.render(body, buf, ctx, &self.world);
         }
         self.footer(false).render(footer, buf, ctx, &mut self.shell);

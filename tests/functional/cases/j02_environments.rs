@@ -10,7 +10,10 @@ use std::time::{Duration, Instant};
 
 use tui_test::TerminalSnapshot;
 
-use crate::support::{App, JACKIN, Launch, Point, find_all, row_text, text, try_launch};
+use crate::support::{
+    App, JACKIN, Launch, Point, SessionMode, file_sha256, find_all, reference_binary_from,
+    reference_digest_from, row_text, text, try_launch,
+};
 
 const DIRECTORY: &str = "Current directory";
 const PAYMENTS: &str = "payments-platform";
@@ -51,7 +54,23 @@ fn visual_id(checkpoint: &str) -> String {
 }
 
 fn open(name: &str) -> App {
-    let mut launch = Launch::new(name, JACKIN);
+    let capture = std::env::var_os("J02_CAPTURE").is_some_and(|value| value == "1");
+    let mut launch = if capture {
+        let manifest =
+            crate::support::workspace_root().join("docs/testing/reference-manifest-j06-pr2.json");
+        let binary = reference_binary_from(&manifest, "jackin-pr2");
+        assert_eq!(
+            file_sha256(&binary),
+            reference_digest_from(&manifest, "jackin-pr2"),
+            "J02 reference binary digest"
+        );
+        let mut launch = Launch::new(name, binary.to_str().expect("reference path"));
+        launch.mode = SessionMode::Reference;
+        launch.reference_manifest = Some(manifest);
+        launch
+    } else {
+        Launch::new(name, JACKIN)
+    };
     launch.args = vec!["--scenario".to_string(), "returning".to_string()];
     launch.cols = 120;
     launch.rows = 40;
@@ -288,16 +307,6 @@ fn button(app: &App, label: &str, row_ok: impl Fn(&str) -> bool) -> Point {
     }
 }
 
-fn form_save(app: &App) -> Point {
-    button(app, CONFIRM, |row| {
-        row.contains(CANCEL)
-            && row.contains(CONFIRM)
-            && !row.contains("Save…")
-            && !row.contains(CLEANUP)
-            && !row.contains(PREVIEW_TITLE)
-    })
-}
-
 fn preview_save(app: &App) -> Point {
     button(app, CONFIRM, |row| {
         row.contains(CANCEL)
@@ -337,6 +346,9 @@ fn open_new_env(app: &App) -> TerminalSnapshot {
 }
 
 fn type_masked(app: &App, key_name: &str, value: &str) {
+    // Replace any value retained by a reopened form before entering a key.
+    app.key("ctrl+a");
+    app.key("ctrl+k");
     app.type_text(key_name);
     app.wait_screen("key text", |screen| {
         let line = focused_line(screen);
@@ -402,7 +414,68 @@ fn nudge(app: &App, quiet_frame: impl Fn(&TerminalSnapshot) -> bool) {
 
 fn shoot(app: &App, checkpoint: &str) {
     nudge(app, prepared_form);
-    app.visual(&visual_id(checkpoint));
+    let test_id = visual_id(checkpoint);
+    if std::env::var_os("J02_CAPTURE").is_some_and(|value| value == "1") {
+        capture_reference_frame(app, &test_id);
+    } else {
+        app.visual(&test_id);
+    }
+}
+
+fn capture_reference_frame(app: &App, test_id: &str) {
+    let session_path = app.evidence_dir().join("session.json");
+    let session: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&session_path).expect("reference session metadata"))
+            .expect("parse reference session metadata");
+    assert_eq!(session["mode"], "reference");
+    assert_eq!(
+        session["reference_sha"],
+        "3cbe13ce922f7d0902bf42af418f3d012d8b537f"
+    );
+    assert_eq!(
+        session["lockfile_sha256"],
+        "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a"
+    );
+    assert_eq!(
+        session["binary_sha256"],
+        "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421"
+    );
+    let screen = app.screen();
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen,
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let directory = app.evidence_dir().join("reference-candidates");
+    std::fs::create_dir_all(&directory).expect("create reference candidate directory");
+    let candidate = directory.join(format!("{}.tui.pb", test_id.replace('/', "_")));
+    std::fs::write(&candidate, &bytes).expect("write reference candidate sample");
+    let digest = file_sha256(&candidate);
+    let index = serde_json::json!({
+        "test_id": test_id,
+        "candidate_path": candidate,
+        "candidate_sha256": digest,
+        "session_path": session_path,
+        "binary_path": session["binary_path"],
+        "binary_sha256": session["binary_sha256"],
+        "reference_sha": session["reference_sha"],
+        "lockfile_sha256": session["lockfile_sha256"],
+    });
+    use std::io::Write as _;
+    let mut log = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(directory.join("index.jsonl"))
+        .expect("open reference capture index");
+    serde_json::to_writer(&mut log, &index).expect("write reference capture index");
+    log.write_all(b"\n")
+        .expect("finish reference capture index");
+    eprintln!(
+        "J02 reference candidate {test_id} sha256 {digest} at {}",
+        candidate.display()
+    );
 }
 
 fn form_closed(screen: &TerminalSnapshot) -> bool {
@@ -453,7 +526,41 @@ fn section_body(screen: &TerminalSnapshot, header: &str, next: &str) -> String {
 }
 
 fn submit_form(app: &App) {
-    app.click(form_save(app));
+    // Commit the value, move to Cancel, then across the button row to Save.
+    app.key("tab");
+    app.key("tab");
+    app.key("tab");
+    app.key("right");
+    let save_focused = app.wait_screen("save focused", |screen| {
+        text(screen).contains("Enter Save") && text(screen).contains(CANCEL)
+    });
+    assert!(
+        text(&save_focused).contains(CONFIRM),
+        "{}",
+        text(&save_focused)
+    );
+    let save_row = (0..save_focused.rows())
+        .find(|row| {
+            let line = row_text(&save_focused, *row);
+            line.contains(CANCEL) && line.contains("▎Save")
+        })
+        .expect("focused Save button row");
+    let label: Vec<_> = CONFIRM.chars().collect();
+    let column = save_focused
+        .row(save_row)
+        .expect("Save button row cells")
+        .windows(label.len())
+        .position(|window| {
+            window
+                .iter()
+                .zip(&label)
+                .all(|(cell, character)| cell.text() == character.to_string())
+        })
+        .expect("Save button cell range");
+    app.click(Point {
+        x: u16::try_from(column + 2).expect("Save button x"),
+        y: u16::try_from(save_row).expect("Save button y"),
+    });
 }
 
 #[test]
@@ -526,17 +633,22 @@ fn j02_environments_env() {
     });
 
     submit_form(&app);
-    let dropped = app.wait_screen("duplicate dropped", |screen| {
+    let rejected = app.wait_screen("duplicate rejected", |screen| {
+        text(screen).contains(NEW_ENV) && text(screen).contains(DUP_ERROR)
+    });
+    assert!(
+        !text(&rejected).contains(ADDED),
+        "duplicate was staged despite the validation error\n{}",
+        text(&rejected)
+    );
+    secrets_hidden(&rejected);
+    app.key("escape");
+    let dropped = app.wait_screen("duplicate form dismissed", |screen| {
         form_closed(screen)
             && !text(screen).contains(DUP_ERROR)
             && key_lines(screen, DATABASE).len() == 1
     });
     secrets_hidden(&dropped);
-    assert!(
-        !text(&dropped).contains(ADDED) && !text(&dropped).contains(NEW_ENV),
-        "duplicate stored a row\n{}",
-        text(&dropped)
-    );
     assert_eq!(star_count(&only_line(&dropped, DATABASE)), 16);
 
     open_new_env(&app);

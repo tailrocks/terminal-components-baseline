@@ -10,7 +10,10 @@ use std::time::{Duration, Instant};
 use tui_test::TerminalSnapshot;
 use tuiscotti_latest::check::CheckOutcome;
 
-use crate::support::{App, JACKIN, Launch, Point, find_all, text, try_launch};
+use crate::support::{
+    App, JACKIN, Launch, Point, SessionMode, file_sha256, find_all, reference_binary_from,
+    reference_digest_from, text, try_launch,
+};
 
 const WORKSPACE: &str = "payments-platform";
 const CLAUDE_VERSION: &str = "Claude Code v2.1.14";
@@ -58,7 +61,23 @@ fn visual_id(checkpoint: &str) -> String {
 }
 
 fn open(name: &str) -> App {
-    let mut launch = Launch::new(name, JACKIN);
+    let capture = std::env::var_os("J06_CAPTURE").is_some_and(|value| value == "1");
+    let mut launch = if capture {
+        let manifest =
+            crate::support::workspace_root().join("docs/testing/reference-manifest-j06-pr2.json");
+        let binary = reference_binary_from(&manifest, "jackin-pr2");
+        assert_eq!(
+            file_sha256(&binary),
+            reference_digest_from(&manifest, "jackin-pr2"),
+            "J06 reference binary digest"
+        );
+        let mut launch = Launch::new(name, binary.to_str().expect("reference path"));
+        launch.mode = SessionMode::Reference;
+        launch.reference_manifest = Some(manifest);
+        launch
+    } else {
+        Launch::new(name, JACKIN)
+    };
     launch.args = vec!["--scenario".to_string(), "capsule-multi".to_string()];
     launch.cols = 120;
     launch.rows = 40;
@@ -263,6 +282,62 @@ fn shot(app: &App, checkpoint: &str, accept: impl Fn(&TerminalSnapshot) -> bool)
 }
 
 fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
+    if std::env::var_os("J06_CAPTURE").is_some_and(|value| value == "1") {
+        let session_path = app.evidence_dir().join("session.json");
+        let session: serde_json::Value = serde_json::from_slice(
+            &std::fs::read(&session_path).expect("reference session metadata"),
+        )
+        .expect("parse reference session metadata");
+        assert_eq!(session["mode"], "reference");
+        assert_eq!(
+            session["reference_sha"],
+            "3cbe13ce922f7d0902bf42af418f3d012d8b537f"
+        );
+        assert_eq!(
+            session["lockfile_sha256"],
+            "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a"
+        );
+        assert_eq!(
+            session["binary_sha256"],
+            "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421"
+        );
+        let sample = tuiscotti_latest::sample::Sample::state(
+            test_id,
+            screen.clone(),
+            tuiscotti_latest::sample::Observation::empty(),
+        )
+        .expect("build Tuiscotti state sample");
+        let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+        let directory = app.evidence_dir().join("reference-candidates");
+        std::fs::create_dir_all(&directory).expect("create reference candidate directory");
+        let candidate = directory.join(format!("{}.tui.pb", test_id.replace('/', "_")));
+        std::fs::write(&candidate, &bytes).expect("write reference candidate sample");
+        let digest = file_sha256(&candidate);
+        let index = serde_json::json!({
+            "test_id": test_id,
+            "candidate_path": candidate,
+            "candidate_sha256": digest,
+            "session_path": session_path,
+            "binary_path": session["binary_path"],
+            "binary_sha256": session["binary_sha256"],
+            "reference_sha": session["reference_sha"],
+            "lockfile_sha256": session["lockfile_sha256"],
+        });
+        use std::io::Write as _;
+        let mut log = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(directory.join("index.jsonl"))
+            .expect("open reference capture index");
+        serde_json::to_writer(&mut log, &index).expect("write reference capture index");
+        log.write_all(b"\n")
+            .expect("finish reference capture index");
+        eprintln!(
+            "J06 reference candidate {test_id} sha256 {digest} at {}",
+            candidate.display()
+        );
+        return;
+    }
     let root = crate::support::workspace_root().join("tests/functional/baselines");
     let sample = tuiscotti_latest::sample::Sample::state(
         test_id,

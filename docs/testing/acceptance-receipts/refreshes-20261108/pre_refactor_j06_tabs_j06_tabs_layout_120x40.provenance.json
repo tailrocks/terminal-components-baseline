@@ -1,0 +1,95 @@
+{
+  "schema": "tcb.reference-baseline-refresh.v1",
+  "test_id": "pre_refactor/j06_tabs/j06_tabs_layout_120x40",
+  "active_baseline_path": "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_120x40.tui.pb",
+  "active_baseline_sha256": "1282bcd47e27d41f703d337100c38d423a1cef62e8ebb009e27afe15d0092fdc",
+  "previous_baseline": {
+    "sha256": "4c00bdb5d920457c60106c7e193e67e10e9f5c5ab1985369d5ff8fd662f396f9",
+    "archive_path": "docs/testing/acceptance-receipts/refreshes-20261108/superseded/pre_refactor_j06_tabs_j06_tabs_layout_120x40.old.tui.pb",
+    "historical_json": "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_120x40.tui.json",
+    "historical_json_sha256": "5fbbfdcc636ead5fb1e0483cb2c5d6f1f41cff3155e30e60bb532f4f68724bdc",
+    "historical_json_preserved": true
+  },
+  "candidate": {
+    "sha256": "1282bcd47e27d41f703d337100c38d423a1cef62e8ebb009e27afe15d0092fdc",
+    "path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/reference-candidates/pre_refactor_j06_tabs_j06_tabs_layout_120x40.tui.pb",
+    "source": "Reference-mode J06 producer session",
+    "session_path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/session.json",
+    "capture_index_path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/reference-candidates/index.jsonl",
+    "binary_path": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+    "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+    "source_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
+  },
+  "candidate_record": {
+    "candidate_sha256": "1282bcd47e27d41f703d337100c38d423a1cef62e8ebb009e27afe15d0092fdc",
+    "source": "reference-session-capture-index",
+    "alternates": [
+      "1282bcd47e27d41f703d337100c38d423a1cef62e8ebb009e27afe15d0092fdc"
+    ],
+    "rejected_alternates": [
+      {
+        "sha256": "540259786e7aac81357dad72834fbc414ae529bd510a96ed51b70f48f9b3c8d2",
+        "session": "target/functional/j06-tabs-layout-34960-1794105924953243000-0/session.json",
+        "mode": "candidate",
+        "accepted": false,
+        "reason": "not a verified Reference-mode sample; excluded from approval selection"
+      },
+      {
+        "sha256": "aa7787826ec6c4f5441eebd17ae6bfcc1522f7620103c66f7fb6192610b35f6b",
+        "session": "target/functional/j06-tabs-layout-63908-1794106127955181000-0/session.json",
+        "mode": "candidate",
+        "accepted": false,
+        "reason": "not a verified Reference-mode sample; excluded from approval selection"
+      }
+    ],
+    "session_mode": "reference"
+  },
+  "state_diff": {
+    "gate": "state",
+    "changed_cell_total": 37,
+    "changed_fields": [],
+    "changed_rows": [
+      2,
+      3
+    ],
+    "pixel_changed_pixels": 0,
+    "pixel_comparison_performed": false,
+    "explanation": "The prior frozen sample has no Grok tab, placing OpenCode in slot 5; CapsuleMulti now exposes Grok and OpenCode separately, so the validated journey closes the dialog with OpenCode in slot 6. The observed changes are limited to the tab strip and its divider."
+  },
+  "acceptance": {
+    "script": "scripts/accept-baseline.py",
+    "accept_command": {
+      "schema": "tuiscotti.cli.v1",
+      "command": "accept",
+      "status": "pass",
+      "test_id": "pre_refactor/j06_tabs/j06_tabs_layout_120x40",
+      "reason": null,
+      "candidate_path": {
+        "encoding": "utf8",
+        "value": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/reference-candidates/pre_refactor_j06_tabs_j06_tabs_layout_120x40.tui.pb"
+      },
+      "candidate_sha256": "1282bcd47e27d41f703d337100c38d423a1cef62e8ebb009e27afe15d0092fdc",
+      "baseline_sha256": "1282bcd47e27d41f703d337100c38d423a1cef62e8ebb009e27afe15d0092fdc",
+      "output_path": {
+        "encoding": "utf8",
+        "value": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_120x40.tui.pb"
+      },
+      "error_code": null
+    },
+    "cli_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_tabs_j06_tabs_layout_120x40.accept.json",
+    "expected_baseline_sha256": "4c00bdb5d920457c60106c7e193e67e10e9f5c5ab1985369d5ff8fd662f396f9",
+    "accepted_baseline_sha256": "1282bcd47e27d41f703d337100c38d423a1cef62e8ebb009e27afe15d0092fdc",
+    "exit_code": 0,
+    "source_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+    "session_path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/session.json",
+    "capture_index_path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/reference-candidates/index.jsonl",
+    "precondition": "The current CapsuleMulti fixture exposes Grok Build and OpenCode as separate supported agents. This passing journey launches both, asserts their distinct start notices and pane bodies, verifies tab return and split/close behavior, and captures the close-pane dialog on OpenCode tab slot 6; the prior sample had no Grok tab and placed OpenCode at slot 5. The 37 changed state cells are limited to the row-2 tab-strip text/focus colors and row-3 divider; pixel comparison is unavailable for the historical sample. The frozen JSON and old PB are preserved."
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/refreshes-20261108/superseded/pre_refactor_j06_tabs_j06_tabs_layout_120x40.old.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_tabs_j06_tabs_layout_120x40.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_tabs_j06_tabs_layout_120x40.provenance.json"
+}

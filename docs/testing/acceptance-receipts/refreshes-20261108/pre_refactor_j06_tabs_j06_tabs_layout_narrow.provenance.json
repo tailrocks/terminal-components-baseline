@@ -1,0 +1,80 @@
+{
+  "schema": "tcb.reference-baseline-refresh.v1",
+  "test_id": "pre_refactor/j06_tabs/j06_tabs_layout_narrow",
+  "active_baseline_path": "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_narrow.tui.pb",
+  "active_baseline_sha256": "817f033a19dc88b49f9ff153f77672b69dbaae8b20d02907e6ad01ece196a1cf",
+  "previous_baseline": {
+    "sha256": "12c81c91f2fdb5954e6694cc74548233fee4ca451573e77cfb6cbd33a63d741f",
+    "archive_path": "docs/testing/acceptance-receipts/refreshes-20261108/superseded/pre_refactor_j06_tabs_j06_tabs_layout_narrow.old.tui.pb",
+    "historical_json": "tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_narrow.tui.json",
+    "historical_json_sha256": "f716068296782e88723166244941b4e3c088bb5ae2fd982753bbd62d36c9c30b",
+    "historical_json_preserved": true
+  },
+  "candidate": {
+    "sha256": "817f033a19dc88b49f9ff153f77672b69dbaae8b20d02907e6ad01ece196a1cf",
+    "path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/reference-candidates/pre_refactor_j06_tabs_j06_tabs_layout_narrow.tui.pb",
+    "source": "Reference-mode J06 producer session",
+    "session_path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/session.json",
+    "capture_index_path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/reference-candidates/index.jsonl",
+    "binary_path": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/reference-bins/aarch64-apple-darwin/pr2-3cbe13c/jackin",
+    "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+    "source_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
+  },
+  "candidate_record": {
+    "candidate_sha256": "817f033a19dc88b49f9ff153f77672b69dbaae8b20d02907e6ad01ece196a1cf",
+    "source": "reference-session-capture-index",
+    "alternates": [
+      "817f033a19dc88b49f9ff153f77672b69dbaae8b20d02907e6ad01ece196a1cf"
+    ],
+    "rejected_alternates": [],
+    "session_mode": "reference"
+  },
+  "state_diff": {
+    "gate": "state",
+    "changed_cell_total": 5,
+    "changed_fields": [],
+    "changed_rows": [
+      2,
+      3
+    ],
+    "pixel_changed_pixels": 0,
+    "pixel_comparison_performed": false,
+    "explanation": "The prior frozen sample has no Grok tab, placing OpenCode in slot 5; CapsuleMulti now exposes Grok and OpenCode separately, so the validated journey closes the dialog with OpenCode in slot 6. The observed changes are limited to the tab strip and its divider."
+  },
+  "acceptance": {
+    "script": "scripts/accept-baseline.py",
+    "accept_command": {
+      "schema": "tuiscotti.cli.v1",
+      "command": "accept",
+      "status": "pass",
+      "test_id": "pre_refactor/j06_tabs/j06_tabs_layout_narrow",
+      "reason": null,
+      "candidate_path": {
+        "encoding": "utf8",
+        "value": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/reference-candidates/pre_refactor_j06_tabs_j06_tabs_layout_narrow.tui.pb"
+      },
+      "candidate_sha256": "817f033a19dc88b49f9ff153f77672b69dbaae8b20d02907e6ad01ece196a1cf",
+      "baseline_sha256": "817f033a19dc88b49f9ff153f77672b69dbaae8b20d02907e6ad01ece196a1cf",
+      "output_path": {
+        "encoding": "utf8",
+        "value": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/baselines/pre_refactor/j06_tabs/j06_tabs_layout_narrow.tui.pb"
+      },
+      "error_code": null
+    },
+    "cli_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_tabs_j06_tabs_layout_narrow.accept.json",
+    "expected_baseline_sha256": "12c81c91f2fdb5954e6694cc74548233fee4ca451573e77cfb6cbd33a63d741f",
+    "accepted_baseline_sha256": "817f033a19dc88b49f9ff153f77672b69dbaae8b20d02907e6ad01ece196a1cf",
+    "exit_code": 0,
+    "source_sha": "3cbe13ce922f7d0902bf42af418f3d012d8b537f",
+    "lockfile_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a",
+    "binary_sha256": "7892611f8c7de53308a3653d5ce53f01c2e717e38bade0af5d20cbd0c43c0421",
+    "session_path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/session.json",
+    "capture_index_path": "target/functional/j06-tabs-layout-5802-1794106953557375000-0/reference-candidates/index.jsonl",
+    "precondition": "The current CapsuleMulti fixture exposes Grok Build and OpenCode as separate supported agents. This passing journey launches both, asserts their distinct start notices and pane bodies, verifies tab return and split/close behavior, and captures the close-pane dialog on OpenCode tab slot 6; the prior sample had no Grok tab and placed OpenCode at slot 5. The five changed state cells are limited to the row-2 tab-strip focus marker and row-3 divider; pixel comparison is unavailable for the historical sample. The frozen JSON and old PB are preserved."
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/refreshes-20261108/superseded/pre_refactor_j06_tabs_j06_tabs_layout_narrow.old.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_tabs_j06_tabs_layout_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_tabs_j06_tabs_layout_narrow.provenance.json"
+}

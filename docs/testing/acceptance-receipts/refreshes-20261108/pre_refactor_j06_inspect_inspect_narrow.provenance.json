@@ -19,23 +19,32 @@
     "actions": "target/functional/j06-inspect-inspect-27276-1794094693393991000-0/actions.txt",
     "binary": "/Users/donbeave/Library/Caches/mbx/targets/v1/2bf59f9ffa97c482408878b7a10701377fc8afe4f24b417554da5eafc20a54d0/debug/jackin-preview",
     "binary_sha256": "90a087c7c43e84267ad53d1257a75ecfba12e88f24d3769d845c597f0a6ca18b",
-    "fixture_args": ["--scenario", "returning"],
+    "fixture_args": [
+      "--scenario",
+      "returning"
+    ],
     "color": "truecolor",
     "motion": "reduced",
     "clock": false,
-    "size": [80, 24],
+    "size": [
+      80,
+      24
+    ],
     "comparator_rev": "92ef2d9ee082b35f68e066c5129fedbf07675a80"
   },
   "observed_delta": {
     "changed_cells": 78,
     "dimensions": "80x24",
     "header": "v switches to side-by-side",
-    "footer": "↑↓ Scroll · drag Select · y Copy · v Show side by side · Esc Back to list",
+    "footer": "\u2191\u2193 Scroll \u00b7 drag Select \u00b7 y Copy \u00b7 v Show side by side \u00b7 Esc Back to list",
     "remaining_screen": "matches frozen sample",
     "semantic_assertions_before_capture": "passed"
   },
   "source_context": {
     "git_head": "9409215747997a473dab138b974c5a718fcf1271",
     "cargo_lock_sha256": "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a"
-  }
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j06_inspect/j06_inspect_inspect_narrow.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_inspect_inspect_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j06_inspect_inspect_narrow.provenance.json"
 }

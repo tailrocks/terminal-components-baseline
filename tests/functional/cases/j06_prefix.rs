@@ -50,7 +50,7 @@ fn open(name: &str) -> App {
     launch.rows = 40;
     launch.color = Some("truecolor".to_string());
     launch.motion = Some("reduced".to_string());
-    // `Launch::new` leaves the clock off. `App::new` would enable it for jackin.
+    // `Launch::new` leaves the clock off. The fixed frame keeps its attach footer.
     launch.clock = false;
     try_launch(launch).unwrap_or_else(|error| panic!("{error}"))
 }

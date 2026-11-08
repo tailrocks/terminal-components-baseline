@@ -61,5 +61,11 @@
     "candidate_count": 1,
     "distinct_visual_diff_signatures": 1,
     "material_delta": "current Pickers playground shows added Multi select and Multi search controls and associated command/remote detail rows behind the same open quick picker; query, matching result row, modal scope and requested size remain correct. No pixel comparison."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "2858e700cc7423c9e4c8a9359f453ac175fef8bb04ae6b41e9cfdc4b6a5afbdc"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/x02_resize/x02_resize_resize_120x40.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_x02_resize_resize_120x40.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_x02_resize_resize_120x40.provenance.json"
 }

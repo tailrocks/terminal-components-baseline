@@ -60,5 +60,11 @@
     "candidate_count": 1,
     "distinct_visual_diff_signatures": 1,
     "material_delta": "required Key marker (*) and eight adjacent label cells shift from current source-required field label; 9 state cells changed. No pixel comparison."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "697b081d280917584d630e8d6b2df50e4131e4d3f70b1585b934108ed66a611d"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j03_environments/j03_environments_env_120x40.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j03_environments_env_120x40.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j03_environments_env_120x40.provenance.json"
 }

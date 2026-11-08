@@ -62,7 +62,8 @@ impl SessionMode {
 /// `history`: `false` sets `HOLLA_NO_HISTORY=1`. `true` omits that variable.
 /// `motion`: when set, `--motion` is appended. `clock` enables the test clock.
 /// `mode`: `Candidate` from [`Launch::new`] and [`App::new`]. `Reference` is
-/// opt-in for captures against the manifest binaries.
+/// opt-in for captures against binaries named by a reference manifest. A
+/// reference-only manifest override never participates in candidate checks.
 #[derive(Clone, Debug)]
 pub struct Launch {
     pub name: String,
@@ -78,6 +79,7 @@ pub struct Launch {
     pub env: Vec<(String, String)>,
     pub term: String,
     pub mode: SessionMode,
+    pub reference_manifest: Option<PathBuf>,
 }
 
 impl Launch {
@@ -96,6 +98,7 @@ impl Launch {
             env: Vec::new(),
             term: "xterm-256color".to_string(),
             mode: SessionMode::Candidate,
+            reference_manifest: None,
         }
     }
 }
@@ -659,7 +662,17 @@ pub fn try_launch(launch: Launch) -> Result<App, LaunchError> {
     let home = directory.join("home");
     std::fs::create_dir_all(&home).expect("create isolated application home");
     let resolved = resolve_bin(&launch.bin);
-    let manifest = read_manifest();
+    let manifest = match (launch.mode, launch.reference_manifest.as_deref()) {
+        (SessionMode::Candidate, Some(_)) => {
+            return refuse_launch(
+                directory,
+                "candidate mode cannot select a reference manifest".to_string(),
+            );
+        }
+        (SessionMode::Candidate, None) => read_manifest(&manifest_path()),
+        (SessionMode::Reference, Some(path)) => read_manifest(path),
+        (SessionMode::Reference, None) => read_manifest(&manifest_path()),
+    };
     let sha = if resolved.is_file() {
         Some(file_sha256(&resolved))
     } else {
@@ -945,6 +958,16 @@ struct Manifest {
     comparator_rev: String,
     session_file: String,
     binaries: Vec<(String, String)>,
+    binary_provenance: Vec<(String, String, String)>,
+}
+
+impl Manifest {
+    fn provenance(&self, sha256: &str) -> Option<(&str, &str)> {
+        self.binary_provenance
+            .iter()
+            .find(|(digest, _, _)| digest == sha256)
+            .map(|(_, source, lockfile)| (source.as_str(), lockfile.as_str()))
+    }
 }
 
 fn manifest_path() -> PathBuf {
@@ -978,7 +1001,11 @@ pub fn host_target_triple() -> &'static str {
 }
 
 pub fn reference_binary(name: &str) -> PathBuf {
-    let value = manifest_value();
+    reference_binary_from(&manifest_path(), name)
+}
+
+pub fn reference_binary_from(manifest: &Path, name: &str) -> PathBuf {
+    let value = manifest_value(manifest);
     let host = host_target_triple();
     let path = value["binaries"][name]["platforms"][host]["path"]
         .as_str()
@@ -987,7 +1014,11 @@ pub fn reference_binary(name: &str) -> PathBuf {
 }
 
 pub fn reference_digest(name: &str) -> String {
-    let value = manifest_value();
+    reference_digest_from(&manifest_path(), name)
+}
+
+pub fn reference_digest_from(manifest: &Path, name: &str) -> String {
+    let value = manifest_value(manifest);
     let host = host_target_triple();
     value["binaries"][name]["platforms"][host]["sha256"]
         .as_str()
@@ -995,16 +1026,17 @@ pub fn reference_digest(name: &str) -> String {
         .to_string()
 }
 
-fn manifest_value() -> serde_json::Value {
-    let path = manifest_path();
-    let text = std::fs::read_to_string(&path)
+fn manifest_value(path: &Path) -> serde_json::Value {
+    let text = std::fs::read_to_string(path)
         .unwrap_or_else(|error| panic!("read reference manifest {}: {error}", path.display()));
     serde_json::from_str(&text)
         .unwrap_or_else(|error| panic!("parse reference manifest {}: {error}", path.display()))
 }
 
-fn read_manifest() -> Manifest {
-    let value = manifest_value();
+fn read_manifest(path: &Path) -> Manifest {
+    let value = manifest_value(path);
+    let reference_sha = required_str(&value, "reference_sha");
+    let lockfile_sha256 = required_str(&value, "lockfile_sha256");
     let session_file = required_str(&value["acceptance"], "session_file");
     assert_eq!(
         session_file, "session.json",
@@ -1014,11 +1046,25 @@ fn read_manifest() -> Manifest {
         .as_object()
         .expect("reference manifest binaries");
     let mut binaries = Vec::with_capacity(binaries_value.len());
+    let mut binary_provenance = Vec::new();
     for (name, entry) in binaries_value {
         let sha = entry["sha256"]
             .as_str()
             .unwrap_or_else(|| panic!("reference manifest sha256 for {name}"));
-        push_digest(&mut binaries, name, sha);
+        let identity_name = entry
+            .get("identity_name")
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or(name);
+        let source = entry
+            .get("reference_sha")
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or(&reference_sha);
+        let lockfile = entry
+            .get("lockfile_sha256")
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or(&lockfile_sha256);
+        push_digest(&mut binaries, identity_name, sha);
+        binary_provenance.push((sha.to_owned(), source.to_owned(), lockfile.to_owned()));
         let Some(platforms) = entry
             .get("platforms")
             .and_then(serde_json::Value::as_object)
@@ -1030,16 +1076,30 @@ fn read_manifest() -> Manifest {
                 .get("sha256")
                 .and_then(serde_json::Value::as_str)
                 .unwrap_or_else(|| panic!("reference manifest sha256 for {name} {target}"));
-            push_digest(&mut binaries, name, platform_sha);
+            let platform_source = platform
+                .get("reference_sha")
+                .and_then(serde_json::Value::as_str)
+                .unwrap_or(source);
+            let platform_lockfile = platform
+                .get("lockfile_sha256")
+                .and_then(serde_json::Value::as_str)
+                .unwrap_or(lockfile);
+            push_digest(&mut binaries, identity_name, platform_sha);
+            binary_provenance.push((
+                platform_sha.to_owned(),
+                platform_source.to_owned(),
+                platform_lockfile.to_owned(),
+            ));
         }
     }
     Manifest {
-        reference_sha: required_str(&value, "reference_sha"),
-        lockfile_sha256: required_str(&value, "lockfile_sha256"),
+        reference_sha,
+        lockfile_sha256,
         comparator_name: required_str(&value["comparator"], "name"),
         comparator_rev: required_str(&value["comparator"], "rev"),
         session_file,
         binaries,
+        binary_provenance,
     }
 }
 
@@ -1111,10 +1171,13 @@ fn write_session(
     sha256: &str,
     manifest: &Manifest,
 ) {
+    let (reference_sha, lockfile_sha256) = manifest
+        .provenance(sha256)
+        .unwrap_or((&manifest.reference_sha, &manifest.lockfile_sha256));
     let record = serde_json::json!({
         "mode": launch.mode.as_str(),
-        "reference_sha": manifest.reference_sha,
-        "lockfile_sha256": manifest.lockfile_sha256,
+        "reference_sha": reference_sha,
+        "lockfile_sha256": lockfile_sha256,
         "binary_path": binary,
         "binary_sha256": sha256,
         "args": launch.args,

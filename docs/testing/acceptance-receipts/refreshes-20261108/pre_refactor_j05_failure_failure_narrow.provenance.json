@@ -507,5 +507,11 @@
     "summary": "At 80x24 the current failure dialog retains the Launch failed title, network attachment summary, Network stage, and wrapped jackin-net-missing cause; the compact layout crops lower dialog details. The test checks the full capsule-not-started detail at 120x40 before and after the narrow shot.",
     "candidate_frame": "80x24 network failure dialog with wrapped network error and retry lines; same candidate frame across all 112 captures.",
     "frozen_frame": "Legacy narrow screenshot differs in dialog/body layout and text wrapping."
-  }
+  },
+  "previous_baseline": {
+    "sha256": "089ed5eb449028aa739ae380c0e8cc7a22a643e26f29e9ccdbdd1733f7e645a1"
+  },
+  "previous_archive_path": "docs/testing/acceptance-receipts/historical-binary-20261108/superseded/pre_refactor/j05_failure/j05_failure_failure_narrow.tui.pb",
+  "acceptance_receipt_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_failure_failure_narrow.accept.json",
+  "provenance_path": "docs/testing/acceptance-receipts/refreshes-20261108/pre_refactor_j05_failure_failure_narrow.provenance.json"
 }

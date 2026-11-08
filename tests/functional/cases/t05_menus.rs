@@ -10,7 +10,10 @@ use std::time::{Duration, Instant};
 
 use tui_test::{MouseButton, MouseOptions, TerminalSnapshot};
 
-use crate::support::{App, Launch, Point, TABLEPRO, find_all, row_text, text, try_launch};
+use crate::support::{
+    App, Launch, Point, SessionMode, TABLEPRO, file_sha256, find_all, reference_binary_from,
+    reference_digest_from, row_text, text, try_launch,
+};
 
 const HOST: &str = "dev-db.internal.acme.io";
 const DATABASE: &str = "acme_dev";
@@ -42,7 +45,23 @@ fn visual_id(checkpoint: &str) -> String {
 }
 
 fn open(name: &str) -> App {
-    let mut launch = Launch::new(name, TABLEPRO);
+    let capture = std::env::var_os("T05_CAPTURE").is_some_and(|value| value == "1");
+    let mut launch = if capture {
+        let manifest =
+            crate::support::workspace_root().join("docs/testing/reference-manifest-j06-pr2.json");
+        let binary = reference_binary_from(&manifest, "tablepro-pr2");
+        assert_eq!(
+            file_sha256(&binary),
+            reference_digest_from(&manifest, "tablepro-pr2"),
+            "T05 reference binary digest"
+        );
+        let mut launch = Launch::new(name, binary.to_str().expect("reference path"));
+        launch.mode = SessionMode::Reference;
+        launch.reference_manifest = Some(manifest);
+        launch
+    } else {
+        Launch::new(name, TABLEPRO)
+    };
     launch.cols = 120;
     launch.rows = 40;
     launch.color = Some("truecolor".to_string());
@@ -122,13 +141,73 @@ fn shot(app: &App, checkpoint: &str, cols: u32, rows: u32) {
         "checkpoint {checkpoint} left the current-tab menu\n{}",
         text(&before)
     );
-    app.visual(&visual_id(checkpoint));
+    let test_id = visual_id(checkpoint);
+    if std::env::var_os("T05_CAPTURE").is_some_and(|value| value == "1") {
+        capture_reference_frame(app, &test_id, &app.screen());
+    } else {
+        app.visual(&test_id);
+    }
     let after = app.screen();
     assert_eq!((after.cols(), after.rows()), (cols, rows));
     assert!(
         tab_menu(&after),
         "checkpoint {checkpoint} did not stay on the current-tab menu\n{}",
         text(&after)
+    );
+}
+
+fn capture_reference_frame(app: &App, test_id: &str, screen: &TerminalSnapshot) {
+    let session_path = app.evidence_dir().join("session.json");
+    let session: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&session_path).expect("reference session metadata"))
+            .expect("parse reference session metadata");
+    assert_eq!(session["mode"], "reference");
+    assert_eq!(
+        session["reference_sha"],
+        "3cbe13ce922f7d0902bf42af418f3d012d8b537f"
+    );
+    assert_eq!(
+        session["lockfile_sha256"],
+        "9d9859e69e1de0b3306231a25a381c865079ca7ab533420f34dceb6eafe4d39a"
+    );
+    assert_eq!(
+        session["binary_sha256"],
+        "ebcc660347e420a9ea1879d1a54537ab08f5cbb750d88701ed5956899492e133"
+    );
+    let sample = tuiscotti_latest::sample::Sample::state(
+        test_id,
+        screen.clone(),
+        tuiscotti_latest::sample::Observation::empty(),
+    )
+    .expect("build Tuiscotti state sample");
+    let bytes = sample.to_bytes().expect("serialize Tuiscotti sample");
+    let directory = app.evidence_dir().join("reference-candidates");
+    std::fs::create_dir_all(&directory).expect("create reference candidate directory");
+    let candidate = directory.join(format!("{}.tui.pb", test_id.replace('/', "_")));
+    std::fs::write(&candidate, &bytes).expect("write reference candidate sample");
+    let digest = file_sha256(&candidate);
+    let index = serde_json::json!({
+        "test_id": test_id,
+        "candidate_path": candidate,
+        "candidate_sha256": digest,
+        "session_path": session_path,
+        "binary_path": session["binary_path"],
+        "binary_sha256": session["binary_sha256"],
+        "reference_sha": session["reference_sha"],
+        "lockfile_sha256": session["lockfile_sha256"],
+    });
+    use std::io::Write as _;
+    let mut log = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(directory.join("index.jsonl"))
+        .expect("open reference capture index");
+    serde_json::to_writer(&mut log, &index).expect("write reference capture index");
+    log.write_all(b"\n")
+        .expect("finish reference capture index");
+    eprintln!(
+        "T05 reference candidate {test_id} sha256 {digest} at {}",
+        candidate.display()
     );
 }
 

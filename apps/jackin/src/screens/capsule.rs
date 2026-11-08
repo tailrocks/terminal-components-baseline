@@ -118,7 +118,6 @@ pub struct CapsuleScreen {
     export_kind: Option<(bool, bool)>,
     pub redraw_flash: u8,
     pending_spawn: Option<PendingSpawn>,
-    shell_status: Option<(String, Tone)>,
     reading: Option<Reading>,
     pending_paste: Option<(PaneId, String, bool)>,
 }
@@ -256,7 +255,6 @@ impl CapsuleScreen {
             export_kind: None,
             redraw_flash: 0,
             pending_spawn: None,
-            shell_status: None,
             reading: None,
             pending_paste: None,
         }
@@ -851,10 +849,6 @@ impl CapsuleScreen {
 }
 
 impl CapsuleScreen {
-    pub(crate) fn set_shell_status(&mut self, status: Option<(String, Tone)>) {
-        self.shell_status = status;
-    }
-
     fn apply_pending_spawn(&mut self, w: &mut World, cx: &mut Cx) {
         let Some((intent, agent, account, _ws, now)) = self.pending_spawn.take() else {
             return;
@@ -1870,14 +1864,6 @@ impl CapsuleScreen {
         };
         let d = self.daemon(w);
         let mut bar = StatusBar::new();
-
-        if let Some((message, tone)) = &self.shell_status {
-            bar.center
-                .push(StatusItem::new(message.clone(), *tone).priority(10));
-            ctx.clickable(STATUS, area);
-            bar.render(area, buf, ctx);
-            return;
-        }
 
         let branch = i.branch.clone().unwrap_or(i.default_branch.clone());
         let work = match &i.pr {

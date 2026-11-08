@@ -23,6 +23,7 @@ runtime_tmp_trace="$test_root/curl runtime TMPDIR"
 observer_plan="$test_root/materialization observer"
 last_output="$test_root/checker output"
 last_status=0
+python_command=$(python3 -c 'import sys; print(sys.executable)')
 object_length=$(git -C "$repo_root" rev-parse --show-object-format | awk '{ if ($0 == "sha1") print 40; else if ($0 == "sha256") print 64; else exit 1 }')
 zero_oid=$(printf '%0*d' "$object_length" 0)
 
@@ -57,7 +58,7 @@ git -C "$repository_template" fetch --quiet --no-tags --no-write-fetch-head "$re
 git -C "$repository_template" update-ref refs/heads/trusted-seed "$trusted_seed_commit"
 
 {
-  printf '#!/bin/bash\ncontrol=%q\nrequest_log=%q\nenvironment_trace=%q\nruntime_tmp_trace=%q\nobserver_plan=%q\n' "$response_plan" "$request_log" "$environment_trace" "$runtime_tmp_trace" "$observer_plan"
+  printf '#!/bin/bash\ncontrol=%q\nrequest_log=%q\nenvironment_trace=%q\nruntime_tmp_trace=%q\nobserver_plan=%q\npython_command=%q\n' "$response_plan" "$request_log" "$environment_trace" "$runtime_tmp_trace" "$observer_plan" "$python_command"
   cat <<'EOF'
 set -eu
 [ "${1-}" = "--disable" ] || exit 91
@@ -97,7 +98,7 @@ done
 [[ "$protocol" == '=https' && "$connect_timeout" == 10 && "$max_time" == 30 && -n "$max_filesize" && -n "$header_file" && -n "$url" ]] || exit 95
 printf '%s\n' "$url" >> "$request_log"
 if [[ -s "$observer_plan" && "$url" == https://static.rust-lang.org/* ]]; then
-  python3 -I -S - "$observer_plan" "$TMPDIR" <<'PY'
+  "$python_command" -I -S - "$observer_plan" "$TMPDIR" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -163,6 +164,9 @@ copy_checker_for_fixture() {
   local destination="$directory/scripts/check-generated-workflows.sh"
   mkdir -p "$directory/scripts"
   cp -p "$source" "$destination"
+  cp -p "$repo_root/scripts/materialize-git-tree.py" "$directory/scripts/"
+  cp -p "$repo_root/scripts/validate-snapshot-blob-sizes.py" "$directory/scripts/"
+  cp -p "$repo_root/scripts/snapshot-large-blob-allowlist.tsv" "$directory/scripts/"
   python3 - "$destination" "$directory" <<'PY'
 import hashlib
 import os
@@ -1744,7 +1748,7 @@ test_snapshot_blob_limits() {
 import sys
 
 blob = sys.argv[1]
-for number in range(33):
+for number in range(161):
     sys.stdout.write(f"100644 {blob}\taggregate/entry-{number:02d}\n")
 PY
   config_file=$(git -C "$directory" rev-parse --path-format=absolute --git-common-dir)/config
@@ -1754,7 +1758,7 @@ PY
   checkout_before=$(git -C "$directory" status --porcelain=v1 --untracked-files=all | shasum -a 256 | awk '{print $1}')
   set_denied_response
   run_checker "$directory" pre-commit
-  assert_failed '33 occurrences of a 16 MiB blob exceed the 512 MiB aggregate cap'
+  assert_failed '161 occurrences of a 16 MiB blob exceed the 2.5 GiB aggregate cap'
   assert_contains 'aggregate cap reports its stable diagnostic' 'snapshot exceeds the total materialized blob size limit'
   assert_request_count 0
   assert_equal 'aggregate fixture preserves the source index' "$index_before" "$(file_sha256 "$index_file")"
@@ -1762,6 +1766,14 @@ PY
   assert_equal 'aggregate fixture preserves source objects' "$objects_before" "$(source_object_inventory "$directory")"
   assert_equal 'aggregate fixture preserves source checkout state' "$checkout_before" "$(git -C "$directory" status --porcelain=v1 --untracked-files=all | shasum -a 256 | awk '{print $1}')"
   assert_no_temporary_snapshot
+}
+
+test_snapshot_large_blob_allowlist() {
+  python3 -I -S "$repo_root/tests/test_snapshot_blob_sizes.py"
+}
+
+test_batch_materializer() {
+  python3 -I -S "$repo_root/tests/test_materialize_git_tree.py"
 }
 
 test_hydrated_repeated_blob_occurrence_limit() {
@@ -1784,7 +1796,7 @@ test_hydrated_repeated_blob_occurrence_limit() {
   directory=$(new_repo hydrated-repeated-occurrences)
   dd if=/dev/zero bs=1048576 count=4 2>/dev/null > "$raw"
   blob_oid=$(git -C "$directory" hash-object -w --stdin < "$raw")
-  for number in {1..129}; do
+  for number in {1..641}; do
     printf '100644 %s\tdocs/repeated-hydrated-%03d.bin\n' "$blob_oid" "$number"
   done | git -C "$directory" update-index --index-info
   object_dir=$(git -C "$directory" rev-parse --path-format=absolute --git-path objects)
@@ -2045,6 +2057,7 @@ assert_redirect_rejected() {
 }
 
 test_redirect_policy() {
+  local selected=${1:-all}
   local directory
   local record
   local body="$test_root/bad checksum"
@@ -2055,33 +2068,42 @@ test_redirect_policy() {
   local loc3="https://sTaTiC.rUsT-lAnG.oRg$checksum_path"
   local loc4="https://stAtIc.rUst-LaNg.oRg$checksum_path"
   directory=$(new_repo redirect-policy)
-  printf 'malformed manifest\n' > "$body"
-  set_response_plan 302 "$mixed_url" - 200 - "$body"
-  record=$(push_record refs/heads/main "$(git -C "$directory" rev-parse HEAD)" refs/heads/main "$zero_oid")
-  run_checker "$directory" pre-push "$record"
-  assert_failed 'same-host approved redirect reaches checksum parsing'
-  assert_contains 'same-host approved redirect reaches the manifest validator' 'official Rustup checksum manifest is malformed'
-  assert_request_count 2
-  assert_equal 'first official request is the checksum URL' "$official_url" "$(sed -n '1p' "$request_log")"
-  assert_equal 'redirect stays on the approved host and path' "$mixed_url" "$(sed -n '2p' "$request_log")"
+  if [[ "$selected" == all || "$selected" == approved ]]; then
+    printf 'malformed manifest\n' > "$body"
+    set_response_plan 302 "$mixed_url" - 200 - "$body"
+    record=$(push_record refs/heads/main "$(git -C "$directory" rev-parse HEAD)" refs/heads/main "$zero_oid")
+    run_checker "$directory" pre-push "$record"
+    assert_failed 'same-host approved redirect reaches checksum parsing'
+    assert_contains 'same-host approved redirect reaches the manifest validator' 'official Rustup checksum manifest is malformed'
+    assert_request_count 2
+    assert_equal 'first official request is the checksum URL' "$official_url" "$(sed -n '1p' "$request_log")"
+    assert_equal 'redirect stays on the approved host and path' "$mixed_url" "$(sed -n '2p' "$request_log")"
+  fi
 
-  assert_redirect_rejected "$directory" 'off-host intermediate redirect' "https://mirror.example/rustup/dist/$host_target/rustup-init.sha256" 'rustup bootstrap URL is outside the approved official distribution path'
-  assert_redirect_rejected "$directory" 'HTTP downgrade redirect' "http://static.rust-lang.org$checksum_path" 'rustup bootstrap URL is outside the approved official distribution path'
-  assert_redirect_rejected "$directory" 'redirect with userinfo' "https://user@static.rust-lang.org$checksum_path" 'rustup bootstrap URL is outside the approved official distribution path'
-  assert_redirect_rejected "$directory" 'redirect with nonstandard port' "https://static.rust-lang.org:444$checksum_path" 'rustup bootstrap URL is outside the approved official distribution path'
-  assert_redirect_rejected "$directory" 'redirect to disallowed official path' "https://static.rust-lang.org/rustup/dist/$host_target/untrusted" 'rustup bootstrap URL is outside the approved official distribution path'
-  assert_redirect_rejected "$directory" 'malformed redirect' 'https://[::1' 'rustup bootstrap redirect URL is malformed'
-  assert_not_contains 'malformed redirect does not continue to the bootstrap executable' 'authenticated Rustup bootstrap failed'
-  assert_not_contains 'malformed redirect produces no Python traceback' 'Traceback'
-  assert_redirect_rejected "$directory" 'redirect loop' "$official_url" 'rustup bootstrap redirect loop detected'
+  if [[ "$selected" == all || "$selected" == rejected-a ]]; then
+    assert_redirect_rejected "$directory" 'off-host intermediate redirect' "https://mirror.example/rustup/dist/$host_target/rustup-init.sha256" 'rustup bootstrap URL is outside the approved official distribution path'
+    assert_redirect_rejected "$directory" 'HTTP downgrade redirect' "http://static.rust-lang.org$checksum_path" 'rustup bootstrap URL is outside the approved official distribution path'
+    assert_redirect_rejected "$directory" 'redirect with userinfo' "https://user@static.rust-lang.org$checksum_path" 'rustup bootstrap URL is outside the approved official distribution path'
+    assert_redirect_rejected "$directory" 'redirect with nonstandard port' "https://static.rust-lang.org:444$checksum_path" 'rustup bootstrap URL is outside the approved official distribution path'
+  fi
 
-  reset_repo "$directory"
-  record=$(push_record refs/heads/main "$(git -C "$directory" rev-parse HEAD)" refs/heads/main "$zero_oid")
-  set_response_plan 302 "$loc1" - 302 "$loc2" - 302 "$loc3" - 302 "$loc4" -
-  run_checker "$directory" pre-push "$record"
-  assert_failed 'overlong HTTPS redirect chain fails closed'
-  assert_contains 'overlong redirect chain reaches its hop limit' 'rustup bootstrap exceeded the redirect limit'
-  assert_request_count 4
+  if [[ "$selected" == all || "$selected" == rejected-b ]]; then
+    assert_redirect_rejected "$directory" 'redirect to disallowed official path' "https://static.rust-lang.org/rustup/dist/$host_target/untrusted" 'rustup bootstrap URL is outside the approved official distribution path'
+    assert_redirect_rejected "$directory" 'malformed redirect' 'https://[::1' 'rustup bootstrap redirect URL is malformed'
+    assert_not_contains 'malformed redirect does not continue to the bootstrap executable' 'authenticated Rustup bootstrap failed'
+    assert_not_contains 'malformed redirect produces no Python traceback' 'Traceback'
+    assert_redirect_rejected "$directory" 'redirect loop' "$official_url" 'rustup bootstrap redirect loop detected'
+  fi
+
+  if [[ "$selected" == all || "$selected" == chain ]]; then
+    reset_repo "$directory"
+    record=$(push_record refs/heads/main "$(git -C "$directory" rev-parse HEAD)" refs/heads/main "$zero_oid")
+    set_response_plan 302 "$loc1" - 302 "$loc2" - 302 "$loc3" - 302 "$loc4" -
+    run_checker "$directory" pre-push "$record"
+    assert_failed 'overlong HTTPS redirect chain fails closed'
+    assert_contains 'overlong redirect chain reaches its hop limit' 'rustup bootstrap exceeded the redirect limit'
+    assert_request_count 4
+  fi
 }
 
 test_response_bounds() {
@@ -2154,6 +2176,8 @@ run_case() {
       test_snapshot_entry_limit
       test_snapshot_listing_limit
       test_snapshot_blob_limits
+      test_snapshot_large_blob_allowlist
+      test_batch_materializer
       test_hydrated_repeated_blob_occurrence_limit
       test_snapshot_rejects_gitlinks
       test_relative_tmpdir_public_hooks
@@ -2184,7 +2208,8 @@ run_case() {
     pushed-blob-hydration) test_pushed_missing_blob_hydration ;;
     pushed-missing) test_pushed_missing_objects ;;
     staged-missing) test_staged_missing_blob ;;
-    snapshot-limits) test_snapshot_entry_limit; test_snapshot_listing_limit; test_snapshot_blob_limits ;;
+    snapshot-limits) test_snapshot_entry_limit; test_snapshot_listing_limit; test_snapshot_blob_limits; test_snapshot_large_blob_allowlist; test_batch_materializer ;;
+    batch-materializer) test_batch_materializer ;;
     hydrated-occurrences) test_hydrated_repeated_blob_occurrence_limit ;;
     listing-limit) test_snapshot_listing_limit ;;
     gitlink) test_snapshot_rejects_gitlinks ;;
@@ -2195,15 +2220,21 @@ run_case() {
     hydration-boundaries) test_trusted_seed_blob_response_validation ;;
     missing-metadata) test_trusted_seed_missing_commit; test_trusted_seed_missing_objects ;;
     projection) test_trusted_seed_excluded_baseline_blob_is_not_hydrated ;;
+    trusted-replacement) test_trusted_seed_ignores_replacement_and_shallow_state ;;
+    trusted-alternates) test_trusted_seed_rejects_object_alternates ;;
     lock-source) test_unreviewed_snapshot_lock_source ;;
     manifest-source) test_unreviewed_snapshot_manifest_source ;;
     cargo) test_cargo_config_vectors ;;
     toolchain) test_toolchain_and_symlink ;;
     redirects) test_redirect_policy ;;
+    redirect-approved) test_redirect_policy approved ;;
+    redirect-rejected-a) test_redirect_policy rejected-a ;;
+    redirect-rejected-b) test_redirect_policy rejected-b ;;
+    redirect-chain) test_redirect_policy chain ;;
     responses) test_response_bounds ;;
     environment) test_curl_environment_isolation ;;
     *)
-      printf 'usage: %s [all|boundary|snapshots|push-records|replacement|raw-blob|selected-hydration|shared-blob-reuse|distinct-blob-budget|pushed-blob-hydration|hydrated-occurrences|pushed-missing|snapshot-limits|gitlink|relative-tmpdir|trusted-seed|hydration|empty-blob|hydration-boundaries|missing-metadata|projection|lock-source|manifest-source|cargo|toolchain|redirects|responses|environment]\n' "$0" >&2
+      printf 'usage: %s [all|boundary|snapshots|push-records|replacement|raw-blob|selected-hydration|shared-blob-reuse|distinct-blob-budget|pushed-blob-hydration|hydrated-occurrences|pushed-missing|snapshot-limits|batch-materializer|gitlink|relative-tmpdir|trusted-seed|hydration|empty-blob|hydration-boundaries|missing-metadata|projection|trusted-replacement|trusted-alternates|lock-source|manifest-source|cargo|toolchain|redirects|redirect-approved|redirect-rejected-a|redirect-rejected-b|redirect-chain|responses|environment]\n' "$0" >&2
       return 2
       ;;
   esac

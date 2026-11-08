@@ -1,0 +1,18 @@
+{
+  "schema": "tuiscotti.cli.v1",
+  "command": "accept",
+  "status": "pass",
+  "test_id": "pre_refactor/j02_environments/j02_environments_env_narrow",
+  "reason": null,
+  "candidate_path": {
+    "encoding": "utf8",
+    "value": "target/functional/j02-environments-env-94969-1794109524878101000-0/reference-candidates/pre_refactor_j02_environments_j02_environments_env_narrow.tui.pb"
+  },
+  "candidate_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa",
+  "baseline_sha256": "76c312c5955401632204560f85eb7e1866472918afccb8ed60565e24c7f4e9fa",
+  "output_path": {
+    "encoding": "utf8",
+    "value": "/private/tmp/tcb-pr2-accepted-binary-baselines-20261108/tests/functional/baselines/pre_refactor/j02_environments/j02_environments_env_narrow.tui.pb"
+  },
+  "error_code": null
+}

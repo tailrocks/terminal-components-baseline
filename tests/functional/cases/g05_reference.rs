@@ -1,7 +1,9 @@
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::{fs::File, io::Read};
 
 use serde_json::Value;
+use sha2::{Digest, Sha256};
 use tui_test::profile::Rgb;
 use tui_test::{
     SnapshotCell, SnapshotColor, SnapshotCursor, SnapshotCursorShape, SnapshotMetadata,
@@ -9,8 +11,7 @@ use tui_test::{
 };
 
 use crate::support::{
-    App, Launch, SHOWCASE, SessionMode, file_sha256, reference_binary, reference_digest, text,
-    try_launch,
+    App, Launch, SHOWCASE, SessionMode, reference_binary, reference_digest, text, try_launch,
 };
 
 const REFERENCE_SHA: &str = "fffe002e936d3621f22f9132144066a1374d5d74";
@@ -20,6 +21,22 @@ const COMPARATOR_REV: &str = "92ef2d9ee082b35f68e066c5129fedbf07675a80";
 const ACCEPTANCE_COMPARATOR_REV: &str = "d8d54155947f6303a41dfd6079b53c0abc16f29a";
 const ACCEPTANCE_LOCKFILE_SHA256: &str =
     "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319";
+
+fn sha256_file(path: &Path) -> String {
+    let mut file = File::open(path).unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+    let mut digest = Sha256::new();
+    let mut buffer = [0_u8; 64 * 1024];
+    loop {
+        let read = file
+            .read(&mut buffer)
+            .unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+        if read == 0 {
+            break;
+        }
+        digest.update(&buffer[..read]);
+    }
+    format!("{:x}", digest.finalize())
+}
 
 fn manifest() -> Value {
     let path =
@@ -34,7 +51,7 @@ fn reference_showcase() -> PathBuf {
         "missing reference showcase {}",
         bin.display()
     );
-    assert_eq!(file_sha256(&bin), reference_digest("showcase"));
+    assert_eq!(sha256_file(&bin), reference_digest("showcase"));
     bin
 }
 
@@ -117,6 +134,187 @@ fn read_disposition_sample(path: &Path) -> tuiscotti_latest::sample::Sample {
 
 fn active_baseline_path(root: &Path, test_id: &str) -> PathBuf {
     root.join(format!("{test_id}.tui.pb"))
+}
+
+fn validate_refresh_provenance(
+    provenance: &Value,
+    test_id: &str,
+    previous_sha: &str,
+    active_sha: &str,
+    archive_path: &str,
+    receipt_path: &str,
+    provenance_path: &str,
+) -> Result<(), String> {
+    if provenance["test_id"].as_str() != Some(test_id) {
+        return Err(format!(
+            "refresh provenance test ID does not match {test_id}"
+        ));
+    }
+
+    fn check_digests(
+        provenance: &Value,
+        test_id: &str,
+        expected: &str,
+        pointers: &[&str],
+        label: &str,
+    ) -> Result<(), String> {
+        let mut found = false;
+        for pointer in pointers {
+            let Some(value) = provenance.pointer(pointer) else {
+                continue;
+            };
+            let Some(actual) = value.as_str() else {
+                return Err(format!("{label} digest is not a string for {test_id}"));
+            };
+            if actual != expected {
+                return Err(format!(
+                    "{label} digest conflicts with refresh ledger for {test_id}"
+                ));
+            }
+            found = true;
+        }
+        if !found {
+            return Err(format!("{label} digest is missing for {test_id}"));
+        }
+        Ok(())
+    }
+
+    check_digests(
+        provenance,
+        test_id,
+        previous_sha,
+        &[
+            "/acceptance/expected_baseline_sha256",
+            "/history/superseded_baseline_sha256",
+            "/previous_baseline/sha256",
+        ],
+        "previous baseline",
+    )?;
+    check_digests(
+        provenance,
+        test_id,
+        active_sha,
+        &[
+            "/acceptance/accepted_baseline_sha256",
+            "/acceptance/candidate_sha256",
+            "/acceptance/accept_command/candidate_sha256",
+            "/acceptance/accept_command/baseline_sha256",
+            "/candidate/sha256",
+        ],
+        "accepted baseline",
+    )?;
+
+    for (field, expected) in [
+        ("previous_archive_path", archive_path),
+        ("acceptance_receipt_path", receipt_path),
+        ("provenance_path", provenance_path),
+    ] {
+        if provenance[field].as_str() != Some(expected) {
+            return Err(format!(
+                "refresh provenance {field} conflicts with ledger for {test_id}"
+            ));
+        }
+    }
+    for (pointer, expected, label) in [
+        (
+            "/history/superseded_baseline",
+            archive_path,
+            "history archive",
+        ),
+        (
+            "/acceptance/transaction_receipt",
+            receipt_path,
+            "acceptance receipt",
+        ),
+    ] {
+        let Some(value) = provenance.pointer(pointer) else {
+            continue;
+        };
+        if value.as_str() != Some(expected) {
+            return Err(format!(
+                "refresh provenance {label} conflicts with ledger for {test_id}"
+            ));
+        }
+    }
+    Ok(())
+}
+
+#[test]
+fn g05_refresh_provenance_rejects_conflicting_digest_alias_without_mutation() {
+    let test_id = "functional/example";
+    let previous_sha = "a".repeat(64);
+    let active_sha = "b".repeat(64);
+    let provenance = serde_json::json!({
+        "test_id": test_id,
+        "acceptance": {
+            "expected_baseline_sha256": previous_sha,
+            "accepted_baseline_sha256": active_sha,
+            "candidate_sha256": "c".repeat(64),
+        },
+        "previous_baseline": {"sha256": previous_sha},
+        "candidate": {"sha256": active_sha},
+        "previous_archive_path": "archive.tui.pb",
+        "acceptance_receipt_path": "accept.json",
+        "provenance_path": "provenance.json",
+    });
+    let original = provenance.clone();
+    let baseline = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("tests/functional/baselines/functional/showcase_page_pickers.tui.pb");
+    let baseline_sha = sha256_file(&baseline);
+
+    assert!(
+        validate_refresh_provenance(
+            &provenance,
+            test_id,
+            &previous_sha,
+            &active_sha,
+            "archive.tui.pb",
+            "accept.json",
+            "provenance.json",
+        )
+        .is_err()
+    );
+    assert_eq!(provenance, original);
+    assert_eq!(sha256_file(&baseline), baseline_sha);
+}
+
+#[test]
+fn g05_refresh_provenance_rejects_ledger_path_mismatch_without_mutation() {
+    let test_id = "functional/example";
+    let previous_sha = "a".repeat(64);
+    let active_sha = "b".repeat(64);
+    let provenance = serde_json::json!({
+        "test_id": test_id,
+        "acceptance": {
+            "expected_baseline_sha256": previous_sha,
+            "accepted_baseline_sha256": active_sha,
+        },
+        "previous_baseline": {"sha256": previous_sha},
+        "candidate": {"sha256": active_sha},
+        "previous_archive_path": "wrong-archive.tui.pb",
+        "acceptance_receipt_path": "accept.json",
+        "provenance_path": "provenance.json",
+        "history": {"superseded_baseline": "wrong-archive.tui.pb"},
+    });
+    let original = provenance.clone();
+    let baseline = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("tests/functional/baselines/functional/showcase_page_pickers.tui.pb");
+    let baseline_sha = sha256_file(&baseline);
+
+    assert!(
+        validate_refresh_provenance(
+            &provenance,
+            test_id,
+            &previous_sha,
+            &active_sha,
+            "archive.tui.pb",
+            "accept.json",
+            "provenance.json",
+        )
+        .is_err()
+    );
+    assert_eq!(provenance, original);
+    assert_eq!(sha256_file(&baseline), baseline_sha);
 }
 
 fn disposition_sample_fixture(cols: u32, rows: u32) -> TerminalSnapshot {
@@ -258,6 +456,7 @@ fn g05_approved_binary_manifest_matches_active_samples() {
     );
     let mut ids = std::collections::BTreeSet::new();
     let mut paths = std::collections::BTreeSet::new();
+    let mut active_records = std::collections::BTreeMap::new();
     let mut count = 0;
     for line in lines {
         let fields: Vec<_> = line.split('\t').collect();
@@ -306,10 +505,11 @@ fn g05_approved_binary_manifest_matches_active_samples() {
             "{} is not a protobuf container",
             path.display()
         );
-        assert_eq!(file_sha256(&path), *expected_sha, "{test_id}");
+        assert_eq!(sha256_file(&path), *expected_sha, "{test_id}");
         let sample = read_disposition_sample(&path);
         assert_eq!(sample.test_id(), *test_id);
-        let receipt_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(receipt_path);
+        let receipt_relative_path = *receipt_path;
+        let receipt_path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(receipt_relative_path);
         let receipt: Value = serde_json::from_slice(
             &std::fs::read(&receipt_path)
                 .unwrap_or_else(|error| panic!("{}: {error}", receipt_path.display())),
@@ -319,6 +519,14 @@ fn g05_approved_binary_manifest_matches_active_samples() {
             receipt["candidate_sha256"].as_str(),
             Some(*expected_sha),
             "{test_id}"
+        );
+        active_records.insert(
+            (*test_id).to_owned(),
+            (
+                (*baseline_path).to_owned(),
+                (*expected_sha).to_owned(),
+                receipt_relative_path.to_owned(),
+            ),
         );
         count += 1;
     }
@@ -351,9 +559,84 @@ fn g05_approved_binary_manifest_matches_active_samples() {
             fields[0]
         );
     }
+    let mut refreshed_ids = std::collections::BTreeSet::new();
+    for (test_id, fields) in &refreshes {
+        let Some((active_path, active_sha, active_receipt)) = active_records.get(test_id) else {
+            continue;
+        };
+        let [
+            manifest_path,
+            manifest_sha,
+            previous_sha,
+            archive_path,
+            receipt_path,
+            provenance_path,
+        ] = fields.as_slice()
+        else {
+            unreachable!("refresh field count checked")
+        };
+        assert_eq!(manifest_path, active_path, "active refresh path {test_id}");
+        assert_eq!(manifest_sha, active_sha, "active refresh SHA {test_id}");
+        assert_eq!(
+            receipt_path, active_receipt,
+            "active refresh receipt {test_id}"
+        );
+
+        let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        let active_path = repo_root.join(active_path);
+        assert_eq!(
+            sha256_file(&active_path),
+            active_sha.as_str(),
+            "active sample {test_id}"
+        );
+        let archive = repo_root.join(archive_path);
+        assert_eq!(
+            sha256_file(&archive),
+            previous_sha.as_str(),
+            "archived sample {test_id}"
+        );
+        let receipt: Value = serde_json::from_slice(
+            &std::fs::read(repo_root.join(receipt_path)).expect("active refresh receipt"),
+        )
+        .expect("parse active refresh receipt");
+        assert_eq!(receipt["command"].as_str(), Some("accept"), "{test_id}");
+        assert_eq!(receipt["status"].as_str(), Some("pass"), "{test_id}");
+        assert_eq!(
+            receipt["test_id"].as_str(),
+            Some(test_id.as_str()),
+            "{test_id}"
+        );
+        assert_eq!(
+            receipt["candidate_sha256"].as_str(),
+            Some(active_sha.as_str()),
+            "{test_id}"
+        );
+        assert_eq!(
+            receipt["baseline_sha256"].as_str(),
+            Some(active_sha.as_str()),
+            "{test_id}"
+        );
+        let provenance: Value = serde_json::from_slice(
+            &std::fs::read(repo_root.join(provenance_path)).expect("active refresh provenance"),
+        )
+        .expect("parse active refresh provenance");
+        validate_refresh_provenance(
+            &provenance,
+            test_id,
+            previous_sha,
+            active_sha,
+            archive_path,
+            receipt_path,
+            provenance_path,
+        )
+        .unwrap_or_else(|error| panic!("{error}"));
+        assert!(
+            refreshed_ids.insert(test_id.clone()),
+            "duplicate refresh use {test_id}"
+        );
+    }
     let mut historical_ids = std::collections::BTreeSet::new();
     let mut historical_paths = std::collections::BTreeSet::new();
-    let mut refreshed_ids = std::collections::BTreeSet::new();
     let mut historical_count = 0;
     for line in historical.lines() {
         let receipt: Value = serde_json::from_str(line).expect("historical transaction receipt");
@@ -382,7 +665,7 @@ fn g05_approved_binary_manifest_matches_active_samples() {
         );
         let path = root.join(relative);
         let expected_sha = receipt["baseline_sha256"].as_str().expect("baseline SHA");
-        let sample_path = if file_sha256(&path) == expected_sha {
+        let sample_path = if sha256_file(&path) == expected_sha {
             path
         } else {
             let fields = refreshes.get(test_id).unwrap_or_else(|| {
@@ -402,14 +685,14 @@ fn g05_approved_binary_manifest_matches_active_samples() {
             assert_eq!(active_baseline, baseline_path, "{test_id}");
             assert_eq!(previous_sha, expected_sha, "{test_id}");
             assert_eq!(
-                file_sha256(&path),
+                sha256_file(&path),
                 active_sha.as_str(),
                 "active refreshed sample {test_id}"
             );
             let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
             let archive = repo_root.join(archive_path);
             assert_eq!(
-                file_sha256(&archive),
+                sha256_file(&archive),
                 expected_sha,
                 "archived historical sample {test_id}"
             );
@@ -431,21 +714,23 @@ fn g05_approved_binary_manifest_matches_active_samples() {
                 refresh_receipt["baseline_sha256"].as_str(),
                 Some(active_sha.as_str())
             );
-            let provenance_path = repo_root.join(provenance_path);
+            let provenance_relative_path = provenance_path;
+            let provenance_path = repo_root.join(provenance_relative_path);
             let provenance: Value = serde_json::from_slice(
                 &std::fs::read(&provenance_path)
                     .unwrap_or_else(|error| panic!("{}: {error}", provenance_path.display())),
             )
             .expect("baseline refresh provenance");
-            assert_eq!(provenance["test_id"].as_str(), Some(test_id));
-            let provenance_previous_sha = provenance["acceptance"]["expected_baseline_sha256"]
-                .as_str()
-                .or_else(|| provenance["previous_baseline"]["sha256"].as_str());
-            let provenance_active_sha = provenance["acceptance"]["accepted_baseline_sha256"]
-                .as_str()
-                .or_else(|| provenance["candidate"]["sha256"].as_str());
-            assert_eq!(provenance_previous_sha, Some(previous_sha.as_str()));
-            assert_eq!(provenance_active_sha, Some(active_sha.as_str()));
+            validate_refresh_provenance(
+                &provenance,
+                test_id,
+                previous_sha,
+                active_sha,
+                archive_path,
+                receipt_path,
+                provenance_relative_path,
+            )
+            .unwrap_or_else(|error| panic!("{error}"));
             assert!(
                 refreshed_ids.insert(test_id.to_string()),
                 "duplicate refresh use {test_id}"
@@ -466,6 +751,13 @@ fn g05_approved_binary_manifest_matches_active_samples() {
                 .expect("historical JSON path"),
         );
         assert!(historical_json.is_file(), "{}", historical_json.display());
+        assert_eq!(
+            sha256_file(&historical_json),
+            receipt["historical_json_sha256"]
+                .as_str()
+                .expect("historical JSON sha256"),
+            "historical JSON changed for {test_id}"
+        );
         let expected_path = historical_json
             .strip_prefix(
                 PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines"),
@@ -475,10 +767,6 @@ fn g05_approved_binary_manifest_matches_active_samples() {
         assert_eq!(
             relative, expected_path,
             "history-derived path for {test_id}"
-        );
-        assert_eq!(
-            receipt["historical_json_sha256"].as_str().map(str::len),
-            Some(64)
         );
         assert!(receipt["path_id"].as_str().is_some());
 
@@ -605,7 +893,7 @@ fn g05_approved_binary_manifest_matches_active_samples() {
             "duplicate inherited path {baseline_path}"
         );
         let path = root.join(relative);
-        assert_eq!(file_sha256(&path), *expected_sha, "{test_id}");
+        assert_eq!(sha256_file(&path), *expected_sha, "{test_id}");
         let receipt = inherited_receipts
             .get(*test_id)
             .unwrap_or_else(|| panic!("missing inherited main approval receipt for {test_id}"));
@@ -773,7 +1061,7 @@ fn assert_acceptance_receipts() {
         let baseline = baseline_root().join(format!("{baseline_id}.tui.pb"));
         assert_eq!(
             receipt["candidate_sha256"].as_str(),
-            Some(file_sha256(&baseline).as_str()),
+            Some(sha256_file(&baseline).as_str()),
             "{file}"
         );
     }
@@ -820,7 +1108,7 @@ fn g05_candidate_refuses_reference_binary() {
             path.display()
         );
         assert_eq!(
-            file_sha256(&path),
+            sha256_file(&path),
             platform["sha256"]
                 .as_str()
                 .unwrap_or_else(|| panic!("sha256 for {target}"))
@@ -833,10 +1121,30 @@ fn g05_candidate_refuses_reference_binary() {
 }
 
 #[test]
+fn g05_candidate_cannot_select_reference_manifest_override() {
+    let mut launch = Launch::new("g05-candidate-reference-manifest", SHOWCASE);
+    launch.reference_manifest = Some(
+        PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("docs/testing/reference-manifest-j06-pr2.json"),
+    );
+    let Err(error) = try_launch(launch) else {
+        panic!("candidate mode must not select an alternate reference manifest");
+    };
+    assert!(
+        error
+            .message
+            .contains("candidate mode cannot select a reference manifest"),
+        "{}",
+        error.message
+    );
+    assert!(!error.evidence.join("session.json").exists());
+}
+
+#[test]
 fn g05_reference_mode_requires_manifest_identity() {
     let candidate = Path::new(SHOWCASE);
     assert!(candidate.is_file(), "missing candidate showcase");
-    assert_ne!(file_sha256(candidate), SHOWCASE_REFERENCE_SHA256);
+    assert_ne!(sha256_file(candidate), SHOWCASE_REFERENCE_SHA256);
     let mut launch = Launch::new("g05-reference-identity", SHOWCASE);
     launch.mode = SessionMode::Reference;
     let Err(error) = try_launch(launch) else {
