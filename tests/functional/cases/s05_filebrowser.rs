@@ -336,6 +336,20 @@ fn logged(screen: &TerminalSnapshot, needle: &str) -> bool {
     })
 }
 
+/// The result line paints while the dialog still shows the previous resolve
+/// error. The URL is accepted only after that error and the dialog title leave.
+fn url_accepted(screen: &TerminalSnapshot, result: &str, host: &str) -> bool {
+    let visible = text(screen);
+    logged(screen, result)
+        && (0..screen.rows()).any(|row| {
+            let line = row_text(screen, row);
+            line.contains("Host folder") && line.contains(host)
+        })
+        && !visible.contains("repository not found")
+        && !visible.contains(CHOOSE_DIR)
+        && !visible.contains(INVALID_URL)
+}
+
 #[test]
 fn route_by_page_keyboard_and_pointer() {
     let app = open("s05-route-page", 120, 40, PAGE_ARGS);
@@ -926,12 +940,9 @@ fn browse_directory_hidden_filter_cancel_and_url() {
     clear_url(&app);
     app.type_text(VALID_PAY);
     app.key("enter");
-    let paid = app.wait_text(URL_PAY);
-    assert!(
-        host_line(&paid).contains(VALID_PAY),
-        "host after url\n{}",
-        text(&paid)
-    );
+    let paid = app.wait_screen("payments url accepted", |screen| {
+        url_accepted(screen, URL_PAY, VALID_PAY) && text(screen).contains(CHOSEN_DIR)
+    });
     assert!(logged(&paid, URL_PAY));
     see(&paid, &[URL_PAY, CHOSEN_DIR], &[CHOOSE_DIR, INVALID_URL]);
 
@@ -941,7 +952,9 @@ fn browse_directory_hidden_filter_cancel_and_url() {
     app.wait_text("Known here:");
     app.type_text(KNOWN_PORTAL);
     app.key("enter");
-    let portal = app.wait_text(URL_PORTAL);
+    let portal = app.wait_screen("portal url accepted", |screen| {
+        url_accepted(screen, URL_PORTAL, KNOWN_PORTAL)
+    });
     assert_size(&app, 120, 40);
     assert!(host_line(&portal).contains(KNOWN_PORTAL));
     see(
@@ -1167,7 +1180,9 @@ fn option_url_entry() {
     clear_url(&app);
     app.type_text(VALID_PAY);
     app.key("enter");
-    let paid = app.wait_text(URL_PAY);
+    let paid = app.wait_screen("payments url accepted", |screen| {
+        url_accepted(screen, URL_PAY, VALID_PAY)
+    });
     assert!(host_line(&paid).contains(VALID_PAY));
     see(&paid, &[URL_PAY], &["repository not found", CHOOSE_DIR]);
     confirm_option(&app, |screen| {

@@ -50,6 +50,18 @@ fn forbid(screen: &TerminalSnapshot, items: &[&str]) {
     }
 }
 
+/// The form title leaves while the test result is still on the button row.
+/// Cancel is done when that row is gone and the list action is back.
+fn list_without_result(screen: &TerminalSnapshot, name: &str, host: &str, result: &str) -> bool {
+    let visible = text(screen);
+    visible.contains(name)
+        && visible.contains(host)
+        && visible.contains("Connect")
+        && !visible.contains("Test connection")
+        && !visible.contains(FORM)
+        && !visible.contains(result)
+}
+
 /// The form title can leave one frame before the name field does. Cancel is
 /// done when the list actions are back and the unsaved name is gone.
 fn form_closed(screen: &TerminalSnapshot, name: &str, host: &str, draft: &str) -> bool {
@@ -294,7 +306,9 @@ fn testing_success() {
         &[FULL_OK, FULL_ERR, SEEN_ERR, SAVED, TUNNEL, WORKBENCH],
     );
     click_action(&app, "Cancel");
-    let returned = app.wait_absent(FORM);
+    let returned = app.wait_screen("success result dismissed", |screen| {
+        list_without_result(screen, "Production", "prod-db-1.acme.io", SEEN_OK)
+    });
     require(&returned, &["Production", "prod-db-1.acme.io"]);
     forbid(&returned, &[SEEN_OK, SAVED, WORKBENCH]);
     app.finish();
@@ -314,7 +328,9 @@ fn testing_timeout() {
         &[FULL_OK, FULL_ERR, SEEN_OK, SAVED, TUNNEL, WORKBENCH],
     );
     click_action(&app, "Cancel");
-    let returned = app.wait_absent(FORM);
+    let returned = app.wait_screen("timeout result dismissed", |screen| {
+        list_without_result(screen, "Analytics", "analytics.acme.io", SEEN_ERR)
+    });
     require(&returned, &["Analytics", "analytics.acme.io"]);
     forbid(&returned, &[SEEN_ERR, SAVED, WORKBENCH]);
     app.finish();

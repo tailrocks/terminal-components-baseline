@@ -216,6 +216,30 @@ fn tree_side(line: &str) -> String {
     line.chars().take(40).collect()
 }
 
+/// The account row is the word Work. Detail text such as "Claude · Work"
+/// keeps the middle dot, so a late detail title is not a second row.
+fn is_work_row(line: &str) -> bool {
+    let side = tree_side(line);
+    side.split_whitespace().any(|token| token == "Work") && !side.contains('·')
+}
+
+fn work_place(visible: &str) -> RowPlace {
+    let lines: Vec<&str> = visible.lines().collect();
+    let Some(focus) = lines.iter().position(|line| line.contains('▎')) else {
+        return RowPlace::Missing;
+    };
+    let Some(work_at) = lines.iter().position(|line| is_work_row(line)) else {
+        return RowPlace::Missing;
+    };
+    if focus == work_at {
+        RowPlace::On
+    } else if focus < work_at {
+        RowPlace::Above
+    } else {
+        RowPlace::Below
+    }
+}
+
 fn row_place(visible: &str, header: &str) -> RowPlace {
     let lines: Vec<&str> = visible.lines().collect();
     let Some(focus) = lines.iter().position(|line| line.contains('▎')) else {
@@ -360,40 +384,41 @@ fn j04_usage_route() {
         "hard-cases failure replaced Go\n{}",
         text(&failed)
     );
-    // Experiments stays on the fixture's refreshing row, so the header keeps
-    // "refreshing". Stop on Work instead of stepping past it while it is stale.
-    let current = 'work: {
-        for _ in 0..40 {
+    // The Work detail title arrives after the row is focused. Stepping away
+    // on that frame leaves the row and the detail never settles.
+    let current = {
+        let deadline = Instant::now() + Duration::from_secs(15);
+        loop {
             let screen = app.screen();
             let visible = text(&screen);
-            if visible.contains(WORK) && visible.contains("77%") && visible.contains("· current ·")
-            {
-                no_secrets(&screen);
-                break 'work screen;
-            }
-            if visible.contains(WORK) && visible.contains(STALE) {
-                let settled = app.wait_screen("work became current", |screen| {
-                    let visible = text(screen);
-                    visible.contains(WORK)
-                        && visible.contains("77%")
-                        && visible.contains("· current ·")
-                        && !visible.contains(STALE)
-                });
-                no_secrets(&settled);
-                break 'work settled;
-            }
-            let before = selection(&visible);
-            app.key("up");
-            let deadline = Instant::now() + Duration::from_millis(800);
-            loop {
-                let moved = selection(&text(&app.screen()));
-                if moved != before || Instant::now() >= deadline {
-                    break;
+            let settled = visible.contains(WORK)
+                && visible.contains("77%")
+                && visible.contains("· current ·")
+                && !visible.contains(STALE);
+            match work_place(&visible) {
+                RowPlace::On if settled => {
+                    no_secrets(&screen);
+                    break screen;
                 }
-                std::thread::sleep(Duration::from_millis(20));
+                RowPlace::On => {}
+                RowPlace::Below => {
+                    let before = selection(&visible);
+                    app.key("up");
+                    wait_selection_change(&app, &before);
+                }
+                RowPlace::Above | RowPlace::Missing => {
+                    let before = selection(&visible);
+                    app.key("down");
+                    wait_selection_change(&app, &before);
+                }
             }
+            assert!(
+                Instant::now() < deadline && app.child_running(),
+                "work became current\n{}",
+                text(&app.screen())
+            );
+            std::thread::sleep(Duration::from_millis(20));
         }
-        panic!("work became current\n{}", text(&app.screen()));
     };
     assert!(
         !text(&current).contains(STALE),
