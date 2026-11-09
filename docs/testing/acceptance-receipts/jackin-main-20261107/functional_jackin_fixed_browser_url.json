@@ -1,0 +1,30 @@
+{
+  "accept_result": {
+    "baseline_sha256": "dd17ca81f1eee5df91a24d9d28c8d4d3b5813e43c09df2cc35b64420a4b835d2",
+    "candidate_path": {
+      "encoding": "utf8",
+      "value": "/private/tmp/jackin-pr1264-rollout-fec38841-20261107/run-evidence/selected-candidates/functional_jackin_fixed_browser_url.dd17ca81f1eee5df91a24d9d28c8d4d3b5813e43c09df2cc35b64420a4b835d2.tui.pb"
+    },
+    "candidate_sha256": "dd17ca81f1eee5df91a24d9d28c8d4d3b5813e43c09df2cc35b64420a4b835d2",
+    "command": "accept",
+    "error_code": null,
+    "output_path": {
+      "encoding": "utf8",
+      "value": "/private/tmp/tcb-jackin-rollout-fec38841-20261107/apps/jackin/tests/functional/baselines/functional/jackin_fixed_browser_url.tui.pb"
+    },
+    "reason": null,
+    "schema": "tuiscotti.cli.v1",
+    "status": "pass",
+    "test_id": "functional/jackin_fixed_browser_url"
+  },
+  "approval_method": "tuiscotti accept --expect-baseline missing",
+  "approved_at_utc": "2026-11-07T15:39:27.290772+00:00",
+  "authorization": "Explicit user approval for all 57 selected Jackin candidate baselines.",
+  "candidate_capture_lineage": "Jackin PR #1264 captured head 79a948d4bf941f4dfd14ae557c112701c1c89ab8; prep source 9061af898 (coverage adaptation and observation-mutation test); merged Tuiscotti fec38841b10a593f64498f1e6daf2f4246a4d70f; 49/49 serial identity tests.",
+  "candidate_selection_bundle_sha256": "88c130c80ad15dc6e5e66ccad6d51d0d82306005498a15f382239c3cde2b46f4",
+  "candidate_sha256": "dd17ca81f1eee5df91a24d9d28c8d4d3b5813e43c09df2cc35b64420a4b835d2",
+  "current_upstream_head": "PR #1264=5076ca2a0a40049bbb04bc72d1d5edddec49c197; diff from captured 79a948d is documentation-only",
+  "schema": "tuiscotti.workstation-acceptance-receipt.v1",
+  "test_id": "functional/jackin_fixed_browser_url",
+  "tuiscotti_source_revision": "fec38841b10a593f64498f1e6daf2f4246a4d70f"
+}

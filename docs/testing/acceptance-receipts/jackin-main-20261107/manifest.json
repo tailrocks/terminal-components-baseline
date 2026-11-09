@@ -1,0 +1,410 @@
+{
+  "approval": "Explicit user approval for all 57 selected Jackin candidate baselines.",
+  "approval_source_commit": "f539d9a61b1fe1e9fab13f4e976c872b09b8fb9a",
+  "baselines": [
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_account_form_pending.tui.pb",
+      "receipt": "functional_jackin_account_form_pending.json",
+      "receipt_sha256": "ed3def29b4274c65bfbc7cf7d9dcabd84babc7dc2bfd405780b5cffefac70838",
+      "sha256": "ec0deb664cf6bc0948bdb666d0ec1ee3e5145aaccd6e3c03ec78655c89bc0ea0",
+      "test_id": "functional/jackin_account_form_pending"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_account_remove.tui.pb",
+      "receipt": "functional_jackin_account_remove.json",
+      "receipt_sha256": "37cd0c4d90141b96a208b9047a412da1cbbaf9e268b0d8844ef656bc47a2a680",
+      "sha256": "5eab94a004087af1abc67d5d655cd0394889ae942423e47287cab7996e0f1108",
+      "test_id": "functional/jackin_account_remove"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_close_pane_codex.tui.pb",
+      "receipt": "functional_jackin_close_pane_codex.json",
+      "receipt_sha256": "409aa20ffe5478aa889c3ba61625609fad63f53c02963c1cf61768d366c54a5d",
+      "sha256": "3fccafed7800cba5eed9b0b4d81d0ede878db177589623261aeff42ae3a7b879",
+      "test_id": "functional/jackin_close_pane_codex"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_close_pane_shell.tui.pb",
+      "receipt": "functional_jackin_close_pane_shell.json",
+      "receipt_sha256": "ed4d4cf9ffc66f6b2ffc07c6af386309e8a89b5fd42752646915577b10fc48ab",
+      "sha256": "e3681eef87dd9ec19dbb05cd162233d8a19a2445dd91433fce6a4c630897308e",
+      "test_id": "functional/jackin_close_pane_shell"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_close_tab.tui.pb",
+      "receipt": "functional_jackin_close_tab.json",
+      "receipt_sha256": "de13b54d5b6ae4e393e0c824a5ffb241c89ea18f461bdc2f71ca81f1c6f48f68",
+      "sha256": "7c7baa50e31a75b15f4e5f60f83cba7ae18be38b8ebbe75137cb3969286696ea",
+      "test_id": "functional/jackin_close_tab"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_docker_no_engine.tui.pb",
+      "receipt": "functional_jackin_docker_no_engine.json",
+      "receipt_sha256": "e915d5c20679f87753af7a58e406262d557673f3e240d29098f4e1956b207575",
+      "sha256": "b07132f77b8e457137afaf259547d0e84d9a2d83826b96828d277f462dd0f203",
+      "test_id": "functional/jackin_docker_no_engine"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_docker_setting.tui.pb",
+      "receipt": "functional_jackin_docker_setting.json",
+      "receipt_sha256": "0b259d21c9ff29fc73354d3c5e9e3badbc742b386ba153465caee7095489088b",
+      "sha256": "743e32a9959b11b216754d61610e7fb0889fd1f2cf98b2fd2e5eb38f76e2cec8",
+      "test_id": "functional/jackin_docker_setting"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_doctor.tui.pb",
+      "receipt": "functional_jackin_doctor.json",
+      "receipt_sha256": "b0915d0fd3324395618f92acb091584e93c6b78739682830aa9db714586215d3",
+      "sha256": "690b7ea5928194f78d1ebee00bfa7a6e53e7e9a4e3b8e34aa728847b6e966166",
+      "test_id": "functional/jackin_doctor"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_editor_discard.tui.pb",
+      "receipt": "functional_jackin_editor_discard.json",
+      "receipt_sha256": "91e97a11241a13fbc878db1e6c42e3f08e5b97efcf96746304e79d43e1bddb6c",
+      "sha256": "d4158c7de9060dbede2456e95ca760bc42064d4fe73d229466dbf711db0bc246",
+      "test_id": "functional/jackin_editor_discard"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_first_use_empty.tui.pb",
+      "receipt": "functional_jackin_first_use_empty.json",
+      "receipt_sha256": "43b8c509e94a0bd80e1e11b2756fa340a7027b8fb2cc2408b7b9ded33a13b44f",
+      "sha256": "8f9c0ea637813cece508293e40404b15b3a7bb5becf887a8141c0aa300de1930",
+      "test_id": "functional/jackin_first_use_empty"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_account_disable_refused.tui.pb",
+      "receipt": "functional_jackin_fixed_account_disable_refused.json",
+      "receipt_sha256": "7ef4f7e7a158e68e37012182bc8bd355e79326ea7fbccb992235454541a74e92",
+      "sha256": "e0da1f8771fb0e46651420020fafa49c55cc9862bcb9c345594f8e67ff1d7259",
+      "test_id": "functional/jackin_fixed_account_disable_refused"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_account_edit_env.tui.pb",
+      "receipt": "functional_jackin_fixed_account_edit_env.json",
+      "receipt_sha256": "b59a3a1729b34554edcfac664d44001efc0af688ae78af276204443aba09580d",
+      "sha256": "d1bd1d2a93ab4173c93186bcde440e7338d4dea00e66c8dc9f46c6ba7a69e34d",
+      "test_id": "functional/jackin_fixed_account_edit_env"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_account_form.tui.pb",
+      "receipt": "functional_jackin_fixed_account_form.json",
+      "receipt_sha256": "b9b7299c25cfcec2c64d80dd5b37dbace9d7f4637a86af6e795d4534716d6c55",
+      "sha256": "57b7e3cdde2c5be6c97203aca46d8306aa7d0358bc39f3cccc4aef83c0cd5354",
+      "test_id": "functional/jackin_fixed_account_form"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_account_form_1password.tui.pb",
+      "receipt": "functional_jackin_fixed_account_form_1password.json",
+      "receipt_sha256": "1117188084430859e3219e95c2cccd4a6a8dd59fb460acf8769b2f0c8f7fbcff",
+      "sha256": "2d66b9ee420e8b3f295719afaec5f8e713987b59e723c4fcfb98ad7727f8b871",
+      "test_id": "functional/jackin_fixed_account_form_1password"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_account_form_env.tui.pb",
+      "receipt": "functional_jackin_fixed_account_form_env.json",
+      "receipt_sha256": "59d52ed3d75257a8261852bb996d0adc2ded18897c753bcf853295e2b97a7127",
+      "sha256": "e4023667c16732207b0dc761754a8470d9aac53c2bdc966b1a7e1cafc715118d",
+      "test_id": "functional/jackin_fixed_account_form_env"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_account_form_pending.tui.pb",
+      "receipt": "functional_jackin_fixed_account_form_pending.json",
+      "receipt_sha256": "ef079948e50410be7d1642c73722f22aafe4ed67911e3b38a1a7359d0a74511a",
+      "sha256": "f0cd1e7f80e3e6398d2e7ef28335079870648f7d07c7abcee5e14210af74c04d",
+      "test_id": "functional/jackin_fixed_account_form_pending"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_account_form_refused.tui.pb",
+      "receipt": "functional_jackin_fixed_account_form_refused.json",
+      "receipt_sha256": "d29fe58825cd1c324d1d8e03dbb1d56d55a9a87c1bda2f281b768f1da224b649",
+      "sha256": "b7e50206fdcb0c1a4539b895216859d04694c5cf3fa190e18af8ba4a53d041d8",
+      "test_id": "functional/jackin_fixed_account_form_refused"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_account_menu.tui.pb",
+      "receipt": "functional_jackin_fixed_account_menu.json",
+      "receipt_sha256": "5085b0b99db1e29373404a29c3a3c8fae13513b348b40c47ce6e66fe8c792e77",
+      "sha256": "1d6169f0a46a1905a0d7b5c42e7bc1c0f225846cf8570d3c1324e047c7c25cfa",
+      "test_id": "functional/jackin_fixed_account_menu"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_browser_read_only.tui.pb",
+      "receipt": "functional_jackin_fixed_browser_read_only.json",
+      "receipt_sha256": "fa6cbab28e319e6faaa3fe9e4044a5e2b87b31509876610aadecd18e80b0d2bd",
+      "sha256": "ee9db82403866f4524caf8cbb746e158fcfabb4e38aa43783c8a6aad91b6a998",
+      "test_id": "functional/jackin_fixed_browser_read_only"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_browser_url.tui.pb",
+      "receipt": "functional_jackin_fixed_browser_url.json",
+      "receipt_sha256": "2ff8a5574fc2b6d40a49b6ddec7e4400422d832c391c9c5783727196b005f0a1",
+      "sha256": "dd17ca81f1eee5df91a24d9d28c8d4d3b5813e43c09df2cc35b64420a4b835d2",
+      "test_id": "functional/jackin_fixed_browser_url"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_browser_url_refused.tui.pb",
+      "receipt": "functional_jackin_fixed_browser_url_refused.json",
+      "receipt_sha256": "05b4de8059a31b3a447bb01ce471f814b80b0c1f76f2ba7047356ebb29e943b3",
+      "sha256": "c70f99575318490d5b06b59340494838c83f7c712ca938a215702d0845e4c62f",
+      "test_id": "functional/jackin_fixed_browser_url_refused"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_editor_accounts.tui.pb",
+      "receipt": "functional_jackin_fixed_editor_accounts.json",
+      "receipt_sha256": "3c1d64affe5a19531cfa5c7be4969229b690a47186982a0876cace25251acd98",
+      "sha256": "ccf5451ef46d44181c9a4a5971cf7d90059211a5a81c2a1483ae6db182cea154",
+      "test_id": "functional/jackin_fixed_editor_accounts"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_editor_general.tui.pb",
+      "receipt": "functional_jackin_fixed_editor_general.json",
+      "receipt_sha256": "dd5d3f8520dc9e2006d5fd0177ed91258d0ddfb6fc86b9fe98b5e307accad80b",
+      "sha256": "38cf24b8cf9173a747f178253e22973ceb6a2d8561f62b32954e387c43c7d087",
+      "test_id": "functional/jackin_fixed_editor_general"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_editor_general_refused.tui.pb",
+      "receipt": "functional_jackin_fixed_editor_general_refused.json",
+      "receipt_sha256": "b1702f3996b6d1ac3af83613e43d008c53b024ea82cf159087b1ca72d381606b",
+      "sha256": "2ef2ec3891741303bc2b129d2de808e893b3edcfebc58f92a83008921944fc02",
+      "test_id": "functional/jackin_fixed_editor_general_refused"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_editor_project.tui.pb",
+      "receipt": "functional_jackin_fixed_editor_project.json",
+      "receipt_sha256": "16013eeeb42a0b3b77b684b7975ccf323616664f6b0924b413dcca036128d326",
+      "sha256": "0a7af9a339e562daba7f7b7a5407bfcc106cf32fd085ffd2543fad631d9c841d",
+      "test_id": "functional/jackin_fixed_editor_project"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_env_form.tui.pb",
+      "receipt": "functional_jackin_fixed_env_form.json",
+      "receipt_sha256": "1aef0d0a4fbbd5598ad10f52c9eebf2b2471e1daa6a97bfc6eaf5b4a6e2bbe70",
+      "sha256": "ab9caa65a83569d76701acf2abebad4fa8422a92e256430dd9735a0bb3f8c114",
+      "test_id": "functional/jackin_fixed_env_form"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_file_menu_export.tui.pb",
+      "receipt": "functional_jackin_fixed_file_menu_export.json",
+      "receipt_sha256": "e63213a0bd92982cc1de881045ca653c1fe1d915a16d8810510ac629163acabc",
+      "sha256": "63b9bd2597e1238804249d411e4237847f0803667b205995b1ca36223849ec0b",
+      "test_id": "functional/jackin_fixed_file_menu_export"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_launch_picker.tui.pb",
+      "receipt": "functional_jackin_fixed_launch_picker.json",
+      "receipt_sha256": "b5c0a7da8973d8e461cf05eb17f394d5bb394b6e0a515c0d46cdb3878b1cc022",
+      "sha256": "6511a4dfad87fa6dc8ba0c389919515dfae253241417c4eec30ac3146efb66ac",
+      "test_id": "functional/jackin_fixed_launch_picker"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_palette_export.tui.pb",
+      "receipt": "functional_jackin_fixed_palette_export.json",
+      "receipt_sha256": "70730bd25b0bb27c24be3c9890ee83c70ec3e8105e695dc5422be8f31a3a492b",
+      "sha256": "125058f0303c2fe3754e44795301c34d418a915606af2a022e313629ff69e88c",
+      "test_id": "functional/jackin_fixed_palette_export"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_settings_agents.tui.pb",
+      "receipt": "functional_jackin_fixed_settings_agents.json",
+      "receipt_sha256": "9a49670e7430127dfdc22e9c311e3c43193202ed18ca5d7ae6dd6433e9068119",
+      "sha256": "a3983f2c2571d0a27928c902b8b9f750a432ddcf6330888f89b793dfa7289039",
+      "test_id": "functional/jackin_fixed_settings_agents"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_settings_commits.tui.pb",
+      "receipt": "functional_jackin_fixed_settings_commits.json",
+      "receipt_sha256": "60485f200c28bb6fc4ab7805809407149e8942d35475d033ba5b225450c6ce86",
+      "sha256": "00f80f4cfe1914dc93d4b13bfcff9e6eeb63a9bf5a1db511a161795859b25965",
+      "test_id": "functional/jackin_fixed_settings_commits"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_settings_env.tui.pb",
+      "receipt": "functional_jackin_fixed_settings_env.json",
+      "receipt_sha256": "416d0747755e867522b57da4f6d83dc164141f5fdd1bd6e2a3c709737ab1072b",
+      "sha256": "21809c9187dc748c2bf566de59b485453519987d6de126b78ad8fdb1f3f8636f",
+      "test_id": "functional/jackin_fixed_settings_env"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_settings_mounts.tui.pb",
+      "receipt": "functional_jackin_fixed_settings_mounts.json",
+      "receipt_sha256": "e070314ece9282846737260cf170b182caade543ed7a0a3b4f7a71760752d896",
+      "sha256": "a0011d7b6a148edb6d6d9efdd4024e094e6306c6ea703841d51f293fb5ae42e2",
+      "test_id": "functional/jackin_fixed_settings_mounts"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_settings_trust.tui.pb",
+      "receipt": "functional_jackin_fixed_settings_trust.json",
+      "receipt_sha256": "b3fa15508d7ac485de21a5ac3b7a142939814c5145e885841d740c17ea4e2779",
+      "sha256": "d882586ed51a783b3b190f89c55a232c6350d849aa896a7f11933d73afef4f35",
+      "test_id": "functional/jackin_fixed_settings_trust"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_wizard_destination.tui.pb",
+      "receipt": "functional_jackin_fixed_wizard_destination.json",
+      "receipt_sha256": "65b7d3a271d21fb1d8bc496fdee0318558823de847089a85d190475747c83e1d",
+      "sha256": "85b7227cd9f20d0cc7ba1f4eb967a1d949573af7b6d541ff8f784025678dce33",
+      "test_id": "functional/jackin_fixed_wizard_destination"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_fixed_wizard_workdir.tui.pb",
+      "receipt": "functional_jackin_fixed_wizard_workdir.json",
+      "receipt_sha256": "44b85ab959ed0b39229e57e23259c326b8c7b2d4eb7bafa1dda1043b9deff700",
+      "sha256": "b0a5118928db1639d579ff2adc011f5a05a09144b6f1f22e310b6abd7d30535b",
+      "test_id": "functional/jackin_fixed_wizard_workdir"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_help_ownership.tui.pb",
+      "receipt": "functional_jackin_help_ownership.json",
+      "receipt_sha256": "1fb9bae3219344f7f37f4ac9269662932b77c2f4433fd3294d39f6b72db2ec4b",
+      "sha256": "d9a24466c6b08166263afb3b9142ccb534ee164b3226ac55bec6952e6e2c748b",
+      "test_id": "functional/jackin_help_ownership"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_launch_env_prompt.tui.pb",
+      "receipt": "functional_jackin_launch_env_prompt.json",
+      "receipt_sha256": "e326bf1f495b65e571e90d9b779e56fe629a2e84072dfe10e234849242097b4e",
+      "sha256": "20cc1e35f2aac06f592652c5423111b2cc3538b7336b5f8a6d1055fdf4b55073",
+      "test_id": "functional/jackin_launch_env_prompt"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_launch_failure.tui.pb",
+      "receipt": "functional_jackin_launch_failure.json",
+      "receipt_sha256": "486751299f88832fd46ea72eeac3aa8dd2179e9c6525ed794e19444c2b0ddaf7",
+      "sha256": "8e13392f1815e93ef768bcd9ddf8673fe2303fd7c6f02ff23af37bea6793b9bd",
+      "test_id": "functional/jackin_launch_failure"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_launch_openshell.tui.pb",
+      "receipt": "functional_jackin_launch_openshell.json",
+      "receipt_sha256": "7ce732b9da93c38b1c7d4c368516a63ee1c6082500a2241b79e8fb40db539995",
+      "sha256": "51e3aebcb9619858fbfd981aee03bf0ccee1f60e5a9deb2e0b621a0786433178",
+      "test_id": "functional/jackin_launch_openshell"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_launch_reconnect.tui.pb",
+      "receipt": "functional_jackin_launch_reconnect.json",
+      "receipt_sha256": "691ed4e11257d17c2a4613575d9cdc01fe3285036c98f4985eb0a2fabda01454",
+      "sha256": "fa22b4fccbc0a05c5c172a91973a1966c2081d2c3c6a8fd09b25cc6e2d4029a2",
+      "test_id": "functional/jackin_launch_reconnect"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_manager_multi_launch.tui.pb",
+      "receipt": "functional_jackin_manager_multi_launch.json",
+      "receipt_sha256": "a6bb9f6cf462910fe8a298f983535b2308e176ee89156a65d37a363182276668",
+      "sha256": "1f0d17174a5f924bd102fcdd184d2861fb421b89d65b11f3921022ac352678d3",
+      "test_id": "functional/jackin_manager_multi_launch"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_manager_stop_dialog.tui.pb",
+      "receipt": "functional_jackin_manager_stop_dialog.json",
+      "receipt_sha256": "27e3da2b9362c69ccb48eac2d40545dc20c289f3922ebf31894b1ae945d79ca5",
+      "sha256": "fa35bbeb6172bf4cbbab8e8cd77a2e8d175e9a835f09f4c66b8c531b6d99b81c",
+      "test_id": "functional/jackin_manager_stop_dialog"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_pane_attaching.tui.pb",
+      "receipt": "functional_jackin_pane_attaching.json",
+      "receipt_sha256": "f2e0e4dc35191cf75c69ed9c374cba80e9df3b049d28c24b26b1fc98049265f9",
+      "sha256": "0abfcfad5bbf48d57040ae33a7dd6f98a81804e4ad8b97c011193d16b099c05c",
+      "test_id": "functional/jackin_pane_attaching"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_pane_detached.tui.pb",
+      "receipt": "functional_jackin_pane_detached.json",
+      "receipt_sha256": "5764ad91133f9367a2f3aa4baec16da8cac9ccb682e524e7b6c0edf5502bebb7",
+      "sha256": "8315c9000ebe72ea5e4879af39dbd53b927827cbd2e8c172301902ab9e3e296b",
+      "test_id": "functional/jackin_pane_detached"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_pane_exited.tui.pb",
+      "receipt": "functional_jackin_pane_exited.json",
+      "receipt_sha256": "be28208b69c524c0d85be42f0fba025dc80a56c625e8ae295d89b78a1c9e272c",
+      "sha256": "c907f3ef1c79c519af3fcd09a678c01553d2c49852a1507cc125372e9b33e11e",
+      "test_id": "functional/jackin_pane_exited"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_pane_failed.tui.pb",
+      "receipt": "functional_jackin_pane_failed.json",
+      "receipt_sha256": "9480dd48e93c70c1e75738ee778255a9b30ab280371c0eb26e0b00ffb8f920a6",
+      "sha256": "97300c13f5043646610538f5055f583bf9b7c996a2bdb264db4dec1e7dfa08eb",
+      "test_id": "functional/jackin_pane_failed"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_pane_info_title.tui.pb",
+      "receipt": "functional_jackin_pane_info_title.json",
+      "receipt_sha256": "a52729c718dde5972d0bc27135002b71c373aaeea05e7ff6dd5d137a020f82ad",
+      "sha256": "a5e92981fc46affaf366c4ddb2bc446f9871bb93a7f3d8d3409dca5f02c989e2",
+      "test_id": "functional/jackin_pane_info_title"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_pane_pending.tui.pb",
+      "receipt": "functional_jackin_pane_pending.json",
+      "receipt_sha256": "c64de2e02533b63f3cf862da81b58e699de22ff04a6fbba929da1de7bbdf6cc0",
+      "sha256": "56740b8cf2b0d3ddf817f1438efff747f109c02ee5b69f3d5bb5541a41020d11",
+      "test_id": "functional/jackin_pane_pending"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_pane_viewing.tui.pb",
+      "receipt": "functional_jackin_pane_viewing.json",
+      "receipt_sha256": "0aa702e060a44e58d535688f76f8928acc4513850691543a154321041c1d5bfe",
+      "sha256": "ac40b229229043c292500cac8eb777d9946187159b4d5d18f7b82339d6fffe43",
+      "test_id": "functional/jackin_pane_viewing"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_paste_confirm.tui.pb",
+      "receipt": "functional_jackin_paste_confirm.json",
+      "receipt_sha256": "302a903e2119878808f9fed9213ceb84275bc075808950ba4bbad345cb744b4d",
+      "sha256": "646afc9df55631a71db4137e769155905f9ac2a83812f9b19cd8c11c6dc57abd",
+      "test_id": "functional/jackin_paste_confirm"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_role_binding.tui.pb",
+      "receipt": "functional_jackin_role_binding.json",
+      "receipt_sha256": "69fa9fca355a831aba92ac37d368ff33366a61c7910e68f4eef47ac6f4bac059",
+      "sha256": "d64ba412322b041e558bd1bf4aef6bf86eba35be324bbca04c9ff65f7b052b68",
+      "test_id": "functional/jackin_role_binding"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_role_editor.tui.pb",
+      "receipt": "functional_jackin_role_editor.json",
+      "receipt_sha256": "4c01d4a7c51b2f2fb313a169990d39c700f46c10cf1a8f21c54ee098962a9ccb",
+      "sha256": "415f1792c3742634f944b40017ad21a61fdb46e13d14b35575d0291a6d4e6814",
+      "test_id": "functional/jackin_role_editor"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_role_not_allowed.tui.pb",
+      "receipt": "functional_jackin_role_not_allowed.json",
+      "receipt_sha256": "3cfb6b2a012f5fcdcf7fb16887f9f227241141f3098e172a190da5f9e06210f9",
+      "sha256": "7bfd551c7047603ce4593458aff6269f7574a43b51ddfab684a05a250031b1d8",
+      "test_id": "functional/jackin_role_not_allowed"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_settings_leave.tui.pb",
+      "receipt": "functional_jackin_settings_leave.json",
+      "receipt_sha256": "2e0f334b9b199e0892d811829d2229236acfe2c16388f14434b18be59f5d85da",
+      "sha256": "5983894cb0b19cc4ef5c6972939512e9cad7285a79979c9c89c32f7129fc14b6",
+      "test_id": "functional/jackin_settings_leave"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_terminal_task_panel.tui.pb",
+      "receipt": "functional_jackin_terminal_task_panel.json",
+      "receipt_sha256": "14a3181d09289fb91ccd987675e9dd58bbb69b2b29d96b5b9d5bd19f5ed2482c",
+      "sha256": "be5c6a4c621233dc76419c2b1d7704cb1a4846809f3fce777c9ce8955e23ca9a",
+      "test_id": "functional/jackin_terminal_task_panel"
+    },
+    {
+      "baseline_path": "apps/jackin/tests/functional/baselines/functional/jackin_workspace_save.tui.pb",
+      "receipt": "functional_jackin_workspace_save.json",
+      "receipt_sha256": "865d8846b504419ca2351d9962015a2b6a369425132c3a60f4904d759d9a670d",
+      "sha256": "1fdd78f4c45977f9b4c460ec205fbb1bfe095fbf7ff87a33dd755025600fa926",
+      "test_id": "functional/jackin_workspace_save"
+    }
+  ],
+  "count": 57,
+  "live_main_commit": "534e0ff5af75b840d93038dd02ece0839cf4f71b",
+  "repository": "tailrocks/terminal-components-baseline",
+  "schema": "tcb.accepted-baseline-evidence.v1",
+  "selection_manifest_sha256": "88c130c80ad15dc6e5e66ccad6d51d0d82306005498a15f382239c3cde2b46f4"
+}
