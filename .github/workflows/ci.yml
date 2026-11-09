@@ -24,14 +24,7 @@ env:
   GH_HOST: ""
   GH_TOKEN: ""
   GITHUB_TOKEN: ""
-  MISE_AUTO_INSTALL: "false"
-  MISE_EXEC_AUTO_INSTALL: "false"
   MISE_GITHUB_TOKEN: ""
-  MISE_LOCKFILE: "0"
-  MISE_NO_CONFIG: "1"
-  MISE_NO_ENV: "1"
-  MISE_NO_HOOKS: "1"
-  MISE_QUIET: "1"
   NODE_AUTH_TOKEN: ""
   NPM_TOKEN: ""
 concurrency:
@@ -88,6 +81,11 @@ jobs:
           mise-sha256: 7129dbab31d698f9028db9374f7ba7987232b0426f837dcbce437130a61415f9
           seed-admitted: ${{ steps.v2.outputs.seed_admitted }}
       - name: Prepare pinned tools
+        env:
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
         run: "mise --no-config --no-env --no-hooks install 'jactionlint@'\"${VELNOR_TOOL_JACTIONLINT}\" 'shellcheck@'\"${VELNOR_TOOL_SHELLCHECK}\""
       - name: Verify jactionlint
         uses: ./.github/actions/velnor-verify-jactionlint # zizmor: ignore[self-repository]
@@ -171,6 +169,10 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks install 'rust[profile=minimal]@'\"${VELNOR_TOOL_RUST}\" 'jactionlint@'\"${VELNOR_TOOL_JACTIONLINT}\" 'shellcheck@'\"${VELNOR_TOOL_SHELLCHECK}\" 'aqua:nextest-rs/nextest/cargo-nextest@'\"${VELNOR_TOOL_NEXTEST}\""
@@ -205,7 +207,13 @@ jobs:
       - name: Fetch Cargo sources
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'mkdir -p \"$RUNNER_TEMP/velnor/cargo-clean\" && cd \"$RUNNER_TEMP/velnor/cargo-clean\" && if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo metadata --locked --offline --all-features --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" >/dev/null 2>&1; then echo \"velnor: sources hit, skipping fetch\"; echo \"velnor: sources downloaded=0\"; else echo \"velnor: sources miss (source_missing), fetching\"; status=0; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo fetch --locked --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" 2> \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" || status=$?; cat \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" >&2; grep -Ec '\\''^ *Downloaded [^ ]+ v[0-9]'\\'' \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" > \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; n=; read -r n < \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; echo \"velnor: sources downloaded=${n:-0}\"; exit $status; fi'"
@@ -220,7 +228,13 @@ jobs:
       - name: Check generated files
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; $RUNNER_TEMP/velnor/bin/velnor-actions-0.1.78 generate --output-dir \"$RUNNER_TEMP/velnor-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}\" && test -L .github/CLAUDE.md && test -L \"$RUNNER_TEMP/velnor-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/.github/CLAUDE.md\" && readlink .github/CLAUDE.md | grep -qxF AGENTS.md && readlink \"$RUNNER_TEMP/velnor-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/.github/CLAUDE.md\" | grep -qxF AGENTS.md && diff -r --brief .github \"$RUNNER_TEMP/velnor-actions-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}/.github\"'"
@@ -231,7 +245,13 @@ jobs:
           VELNOR_INTERNAL_OP: plan-v1
           VELNOR_REQUEST_FILE: ${{ runner.temp }}/velnor/request/plan-v1-request.json
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "\"$RUNNER_TEMP\"'/velnor/bin/velnor-actions-0.1.78'"
@@ -256,13 +276,14 @@ jobs:
       contents: read
       actions: read
     needs:
+      - jactionlint
       - plan
       - rust-jackin-console
       - rust-jackin-console-product
       - rust-junie-tui
       - rust-junie-tui-product
       - suite-functional
-      - jactionlint
+      - task-baseline-linux-guard
     if: ${{ !cancelled() }}
     steps:
       - name: Checkout
@@ -283,6 +304,11 @@ jobs:
         timeout-minutes: 6
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; d=\"$RUNNER_TEMP/velnor/bin/velnor-actions-0.1.78\"&&mkdir -p \"${d%/*}\"&&s=\"/opt/velnor/seed/generator/${d##*/}\"&&p=\"$VELNOR_ASSET_SHA256  \"&&if [ -f \"$s\" ]&&echo \"$p$s\"|sha256sum -c -;then cp \"$s\" \"$d\";else curl -fsSL --connect-timeout 15 --max-time 120 --retry 5 --retry-all-errors --retry-max-time 180 --proto '\\''=https'\\'' --tlsv1.2 \"$VELNOR_ASSET_URL\" -o \"$d\"&&echo \"$p$d\"|sha256sum -c -;fi&&chmod +x \"$d\"'"
       - name: Prepare pinned tools
+        env:
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
         run: mise --no-config --no-env --no-hooks install gh@2.103.3
       - name: Download plan
         continue-on-error: true
@@ -304,7 +330,7 @@ jobs:
         env:
           VELNOR_INTERNAL_OP: write-request-v1
           VELNOR_NEEDS_JSON: ${{ toJSON(needs) }}
-          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-jackin-console\",\"rust-jackin-console-product\",\"rust-junie-tui\",\"rust-junie-tui-product\",\"suite-functional\"]"
+          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-jackin-console\",\"rust-jackin-console-product\",\"rust-junie-tui\",\"rust-junie-tui-product\",\"suite-functional\",\"task-baseline-linux-guard\"]"
           VELNOR_REQUEST_FILE: ${{ runner.temp }}/velnor/request/merge-v1-request.json
         run: "\"$RUNNER_TEMP\"'/velnor/bin/velnor-actions-0.1.78'"
       - name: Merge reports
@@ -312,7 +338,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VELNOR_INTERNAL_OP: merge-v1
           VELNOR_NEEDS_JSON: ${{ toJSON(needs) }}
-          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-jackin-console\",\"rust-jackin-console-product\",\"rust-junie-tui\",\"rust-junie-tui-product\",\"suite-functional\"]"
+          VELNOR_NEEDS_EXPECTED: "[\"jactionlint\",\"plan\",\"rust-jackin-console\",\"rust-jackin-console-product\",\"rust-junie-tui\",\"rust-junie-tui-product\",\"suite-functional\",\"task-baseline-linux-guard\"]"
           VELNOR_REQUEST_FILE: ${{ runner.temp }}/velnor/request/merge-v1-request.json
         run: "\"$RUNNER_TEMP\"'/velnor/bin/velnor-actions-0.1.78'"
       - name: Publish final report
@@ -413,6 +439,10 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks install 'rust[profile=minimal]@'\"${VELNOR_TOOL_RUST}\" 'mr-boxington@'\"${VELNOR_TOOL_MR_BOXINGTON}\" 'jactionlint@'\"${VELNOR_TOOL_JACTIONLINT}\" 'shellcheck@'\"${VELNOR_TOOL_SHELLCHECK}\" 'aqua:nextest-rs/nextest/cargo-nextest@'\"${VELNOR_TOOL_NEXTEST}\""
@@ -421,7 +451,13 @@ jobs:
       - name: Prepare Rust components
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks exec 'rust@'\"${VELNOR_TOOL_RUST}\" -- rustup component add --toolchain \"${VELNOR_TOOL_RUST}\"'-x86_64-unknown-linux-gnu' clippy rustfmt"
@@ -438,7 +474,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must exist'\\'' >&2; exit 1; }; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP path contains a symlink'\\'' >&2; exit 1; }; mbx_cache_dir=\"$RUNNER_TEMP/velnor/mbx\"; [ \"${MBX_CACHE_DIR:-}\" = \"$mbx_cache_dir\" ] || { printf '\\''%s\\n'\\'' '\\''MBX_CACHE_DIR must use the stable runner-temp path'\\'' >&2; exit 1; }; [ ! -L \"$RUNNER_TEMP/velnor\" ] || { printf '\\''%s\\n'\\'' '\\''Velnor temp root must not be a symlink'\\'' >&2; exit 1; }; if [ ! -e \"$RUNNER_TEMP/velnor\" ]; then (umask 077 && mkdir -m 700 \"$RUNNER_TEMP/velnor\"); fi; [ -d \"$RUNNER_TEMP/velnor\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" || { printf '\\''%s\\n'\\'' '\\''Velnor temp root must be a real directory'\\'' >&2; exit 1; }; [ ! -e \"$mbx_cache_dir\" ] && [ ! -L \"$mbx_cache_dir\" ] || { printf '\\''%s\\n'\\'' '\\''MBX store root already exists in this private runner namespace'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$mbx_cache_dir\" && mkdir -m 700 \"$mbx_cache_dir/actions\") || { printf '\\''%s\\n'\\'' '\\''could not reserve the MBX store root'\\'' >&2; exit 1; }; [ -n \"${GITHUB_ENV:-}\" ] && [ -f \"$GITHUB_ENV\" ] && [ ! -L \"$GITHUB_ENV\" ] || { printf '\\''%s\\n'\\'' '\\''GITHUB_ENV must be a regular runner file'\\'' >&2; exit 1; }; check_no_symlink \"$GITHUB_ENV\" || { printf '\\''%s\\n'\\'' '\\''GITHUB_ENV path contains a symlink'\\'' >&2; exit 1; }; printf '\\''MBX_CACHE_DIR=%s\\n'\\'' \"$mbx_cache_dir\" >> \"$GITHUB_ENV\"; [ -n \"$GITHUB_PATH\" ] || { printf '\\''%s\\n'\\'' '\\''GITHUB_PATH is required'\\'' >&2; exit 1; }; case \"$GITHUB_RUN_ID\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run id must be numeric'\\'' >&2; exit 1 ;; esac; case \"$GITHUB_RUN_ATTEMPT\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run attempt must be numeric'\\'' >&2; exit 1 ;; esac; probe_dir=\"$RUNNER_TEMP/velnor-mbx-preflight-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"; [ ! -e \"$probe_dir\" ] && [ ! -L \"$probe_dir\" ] || { printf '\\''%s\\n'\\'' '\\''preflight scratch already exists'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$probe_dir\") || { printf '\\''%s\\n'\\'' '\\''could not reserve preflight scratch'\\'' >&2; exit 1; }; cleanup() { rm -f \"$probe_dir/rust-root\" \"$probe_dir/rustc-output\"; rmdir \"$probe_dir\"; }; trap cleanup EXIT; trap '\\''exit 1'\\'' HUP INT TERM; mise --no-config --no-env --no-hooks where '\\''rust@'\"${VELNOR_TOOL_RUST}\"''\\'' > \"$probe_dir/rust-root\"; exec 3< \"$probe_dir/rust-root\"; IFS= read -r rust_root <&3 || { printf '\\''%s\\n'\\'' '\\''Mise returned no Rust install path'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''Mise returned multiple Rust install paths'\\'' >&2; exit 1; fi; exec 3<&-; [ -n \"$rust_root\" ] || { printf '\\''%s\\n'\\'' '\\''Mise returned an empty Rust install path'\\'' >&2; exit 1; }; case \"$rust_root\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''Rust install path must be absolute'\\'' >&2; exit 1 ;; esac; rustc_bin=\"$rust_root/rustc\"; [ -x \"$rustc_bin\" ] || { printf '\\''expected Rustup shim at %s\\n'\\'' \"$rustc_bin\" >&2; exit 1; }; \"$rustc_bin\" '\\''+'\"${VELNOR_TOOL_RUST}\"''\\'' -vV > \"$probe_dir/rustc-output\"; grep -Fqx '\\''release: '\"${VELNOR_TOOL_RUST}\"''\\'' \"$probe_dir/rustc-output\" || { printf '\\''Rustup did not report exact toolchain '\"${VELNOR_TOOL_RUST}\"'\\n'\\'' >&2; exit 1; }; printf '\\''%s\\n'\\'' \"$rust_root\" >> \"$GITHUB_PATH\"; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; mbx_disk_sample before-action-restore'"
@@ -451,7 +493,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
       - name: Verify native MBX version
@@ -459,7 +507,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] || { printf '\\''%s\\n'\\'' '\\''MBX_CACHE_DIR changed from its stable runner-temp path'\\'' >&2; exit 1; }; [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] || { printf '\\''%s\\n'\\'' '\\''MBX store directories are missing'\\'' >&2; exit 1; }; check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path contains a symlink'\\'' >&2; exit 1; }; case \"$GITHUB_RUN_ID\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run id must be numeric'\\'' >&2; exit 1 ;; esac; case \"$GITHUB_RUN_ATTEMPT\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run attempt must be numeric'\\'' >&2; exit 1 ;; esac; probe_dir=\"$RUNNER_TEMP/velnor-mbx-verify-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"; [ ! -e \"$probe_dir\" ] && [ ! -L \"$probe_dir\" ] || { printf '\\''%s\\n'\\'' '\\''verification scratch already exists'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$probe_dir\") || { printf '\\''%s\\n'\\'' '\\''could not reserve verification scratch'\\'' >&2; exit 1; }; cleanup() { rm -f \"$probe_dir/version\" \"$probe_dir/cache-dir\" \"$probe_dir/rustc-path\" \"$probe_dir/rustc-vv\" \"$probe_dir/mbx-rustc-vv\" \"$probe_dir/mbx-rustc\"; rmdir \"$probe_dir\"; }; trap cleanup EXIT; trap '\\''exit 1'\\'' HUP INT TERM; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" --version > \"$probe_dir/version\"; exec 3< \"$probe_dir/version\"; IFS= read -r version_line <&3 || { printf '\\''%s\\n'\\'' '\\''MBX version output is empty or unterminated'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''MBX version output has extra data'\\'' >&2; exit 1; fi; exec 3<&-; [ \"$version_line\" = '\\''mbx '\"${VELNOR_TOOL_MR_BOXINGTON}\"''\\'' ] || { printf '\\''%s\\n'\\'' '\\''MBX on PATH does not match the pinned action version'\\'' >&2; exit 1; }; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" cache dir > \"$probe_dir/cache-dir\"; exec 3< \"$probe_dir/cache-dir\"; IFS= read -r cache_dir <&3 || { printf '\\''%s\\n'\\'' '\\''MBX cache dir output is empty or unterminated'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''MBX cache dir output has extra data'\\'' >&2; exit 1; fi; exec 3<&-; [ \"$cache_dir\" = \"$MBX_CACHE_DIR/actions\" ] || { printf '\\''%s\\n'\\'' '\\''MBX reported an unexpected object store path'\\'' >&2; exit 1; }; ln -s \"$mbx_bin\" \"$probe_dir/mbx-rustc\"; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- rustup which --toolchain '\\'''\"${VELNOR_TOOL_RUST}\"''\\'' rustc > \"$probe_dir/rustc-path\"; exec 3< \"$probe_dir/rustc-path\"; IFS= read -r rustc_path <&3 || { printf '\\''%s\\n'\\'' '\\''rustup returned no rustc path'\\'' >&2; exit 1; }; exec 3<&-; case \"$rustc_path\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''rustc path must be absolute'\\'' >&2; exit 1 ;; esac; \"$rustc_path\" -vV > \"$probe_dir/rustc-vv\"; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$probe_dir/mbx-rustc\" \"$rustc_path\" -vV > \"$probe_dir/mbx-rustc-vv\"; cmp -s \"$probe_dir/rustc-vv\" \"$probe_dir/mbx-rustc-vv\" || { printf '\\''%s\\n'\\'' '\\''mbx-rustc -vV differs from rustc -vV'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; mbx_disk_sample after-cache-restore'"
@@ -487,7 +541,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           VELNOR_MBX_BUNDLE_MATCHED_KEY: ${{steps.mbx-bundle-restore.outputs.cache-matched-key}}
@@ -496,7 +556,13 @@ jobs:
       - name: Fetch Cargo sources
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'mkdir -p \"$RUNNER_TEMP/velnor/cargo-clean\" && cd \"$RUNNER_TEMP/velnor/cargo-clean\" && if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo metadata --locked --offline --all-features --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" >/dev/null 2>&1; then echo \"velnor: sources hit, skipping fetch\"; echo \"velnor: sources downloaded=0\"; else echo \"velnor: sources miss (source_missing), fetching\"; status=0; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo fetch --locked --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" 2> \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" || status=$?; cat \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" >&2; grep -Ec '\\''^ *Downloaded [^ ]+ v[0-9]'\\'' \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" > \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; n=; read -r n < \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; echo \"velnor: sources downloaded=${n:-0}\"; exit $status; fi'"
@@ -559,7 +625,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] && [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path changed before cleanup'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; target_dir=\"target\"; mbx_disk_sample before-final-clean; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; clean_status=0; if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" clean; then clean_status=0; else clean_status=$?; fi; mbx_disk_sample after-final-clean; exit \"$clean_status\"'"
@@ -640,6 +712,10 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks install 'rust[profile=minimal]@'\"${VELNOR_TOOL_RUST}\" 'mr-boxington@'\"${VELNOR_TOOL_MR_BOXINGTON}\" 'jactionlint@'\"${VELNOR_TOOL_JACTIONLINT}\" 'shellcheck@'\"${VELNOR_TOOL_SHELLCHECK}\" 'aqua:nextest-rs/nextest/cargo-nextest@'\"${VELNOR_TOOL_NEXTEST}\""
@@ -648,7 +724,13 @@ jobs:
       - name: Prepare Rust components
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks exec 'rust@'\"${VELNOR_TOOL_RUST}\" -- rustup component add --toolchain \"${VELNOR_TOOL_RUST}\"'-x86_64-unknown-linux-gnu' clippy rustfmt"
@@ -665,7 +747,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must exist'\\'' >&2; exit 1; }; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP path contains a symlink'\\'' >&2; exit 1; }; mbx_cache_dir=\"$RUNNER_TEMP/velnor/mbx\"; [ \"${MBX_CACHE_DIR:-}\" = \"$mbx_cache_dir\" ] || { printf '\\''%s\\n'\\'' '\\''MBX_CACHE_DIR must use the stable runner-temp path'\\'' >&2; exit 1; }; [ ! -L \"$RUNNER_TEMP/velnor\" ] || { printf '\\''%s\\n'\\'' '\\''Velnor temp root must not be a symlink'\\'' >&2; exit 1; }; if [ ! -e \"$RUNNER_TEMP/velnor\" ]; then (umask 077 && mkdir -m 700 \"$RUNNER_TEMP/velnor\"); fi; [ -d \"$RUNNER_TEMP/velnor\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" || { printf '\\''%s\\n'\\'' '\\''Velnor temp root must be a real directory'\\'' >&2; exit 1; }; [ ! -e \"$mbx_cache_dir\" ] && [ ! -L \"$mbx_cache_dir\" ] || { printf '\\''%s\\n'\\'' '\\''MBX store root already exists in this private runner namespace'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$mbx_cache_dir\" && mkdir -m 700 \"$mbx_cache_dir/actions\") || { printf '\\''%s\\n'\\'' '\\''could not reserve the MBX store root'\\'' >&2; exit 1; }; [ -n \"${GITHUB_ENV:-}\" ] && [ -f \"$GITHUB_ENV\" ] && [ ! -L \"$GITHUB_ENV\" ] || { printf '\\''%s\\n'\\'' '\\''GITHUB_ENV must be a regular runner file'\\'' >&2; exit 1; }; check_no_symlink \"$GITHUB_ENV\" || { printf '\\''%s\\n'\\'' '\\''GITHUB_ENV path contains a symlink'\\'' >&2; exit 1; }; printf '\\''MBX_CACHE_DIR=%s\\n'\\'' \"$mbx_cache_dir\" >> \"$GITHUB_ENV\"; [ -n \"$GITHUB_PATH\" ] || { printf '\\''%s\\n'\\'' '\\''GITHUB_PATH is required'\\'' >&2; exit 1; }; case \"$GITHUB_RUN_ID\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run id must be numeric'\\'' >&2; exit 1 ;; esac; case \"$GITHUB_RUN_ATTEMPT\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run attempt must be numeric'\\'' >&2; exit 1 ;; esac; probe_dir=\"$RUNNER_TEMP/velnor-mbx-preflight-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"; [ ! -e \"$probe_dir\" ] && [ ! -L \"$probe_dir\" ] || { printf '\\''%s\\n'\\'' '\\''preflight scratch already exists'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$probe_dir\") || { printf '\\''%s\\n'\\'' '\\''could not reserve preflight scratch'\\'' >&2; exit 1; }; cleanup() { rm -f \"$probe_dir/rust-root\" \"$probe_dir/rustc-output\"; rmdir \"$probe_dir\"; }; trap cleanup EXIT; trap '\\''exit 1'\\'' HUP INT TERM; mise --no-config --no-env --no-hooks where '\\''rust@'\"${VELNOR_TOOL_RUST}\"''\\'' > \"$probe_dir/rust-root\"; exec 3< \"$probe_dir/rust-root\"; IFS= read -r rust_root <&3 || { printf '\\''%s\\n'\\'' '\\''Mise returned no Rust install path'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''Mise returned multiple Rust install paths'\\'' >&2; exit 1; fi; exec 3<&-; [ -n \"$rust_root\" ] || { printf '\\''%s\\n'\\'' '\\''Mise returned an empty Rust install path'\\'' >&2; exit 1; }; case \"$rust_root\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''Rust install path must be absolute'\\'' >&2; exit 1 ;; esac; rustc_bin=\"$rust_root/rustc\"; [ -x \"$rustc_bin\" ] || { printf '\\''expected Rustup shim at %s\\n'\\'' \"$rustc_bin\" >&2; exit 1; }; \"$rustc_bin\" '\\''+'\"${VELNOR_TOOL_RUST}\"''\\'' -vV > \"$probe_dir/rustc-output\"; grep -Fqx '\\''release: '\"${VELNOR_TOOL_RUST}\"''\\'' \"$probe_dir/rustc-output\" || { printf '\\''Rustup did not report exact toolchain '\"${VELNOR_TOOL_RUST}\"'\\n'\\'' >&2; exit 1; }; printf '\\''%s\\n'\\'' \"$rust_root\" >> \"$GITHUB_PATH\"; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; mbx_disk_sample before-action-restore'"
@@ -678,7 +766,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
       - name: Verify native MBX version
@@ -686,7 +780,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] || { printf '\\''%s\\n'\\'' '\\''MBX_CACHE_DIR changed from its stable runner-temp path'\\'' >&2; exit 1; }; [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] || { printf '\\''%s\\n'\\'' '\\''MBX store directories are missing'\\'' >&2; exit 1; }; check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path contains a symlink'\\'' >&2; exit 1; }; case \"$GITHUB_RUN_ID\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run id must be numeric'\\'' >&2; exit 1 ;; esac; case \"$GITHUB_RUN_ATTEMPT\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run attempt must be numeric'\\'' >&2; exit 1 ;; esac; probe_dir=\"$RUNNER_TEMP/velnor-mbx-verify-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"; [ ! -e \"$probe_dir\" ] && [ ! -L \"$probe_dir\" ] || { printf '\\''%s\\n'\\'' '\\''verification scratch already exists'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$probe_dir\") || { printf '\\''%s\\n'\\'' '\\''could not reserve verification scratch'\\'' >&2; exit 1; }; cleanup() { rm -f \"$probe_dir/version\" \"$probe_dir/cache-dir\" \"$probe_dir/rustc-path\" \"$probe_dir/rustc-vv\" \"$probe_dir/mbx-rustc-vv\" \"$probe_dir/mbx-rustc\"; rmdir \"$probe_dir\"; }; trap cleanup EXIT; trap '\\''exit 1'\\'' HUP INT TERM; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" --version > \"$probe_dir/version\"; exec 3< \"$probe_dir/version\"; IFS= read -r version_line <&3 || { printf '\\''%s\\n'\\'' '\\''MBX version output is empty or unterminated'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''MBX version output has extra data'\\'' >&2; exit 1; fi; exec 3<&-; [ \"$version_line\" = '\\''mbx '\"${VELNOR_TOOL_MR_BOXINGTON}\"''\\'' ] || { printf '\\''%s\\n'\\'' '\\''MBX on PATH does not match the pinned action version'\\'' >&2; exit 1; }; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" cache dir > \"$probe_dir/cache-dir\"; exec 3< \"$probe_dir/cache-dir\"; IFS= read -r cache_dir <&3 || { printf '\\''%s\\n'\\'' '\\''MBX cache dir output is empty or unterminated'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''MBX cache dir output has extra data'\\'' >&2; exit 1; fi; exec 3<&-; [ \"$cache_dir\" = \"$MBX_CACHE_DIR/actions\" ] || { printf '\\''%s\\n'\\'' '\\''MBX reported an unexpected object store path'\\'' >&2; exit 1; }; ln -s \"$mbx_bin\" \"$probe_dir/mbx-rustc\"; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- rustup which --toolchain '\\'''\"${VELNOR_TOOL_RUST}\"''\\'' rustc > \"$probe_dir/rustc-path\"; exec 3< \"$probe_dir/rustc-path\"; IFS= read -r rustc_path <&3 || { printf '\\''%s\\n'\\'' '\\''rustup returned no rustc path'\\'' >&2; exit 1; }; exec 3<&-; case \"$rustc_path\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''rustc path must be absolute'\\'' >&2; exit 1 ;; esac; \"$rustc_path\" -vV > \"$probe_dir/rustc-vv\"; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$probe_dir/mbx-rustc\" \"$rustc_path\" -vV > \"$probe_dir/mbx-rustc-vv\"; cmp -s \"$probe_dir/rustc-vv\" \"$probe_dir/mbx-rustc-vv\" || { printf '\\''%s\\n'\\'' '\\''mbx-rustc -vV differs from rustc -vV'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; mbx_disk_sample after-cache-restore'"
@@ -714,7 +814,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           VELNOR_MBX_BUNDLE_MATCHED_KEY: ${{steps.mbx-bundle-restore.outputs.cache-matched-key}}
@@ -723,7 +829,13 @@ jobs:
       - name: Fetch Cargo sources
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'mkdir -p \"$RUNNER_TEMP/velnor/cargo-clean\" && cd \"$RUNNER_TEMP/velnor/cargo-clean\" && if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo metadata --locked --offline --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" >/dev/null 2>&1; then echo \"velnor: sources hit, skipping fetch\"; echo \"velnor: sources downloaded=0\"; else echo \"velnor: sources miss (source_missing), fetching\"; status=0; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo fetch --locked --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" 2> \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" || status=$?; cat \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" >&2; grep -Ec '\\''^ *Downloaded [^ ]+ v[0-9]'\\'' \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" > \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; n=; read -r n < \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; echo \"velnor: sources downloaded=${n:-0}\"; exit $status; fi'"
@@ -786,7 +898,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] && [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path changed before cleanup'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; target_dir=\"target\"; mbx_disk_sample before-final-clean; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; clean_status=0; if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" clean; then clean_status=0; else clean_status=$?; fi; mbx_disk_sample after-final-clean; exit \"$clean_status\"'"
@@ -867,6 +985,10 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks install 'rust[profile=minimal]@'\"${VELNOR_TOOL_RUST}\" 'mr-boxington@'\"${VELNOR_TOOL_MR_BOXINGTON}\" 'jactionlint@'\"${VELNOR_TOOL_JACTIONLINT}\" 'shellcheck@'\"${VELNOR_TOOL_SHELLCHECK}\" 'aqua:nextest-rs/nextest/cargo-nextest@'\"${VELNOR_TOOL_NEXTEST}\""
@@ -875,7 +997,13 @@ jobs:
       - name: Prepare Rust components
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks exec 'rust@'\"${VELNOR_TOOL_RUST}\" -- rustup component add --toolchain \"${VELNOR_TOOL_RUST}\"'-x86_64-unknown-linux-gnu' clippy rustfmt"
@@ -892,7 +1020,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must exist'\\'' >&2; exit 1; }; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP path contains a symlink'\\'' >&2; exit 1; }; mbx_cache_dir=\"$RUNNER_TEMP/velnor/mbx\"; [ \"${MBX_CACHE_DIR:-}\" = \"$mbx_cache_dir\" ] || { printf '\\''%s\\n'\\'' '\\''MBX_CACHE_DIR must use the stable runner-temp path'\\'' >&2; exit 1; }; [ ! -L \"$RUNNER_TEMP/velnor\" ] || { printf '\\''%s\\n'\\'' '\\''Velnor temp root must not be a symlink'\\'' >&2; exit 1; }; if [ ! -e \"$RUNNER_TEMP/velnor\" ]; then (umask 077 && mkdir -m 700 \"$RUNNER_TEMP/velnor\"); fi; [ -d \"$RUNNER_TEMP/velnor\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" || { printf '\\''%s\\n'\\'' '\\''Velnor temp root must be a real directory'\\'' >&2; exit 1; }; [ ! -e \"$mbx_cache_dir\" ] && [ ! -L \"$mbx_cache_dir\" ] || { printf '\\''%s\\n'\\'' '\\''MBX store root already exists in this private runner namespace'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$mbx_cache_dir\" && mkdir -m 700 \"$mbx_cache_dir/actions\") || { printf '\\''%s\\n'\\'' '\\''could not reserve the MBX store root'\\'' >&2; exit 1; }; [ -n \"${GITHUB_ENV:-}\" ] && [ -f \"$GITHUB_ENV\" ] && [ ! -L \"$GITHUB_ENV\" ] || { printf '\\''%s\\n'\\'' '\\''GITHUB_ENV must be a regular runner file'\\'' >&2; exit 1; }; check_no_symlink \"$GITHUB_ENV\" || { printf '\\''%s\\n'\\'' '\\''GITHUB_ENV path contains a symlink'\\'' >&2; exit 1; }; printf '\\''MBX_CACHE_DIR=%s\\n'\\'' \"$mbx_cache_dir\" >> \"$GITHUB_ENV\"; [ -n \"$GITHUB_PATH\" ] || { printf '\\''%s\\n'\\'' '\\''GITHUB_PATH is required'\\'' >&2; exit 1; }; case \"$GITHUB_RUN_ID\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run id must be numeric'\\'' >&2; exit 1 ;; esac; case \"$GITHUB_RUN_ATTEMPT\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run attempt must be numeric'\\'' >&2; exit 1 ;; esac; probe_dir=\"$RUNNER_TEMP/velnor-mbx-preflight-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"; [ ! -e \"$probe_dir\" ] && [ ! -L \"$probe_dir\" ] || { printf '\\''%s\\n'\\'' '\\''preflight scratch already exists'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$probe_dir\") || { printf '\\''%s\\n'\\'' '\\''could not reserve preflight scratch'\\'' >&2; exit 1; }; cleanup() { rm -f \"$probe_dir/rust-root\" \"$probe_dir/rustc-output\"; rmdir \"$probe_dir\"; }; trap cleanup EXIT; trap '\\''exit 1'\\'' HUP INT TERM; mise --no-config --no-env --no-hooks where '\\''rust@'\"${VELNOR_TOOL_RUST}\"''\\'' > \"$probe_dir/rust-root\"; exec 3< \"$probe_dir/rust-root\"; IFS= read -r rust_root <&3 || { printf '\\''%s\\n'\\'' '\\''Mise returned no Rust install path'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''Mise returned multiple Rust install paths'\\'' >&2; exit 1; fi; exec 3<&-; [ -n \"$rust_root\" ] || { printf '\\''%s\\n'\\'' '\\''Mise returned an empty Rust install path'\\'' >&2; exit 1; }; case \"$rust_root\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''Rust install path must be absolute'\\'' >&2; exit 1 ;; esac; rustc_bin=\"$rust_root/rustc\"; [ -x \"$rustc_bin\" ] || { printf '\\''expected Rustup shim at %s\\n'\\'' \"$rustc_bin\" >&2; exit 1; }; \"$rustc_bin\" '\\''+'\"${VELNOR_TOOL_RUST}\"''\\'' -vV > \"$probe_dir/rustc-output\"; grep -Fqx '\\''release: '\"${VELNOR_TOOL_RUST}\"''\\'' \"$probe_dir/rustc-output\" || { printf '\\''Rustup did not report exact toolchain '\"${VELNOR_TOOL_RUST}\"'\\n'\\'' >&2; exit 1; }; printf '\\''%s\\n'\\'' \"$rust_root\" >> \"$GITHUB_PATH\"; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; mbx_disk_sample before-action-restore'"
@@ -905,7 +1039,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
       - name: Verify native MBX version
@@ -913,7 +1053,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] || { printf '\\''%s\\n'\\'' '\\''MBX_CACHE_DIR changed from its stable runner-temp path'\\'' >&2; exit 1; }; [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] || { printf '\\''%s\\n'\\'' '\\''MBX store directories are missing'\\'' >&2; exit 1; }; check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path contains a symlink'\\'' >&2; exit 1; }; case \"$GITHUB_RUN_ID\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run id must be numeric'\\'' >&2; exit 1 ;; esac; case \"$GITHUB_RUN_ATTEMPT\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run attempt must be numeric'\\'' >&2; exit 1 ;; esac; probe_dir=\"$RUNNER_TEMP/velnor-mbx-verify-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"; [ ! -e \"$probe_dir\" ] && [ ! -L \"$probe_dir\" ] || { printf '\\''%s\\n'\\'' '\\''verification scratch already exists'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$probe_dir\") || { printf '\\''%s\\n'\\'' '\\''could not reserve verification scratch'\\'' >&2; exit 1; }; cleanup() { rm -f \"$probe_dir/version\" \"$probe_dir/cache-dir\" \"$probe_dir/rustc-path\" \"$probe_dir/rustc-vv\" \"$probe_dir/mbx-rustc-vv\" \"$probe_dir/mbx-rustc\"; rmdir \"$probe_dir\"; }; trap cleanup EXIT; trap '\\''exit 1'\\'' HUP INT TERM; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" --version > \"$probe_dir/version\"; exec 3< \"$probe_dir/version\"; IFS= read -r version_line <&3 || { printf '\\''%s\\n'\\'' '\\''MBX version output is empty or unterminated'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''MBX version output has extra data'\\'' >&2; exit 1; fi; exec 3<&-; [ \"$version_line\" = '\\''mbx '\"${VELNOR_TOOL_MR_BOXINGTON}\"''\\'' ] || { printf '\\''%s\\n'\\'' '\\''MBX on PATH does not match the pinned action version'\\'' >&2; exit 1; }; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" cache dir > \"$probe_dir/cache-dir\"; exec 3< \"$probe_dir/cache-dir\"; IFS= read -r cache_dir <&3 || { printf '\\''%s\\n'\\'' '\\''MBX cache dir output is empty or unterminated'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''MBX cache dir output has extra data'\\'' >&2; exit 1; fi; exec 3<&-; [ \"$cache_dir\" = \"$MBX_CACHE_DIR/actions\" ] || { printf '\\''%s\\n'\\'' '\\''MBX reported an unexpected object store path'\\'' >&2; exit 1; }; ln -s \"$mbx_bin\" \"$probe_dir/mbx-rustc\"; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- rustup which --toolchain '\\'''\"${VELNOR_TOOL_RUST}\"''\\'' rustc > \"$probe_dir/rustc-path\"; exec 3< \"$probe_dir/rustc-path\"; IFS= read -r rustc_path <&3 || { printf '\\''%s\\n'\\'' '\\''rustup returned no rustc path'\\'' >&2; exit 1; }; exec 3<&-; case \"$rustc_path\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''rustc path must be absolute'\\'' >&2; exit 1 ;; esac; \"$rustc_path\" -vV > \"$probe_dir/rustc-vv\"; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$probe_dir/mbx-rustc\" \"$rustc_path\" -vV > \"$probe_dir/mbx-rustc-vv\"; cmp -s \"$probe_dir/rustc-vv\" \"$probe_dir/mbx-rustc-vv\" || { printf '\\''%s\\n'\\'' '\\''mbx-rustc -vV differs from rustc -vV'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; mbx_disk_sample after-cache-restore'"
@@ -941,7 +1087,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           VELNOR_MBX_BUNDLE_MATCHED_KEY: ${{steps.mbx-bundle-restore.outputs.cache-matched-key}}
@@ -950,7 +1102,13 @@ jobs:
       - name: Fetch Cargo sources
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'mkdir -p \"$RUNNER_TEMP/velnor/cargo-clean\" && cd \"$RUNNER_TEMP/velnor/cargo-clean\" && if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo metadata --locked --offline --all-features --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" >/dev/null 2>&1; then echo \"velnor: sources hit, skipping fetch\"; echo \"velnor: sources downloaded=0\"; else echo \"velnor: sources miss (source_missing), fetching\"; status=0; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo fetch --locked --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" 2> \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" || status=$?; cat \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" >&2; grep -Ec '\\''^ *Downloaded [^ ]+ v[0-9]'\\'' \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" > \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; n=; read -r n < \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; echo \"velnor: sources downloaded=${n:-0}\"; exit $status; fi'"
@@ -1013,7 +1171,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] && [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path changed before cleanup'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; target_dir=\"target\"; mbx_disk_sample before-final-clean; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; clean_status=0; if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" clean; then clean_status=0; else clean_status=$?; fi; mbx_disk_sample after-final-clean; exit \"$clean_status\"'"
@@ -1094,6 +1258,10 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks install 'rust[profile=minimal]@'\"${VELNOR_TOOL_RUST}\" 'mr-boxington@'\"${VELNOR_TOOL_MR_BOXINGTON}\" 'jactionlint@'\"${VELNOR_TOOL_JACTIONLINT}\" 'shellcheck@'\"${VELNOR_TOOL_SHELLCHECK}\" 'aqua:nextest-rs/nextest/cargo-nextest@'\"${VELNOR_TOOL_NEXTEST}\""
@@ -1102,7 +1270,13 @@ jobs:
       - name: Prepare Rust components
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "mise --no-config --no-env --no-hooks exec 'rust@'\"${VELNOR_TOOL_RUST}\" -- rustup component add --toolchain \"${VELNOR_TOOL_RUST}\"'-x86_64-unknown-linux-gnu' clippy rustfmt"
@@ -1119,7 +1293,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must exist'\\'' >&2; exit 1; }; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP path contains a symlink'\\'' >&2; exit 1; }; mbx_cache_dir=\"$RUNNER_TEMP/velnor/mbx\"; [ \"${MBX_CACHE_DIR:-}\" = \"$mbx_cache_dir\" ] || { printf '\\''%s\\n'\\'' '\\''MBX_CACHE_DIR must use the stable runner-temp path'\\'' >&2; exit 1; }; [ ! -L \"$RUNNER_TEMP/velnor\" ] || { printf '\\''%s\\n'\\'' '\\''Velnor temp root must not be a symlink'\\'' >&2; exit 1; }; if [ ! -e \"$RUNNER_TEMP/velnor\" ]; then (umask 077 && mkdir -m 700 \"$RUNNER_TEMP/velnor\"); fi; [ -d \"$RUNNER_TEMP/velnor\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" || { printf '\\''%s\\n'\\'' '\\''Velnor temp root must be a real directory'\\'' >&2; exit 1; }; [ ! -e \"$mbx_cache_dir\" ] && [ ! -L \"$mbx_cache_dir\" ] || { printf '\\''%s\\n'\\'' '\\''MBX store root already exists in this private runner namespace'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$mbx_cache_dir\" && mkdir -m 700 \"$mbx_cache_dir/actions\") || { printf '\\''%s\\n'\\'' '\\''could not reserve the MBX store root'\\'' >&2; exit 1; }; [ -n \"${GITHUB_ENV:-}\" ] && [ -f \"$GITHUB_ENV\" ] && [ ! -L \"$GITHUB_ENV\" ] || { printf '\\''%s\\n'\\'' '\\''GITHUB_ENV must be a regular runner file'\\'' >&2; exit 1; }; check_no_symlink \"$GITHUB_ENV\" || { printf '\\''%s\\n'\\'' '\\''GITHUB_ENV path contains a symlink'\\'' >&2; exit 1; }; printf '\\''MBX_CACHE_DIR=%s\\n'\\'' \"$mbx_cache_dir\" >> \"$GITHUB_ENV\"; [ -n \"$GITHUB_PATH\" ] || { printf '\\''%s\\n'\\'' '\\''GITHUB_PATH is required'\\'' >&2; exit 1; }; case \"$GITHUB_RUN_ID\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run id must be numeric'\\'' >&2; exit 1 ;; esac; case \"$GITHUB_RUN_ATTEMPT\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run attempt must be numeric'\\'' >&2; exit 1 ;; esac; probe_dir=\"$RUNNER_TEMP/velnor-mbx-preflight-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"; [ ! -e \"$probe_dir\" ] && [ ! -L \"$probe_dir\" ] || { printf '\\''%s\\n'\\'' '\\''preflight scratch already exists'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$probe_dir\") || { printf '\\''%s\\n'\\'' '\\''could not reserve preflight scratch'\\'' >&2; exit 1; }; cleanup() { rm -f \"$probe_dir/rust-root\" \"$probe_dir/rustc-output\"; rmdir \"$probe_dir\"; }; trap cleanup EXIT; trap '\\''exit 1'\\'' HUP INT TERM; mise --no-config --no-env --no-hooks where '\\''rust@'\"${VELNOR_TOOL_RUST}\"''\\'' > \"$probe_dir/rust-root\"; exec 3< \"$probe_dir/rust-root\"; IFS= read -r rust_root <&3 || { printf '\\''%s\\n'\\'' '\\''Mise returned no Rust install path'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''Mise returned multiple Rust install paths'\\'' >&2; exit 1; fi; exec 3<&-; [ -n \"$rust_root\" ] || { printf '\\''%s\\n'\\'' '\\''Mise returned an empty Rust install path'\\'' >&2; exit 1; }; case \"$rust_root\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''Rust install path must be absolute'\\'' >&2; exit 1 ;; esac; rustc_bin=\"$rust_root/rustc\"; [ -x \"$rustc_bin\" ] || { printf '\\''expected Rustup shim at %s\\n'\\'' \"$rustc_bin\" >&2; exit 1; }; \"$rustc_bin\" '\\''+'\"${VELNOR_TOOL_RUST}\"''\\'' -vV > \"$probe_dir/rustc-output\"; grep -Fqx '\\''release: '\"${VELNOR_TOOL_RUST}\"''\\'' \"$probe_dir/rustc-output\" || { printf '\\''Rustup did not report exact toolchain '\"${VELNOR_TOOL_RUST}\"'\\n'\\'' >&2; exit 1; }; printf '\\''%s\\n'\\'' \"$rust_root\" >> \"$GITHUB_PATH\"; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; mbx_disk_sample before-action-restore'"
@@ -1132,7 +1312,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
       - name: Verify native MBX version
@@ -1140,7 +1326,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] || { printf '\\''%s\\n'\\'' '\\''MBX_CACHE_DIR changed from its stable runner-temp path'\\'' >&2; exit 1; }; [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] || { printf '\\''%s\\n'\\'' '\\''MBX store directories are missing'\\'' >&2; exit 1; }; check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path contains a symlink'\\'' >&2; exit 1; }; case \"$GITHUB_RUN_ID\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run id must be numeric'\\'' >&2; exit 1 ;; esac; case \"$GITHUB_RUN_ATTEMPT\" in '\\'''\\''|*[!0-9]*) printf '\\''%s\\n'\\'' '\\''run attempt must be numeric'\\'' >&2; exit 1 ;; esac; probe_dir=\"$RUNNER_TEMP/velnor-mbx-verify-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"; [ ! -e \"$probe_dir\" ] && [ ! -L \"$probe_dir\" ] || { printf '\\''%s\\n'\\'' '\\''verification scratch already exists'\\'' >&2; exit 1; }; (umask 077 && mkdir -m 700 \"$probe_dir\") || { printf '\\''%s\\n'\\'' '\\''could not reserve verification scratch'\\'' >&2; exit 1; }; cleanup() { rm -f \"$probe_dir/version\" \"$probe_dir/cache-dir\" \"$probe_dir/rustc-path\" \"$probe_dir/rustc-vv\" \"$probe_dir/mbx-rustc-vv\" \"$probe_dir/mbx-rustc\"; rmdir \"$probe_dir\"; }; trap cleanup EXIT; trap '\\''exit 1'\\'' HUP INT TERM; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" --version > \"$probe_dir/version\"; exec 3< \"$probe_dir/version\"; IFS= read -r version_line <&3 || { printf '\\''%s\\n'\\'' '\\''MBX version output is empty or unterminated'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''MBX version output has extra data'\\'' >&2; exit 1; fi; exec 3<&-; [ \"$version_line\" = '\\''mbx '\"${VELNOR_TOOL_MR_BOXINGTON}\"''\\'' ] || { printf '\\''%s\\n'\\'' '\\''MBX on PATH does not match the pinned action version'\\'' >&2; exit 1; }; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" cache dir > \"$probe_dir/cache-dir\"; exec 3< \"$probe_dir/cache-dir\"; IFS= read -r cache_dir <&3 || { printf '\\''%s\\n'\\'' '\\''MBX cache dir output is empty or unterminated'\\'' >&2; exit 1; }; extra=; if IFS= read -r extra <&3 || [ -n \"$extra\" ]; then printf '\\''%s\\n'\\'' '\\''MBX cache dir output has extra data'\\'' >&2; exit 1; fi; exec 3<&-; [ \"$cache_dir\" = \"$MBX_CACHE_DIR/actions\" ] || { printf '\\''%s\\n'\\'' '\\''MBX reported an unexpected object store path'\\'' >&2; exit 1; }; ln -s \"$mbx_bin\" \"$probe_dir/mbx-rustc\"; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- rustup which --toolchain '\\'''\"${VELNOR_TOOL_RUST}\"''\\'' rustc > \"$probe_dir/rustc-path\"; exec 3< \"$probe_dir/rustc-path\"; IFS= read -r rustc_path <&3 || { printf '\\''%s\\n'\\'' '\\''rustup returned no rustc path'\\'' >&2; exit 1; }; exec 3<&-; case \"$rustc_path\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''rustc path must be absolute'\\'' >&2; exit 1 ;; esac; \"$rustc_path\" -vV > \"$probe_dir/rustc-vv\"; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$probe_dir/mbx-rustc\" \"$rustc_path\" -vV > \"$probe_dir/mbx-rustc-vv\"; cmp -s \"$probe_dir/rustc-vv\" \"$probe_dir/mbx-rustc-vv\" || { printf '\\''%s\\n'\\'' '\\''mbx-rustc -vV differs from rustc -vV'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; mbx_disk_sample after-cache-restore'"
@@ -1168,7 +1360,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           VELNOR_MBX_BUNDLE_MATCHED_KEY: ${{steps.mbx-bundle-restore.outputs.cache-matched-key}}
@@ -1177,7 +1375,13 @@ jobs:
       - name: Fetch Cargo sources
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'mkdir -p \"$RUNNER_TEMP/velnor/cargo-clean\" && cd \"$RUNNER_TEMP/velnor/cargo-clean\" && if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo metadata --locked --offline --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" >/dev/null 2>&1; then echo \"velnor: sources hit, skipping fetch\"; echo \"velnor: sources downloaded=0\"; else echo \"velnor: sources miss (source_missing), fetching\"; status=0; mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- cargo fetch --locked --manifest-path \"$GITHUB_WORKSPACE/Cargo.toml\" 2> \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" || status=$?; cat \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" >&2; grep -Ec '\\''^ *Downloaded [^ ]+ v[0-9]'\\'' \"$RUNNER_TEMP/velnor/cargo-clean/fetch-stderr.log\" > \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; n=; read -r n < \"$RUNNER_TEMP/velnor/cargo-clean/fetch-downloads\" || true; echo \"velnor: sources downloaded=${n:-0}\"; exit $status; fi'"
@@ -1240,7 +1444,13 @@ jobs:
         env:
           CARGO_HOME: ${{ runner.temp }}/velnor/cargo
           MBX_CACHE_DIR: ${{ runner.temp }}/velnor/mbx
+          MISE_AUTO_INSTALL: "false"
           MISE_CARGO_HOME: ${{ runner.temp }}/velnor/cargo
+          MISE_EXEC_AUTO_INSTALL: "false"
+          MISE_LOCKFILE: "0"
+          MISE_NO_CONFIG: "1"
+          MISE_NO_ENV: "1"
+          MISE_NO_HOOKS: "1"
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] && [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path changed before cleanup'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; target_dir=\"target\"; mbx_disk_sample before-final-clean; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; clean_status=0; if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" clean; then clean_status=0; else clean_status=$?; fi; mbx_disk_sample after-final-clean; exit \"$clean_status\"'"
@@ -1409,3 +1619,34 @@ jobs:
           MISE_RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
           RUSTUP_HOME: ${{ runner.temp }}/velnor/rustup
         run: "sh -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -eu; check_no_symlink() { path=$1; while [ \"$path\" != / ]; do [ ! -L \"$path\" ] || return 1; path=${path%/*}; [ -n \"$path\" ] || path=/; done; return 0; }; case \"$RUNNER_TEMP\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be absolute'\\'' >&2; exit 1 ;; esac; [ -d \"$RUNNER_TEMP\" ] && check_no_symlink \"$RUNNER_TEMP\" || { printf '\\''%s\\n'\\'' '\\''RUNNER_TEMP must be a real directory'\\'' >&2; exit 1; }; [ \"${MBX_CACHE_DIR:-}\" = \"$RUNNER_TEMP/velnor/mbx\" ] && [ -d \"$RUNNER_TEMP/velnor\" ] && [ -d \"$MBX_CACHE_DIR/actions\" ] && check_no_symlink \"$RUNNER_TEMP/velnor\" && check_no_symlink \"$MBX_CACHE_DIR/actions\" || { printf '\\''%s\\n'\\'' '\\''MBX store path changed before cleanup'\\'' >&2; exit 1; }; mbx_disk_sample() { boundary=$1; case \"${RUNNER_TEMP:-}\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''MBX_DISK_SAMPLE_ERROR runner_temp_not_absolute'\\'' >&2; return 0 ;; esac; if [ -d \"$RUNNER_TEMP\" ] && [ ! -L \"$RUNNER_TEMP\" ]; then printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp blocks_kib\\n'\\'' \"$boundary\"; if df -Pk \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_blocks\\n'\\'' \"$boundary\" >&2; fi; printf '\\''MBX_DISK_SAMPLE boundary=%s volume=runner_temp inodes\\n'\\'' \"$boundary\"; if df -Pi \"$RUNNER_TEMP\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s command=df_inodes\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s runner_temp_not_real_directory\\n'\\'' \"$boundary\" >&2; return 0; fi; store_path=\"$RUNNER_TEMP/velnor/mbx\"; if [ \"${MBX_CACHE_DIR:-}\" = \"$store_path\" ] && [ -d \"$store_path\" ] && [ ! -L \"$store_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=mbx_store\\n'\\'' \"$boundary\"; if du -sk \"$store_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=mbx_store_unavailable\\n'\\'' \"$boundary\" >&2; fi; target_path=\"${target_dir:-target}\"; if [ ! -d \"$target_path\" ]; then for candidate in */target crates/*/target \"$RUNNER_TEMP/velnor/target\"; do if [ -d \"$candidate\" ]; then target_path=\"$candidate\"; break; fi; done; fi; if [ -L \"$target_path\" ]; then printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target_is_symlink\\n'\\'' \"$boundary\" >&2; elif [ -d \"$target_path\" ]; then printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target\\n'\\'' \"$boundary\"; if du -sk \"$target_path\"; then :; else printf '\\''MBX_DISK_SAMPLE_ERROR boundary=%s path=target command=du\\n'\\'' \"$boundary\" >&2; fi; else printf '\\''MBX_DISK_ALLOCATED_KIB boundary=%s root=target state=absent\\n'\\'' \"$boundary\"; fi; }; target_dir=\"target\"; mbx_disk_sample before-final-clean; if ! mbx_bin=$(command -v mbx); then printf '\\''%s\\n'\\'' '\\''action-owned MBX is not on PATH'\\'' >&2; exit 1; fi; case \"$mbx_bin\" in /*) ;; *) printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be absolute'\\'' >&2; exit 1 ;; esac; if [ ! -f \"$mbx_bin\" ] || [ ! -x \"$mbx_bin\" ]; then printf '\\''%s\\n'\\'' '\\''action-owned MBX path must be an executable file'\\'' >&2; exit 1; fi; clean_status=0; if mise --no-config --no-env --no-hooks exec rust@'\"${VELNOR_TOOL_RUST}\"' -- \"$mbx_bin\" clean; then clean_status=0; else clean_status=$?; fi; mbx_disk_sample after-final-clean; exit \"$clean_status\"'"
+  task-baseline-linux-guard:
+    name: Verify baseline-linux-guard
+    runs-on: ubuntu-26.04
+    timeout-minutes: 180
+    env:
+      RUSTUP_AUTO_INSTALL: "0"
+      VELNOR_RUN_KEY_ATTEMPT: ${{ github.run_attempt }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: "false"
+      - name: Setup Mise
+        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c
+        with:
+          cache: "false"
+          cache_save: "false"
+          env: "false"
+          install: "false"
+          sha256: 7129dbab31d698f9028db9374f7ba7987232b0426f837dcbce437130a61415f9
+          version: 2026.11.1
+      - name: Install declared prebuilt task tools
+        env:
+          MISE_CARGO_BINSTALL_ONLY: "1"
+        run: "bash -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -euo pipefail; for name in ${!MISE_@}; do unset \"$name\"; done; umask 077; task_root=\"${RUNNER_TEMP}/velnor-verification-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-baseline-linux-guard\"; test -n \"$RUNNER_TEMP\" && test -n \"$GITHUB_WORKSPACE\" && test -n \"$GITHUB_RUN_ID\" && test -n \"$GITHUB_RUN_ATTEMPT\"; [[ \"$GITHUB_RUN_ID\" =~ ^[0-9]+$ ]]; [[ \"$GITHUB_RUN_ATTEMPT\" =~ ^[0-9]+$ ]]; /bin/mkdir -m 700 \"$task_root\"; /bin/mkdir -m 700 \"$task_root/home\" \"$task_root/home/config\" \"$task_root/home/data\" \"$task_root/home/cache\" \"$task_root/home/state\" \"$task_root/config\" \"$task_root/data\" \"$task_root/cache\" \"$task_root/state\" \"$task_root/cargo\" \"$task_root/rustup\"; export HOME=\"$task_root/home\"; export XDG_CONFIG_HOME=\"$task_root/home/config\"; export XDG_DATA_HOME=\"$task_root/home/data\"; export XDG_CACHE_HOME=\"$task_root/home/cache\"; export XDG_STATE_HOME=\"$task_root/home/state\"; export MISE_CONFIG_DIR=\"$task_root/config\"; export MISE_DATA_DIR=\"$task_root/data\"; export MISE_CACHE_DIR=\"$task_root/cache\"; export MISE_STATE_DIR=\"$task_root/state\"; export CARGO_HOME=\"$task_root/cargo\"; export RUSTUP_HOME=\"$task_root/rustup\"; export MISE_GLOBAL_CONFIG_FILE=\"$task_root/global.toml\"; export MISE_SYSTEM_CONFIG_FILE=\"$task_root/system.toml\"; export MISE_AUTO_INSTALL=false; export MISE_EXEC_AUTO_INSTALL=false; export MISE_TASK_RUN_AUTO_INSTALL=false; export MISE_AUTO_ENV=false; export MISE_NO_ENV=1; export MISE_CEILING_PATHS=\"${task_root%/*}\"; export MISE_TRUSTED_CONFIG_PATHS=\"$task_root\"; export MISE_NO_HOOKS=1; export MISE_CARGO_BINSTALL_ONLY=1; : > \"$task_root/global.toml\"; : > \"$task_root/system.toml\"; printf '\\''%s\\n'\\'' '\\''[tools.\"rust\"]'\\'' '\\''version = \"1.99.1\"'\\'' '\\''components = \"clippy,rustfmt\"'\\'' '\\''profile = \"minimal\"'\\'' '\\''targets = \"aarch64-apple-darwin,aarch64-unknown-linux-gnu,x86_64-apple-darwin,x86_64-unknown-linux-gnu\"'\\'' '\\'''\\'' '\\'''\\'' '\\''[settings]'\\'' '\\''lockfile = true'\\'' > \"$task_root/mise.toml\"; printf '\\''%s\\n'\\'' '\\''[[tools.\"rust\"]]'\\'' '\\''version = \"1.99.1\"'\\'' '\\''backend = \"core:rust\"'\\'' '\\'''\\'' '\\''[tools.\"rust\".options]'\\'' '\\''components = \"clippy,rustfmt\"'\\'' '\\''profile = \"minimal\"'\\'' '\\''targets = \"aarch64-apple-darwin,aarch64-unknown-linux-gnu,x86_64-apple-darwin,x86_64-unknown-linux-gnu\"'\\'' > \"$task_root/mise.lock\"; cd -P \"$task_root\"; command -v jq > \"$task_root/jq_path.txt\"; IFS= read -r jq_path < \"$task_root/jq_path.txt\"; test -n \"$jq_path\"; test -x \"$jq_path\"; \"$jq_path\" --version | /usr/bin/grep -Eqx '\\''jq-1\\.8\\.[0-9]+'\\''; mise --no-env --no-hooks config ls --json | \"$jq_path\" -r '\\''.[].path'\\'' | LC_ALL=C /usr/bin/sort > \"$task_root/actual_mise_configs.txt\"; printf '\\''%s\\n'\\'' \"$task_root/mise.toml\" \"$task_root/global.toml\" \"$task_root/system.toml\" | LC_ALL=C /usr/bin/sort | /usr/bin/cmp -s \"$task_root/actual_mise_configs.txt\" -; mise --no-env --locked --no-hooks install --jobs 2'"
+      - name: Run declared Mise task
+        env:
+          MISE_CARGO_BINSTALL_ONLY: "1"
+        run: "bash -c 'unset ACTIONS_ID_TOKEN_REQUEST_TOKEN ACTIONS_ID_TOKEN_REQUEST_URL ACTIONS_RUNTIME_TOKEN GITHUB_TOKEN MISE_GITHUB_TOKEN GH_TOKEN GH_HOST GH_CONFIG_DIR; set -euo pipefail; for name in ${!MISE_@}; do unset \"$name\"; done; umask 077; task_root=\"${RUNNER_TEMP}/velnor-verification-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-baseline-linux-guard\"; test -n \"$RUNNER_TEMP\" && test -n \"$GITHUB_WORKSPACE\" && test -n \"$GITHUB_RUN_ID\" && test -n \"$GITHUB_RUN_ATTEMPT\"; [[ \"$GITHUB_RUN_ID\" =~ ^[0-9]+$ ]]; [[ \"$GITHUB_RUN_ATTEMPT\" =~ ^[0-9]+$ ]]; cd -P \"$GITHUB_WORKSPACE\"; workspace_root=\"$PWD\"; test -d \"$workspace_root/.velnor\"; test ! -L \"$workspace_root/.velnor\"; test -d \"$workspace_root/.velnor/guard\"; test ! -L \"$workspace_root/.velnor/guard\"; cd -P \"$workspace_root/.velnor/guard\"; task_working_directory=\"$PWD\"; test -d \"$task_root\"; export HOME=\"$task_root/home\"; export XDG_CONFIG_HOME=\"$task_root/home/config\"; export XDG_DATA_HOME=\"$task_root/home/data\"; export XDG_CACHE_HOME=\"$task_root/home/cache\"; export XDG_STATE_HOME=\"$task_root/home/state\"; export MISE_CONFIG_DIR=\"$task_root/config\"; export MISE_DATA_DIR=\"$task_root/data\"; export MISE_CACHE_DIR=\"$task_root/cache\"; export MISE_STATE_DIR=\"$task_root/state\"; export CARGO_HOME=\"$task_root/cargo\"; export RUSTUP_HOME=\"$task_root/rustup\"; export MISE_GLOBAL_CONFIG_FILE=\"$task_root/global.toml\"; export MISE_SYSTEM_CONFIG_FILE=\"$task_root/system.toml\"; export MISE_AUTO_INSTALL=false; export MISE_EXEC_AUTO_INSTALL=false; export MISE_TASK_RUN_AUTO_INSTALL=false; export MISE_AUTO_ENV=false; export MISE_NO_ENV=1; export MISE_CEILING_PATHS=\"$workspace_root/.velnor\"; export MISE_TRUSTED_CONFIG_PATHS=\"$workspace_root\"; export MISE_NO_HOOKS=1; export MISE_CARGO_BINSTALL_ONLY=1; unset MISE_CONFIG_FILE MISE_ENV MISE_ENV_FILE; test -d \"$workspace_root/.velnor\"; test ! -L \"$workspace_root/.velnor\"; test -d \"$workspace_root/.velnor/guard\"; test ! -L \"$workspace_root/.velnor/guard\"; test -f \"$workspace_root/.velnor/guard/mise.toml\"; test ! -L \"$workspace_root/.velnor/guard/mise.toml\"; /usr/bin/sha256sum  \"$workspace_root/.velnor/guard/mise.toml\" > \"$task_root/sha256.txt\"; read actual rest < \"$task_root/sha256.txt\"; test \"$actual\" = \"2cd9edb778ac1f6df2cebba0e8e92086c348fce71bc510ae36f19609555fd82a\"; test -d \"$workspace_root/.velnor\"; test ! -L \"$workspace_root/.velnor\"; test -d \"$workspace_root/.velnor/guard\"; test ! -L \"$workspace_root/.velnor/guard\"; test -f \"$workspace_root/.velnor/guard/mise.lock\"; test ! -L \"$workspace_root/.velnor/guard/mise.lock\"; /usr/bin/sha256sum  \"$workspace_root/.velnor/guard/mise.lock\" > \"$task_root/sha256.txt\"; read actual rest < \"$task_root/sha256.txt\"; test \"$actual\" = \"51a46124f26773d6b9da19766023f044132fe28b6bcff5b3859b930196875a10\"; test -d \"$workspace_root/.velnor\"; test ! -L \"$workspace_root/.velnor\"; test -d \"$workspace_root/.velnor/guard\"; test ! -L \"$workspace_root/.velnor/guard\"; test -f \"$workspace_root/.velnor/guard/rust-toolchain.toml\"; test ! -L \"$workspace_root/.velnor/guard/rust-toolchain.toml\"; /usr/bin/sha256sum  \"$workspace_root/.velnor/guard/rust-toolchain.toml\" > \"$task_root/sha256.txt\"; read actual rest < \"$task_root/sha256.txt\"; test \"$actual\" = \"096b72da6816bb1aea3611ee66eef04ed5f062126681c3a42fa03270514a4d6e\"; command -v jq > \"$task_root/jq_path.txt\"; IFS= read -r jq_path < \"$task_root/jq_path.txt\"; test -n \"$jq_path\"; test -x \"$jq_path\"; \"$jq_path\" --version | /usr/bin/grep -Eqx '\\''jq-1\\.8\\.[0-9]+'\\''; mise --no-env --no-hooks config ls --json | \"$jq_path\" -r '\\''.[].path'\\'' | LC_ALL=C /usr/bin/sort > \"$task_root/mise_configs.txt\"; workspace_config_found=false; while IFS= read -r path; do case \"$path\" in \"$workspace_root/.velnor/guard/mise.toml\") workspace_config_found=true ;; \"$workspace_root/.velnor/guard/rust-toolchain.toml\"|\"$task_root/global.toml\"|\"$task_root/system.toml\") ;; *) exit 1 ;; esac; done < \"$task_root/mise_configs.txt\"; [[ \"$workspace_config_found\" == true ]]; mise --no-env --locked --no-hooks run --skip-tools check:baseline-linux-guard'"

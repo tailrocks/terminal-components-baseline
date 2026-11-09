@@ -59,3 +59,14 @@ target = "host"
 name = "product"
 features = ["product"]
 target = "host"
+
+[[workflow.tasks]]
+id = "baseline-linux-guard"
+kind = "verification"
+mise_task = "check:baseline-linux-guard"
+runner = "linux-x64"
+timeout_minutes = 180
+
+[workflow.tasks.source]
+mise_config = ".velnor/guard/mise.toml"
+working_directory = ".velnor/guard"

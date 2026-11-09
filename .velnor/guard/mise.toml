@@ -1,0 +1,3 @@
+[tasks."check:baseline-linux-guard"]
+run = "bash check.sh"
+tools = { rust = "1.99.1" }

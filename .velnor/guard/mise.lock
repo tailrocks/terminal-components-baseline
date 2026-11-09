@@ -1,0 +1,12 @@
+lockfile_version = 3
+
+[[tools.rust]]
+version = "1.99.1"
+backend = "core:rust"
+specifiers = ["1.99.1"]
+
+[tools.rust.options]
+components = "clippy,rustfmt"
+profile = "minimal"
+targets = "aarch64-apple-darwin,aarch64-unknown-linux-gnu,x86_64-apple-darwin,x86_64-unknown-linux-gnu"
+
