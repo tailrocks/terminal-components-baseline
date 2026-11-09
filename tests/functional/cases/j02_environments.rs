@@ -526,42 +526,88 @@ fn section_body(screen: &TerminalSnapshot, header: &str, next: &str) -> String {
     lines[start..end].join("\n")
 }
 
-fn submit_form(app: &App) {
-    // Commit the value, move to Cancel, then across the button row to Save.
-    app.key("tab");
-    app.key("tab");
-    app.key("tab");
-    app.key("right");
-    let save_focused = app.wait_screen("save focused", |screen| {
-        text(screen).contains("Enter Save") && text(screen).contains(CANCEL)
-    });
+fn environment_form_title_visible(screen: &TerminalSnapshot) -> bool {
+    let visible = text(screen);
+    visible.contains(NEW_ENV) || visible.contains(EDIT_LOG)
+}
+
+fn environment_form_save_button(screen: &TerminalSnapshot) -> Option<Point> {
+    if !environment_form_title_visible(screen) {
+        return None;
+    }
+    let hits: Vec<_> = find_all(screen, CONFIRM)
+        .into_iter()
+        .filter(|point| {
+            let line = row_text(screen, u32::from(point.y));
+            line.contains(CANCEL)
+                && line.contains(CONFIRM)
+                && line.contains('│')
+                && !line.contains("Save…")
+                && !line.contains(CLEANUP)
+                && !line.contains(UNSAVED)
+        })
+        .collect();
+    if hits.len() != 1 {
+        return None;
+    }
+    Some(Point {
+        x: hits[0].x + 2,
+        y: hits[0].y,
+    })
+}
+
+fn environment_form_save_focused(screen: &TerminalSnapshot) -> bool {
+    let Some(save) = environment_form_save_button(screen) else {
+        return false;
+    };
+    row_text(screen, u32::from(save.y)).contains("▎Save")
+}
+
+fn focus_environment_save_by_tab(app: &App) -> TerminalSnapshot {
+    let mut screen = app.screen();
+    assert!(environment_form_save_button(&screen).is_some());
+    for _ in 0..6 {
+        if environment_form_save_focused(&screen) {
+            return screen;
+        }
+        let previous = focused_line(&screen);
+        app.key("tab");
+        screen = app.wait_screen("environment form focus advanced", |next| {
+            environment_form_title_visible(next)
+                && !focused_line(next).is_empty()
+                && focused_line(next) != previous
+        });
+    }
     assert!(
-        text(&save_focused).contains(CONFIRM),
-        "{}",
-        text(&save_focused)
+        environment_form_save_focused(&screen),
+        "Tab did not reach the focused Save button\n{}",
+        text(&screen)
     );
-    let save_row = (0..save_focused.rows())
-        .find(|row| {
-            let line = row_text(&save_focused, *row);
-            line.contains(CANCEL) && line.contains("▎Save")
-        })
-        .expect("focused Save button row");
-    let label: Vec<_> = CONFIRM.chars().collect();
-    let column = save_focused
-        .row(save_row)
-        .expect("Save button row cells")
-        .windows(label.len())
-        .position(|window| {
-            window
-                .iter()
-                .zip(&label)
-                .all(|(cell, character)| cell.text() == character.to_string())
-        })
-        .expect("Save button cell range");
-    app.click(Point {
-        x: u16::try_from(column + 2).expect("Save button x"),
-        y: u16::try_from(save_row).expect("Save button y"),
+    screen
+}
+
+fn submit_form(app: &App, completion: &str) {
+    let form = app.wait_screen("environment form Save button", |screen| {
+        !text(screen).contains(completion) && environment_form_save_button(screen).is_some()
     });
+    assert!(!text(&form).contains(completion));
+    let save = environment_form_save_button(&form).expect("environment form Save button");
+    if environment_form_save_focused(&form) {
+        app.click(save);
+        return;
+    }
+    app.click(save);
+    let state = app.wait_screen("environment form Save focused or submitted", |screen| {
+        text(screen).contains(completion)
+            || !environment_form_title_visible(screen)
+            || environment_form_save_focused(screen)
+    });
+    if text(&state).contains(completion) || !environment_form_title_visible(&state) {
+        return;
+    }
+    let save = environment_form_save_button(&state).expect("environment form Save button");
+    assert!(environment_form_save_focused(&state));
+    app.click(save);
 }
 
 #[test]
@@ -603,6 +649,7 @@ fn j02_environments_env() {
     let manager = reach_manager(&app);
     require(&manager, DIRECTORY);
     assert_eq!((manager.cols(), manager.rows()), (120, 40));
+    assert!(environment_form_save_button(&manager).is_none());
     select_payments(&app);
     open_editor(&app);
     let environments = open_environments(&app);
@@ -633,7 +680,9 @@ fn j02_environments_env() {
         screen.cols() == 120 && screen.rows() == 40 && prepared_form(screen)
     });
 
-    submit_form(&app);
+    let save_focused = focus_environment_save_by_tab(&app);
+    assert!(environment_form_save_focused(&save_focused));
+    submit_form(&app, DUP_ERROR);
     let rejected = app.wait_screen("duplicate rejected", |screen| {
         text(screen).contains(NEW_ENV) && text(screen).contains(DUP_ERROR)
     });
@@ -654,7 +703,7 @@ fn j02_environments_env() {
 
     open_new_env(&app);
     type_masked(&app, FIELD_TOKEN, TOKEN_SECRET);
-    submit_form(&app);
+    submit_form(&app, ADDED);
     let added = app.wait_screen("field token added", |screen| {
         text(screen).contains(ADDED) && form_closed(screen) && has_value_row(screen, FIELD_TOKEN)
     });
@@ -679,7 +728,7 @@ fn j02_environments_env() {
     app.wait_screen("info masked", |screen| {
         bullet_count(&focused_line(screen)) == 4 && !text(screen).contains("debug")
     });
-    submit_form(&app);
+    submit_form(&app, UPDATED);
     let updated = app.wait_screen("log updated", |screen| {
         text(screen).contains(UPDATED) && form_closed(screen)
     });
@@ -744,6 +793,7 @@ fn j02_environments_env() {
             && !visible.contains(SAVED)
             && !visible.contains(CLEANUP)
     });
+    assert!(environment_form_save_button(&preview).is_none());
     secrets_hidden(&preview);
     app.click(preview_save(&app));
     let saved = app.wait_screen("saved", |screen| {

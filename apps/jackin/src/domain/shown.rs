@@ -28,6 +28,18 @@ pub fn shown(raw: &str, max_chars: usize) -> String {
     if visible { out } else { String::new() }
 }
 
+pub fn escaped(raw: &str) -> String {
+    let mut out = String::with_capacity(raw.len());
+    for c in raw.chars() {
+        if is_hidden(c) {
+            out.extend(c.escape_debug());
+        } else {
+            out.push(c);
+        }
+    }
+    out
+}
+
 pub fn is_hidden(c: char) -> bool {
     c.is_control() || is_spoofing_format(c) || is_invisible(c)
 }

@@ -1,7 +1,7 @@
 use crate::domain::vocabulary::Vocabulary;
 use crate::screens::Jackin;
 use junie_tui::shell::Page;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet, VecDeque};
 
 use junie_tui::core::event::{Key, Outcome};
 use junie_tui::core::hit::Axis;
@@ -23,6 +23,7 @@ use junie_tui::widgets::keyhint::{Hint, hint};
 use junie_tui::widgets::meter_list::{MeterList, MeterRow};
 use junie_tui::widgets::panel::{Panel, PanelFocus};
 use junie_tui::widgets::progress::{Meter, MeterLevel, MeterTone, MeterVisual, spinner_frame};
+use junie_tui::widgets::props::Prop;
 use junie_tui::widgets::scrollbar;
 use junie_tui::widgets::segments::Segment;
 use junie_tui::widgets::select::Select;
@@ -33,7 +34,9 @@ use ratatui::crossterm::event::KeyCode;
 use ratatui::layout::{Position, Rect};
 use ratatui::style::{Modifier, Style};
 
-use super::modals::{BrowserResult, FormDialog, FormField, FormValues, OpFlow};
+use super::modals::{
+    BrowserResult, FormDialog, FormField, FormValues, InfoDialog, InfoResult, OpFlow,
+};
 use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::{
     CheckRow, Effect, FolderProbe, PlainKey, Ticket, Validation, ValidationOutcome,
@@ -47,7 +50,7 @@ use crate::domain::account::{
 use crate::domain::agent::{Provider, UsageSurface};
 use crate::domain::onepassword::OpReference;
 use crate::domain::usage::{Freshness, OverallSummary, QuotaStatus, QuotaWindow, WindowUnit};
-use crate::world::{Msg, World, job};
+use crate::world::{AccountRecoveryDetails, AccountSaveFailure, Msg, World, job};
 use junie_tui::ui::context::ContextAnchor;
 use junie_tui::ui::text::plural;
 use junie_tui::ui::text::thousands;
@@ -59,6 +62,7 @@ pub const INSPECTOR: WidgetId = WidgetId::of("accounts.inspector");
 pub const SEAM: WidgetId = WidgetId::of("accounts.seam");
 pub const FORM: WidgetId = WidgetId::of("accounts.form");
 pub const MENU: WidgetId = WidgetId::of("accounts.menu");
+const RECOVERY_ACTION: &str = "recovery-details";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Sel {
@@ -89,7 +93,11 @@ struct FormCtx {
     op_masked: Option<String>,
     validation: Option<ValidationOutcome>,
     check: Option<Check>,
+    recovery: Option<Ticket>,
 }
+
+#[derive(Clone)]
+struct RecoveryNotice(AccountRecoveryDetails);
 
 /// The form's one request to the backend that has not come back, and what
 /// the form does with the reply.
@@ -157,6 +165,16 @@ fn end_pending(form: &mut FormDialog) {
     form.set_note("validation", vec![]);
 }
 
+fn recovery_prompt(form: &mut FormDialog) {
+    form.error = Some("Remote account state needs review".into());
+    if !form.actions.iter().any(|(name, _)| name == RECOVERY_ACTION) {
+        form.actions.push((
+            RECOVERY_ACTION.into(),
+            Button::secondary(FORM.sub(RECOVERY_ACTION), "Recovery details"),
+        ));
+    }
+}
+
 const SAVE_TIMEOUT_SECS: i64 = 30;
 
 /// What the screen does when the backend has stored the registry it sent.
@@ -165,6 +183,8 @@ struct Saving {
     select: Pick,
     unfold: Option<UsageSurface>,
     form: Option<usize>,
+    submitted: Option<FormValues>,
+    matches_submitted: bool,
 }
 
 /// What a save selects once the backend has stored it.
@@ -191,6 +211,10 @@ pub struct AccountsScreen {
     pending_remove: Option<AccountId>,
     saving: Option<(Ticket, Saving)>,
     saving_since: i64,
+    recovery_notices: HashMap<Ticket, RecoveryNotice>,
+    recovery_seen: HashSet<Ticket>,
+    recovery_queue: VecDeque<Ticket>,
+    recovery_dialog: Option<Ticket>,
 
     pub menu: RowMenu<Sel, &'static str>,
 }
@@ -240,6 +264,10 @@ impl AccountsScreen {
             pending_remove: None,
             saving: None,
             saving_since: 0,
+            recovery_notices: HashMap::new(),
+            recovery_seen: HashSet::new(),
+            recovery_queue: VecDeque::new(),
+            recovery_dialog: None,
             menu: RowMenu::new(MENU),
         }
     }
@@ -642,6 +670,7 @@ impl AccountsScreen {
             op_masked: None,
             validation: None,
             check: None,
+            recovery: None,
         };
         if let Some(CredentialSource::OnePassword(r)) = editing.map(|a| &a.source) {
             ctx.op_ref = Some(r.clone());
@@ -960,6 +989,125 @@ impl AccountsScreen {
         self.start_check(&values, Then::Save(values.clone()), w, cx);
     }
 
+    pub(crate) fn recovery_dialog(details: &AccountRecoveryDetails) -> InfoDialog {
+        let mut lines = vec![format!("Cause: {}", details.cause().label())];
+        for issue in details.issues() {
+            lines.push(format!(
+                "Account: {}",
+                crate::domain::shown::escaped(issue.account.as_str())
+            ));
+            lines.push(format!(
+                "Provider resource: {}",
+                crate::domain::shown::escaped(issue.provider.as_str())
+            ));
+            lines.push(format!(
+                "Gateway: {}",
+                crate::domain::shown::escaped(issue.gateway.as_str())
+            ));
+            lines.push(format!(
+                "OpenShell workspace: {}",
+                crate::domain::shown::escaped(issue.gateway_entry.openshell_workspace.as_str())
+            ));
+            lines.push(format!(
+                "Builder: {}",
+                crate::domain::shown::escaped(issue.gateway_entry.builder.as_str())
+            ));
+            lines.push(format!(
+                "Platform: {}",
+                issue.gateway_entry.platform.label()
+            ));
+            if let Some(port) = issue.gateway_entry.docker_engine_port {
+                lines.push(format!("Docker engine port: {port}"));
+            }
+            lines.push(format!("Intent: {}", issue.intent.label()));
+            if let Some(agent) = issue.previous_agent {
+                lines.push(format!("Previous agent: {}", agent.label()));
+            }
+            if let Some(agent) = issue.next_agent {
+                lines.push(format!("Next agent: {}", agent.label()));
+            }
+            lines.push(format!("Effect: {}", issue.effect.label()));
+            lines.push(format!("Remote outcome: {}", issue.outcome.label()));
+        }
+        InfoDialog::new(
+            WidgetId::of("accounts.recovery"),
+            "Account recovery details",
+            vec![Prop::new("Status", "Remote state needs review")],
+        )
+        .intro(vec![(
+            "Config was not committed; remote state needs review.".into(),
+            Tone::Warning,
+        )])
+        .detail(lines)
+        .width(70)
+        .error()
+    }
+
+    fn enqueue_recovery(&mut self, ticket: Ticket) {
+        if !self.recovery_queue.contains(&ticket) && self.recovery_dialog != Some(ticket) {
+            self.recovery_queue.push_back(ticket);
+        }
+    }
+
+    fn queue_recovery(&mut self, ticket: Ticket) {
+        self.enqueue_recovery(ticket);
+    }
+
+    pub(crate) fn next_recovery_candidate(&self) -> Option<(Ticket, AccountRecoveryDetails)> {
+        if self.recovery_dialog.is_some() {
+            return None;
+        }
+        self.recovery_queue.front().and_then(|ticket| {
+            self.recovery_notices
+                .get(ticket)
+                .map(|notice| (*ticket, notice.0.clone()))
+        })
+    }
+
+    pub(crate) fn recovery_presented(&mut self, ticket: Ticket) {
+        if self.recovery_dialog.is_some() {
+            return;
+        }
+        if self.recovery_queue.front() == Some(&ticket) {
+            self.recovery_queue.pop_front();
+        }
+        self.recovery_dialog = Some(ticket);
+    }
+
+    pub(crate) fn recovery_dialog_closed(&mut self, ticket: Ticket) {
+        if self.recovery_dialog == Some(ticket) {
+            self.recovery_dialog = None;
+            self.recovery_notices.remove(&ticket);
+            self.recovery_queue.retain(|queued| *queued != ticket);
+        }
+    }
+
+    pub(crate) fn recovery_form_closed(
+        &mut self,
+        tag: &LayerTag,
+        form: &mut FormDialog,
+        ticket: Ticket,
+    ) {
+        if tag.kind == "form"
+            && let Some(ctx) = self.form.as_mut()
+            && ctx.serial == tag.n
+            && ctx.recovery == Some(ticket)
+        {
+            ctx.recovery = None;
+            if form.error.as_deref() == Some("Remote account state needs review") {
+                form.error = None;
+            }
+            form.actions.retain(|(name, _)| name != RECOVERY_ACTION);
+        }
+    }
+
+    fn retain_recovery(&mut self, ticket: Ticket, recovery: &AccountRecoveryDetails) {
+        if self.recovery_seen.insert(ticket) {
+            self.recovery_notices
+                .insert(ticket, RecoveryNotice(recovery.clone()));
+        }
+    }
+
     fn checked_for_save(
         &mut self,
         values: FormValues,
@@ -1160,6 +1308,8 @@ impl AccountsScreen {
                 },
                 unfold: Some(provider.usage_surface()),
                 form: self.form.as_ref().map(|c| c.serial),
+                submitted: Some(values.clone()),
+                matches_submitted: true,
             },
             w,
             cx,
@@ -1197,6 +1347,9 @@ impl AccountsScreen {
         if let Some(serial) = saving.form
             && self.form.as_ref().is_some_and(|c| c.serial == serial)
         {
+            if let Some(ticket) = self.form.as_mut().and_then(|form| form.recovery.take()) {
+                self.enqueue_recovery(ticket);
+            }
             self.form = None;
             cx.go(Go::CloseTop {
                 tag: LayerTag::new("form").n(serial),
@@ -1277,6 +1430,8 @@ impl AccountsScreen {
                 select: Pick::Keep,
                 unfold: None,
                 form: None,
+                submitted: None,
+                matches_submitted: false,
             },
             w,
             cx,
@@ -1297,6 +1452,8 @@ impl AccountsScreen {
                         select: Pick::Keep,
                         unfold: None,
                         form: None,
+                        submitted: None,
+                        matches_submitted: false,
                     },
                     w,
                     cx,
@@ -2428,17 +2585,29 @@ impl Page<Jackin> for AccountsScreen {
                             }
                         }
                     }
-                    (
-                        Err(error),
-                        Some(Saving {
-                            form: Some(serial), ..
-                        }),
-                    ) if self.form.as_ref().is_some_and(|c| c.serial == serial) => {
-                        let error = error.clone();
-                        cx.with_top::<FormDialog>(move |f| f.error = Some(error));
+                    (Err(AccountSaveFailure::RecoveryRequired { recovery }), _current) => {
+                        if !self.recovery_seen.contains(ticket) {
+                            self.retain_recovery(*ticket, recovery);
+                            self.queue_recovery(*ticket);
+                        }
                     }
-                    (Err(error), Some(_)) => cx.error(error.clone()),
-                    (Err(_), None) => {}
+                    (Err(AccountSaveFailure::Rejected { error }), Some(saving)) => {
+                        let form_serial = saving.matches_submitted.then_some(saving.form).flatten();
+                        let can_show_in_form = form_serial.is_some_and(|serial| {
+                            self.form.as_ref().is_some_and(|form| form.serial == serial)
+                        });
+                        if can_show_in_form {
+                            let error = crate::domain::shown::escaped(error);
+                            cx.with_top::<FormDialog>(move |form| {
+                                form.error = Some(error);
+                            });
+                        } else {
+                            cx.error(crate::domain::shown::escaped(error));
+                        }
+                    }
+                    (Err(AccountSaveFailure::Rejected { error }), None) => {
+                        cx.error(crate::domain::shown::escaped(error));
+                    }
                 }
                 self.build_rows(w);
                 Outcome::Changed
@@ -2840,14 +3009,35 @@ impl Page<Jackin> for AccountsScreen {
                     }
                     "validate" => self.start_check(&values, Then::Show, w, cx),
                     "save" => self.save_form(values, w, cx),
+                    RECOVERY_ACTION => {
+                        let details = self.form.as_ref().and_then(|form| {
+                            form.recovery.and_then(|ticket| {
+                                self.recovery_notices
+                                    .get(&ticket)
+                                    .map(|notice| (form.serial, ticket, notice.clone()))
+                            })
+                        });
+                        if let Some((serial, ticket, notice)) = details {
+                            cx.open(
+                                Self::recovery_dialog(&notice.0),
+                                LayerTag::new("recovery-details")
+                                    .key(ticket.to_string())
+                                    .n(serial),
+                            );
+                        }
+                    }
                     _ => {}
                 }
                 Outcome::Changed
             }
             ("form", ModalResult::Form(None)) => {
+                let recovery_ticket = self.form.as_mut().and_then(|form| form.recovery.take());
                 self.form = None;
                 cx.status("Cancelled · nothing saved");
                 cx.focus.focus(TREE);
+                if let Some(ticket) = recovery_ticket {
+                    self.queue_recovery(ticket);
+                }
                 Outcome::Changed
             }
             ("form", ModalResult::Form(Some(values))) => {
@@ -2886,6 +3076,15 @@ impl Page<Jackin> for AccountsScreen {
                 Outcome::Changed
             }
             ("op", ModalResult::Op(None)) => Outcome::Changed,
+            ("recovery-details", ModalResult::Info(InfoResult::Closed)) => {
+                if let Ok(ticket) = tag.key.parse::<Ticket>()
+                    && self.recovery_dialog == Some(ticket)
+                {
+                    self.recovery_dialog_closed(ticket);
+                }
+                Outcome::Changed
+            }
+            ("recovery-details", _) => Outcome::Changed,
             ("browse", ModalResult::Browser(BrowserResult::Chosen { path, .. })) => {
                 let tilde = w.tilde(&path);
                 cx.with_top::<FormDialog>(move |f| f.set_text("folder", &tilde));
@@ -2906,6 +3105,8 @@ impl Page<Jackin> for AccountsScreen {
                             select: Pick::Row(Sel::Provider(a.surface)),
                             unfold: None,
                             form: None,
+                            submitted: None,
+                            matches_submitted: false,
                         },
                         w,
                         cx,
@@ -3068,12 +3269,47 @@ impl Screen for AccountsScreen {
             if let Some(ctx) = self.form.as_mut() {
                 ctx.validation = None;
                 ctx.check = None;
+                if ctx.recovery.is_none() {
+                    form.actions.retain(|(name, _)| name != RECOVERY_ACTION);
+                }
+            } else {
+                form.actions.retain(|(name, _)| name != RECOVERY_ACTION);
             }
             end_pending(form);
         }
     }
 
     fn reply_arrives(&mut self, tag: &LayerTag, form: &mut FormDialog, m: &Msg) {
+        if tag.kind == "form"
+            && let Msg::AccountsSaved {
+                ticket,
+                result: Err(AccountSaveFailure::RecoveryRequired { recovery }),
+                ..
+            } = m
+        {
+            let mut attach = false;
+            if let Some((current, saving)) = self.saving.as_mut()
+                && current == ticket
+                && saving.form == Some(tag.n)
+                && let Some(submitted) = saving.submitted.as_ref()
+            {
+                if submitted != &form.values() {
+                    saving.matches_submitted = false;
+                } else {
+                    attach = self
+                        .form
+                        .as_ref()
+                        .is_some_and(|ctx| ctx.serial == tag.n && ctx.recovery.is_none());
+                }
+            }
+            if attach {
+                self.retain_recovery(*ticket, recovery);
+                if let Some(ctx) = self.form.as_mut() {
+                    ctx.recovery = Some(*ticket);
+                }
+                recovery_prompt(form);
+            }
+        }
         let (Msg::SourceChecked { ticket, .. } | Msg::FolderProbed { ticket, .. }) = m else {
             return;
         };

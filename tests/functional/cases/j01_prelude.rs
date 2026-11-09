@@ -169,6 +169,18 @@ fn status_duplicate(screen: &TerminalSnapshot) -> bool {
     duplicate_open(screen) && text(screen).contains(CANCELLED)
 }
 
+fn narrow_modal_geometry(screen: &TerminalSnapshot) -> bool {
+    if (screen.cols(), screen.rows()) != (80, 24) {
+        return false;
+    }
+    let top = row_text(screen, 7);
+    let bottom = row_text(screen, 17);
+    top.chars().nth(9) == Some('╭')
+        && top.chars().nth(70) == Some('╮')
+        && bottom.chars().nth(9) == Some('╰')
+        && bottom.chars().nth(70) == Some('╯')
+}
+
 fn escape_until(app: &App, present: &str, absent: &str) {
     let visible = text(&app.screen());
     if visible.contains(present) && !visible.contains(absent) {
@@ -257,7 +269,20 @@ fn check_frame(app: &App, screen: &TerminalSnapshot, test_id: &str) {
 /// status. Compare the frame that still shows it.
 fn shot_held(app: &App, checkpoint: &str) {
     nudge(app, status_duplicate);
-    let screen = app.wait_screen("cancelled status", status_duplicate);
+    let screen = if checkpoint == NARROW {
+        app.wait_screen("cancelled status in narrow modal geometry", |screen| {
+            status_duplicate(screen) && narrow_modal_geometry(screen)
+        });
+        let screen = app.settle();
+        assert!(
+            status_duplicate(&screen) && narrow_modal_geometry(&screen),
+            "narrow modal changed while settling\n{}",
+            text(&screen)
+        );
+        screen
+    } else {
+        app.wait_screen("cancelled status", status_duplicate)
+    };
     check_frame(app, &screen, &visual_id(checkpoint));
 }
 

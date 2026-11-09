@@ -28,7 +28,7 @@ use ratatui::crossterm::event::{KeyCode, KeyModifiers};
 use ratatui::layout::{Position, Rect};
 
 use crate::arbiter::{EntryDecision, ExitDecision};
-use crate::backend::Effect;
+use crate::backend::{Effect, Ticket};
 use crate::domain::instance::{InstanceEntry, InstanceId, InstanceStatus};
 use crate::domain::launch::EmptyLanding;
 use crate::domain::vocabulary::fill_in;
@@ -36,6 +36,7 @@ use crate::launch::LaunchTarget;
 use crate::pages::{Page, Pages, TAB_ACCOUNTS, TAB_MANAGER, TAB_ROLES, TAB_USAGE};
 use crate::panes::{PaneId, PanePolicy};
 use crate::rain::{self, HANDOFF_LEN, IntroState, OutroState, handoff_stage};
+use crate::screens::accounts::AccountsScreen;
 use crate::screens::capsule::CapsuleScreen;
 use crate::screens::cockpit::CockpitScreen;
 use crate::screens::editor::EditorScreen;
@@ -656,12 +657,12 @@ impl App {
     }
 
     fn dispatch_reply(&mut self, m: &Msg) -> Outcome {
-        self.tell_forms_of_reply(m);
         let absorbed = self.world.absorb(m);
         self.show_committed_save_warning();
         if absorbed == Absorbed::Stale {
             return Outcome::Ignored;
         }
+        self.tell_forms_of_reply(m);
         let ended = m
             .job()
             .is_some_and(|job| !self.job_continues(m) && self.shell.status.end_job(job));
@@ -691,6 +692,7 @@ impl App {
         });
         let o = o.or(self.apply_requests(reqs, route));
         let o = o.or(self.apply_requests(behind, route));
+        let o = o.or(self.present_next_account_recovery());
         if ended { o.or(Outcome::Changed) } else { o }
     }
 
@@ -1564,7 +1566,16 @@ impl App {
             },
             r => r,
         };
-        self.tell_owner(entry.owner, &entry.tag, r)
+        let mut out = self.tell_owner(entry.owner, &entry.tag, r);
+        if entry.owner == Route::Accounts
+            && entry.tag.kind == "recovery-details"
+            && entry.tag.n > 0
+            && let Ok(ticket) = entry.tag.key.parse::<Ticket>()
+        {
+            self.acknowledge_form_recovery(ticket, entry.tag.n);
+            out = out.or(Outcome::Changed);
+        }
+        out.or(self.present_next_account_recovery())
     }
 
     fn tell_owner(&mut self, owner: Route, tag: &LayerTag, r: ModalResult) -> Outcome {
@@ -1621,6 +1632,31 @@ impl App {
                 s.reply_arrives(&tag, form, m);
             }
         }
+    }
+
+    fn acknowledge_form_recovery(&mut self, ticket: Ticket, serial: usize) {
+        let accounts = self.router.accounts_mut();
+        for entry in self.layers.iter_mut() {
+            let tag = entry.tag.clone();
+            if entry.owner == Route::Accounts
+                && tag.kind == "form"
+                && tag.n == serial
+                && let Some(form) = entry.get_mut::<FormDialog>()
+            {
+                accounts.recovery_form_closed(&tag, form, ticket);
+            }
+        }
+    }
+
+    fn present_next_account_recovery(&mut self) -> Outcome {
+        let Some((ticket, details)) = self.router.accounts_mut().next_recovery_candidate() else {
+            return Outcome::Ignored;
+        };
+        let tag = LayerTag::new("recovery-details").key(ticket.to_string());
+        let layer: Box<AppLayer> = Box::new(AccountsScreen::recovery_dialog(&details));
+        self.open_layer(layer, tag, Route::Accounts);
+        self.router.accounts_mut().recovery_presented(ticket);
+        Outcome::Changed
     }
 
     fn form_changed(&mut self) {
@@ -1842,7 +1878,16 @@ impl App {
                         self.shell.status.progress_at(job, s, now);
                     }
                 }
-                Request::Open(layer, tag) => self.open_layer(layer, tag, owner),
+                Request::Open(layer, tag) => {
+                    let recovery_ticket = (owner == Route::Accounts
+                        && tag.kind == "recovery-details")
+                        .then(|| tag.key.parse::<Ticket>().ok())
+                        .flatten();
+                    self.open_layer(layer, tag, owner);
+                    if let Some(ticket) = recovery_ticket {
+                        self.router.accounts_mut().recovery_presented(ticket);
+                    }
+                }
 
                 Request::Close => {
                     self.layers.pop(&mut self.shell.focus);

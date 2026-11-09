@@ -23,13 +23,19 @@ use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::{self, SimBackend};
 use jackin_console::world::{
-    DaemonHealth, GlobalConfig, Msg, SaveFailure, SaveSuccess, SaveWarning, Snapshot, World,
+    AccountRecoveryAccountName, AccountRecoveryBuilderName, AccountRecoveryCause,
+    AccountRecoveryDetails, AccountRecoveryEffect, AccountRecoveryGatewayEntry,
+    AccountRecoveryGatewayName, AccountRecoveryIntent, AccountRecoveryIssue,
+    AccountRecoveryOpenShellWorkspace, AccountRecoveryOutcome, AccountRecoveryPlatform,
+    AccountRecoveryProviderName, AccountSaveFailure, DaemonHealth, GlobalConfig, Msg, SaveFailure,
+    SaveSuccess, SaveWarning, Snapshot, World,
 };
-use junie_tui::core::event::{External, Input, Outcome};
+use junie_tui::core::event::{External, Input, Mouse, MouseKind, Outcome};
 use junie_tui::motion::Motion;
 use junie_tui::runtime::Application;
 use junie_tui::theme::{ColorLevel, Theme};
 use junie_tui::widgets::file_browser::FileEntry;
+use ratatui::layout::Position;
 
 fn iid(label: &str) -> InstanceId {
     InstanceId::simulated(label)
@@ -552,8 +558,369 @@ fn fail_accounts(effect: &Effect, _: &World) -> Option<Msg> {
     Some(Msg::AccountsSaved {
         ticket: *ticket,
         added: None,
-        result: Err("disk full".into()),
+        result: Err(AccountSaveFailure::Rejected {
+            error: "disk full".into(),
+        }),
     })
+}
+
+const RECOVERY_ACCOUNT: &str = "acct-recovery-000000000000000000";
+const RECOVERY_PROVIDER: &str = "jackin-acct-recovery-000000000000000000-codex";
+const RECOVERY_NEXT_PROVIDER: &str = "jackin-acct-recovery-000000000000000000-omp";
+const RECOVERY_GATEWAY: &str = "Gateway_Original.";
+const RECOVERY_SECOND_GATEWAY: &str = "gateway-second-";
+const RECOVERY_LAUNCH_GATEWAY: &str = "gateway-launch_";
+const SECOND_RECOVERY_ACCOUNT: &str = "acct-secondary-0000000000000000";
+const SECOND_RECOVERY_PROVIDER: &str = "jackin-acct-secondary-0000000000000000-omp";
+const LAUNCH_RECOVERY_ACCOUNT: &str = "acct-launch-0000000000000000";
+const LAUNCH_RECOVERY_PROVIDER: &str = "jackin-acct-launch-0000000000000000-codex";
+
+fn recovery_issue(
+    account: &str,
+    provider: &str,
+    gateway: (&str, &str, &str),
+    intent: AccountRecoveryIntent,
+    agents: (Option<Agent>, Option<Agent>),
+    effect: AccountRecoveryEffect,
+    outcome: AccountRecoveryOutcome,
+) -> AccountRecoveryIssue {
+    let (gateway, workspace, builder) = gateway;
+    let (previous_agent, next_agent) = agents;
+    AccountRecoveryIssue {
+        account: AccountRecoveryAccountName::parse(account).expect("validated account name"),
+        provider: AccountRecoveryProviderName::parse(provider)
+            .expect("validated provider resource name"),
+        gateway: AccountRecoveryGatewayName::parse(gateway).expect("validated gateway name"),
+        gateway_entry: AccountRecoveryGatewayEntry {
+            openshell_workspace: AccountRecoveryOpenShellWorkspace::parse(workspace)
+                .expect("validated workspace name"),
+            builder: AccountRecoveryBuilderName::parse(builder).expect("validated builder name"),
+            platform: AccountRecoveryPlatform::LinuxAmd64,
+            docker_engine_port: Some(2376),
+        },
+        intent,
+        previous_agent,
+        next_agent,
+        effect,
+        outcome,
+    }
+}
+
+#[test]
+fn recovery_gateway_names_match_the_source_identifier_rule() {
+    for value in ["Dev_Gateway", "foo.", "foo_", "foo-"] {
+        assert!(
+            AccountRecoveryGatewayName::parse(value).is_some(),
+            "{value}"
+        );
+    }
+    let maximum = format!("a{}.", ".".repeat(62));
+    assert_eq!(maximum.chars().count(), 64);
+    assert!(AccountRecoveryGatewayName::parse(&maximum).is_some());
+    for value in [
+        "",
+        ".leading",
+        "_leading",
+        "-leading",
+        "nonascii-é",
+        "bad/name",
+    ] {
+        assert!(
+            AccountRecoveryGatewayName::parse(value).is_none(),
+            "{value}"
+        );
+    }
+    assert!(AccountRecoveryGatewayName::parse(&"a".repeat(65)).is_none());
+}
+
+#[test]
+fn recovery_builder_and_workspace_names_use_distinct_source_rules() {
+    for value in ["Dev_Builder", "builder.", "builder_", "builder-"] {
+        assert!(
+            AccountRecoveryBuilderName::parse(value).is_some(),
+            "{value}"
+        );
+    }
+    let maximum_builder = format!("a{}.", ".".repeat(62));
+    assert_eq!(maximum_builder.chars().count(), 64);
+    assert!(AccountRecoveryBuilderName::parse(&maximum_builder).is_some());
+    for value in [
+        "",
+        ".leading",
+        "_leading",
+        "-leading",
+        "nonascii-é",
+        "bad/name",
+    ] {
+        assert!(
+            AccountRecoveryBuilderName::parse(value).is_none(),
+            "{value}"
+        );
+    }
+    assert!(AccountRecoveryBuilderName::parse(&"a".repeat(65)).is_none());
+    assert!(AccountRecoveryOpenShellWorkspace::parse(&"a".repeat(19)).is_some());
+    assert!(AccountRecoveryOpenShellWorkspace::parse(&"a".repeat(20)).is_none());
+    for value in [
+        "",
+        "Workspace",
+        "-workspace",
+        "workspace-",
+        "workspace--name",
+        "bad.name",
+        "nonascii-é",
+    ] {
+        assert!(
+            AccountRecoveryOpenShellWorkspace::parse(value).is_none(),
+            "{value}"
+        );
+    }
+}
+
+#[test]
+fn recovery_account_and_provider_names_match_their_source_rules() {
+    assert!(AccountRecoveryAccountName::parse(&"a".repeat(32)).is_some());
+    assert!(AccountRecoveryAccountName::parse(&"a".repeat(33)).is_none());
+    assert!(AccountRecoveryAccountName::parse("account-name").is_some());
+    for value in [
+        "",
+        "Account",
+        "-account",
+        "account-",
+        "account--name",
+        "bad.name",
+        "nonascii-é",
+    ] {
+        assert!(
+            AccountRecoveryAccountName::parse(value).is_none(),
+            "{value}"
+        );
+    }
+    assert!(AccountRecoveryProviderName::parse(&"a".repeat(63)).is_some());
+    assert!(AccountRecoveryProviderName::parse(&"a".repeat(64)).is_none());
+    assert!(AccountRecoveryProviderName::parse("provider-name").is_some());
+    for value in [
+        "",
+        "Provider",
+        "-provider",
+        "provider-",
+        "provider--name",
+        "bad.name",
+        "nonascii-é",
+    ] {
+        assert!(
+            AccountRecoveryProviderName::parse(value).is_none(),
+            "{value}"
+        );
+    }
+}
+
+fn recovery_failure() -> AccountSaveFailure {
+    AccountSaveFailure::RecoveryRequired {
+        recovery: AccountRecoveryDetails::new(
+            AccountRecoveryCause::RemoteStateRequiresReview,
+            vec![
+                recovery_issue(
+                    RECOVERY_ACCOUNT,
+                    RECOVERY_PROVIDER,
+                    (RECOVERY_GATEWAY, "workspace-orig-001", "Dev_Builder."),
+                    AccountRecoveryIntent::AccountEdit,
+                    (Some(Agent::Codex), Some(Agent::Omp)),
+                    AccountRecoveryEffect::ProviderDelete,
+                    AccountRecoveryOutcome::Indeterminate,
+                ),
+                recovery_issue(
+                    RECOVERY_ACCOUNT,
+                    RECOVERY_NEXT_PROVIDER,
+                    (RECOVERY_GATEWAY, "workspace-orig-001", "Dev_Builder."),
+                    AccountRecoveryIntent::AccountEdit,
+                    (Some(Agent::Codex), Some(Agent::Omp)),
+                    AccountRecoveryEffect::ProviderPut,
+                    AccountRecoveryOutcome::Applied,
+                ),
+                recovery_issue(
+                    SECOND_RECOVERY_ACCOUNT,
+                    SECOND_RECOVERY_PROVIDER,
+                    (
+                        RECOVERY_SECOND_GATEWAY,
+                        "workspace-second-2",
+                        "builder-second-",
+                    ),
+                    AccountRecoveryIntent::GatewayRemoval,
+                    (Some(Agent::Omp), None),
+                    AccountRecoveryEffect::ProviderDelete,
+                    AccountRecoveryOutcome::Indeterminate,
+                ),
+                recovery_issue(
+                    LAUNCH_RECOVERY_ACCOUNT,
+                    LAUNCH_RECOVERY_PROVIDER,
+                    (
+                        RECOVERY_LAUNCH_GATEWAY,
+                        "workspace-launch-3",
+                        "Builder_Launch-",
+                    ),
+                    AccountRecoveryIntent::LaunchSync,
+                    (None, Some(Agent::Codex)),
+                    AccountRecoveryEffect::Profile,
+                    AccountRecoveryOutcome::Applied,
+                ),
+            ],
+        )
+        .expect("recovery details contain an affected account"),
+    }
+}
+
+fn distinct_recovery_failure() -> AccountSaveFailure {
+    AccountSaveFailure::RecoveryRequired {
+        recovery: AccountRecoveryDetails::new(
+            AccountRecoveryCause::RemoteStateRequiresReview,
+            vec![recovery_issue(
+                SECOND_RECOVERY_ACCOUNT,
+                SECOND_RECOVERY_PROVIDER,
+                (
+                    RECOVERY_SECOND_GATEWAY,
+                    "workspace-second-2",
+                    "builder-second-",
+                ),
+                AccountRecoveryIntent::GatewayRemoval,
+                (Some(Agent::Omp), None),
+                AccountRecoveryEffect::ProviderDelete,
+                AccountRecoveryOutcome::Indeterminate,
+            )],
+        )
+        .expect("recovery details contain an affected account"),
+    }
+}
+
+fn fail_accounts_with_recovery(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::SaveAccounts { ticket, .. } = effect else {
+        return None;
+    };
+    Some(Msg::AccountsSaved {
+        ticket: *ticket,
+        added: None,
+        result: Err(recovery_failure()),
+    })
+}
+
+fn recovery_reply(effect: &Effect, failure: AccountSaveFailure) -> Msg {
+    let Effect::SaveAccounts { ticket, .. } = effect else {
+        panic!("a save expected");
+    };
+    Msg::AccountsSaved {
+        ticket: *ticket,
+        added: None,
+        result: Err(failure),
+    }
+}
+
+fn fail_accounts_cancelled(effect: &Effect, _: &World) -> Option<Msg> {
+    let Effect::SaveAccounts { ticket, .. } = effect else {
+        return None;
+    };
+    Some(Msg::AccountsSaved {
+        ticket: *ticket,
+        added: None,
+        result: Err(AccountSaveFailure::Rejected {
+            error: "the account operation was cancelled before any remote effect".into(),
+        }),
+    })
+}
+
+fn scroll_recovery_details(app: &mut App) {
+    wheel_recovery_details(app);
+}
+
+fn scroll_recovery_details_to(app: &mut App, marker: &str) {
+    for _ in 0..64 {
+        let shown = screen(app);
+        if normalized(&recovery_dialog_text(&shown)).contains(marker) {
+            return;
+        }
+        wheel_recovery_details(app);
+    }
+    let shown = screen(app);
+    panic!("detail row {marker:?} is not visible after scrolling:\n{shown}");
+}
+
+fn wheel_recovery_details(app: &mut App) {
+    let shown = screen(app);
+    let (y, line, marker) = shown
+        .lines()
+        .enumerate()
+        .find_map(|(y, line)| {
+            [
+                "Cause:",
+                "Account:",
+                "Provider resource:",
+                "Gateway:",
+                "OpenShell workspace:",
+                "Builder:",
+                "OpenShell platform:",
+                "Docker engine port:",
+                "Intent:",
+                "Previous agent:",
+                "Next agent:",
+                "Effect:",
+                "Remote outcome:",
+            ]
+            .iter()
+            .find(|marker| line.contains(**marker))
+            .map(|marker| (y, line, *marker))
+        })
+        .unwrap_or_else(|| panic!("no visible recovery detail row to scroll:\n{shown}"));
+    let x = line[..line.find(marker).expect("visible detail marker")]
+        .chars()
+        .count()
+        + 1;
+    Application::handle(
+        app,
+        Input::Mouse(Mouse::new(
+            MouseKind::WheelDown,
+            Position::new(x as u16, y as u16),
+        )),
+    );
+    screen(app);
+}
+
+fn normalized(shown: &str) -> String {
+    shown.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+fn compact(shown: &str) -> String {
+    shown.chars().filter(|ch| !ch.is_whitespace()).collect()
+}
+
+fn recovery_dialog_text(shown: &str) -> String {
+    let lines = shown.lines().collect::<Vec<_>>();
+    let title_y = lines
+        .iter()
+        .position(|line| line.contains("Account recovery details"))
+        .expect("recovery dialog title");
+    let title = lines[title_y].chars().collect::<Vec<_>>();
+    let left = title
+        .iter()
+        .rposition(|ch| *ch == '╭')
+        .expect("recovery dialog left border");
+    let right = title
+        .iter()
+        .enumerate()
+        .skip(left + 1)
+        .find_map(|(x, ch)| (*ch == '╮').then_some(x))
+        .expect("recovery dialog right border");
+    let bottom_y = (title_y + 1..lines.len())
+        .find(|y| lines[*y].chars().nth(left).is_some_and(|ch| ch == '╰'))
+        .unwrap_or(lines.len());
+    lines[title_y..bottom_y]
+        .iter()
+        .map(|line| {
+            line.chars()
+                .skip(left + 1)
+                .take(right.saturating_sub(left + 1))
+                .filter(|ch| *ch != '┆')
+                .collect::<String>()
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 #[test]
@@ -626,6 +993,103 @@ fn failed_accounts_save_keeps_the_form() {
     assert!(shown.contains("New account"), "{shown}");
     assert!(shown.contains("disk full"), "{shown}");
     assert!(shown.contains("Spare"), "{shown}");
+    assert!(!shown.contains("Recovery details"), "{shown}");
+    assert_eq!(app.world.accounts, before);
+}
+
+#[test]
+fn recovery_details_show_captured_remote_context_and_return_to_the_unchanged_form() {
+    let (mut app, _) = backed(Scenario::AccountsMixed, fail_accounts_with_recovery);
+    let before = app.world.accounts.clone();
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+
+    let failed = screen(&mut app);
+    assert!(failed.contains("New account"), "{failed}");
+    assert!(failed.contains("Spare"), "{failed}");
+    assert!(failed.contains("Recovery details"), "{failed}");
+    assert_eq!(app.world.accounts, before);
+
+    click_text(&mut app, "Recovery details");
+    let first = screen(&mut app);
+    assert!(first.contains("Account recovery details"), "{first}");
+    assert!(first.contains("Remote state needs review"), "{first}");
+    let first_text = normalized(&recovery_dialog_text(&first));
+    assert!(
+        !first_text.contains(RECOVERY_SECOND_GATEWAY),
+        "the detail view should require scrolling to read all identities:\n{first}"
+    );
+    assert!(!first.contains('\u{001b}'), "{first:?}");
+
+    let mut pages = recovery_dialog_text(&first);
+    for _ in 0..8 {
+        scroll_recovery_details(&mut app);
+        pages.push_str(&recovery_dialog_text(&screen(&mut app)));
+    }
+    for marker in [
+        "Effect: provider write",
+        "Intent: gateway removal",
+        "Intent: launch synchronization",
+        "Effect: profile synchronization",
+    ] {
+        scroll_recovery_details_to(&mut app, marker);
+        pages.push_str(&recovery_dialog_text(&screen(&mut app)));
+    }
+    let pages = normalized(&pages);
+    let compact_pages = compact(&pages);
+    for identity in [
+        RECOVERY_ACCOUNT,
+        RECOVERY_PROVIDER,
+        RECOVERY_GATEWAY,
+        RECOVERY_SECOND_GATEWAY,
+        "workspace-orig-001",
+        "Dev_Builder.",
+        "workspace-second-2",
+        "builder-second-",
+        "workspace-launch-3",
+        "Builder_Launch-",
+    ] {
+        assert!(compact_pages.contains(identity), "{identity}: {pages}");
+    }
+    assert!(pages.contains("Platform: Linux x86_64"), "{pages}");
+    assert!(pages.contains("Docker engine port: 2376"), "{pages}");
+    assert!(pages.contains("Intent: account edit"), "{pages}");
+    assert!(pages.contains("Intent: gateway removal"), "{pages}");
+    assert!(pages.contains("Intent: launch synchronization"), "{pages}");
+    assert!(pages.contains("Effect: provider delete"), "{pages}");
+    assert!(pages.contains("Effect: provider write"), "{pages}");
+    assert!(pages.contains("Effect: profile synchronization"), "{pages}");
+    assert!(pages.contains("Previous agent: Codex"), "{pages}");
+    assert!(pages.contains("Next agent: OMP"), "{pages}");
+    assert!(pages.contains("applied"), "{pages}");
+    assert!(pages.contains("indeterminate"), "{pages}");
+    assert!(AccountRecoveryGatewayName::parse("gateway\u{001b}[31mred").is_none());
+    assert!(!pages.contains('\u{001b}'), "{pages:?}");
+
+    press(&mut app, "esc");
+    let returned = screen(&mut app);
+    assert!(returned.contains("New account"), "{returned}");
+    assert!(returned.contains("Spare"), "{returned}");
+    assert!(!returned.contains("Recovery details"), "{returned}");
+    assert_eq!(app.world.accounts, before);
+}
+
+#[test]
+fn an_ordinary_cancelled_account_save_does_not_offer_recovery_details() {
+    let (mut app, _) = backed(Scenario::AccountsMixed, fail_accounts_cancelled);
+    let before = app.world.accounts.clone();
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+
+    let shown = screen(&mut app);
+    assert!(shown.contains("New account"), "{shown}");
+    assert!(
+        shown.contains("cancelled before any remote effect"),
+        "{shown}"
+    );
+    assert!(!shown.contains("Recovery details"), "{shown}");
     assert_eq!(app.world.accounts, before);
 }
 
@@ -2660,7 +3124,9 @@ fn a_failed_save_does_not_write_its_error_into_a_form_opened_after_it() {
     app.deliver(&Msg::AccountsSaved {
         ticket,
         added: None,
-        result: Err("disk full".into()),
+        result: Err(AccountSaveFailure::Rejected {
+            error: "disk full".into(),
+        }),
     });
 
     let after = screen(&mut app);
@@ -2671,6 +3137,468 @@ fn a_failed_save_does_not_write_its_error_into_a_form_opened_after_it() {
         1,
         "the error went into the new form too:\n{after}"
     );
+}
+
+#[test]
+fn stale_recovery_is_shown_separately_and_preserves_the_newer_form() {
+    let (mut app, _, save) = a_form_left_during_its_save();
+    let before = app.world.accounts.clone();
+    press(&mut app, "F r e s h");
+    let Effect::SaveAccounts { ticket, .. } = save else {
+        panic!("a save expected");
+    };
+
+    app.deliver(&Msg::AccountsSaved {
+        ticket,
+        added: None,
+        result: Err(recovery_failure()),
+    });
+
+    let first = screen(&mut app);
+    assert!(first.contains("New account"), "{first}");
+    assert!(first.contains("Fresh"), "{first}");
+    assert!(first.contains("Account recovery details"), "{first}");
+    assert!(
+        !first.contains("Recovery details"),
+        "the old ticket was attached to the newer form:\n{first}"
+    );
+    assert!(first.contains("Remote state needs review"), "{first}");
+    assert!(!first.contains('\u{001b}'), "{first:?}");
+
+    let mut pages = recovery_dialog_text(&first);
+    for _ in 0..8 {
+        scroll_recovery_details(&mut app);
+        pages.push_str(&recovery_dialog_text(&screen(&mut app)));
+    }
+    scroll_recovery_details_to(&mut app, "Remote outcome: indeterminate");
+    pages.push_str(&recovery_dialog_text(&screen(&mut app)));
+    let pages = normalized(&pages);
+    let compact_pages = compact(&pages);
+    for identity in [RECOVERY_ACCOUNT, RECOVERY_PROVIDER] {
+        assert!(compact_pages.contains(identity), "{identity}: {pages}");
+    }
+    assert!(compact_pages.contains(RECOVERY_GATEWAY), "{pages}");
+    assert!(pages.contains("applied"), "{pages}");
+    assert!(pages.contains("indeterminate"), "{pages}");
+    assert!(!pages.contains('\u{001b}'), "{pages:?}");
+
+    press(&mut app, "esc");
+    let after = screen(&mut app);
+    let after_text = normalized(&after);
+    assert!(after.contains("New account"), "{after}");
+    assert!(after.contains("Fresh"), "the newer input changed:\n{after}");
+    assert!(!after.contains("Recovery details"), "{after}");
+    assert!(!after_text.contains(RECOVERY_ACCOUNT), "{after}");
+    assert!(!after_text.contains(RECOVERY_PROVIDER), "{after}");
+    assert_eq!(app.world.accounts, before);
+}
+
+#[test]
+fn background_account_recoveries_are_accepted_by_accounts_and_drained_in_arrival_order() {
+    let (mut app, backend, _) = a_form_left_during_its_save();
+    press(&mut app, "esc");
+    app.world.clock.advance(31_000);
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two account saves expected, got {saves:?}");
+    };
+    press(&mut app, "esc");
+    app.go(Go::Manager);
+    assert_eq!(app.route(), Route::Manager);
+
+    let first_reply = recovery_reply(first, recovery_failure());
+    app.deliver(&first_reply);
+    let first_view = screen(&mut app);
+    let first_text = compact(&recovery_dialog_text(&first_view));
+    assert!(
+        first_view.contains("Account recovery details"),
+        "{first_view}"
+    );
+    assert!(first_text.contains(RECOVERY_ACCOUNT), "{first_view}");
+    assert!(
+        !first_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{first_view}"
+    );
+    assert_eq!(app.route(), Route::Manager);
+
+    let second_reply = recovery_reply(second, distinct_recovery_failure());
+    app.deliver(&second_reply);
+    app.deliver(&second_reply);
+    let first_still_visible = screen(&mut app);
+    let first_still_text = compact(&recovery_dialog_text(&first_still_visible));
+    assert!(
+        first_still_text.contains(RECOVERY_ACCOUNT),
+        "{first_still_visible}"
+    );
+    assert!(
+        !first_still_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{first_still_visible}"
+    );
+
+    press(&mut app, "esc");
+    let second_view = screen(&mut app);
+    let second_text = compact(&recovery_dialog_text(&second_view));
+    assert!(
+        second_view.contains("Account recovery details"),
+        "{second_view}"
+    );
+    assert!(
+        second_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{second_view}"
+    );
+    assert!(
+        second_text.contains(SECOND_RECOVERY_PROVIDER),
+        "{second_view}"
+    );
+    assert!(
+        second_text.contains(RECOVERY_SECOND_GATEWAY),
+        "{second_view}"
+    );
+    assert_eq!(app.route(), Route::Manager);
+
+    press(&mut app, "esc");
+    let returned = screen(&mut app);
+    assert_eq!(app.route(), Route::Manager);
+    assert!(!returned.contains("Account recovery details"), "{returned}");
+}
+
+#[test]
+fn a_recovery_reply_updates_its_form_beneath_an_open_provider_picker() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |effect| matches!(effect, Effect::SaveAccounts { .. }),
+        store_accounts,
+    );
+    app.go(Go::Accounts {
+        select: Some("acct-claude-work".into()),
+    });
+    press(&mut app, "e");
+    let opened = screen(&mut app);
+    assert!(opened.contains("Edit account"), "{opened}");
+    click_text(&mut app, "Save");
+    settle(&mut app);
+    let saves = saves_of(&backend);
+    let [save] = saves.as_slice() else {
+        panic!("one account save expected, got {saves:?}");
+    };
+
+    click_text(&mut app, "Choose…");
+    let overlay = screen(&mut app);
+    assert!(overlay.contains("1Password"), "{overlay}");
+    let reply = recovery_reply(save, recovery_failure());
+    app.deliver(&reply);
+    let still_covered = screen(&mut app);
+    assert!(still_covered.contains("1Password"), "{still_covered}");
+    assert!(
+        !still_covered.contains("Account recovery details"),
+        "{still_covered}"
+    );
+
+    press(&mut app, "esc");
+    let form = screen(&mut app);
+    assert!(form.contains("Edit account"), "{form}");
+    assert!(form.contains("Work"), "{form}");
+    assert!(form.contains("Recovery details"), "{form}");
+}
+
+#[test]
+fn dismissing_form_recovery_acknowledges_only_its_ticket_and_keeps_the_next_notice() {
+    let (mut app, backend) = held_in(
+        Scenario::AccountsMixed,
+        |effect| matches!(effect, Effect::SaveAccounts { .. }),
+        store_accounts,
+    );
+    let before = app.world.accounts.clone();
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+    let first_save = saves_of(&backend)
+        .into_iter()
+        .next()
+        .expect("first account save");
+    let first_reply = recovery_reply(&first_save, recovery_failure());
+    app.deliver(&first_reply);
+    let form = screen(&mut app);
+    assert!(form.contains("New account"), "{form}");
+    assert!(form.contains("Recovery details"), "{form}");
+
+    app.world.clock.advance(31_000);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+    let saves = saves_of(&backend);
+    let [_, second_save] = saves.as_slice() else {
+        panic!("two account saves expected, got {saves:?}");
+    };
+    click_text(&mut app, "Recovery details");
+    let first_details = screen(&mut app);
+    assert!(
+        compact(&recovery_dialog_text(&first_details)).contains(RECOVERY_ACCOUNT),
+        "{first_details}"
+    );
+
+    let second_reply = recovery_reply(second_save, distinct_recovery_failure());
+    app.deliver(&second_reply);
+    app.deliver(&second_reply);
+    let first_still_open = screen(&mut app);
+    let first_still_text = compact(&recovery_dialog_text(&first_still_open));
+    assert!(
+        first_still_text.contains(RECOVERY_ACCOUNT),
+        "{first_still_open}"
+    );
+    assert!(
+        !first_still_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{first_still_open}"
+    );
+
+    press(&mut app, "esc");
+    let second_details = screen(&mut app);
+    let second_text = compact(&recovery_dialog_text(&second_details));
+    assert!(
+        second_details.contains("Account recovery details"),
+        "{second_details}"
+    );
+    assert!(
+        second_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{second_details}"
+    );
+    assert!(
+        second_text.contains(SECOND_RECOVERY_PROVIDER),
+        "{second_details}"
+    );
+    assert!(!second_text.contains(RECOVERY_ACCOUNT), "{second_details}");
+    assert!(second_details.contains("New account"), "{second_details}");
+
+    press(&mut app, "esc");
+    let returned = screen(&mut app);
+    assert!(returned.contains("New account"), "{returned}");
+    assert!(!returned.contains("Recovery details"), "{returned}");
+    assert_eq!(app.world.accounts, before);
+
+    app.deliver(&first_reply);
+    app.deliver(&second_reply);
+    let after_duplicates = screen(&mut app);
+    assert!(
+        !after_duplicates.contains("Account recovery details"),
+        "{after_duplicates}"
+    );
+    assert!(
+        after_duplicates.contains("New account"),
+        "{after_duplicates}"
+    );
+}
+
+#[test]
+fn account_save_replies_require_a_dispatched_unresolved_account_ticket() {
+    let (mut app, _, save) = a_form_left_during_its_save();
+    let before = app.world.accounts.clone();
+    let mut changed = sim::snapshot(&app.world);
+    changed.accounts.accounts[0].display_name = "unissued reply applied".into();
+    let unissued = Msg::AccountsSaved {
+        ticket: u64::MAX,
+        added: None,
+        result: Ok(save_success(changed, Some(SaveWarning::DirectorySync))),
+    };
+    assert_eq!(app.deliver(&unissued), Outcome::Ignored);
+    assert_eq!(app.world.accounts, before);
+    assert_eq!(app.world.committed_save_warning, None);
+    assert!(!screen(&mut app).contains("Account recovery details"));
+
+    app.world.refresh_now();
+    let refresh_ticket = app.world.refresh_ticket;
+    let crossed = Msg::AccountsSaved {
+        ticket: refresh_ticket,
+        added: None,
+        result: Err(recovery_failure()),
+    };
+    assert_eq!(app.deliver(&crossed), Outcome::Ignored);
+    assert_eq!(app.world.accounts, before);
+    assert!(!screen(&mut app).contains("Account recovery details"));
+
+    let Effect::SaveAccounts { ticket, .. } = save else {
+        panic!("a save expected");
+    };
+    let rejected = Msg::AccountsSaved {
+        ticket,
+        added: None,
+        result: Err(AccountSaveFailure::Rejected {
+            error: "disk full".into(),
+        }),
+    };
+    assert_ne!(app.deliver(&rejected), Outcome::Ignored);
+    let contradictory = Msg::AccountsSaved {
+        ticket,
+        added: None,
+        result: Err(recovery_failure()),
+    };
+    assert_eq!(app.deliver(&contradictory), Outcome::Ignored);
+    assert!(!screen(&mut app).contains("Account recovery details"));
+
+    let (mut committed, _, committed_save) = a_form_left_during_its_save();
+    let Effect::SaveAccounts { ticket, .. } = &committed_save else {
+        panic!("a save expected");
+    };
+    let saved = store_accounts(&committed_save, &committed.world).expect("the save reply");
+    assert_ne!(committed.deliver(&saved), Outcome::Ignored);
+    let committed_snapshot = committed.world.accounts.clone();
+    let after_commit = Msg::AccountsSaved {
+        ticket: *ticket,
+        added: None,
+        result: Err(recovery_failure()),
+    };
+    assert_eq!(committed.deliver(&after_commit), Outcome::Ignored);
+    assert_eq!(committed.world.accounts, committed_snapshot);
+    assert!(!screen(&mut committed).contains("Account recovery details"));
+}
+
+#[test]
+fn distinct_stale_recoveries_queue_by_ticket_and_ignore_duplicates() {
+    let (mut app, backend, _) = a_form_left_during_its_save();
+    press(&mut app, "esc");
+    app.world.clock.advance(31_000);
+    press(&mut app, NEW_ACCOUNT);
+    click_text(&mut app, "Save");
+    settle(&mut app);
+
+    let saves = saves_of(&backend);
+    let [first, second] = saves.as_slice() else {
+        panic!("two account saves expected, got {saves:?}");
+    };
+    let Effect::SaveAccounts {
+        ticket: first_ticket,
+        ..
+    } = first
+    else {
+        panic!("first account save expected");
+    };
+    let Effect::SaveAccounts {
+        ticket: second_ticket,
+        ..
+    } = second
+    else {
+        panic!("second account save expected");
+    };
+    assert_ne!(first_ticket, second_ticket, "each save has its own ticket");
+
+    press(&mut app, "esc");
+    press(&mut app, "a");
+    press(&mut app, "F r e s h");
+    let before = app.world.accounts.clone();
+
+    let first_reply = recovery_reply(first, recovery_failure());
+    app.deliver(&first_reply);
+    let first_view = screen(&mut app);
+    let first_text = compact(&recovery_dialog_text(&first_view));
+    assert!(
+        first_view.contains("Account recovery details"),
+        "{first_view}"
+    );
+    assert!(first_text.contains(RECOVERY_ACCOUNT), "{first_view}");
+    assert!(
+        !first_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{first_view}"
+    );
+    assert!(first_view.contains("Fresh"), "{first_view}");
+
+    app.deliver(&first_reply);
+    let duplicate_first = screen(&mut app);
+    let duplicate_text = compact(&recovery_dialog_text(&duplicate_first));
+    assert!(
+        duplicate_text.contains(RECOVERY_ACCOUNT),
+        "{duplicate_first}"
+    );
+    assert!(
+        !duplicate_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{duplicate_first}"
+    );
+
+    let second_reply = recovery_reply(second, distinct_recovery_failure());
+    app.deliver(&second_reply);
+    app.deliver(&second_reply);
+    let first_still_visible = screen(&mut app);
+    let first_still_text = compact(&recovery_dialog_text(&first_still_visible));
+    assert!(
+        first_still_text.contains(RECOVERY_ACCOUNT),
+        "{first_still_visible}"
+    );
+    assert!(
+        !first_still_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{first_still_visible}"
+    );
+
+    press(&mut app, "esc");
+    let second_view = screen(&mut app);
+    let second_text = compact(&recovery_dialog_text(&second_view));
+    assert!(
+        second_view.contains("Account recovery details"),
+        "{second_view}"
+    );
+    assert!(
+        second_text.contains(SECOND_RECOVERY_ACCOUNT),
+        "{second_view}"
+    );
+    assert!(
+        second_text.contains(SECOND_RECOVERY_PROVIDER),
+        "{second_view}"
+    );
+    assert!(
+        second_text.contains(RECOVERY_SECOND_GATEWAY),
+        "{second_view}"
+    );
+    scroll_recovery_details_to(&mut app, "Effect: provider delete");
+    let second_scrolled = screen(&mut app);
+    scroll_recovery_details_to(&mut app, "Remote outcome: indeterminate");
+    let second_terminal = screen(&mut app);
+    let second_all = normalized(&format!(
+        "{}\n{}\n{}",
+        recovery_dialog_text(&second_view),
+        recovery_dialog_text(&second_scrolled),
+        recovery_dialog_text(&second_terminal)
+    ));
+    let second_all_compact = compact(&second_all);
+    assert!(second_all_compact.contains(SECOND_RECOVERY_ACCOUNT));
+    assert!(second_all_compact.contains(SECOND_RECOVERY_PROVIDER));
+    assert!(second_all_compact.contains(RECOVERY_SECOND_GATEWAY));
+    assert!(second_all.contains("indeterminate"), "{second_scrolled}");
+    assert!(!second_text.contains(RECOVERY_ACCOUNT), "{second_view}");
+    assert!(second_view.contains("Fresh"), "{second_view}");
+
+    app.deliver(&first_reply);
+    app.deliver(&second_reply);
+    let second_still_visible = screen(&mut app);
+    let second_still_text = compact(&recovery_dialog_text(&second_still_visible));
+    assert!(
+        second_still_visible.contains("Account recovery details"),
+        "{second_still_visible}"
+    );
+    assert!(
+        second_still_text.contains("workspace-second-2"),
+        "{second_still_visible}"
+    );
+    assert!(
+        !second_still_text.contains("workspace-orig-001"),
+        "{second_still_visible}"
+    );
+
+    press(&mut app, "esc");
+    let returned = screen(&mut app);
+    assert!(returned.contains("New account"), "{returned}");
+    assert!(returned.contains("Fresh"), "{returned}");
+    assert!(!returned.contains("Account recovery details"), "{returned}");
+    assert!(!returned.contains("Recovery details"), "{returned}");
+    app.deliver(&second_reply);
+    let after_dismissed_duplicate = screen(&mut app);
+    assert!(
+        !after_dismissed_duplicate.contains("Account recovery details"),
+        "{after_dismissed_duplicate}"
+    );
+    assert!(
+        after_dismissed_duplicate.contains("Fresh"),
+        "{after_dismissed_duplicate}"
+    );
+    assert_eq!(app.world.accounts, before);
 }
 
 fn unparsed_manifests(names: &[&str], unanswered: fn(&Effect) -> bool) -> (App, Arc<TestBackend>) {

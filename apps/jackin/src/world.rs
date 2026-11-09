@@ -105,6 +105,209 @@ pub struct SaveFailure {
     pub next: Option<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum AccountSaveFailure {
+    Rejected { error: String },
+    RecoveryRequired { recovery: AccountRecoveryDetails },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AccountRecoveryDetails {
+    cause: AccountRecoveryCause,
+    issues: Vec<AccountRecoveryIssue>,
+}
+
+impl AccountRecoveryDetails {
+    pub fn new(
+        cause: AccountRecoveryCause,
+        issues: Vec<AccountRecoveryIssue>,
+    ) -> Option<AccountRecoveryDetails> {
+        if issues.is_empty() {
+            None
+        } else {
+            Some(AccountRecoveryDetails { cause, issues })
+        }
+    }
+
+    pub fn cause(&self) -> AccountRecoveryCause {
+        self.cause
+    }
+
+    pub fn issues(&self) -> &[AccountRecoveryIssue] {
+        &self.issues
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AccountRecoveryCause {
+    RemoteStateRequiresReview,
+}
+
+impl AccountRecoveryCause {
+    pub fn label(self) -> &'static str {
+        match self {
+            AccountRecoveryCause::RemoteStateRequiresReview => "Remote account state needs review",
+        }
+    }
+}
+
+fn valid_recovery_dns_name(value: &str, maximum: usize) -> bool {
+    let bytes = value.as_bytes();
+    !bytes.is_empty()
+        && bytes.len() <= maximum
+        && bytes
+            .iter()
+            .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit() || *byte == b'-')
+        && (bytes[0].is_ascii_lowercase() || bytes[0].is_ascii_digit())
+        && (bytes[bytes.len() - 1].is_ascii_lowercase() || bytes[bytes.len() - 1].is_ascii_digit())
+        && !bytes.windows(2).any(|pair| pair == b"--")
+}
+
+fn valid_recovery_gateway_like(value: &str) -> bool {
+    let bytes = value.as_bytes();
+    !bytes.is_empty()
+        && bytes.len() <= 64
+        && bytes
+            .iter()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(*byte, b'.' | b'_' | b'-'))
+        && bytes[0].is_ascii_alphanumeric()
+}
+
+macro_rules! recovery_name {
+    ($name:ident, $valid:ident) => {
+        #[derive(Debug, Clone, PartialEq, Eq)]
+        pub struct $name(String);
+
+        impl $name {
+            pub fn parse(value: &str) -> Option<Self> {
+                $valid(value).then(|| Self(value.to_owned()))
+            }
+
+            pub fn as_str(&self) -> &str {
+                &self.0
+            }
+        }
+    };
+}
+
+fn valid_recovery_account_name(value: &str) -> bool {
+    valid_recovery_dns_name(value, 32)
+}
+
+fn valid_recovery_provider_name(value: &str) -> bool {
+    valid_recovery_dns_name(value, 63)
+}
+
+fn valid_recovery_gateway_name(value: &str) -> bool {
+    valid_recovery_gateway_like(value)
+}
+
+fn valid_recovery_builder_name(value: &str) -> bool {
+    valid_recovery_gateway_like(value)
+}
+
+fn valid_recovery_workspace_name(value: &str) -> bool {
+    valid_recovery_dns_name(value, 19)
+}
+
+recovery_name!(AccountRecoveryAccountName, valid_recovery_account_name);
+recovery_name!(AccountRecoveryProviderName, valid_recovery_provider_name);
+recovery_name!(AccountRecoveryGatewayName, valid_recovery_gateway_name);
+recovery_name!(AccountRecoveryBuilderName, valid_recovery_builder_name);
+recovery_name!(
+    AccountRecoveryOpenShellWorkspace,
+    valid_recovery_workspace_name
+);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AccountRecoveryPlatform {
+    LinuxAmd64,
+    LinuxArm64,
+    MacosAmd64,
+    MacosArm64,
+}
+
+impl AccountRecoveryPlatform {
+    pub fn label(self) -> &'static str {
+        match self {
+            AccountRecoveryPlatform::LinuxAmd64 => "Linux x86_64",
+            AccountRecoveryPlatform::LinuxArm64 => "Linux aarch64",
+            AccountRecoveryPlatform::MacosAmd64 => "macOS x86_64",
+            AccountRecoveryPlatform::MacosArm64 => "macOS aarch64",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AccountRecoveryGatewayEntry {
+    pub openshell_workspace: AccountRecoveryOpenShellWorkspace,
+    pub builder: AccountRecoveryBuilderName,
+    pub platform: AccountRecoveryPlatform,
+    pub docker_engine_port: Option<u16>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AccountRecoveryIssue {
+    pub account: AccountRecoveryAccountName,
+    pub provider: AccountRecoveryProviderName,
+    pub gateway: AccountRecoveryGatewayName,
+    pub gateway_entry: AccountRecoveryGatewayEntry,
+    pub intent: AccountRecoveryIntent,
+    pub previous_agent: Option<Agent>,
+    pub next_agent: Option<Agent>,
+    pub effect: AccountRecoveryEffect,
+    pub outcome: AccountRecoveryOutcome,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AccountRecoveryIntent {
+    AccountEdit,
+    GatewayRemoval,
+    LaunchSync,
+}
+
+impl AccountRecoveryIntent {
+    pub fn label(self) -> &'static str {
+        match self {
+            AccountRecoveryIntent::AccountEdit => "account edit",
+            AccountRecoveryIntent::GatewayRemoval => "gateway removal",
+            AccountRecoveryIntent::LaunchSync => "launch synchronization",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AccountRecoveryEffect {
+    Profile,
+    ProviderPut,
+    ProviderDelete,
+}
+
+impl AccountRecoveryEffect {
+    pub fn label(self) -> &'static str {
+        match self {
+            AccountRecoveryEffect::Profile => "profile synchronization",
+            AccountRecoveryEffect::ProviderPut => "provider write",
+            AccountRecoveryEffect::ProviderDelete => "provider delete",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AccountRecoveryOutcome {
+    Applied,
+    Indeterminate,
+}
+
+impl AccountRecoveryOutcome {
+    pub fn label(self) -> &'static str {
+        match self {
+            AccountRecoveryOutcome::Applied => "applied",
+            AccountRecoveryOutcome::Indeterminate => "indeterminate",
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SaveWarning {
     DirectorySync,
@@ -180,7 +383,7 @@ pub enum Msg {
     AccountsSaved {
         ticket: Ticket,
         added: Option<AccountId>,
-        result: Result<SaveSuccess, String>,
+        result: Result<SaveSuccess, AccountSaveFailure>,
     },
     WorkspaceDeleted {
         id: WorkspaceId,
@@ -351,6 +554,14 @@ pub enum Absorbed {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AccountSaveDisposition {
+    Dispatched,
+    Committed,
+    Rejected,
+    RecoveryRequired,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DaemonHealth {
     Healthy,
     Stale,
@@ -404,6 +615,7 @@ pub struct World {
     pub refresh_started_secs: i64,
     pub refresh_ticket: Ticket,
     pub saved_ticket: Ticket,
+    pub account_saves: BTreeMap<Ticket, AccountSaveDisposition>,
 
     pub committed_save_warning: Option<SaveWarning>,
     pub committed_save_status: Option<String>,
@@ -554,6 +766,7 @@ impl World {
             refresh_started_secs: 0,
             refresh_ticket: 0,
             saved_ticket: 0,
+            account_saves: BTreeMap::new(),
             committed_save_warning: None,
             committed_save_status: None,
             pane_policy: Arc::default(),
@@ -637,6 +850,11 @@ impl World {
     }
 
     pub fn perform(&mut self, effect: Effect) {
+        if let Effect::SaveAccounts { ticket, .. } = &effect {
+            self.account_saves
+                .entry(*ticket)
+                .or_insert(AccountSaveDisposition::Dispatched);
+        }
         let backend = self.backend.clone();
         if let Some(done) = backend.perform(&effect, self) {
             match done.reply {
@@ -771,6 +989,19 @@ impl World {
     /// Takes in what a reply says about the world itself, before any screen
     /// sees the message.
     pub fn absorb(&mut self, msg: &Msg) -> Absorbed {
+        if let Msg::AccountsSaved { ticket, result, .. } = msg {
+            if self.account_saves.get(ticket) != Some(&AccountSaveDisposition::Dispatched) {
+                return Absorbed::Stale;
+            }
+            let disposition = match result {
+                Ok(_) => AccountSaveDisposition::Committed,
+                Err(AccountSaveFailure::Rejected { .. }) => AccountSaveDisposition::Rejected,
+                Err(AccountSaveFailure::RecoveryRequired { .. }) => {
+                    AccountSaveDisposition::RecoveryRequired
+                }
+            };
+            self.account_saves.insert(*ticket, disposition);
+        }
         let warning = match msg {
             Msg::WorkspaceSaved {
                 result: Ok(saved), ..
