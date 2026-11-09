@@ -37,7 +37,9 @@ use super::{Cx, Go, LayerTag, ModalResult, Screen};
 use crate::backend::Effect;
 use crate::domain::account::AccountId;
 use crate::domain::agent::Agent;
-use crate::domain::instance::{DaemonSnapshot, InstanceEntry, InstanceId, InstanceStatus};
+use crate::domain::instance::{
+    DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus,
+};
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::role::LaunchRole;
 use crate::domain::tuple::{AccountRequirement, InstanceChoice, TupleIdentity};
@@ -641,7 +643,7 @@ impl ManagerScreen {
         match &choice.account {
             AccountSelection::Automatic { account, level } => {
                 let workspace = ws.and_then(|id| w.workspace(id));
-                let resolved = w.account_for(choice.tuple.provider, workspace, Some(role), None);
+                let resolved = w.account_for(choice.tuple, workspace, Some(role), None);
                 offer.account_offer.preselected.as_ref() == Some(account)
                     && resolved.account.as_ref() == Some(account)
                     && resolved.level == *level
@@ -2053,7 +2055,7 @@ impl ManagerScreen {
             RowKey::Instance(id) => {
                 if let Some(i) = w.instance(&id) {
                     let ws = i.workspace.and_then(|x| w.workspace(x));
-                    let acc = w.account_for(i.agent.provider(), ws, i.role.as_deref(), None);
+                    let acc = w.account_for(instance_tuple(i), ws, i.role.as_deref(), None);
                     let facts = vec![
                         Prop::new(
                             "Workspace",
@@ -2300,7 +2302,7 @@ impl ManagerScreen {
                 .map(|x| x.name.as_str())
                 .unwrap_or("current directory");
             let acc = w.account_for(
-                i.agent.provider(),
+                instance_tuple(i),
                 i.workspace.and_then(|x| w.workspace(x)),
                 i.role.as_deref(),
                 None,
@@ -2516,12 +2518,7 @@ fn tuple_rows(
         let account_detail = if let Some(blocked) = &effective.account_offer.blocked {
             blocked.clone()
         } else if let Some(account) = &effective.account_offer.preselected {
-            let resolved = w.account_for(
-                tuple.provider,
-                ws.and_then(|id| w.workspace(id)),
-                role,
-                None,
-            );
+            let resolved = w.account_for(tuple, ws.and_then(|id| w.workspace(id)), role, None);
             let additional = effective.account_offer.accounts.len().saturating_sub(1);
             format!(
                 "account {} · {}{}",
@@ -2677,7 +2674,7 @@ fn launch_choice_snapshot(
     let account = match effective.account_offer.preselected.clone() {
         Some(account) => {
             let resolved = world.account_for(
-                tuple.provider,
+                tuple,
                 workspace.and_then(|id| world.workspace(id)),
                 role,
                 None,
@@ -2697,6 +2694,13 @@ fn launch_choice_snapshot(
     }
 }
 
+fn instance_tuple(instance: &Instance) -> TupleIdentity {
+    instance.agents.first().map_or_else(
+        || TupleIdentity::new(instance.agent, instance.agent.provider()),
+        |choice| TupleIdentity::new(choice.agent, choice.provider),
+    )
+}
+
 fn agent_rows(
     w: &World,
     ws: Option<WorkspaceId>,
@@ -2711,7 +2715,7 @@ fn agent_rows(
         let (detail, _disabled, tag) = match (&offer.preselected, &offer.blocked) {
             (Some(id), _) => {
                 let acc = w.accounts.get(id);
-                let r = w.account_for(a.provider(), wsr, role, None);
+                let r = w.account_for(TupleIdentity::new(a, a.provider()), wsr, role, None);
                 let more = w.eligible_accounts(a, wsr, role).len().saturating_sub(1);
                 (
                     format!(
@@ -2740,7 +2744,7 @@ fn agent_rows(
             let account_detail = if let Some(reason) = &effective.account_offer.blocked {
                 reason.clone()
             } else if let Some(id) = &effective.account_offer.preselected {
-                let resolved = w.account_for(a.provider(), wsr, role, None);
+                let resolved = w.account_for(TupleIdentity::new(a, a.provider()), wsr, role, None);
                 let more = effective.account_offer.accounts.len().saturating_sub(1);
                 format!(
                     "account {} · {}{}",
@@ -3869,8 +3873,13 @@ impl ManagerScreen {
                                 crate::domain::workspace::AllowedRoles::Custom(l) =>
                                     format!(" · {} allowed", l.len()),
                             },
-                            w.account_for(Agent::ClaudeCode.provider(), Some(ws), None, None)
-                                .label(&w.accounts)
+                            w.account_for(
+                                TupleIdentity::new(Agent::ClaudeCode, Agent::ClaudeCode.provider()),
+                                Some(ws),
+                                None,
+                                None,
+                            )
+                            .label(&w.accounts)
                         ),
                         Tone::Muted,
                     ),

@@ -2649,7 +2649,7 @@ fn jackin_fixed_file_menu_shows_reveal_as_unavailable() {
 }
 
 #[test]
-fn jackin_fixed_launch_picker_disables_every_agent_jackin_cannot_launch() {
+fn jackin_fixed_launch_picker_disables_explicitly_ignored_agents() {
     let app = fixed_app("jackin-fixed-launch-picker");
     app.wait_text("Current directory");
     app.key("enter");
@@ -2659,7 +2659,7 @@ fn jackin_fixed_launch_picker_disables_every_agent_jackin_cannot_launch() {
     for agent in ["Claude Code", "Amp", "Kimi Code", "OpenCode", "Grok Build"] {
         assert!(
             rows.iter().any(|row| row.contains(&format!(" {agent} "))
-                && row.contains("usage only · launches Codex only")
+                && row.contains("agent runtime mode is ignore")
                 && row.contains("unavailable")),
             "{agent} is a disabled row with its reason:\n{}",
             text(&picker)
@@ -2668,7 +2668,7 @@ fn jackin_fixed_launch_picker_disables_every_agent_jackin_cannot_launch() {
     let codex = row_with(&picker, "▪ Codex");
     assert!(
         codex.contains("choose at start") && !codex.contains("unavailable"),
-        "Codex is the one agent that launches: {codex}"
+        "Codex stays available: {codex}"
     );
     app.visual("functional/jackin_fixed_launch_picker");
 

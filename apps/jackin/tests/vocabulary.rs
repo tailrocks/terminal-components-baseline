@@ -190,7 +190,17 @@ fn the_session_choice_reason_follows_the_words() {
             .next()
             .map(|a| a.id.clone())
             .expect("a Codex account");
-        world.account_for(provider, None, None, Some(&session)).why
+        world
+            .account_for(
+                jackin_console::domain::tuple::TupleIdentity::new(
+                    jackin_console::domain::agent::Agent::Codex,
+                    provider,
+                ),
+                None,
+                None,
+                Some(&session),
+            )
+            .why
     });
     assert_eq!(
         reasons[0],

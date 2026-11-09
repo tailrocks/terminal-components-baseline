@@ -10,12 +10,17 @@ use std::sync::{Arc, Mutex};
 use common::*;
 use jackin_console::app::App;
 use jackin_console::backend::{Backend, Completion, Effect, Reply};
-use jackin_console::domain::account::{AccountRegistry, Lifecycle};
-use jackin_console::domain::agent::Agent;
+use jackin_console::domain::account::{
+    Account, AccountRegistry, CredentialSource, Lifecycle, ValidationLevel, ValidationState,
+};
+use jackin_console::domain::agent::{Agent, Provider};
 use jackin_console::domain::fixed::Fixed;
 use jackin_console::domain::instance::{Instance, InstanceEntry, InstanceId, RepoRef};
 use jackin_console::domain::launch::LaunchContent;
+use jackin_console::domain::precedence::PrecedenceLevel;
+use jackin_console::domain::role::AccountOrder;
 use jackin_console::domain::role::{FindingArea, RoleCheckState, RoleFinding};
+use jackin_console::domain::tuple::{TupleIdentity, TupleOffer};
 use jackin_console::domain::vocabulary::{Rejection, SaveField, Unbuilt, Vocabulary, fill_in};
 use jackin_console::domain::workspace::Workspace;
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
@@ -609,6 +614,207 @@ fn a_preselected_account_launches_without_a_second_pick() {
         panic!("one launch expected, got {launched:?}");
     };
     assert_eq!(target.account().as_deref(), Some("acct-claude-personal"));
+}
+
+fn zai_account(id: &str) -> Account {
+    let mut account = Account::registered(
+        id,
+        id,
+        Provider::Zai,
+        CredentialSource::PlainApiKey {
+            fingerprint: format!("fixture-{id}"),
+            tail: "test".into(),
+        },
+    );
+    account.lifecycle = Lifecycle::Available;
+    account.default_for_provider = true;
+    account.validation = ValidationState::Valid(ValidationLevel::IdentityAuthenticated);
+    account
+}
+
+fn openai_account() -> Account {
+    let mut account = zai_account("unrelated-openai");
+    account.provider = Provider::OpenAi;
+    account
+}
+
+fn zai_offer_world(accounts: Vec<Account>, bindings: &[(Agent, &str)]) -> World {
+    let mut world = world_for(Scenario::Returning);
+    world.surfaces.tuples = [
+        (Agent::Omp, "omp-zai"),
+        (Agent::ClaudeCode, "claude-zai"),
+        (Agent::Codex, "codex-zai"),
+    ]
+    .into_iter()
+    .map(|(agent, model)| TupleOffer::supported(agent, Provider::Zai, &[model]))
+    .collect();
+    world
+        .accounts
+        .accounts
+        .retain(|account| ![Provider::Zai, Provider::OpenAi].contains(&account.provider));
+    for account in accounts {
+        world.accounts.insert(account);
+    }
+    let mut admin = world_for(Scenario::RoleBinding)
+        .surfaces
+        .roles
+        .expect("role admin fixture");
+    admin.agents = Agent::ALL.to_vec();
+    admin.order = AccountOrder::Jackin;
+    for record in &mut admin.roles {
+        record.bindings.clear();
+    }
+    for (agent, account) in bindings {
+        admin
+            .role_mut("the-architect")
+            .expect("launch role")
+            .bindings
+            .insert(*agent, (*account).into());
+    }
+    world.surfaces.roles = Some(admin);
+    let workspace = world.workspace_mut(1).expect("workspace");
+    workspace.accounts.preferred.clear();
+    workspace.accounts.role_preferred.clear();
+    world
+}
+
+#[test]
+fn t09_t14_t18_offer_only_zai_and_preselect_the_agent_role_binding() {
+    for agent in [Agent::Omp, Agent::ClaudeCode, Agent::Codex] {
+        let id = format!("zai-{}", agent.short());
+        let world = zai_offer_world(vec![zai_account(&id), openai_account()], &[(agent, &id)]);
+        let workspace = world.workspace(1).expect("workspace");
+        let offer =
+            world.offer_for_provider(agent, Provider::Zai, Some(workspace), Some("the-architect"));
+        assert_eq!(offer.accounts, [id.as_str()], "{agent:?}");
+        assert_eq!(offer.preselected.as_deref(), Some(id.as_str()), "{agent:?}");
+        assert_eq!(offer.blocked, None, "{agent:?}");
+        let resolved = world.account_for(
+            TupleIdentity::new(agent, Provider::Zai),
+            Some(workspace),
+            Some("the-architect"),
+            None,
+        );
+        assert_eq!(resolved.account.as_deref(), Some(id.as_str()), "{agent:?}");
+        assert_eq!(resolved.level, PrecedenceLevel::Role, "{agent:?}");
+    }
+}
+
+#[test]
+fn zai_role_bindings_are_specific_to_omp_claude_code_and_codex() {
+    let mut accounts = vec![
+        zai_account("zai-omp"),
+        zai_account("zai-claude"),
+        zai_account("zai-codex"),
+        openai_account(),
+    ];
+    for account in &mut accounts[..3] {
+        account.default_for_provider = false;
+    }
+    let mut world = zai_offer_world(
+        accounts,
+        &[
+            (Agent::Omp, "zai-omp"),
+            (Agent::ClaudeCode, "zai-claude"),
+            (Agent::Codex, "zai-codex"),
+        ],
+    );
+    world.workspace_mut(1).expect("workspace").accounts.enabled =
+        ["zai-omp".into(), "zai-claude".into(), "zai-codex".into()].into();
+    for (agent, id) in [
+        (Agent::Omp, "zai-omp"),
+        (Agent::ClaudeCode, "zai-claude"),
+        (Agent::Codex, "zai-codex"),
+    ] {
+        let workspace = world.workspace(1).expect("workspace");
+        let resolved = world.account_for(
+            TupleIdentity::new(agent, Provider::Zai),
+            Some(workspace),
+            Some("the-architect"),
+            None,
+        );
+        assert_eq!(resolved.account.as_deref(), Some(id), "{agent:?}");
+        assert_eq!(resolved.level, PrecedenceLevel::Role, "{agent:?}");
+        let offer =
+            world.offer_for_provider(agent, Provider::Zai, Some(workspace), Some("the-architect"));
+        assert_eq!(offer.preselected.as_deref(), Some(id), "{agent:?}");
+    }
+}
+
+#[test]
+fn shared_provider_precedence_is_workspace_role_default_then_only_account() {
+    let mut accounts = vec![
+        zai_account("zai-workspace"),
+        zai_account("zai-role"),
+        zai_account("zai-default"),
+    ];
+    for account in &mut accounts[..2] {
+        account.default_for_provider = false;
+    }
+    let mut world = zai_offer_world(accounts, &[(Agent::Omp, "zai-role")]);
+    let workspace = world.workspace_mut(1).expect("workspace");
+    workspace.accounts.enabled = [
+        "zai-workspace".into(),
+        "zai-role".into(),
+        "zai-default".into(),
+    ]
+    .into();
+    workspace
+        .accounts
+        .preferred
+        .insert(Provider::Zai, "zai-workspace".into());
+
+    let resolved = |world: &World| {
+        let agent = Agent::Omp;
+        world.account_for(
+            TupleIdentity::new(agent, Provider::Zai),
+            world.workspace(1),
+            Some("the-architect"),
+            None,
+        )
+    };
+    assert_eq!(resolved(&world).account.as_deref(), Some("zai-workspace"));
+    assert_eq!(resolved(&world).level, PrecedenceLevel::Workspace);
+    world
+        .workspace_mut(1)
+        .expect("workspace")
+        .accounts
+        .preferred
+        .clear();
+    assert_eq!(resolved(&world).account.as_deref(), Some("zai-role"));
+    assert_eq!(resolved(&world).level, PrecedenceLevel::Role);
+    world
+        .surfaces
+        .roles
+        .as_mut()
+        .expect("role admin")
+        .role_mut("the-architect")
+        .expect("launch role")
+        .bindings
+        .remove(&Agent::Omp);
+    assert_eq!(resolved(&world).account.as_deref(), Some("zai-default"));
+    assert_eq!(resolved(&world).level, PrecedenceLevel::ProviderDefault);
+    let offer = world.offer_for_provider(
+        Agent::Omp,
+        Provider::Zai,
+        world.workspace(1),
+        Some("the-architect"),
+    );
+    assert_eq!(offer.preselected.as_deref(), Some("zai-default"));
+
+    let mut only = zai_account("zai-only");
+    only.default_for_provider = false;
+    let mut world = zai_offer_world(vec![only, openai_account()], &[]);
+    world.workspace_mut(1).expect("workspace").accounts.enabled = ["zai-only".into()].into();
+    assert_eq!(resolved(&world).account.as_deref(), Some("zai-only"));
+    assert_eq!(resolved(&world).level, PrecedenceLevel::OnlyAccount);
+    let offer = world.offer_for_provider(
+        Agent::Omp,
+        Provider::Zai,
+        world.workspace(1),
+        Some("the-architect"),
+    );
+    assert_eq!(offer.preselected.as_deref(), Some("zai-only"));
 }
 
 // Gap 6: RoleFinding.fix and key are optional.

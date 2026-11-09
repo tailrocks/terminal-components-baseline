@@ -252,9 +252,14 @@ pub fn fixed(w: &mut World) {
     openshell::surfaces(&mut w.surfaces);
     w.surfaces.config_path = Some(format!("{}/.config/jackin/config.toml", w.home));
     openshell::global(&mut w.global);
-    w.global
-        .agent_modes
-        .insert(Fixed::openshell().launchable, AuthMode::Sync);
+    for agent in Agent::ALL {
+        let mode = if agent == Fixed::openshell().launchable {
+            AuthMode::Sync
+        } else {
+            AuthMode::Ignore
+        };
+        w.global.agent_modes.insert(agent, mode);
+    }
     w.global.env.retain(plain);
     for a in &mut w.accounts.accounts {
         openshell::account(a);

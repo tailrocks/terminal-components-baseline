@@ -2,8 +2,11 @@
 
 mod common;
 
+use std::sync::{Arc, Mutex};
+
 use common::*;
 use jackin_console::app::{App, Route};
+use jackin_console::backend::{Backend, Completion, Effect};
 use jackin_console::domain::account::LaunchBlock;
 use jackin_console::domain::account::{
     Account, CredentialSource, Lifecycle, ValidationLevel, ValidationState,
@@ -12,12 +15,16 @@ use jackin_console::domain::agent::{Agent, AgentBlocked, AuthMode, Provider};
 use jackin_console::domain::instance::{
     DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus,
 };
-use jackin_console::domain::launch::RefusalReason;
+use jackin_console::domain::launch::{LaunchContent, RefusalReason};
+use jackin_console::domain::openshell;
+use jackin_console::domain::role::AccountOrder;
+use jackin_console::domain::surfaces::{LiveFacts, Surfaces};
 use jackin_console::domain::tuple::{
     AccountRequirement, InstanceChoice, TupleIdentity, TupleOffer, TupleState,
 };
 use jackin_console::fixtures::{Scenario, app_with_world, world_for};
-use jackin_console::launch::{EnvAnswer, EnvQuestion, LaunchEvent, LaunchTarget};
+use jackin_console::launch::{EnvAnswer, EnvQuestion, LaunchEvent, LaunchFeed, LaunchTarget};
+use jackin_console::panes::{PaneBody, PaneRequest, PaneSpawn};
 use jackin_console::screens::Go;
 use jackin_console::sim::launch::validate_tuples;
 use jackin_console::sim::{self, SimBackend};
@@ -133,6 +140,95 @@ fn tuple_world(tuples: Vec<TupleOffer>, accounts: Vec<Account>) -> World {
     }
     world.backend = SimBackend::shared();
     world
+}
+
+fn live_tuple_world(tuples: Vec<TupleOffer>, accounts: Vec<Account>) -> World {
+    let mut world = world_for(Scenario::Returning);
+    world.surfaces = Surfaces::openshell(LiveFacts {
+        version: "test".into(),
+        config_path: "/tmp/jackin-test.toml".into(),
+        gateway: None,
+    });
+    world.surfaces.tuples = tuples;
+    openshell::global(&mut world.global);
+    let providers: Vec<Provider> = accounts.iter().map(|account| account.provider).collect();
+    world
+        .accounts
+        .accounts
+        .retain(|existing| !providers.contains(&existing.provider));
+    for account in accounts {
+        world.accounts.insert(account);
+    }
+    world.backend = SimBackend::shared();
+    world
+}
+
+fn bind_role(world: &mut World, bindings: &[(Agent, &str)]) {
+    let mut admin = world_for(Scenario::RoleBinding)
+        .surfaces
+        .roles
+        .expect("role admin fixture");
+    admin.agents = Agent::ALL.to_vec();
+    admin.order = AccountOrder::Jackin;
+    for record in &mut admin.roles {
+        record.bindings.clear();
+    }
+    let record = admin.role_mut("the-architect").expect("launch role");
+    for (agent, account) in bindings {
+        record.bindings.insert(*agent, (*account).into());
+    }
+    world.surfaces.roles = Some(admin);
+}
+
+#[derive(Debug)]
+struct LaunchRecorder {
+    inner: Arc<dyn Backend>,
+    targets: Mutex<Vec<LaunchTarget>>,
+}
+
+impl LaunchRecorder {
+    fn install(world: &mut World) -> Arc<Self> {
+        let recorder = Arc::new(Self {
+            inner: SimBackend::shared(),
+            targets: Mutex::new(vec![]),
+        });
+        world.backend = recorder.clone();
+        recorder
+    }
+
+    fn count(&self) -> usize {
+        self.targets.lock().expect("launch records").len()
+    }
+}
+
+impl Backend for LaunchRecorder {
+    fn perform(&self, effect: &Effect, world: &World) -> Option<Completion> {
+        self.inner.perform(effect, world)
+    }
+
+    fn launch_content(&self) -> Arc<LaunchContent> {
+        self.inner.launch_content()
+    }
+
+    fn account_requirement(&self, tuple: TupleIdentity) -> AccountRequirement {
+        self.inner.account_requirement(tuple)
+    }
+
+    fn launch(&self, world: &World, target: &LaunchTarget) -> Box<dyn LaunchFeed> {
+        self.targets
+            .lock()
+            .expect("launch records")
+            .push(target.clone());
+        self.inner.launch(world, target)
+    }
+
+    fn spawn_pane(&self, request: &PaneRequest, spawn: PaneSpawn) -> Box<dyn PaneBody> {
+        self.inner.spawn_pane(request, spawn)
+    }
+
+    fn initial_panes(&self, instance: &Instance) -> Vec<PaneRequest> {
+        self.inner.initial_panes(instance)
+    }
 }
 
 fn running_instance() -> Instance {
@@ -661,7 +757,7 @@ fn manager_new_session_rejects_empty_account_offers_and_keeps_valid_rows_usable(
     assert_eq!(pane.account.as_deref(), Some("fixture-capsule-omp"));
 }
 
-fn launch_tuple(world: World, label: &str, expected: InstanceChoice) {
+fn launch_tuple(world: World, label: &str, expected: InstanceChoice) -> (App, String) {
     let mut app = started(world);
     press(&mut app, "enter");
     let picker = screen(&mut app);
@@ -669,6 +765,9 @@ fn launch_tuple(world: World, label: &str, expected: InstanceChoice) {
     click_text(&mut app, label);
     press(&mut app, "enter");
     assert_eq!(app.route(), Route::Cockpit, "{}", screen(&mut app));
+    let cockpit = screen(&mut app);
+    let tuple_label = TupleIdentity::new(expected.agent, expected.provider).label();
+    assert!(cockpit.contains(&tuple_label), "{tuple_label}\n{cockpit}");
     tick_until(&mut app, "the selected tuple is recorded", |app| {
         app.world
             .instances
@@ -698,6 +797,7 @@ fn launch_tuple(world: World, label: &str, expected: InstanceChoice) {
     assert_eq!(actual.provider, expected.provider);
     assert_eq!(actual.account, expected.account);
     assert_eq!(actual.model, expected.model);
+    (app, picker)
 }
 
 fn blocked_tuple_stays_unlaunchable(world: World, label: &str, reason: &str) {
@@ -1156,6 +1256,138 @@ fn the_picker_keeps_omp_opencode_on_the_opencode_account() {
     );
 }
 
+fn assert_live_zai_launch(agent: Agent, docker: bool) {
+    let id = format!("zai-{}", agent.short());
+    let model = format!("zai-{}", agent.short());
+    let mut world = live_tuple_world(
+        vec![supported_tuple(agent, Provider::Zai, &model)],
+        vec![
+            ready_account(&id, &format!("ZAI {}", agent.label()), Provider::Zai),
+            ready_account("unrelated-openai", "Unrelated OpenAI", Provider::OpenAi),
+        ],
+    );
+    bind_role(&mut world, &[(agent, &id)]);
+    if docker {
+        world.surfaces.docker = world_for(Scenario::RoleEditor).surfaces.docker;
+        world.workspace_mut(1).expect("workspace").docker = true;
+    }
+    let label = TupleIdentity::new(agent, Provider::Zai).label();
+    let (_app, picker) = launch_tuple(
+        world,
+        &label,
+        InstanceChoice {
+            agent,
+            provider: Provider::Zai,
+            account: Some(id.clone()),
+            model,
+        },
+    );
+    assert!(picker.contains("Role choice"), "{picker}");
+    assert_eq!(picker.contains("Docker is on"), docker, "{picker}");
+}
+
+#[test]
+fn t09_interactive_launch_uses_the_zai_tuple_and_agent_role_binding() {
+    assert_live_zai_launch(Agent::Omp, false);
+}
+
+#[test]
+fn t14_interactive_launch_uses_the_zai_tuple_and_agent_role_binding() {
+    assert_live_zai_launch(Agent::ClaudeCode, false);
+}
+
+#[test]
+fn t18_interactive_docker_launch_uses_the_zai_tuple_and_agent_role_binding() {
+    assert_live_zai_launch(Agent::Codex, true);
+}
+
+#[test]
+fn ambiguous_zai_accounts_require_and_launch_the_explicit_choice() {
+    let mut one = ready_account("zai-one", "ZAI one", Provider::Zai);
+    one.default_for_provider = false;
+    let mut two = ready_account("zai-two", "ZAI two", Provider::Zai);
+    two.default_for_provider = false;
+    let mut world = live_tuple_world(
+        vec![supported_tuple(Agent::Codex, Provider::Zai, "zai-codex")],
+        vec![
+            one,
+            two,
+            ready_account("unrelated-openai", "Unrelated OpenAI", Provider::OpenAi),
+        ],
+    );
+    bind_role(&mut world, &[]);
+    let workspace = world.workspace_mut(1).expect("workspace");
+    workspace.accounts.enabled = ["zai-one".into(), "zai-two".into()].into();
+    workspace.accounts.preferred.clear();
+    let recorder = LaunchRecorder::install(&mut world);
+    let before = world.instances.clone();
+    let mut app = started(world);
+    press(&mut app, "enter");
+    click_picker_option(&mut app, "Launch · choose Agent", "Codex · Z.AI");
+    press(&mut app, "enter");
+    let choices = screen(&mut app);
+    assert!(choices.contains("Account for Codex"), "{choices}");
+    assert!(
+        choices.contains("ZAI one") && choices.contains("ZAI two"),
+        "{choices}"
+    );
+    assert!(
+        !choices
+            .lines()
+            .any(|line| line.contains("Unrelated OpenAI") && line.contains("API key ·")),
+        "{choices}"
+    );
+    click_picker_option(&mut app, "Account for Codex", "ZAI two");
+    assert_eq!(app.route(), Route::Cockpit, "{}", screen(&mut app));
+    assert!(screen(&mut app).contains("Codex · Z.AI"));
+    tick_until(&mut app, "the explicit ZAI account is recorded", |app| {
+        app.world.instances.len() > before.len()
+    });
+    let launched = available(&app.world.instances[before.len()]);
+    assert_eq!(launched.agents[0].account.as_deref(), Some("zai-two"));
+    assert_eq!(recorder.count(), 1);
+}
+
+#[test]
+fn an_automatic_t18_role_binding_change_before_confirmation_launches_nothing() {
+    let mut second = ready_account("zai-t18-second", "ZAI second", Provider::Zai);
+    second.default_for_provider = false;
+    let mut world = live_tuple_world(
+        vec![supported_tuple(Agent::Codex, Provider::Zai, "zai-codex")],
+        vec![
+            ready_account("zai-t18-first", "ZAI first", Provider::Zai),
+            second,
+        ],
+    );
+    bind_role(&mut world, &[(Agent::Codex, "zai-t18-first")]);
+    world
+        .workspace_mut(1)
+        .expect("workspace")
+        .accounts
+        .enabled
+        .insert("zai-t18-second".into());
+    let recorder = LaunchRecorder::install(&mut world);
+    let before = world.instances.clone();
+    let mut app = started(world);
+    press(&mut app, "enter");
+    click_picker_option(&mut app, "Launch · choose Agent", "Codex · Z.AI");
+    let reload = snapshot_after(&app, |snapshot| {
+        snapshot
+            .surfaces
+            .roles
+            .as_mut()
+            .expect("role admin")
+            .role_mut("the-architect")
+            .expect("launch role")
+            .bindings
+            .insert(Agent::Codex, "zai-t18-second".into());
+    });
+    app.deliver(&reload);
+    press(&mut app, "enter");
+    assert_launch_invalidated(&mut app, &before);
+    assert_eq!(recorder.count(), 0);
+}
+
 #[test]
 fn the_simulator_accepts_matching_credentials_and_refuses_a_mismatched_provider() {
     let world = tuple_world(
@@ -1227,22 +1459,30 @@ fn the_picker_keeps_unsupported_omp_kimi_disabled_when_open_code_is_supported() 
     let mut unavailable = supported_tuple(Agent::Omp, Provider::Moonshot, "kimi-default");
     unavailable.state = jackin_console::domain::tuple::TupleState::Unavailable;
     unavailable.reason = Some("not offered".into());
-    let world = tuple_world(
+    let mut world = tuple_world(
         vec![
             supported_tuple(Agent::Omp, Provider::OpenCode, "opencode-default"),
             unavailable,
         ],
         vec![kimi, opencode],
     );
+    let recorder = LaunchRecorder::install(&mut world);
+    let before = world.instances.clone();
     let mut app = started(world);
     press(&mut app, "enter");
     let picker = screen(&mut app);
-    assert!(picker.contains("OMP · Moonshot / Kimi"), "{picker}");
-    assert!(picker.contains("not offered"), "{picker}");
+    let row = picker
+        .lines()
+        .find(|line| line.contains("OMP · Moonshot / Kimi"))
+        .unwrap_or_else(|| panic!("missing T10 row:\n{picker}"));
+    assert!(row.contains("not offered"), "{row}");
+    assert!(row.contains("unavailable"), "{row}");
     click_text(&mut app, "OMP · Moonshot / Kimi");
     press(&mut app, "enter");
     assert_eq!(app.route(), Route::Manager);
     assert!(screen(&mut app).contains("Launch · choose Agent"));
+    assert_eq!(app.world.instances, before);
+    assert_eq!(recorder.count(), 0);
     assert!(
         app.world
             .instances

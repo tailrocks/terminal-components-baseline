@@ -2384,13 +2384,13 @@ fn a_delete_error_for_a_workspace_that_is_gone_is_dropped() {
 #[test]
 fn inspect_names_the_account_the_launch_used() {
     let mut world = world_for(Scenario::Returning);
-    let (provider, ws, role) = {
+    let (agent, provider, ws, role) = {
         let i = world.instance(&iid("jk-7f3a")).expect("instance");
-        (i.agent.provider(), i.workspace, i.role.clone())
+        (i.agent, i.agent.provider(), i.workspace, i.role.clone())
     };
     let resolved = world
         .account_for(
-            provider,
+            jackin_console::domain::tuple::TupleIdentity::new(agent, provider),
             ws.and_then(|id| world.workspace(id)),
             role.as_deref(),
             None,

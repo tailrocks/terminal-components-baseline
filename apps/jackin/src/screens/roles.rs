@@ -247,7 +247,12 @@ impl RolesScreen {
             .pending
             .as_ref()
             .is_some_and(|p| p.role == rec.name && p.agent == agent);
-        let resolved = w.account_for(agent.provider(), None, Some(&rec.name), None);
+        let resolved = w.account_for(
+            crate::domain::tuple::TupleIdentity::new(agent, agent.provider()),
+            None,
+            Some(&rec.name),
+            None,
+        );
         let bound = rec.bindings.get(&agent).and_then(|id| w.accounts.get(id));
         let (cols, mut mark, mut tone) = match (bound, &resolved.account) {
             (Some(a), _) => (

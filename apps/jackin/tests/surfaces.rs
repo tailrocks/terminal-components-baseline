@@ -1,4 +1,4 @@
-use jackin_console::domain::agent::{Agent, AgentBlocked};
+use jackin_console::domain::agent::Agent;
 use jackin_console::domain::docker::{DockerSetting, EngineState};
 use jackin_console::domain::doctor::{DoctorState, DoctorSurface};
 use jackin_console::domain::fixed::Fixed;
@@ -62,13 +62,7 @@ fn surfaces_openshell_sets_every_field() {
         account_form.op_note.as_deref(),
         Some("Usage only · launching Codex needs a local login")
     );
-    assert_eq!(
-        agent_blocked,
-        Some(AgentBlocked {
-            launchable: Agent::Codex,
-            text: "usage only · launches Codex only".into(),
-        })
-    );
+    assert_eq!(agent_blocked, None);
     assert_eq!(
         wizard,
         Some(WizardDefaults {

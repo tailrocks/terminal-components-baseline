@@ -6,7 +6,6 @@
 
 use super::account::{Account, AccountOrigin, AccountRegistry, CredentialSource, EditBlocked};
 use super::agent::{Agent, AuthMode};
-use super::fixed::Fixed;
 use super::fixed_fields::SurfaceFixed;
 use super::instance::Instance;
 use super::surfaces::Surfaces;
@@ -60,23 +59,16 @@ pub fn workspace(ws: &mut Workspace, host_path: &str, accounts: &AccountRegistry
     ws.accounts.role_preferred.clear();
 }
 
-/// Every agent but the launchable one is `Ignore`; the launchable agent keeps
-/// its mode, or gets `Sync` when it has none. `env` is left alone.
 pub fn global(g: &mut GlobalConfig) {
-    let launchable = Fixed::openshell().launchable;
     g.coauthor_trailer = false;
     g.dco_signoff = false;
     g.mounts.clear();
     g.role_env.clear();
     g.agent_modes = Agent::ALL
         .into_iter()
-        .map(|a| {
-            let mode = if a == launchable {
-                g.agent_modes.get(&a).copied().unwrap_or(AuthMode::Sync)
-            } else {
-                AuthMode::Ignore
-            };
-            (a, mode)
+        .map(|agent| {
+            let mode = g.agent_modes.get(&agent).copied().unwrap_or(AuthMode::Sync);
+            (agent, mode)
         })
         .collect();
     for row in &mut g.trust {

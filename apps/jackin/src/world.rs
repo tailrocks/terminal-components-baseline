@@ -10,7 +10,7 @@ use crate::domain::account::{
     AccountId, AccountRegistry, CredentialSource, IssueCode, Recoverability, RecoverableIssue,
     ValidationState,
 };
-use crate::domain::agent::{Agent, AuthMode, Provider};
+use crate::domain::agent::{Agent, AuthMode};
 use crate::domain::doctor::{DoctorFailure, DoctorReport};
 use crate::domain::instance::{
     DaemonSnapshot, Instance, InstanceEntry, InstanceId, InstanceStatus, RepoRef,
@@ -21,6 +21,7 @@ use crate::domain::role::{
     NO_SAVED_WORKSPACE,
 };
 use crate::domain::surfaces::Surfaces;
+use crate::domain::tuple::TupleIdentity;
 use crate::domain::usage::Freshness;
 use crate::domain::workspace::{
     EnvVar, Mount, RoleEntry, RoleName, Usability, Workspace, WorkspaceId,
@@ -1108,7 +1109,7 @@ impl World {
 
     pub fn account_for(
         &self,
-        provider: Provider,
+        tuple: TupleIdentity,
         ws: Option<&Workspace>,
         role: Option<&str>,
         session: Option<&AccountId>,
@@ -1116,12 +1117,12 @@ impl World {
         let (order, binding) = match &self.surfaces.roles {
             Some(admin) => (
                 admin.order,
-                role.and_then(|r| admin.binding_for_provider(r, provider)),
+                role.and_then(|r| admin.binding(r, tuple.agent)),
             ),
             None => (AccountOrder::Demo, None),
         };
         crate::domain::precedence::resolve_account(
-            provider,
+            tuple.provider,
             ws,
             role,
             session.map(|s| (s, self.surfaces.vocabulary.session_choice.as_str())),
@@ -1219,7 +1220,7 @@ impl World {
         {
             ready.push(only.id.clone());
         }
-        let resolved = self.account_for(provider, ws, role, None);
+        let resolved = self.account_for(TupleIdentity::new(agent, provider), ws, role, None);
         let explicit = resolved.account.filter(|_| resolved.explicit);
         let preselected = match &explicit {
             Some(id) => ready.contains(id).then(|| id.clone()),

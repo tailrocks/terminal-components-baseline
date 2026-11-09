@@ -35,6 +35,7 @@ use crate::domain::instance::{InstanceEntry, InstanceStatus};
 use crate::domain::launch::{LaunchContent, LaunchFailure, NextStep, RefusalReason, StageKind};
 use crate::domain::precedence::PrecedenceLevel;
 use crate::domain::shown::shown;
+use crate::domain::tuple::TupleIdentity;
 use crate::domain::vocabulary::fill_in;
 use crate::domain::workspace::WorkspaceId;
 use crate::launch::{
@@ -116,7 +117,7 @@ pub struct CockpitScreen {
     progress: Progress,
     pub workspace: Option<WorkspaceId>,
     pub role: String,
-    pub agent: Agent,
+    pub tuple: TupleIdentity,
     pub account: Option<AccountId>,
 
     pub accounts: Vec<AccountId>,
@@ -154,7 +155,10 @@ impl CockpitScreen {
             instances,
             task: _,
         } = target;
-        let agent = instances.first().map_or(Agent::Codex, |i| i.agent);
+        let tuple = instances.first().map_or_else(
+            || TupleIdentity::new(Agent::Codex, Agent::Codex.provider()),
+            |instance| TupleIdentity::new(instance.agent, instance.provider),
+        );
         let account = instances.first().and_then(|i| i.account.clone());
         let steps = content.stages.iter().map(|s| Step::new(&s.label)).collect();
         let mut log = TextViewport::new(LOG).wrap(true).max_lines(5_000);
@@ -170,7 +174,7 @@ impl CockpitScreen {
             content,
             workspace,
             role,
-            agent,
+            tuple,
             account,
             accounts,
             questions: Vec::new(),
@@ -259,7 +263,7 @@ impl CockpitScreen {
 
     fn why_label(&self, account: &crate::domain::account::Account, w: &World) -> &'static str {
         let r = w.account_for(
-            account.provider,
+            self.tuple,
             self.workspace.and_then(|id| w.workspace(id)),
             Some(&self.role),
             None,
@@ -291,7 +295,7 @@ impl CockpitScreen {
                 (origin, val, tone)
             }
             None => (
-                format!("host profile · {} sync", self.agent.label()),
+                format!("host profile · {} sync", self.tuple.agent.label()),
                 format!("{} · no registered account", PrecedenceLevel::None.label()),
                 Tone::Warning,
             ),
@@ -593,7 +597,7 @@ impl CockpitScreen {
                 "Agent",
                 format!(
                     "{} · account {}",
-                    self.agent.label(),
+                    self.tuple.agent.label(),
                     self.account
                         .as_ref()
                         .and_then(|id| w.accounts.get(id))
@@ -1114,8 +1118,8 @@ impl Page<Jackin> for CockpitScreen {
             ident_y + 2,
             &format!(
                 "{} · {} · account {acc} ({why})",
-                self.agent.label(),
-                self.agent.provider().label()
+                self.tuple.agent.label(),
+                self.tuple.provider.label()
             ),
             t.secondary(),
         );
