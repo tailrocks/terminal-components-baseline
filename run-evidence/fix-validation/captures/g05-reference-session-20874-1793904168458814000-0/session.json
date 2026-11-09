@@ -1,0 +1,23 @@
+{
+  "TERM": "xterm-256color",
+  "args": [
+    "--page",
+    "overview",
+    "--frame",
+    "40"
+  ],
+  "binary_path": "/private/tmp/tuiscotti-pr2-failure-fixcheck-20261106/tests/functional/reference-bins/aarch64-apple-darwin/showcase",
+  "binary_sha256": "430460e90a752587d7f1f6d2e37b4d8343076a2787a343048fbd3448b3d54a0b",
+  "clock": false,
+  "color": "truecolor",
+  "cols": 120,
+  "comparator_name": "tuiscotti FrozenStore state comparison",
+  "comparator_rev": "d8d54155947f6303a41dfd6079b53c0abc16f29a",
+  "history": false,
+  "lockfile_sha256": "582b6cd514d0bd9c90966bdea90028ce24b652a0607d0ef7b8369a1a7532e319",
+  "mode": "reference",
+  "motion": "paused",
+  "platform": "macos",
+  "reference_sha": "fffe002e936d3621f22f9132144066a1374d5d74",
+  "rows": 40
+}

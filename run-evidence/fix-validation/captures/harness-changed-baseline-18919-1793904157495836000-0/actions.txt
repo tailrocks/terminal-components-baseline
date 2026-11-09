@@ -1,0 +1,7 @@
+spawn /private/tmp/tuiscotti-pr2-failure-fixcheck-20261106/target/debug/showcase ["--page", "overview", "--frame", "40", "--color", "truecolor", "--motion", "paused"] 120x40 color=Some("truecolor") clock=false
+checkpoint 000: visible 120×40 c1f48b6847398633
+checkpoint 001: settled c1f48b6847398633
+precondition 
+visual functional/harness_changed_screen candidate bddfc66df0fe07a038ae9a9483bcbe971162a833a74eea0b979c96ae79604473
+key ctrl+q
+clean exit 0
