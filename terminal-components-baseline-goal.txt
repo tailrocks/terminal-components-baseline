@@ -1,0 +1,1908 @@
+/goal
+
+PREPARE FUNCTIONAL AND VISUAL TESTS BEFORE THE REFACTOR
+
+Repository: https://github.com/tailrocks/terminal-components-baseline
+Audited commit: fffe002e936d3621f22f9132144066a1374d5d74
+Audited branches: main and design/interaction-polish pointed to that commit.
+
+OBJECTIVE
+
+Prepare this repository for a large internal refactor.
+Add functional tests through the real terminal applications.
+Add visual checks for every implemented screen and its relevant states.
+Preserve the current user-visible behavior and terminal output.
+Complete the test work before the refactor starts.
+Do not perform the architecture refactor in this goal.
+
+Use the current source as the behavior reference.
+Use the product documents to identify intended contracts and existing defects.
+Record any difference between intended behavior and observed behavior.
+Do not change production behavior to make a characterization test pass.
+Keep any proposed product correction separate from this test work.
+
+MODEL AND SUBAGENT RULES
+
+1. Assign exactly one task ID to each subagent.
+2. Start a separate subagent for each new task ID.
+3. Use follow-up messages only for corrections within that subagent's assigned task.
+4. Keep the main agent as the coordinator, reviewer, and integrator.
+5. Give each implementation subagent a separate Git worktree and branch.
+6. Give each subagent only its assigned files.
+7. Prevent two subagents from changing the same file at the same time.
+8. Do not let worker subagents start other subagents.
+9. Run no more than five subagents at the same time.
+10. Use a lower limit if the host provides fewer execution slots.
+11. Reserve an execution slot for the coordinator when the host requires it.
+12. Record the actual model and reasoning setting in each task receipt.
+13. Keep unfinished tasks in a queue.
+14. Start a queued task only when its dependencies have passed.
+
+TECHNICAL TERMS
+
+Reference: the unchanged application source selected before this work.
+Candidate: the source with the new test system and test files.
+PTY: a pseudo-terminal connected to a real application process.
+Case: one named input sequence with explicit expected results.
+Checkpoint: an observation after a defined input or state change.
+Baseline: a reviewed terminal capture from the reference.
+Visual check: an exact comparison against a baseline.
+Screen: a route, tab body, overlay, or application phase with distinct output.
+State: a meaningful condition of a screen or control.
+Fixture: fixed input data supplied by an existing simulation or supported option.
+Receipt: a record of source identity, commands, results, and evidence.
+Coverage row: one required case in the machine-readable coverage inventory.
+Sensitivity probe: a temporary defect used to prove that a test detects that defect.
+Retired baseline: a preserved capture with an explicit replacement record.
+Technical verbs: spawn, compile, render, capture, assert, commit, rebase, and push.
+
+KNOWN SOURCE FINDINGS
+
+These findings describe the audited commit.
+They are not execution results from this audit environment.
+The audit environment had no available Rust, Cargo, Nextest, or mise tools.
+The baseline command failed before test execution because Cargo was absent.
+
+The repository contains one Rust crate and four application binaries.
+The binaries are showcase, tablepro, holla, and jackin.
+The package name is junie-tui.
+The current functional target contains 93 test cases after macro expansion.
+Showcase accounts for 62 cases, including lifecycle and visual modules.
+TablePro accounts for 11 cases.
+Holla accounts for 11 cases.
+Jackin accounts for nine cases.
+The baseline directory contains 98 terminal samples.
+All 98 samples use the state comparison gate.
+The current baseline IDs match current source references.
+No current functional test has an ignore attribute.
+
+Showcase has 54 routes.
+Each route has Playground, Options, and States sections.
+The 54 routes therefore contain 162 primary section surfaces.
+Thirty-eight route tests only open a page and capture its initial view.
+The options source declares 538 keys: 33 shell keys and 505 page keys.
+Current tests do not exercise the Options, States, Inspector, or Compare levels surfaces.
+Current tests do not use --opt or --nav.
+The source catalog contains 3,553 entries of different technical kinds.
+Those entries are not 3,553 independent screens.
+The catalog lists 13 state IDs, but SpecimenState has 14 states.
+Editing is the state that needs reconciliation.
+
+Holla defines 34 scenarios.
+Current tests start only eight of those scenarios.
+Jackin defines eight scenarios.
+Current tests start only four of those scenarios.
+TablePro has two root routes with many additional tabs, result states, and overlays.
+The three consumer applications use deterministic simulated backends.
+They do not prove real database, Docker, provider, or credential-service integration.
+
+The stability wait can return its last frame when the deadline expires.
+That return does not prove that the frame became stable.
+Its fingerprint also omits fields that the visual comparator checks.
+The visual comparator checks full cells and all cursor fields.
+It also checks dimensions, scope, viewport origin, palette, default colors, and title.
+Hidden cursor positions are part of the current comparison contract.
+
+Several named tests do not prove their named result.
+The keyboard activation test can accept a result from an earlier pointer click.
+The table sort test discards its saved row-order value.
+The form validation test does not test reset or successful submission.
+The dialog test does not prove a complete modal focus cycle.
+The Jackin stop test accepts an unchanged manager screen.
+Its committed stop-dialog baseline contains the manager, without the stop dialog.
+The Jackin settings test does not make an edit.
+Its committed settings-leave baseline contains the manager.
+The Jackin launch-failure baseline shows unfinished credential resolution.
+The launch-failure test does not reach the failure state.
+The Jackin reconnect test captures its baseline before the launch starts.
+Several TablePro and Holla waits accept background text or dialog disappearance as success.
+
+Eighty-eight captures are 120 by 40 cells.
+Eight captures are 160 by 50 cells.
+One capture is 100 by 36 cells.
+One capture is 80 by 24 cells.
+The TablePro capture named resize_60x20 is actually 120 by 40 cells.
+The Holla capture named resize_narrow is also 120 by 40 cells.
+Both captures occur after the application returns to the larger size.
+
+The live harness fixes the client platform to macos.
+It fixes TERM to xterm-256color and COLORTERM to truecolor.
+It disables Holla history for every test.
+Only Jackin implements the clock-advance hook used by the harness.
+The Showcase page helper nevertheless sends that clock-control paste.
+The shared shell can route an unsupported clock-control paste as ordinary text.
+
+AGENTS.md names a removed Showcase coverage test.
+The test documentation names a removed coverage.rs file.
+No current executable gate closes the screen, option, and state inventory.
+The functional CI job exists for pull requests and pushes.
+The generated dedicated command uses mbx and omits --locked.
+Some documentation instead describes a Cargo compile driver.
+The configured CI runner is Linux.
+No scheduled broad matrix or macOS functional job exists in the audited configuration.
+Branch-protection enforcement was not verified.
+
+The public remote did not advertise visual-baseline during the audit.
+This observation does not establish why that historical reference was unavailable.
+Do not create, move, delete, or replace that tag or its release.
+
+SCOPE AND REPOSITORY RULES
+
+1. Read AGENTS.md before work starts.
+2. Read docs/GOAL.md and docs/handoff/README.md.
+3. Read docs/current-state.md, docs/product.md, docs/requirements.md, and docs/functional-testing.md.
+4. Read docs/development.md, docs/ci.md, and docs/architecture.md.
+5. Read any additional instructions for the files assigned to a task.
+6. Preserve the immutable visual-baseline tag and release.
+7. Use cargo nextest for Rust test execution.
+8. Do not use cargo test.
+9. Use only Tuiscotti for terminal driving and visual comparison.
+10. Keep tuiscotti-tui-test and the pinned tuiscotti-latest roles distinct.
+11. Do not add a browser test framework to this terminal application.
+12. Do not restore a second snapshot framework or the retired test harness.
+13. Drive the real compiled binaries through the shared PTY harness.
+14. Do not call application event handlers from functional tests.
+15. Do not inject internal focus IDs, hit-region IDs, or application state.
+16. Use existing CLI options and simulation scenarios as fixtures.
+17. Record an unreachable state as a testability gap.
+18. Do not invent a production capability to close a test gap.
+19. Keep dependency and tool versions identical for reference and candidate comparisons.
+20. Qualify any necessary version update separately before reference capture.
+21. Change generated CI only through .velnor/config.toml and velnor-actions generate.
+22. Do not edit generated workflow files by hand.
+23. Preserve the CLAUDE.md symlinks.
+24. Use an explicit timeout below four minutes for each command.
+25. Split long Nextest runs into complete, recorded partitions.
+26. Keep the union of required partitions equal to the required test inventory.
+27. Stop only processes created by the current task.
+28. Follow the repository's signed-commit and serialized-push rules.
+29. Use the configured author identity.
+30. Do not invent another person's commit identity.
+31. Keep work on dedicated test branches.
+32. Do not merge the work or change repository protection settings.
+
+EXPECTED OUTPUT FILES
+
+The following paths are proposed outputs.
+They are not claims about existing files.
+
+docs/testing/refactor-protection.md
+docs/testing/refactor-coverage.json
+docs/testing/reference-manifest.json
+docs/testing/known-gaps.md
+docs/testing/tasks/<task-id>.json
+docs/testing/cases/<task-id>.json
+docs/audits/refactor-test-readiness.md
+tests/functional/cases/<task-id>.rs
+tests/functional/baselines/pre_refactor/<task-id>/...
+scripts/check-refactor-coverage.py
+target/functional/<run-id>/...
+
+Use the existing tests/functional/main.rs as the integration target.
+Let the coordinator register each worker module before its first compile or test run.
+Scaffold the required module files before parallel implementation starts.
+Keep module registration under the coordinator's ownership.
+Integrate each registration only once with the accepted task changes.
+Give support.rs to G02 until that task passes.
+Give the existing test modules to G03 until that task passes.
+Give each later worker its own case file and coverage fragment.
+Let C03 assemble the final coverage inventory.
+Keep generated run artifacts outside the source tree's tracked baseline directory.
+Keep approved baselines and their provenance in version control.
+
+MANDATORY CASE RECORD
+
+Create one record for every required case.
+Use these fields:
+
+- case_id
+- owner_task
+- application
+- source_paths
+- route
+- section_or_overlay
+- scenario
+- option_values
+- input_path
+- initial_state
+- action_sequence
+- expected_results
+- forbidden_effects
+- checkpoint_ids
+- terminal_columns
+- terminal_rows
+- color_mode
+- glyph_mode
+- motion_mode
+- client_platform
+- test_name
+- baseline_paths
+- reference_commit
+- reference_binary_digest
+- baseline_digest
+- execution_commit
+- result
+- evidence_paths
+- disposition_reason
+
+Use PASS, FAIL, BLOCKED, or NOT_APPLICABLE for result.
+Use NOT_APPLICABLE only with source evidence and a precise reason.
+Do not use NOT_APPLICABLE for an implemented state that lacks a test.
+Keep a missing implemented case open as BLOCKED.
+Do not treat a test declaration as execution evidence.
+Do not treat a baseline file as evidence that its checkpoint ran.
+
+TEST METHOD FOR EVERY IMPLEMENTATION TASK
+
+1. Read the source files for the assigned screen or component.
+2. Read its current tests and existing baseline metadata.
+3. List the supported actions, states, options, and data shapes.
+4. Write the initial condition for each case.
+5. Write the exact visible result for each action.
+6. Write the effect that must not occur.
+7. Start the real application with an isolated test home.
+8. Wait for a screen-specific readiness condition.
+9. Locate the target from current rendered cells.
+10. Make sure that the target is unique within its visible owner.
+11. Send one user action through the PTY.
+12. Wait for the exact expected result.
+13. Assert the forbidden effect is absent.
+14. Capture every important intermediate screen state.
+15. Reopen the affected object after a save, delete, cancel, or navigation change.
+16. Assert the exact object identity and stored value.
+17. Resolve any intentional exit guard through the tested user path.
+18. Assert the expected process exit and terminal restoration.
+19. Save the first failure evidence.
+20. Record the command, source commit, test name, and result.
+
+Use keyboard and pointer paths where the application supports both paths.
+Test pointer down, held press, release inside, and release outside separately.
+Test hover without activation.
+Test disabled controls without changing their state.
+Test read-only controls with navigation and rejected mutation.
+Test selection after focus leaves the control.
+Test background controls while an overlay owns input.
+Test focus after the overlay closes.
+Test empty data and one-item data where those fixtures exist.
+Test long labels, repeated labels, and large collections where those fixtures exist.
+Test combining text, wide characters, emoji, and ASCII fallback where supported.
+
+Use fresh state to prove an action occurs exactly once.
+Use a before-and-after count, value, row identity, or visible event.
+Do not accept an earlier action's status message as new success.
+Do not accept dialog disappearance as proof of a completed operation.
+Do not accept a footer hint as proof that its screen is open.
+Do not accept generic text already present before an action.
+Do not use optional success branches for required behavior.
+Do not use fixed sleeps as the readiness contract.
+Keep wait predicates safe when a transient frame lacks the expected content.
+Do not index a missing match inside a polling predicate.
+Assert forbidden effects through the relevant completion or cancellation boundary.
+Do not treat immediate absence as proof against a later asynchronous effect.
+If a guard prevents a proposed sequence, test the refusal through the real UI.
+Do not bypass the guard through internal-state injection.
+
+VISUAL METHOD FOR EVERY SCREEN TASK
+
+1. Capture the screen at 120 by 40 cells.
+2. Capture the same screen at 80 by 24 cells.
+3. If the screen has a different minimum size, capture its explicit small-terminal state.
+4. Capture the visible result immediately before and after each important state transition.
+5. Capture an overlay while it is open.
+6. Capture the covered background while the overlay owns focus.
+7. Capture the state after cancel or close.
+8. Capture an error before recovery.
+9. Capture the recovered result.
+10. Capture held controls before release.
+11. Capture the narrow layout before the terminal grows again.
+12. Capture the recovered layout after the terminal grows.
+13. Record dimensions and modes in each checkpoint ID.
+14. Compare full terminal cells with the reviewed reference capture.
+15. Keep foreground, background, attributes, grapheme width, and cursor checks enabled.
+
+Use the pinned comparator's exact state contract.
+Do not mask hidden cursor positions merely to make a refactor pass.
+Record a proposed comparator-policy change as a separate decision.
+Compare the same terminal profile on both sides of a visual check.
+Keep Linux and macOS evidence distinct where their terminal output differs.
+Use raster images only as additional review evidence when pinned Tuiscotti supports them.
+Do not claim pixel parity across terminal fonts from cell snapshots alone.
+
+Cover all five color configurations for each distinct shared visual treatment.
+The configurations are truecolor, 256, 16, none, and NO_COLOR.
+Cover focus, selection, hover, held press, disabled state, and overlay dimming in that matrix.
+Cover every application shell and a real consumer of each affected shared component.
+Use Unicode and ASCII for each distinct glyph-dependent component family.
+Use full, reduced, and paused motion for each implemented motion behavior.
+Use fixed supported frame values for motion captures.
+Do not pause the application before a transition that needs ticks.
+Use the clock-advance request only when that application implements the hook.
+
+Use stable capture for screens that can become stable.
+Use a separate semantic checkpoint for a transition that is still running.
+Use existing frame controls or an actual Pause action for deterministic transient visual captures.
+Use a motion-trace comparison only if the pinned Tuiscotti API supports the required contract.
+If deterministic transient capture is unavailable, record that visual state as BLOCKED.
+Do not accept an arbitrary changing frame as its reference.
+Do not add a production clock hook without a separate reviewed testability decision.
+
+Do not generate an uncontrolled Cartesian product of every option and mode.
+List every supported option value or boundary case in the inventory.
+Use explicit combinations when two options share code or affect each other.
+Record the source-based reason for each reduced combination set.
+Do not reduce coverage of a distinct screen or state to save snapshot count.
+
+REFERENCE AND BASELINE RULES
+
+1. Record the current branch and exact source commit before any production change.
+2. If that commit differs from the audited commit, inspect the intervening changes.
+3. Update the screen, scenario, option, and state inventory for those changes.
+4. Record the selected commit as REFERENCE_SHA.
+5. Keep a clean reference checkout for the entire goal.
+6. Build the reference binaries with the recorded toolchain and lockfile.
+7. Record each binary's cryptographic digest.
+8. Run each new journey against those reference binaries.
+9. Review the expected semantic state before accepting its capture.
+10. Accept a new capture only through the pinned Tuiscotti CLI.
+11. Read that CLI's help before using its current acceptance syntax.
+12. Use the candidate digest and expected-baseline guard required by that CLI.
+13. Preserve the receipt for every accepted baseline.
+14. Make the candidate test run read-only with respect to baselines.
+15. Fail when a baseline is missing or different.
+16. Do not accept a capture from a failed refactor candidate as the new reference.
+17. Do not update expected output merely because a test fails.
+18. Preserve the original 98 baseline files or their explicit retired records.
+19. Record replacements for misleading checkpoint names and wrong-state captures.
+20. Give a new state a new baseline ID.
+21. Keep baseline creation separate from baseline checking.
+22. Prevent two workers from accepting the same baseline ID.
+
+Try to resolve the historical visual-baseline tag without changing it.
+If the remote does not provide it, record the missing historical provenance.
+Continue current-source capture from REFERENCE_SHA.
+Do not claim historical parity without the historical source and captures.
+Do not make a replacement tag with the historical name.
+
+EXECUTION ORDER
+
+The plan has 40 scope cards.
+Create bounded execution tasks from these cards before assignment.
+Each execution task gets one subagent.
+Use these waves in order:
+
+Wave A: G00, then G01.
+Wave B: G02, then G05, then G03, then G04.
+Wave C: S01-S10, T01-T05, H01-H06, and J01-J06.
+Wave D: X01-X03 after G03 and G04; coordinate their files with Wave C.
+Wave E: C01 after the inventory and test names are stable.
+Wave F: C02, then C03, then C04.
+
+Run disjoint tasks within a wave in parallel when resources permit.
+Use the dependencies listed in each task card.
+Resolve shared harness changes through the coordinator.
+Record a new dependency before a task uses another task's output.
+Split S01-S10 into one execution task per route.
+Use IDs such as S01.overview and S01.chrome.
+Assign global shell work to a separate S01.shell task.
+Split each consumer card by its named surface or a single operation's complete lifecycle.
+Keep a lifecycle together when its states require the same running process.
+Split a surface again when it contains unrelated operation lifecycles.
+Give each leaf task one case file, one coverage fragment, and one baseline namespace.
+List exact inventory rows and required checkpoints in every leaf task.
+Do not assign a scope card itself when it has child tasks.
+Record the resulting execution-task count in the ledger.
+Do not let one worker silently take another task's scope.
+
+A task can complete its implementation while the overall readiness gate remains BLOCKED.
+G04 proves the validator works with controlled positive and negative fixtures.
+G04 does not require the unfinished repository inventory to pass.
+C03 and C04 require every mandatory repository row to pass.
+If execution is blocked, continue useful source inventory work.
+Do not mark an execution task complete without its required run evidence.
+If a blocker cannot be resolved within scope, continue independent tasks.
+After those tasks finish, complete C03's review and C04's report with the unresolved blockers.
+Do not report READY in that situation.
+
+G00 — RECORD THE SOURCE AND RUN THE EXISTING GATES
+
+Dependencies: none.
+Owner files: docs/testing/tasks/G00.json and the initial reference manifest.
+Inputs: repository instructions, Cargo files, tool pins, Git refs, and existing CI configuration.
+
+1. Record the worktree status without removing user changes.
+2. Record the requested branch and its exact commit.
+3. Record the remote default branch.
+4. Resolve main and design/interaction-polish separately.
+5. Try to read the historical visual-baseline reference without modifying it.
+6. Record unavailable references explicitly.
+7. Record the existing Cargo.lock and tool configuration digests.
+8. Install the pinned tools when the environment permits installation.
+9. Record Rust, Nextest, Tuiscotti, mise, and Velnor versions.
+10. List the actual functional tests with Nextest.
+11. Run the existing functional suite before editing tests.
+12. Run the existing all-target gate, Clippy, and formatting check.
+13. Record failures with their original artifacts.
+14. Classify each failure as product, test, baseline, or environment failure.
+15. Preserve a clean reference checkout and its executable artifacts.
+
+Required result:
+- A reproducible REFERENCE_SHA and tool manifest.
+- An actual Nextest test list, including macro-generated cases.
+- Baseline execution evidence, or an exact environment blocker.
+- No claim that a static source count is a passing run.
+
+G01 — BUILD THE COMPLETE COVERAGE INVENTORY
+
+Dependencies: G00.
+Owner files: docs/testing/refactor-coverage.json and docs/testing/known-gaps.md.
+Inputs: src/catalog.rs; all application route registries; all scenarios; all options; all current tests.
+
+1. Enumerate every Showcase route from PageId and NAV_ENTRIES.
+2. Enumerate Playground, Options, and States for each route.
+3. Enumerate the Inspector and global shell surfaces.
+4. Enumerate every shell and page option from options.rs.
+5. Enumerate every supported SpecimenState.
+6. Reconcile SpecimenState with the catalog state list.
+7. Classify catalog types, variants, builders, tokens, functions, and states separately.
+8. Map each visible capability to a reachable demonstration and consumer.
+9. Record nonvisual catalog items with their technical reason.
+10. Enumerate TablePro roots, tabs, result bodies, forms, menus, and guards.
+11. Enumerate Holla pages, tab types, snapshot families, and all 34 scenarios.
+12. Enumerate Jackin routes, page sections, overlays, phases, and all eight scenarios.
+13. List the expected transitions for each implemented state machine.
+14. Map the existing 93 cases to their actual assertions and checkpoints.
+15. Map the 98 baseline IDs to their actual dimensions and displayed states.
+16. Classify each current test as behavior coverage, visual coverage, both, or insufficient evidence.
+17. Add all missing implemented cases to the task ledger.
+18. Record product proposals separately from current implemented behavior.
+19. Assign every required row to exactly one worker task.
+
+Required result:
+- All implemented screens and overlays have an owner and a coverage row.
+- Every route has an entry path and a return path.
+- Every option has a value or boundary plan.
+- Every omitted combination has a specific reason.
+- No required implemented case disappears into a generic exception.
+
+G02 — MAKE THE SHARED HARNESS FAIL CORRECTLY
+
+Dependencies: G01.
+Owner files: tests/functional/support.rs and new harness-specific functional cases.
+Inputs: current support.rs; runtime.rs; shell/app.rs; the exact pinned Tuiscotti source.
+
+1. Make stable_screen fail when the stable interval is not reached before its deadline.
+2. Make the stability fingerprint cover all fields used by the pinned state comparator.
+3. Assert child liveness during every wait and stability loop.
+4. Save the last frames and action trace before reporting a timeout.
+5. Prepare the helper change that rejects unsupported clock-control requests.
+6. Make clock advancement an explicit per-application capability.
+7. Keep unsupported clock requests from entering user text through the harness.
+8. Add typed launch configuration for terminal, platform, history, motion, and environment cases.
+9. Preserve cleared environment and isolated HOME/XDG defaults.
+10. Add an explicit enabled-history fixture mode for Holla.
+11. Add scoped locators for repeated labels, dialogs, lists, and panes.
+12. Preserve grapheme-to-cell coordinate handling.
+13. Add distinct helpers for expected clean exit and already-exited short commands.
+14. Keep dirty and running exit choices in the test's visible action sequence.
+15. Record the exact binary path and digest for every session.
+16. Record each checkpoint result and comparison digest.
+17. Keep evidence paths unique across parallel processes and repeated runs.
+18. Save startup failures even when no ready screen appears.
+19. Add negative harness cases for missing baselines, mismatches, timeouts, and early child exit.
+20. Use temporary baseline directories for negative comparator cases.
+21. Keep production baselines unchanged during those negative cases.
+
+Required result:
+- A changing screen cannot pass the stability contract.
+- A dead child cannot satisfy a wait or successful shutdown.
+- A missing or changed baseline fails the case.
+- Cleanup termination cannot count as a normal application exit.
+- Current valid tests retain their precise assertions.
+
+G03 — REPAIR THE EXISTING TEST CLAIMS
+
+Dependencies: G05.
+Owner files: existing application test modules, lifecycle.rs, visual.rs, replacement-baseline namespaces, and disposition records.
+Inputs: the specific weak cases listed in KNOWN SOURCE FINDINGS.
+
+1. Remove the unsupported clock-control paste from Showcase page visits.
+2. Prove keyboard activation from a fresh unactivated control.
+3. Compare actual sorted row identities before and after each sort action.
+4. Complete the form reset and valid-submit paths promised by the test name.
+5. Traverse the modal focus ring forward and backward.
+6. Prove that background controls cannot activate while the modal is open.
+7. Restore focus to the correct opener after dismissal.
+8. Require real TablePro result headers and row values after execution.
+9. Require removal of the prior query error after recovery.
+10. Rerun the selected History entry when a test claims rerun coverage.
+11. Require a help-specific title when a test opens help.
+12. Require Holla's intended plan to start after its exact confirmation phrase.
+13. Require the plan's final outcome and included-step identities.
+14. Require the actual Holla no-results state.
+15. Require the exact failed Holla activity and its exit status.
+16. Select a running Jackin instance before opening its stop dialog.
+17. Prove that stop cancellation preserves the selected instance.
+18. Prove that confirmed stop changes that instance and the running count.
+19. Change a real Jackin setting before testing its dirty leave choices.
+20. Reach Jackin's actual failed launch stage before capturing failure.
+21. Keep Ctrl+C launch abort as a separate case.
+22. Add cockpit, capsule, detach, and reconnect checkpoints to the existing launch journey.
+23. Add separate narrow and recovered checkpoints to the existing resize cases.
+24. Preserve replaced captures with an explicit disposition record.
+
+Required result:
+- Each test name describes the actions that the test performs.
+- Each required path is unconditional.
+- Each baseline shows its named state at its named dimensions.
+- The old permissive path fails an appropriate sensitivity probe.
+
+G04 — ADD AN EXECUTABLE COVERAGE GATE
+
+Dependencies: G01 and G03.
+Owner files: scripts/check-refactor-coverage.py and its inventory schema.
+Inputs: source registries, Nextest test lists, coverage fragments, checkpoint receipts, and baseline files.
+
+1. Compare the source route inventory with the required case inventory.
+2. Compare option keys and supported states with their coverage records.
+3. Compare declared test names with the actual Nextest test list.
+4. Compare required checkpoints with current execution receipts.
+5. Compare active baseline IDs with baseline files and checkpoint IDs.
+6. Fail on missing routes, cases, tests, checkpoints, or baselines.
+7. Fail on duplicate case IDs or duplicate active baseline IDs.
+8. Fail on unexplained orphan baselines.
+9. Keep retired baselines in a separate explicit record.
+10. Fail when a required case is ignored, filtered from every partition, or never executed.
+11. Fail when a required case's result is not PASS.
+12. Require a source-based reason for each NOT_APPLICABLE row.
+13. Keep required-but-unreachable cases visible as BLOCKED.
+14. Emit separate denominators for routes, sections, states, transitions, options, and scenarios.
+15. Add temporary negative inputs that prove each missing-coverage check fails.
+16. Keep source scanning separate from functional behavior proof.
+
+Required result:
+- Adding a route without tests fails the inventory gate.
+- Removing a test or checkpoint fails the inventory gate.
+- A declared test without a current execution receipt cannot close coverage.
+- The gate does not confuse catalog function counts with screen counts.
+
+G05 — ESTABLISH REFERENCE EXECUTION AND BASELINE RECEIPTS
+
+Dependencies: G00, G01, and G02.
+Owner files: reference-manifest.json, baseline-capture tooling, and support.rs after G02 releases it.
+Inputs: unchanged reference binaries, candidate test harness, baseline IDs, and pinned Tuiscotti acceptance help.
+
+1. Run the test harness against separately identified reference executables.
+2. Keep reference capture mode separate from the normal candidate test mode.
+3. Make normal CI select the current build's CARGO_BIN_EXE binaries.
+4. Reject accidental reference-binary substitution in the candidate gate.
+5. Record source, lockfile, toolchain, binary, fixture, environment, and comparator digests.
+6. Record the semantic precondition and state for each proposed capture.
+7. Store immutable receipts for accepted captures.
+8. Review changed or new baselines before acceptance.
+9. Keep existing correct baselines unchanged.
+10. Provide the disposition format for misleading captures and their replacement cases.
+11. Make sure that reference and candidate use the same terminal profile.
+12. Make sure that test execution cannot invoke the acceptance command.
+13. Freeze the shared harness interface before the screen workers start.
+14. Let G03 use this capture process for corrected checkpoint states.
+
+Required result:
+- A later refactor cannot create its own expected output.
+- Every new baseline identifies the unchanged source that produced it.
+- Candidate execution proves the candidate binary ran.
+- Missing historical evidence remains explicit.
+
+COMMON REQUIREMENTS FOR S01-S10
+
+Dependencies: G03 and G04, plus any specific dependency stated below.
+Owner files: the task's new case module, coverage fragment, and baseline namespace.
+Inputs: assigned page files, options.rs, Template, Inspector, SpecimenState, and used shared components.
+
+1. Open every assigned route through supported direct navigation.
+2. Reach every assigned route through keyboard navigation.
+3. Reach every assigned route through pointer navigation.
+4. Visit Playground, Options, and States on every assigned route.
+5. Capture those three sections at 120 by 40 and 80 by 24 cells.
+6. Scroll each section until all required content is reachable.
+7. Capture additional viewports for clipped content.
+8. Change a visible option on every route.
+9. Assert its actual effect on the assigned control or screen.
+10. List every assigned option key and its supported values.
+11. Cover every distinct behavioral result and visual treatment.
+12. Test default behavior before its overrides.
+13. Test option dependencies declared by Opt.needs.
+14. Compare Effect::Frame and Effect::Behaviour declarations with actual results.
+15. Cover all supported specimen states for the page's components.
+16. Keep unsupported specimen cells distinct from tested component states.
+17. Test live input separately from specimen rendering.
+18. Preserve sample focus markers when testing the States section.
+19. Count only the live focus owner when testing the focus rule.
+20. Map each shared component to its existing consumer uses.
+21. Assign those uses to the corresponding consumer tasks.
+22. Record components without consumer uses as source-based gaps.
+23. Do not invent a consumer to close such a gap.
+24. Switch Compare levels off and on in each supported States view.
+25. Test its color bands, horizontal limits, scrolling, and narrow layout.
+26. Return from Compare levels and assert preserved page state.
+27. Test copy payloads only through visible round trips or supported terminal clipboard output.
+28. Record an unobservable copy payload as an observation gap.
+
+The minimum section-size inventory contains 324 combinations.
+The calculation is 54 routes times three sections times two terminal sizes.
+This minimum excludes scrolling viewports, overlays, variants, and transient states.
+Do not use 324 as a maximum snapshot count.
+
+S01 — SHOWCASE SHELL AND OVERVIEW
+
+Routes: overview, chrome, statushints, breadcrumbsrails, helpkeys, quitleave, focusnavigation.
+Option budget at audited commit: 80 keys, including 33 shell keys.
+Page sources: overview.rs, chrome.rs, status_hints.rs, breadcrumbs_rails.rs, help_keys.rs, quit_leave.rs, focus_navigation.rs.
+Additional sources: app.rs, inspector.rs, options.rs, and src/shell/.
+
+1. Open Overview's token, plane, kind, ladder, modifier, and contrast examples.
+2. Test all Chrome menus and their enabled commands.
+3. Test disabled menu commands without changing application state.
+4. Test pointer menu switching and keyboard menu switching.
+5. Test row, environment, status-item, and overflow actions.
+6. Post success, error, and progress statuses through their real controls.
+7. Assert status expiry and persistent errors where implemented.
+8. Test hint priority, hidden hints, width, and too-small options.
+9. Enter a folder through the breadcrumb demonstration.
+10. Return through Backspace and a breadcrumb.
+11. Collapse and expand the rail without losing the selected path.
+12. Open the page-specific help and global help separately.
+13. Test help scrolling, dismissal policy, and restored focus.
+14. Test clean, dirty, and running leave states.
+15. Test every offered Stay, Cancel, Discard, and Save result.
+16. Traverse the complete focus ring in both directions.
+17. Test first-click focus and activation according to current policy.
+18. Test Inspector open, close, navigation, and option changes.
+19. Test Current, Accordion, and All sidebar expansion policies.
+20. Test shell-level overrides on an actual page control.
+
+Required checkpoints: each shell surface; every help layer; leave guards; hint overflow; changed focus; Inspector sections.
+Completion proof: exact route, path, selected item, status, and focus results survive each transition.
+
+S02 — SHOWCASE CONTROLS AND FORMS
+
+Routes: buttons, inputs, textareas, chipsselects, forms, checksradios, toolbars.
+Option budget at audited commit: 76 keys.
+Page sources: buttons.rs, inputs.rs, textareas.rs, chips.rs, forms.rs, checks_radios.rs, toolbars.rs.
+
+1. Exercise every distinct button family and tone.
+2. Test busy buttons, icon actions, toggles, toolbar actions, and overflow actions.
+3. Test activation on release and cancellation after release outside.
+4. Test each input entry mode and blur policy.
+5. Test text selection, paste, undo, redo, validation, and secret masking.
+6. Test multiline insertion, multiline paste, line selection, and scrolling.
+7. Test commit, cancel, Tab behavior, and read-only text areas.
+8. Add, remove, clear, activate, and toggle chips.
+9. Test chip overflow and close hit targets.
+10. Test each select's choice, type-ahead, scrolling, and dismissal policy.
+11. Test disabled selects and mixed values.
+12. Submit invalid and valid forms.
+13. Assert the submitted field values.
+14. Reset the form and assert the exact defaults.
+15. Test dependent fields and validation timing.
+16. Test mixed, checked, and unchecked transitions.
+17. Test radio exclusivity through keys and pointer input.
+18. Test checkbox labels and row hit targets.
+19. Test toolbar Run, Stop, shortcuts, toggles, alignment, wrapping, and overflow.
+20. Assert exactly-once effects for each activation family.
+
+Required checkpoints: rest, hover, held, focused, selected, busy, disabled, invalid, mixed, open-select, and overflow states.
+Completion proof: rendered state and exact field values agree after each action and cancellation.
+
+S03 — SHOWCASE TABLES, GRIDS, AND COLUMNS
+
+Routes: basictable, editable, datagrid, selection, celleditors, columns.
+Alias: tables selects basictable.
+Option budget at audited commit: 50 keys.
+Page sources: tables.rs, editable.rs, grid.rs, selectable.rs, celleditors.rs, columns.rs.
+
+1. Assert exact ascending, descending, and restored row order.
+2. Test row selection and activation independently.
+3. Test none, single, and multiple selection policies.
+4. Test row and cell context actions.
+5. Edit, validate, commit, and cancel cells.
+6. Test numeric limits and invalid-value recovery.
+7. Test paste, cell traversal, blur policies, and edge navigation.
+8. Insert, duplicate, delete, and restore rows where implemented.
+9. Test refresh and additional-row requests.
+10. Open SQL preview and pending-change review.
+11. Cancel, save, and discard pending changes.
+12. Test read-only refusal with the current visible reason.
+13. Test range, toggle, and Select All behavior with disabled rows.
+14. Test cursor movement without replacement of the selected set.
+15. Test mixed bulk fields, apply, revert, and leave guards.
+16. Open every constrained cell-editor kind.
+17. Test out-of-set values, type-ahead, cancellation, and popup placement.
+18. Resize columns within their implemented limits.
+19. Test fixed columns, horizontal overflow, and column menus.
+20. Assert that seam styling changes only the seam's cells.
+
+Required checkpoints: selected rows; active cell; editing cell; invalid cell; pending changes; read-only grid; cell popup; seam states.
+Completion proof: exact row IDs, cell values, selection, order, and pending counts match the reference.
+
+S04 — SHOWCASE COLLECTIONS AND NAVIGATION
+
+Routes: lists, trees, sidebars, tabs, menus.
+Option budget at audited commit: 68 keys.
+Page sources: lists.rs, trees.rs, sidebars.rs, tabs.rs, menus.rs.
+
+1. Test range selection, toggle selection, and Select All.
+2. Test disabled-item skipping and selection retention after blur.
+3. Test type-ahead, wrapping, activation policy, and empty collections.
+4. Test context selection on selected and unselected rows.
+5. Test lazy tree loading and its final children.
+6. Test branch toggle, branch activation, recursive expansion, and collapse.
+7. Test sidebar collapse, rail hiding, badges, and selection recovery.
+8. Create, switch, and close tabs.
+9. Test dirty-tab Cancel, Save, and Discard.
+10. Test overflow, middle-click closure, digit jumps, and custom keys.
+11. Test nested tab focus and selected accent beneath overlays.
+12. Open menus through each supported keyboard and pointer path.
+13. Test separators, disabled rows, type-ahead, and unknown keys.
+14. Test release selection, drag selection, placement, and scrolling.
+15. Test each supported menu dismissal policy.
+16. Assert the exact selected identity after each mutation.
+
+Required checkpoints: active and inactive selections; lazy loading; empty results; dirty close; menu variants; overflow; restored focus.
+Completion proof: cursor, focus, chosen value, checked value, and selected set remain distinct.
+
+S05 — SHOWCASE OVERLAYS AND FILE BROWSER
+
+Routes: dialogs, pickers, dialogkinds, popupstooltips, filebrowser.
+Alias: popups selects popupstooltips.
+Option budget at audited commit: 88 keys.
+Page sources: dialogs.rs, pickers.rs, dialog_kinds.rs, popups_tooltips.rs, file_browser.rs.
+
+1. Open every implemented dialog variant.
+2. Test confirm, rename, unsaved choice, delete, facts, typed-drop, retry, and release-note dialogs.
+3. Test invalid and valid prompt values.
+4. Test both stages of typed confirmation.
+5. Test Quick, Tabs, Level, Commands, and Remote pickers.
+6. Test filtering, empty results, clearing, scope, alternate choice, and secondary actions.
+7. Test loading, error, retry, and nonsearchable picker states.
+8. Open Form, Info, Choice, and Help dialog kinds.
+9. Test each supported field kind in the form dialog.
+10. Open the nested key chooser above its owning form.
+11. Test failure, success, save, cancel, and keep-open actions.
+12. Test popover choice and dismissal.
+13. Test delayed tooltips through pointer and keyboard paths.
+14. Test focus-out, outside-click, and pass-through policies separately.
+15. Move or resize the anchor while the overlay is open.
+16. Browse directories and return to the parent path.
+17. Test hidden entries, filtering, selection mode, and cancellation.
+18. Test empty, invalid, and valid URL input.
+19. Use isolated temporary files for any real FsSource case.
+20. Assert no click-through into covered controls.
+21. Assert one live top-layer focus owner through nested overlays.
+
+Required checkpoints: every dialog and picker kind; each nested layer; wrong and valid confirmation; tooltip; browser mode; error recovery.
+Completion proof: each close resolves the correct result and restores the correct owner.
+
+S06 — SHOWCASE FEEDBACK
+
+Routes: progress, emptyerror, meters, notices.
+Option budget at audited commit: 24 keys.
+Page sources: progress.rs, empty_error.rs, meters.rs, notices.rs.
+
+1. Start, pause, resume, restart, and complete progress demonstrations.
+2. Test determinate, indeterminate, aggregate, and meter presentations.
+3. Test label width, value width, and stale styling.
+4. Activate New, Import, and Retry from their real empty or error state.
+5. Test read-only mutation refusal and its message.
+6. Test narrow action overflow.
+7. Test meter refresh start, busy state, and final values.
+8. Test offline behavior and refresh refusal.
+9. Test warning, stale, and detail-tone variants.
+10. Cycle all connection-notice outcomes.
+11. Test notice details, hints, line limits, and truncation marks.
+12. Capture each timed state through a supported timing mechanism.
+
+Required checkpoints: busy, completed, empty, error, offline, stale, warning, and truncated states.
+Completion proof: numeric values, statuses, and available actions change together as the reference defines.
+
+S07 — SHOWCASE LAYOUT AND SCROLLING
+
+Routes: panels, scrolling, splitsstacks, masterdetail, panetree.
+Alias: splits selects splitsstacks.
+Option budget at audited commit: 47 keys.
+Page sources: panels.rs, scrolling.rs, splits_stacks.rs, master_detail.rs, pane_tree.rs.
+
+1. Scroll adjacent and nested panels independently.
+2. Test both horizontal and vertical scrolling.
+3. Test track click, track hold, thumb drag, and boundary behavior.
+4. Test wheel-line policy, follow-tail, and hover after scrolling.
+5. Test keyboard navigation and type-ahead precedence.
+6. Test wrap, clipping, and heading styles.
+7. Resize horizontal and vertical splits.
+8. Test minimum sizes, hit padding, and supported double-click actions.
+9. Zoom and restore each supported pane.
+10. Select a master row and open its detail.
+11. Cross the master-detail collapse breakpoint in both directions.
+12. Open and close its narrow drawer.
+13. Split, focus, resize, close, and zoom pane-tree leaves.
+14. Assert unchanged neighboring pane content during each operation.
+15. Assert seam glyph and style containment at rest, hover, and held drag.
+16. Assert restored selection and focus after resize.
+
+Required checkpoints: both scrollbar axes; each seam kind; narrow drawer; nested panes; minimum layout; zoom; recovered layout.
+Completion proof: only the intended pane or seam changes, with valid layout bounds.
+
+S08 — SHOWCASE TEXT, EDITOR, DIFF, AND TERMINAL
+
+Routes: codeeditor, diff, terminal, textutilities.
+Option budget at audited commit: 46 keys.
+Page sources: editor.rs, diff.rs, terminal.rs, text_utilities.rs.
+
+1. Enter, edit, commit, and revert code.
+2. Test grapheme-safe selection, copy, paste, undo, and redo.
+3. Test find movement and completion acceptance or dismissal.
+4. Assert the completion list uses its owner's focus policy.
+5. Test diagnostics, indentation, highlighting, and supported key overrides.
+6. Run a code block through busy and result states.
+7. Test read-only code and Tab-leave behavior.
+8. Switch diff files and diff modes.
+9. Test unified, review, and empty diff output.
+10. Test diff scrolling, selection, copy, and narrow clipping.
+11. Run successful and failed terminal demonstrations.
+12. Test step selection, follow mode, find marks, and retention.
+13. Test horizontal output and wrapping.
+14. Activate and copy property rows.
+15. Test text fit, wrap, case, duration, and reveal variants.
+
+Required checkpoints: editing; selection; completion; diagnostics; busy result; diff modes; terminal success and failure; reveal; clipping.
+Completion proof: text, selection, caret, result, and copied content agree with the current contract.
+
+S09 — SHOWCASE COMPOSITE WORKFLOWS
+
+Routes: settings, taskrunner, queryworkbench, connections, finder.
+Option budget at audited commit: 30 keys.
+Page sources: settings.rs, taskrunner.rs, query_workbench.rs, connections.rs, finder.rs.
+
+1. Visit every Settings tab.
+2. Change fields and test dirty-tab leave choices.
+3. Invite, edit, and remove members where implemented.
+4. Add and remove environment values.
+5. Test save validation and save confirmation.
+6. Select task targets and run the pipeline.
+7. Test stage, log, and progress changes.
+8. Test cancellation refusal, confirmed cancellation, and restart.
+9. Expand the query explorer and open a table.
+10. Create, switch, and close query tabs.
+11. Assert that each tab retains its own SQL and results.
+12. Test run, explain, stop, clear, rows, plan, and error states.
+13. Test connection create, edit, test, save, cancel, duplicate, and delete.
+14. Test connection filtering, empty state, loading, and failure.
+15. Edit Finder queries and change scope.
+16. Test result activation, Alternatives, Why, preview, and no results.
+
+Required checkpoints: dirty forms; nested forms; running pipeline; cancellation guard; query result types; connection errors; Finder alternatives.
+Completion proof: composed components preserve user data and input ownership across each transition.
+
+S10 — SHOWCASE COMPOSITE OPERATIONS
+
+Routes: diskcleanup, activity, workspaces, accountsusage, launchcockpit, readonlyreport.
+Option budget at audited commit: 29 keys.
+Page sources: disk_cleanup.rs, activity.rs, workspaces.rs, accounts_usage.rs, launch_cockpit.rs, readonly_report.rs.
+
+1. Rescan disk data and select cleanup targets.
+2. Test dry run and every implemented confirmation stage.
+3. Test wrong and exact confirmation phrases.
+4. Assert retained and removed demonstration items.
+5. Test activity stream filters, follow, find, copy, stop, and restart.
+6. Assert stopping and stopped states separately.
+7. Select workspace and roster entries.
+8. Test launch, edit, prewarm, delete, and post-delete selection.
+9. Test workspace detail collapse and return.
+10. Select accounts and inspect their facts and usage.
+11. Test copy, refresh, default choice, disabled, offline, and warning states.
+12. Run launch stages to success.
+13. Test credential failure, retry, build failure, and cancellation.
+14. Test read-only report refresh and offline refusal.
+15. Copy report facts and the complete report.
+16. Navigate from the report to its related screens and back.
+
+Required checkpoints: dry run; both gates; operation output; stopped activity; workspace detail; account status; launch failures; report states.
+Completion proof: state-machine results and exact demonstration data remain unchanged by the test work.
+
+COMMON REQUIREMENTS FOR CONSUMER TASKS
+
+Dependencies: G03 and G04, plus shared-component tasks that supply required helpers.
+Owner files: the task's new case module, coverage fragment, and baseline namespace.
+Source paths below are relative to src/bin/<application>/.
+
+1. Use the real application entry point.
+2. Reach screens through real keys, pointer input, or supported startup arguments.
+3. Use the existing simulation fixtures before proposing new fixtures.
+4. Assert simulated effects through their observable follow-up screens.
+5. Assert exact displayed identities, values, command previews, and result counts.
+6. If an internal effect has no observable result, record the observation gap.
+7. Do not substitute a direct internal-state assertion for a required PTY journey.
+8. Capture every implemented route, tab body, modal kind, and meaningful operation state.
+9. Preserve current unsupported-operation and failure messages.
+10. Keep host services and real credentials outside these simulation tests.
+11. Use synthetic secret values for masking and leak tests.
+
+T01 — TABLEPRO CONNECTIONS AND FORMS
+
+Sources: connections.rs, pages.rs, model.rs, db.rs, and the connection branches in app.rs.
+Surfaces: Connections; Basic form; Advanced form; connection test; connection leave dialogs.
+
+1. Test tree selection, filtering, details, and empty search.
+2. Test idle, connecting, authentication failure, unreachable host, and recovery.
+3. Create, edit, duplicate, and delete a connection.
+4. Test canceled deletion and selection fallback after confirmed deletion.
+5. Test blank and whitespace names.
+6. Test invalid ports and the implemented valid boundaries.
+7. Test engine, environment, group, and safe-mode choices.
+8. Test host, database, user, password, SSL, SSH, and startup fields.
+9. Test secret paste and masked output.
+10. Test Save, Save & connect, Test, and Cancel independently.
+11. Reopen saved records and assert exact values.
+12. Test close, New, Edit another connection, and Quit from a dirty form.
+13. Test Stay, Discard, and Save for every distinct leave path.
+14. Test invalid Save from a leave dialog.
+15. Assert that failed validation preserves the original connection.
+16. Record the current database-field validation mismatch without changing the product.
+
+Required checkpoints: each form tab; invalid fields; secret field; connecting; each failure; leave choices; saved details; empty list.
+Completion proof: only the selected connection changes, and canceled actions preserve all previous records.
+
+T02 — TABLEPRO EXPLORER, TABLE DATA, FILTERS, AND COMMIT
+
+Sources: workbench.rs, tabs.rs, filter_editor.rs, context.rs, and commit branches in app.rs.
+Surfaces: explorer; table Data; Structure; grid editors; filters; commit review; discard review; cell viewers.
+
+1. Expand schema and object trees through real input.
+2. Test filtering, preview reuse, and permanent table opening.
+3. Visit Columns, Indexes, Foreign keys, Constraints, Triggers, and DDL.
+4. Assert each Structure tab's actual schema values and empty states.
+5. Test editable tables, read-only views, and missing-primary-key tables.
+6. Edit every implemented data-type family.
+7. Test invalid values, NULL, insert, duplicate, and delete.
+8. Test multiple selection, row menus, foreign-key follow, and cell viewers.
+9. Test refresh and additional-row fetch.
+10. Test every implemented filter operator through its actual UI.
+11. Test zero-value, one-value, and two-value filter forms.
+12. Add, edit, remove, and reset filter chips.
+13. Test match-all, match-any, no rows, and filter-on-cell.
+14. Assert selected row identity after sorting and filtering.
+15. Assert pending update, insert, and delete counts.
+16. Open the exact SQL preview.
+17. Cancel commit and assert that pending changes remain.
+18. Confirm commit and assert cleared changes and expected History entries.
+19. Discard changes and assert restored row values.
+20. Record the simulator's success-only commit branch as a scope limit.
+
+Required checkpoints: every Structure tab; editors; invalid values; filter forms; no rows; pending grid; SQL preview; commit guards.
+Completion proof: exact row values, identities, pending counts, and simulated commit records agree.
+Excluded product expansion: real transaction rollback and a new commit-failure adapter.
+
+T03 — TABLEPRO QUERY EDITOR, SAFETY, AND EXECUTION
+
+Sources: sql.rs, query code in tabs.rs, run_active in app.rs, and safety dialogs.
+Surfaces: Query; completion; running query; Rows; Affected; Error; Plan; Cancelled.
+
+1. Test every implemented SafeMode through its supported connection settings.
+2. Test SELECT, scoped writes, unscoped writes, destructive statements, and mixed batches.
+3. Test the current EXPLAIN and EXPLAIN ANALYZE classification.
+4. Test statement-at-cursor, selected SQL, and Run all.
+5. Test comments, quoted semicolons, empty SQL, and syntax errors.
+6. Require the highest applicable safety decision for a batch.
+7. Test denied execution without a new result or History entry.
+8. Test ordinary and typed confirmation cancellation.
+9. Test wrong, partial, and exact confirmation text.
+10. Assert exactly one execution after confirmed input.
+11. Test running feedback and duplicate-run refusal.
+12. Cancel before completion and between statements where the current UI permits it.
+13. Assert that canceled work cannot later replace the canceled result.
+14. Test first-error behavior in a batch.
+15. Test empty rows, normal rows, and large-result counts.
+16. Test read-only result editing refusal.
+17. Test result selection, sort, copy, pin, switch, and close.
+18. Test completion opening, selection, acceptance, and dismissal.
+19. Test plan tree, raw plan, and analysis output.
+20. Correct a failed query and require the exact completed result.
+
+Required checkpoints: editor selection; completion; each safety gate; running; all five result bodies; plan modes; recovered result.
+Completion proof: displayed result data and History prove which statement ran and whether it completed.
+
+T04 — TABLEPRO HISTORY, SWITCHERS, AND TAB IDENTITY
+
+Sources: History code in tabs.rs; picker and close logic in app.rs; tab navigation in workbench.rs.
+Surfaces: History; Open Quickly; tab list; preview tabs; close dialogs.
+
+1. Test History search, connection scope, all scope, and failed-only mode.
+2. Test History details, open, copy, and actual rerun.
+3. Assert the selected History entry's SQL and resulting execution.
+4. Test empty History search.
+5. Test Open Quickly for tables, History, and query tabs.
+6. Test no-match and canceled switcher states.
+7. Test pointer, keyboard, and middle-click tab closure where supported.
+8. Close first, last, inactive, active, and only tabs.
+9. Test dirty tab Cancel, Discard, and Save where offered.
+10. Test filtered target selection and stable target identity.
+11. Attempt adjacent tab removal while close confirmation is open.
+12. If the modal blocks removal, assert that refusal and record the unreachable race.
+13. Test preview reuse without replacing a pinned or dirty tab.
+14. Assert exact remaining tab titles, SQL values, and active-tab fallback.
+
+Required checkpoints: History modes; switchers; empty search; dirty close; preview and pinned tabs; final fallback.
+Completion proof: a reused index cannot silently redirect the tested action to another tab.
+
+T05 — TABLEPRO SHELL, LAYERS, AND LEAVE POLICY
+
+Sources: pages.rs, context.rs, workbench.rs, and shell branches in app.rs.
+Surfaces: menus; Help; context menus; viewers; maximize; disconnect; quit guards.
+
+1. Open each implemented shell and context menu.
+2. Require the exact Help title and help content.
+3. Test Help input ownership and focus restoration.
+4. Test cell-viewer selection, copy, and close.
+5. Hide and show the explorer.
+6. Maximize and restore supported panes.
+7. Drag explorer, query, result, and History seams where implemented.
+8. Test Escape ownership with nested layers.
+9. Test clean disconnect and clean quit.
+10. Test disconnect and quit with dirty SQL or pending table changes.
+11. Assert that canceled leave preserves connection, drafts, and pending values.
+12. Resolve confirmed exit through the visible guard.
+13. Assert terminal restoration after the confirmed exit.
+14. Capture narrow open-layer states for the shared resize matrix.
+
+Required checkpoints: menus; Help; viewers; maximized panes; disconnect and quit guards; narrow layers; recovered layout.
+Completion proof: shell navigation does not bypass an active layer or discard pending work without the current guard.
+
+H01 — HOLLA FINDER, DISCOVERY, SCOPE, AND MEMORY
+
+Sources: screens/finder.rs, domain/ranking.rs, domain/usage.rs, domain/parity.rs, and discovery branches in app.rs.
+Scenarios: first-use, rust-dirty, monorepo-root, monorepo-child, parity-discovery, parity-history, remote-host.
+Surfaces: Finder groups; Alternatives; Why; learned-query and scope states.
+
+1. Test discovery pending, ready, failed, and unavailable sources.
+2. Assert selected identity while result order changes.
+3. Test query typing, paste, backspace, clearing, and empty results.
+4. Test Here, project, and host scope.
+5. Test groups, aliases, pin, hide, restore, and ranking reset.
+6. Open Why details for the exact selected item.
+7. Test enabled and disabled history separately.
+8. Test learned queries within the implemented simulated persistence contract.
+9. Test malformed memory and memory-save failure where fixtures provide them.
+10. Assert that memory failure preserves the current search.
+11. Test remote host and role details before an action.
+12. Require that Enter on empty results cannot run a previous result.
+
+Required checkpoints: discovery stages; scope and group variants; empty results; alternatives; Why; unavailable source; memory error.
+Completion proof: the chosen action, working directory, and displayed host remain correct after filtering and reranking.
+
+H02 — HOLLA TRUST, CUSTOM CONFIGURATION, AND ARGUMENTS
+
+Sources: screens/review.rs, domain/custom.rs, domain/digest.rs, domain/scripts.rs, and trust branches in app.rs.
+Scenarios: monorepo-child, parity-task-sources, parity-custom-actions, hard-cases.
+Surfaces: Trust; Args; Config; custom action reload; argument validation.
+
+1. Test trust cancellation and confirmation.
+2. Test the current path, working-directory, and content-digest trust boundaries.
+3. Test changed configuration, revocation, and reload where supported.
+4. Test malformed and duplicate custom actions.
+5. Test unavailable actions without starting an activity.
+6. Test required, choice, secret, and other implemented argument types.
+7. Test invalid input and correction.
+8. Test cancellation after argument editing.
+9. Assert displayed argument boundaries and working-directory details.
+10. Test literal shell syntax as input where the argument UI supports it.
+11. Assert that secret values do not appear in visible output or saved test diagnostics.
+12. Test trust-store and reload failure using existing fixtures.
+13. Return to the exact owning action after cancel or error.
+
+Required checkpoints: trust details; canceled trust; argument variants; invalid fields; masked secrets; configuration errors; recovered action.
+Completion proof: confirmation applies to the reviewed action and configuration, with no unintended activity after refusal.
+
+H03 — HOLLA ACTIVITY, INPUT, STOP, AND QUIT
+
+Sources: screens/activity.rs, domain/activity.rs, domain/exec.rs, sim/world.rs, and activity-tab branches in app.rs.
+Scenarios: activities-multi, launch-failure, parity-executor, parity-task-input.
+Surfaces: activity output; activity picker; task input; attachment; tab-close and quit guards.
+
+1. Test queued, running, waiting-input, completed, failed, and stopped activities where implemented.
+2. Test spawn failure, nonzero exit, and restart.
+3. Test public and secret prompts.
+4. Test input refusal when the process cannot accept input.
+5. Test Ctrl+C delivery while task input owns the terminal.
+6. Test Escape returning input ownership to the shell.
+7. Test attachment and detachment without stopping the task.
+8. Test stop requests and resistant-process escalation.
+9. Test output normalization, stream filters, find, selection, copy, and follow mode.
+10. Test bounded burst output through the real runtime.
+11. Assert that independent activities retain their identities and output.
+12. Test completed-tab closure and running-tab close choices.
+13. Test the activity picker's selected target.
+14. Test clean quit and running-work Stay or Stop and quit.
+15. Assert that ordinary q remains query text where the Finder owns text input.
+16. Assert terminal restoration after each confirmed terminating path.
+
+Required checkpoints: activity lifecycle states; prompts; detached monitor; output search; picker; stop guards; quit guards.
+Completion proof: cancellation and input routing affect only the intended simulated activity.
+
+H04 — HOLLA STACK ACTIONS, SNAPSHOTS, AND PLANS
+
+Sources: domain/catalog.rs, domain/outcomes.rs, domain/plan.rs, screens/snapshot.rs, screens/plan.rs, and sim/world.rs.
+Scenarios: parity-git-current, parity-git-batch, parity-cargo, parity-docker, parity-brew-services, parity-gradle, parity-idea.
+Additional scenarios: parity-upgrade-managers, upgrade-plan, docker-cleanup, parity-platforms, parity-platforms-linux.
+Surfaces: Snapshot families; PlanReview; Review; running plan; plan results.
+
+1. Cover Git, Cargo, Docker, Compose, Homebrew services, Gradle, IDEA, and upgrade-manager action families.
+2. Assert the displayed command, working directory, host, and applicable confirmation.
+3. Assert the intended simulated effect through a follow-up screen.
+4. Test batch eligibility and member identity.
+5. Test implemented sequential and parallel member behavior.
+6. Capture each snapshot family listed in the source inventory.
+7. Test unavailable, empty, and failed snapshot states.
+8. Test each snapshot's real follow-up action.
+9. Test plan dependencies, required steps, exclusions, and exclusive groups.
+10. Test optional-step removal, undo, restore, and no runnable steps.
+11. Test confirmation cancellation at both stages.
+12. Test exact confirmation and the actual plan start.
+13. Test reviewed-plan drift and required re-review.
+14. Run plans to success and failure.
+15. Retry or skip a failed step only where supported.
+16. Cancel remaining work and assert per-step results.
+17. Assert that completed steps do not execute twice.
+
+Snapshot census:
+git; git-diff; git-stash; git-all; system; processes; port:<port>;
+docker-ps; docker-df; compose-ps; docker-unavailable; pg; pg-blocking;
+mise; mise-outdated; disk-history; service-*; ssh:<alias>; brew-services.
+Report and Config are owned by H06 and H02.
+
+Required checkpoints: every snapshot family; plan selection; both gates; drift warning; running plan; failed step; final tally.
+Completion proof: displayed operations and follow-up simulation state agree for every implemented action family.
+
+H05 — HOLLA FILES, FIND, DISK SCAN, AND NAVIGATION
+
+Sources: screens/files.rs, screens/disk.rs, sim/fs.rs, and disk branches in sim/world.rs.
+Scenarios: parity-files, parity-browser, disk-cleanup, parity-disk-scan, parity-disk-navigation, parity-insights.
+Surfaces: Files; Find; Disk; DiskOverview; TopFiles; path chooser; previews; scan output.
+
+1. Enter directories and return to parent and root boundaries.
+2. Test Find queries, empty results, selection, and opening the selected path.
+3. Test hidden-file toggling with selected-item fallback.
+4. Test text, binary, missing, unreadable, and symlink previews where fixtures provide them.
+5. Test large-preview limits, preview find, selection, and copy.
+6. Test file actions and path suggestions.
+7. Correct an invalid jump path and open the intended directory.
+8. Test pointer wheel and keyboard focus in both panes.
+9. Test scan start, progress, partial data, completion, and cancellation.
+10. Test cached scan results and partial errors.
+11. Test disk tree expansion, sorting, multiple selection, and selected-byte totals.
+12. Open Overview and TopFiles through real navigation.
+13. Return to the same disk node.
+14. Change the scan root and test available stale-result handling.
+15. Assert that unrelated pane content and selected path remain unchanged.
+
+Required checkpoints: every preview type; path errors; Find; scan stages; Overview; TopFiles; sorted tree; narrow split view.
+Completion proof: path identity and pane ownership survive filtering, sorting, scan updates, and navigation.
+
+H06 — HOLLA CLEANUP SAFETY AND REPORTS
+
+Sources: domain/cleanup.rs, screens/cleanup.rs, screens/review.rs, screens/snapshot.rs, and cleanup branches in app.rs.
+Scenarios: parity-delete-safety, parity-cleanup-results, parity-gradle, parity-idea, parity-platforms, parity-platforms-linux.
+Surfaces: Cleanup; CleanupGate; Report; operation log; cleanup quit guard.
+
+1. Test category detection and item eligibility.
+2. Test disabled items and multiple selection.
+3. Test protected paths, descendants, normalization, and symlink rules from the fixtures.
+4. Test dry run, Trash, and permanent modes separately.
+5. Cancel each confirmation stage and assert no simulated deletion or operation log.
+6. Test partial, wrong, and exact acknowledgement text.
+7. Test changed-plan rejection and re-review.
+8. Test concurrent cleanup refusal.
+9. Test process guards and failed Gradle stop before cleanup.
+10. Assert that a failed prerequisite prevents deletion.
+11. Test successful, failed, and partial per-item outcomes.
+12. Assert simulated freed-byte totals and operation-log entries.
+13. Open the running report and the finalized report.
+14. Test log failure and available recovery behavior.
+15. Test quit while cleanup runs.
+16. Test combined running activities and cleanup.
+17. Assert that exit waits for the current report and log contract.
+
+Required checkpoints: categories; protected items; dry run; both gates; stale review; partial failure; reports; logs; quit guard.
+Completion proof: only reviewed eligible simulation targets change, with truthful per-item results.
+
+J01 — JACKIN MANAGER AND NEW-WORKSPACE PRELUDE
+
+Leaf dependency: Prelude completion requires the accepted J02 workspace-save contract.
+Independent leaves: Manager status, refresh, stop, purge, delete, and prewarm.
+Sources: screens/manager.rs, screens/prelude.rs, domain/instance.rs, domain/workspace.rs, and sim/world.rs.
+Scenarios: first-use, returning, launch-running, hard-cases.
+Surfaces: Manager; instance rows; session picker; Prelude; stop, purge, and delete dialogs.
+
+1. Test every implemented instance status in the fixtures.
+2. Expand a workspace and select an actual instance.
+3. Test stop cancellation and confirmed stop.
+4. Assert running counts and the preserved instance record.
+5. Test purge with wrong and exact instance tokens.
+6. Test workspace deletion and its existing instance-reference behavior.
+7. Test prewarm and duplicate-prewarm refusal.
+8. Test refresh start, success, failure, and last-good rows.
+9. Change selection while a pending result exists where the UI permits it.
+10. Assert that stale results do not affect another target.
+11. Test instance inspection, session picking, and shell availability.
+12. Start Prelude with a host-directory source.
+13. Start Prelude with a Git source.
+14. Visit Source, Destination, Edit, Workdir, and Name steps.
+15. Test Back and Cancel at every step boundary.
+16. Test invalid and duplicate names.
+17. Assert that canceled creation leaves no new workspace.
+18. Finish Prelude.
+19. Assert the pending Editor values.
+20. Save and reopen the exact new workspace through the J02 save contract.
+
+Required checkpoints: manager status variants; each guard; refresh failure; each Prelude step; validation; created workspace.
+Completion proof: the exact selected instance or workspace receives the action, with no duplicate creation or mutation.
+
+J02 — JACKIN WORKSPACE EDITOR AND SHARED CONFIGURATION
+
+Sources: screens/editor.rs, screens/config.rs, sim/changes.rs, domain/workspace.rs, and save jobs in sim/world.rs.
+Scenarios: returning and hard-cases.
+Surfaces: Editor General, Mounts, Roles, Environments, Accounts; shared configuration forms; save preview; leave guard.
+
+1. Visit all five Editor tabs.
+2. Test name, working directory, and General policies.
+3. Create, edit, remove, and browse mounts.
+4. Test mount source, destination, mode, isolation, and scope.
+5. Test destination conflicts and invalid paths.
+6. Create, edit, remove, and scope environment values.
+7. Test duplicate environment keys and literal values.
+8. Test secret references without exposing secret material.
+9. Assert that invalid forms do not partially change pending rows.
+10. Test role load, role trust, failure, and retry.
+11. Test account bindings, default overrides, and fallback.
+12. Test cancel, preview cancel, direct save, and Save through leave.
+13. Test dirty Stay and Discard.
+14. Use the existing one-shot save-failure fixture.
+15. Assert unchanged saved values and retained pending edits after failure.
+16. Retry the save and reopen the exact workspace.
+17. Test implemented cleanup blockers.
+18. Expose reusable test helpers for J03's global configuration forms.
+
+Required checkpoints: every Editor tab; each configuration form; invalid rows; secret references; preview; save failure; retry; leave choices.
+Completion proof: exact values and workspace identity survive cancellation, failed save, retry, and reopen.
+
+J03 — JACKIN SETTINGS
+
+Dependencies: J02 shared configuration helpers, after their interface is accepted.
+Sources: screens/settings.rs, screens/config.rs, sim/changes.rs, and Settings save jobs.
+Scenarios: returning and hard-cases.
+Surfaces: General, Mounts, Environments, Agents, Trust; save preview; dirty leave.
+
+1. Visit every Settings tab.
+2. Change at least one supported value in each tab.
+3. Assert the exact dirty marker and change count.
+4. Test global Mounts and Environments through the accepted shared form helpers.
+5. Assert scope differences from workspace configuration.
+6. Test agent authorization and trust changes.
+7. Test clean leave without a dirty guard.
+8. Test dirty Stay, Discard, and Save.
+9. Test preview cancellation.
+10. Test cleanup blockers where implemented.
+11. Test save failure and retry with existing fixtures.
+12. Reopen Settings and assert exact saved or restored values.
+13. Restore focus to the actual owner after every overlay.
+
+Required checkpoints: all five tabs; dirty state; preview; leave choices; failure; retry; reopened values.
+Completion proof: the Settings test must prove an actual edit and each named leave result.
+
+J04 — JACKIN ACCOUNTS, CREDENTIAL CHOOSER, AND USAGE
+
+Sources: screens/accounts.rs, screens/usage.rs, screens/modals.rs, sim/provider.rs, and sim/onepassword.rs.
+Scenarios: first-use, accounts-mixed, returning, hard-cases.
+Surfaces: Accounts overview/provider/account; account form; 1Password chooser; Usage overview/provider/account.
+
+1. Test 1Password, local-folder, and API-key account sources.
+2. Test supported providers and provider-specific validation results.
+3. Test missing, locked, denied, revoked, invalid, and wrong-provider material from fixtures.
+4. Test duplicate source, duplicate identity, required name, and long name behavior.
+5. Test edit cancellation and reopened values.
+6. Test discovered read-only accounts.
+7. Test enable, disable, default choice, and removal.
+8. Assert workspace-binding fallback after account removal.
+9. Assert that captures contain only permitted masking, reference, fingerprint, or tail values.
+10. Traverse account, vault, item, and field in the credential chooser.
+11. Test Back, Cancel, inaccessible vaults, and unsupported fields.
+12. Test locked-session retry and reference return to the owning form.
+13. Visit Usage overview, provider, and account views.
+14. Test quota, missing data, mixed health, freshness, and stale values.
+15. Test refresh start, duplicate-refresh refusal, success, and failure.
+16. Assert last-good values after failed refresh.
+17. Return from Usage to the correct account identity.
+
+Required checkpoints: account source forms; validation classes; masking; chooser levels; locked state; Usage variants; stale data; refresh failure.
+Completion proof: account identity, source scope, secret treatment, and displayed usage remain correct across transitions.
+
+J05 — JACKIN LAUNCH, INTRO, HANDOFF, AND OUTRO
+
+Sources: screens/cockpit.rs, sim/launch.rs, app.rs, arbiter.rs, and rain.rs.
+Scenarios: first-use, returning, launch-running, launch-failure, outro-last, hard-cases.
+Surfaces: Intro; Cockpit; launch logs; launch guards; Handoff; Outro.
+
+1. Test first entry, joining active instances, duplicate entry, and unknown discovery.
+2. Test supported intro skip, guard, and abort paths.
+3. Test Clean, FailNetwork, CredentialsLocked, and BlockedSidecar launch plans.
+4. Map all 11 launch-stage identities.
+5. Capture meaningful stage boundaries with supported deterministic controls.
+6. Test locked credentials, retry, and supported one-launch fallback.
+7. Test blocked launch cancellation.
+8. Open build logs before output and after output.
+9. Test copy-before-abort when a selection owns Ctrl+C.
+10. Test Ctrl+C abort when no selection consumes it.
+11. Test Ctrl+Q confirmation Cancel and Confirm.
+12. Reach the actual failed stage before acknowledging failure.
+13. Assert that failed launch does not attach a capsule.
+14. Assert exactly one resulting instance record.
+15. Test Handoff and its supported skip behavior.
+16. Test last-instance Outro and non-last-instance exit.
+17. Capture supported full, reduced, and paused phase states.
+18. Assert terminal restoration on terminating paths.
+
+Required checkpoints: intro variants; launch stages; logs; credential recovery; actual failure; cancellation; handoff; outro.
+Completion proof: launch phase, record status, instance count, and attachment outcome agree.
+
+J06 — JACKIN CAPSULE, PANES, RECOVERY, AND EXIT
+
+Sources: screens/capsule.rs, screens/inspect.rs, sim/pty.rs, sim/world.rs, and capsule routes in app.rs.
+Scenarios: capsule-multi, returning, hard-cases, outro-last.
+Surfaces: Capsule; pane commands; tabs; agent/provider picker; inspect; takeover; dirty exit; export.
+
+1. Type and paste into each supported terminal-pane kind.
+2. Respond to simulated agent prompts.
+3. Assert that only the focused pane receives input.
+4. Test prefix entry, timeout, repeated prefix, and cancellation.
+5. Test new tab, shell tab, and agent/provider choice.
+6. Split horizontally and vertically.
+7. Move focus, zoom, drag seams, and resize through keys.
+8. Test minimum-size refusal without corrupting the layout.
+9. Rename, close, and cancel closing tabs and panes.
+10. Test last-pane and last-tab fallback.
+11. Assert preserved identities and output in unaffected panes.
+12. Test detach and reconnect to the same instance.
+13. Test takeover, stale takeover for another instance, reconnect, and leave.
+14. Test inspector selection, detail, diff, and observable copy results.
+15. Test clean exit and every dirty-exit choice.
+16. Test Inspect changes returning to the correct exit choice.
+17. Test Keep changes and Discard with its second confirmation.
+18. Test export path validation, cancellation, and reported success.
+19. Test palette and menu routing while a terminal pane owns input.
+20. Assert terminal restoration after confirmed exit.
+
+Required checkpoints: each pane kind; prefix; splits; zoom; rename/close dialogs; takeover; inspector; dirty exit; export validation.
+Completion proof: pane ownership, instance identity, simulated changes, and exit choices match the reference.
+Excluded product expansion: real daemon attachment, host export, and a new credential or container adapter.
+
+X01 — CLI, ENVIRONMENT, INPUT PROTOCOL, AND CLIPBOARD
+
+Dependencies: G03 and G04.
+Sources: src/cli.rs, src/core/keyboard.rs, src/core/event.rs, src/shell/clipboard.rs, and each main.rs.
+Surfaces: command output; startup options; input negotiation; clipboard output; platform-specific hints.
+
+1. Test --help and the current application names for all four binaries.
+2. Test valid and invalid values for every implemented CLI option.
+3. Test unknown pages, scenarios, connection names, option keys, and option values.
+4. Assert exact exit status and useful error output for invalid input.
+5. Test repeated --opt values and their current precedence.
+6. Test explicit color, glyph, and motion values against environment defaults.
+7. Test NO_COLOR and each application-specific NO_MOTION variable.
+8. Test supported TERM and COLORTERM detection branches.
+9. Test JUNIE_TUI_GLYPHS overrides and automatic ASCII selection.
+10. Test supported client-platform profiles without confusing them with host OS qualification.
+11. Test available keyboard-protocol negotiation and fallback paths.
+12. Test modified keys, application overrides, and hints for deliverable keys.
+13. Test bracketed paste, multiline paste, control-like text, and Unicode input.
+14. Test modal paste ownership before background page ownership.
+15. Test selection-copy precedence over quit where the current app implements it.
+16. Assert OSC 52 payloads or paste round trips only where the current app emits them.
+17. Test unsupported or oversized clipboard paths when publicly reachable.
+18. Record unreachable clipboard-policy branches as observation or fixture gaps.
+19. Keep short-lived CLI commands separate from the normal Ctrl+Q helper.
+20. Capture their final terminal output when the pinned harness can retain it.
+
+Required checkpoints: CLI help/errors; platform hints; ASCII fallback; paste ownership; supported clipboard outcomes.
+Completion proof: exit status, visible output, and input routing match the reference under each tested environment.
+
+X02 — TERMINAL STARTUP, RESIZE, SUSPEND, AND EXIT
+
+Dependencies: G03 and G04; relevant app tasks for dirty and running fixtures.
+Sources: src/runtime.rs, src/core/keyboard.rs, src/core/shape.rs, src/shell/app.rs, and app exit policies.
+Surfaces: startup; first input; resize; terminal mode changes; suspend/resume; normal and guarded exit.
+
+1. Test the first input after real PTY startup.
+2. Test supported delayed-first-poll behavior with the existing runtime control.
+3. Test bounded bursts of keys, pointer movement, wheel input, and resize events.
+4. Assert the final semantic result and process liveness after each burst.
+5. Test resize while a form, picker, destructive gate, and running output are open.
+6. Test 71 by 20, 72 by 19, and 72 by 20 around the current shared minimum.
+7. Test each additional layout breakpoint found in source.
+8. Test both dimensions below, at, and above each applicable breakpoint.
+9. Capture narrow and too-small states before recovery.
+10. Resume interaction after growth and assert retained state and focus.
+11. Test supported focus-in and focus-out events.
+12. Test suspend and resume on Linux and macOS when the pinned PTY API supports them.
+13. Inspect terminal restoration during suspension and after final exit.
+14. Test clean, dirty, running, attached, and launch exit paths for each applicable app.
+15. Assert the actual exit code and termination signal.
+16. Assert alternate-screen, paste, mouse, cursor, and other observable mode restoration.
+17. Assert keyboard-protocol and cursor-shape restoration when the harness exposes them.
+18. Assert raw-mode and echo restoration only through supported terminal-attribute observations.
+19. Record unobservable terminal attributes as explicit limitations.
+20. Test ordinary runtime error paths only where the unchanged binary exposes them.
+21. Keep forced cleanup separate from successful application shutdown.
+
+Required checkpoints: startup; first-action result; burst result; open-layer shrink/growth; too-small; suspended/restored state; guarded exits.
+Completion proof: all observed modes and user data return to the expected state without killing an unrelated process.
+
+X03 — CROSS-APPLICATION VISUAL CONTRACTS AND MOTION
+
+Dependencies: relevant S, T, H, and J tasks.
+Sources: src/theme.rs, src/ui/specimen.rs, src/ui/ctx.rs, src/motion.rs, and shared widget state ladders.
+Surfaces: all application shells; distinct shared control states; specimen comparison; glyphs; motion phases.
+
+1. Reconcile all visual inventory rows with actual checkpoint receipts.
+2. Cover truecolor, 256, 16, none, and NO_COLOR for every distinct shared visual treatment.
+3. Cover each application's shell and app-specific visual states in that matrix.
+4. Test the default active-layer selection accent.
+5. Test supported inactive-selection overrides.
+6. Open overlays and assert neutralized background selection.
+7. Assert exactly one live keyboard-focus indicator in the active layer.
+8. Assert owner-controlled list cursors use fill without a second live focus gutter.
+9. Test scrollbar glyph constancy across rest, hover, held, and drag.
+10. Test horizontal and vertical scrollbar modifiers in monochrome.
+11. Test thin, heavy, bright, and accent seam states.
+12. Assert unchanged padding cells and unrelated seams.
+13. Test disabled hover, press, and activation invariance.
+14. Test error, warning, read-only, busy, and selected distinctions without color alone.
+15. Measure resolved text and non-text contrast according to the product's semantic-role requirements.
+16. Record terminal-default colors when a numeric contrast result is unavailable.
+17. Record existing contrast defects without silently changing the theme.
+18. Test Unicode, combining graphemes, wide text, emoji, and ASCII glyph modes.
+19. Test full, reduced, and paused motion separately.
+20. Capture deterministic intro, handoff, outro, progress, and loading states where supported.
+21. Record transient states that cannot yet support deterministic visual comparison.
+22. Inspect both live controls and synthetic States specimens.
+23. Make sure that all required Compare levels bands are visible in recorded viewports.
+24. Keep strict cursor comparison unless a separate policy decision explicitly changes it.
+
+Required checkpoints: color/state matrix; glyph matrix; all shells; overlay ownership; seam containment; deterministic motion phases.
+Completion proof: every distinct implemented visual treatment has an exact reference comparison and an applicable semantic assertion.
+
+C01 — MAKE CI EXECUTE THE REQUIRED COVERAGE
+
+Dependencies: G04, G05, and stable test IDs from the implementation tasks.
+Owner files: .velnor/config.toml, .config/nextest.toml, source-controlled validation entry points, and generated outputs through Velnor.
+
+1. Read the current generated and source CI configuration.
+2. Preserve the existing dedicated functional gate.
+3. Make the dedicated suite use the intended lockfile contract.
+4. Examine the actual generated command.
+5. Include the inventory gate and current checkpoint accounting.
+6. Run complete coverage accounting after collecting all required partition receipts.
+7. Upload machine-readable receipts and partition manifests for successful and failed partitions.
+8. Bind aggregate inputs to the same candidate commit, harness digest, baseline manifest, and run ID.
+9. Bind each receipt to its expected platform build and terminal profile.
+10. Reject missing, stale, foreign, and reference-capture receipts as candidate execution evidence.
+11. Preserve --no-tests fail.
+12. Make required cases non-ignored.
+13. Set explicit partition membership and PTY resource limits.
+14. Keep parallel test execution within the host's PTY and process budget.
+15. Run the complete required parity inventory on test-setup and refactor changes.
+16. Use a smaller fast tier only as an additional feedback path.
+17. Do not substitute a smoke tier for complete refactor acceptance.
+18. Add Linux and macOS qualification where repository support and runner access permit it.
+19. Keep Windows support unclaimed without separate runtime qualification.
+20. Add a broader scheduled matrix if the generated CI system supports it.
+21. Preserve first-failure traces, samples, diffs, JUnit reports, and manifests.
+22. Upload failure evidence when the test command fails or times out.
+23. Keep artifact paths unique across partitions and platforms.
+24. Regenerate the workflows through velnor-actions generate.
+25. Make sure that regeneration produces only expected changes.
+26. Read required-check settings when permission permits it.
+27. Report required-check changes as owner actions if they are not already authorized.
+28. Record unavailable generator features as blockers.
+29. Do not patch generated files to bypass a generator limitation.
+
+Required result:
+- The generated functional command selects the required current tests.
+- A missing test or missing baseline makes CI fail.
+- A failed partition makes the required aggregate fail.
+- Complete refactor acceptance includes the full required matrix.
+- Branch protection is reported as verified or unverified, with evidence.
+
+C02 — PROVE THE TESTS DETECT REAL REGRESSIONS
+
+Dependencies: S, T, H, J, and X implementation tasks, plus C01.
+Owner files: temporary isolated probe worktree and the probe receipt.
+
+1. Create a temporary worktree from the completed test branch.
+2. Record its unchanged test and baseline digests.
+3. Change one application behavior or one temporary test-system input for each probe.
+4. Run the specific test or aggregate gate expected to detect that change.
+5. Require failure at the intended semantic assertion, visual assertion, inventory check, or provenance check.
+6. Save the failure evidence.
+7. Remove the temporary defect.
+8. Run the same case again and require PASS.
+9. Repeat with a separate defect for each mandatory probe below.
+10. Remove all temporary probe changes before integration.
+11. Confirm that no probe baseline was accepted.
+12. Reject compile errors as proof that a behavioral test detected its intended defect.
+13. Reject unrelated environment failures as successful sensitivity evidence.
+
+Use functional or visual tests to detect application-behavior changes.
+Use the aggregate inventory gate to detect a missing test or checkpoint receipt.
+Use the comparator to detect a missing baseline in a temporary store.
+Use the harness's negative cases to detect an unstable-screen deadline.
+Keep the original baseline files immutable during every probe.
+
+Mandatory probes:
+- Disable a button's action while preserving its appearance.
+- Change a visual state color while preserving its text.
+- Change a focus indicator or covered-layer selection style.
+- Change a visible cursor position or shape.
+- Redirect input to the wrong pane or background layer.
+- Skip a sort operation while preserving its status text.
+- Permit an operation after cancellation.
+- Bypass a required confirmation.
+- Redirect a pending tab action to a different identity.
+- Remove a screen's required case from execution.
+- Remove a required checkpoint receipt.
+- Remove a baseline from a temporary baseline store.
+- Keep a screen changing beyond the stability deadline.
+
+Required result:
+- Every mandatory probe has an expected detector and actual failure evidence.
+- Restoring the original code restores the passing result.
+- A test suite that remains green under a relevant probe remains incomplete.
+
+C03 — INDEPENDENT COVERAGE AND BASELINE REVIEW
+
+Dependencies: all implementation tasks, X01-X03, C01, and C02.
+Owner files: final coverage inventory, known-gap reconciliation, and review report.
+Reviewer rule: assign a subagent that did not implement the reviewed test cases.
+
+1. Re-enumerate the source routes, sections, options, scenarios, and meaningful states.
+2. Compare that inventory with executed cases and baseline receipts.
+3. Examine coverage evidence for all 54 Showcase routes and all 162 primary sections.
+4. Examine the complete option census and each value's disposition.
+5. Examine coverage evidence for every Holla scenario and every Jackin scenario.
+6. Examine coverage evidence for all consumer tabs, result bodies, overlays, and lifecycle phases.
+7. Make sure that each new baseline came from the recorded reference binary.
+8. Inspect each newly captured distinct screen state through Tuiscotti's available review output.
+9. Inspect changes in labels, layout, colors, focus, selection, and cursor state.
+10. Reject tests that accept preexisting background text as success.
+11. Reject optional required actions and absence-only success checks.
+12. Reject unexplained masks, retries, ignored cases, and generic success branches.
+13. Make sure that semantic assertions accompany important visual checkpoints.
+14. Make sure that fixture names describe the state actually reached.
+15. Make sure that every audit finding has a correction or an explicit unresolved disposition.
+16. Require the complete coverage gate to pass.
+17. Keep untested implemented states open as blockers.
+18. Separate existing characterized product defects from test-coverage gaps.
+19. Record remaining environment and historical-provenance limits precisely.
+
+Required result:
+- No mandatory implemented screen or state remains without executable evidence.
+- No wrong-state baseline remains active under a misleading claim.
+- No unexplained omission is hidden by a percentage or an exception list.
+
+C04 — RUN THE FINAL GATES AND ISSUE THE READINESS REPORT
+
+Dependencies: completed C03 review, including any explicit unresolved blockers.
+Owner files: docs/testing/refactor-protection.md, docs/audits/refactor-test-readiness.md, and final task receipts.
+
+1. Make sure that all accepted worker commits are integrated into the dedicated test branch.
+2. Make sure that C03 reviewed that integrated tree before final acceptance.
+3. If integration changes that tree, repeat the affected independent review.
+4. Record the resulting exact HEAD.
+5. Run the full required functional inventory at that HEAD.
+6. Run every required partition without missing or duplicate membership.
+7. Run the all-target Nextest gate at that HEAD.
+8. Run Clippy with warnings denied.
+9. Run the formatting check.
+10. Run the complete coverage and provenance gate.
+11. Repeat each new or modified required case in fresh processes three times.
+12. Repeat affected groups at the configured CI concurrency.
+13. Keep first-attempt failures visible in the report.
+14. Treat retry-only success as instability that requires explanation and correction.
+15. Confirm that reference tags and releases remain unchanged where their identity is available.
+16. Confirm that normal test runs do not modify baselines or the lockfile.
+17. Reconcile stale test counts, binary names, and CI documentation.
+18. Record all commands, tool versions, source IDs, results, and artifact locations.
+19. Record route, section, state, transition, option, scenario, and mode coverage separately.
+20. Report the actual test and baseline counts.
+21. Report total run time and the slowest cases.
+22. State the exact remaining risks and unresolved blockers.
+23. Follow the repository's commit and push rules for the dedicated branch.
+24. Provide the final change summary and refactor-entry instructions.
+25. Do not start the architecture refactor as part of this goal.
+
+Required result:
+- A clean, reviewable test branch with reproducible evidence.
+- All required tests pass on the reported HEAD.
+- All mandatory coverage rows have current evidence.
+- All baseline checks use reviewed reference output.
+- The report states READY or BLOCKED with the precise reason.
+
+REFERENCE COMMANDS
+
+Run these commands from the repository root after installing the pinned tools.
+Use a verified equivalent deadline command when timeout is unavailable on the host.
+On macOS, GNU timeout can be available as gtimeout.
+Record the exact command used on each host.
+
+List the actual functional cases:
+
+    timeout 230s cargo nextest list --locked --test functional --message-format json
+
+Run the required functional profile:
+
+    timeout 230s cargo nextest run --locked --test functional --profile functional --no-tests fail
+
+Run the all-target gate:
+
+    timeout 230s cargo nextest run --locked --all-targets --no-tests fail
+
+Run Clippy:
+
+    timeout 230s cargo clippy --locked --all-targets -- -D warnings
+
+Run the formatting check:
+
+    timeout 230s cargo fmt --check
+
+Read the pinned Nextest help before adding partition or filter arguments.
+Make every partition's membership explicit.
+Keep the complete union in the run receipt.
+Do not treat timeout, no tests, ignored cases, or missing artifacts as PASS.
+Do not run full suites concurrently from every worker.
+Let workers run their assigned cases.
+Let the coordinator run the complete integration gate.
+
+REQUIRED SOURCE INVENTORIES
+
+Showcase route inventory, 54 routes:
+overview, chrome, statushints, breadcrumbsrails, helpkeys, quitleave, focusnavigation,
+buttons, inputs, textareas, chipsselects, forms, checksradios, toolbars,
+basictable, editable, datagrid, selection, celleditors, columns,
+lists, trees, sidebars, tabs, menus,
+dialogs, pickers, dialogkinds, popupstooltips, filebrowser,
+progress, emptyerror, meters, notices,
+panels, scrolling, splitsstacks, masterdetail, panetree,
+codeeditor, diff, terminal, textutilities,
+settings, taskrunner, queryworkbench, connections, finder,
+diskcleanup, activity, workspaces, accountsusage, launchcockpit, readonlyreport.
+
+TablePro root inventory:
+Connections; Workbench.
+
+TablePro nested inventory:
+Connection Basic; Connection Advanced; explorer; table Data;
+Structure Columns; Indexes; Foreign keys; Constraints; Triggers; DDL;
+Query editor; Rows; Affected; Error; Plan tree; Plan raw; Cancelled;
+History; Open Quickly; tab picker; completion; context menus;
+cell viewers; filter editor; commit preview; discard preview;
+safe-mode denial; ordinary confirmation; typed confirmation;
+dirty leave; disconnect; quit; Help; maximized panes; too-small state.
+
+Holla page inventory, 15 page variants:
+Finder; Disk; PlanReview; Review; Trust; Args; Snapshot; Files; Find;
+DiskOverview; TopFiles; Cleanup; CleanupGate; Report; Config.
+
+Additional Holla surfaces:
+Activity; running Plan; activity picker; log and input modes; tab-close guard;
+quit guard; menus; Help; every concrete Snapshot family.
+
+Holla scenario inventory, 34 scenarios:
+first-use, rust-dirty, monorepo-root, monorepo-child, docker-cleanup,
+disk-cleanup, upgrade-plan, activities-multi, remote-host, launch-failure,
+hard-cases, parity-discovery, parity-history, parity-files, parity-browser,
+parity-git-current, parity-git-batch, parity-task-sources, parity-cargo,
+parity-docker, parity-brew-services, parity-gradle, parity-idea,
+parity-upgrade-managers, parity-executor, parity-task-input, parity-custom-actions,
+parity-disk-scan, parity-disk-navigation, parity-insights, parity-delete-safety,
+parity-cleanup-results, parity-platforms, parity-platforms-linux.
+
+Jackin route inventory, 11 route values:
+Intro; Manager; Prelude; Editor; Settings; Accounts; Usage; Cockpit;
+Handoff; Capsule; Outro.
+
+Jackin nested inventory:
+Prelude Source, Destination, Edit, Workdir, Name;
+Editor General, Mounts, Roles, Environments, Accounts;
+Settings General, Mounts, Environments, Agents, Trust;
+Accounts overview, provider, account, form, credential chooser;
+Usage overview, provider, account, freshness states;
+Cockpit stage, log, credential, failure, cancel, and quit states;
+Capsule pane, tab, prefix, split, picker, menu, palette, inspect, takeover,
+rename, close, export, detach, reconnect, dirty exit, and confirmation states.
+
+Jackin scenario inventory, eight scenarios:
+first-use, returning, accounts-mixed, launch-running, launch-failure,
+capsule-multi, outro-last, hard-cases.
+
+Use source registries as the authority if these inventories change.
+Treat the lists above as the audited starting point.
+Do not treat a scenario launch as full scenario behavior coverage.
+
+WORKER ASSIGNMENT FORMAT
+
+Give each subagent this complete assignment structure:
+
+Task ID: <one leaf task ID>
+Model: Grok 4.7
+Reference commit: <REFERENCE_SHA>
+Base implementation commit: <accepted task branch commit>
+Dependencies: <completed task IDs and their receipts>
+Owned files: <exact paths>
+Forbidden shared edits: <exact shared paths owned by other tasks>
+Source inputs: <exact application and component files>
+Coverage rows: <exact required row IDs>
+Cases: <initial conditions, actions, results, and forbidden effects>
+Visual checkpoints: <state, size, mode, and baseline IDs>
+Commands: <bounded Nextest filters and relevant validation>
+Output receipt: <task receipt path>
+Acceptance: <specific passing assertions and baseline comparisons>
+
+Require this completion report from the subagent:
+
+1. Task ID and actual model configuration.
+2. Commit IDs and owned changed files.
+3. Cases added or strengthened.
+4. Exact states and dimensions captured.
+5. Reference and baseline provenance.
+6. Commands and actual results.
+7. First failures and their corrections.
+8. Remaining gaps and their reasons.
+9. Coverage-row dispositions and evidence paths.
+10. Exact resume steps for unfinished work.
+
+COORDINATOR ACCEPTANCE CHECKLIST
+
+1. Make sure that the worker stayed within its assigned files.
+2. Make sure that each claimed operation has a semantic assertion.
+3. Make sure that each baseline shows its named state.
+4. Make sure that cancellation preserves the correct prior state.
+5. Make sure that success identifies the correct object and exact result.
+6. Make sure that the reference executable produced new expected output.
+7. Make sure that normal test runs cannot approve baselines.
+8. Make sure that the required cases appear in the Nextest list.
+9. Make sure that the current receipt proves those cases ran.
+10. Make sure that no required case is ignored or silently filtered out.
+11. Make sure that production behavior did not change without a separate decision.
+12. Integrate only the reviewed coherent portion.
+13. Run the affected integration cases after integration.
+14. Update the task ledger and coverage receipts.
+
+COMPLETION CRITERIA
+
+Declare READY only when all applicable criteria below hold.
+
+- Every implemented screen has a required case and reviewed visual evidence.
+- Every Showcase route has all three primary sections covered at both required sizes.
+- Every relevant implemented interaction state has a named assertion and checkpoint.
+- Every Holla and Jackin scenario has its distinct behavior contracts covered.
+- Every option value or boundary has executed evidence or a precise applicability/equivalence reason.
+- No required implementation case is ignored, missing, or unexecuted.
+- Every new baseline has unchanged-reference provenance.
+- Every accepted baseline remains immutable during ordinary testing.
+- Every required cancellation and guard path checks forbidden effects.
+- Each required save or mutation checks the resulting object and its identity.
+- The required color, glyph, size, and motion contracts have evidence.
+- Terminal shutdown and supported restoration contracts have evidence.
+- Sensitivity probes prove that important behavior and visual changes are detected.
+- Repeated fresh-process runs and configured-concurrency runs are stable.
+- The functional, all-target, Clippy, formatting, coverage, and provenance gates pass at the reported HEAD.
+- CI executes the complete required parity inventory for the refactor.
+- All audit findings have an explicit correction or disposition.
+- No production refactor is mixed into the test-protection branch.
+
+Keep existing characterized product defects in a separate section of the report.
+Do not describe a characterized defect as correct product behavior.
+State whether each defect prevents parity proof or only violates an intended future contract.
+Do not silently change expected current behavior to satisfy an intended future contract.
+Keep required but unobservable or nondeterministic states as blockers until resolved or explicitly accepted by the user.
+Do not claim protection for real external adapters that the source does not implement.
+Do not claim historical tag parity when that reference was unavailable.
+
+FINAL RESPONSE FORMAT
+
+Start with READY or BLOCKED.
+Issue a BLOCKED report even when a prerequisite cannot pass after all permitted recovery work.
+Give the tested source commit and test-branch commit.
+Give the actual test count and baseline count.
+Give separate coverage counts for routes, sections, states, transitions, options, scenarios, and modes.
+Give the exact commands and their pass, fail, or blocked results.
+List corrected weaknesses in the original tests.
+List remaining characterized product defects.
+List unresolved coverage and environment limits.
+Link the reviewable changes and evidence.
+State which test command must pass before each later refactor step.
+
+AUDIT SOURCE REFERENCES
+
+The source audit used the exact commit below.
+The GitHub connector was unavailable during the audit.
+The repository was read through its public Git checkout.
+The source and baseline files, not documentation claims alone, supplied the findings.
+
+Repository instructions:
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/AGENTS.md
+
+Test harness and comparator integration:
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/tests/functional/support.rs
+
+Showcase tests and generated page visits:
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/tests/functional/showcase.rs
+
+Consumer test assertions:
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/tests/functional/tablepro.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/tests/functional/holla.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/tests/functional/jackin.rs
+
+Showcase route, option, section, and state inventories:
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/bin/showcase/app.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/bin/showcase/options.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/bin/showcase/pages/template.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/ui/specimen.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/catalog.rs
+
+Consumer route and scenario inventories:
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/bin/holla/screens/mod.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/bin/holla/scenario.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/bin/jackin/app.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/bin/jackin/scenario.rs
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/src/bin/tablepro/tabs.rs
+
+Current captures:
+https://github.com/tailrocks/terminal-components-baseline/tree/fffe002e936d3621f22f9132144066a1374d5d74/tests/functional/baselines
+
+Current CI inputs and test profile:
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/.velnor/config.toml
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/.config/nextest.toml
+
+Recorded test-estate migration:
+https://github.com/tailrocks/terminal-components-baseline/blob/fffe002e936d3621f22f9132144066a1374d5d74/docs/functional-testing.md
+
+Exact pinned Tuiscotti state comparator:
+https://github.com/tailrocks/tuiscotti/blob/d8d54155947f6303a41dfd6079b53c0abc16f29a/crates/tuiscotti/src/check.rs
+
+ASD-STE100 procedure and terminology reference:
+https://www.asd-ste100.org/assets/files/ASD-STE100_ISSUE9.pdf
+
+
+
+
+
+
+
