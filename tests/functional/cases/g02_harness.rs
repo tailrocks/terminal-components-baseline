@@ -1,5 +1,6 @@
 use std::panic::AssertUnwindSafe;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::process::Command;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use tui_test::profile::Rgb;
@@ -8,6 +9,7 @@ use tui_test::{
     SnapshotParts, SnapshotScope, SnapshotUnderline, TerminalSnapshot,
 };
 use tuiscotti_latest::check::{CheckOutcome, MismatchReason};
+use tuiscotti_latest::sample::{Observation, Sample};
 
 use crate::support::{
     App, Launch, Point, SHOWCASE, file_sha256, find_all, find_in, text, try_launch,
@@ -37,9 +39,47 @@ fn panic_text(payload: Box<dyn std::any::Any + Send>) -> String {
     }
 }
 
-fn production_baseline() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("tests/functional/baselines/functional/showcase_popover_resize.tui.json")
+fn baseline_root() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/functional/baselines")
+}
+
+fn baseline_tree_digest(root: &Path) -> String {
+    let mut files = Vec::new();
+    let mut dirs = vec![root.to_path_buf()];
+    while let Some(dir) = dirs.pop() {
+        let mut entries = std::fs::read_dir(&dir)
+            .unwrap_or_else(|error| panic!("read {}: {error}", dir.display()))
+            .collect::<Result<Vec<_>, _>>()
+            .unwrap_or_else(|error| panic!("entry: {error}"));
+        entries.sort_by_key(std::fs::DirEntry::file_name);
+        for entry in entries {
+            let path = entry.path();
+            let kind = entry.file_type().expect("file type");
+            assert!(!kind.is_symlink(), "symlink {}", path.display());
+            if kind.is_dir() {
+                dirs.push(path);
+            } else {
+                files.push(path);
+            }
+        }
+    }
+    files.sort();
+    let output = if Path::new("/usr/bin/shasum").is_file() {
+        Command::new("/usr/bin/shasum")
+            .arg("-a")
+            .arg("256")
+            .args(&files)
+            .output()
+    } else {
+        Command::new("/usr/bin/sha256sum").args(&files).output()
+    }
+    .expect("hash baseline tree");
+    assert!(
+        output.status.success(),
+        "baseline tree hash failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8(output.stdout).expect("hash output")
 }
 
 fn temp_root(name: &str) -> PathBuf {
@@ -196,7 +236,7 @@ fn harness_dead_child_fails_wait() {
 
 #[test]
 fn harness_missing_baseline_fails() {
-    let before = file_sha256(&production_baseline());
+    let before = baseline_tree_digest(&baseline_root());
     let app = showcase("harness-missing-baseline");
     app.wait_text("120×40");
     let root = temp_root("missing");
@@ -208,44 +248,38 @@ fn harness_missing_baseline_fails() {
         CheckOutcome::Pass(success) => panic!("missing baseline passed: {success:?}"),
     }
     assert_candidate_logged(&app, "functional/harness_missing_screen");
-    assert_eq!(file_sha256(&production_baseline()), before);
+    assert_eq!(baseline_tree_digest(&baseline_root()), before);
     app.finish();
 }
 
 #[test]
 fn harness_changed_baseline_fails() {
-    let before = file_sha256(&production_baseline());
+    let before = baseline_tree_digest(&baseline_root());
     let app = showcase("harness-changed-baseline");
     app.wait_text("120×40");
     let root = temp_root("changed");
-    let raw = std::fs::read_to_string(production_baseline()).expect("read production baseline");
-    assert_eq!(raw.matches("functional/showcase_popover_resize").count(), 1);
-    let rewritten = raw.replacen(
-        "functional/showcase_popover_resize",
-        "functional/harness_changed_screen",
-        1,
-    );
     let dest = root.join("functional");
     std::fs::create_dir_all(&dest).expect("temp baseline dir");
-    std::fs::write(dest.join("harness_changed_screen.tui.json"), rewritten)
-        .expect("write changed baseline");
+    let baseline = Sample::state(
+        "functional/harness_changed_screen",
+        locator_screen(),
+        Observation::empty(),
+    )
+    .expect("build binary changed-baseline fixture");
+    baseline
+        .save(&dest.join("harness_changed_screen.tui.pb"))
+        .expect("write changed binary baseline");
     let outcome = app.check_visual(&root, "functional/harness_changed_screen");
     match outcome {
         CheckOutcome::Failure(failure) => {
-            assert_ne!(failure.reason(), MismatchReason::Missing);
-            assert!(
-                matches!(
-                    failure.reason(),
-                    MismatchReason::State | MismatchReason::Dimensions
-                ),
-                "{:?}",
-                failure.reason()
-            );
+            assert_eq!(failure.reason(), MismatchReason::State);
+            assert!(failure.changed_fields().iter().any(|field| field == "cols"));
+            assert!(failure.changed_fields().iter().any(|field| field == "rows"));
         }
         CheckOutcome::Pass(success) => panic!("changed baseline passed: {success:?}"),
     }
     assert_candidate_logged(&app, "functional/harness_changed_screen");
-    assert_eq!(file_sha256(&production_baseline()), before);
+    assert_eq!(baseline_tree_digest(&baseline_root()), before);
     app.finish();
 }
 

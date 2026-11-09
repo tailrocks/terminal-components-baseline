@@ -408,8 +408,13 @@ fn g05_reference_session_receipt_records_identity() {
     assert!(text(&screen).chars().any(|ch| ch.is_ascii_alphanumeric()));
     let evidence = app.evidence_dir();
     let baselines = baseline_root();
+    let expected_evidence_root = std::env::var_os("TUISCOTTI_CAPTURE_ROOT")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| {
+            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("target/functional")
+        });
     assert!(
-        evidence.starts_with(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("target/functional"))
+        evidence.starts_with(expected_evidence_root)
     );
     assert!(!evidence.starts_with(&baselines));
     let session: Value = serde_json::from_slice(
