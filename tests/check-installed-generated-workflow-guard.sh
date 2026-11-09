@@ -25,11 +25,15 @@ case "$public_mutant" in
   *) printf 'generated-workflows: unsupported public mutant %s\n' "$public_mutant" >&2; exit 2 ;;
 esac
 case "$policy_case" in
-  all|external-checksum|external-source|external-version|external-dependency-graph|unknown-local-package|forged-source-less-entry|duplicate-package-identity|ambiguous-unqualified-edge|duplicate-edge|unknown-lock-metadata|unknown-package-metadata|missing-external-record|malformed-lock|unresolved-local-edge|root-lock-symlink|nested-lock-symlink|nested-lock-changed|path-escape|feature-only-removal|feature-unrelated-token|feature-new-key|feature-similar-key|feature-edge-retained|feature-lock-only-removal|typed-workspace-boolean-int|typed-dependency-boolean-int|typed-protected-boolean-int|lock-version-float|positive-external-edge|positive-local-local-removal|positive-lock-formatting|positive-pair) ;;
+  all|external-checksum|external-source|external-version|external-dependency-graph|unknown-local-package|forged-source-less-entry|duplicate-package-identity|ambiguous-unqualified-edge|duplicate-edge|unknown-lock-metadata|unknown-package-metadata|missing-external-record|malformed-lock|unresolved-local-edge|root-lock-symlink|nested-lock-symlink|nested-lock-changed|path-escape|feature-only-removal|feature-unrelated-token|feature-new-key|feature-similar-key|feature-edge-retained|feature-lock-only-removal|typed-workspace-boolean-int|typed-dependency-boolean-int|typed-protected-boolean-int|lock-version-float|positive-external-edge|positive-local-local-removal|positive-lock-formatting|positive-pair|generator-tool-resolution) ;;
   *) printf 'generated-workflows: unsupported Cargo lock policy case %s\n' "$policy_case" >&2; exit 2 ;;
 esac
 if [[ "$policy_case" == positive-pair && "$e2e_focus" != cargo-local-lock-policy ]]; then
   printf 'generated-workflows: positive-pair requires the Cargo local lock policy focus\n' >&2
+  exit 2
+fi
+if [[ "$policy_case" == generator-tool-resolution && "$e2e_focus" != cargo-local-lock-policy ]]; then
+  printf 'generated-workflows: generator-tool-resolution requires the Cargo local lock policy focus\n' >&2
   exit 2
 fi
 case "$policy_preflight_only" in
@@ -622,9 +626,101 @@ if [[ "$policy_preflight_only" != 1 && "$cold_install" -eq 0 && ( -L "$guard_ins
 fi
 
 test_root=$(mktemp -d "${TMPDIR:-/tmp}/generated-workflow-e2e.XXXXXX")
+policy_snapshot_python_runtime=
+policy_snapshot_python_path=
+policy_snapshot_python_version=
+policy_snapshot_python_sha256=
+policy_snapshot_manifest_value() {
+  local manifest=$1
+  local key=$2
+  /usr/bin/awk -F= -v key="$key" '$1 == key { count++; value = substr($0, index($0, "=") + 1) } END { if (count != 1) exit 1; print value }' "$manifest"
+}
+policy_prepare_snapshot_python() {
+  local checker_sha
+  local manifest_checker_sha
+  local installed_manifest
+  local checker_version
+  local python_version
+  local python_archive_sha
+  local python_lock_sha
+  local python_mise_sha
+  local inventory_helper_sha
+  local inventory_sha
+  local mise_version
+  local mise_sha
+  local python_generation
+  local artifact_dir
+  local expected_artifact_manifest
+  local expected_python_sha
+  local resolved_python
+  local resolved_git
+  local actual_version
+  local python_path
+  checker_sha=$(sha256_file "$repo_root/scripts/check-generated-workflows.sh") || return 1
+  installed_manifest="$guard_install_root/versions/$checker_sha/manifest"
+  if [[ "$guard_install_root" != /* || -L "$guard_install_root" || ! -d "$guard_install_root" || -L "$guard_install_root/versions" || ! -d "$guard_install_root/versions" || -L "$guard_install_root/versions/$checker_sha" || ! -d "$guard_install_root/versions/$checker_sha" || ! -f "$installed_manifest" || -L "$installed_manifest" || ! -f "$guard_install_root/versions/$checker_sha/check-generated-workflows.sh" || -L "$guard_install_root/versions/$checker_sha/check-generated-workflows.sh" || "$(sha256_file "$guard_install_root/versions/$checker_sha/check-generated-workflows.sh")" != "$checker_sha" ]]; then
+    printf 'generated-workflows: installed checker-bound Python 3.15.2 authority is unavailable for custody snapshots\n' >&2
+    return 1
+  fi
+  checker_version=$(policy_snapshot_manifest_value "$installed_manifest" checker_version) || return 1
+  manifest_checker_sha=$(policy_snapshot_manifest_value "$installed_manifest" checker_sha256) || return 1
+  python_version=$(policy_snapshot_manifest_value "$installed_manifest" python_version) || return 1
+  python_archive_sha=$(policy_snapshot_manifest_value "$installed_manifest" python_artifact_sha256) || return 1
+  python_lock_sha=$(policy_snapshot_manifest_value "$installed_manifest" python_lock_sha256) || return 1
+  python_mise_sha=$(policy_snapshot_manifest_value "$installed_manifest" python_mise_sha256) || return 1
+  inventory_helper_sha=$(policy_snapshot_manifest_value "$installed_manifest" inventory_helper_sha256) || return 1
+  inventory_sha=$(policy_snapshot_manifest_value "$installed_manifest" inventory_sha256) || return 1
+  mise_version=$(policy_snapshot_manifest_value "$installed_manifest" mise_version) || return 1
+  mise_sha=$(policy_snapshot_manifest_value "$installed_manifest" mise_sha256) || return 1
+  if [[ "$checker_version" != 2 || "$manifest_checker_sha" != "$checker_sha" || "$python_version" != 3.15.2 || ! "$python_archive_sha" =~ ^[0-9a-f]{64}$ || ! "$python_lock_sha" =~ ^[0-9a-f]{64}$ || ! "$python_mise_sha" =~ ^[0-9a-f]{64}$ || ! "$inventory_helper_sha" =~ ^[0-9a-f]{64}$ || ! "$inventory_sha" =~ ^[0-9a-f]{64}$ || ! "$mise_sha" =~ ^[0-9a-f]{64}$ || ! "$mise_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ || "$(sha256_file "$repo_root/scripts/python-inventory.sh")" != "$inventory_helper_sha" ]]; then
+    printf 'generated-workflows: installed Python artifact pins or inventory helper do not match the custody snapshot authority\n' >&2
+    return 1
+  fi
+  if [[ "$hash_tool" == /usr/bin/shasum ]]; then
+    python_generation=$(printf '%s\n' "$platform" "$python_version" "$python_archive_sha" "$python_lock_sha" "$python_mise_sha" "$inventory_helper_sha" "$mise_version" "$mise_sha" | "$hash_tool" -a 256 | /usr/bin/awk '{print $1}') || return 1
+  else
+    python_generation=$(printf '%s\n' "$platform" "$python_version" "$python_archive_sha" "$python_lock_sha" "$python_mise_sha" "$inventory_helper_sha" "$mise_version" "$mise_sha" | "$hash_tool" | /usr/bin/awk '{print $1}') || return 1
+  fi
+  if [[ ! "$python_generation" =~ ^[0-9a-f]{64}$ ]]; then
+    printf 'generated-workflows: installed Python artifact generation key is invalid for custody snapshots\n' >&2
+    return 1
+  fi
+  artifact_dir="$guard_install_root/artifacts/python/$python_version/$platform-$python_generation"
+  policy_snapshot_python_runtime="$artifact_dir/runtime"
+  python_path="$policy_snapshot_python_runtime/bin/python3"
+  policy_snapshot_python_path="$policy_snapshot_python_runtime/bin:${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin"
+  if [[ -L "$guard_install_root/artifacts" || ! -d "$guard_install_root/artifacts" || -L "$guard_install_root/artifacts/python" || ! -d "$guard_install_root/artifacts/python" || -L "$guard_install_root/artifacts/python/$python_version" || ! -d "$guard_install_root/artifacts/python/$python_version" || -L "$artifact_dir" || ! -d "$artifact_dir" || -L "$policy_snapshot_python_runtime" || ! -d "$policy_snapshot_python_runtime" || -L "$policy_snapshot_python_runtime/bin" || ! -d "$policy_snapshot_python_runtime/bin" || ! -f "$artifact_dir/inventory" || -L "$artifact_dir/inventory" || ! -f "$artifact_dir/manifest" || -L "$artifact_dir/manifest" || ! -f "$policy_snapshot_python_runtime/bin/python3.15" || -L "$policy_snapshot_python_runtime/bin/python3.15" || ! -x "$policy_snapshot_python_runtime/bin/python3.15" || ! -L "$python_path" || "$(/usr/bin/readlink "$python_path")" != python3.15 ]]; then
+    printf 'generated-workflows: installed Python 3.15.2 runtime is missing or unsafe for custody snapshots\n' >&2
+    return 1
+  fi
+  expected_artifact_manifest=$(printf 'python_version=%s\nbackend=core:python\narchive_sha256=%s\nlock_sha256=%s\nmise_config_sha256=%s\ninventory_helper_sha256=%s\ninventory_sha256=%s' "$python_version" "$python_archive_sha" "$python_lock_sha" "$python_mise_sha" "$inventory_helper_sha" "$inventory_sha")
+  if ! printf '%s\n' "$expected_artifact_manifest" | /usr/bin/cmp -s - "$artifact_dir/manifest" || [[ "$(sha256_file "$artifact_dir/inventory")" != "$inventory_sha" ]]; then
+    printf 'generated-workflows: installed Python 3.15.2 artifact manifest or inventory is not checker-bound\n' >&2
+    return 1
+  fi
+  expected_python_sha=$(/usr/bin/awk -F '\t' '$1 == "file" && $4 == "bin/python3.15" { count++; value = $3 } END { if (count != 1) exit 1; print value }' "$artifact_dir/inventory") || return 1
+  if [[ "$(sha256_file "$policy_snapshot_python_runtime/bin/python3.15")" != "$expected_python_sha" ]] || ! env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin HOME="$test_root/policy-snapshot-home" TMPDIR="$test_root" LC_ALL=C LANG=C /bin/bash "$repo_root/scripts/python-inventory.sh" check "$policy_snapshot_python_runtime" "$artifact_dir/inventory"; then
+    printf 'generated-workflows: installed Python 3.15.2 runtime failed its pinned inventory check\n' >&2
+    return 1
+  fi
+  resolved_python=$(env -i "PATH=$policy_snapshot_python_path" HOME="$test_root/policy-snapshot-home" LC_ALL=C LANG=C /bin/bash -c 'command -v python3') || return 1
+  resolved_git=$(env -i "PATH=$policy_snapshot_python_path" HOME="$test_root/policy-snapshot-home" LC_ALL=C LANG=C /bin/bash -c 'command -v git') || return 1
+  actual_version=$(env -i "PATH=$policy_snapshot_python_path" HOME="$test_root/policy-snapshot-home" LC_ALL=C LANG=C python3 -I -S -c 'import sys; print(".".join(map(str, sys.version_info[:3])))') || return 1
+  if [[ "$resolved_python" != "$python_path" || "$resolved_git" != "$git_command" || "$actual_version" != 3.15.2 ]]; then
+    printf 'generated-workflows: custody snapshot PATH does not resolve the pinned Python 3.15.2 and Git authorities\n' >&2
+    return 1
+  fi
+  policy_snapshot_python_version=$actual_version
+  policy_snapshot_python_sha256=$(sha256_file "$policy_snapshot_python_runtime/bin/python3.15") || return 1
+  python_artifact_dir=$artifact_dir
+  python_runtime=$policy_snapshot_python_runtime
+  python_inventory="$artifact_dir/inventory"
+  python_artifact_manifest="$artifact_dir/manifest"
+}
 evidence_base=${BASELINE_GUARD_EVIDENCE_DIR:-}
 network_enforcement=not-available
 network_fixture_pid=
+network_fixture_release_marker=
 capture_optional_installer_diagnostics() {
   local evidence_run=$1
   (
@@ -927,6 +1023,7 @@ mark_completion_complete() {
 capture_required_run_evidence() {
   local evidence_run=
   local name
+  local capture_label
   if ! mkdir -p "$evidence_base"; then
     printf 'generated-workflows: cannot create the evidence directory\n' >&2
     return 1
@@ -950,14 +1047,26 @@ capture_required_run_evidence() {
   if [[ -f "$test_root/network-control.result" ]]; then
     cp -p "$test_root/network-control.result" "$evidence_run/" || return 1
   fi
+  if [[ -f "$test_root/policy-network-control.result" ]]; then
+    cp -p "$test_root/policy-network-control.result" "$evidence_run/" || return 1
+  fi
   if [[ -f "$completion_witnesses_file" && ! -L "$completion_witnesses_file" ]]; then
     cp -p "$completion_witnesses_file" "$evidence_run/completion-witnesses.log" || return 1
   fi
-  for name in policy-fixture-context.txt policy-source.patch policy-source-untracked.nul policy-source-untracked.original.json policy-source-status.original policy-source-refs.original policy-source-snapshot.original.json policy-source-snapshot.current.json policy-candidate-control-paths policy-external-changed-paths.nul policy-external-generated-paths.nul policy-external-generated-files.json policy-external-candidate-paths.expected.nul policy-local-changed-paths.nul policy-local-generated-paths.nul policy-local-generated-files.json policy-local-candidate-paths.expected.nul policy-local-generator-state.log policy-formatting-changed-paths.nul policy-formatting-generated-paths.nul policy-formatting-generated-files.json policy-formatting-candidate-paths.expected.nul policy-formatting-lock.candidate policy-formatting-semantic-proof.json policy-formatting-generator-state.log policy-formatting-generator-version.stderr policy-formatting-generator-first.log policy-formatting-generator-second.log positive-lock-formatting-candidate-paths policy-positive-lock-formatting-state.log positive-lock-formatting-commit.log positive-lock-formatting-push.log positive-lock-formatting-mutant-fixture-commit.log positive-lock-formatting-mutant-push.log positive-local-local-removal-candidate-paths policy-local-positive-paths positive-external-edge-candidate-paths policy-positive-external-edge.patch policy-external-app-manifest.patch policy-mutant.patch policy-mutant-checker.original policy-mutant-checker.mutant policy-mutant-whole-lock-digest.patch policy-mutant-edge-resolution.patch policy-mutant-checker-whole-lock-digest policy-mutant-checker-edge-resolution; do
+  for name in policy-fixture-context.txt policy-source.patch policy-source-untracked.nul policy-source-untracked.original.json policy-source-status.original policy-source-refs.original policy-source-snapshot.original.json policy-source-snapshot.current.json policy-candidate-control-paths policy-generator-context.log policy-generator-source-before.state policy-generator-source-after.state policy-network-control.result policy-external-changed-paths.nul policy-external-generated-paths.nul policy-external-generated-files.json policy-external-candidate-paths.expected.nul policy-local-changed-paths.nul policy-local-generated-paths.nul policy-local-generated-files.json policy-local-candidate-paths.expected.nul policy-local-generator-state.log policy-formatting-changed-paths.nul policy-formatting-generated-paths.nul policy-formatting-generated-files.json policy-formatting-candidate-paths.expected.nul policy-formatting-lock.candidate policy-formatting-semantic-proof.json policy-formatting-generator-state.log policy-formatting-generator-version.stderr policy-formatting-generator-first.log policy-formatting-generator-second.log positive-lock-formatting-candidate-paths policy-positive-lock-formatting-state.log positive-lock-formatting-commit.log positive-lock-formatting-push.log positive-lock-formatting-mutant-fixture-commit.log positive-lock-formatting-mutant-push.log positive-local-local-removal-candidate-paths policy-local-positive-paths positive-external-edge-candidate-paths policy-positive-external-edge.patch policy-external-app-manifest.patch policy-mutant.patch policy-mutant-checker.original policy-mutant-checker.mutant policy-mutant-whole-lock-digest.patch policy-mutant-edge-resolution.patch policy-mutant-checker-whole-lock-digest policy-mutant-checker-edge-resolution; do
     if [[ -f "$test_root/$name" && ! -L "$test_root/$name" ]]; then
       cp -p "$test_root/$name" "$evidence_run/" || return 1
     fi
   done
+  if [[ -d "$test_root/policy-context-capture" && ! -L "$test_root/policy-context-capture" ]]; then
+    mkdir "$evidence_run/policy-context-capture" || return 1
+    for name in "$test_root"/policy-context-capture/*/lifecycle.json; do
+      [[ -f "$name" && ! -L "$name" ]] || continue
+      capture_label=${name%/lifecycle.json}
+      capture_label=${capture_label##*/}
+      cp -p "$name" "$evidence_run/policy-context-capture/$capture_label.lifecycle.json" || return 1
+    done
+  fi
   if [[ -d "$test_root/policy-candidate-files" && ! -L "$test_root/policy-candidate-files" ]]; then
     mkdir "$evidence_run/policy-candidate-files" || return 1
     for name in root-Cargo.toml.candidate app-Cargo.toml.candidate Cargo.lock.candidate; do
@@ -1016,7 +1125,6 @@ cleanup_e2e() {
   local original_status=$?
   local final_status=$original_status
   local cleanup_status=0
-  local network_pid
   local wait_status
   set +e
   if [[ "$original_status" -eq 0 ]]; then
@@ -1028,25 +1136,22 @@ cleanup_e2e() {
     fi
   fi
   if [[ -n "$network_fixture_pid" ]]; then
-    network_pid=$network_fixture_pid
-    if kill -0 "$network_pid" 2>/dev/null; then
-      if ! kill "$network_pid" 2>/dev/null && kill -0 "$network_pid" 2>/dev/null; then
-        printf 'generated-workflows: cannot stop the owned network fixture during cleanup\n' >&2
-        cleanup_status=1
-      fi
+    if [[ -z "$network_fixture_release_marker" || "$network_fixture_release_marker" != "$test_root"/* ]]; then
+      printf 'generated-workflows: owned network fixture has no private release marker\n' >&2
+      cleanup_status=1
+    elif ! : > "$network_fixture_release_marker"; then
+      printf 'generated-workflows: cannot release the owned network fixture during cleanup\n' >&2
+      cleanup_status=1
     fi
-    if wait "$network_pid" 2>/dev/null; then
+    if wait "$network_fixture_pid" 2>/dev/null; then
       wait_status=0
     else
       wait_status=$?
     fi
     network_fixture_pid=
-    if [[ "$wait_status" -ne 0 && "$wait_status" -ne 143 ]]; then
+    network_fixture_release_marker=
+    if [[ "$wait_status" -ne 0 ]]; then
       printf 'generated-workflows: owned network fixture exited unexpectedly during cleanup\n' >&2
-      cleanup_status=1
-    fi
-    if kill -0 "$network_pid" 2>/dev/null; then
-      printf 'generated-workflows: owned network fixture remains after cleanup\n' >&2
       cleanup_status=1
     fi
   fi
@@ -1077,6 +1182,142 @@ completion_state=incomplete
 completion_witnesses_file="$test_root/completion-witnesses.log"
 trap cleanup_e2e EXIT
 : > "$completion_witnesses_file"
+policy_private_git_root=
+policy_private_git_index=
+policy_private_git_objects=
+policy_private_git_source_objects=
+policy_private_git_common_dir=
+policy_private_git_source_index=
+policy_private_git_shared_index=
+policy_prepare_private_git_state() {
+  local label=$1
+  local root=$2
+  local private="$test_root/policy-context-capture/$label"
+  local common_dir
+  local index_path
+  local shared_index
+  local object_dir
+  mkdir -p "$private/objects" "$private/home" || return 1
+  common_dir=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$root" rev-parse --path-format=absolute --git-common-dir) || return 1
+  index_path=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$root" rev-parse --path-format=absolute --git-path index) || return 1
+  object_dir=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$root" rev-parse --path-format=absolute --git-path objects) || return 1
+  shared_index=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$root" rev-parse --shared-index-path) || return 1
+  if [[ -L "$index_path" || ! -f "$index_path" ]]; then
+    printf 'generated-workflows: custody snapshot effective index is unsafe for %s\n' "$label" >&2
+    return 1
+  fi
+  cp -p "$index_path" "$private/index" || return 1
+  if [[ -n "$shared_index" ]]; then
+    if [[ "$shared_index" != /* ]]; then
+      shared_index="$root/$shared_index"
+    fi
+    if [[ -L "$shared_index" || ! -f "$shared_index" ]]; then
+      printf 'generated-workflows: custody snapshot split-index base is unavailable for %s\n' "$label" >&2
+      return 1
+    fi
+    cp -p "$shared_index" "$private/${shared_index##*/}" || return 1
+  fi
+  if [[ -L "$object_dir" || ! -d "$object_dir" ]]; then
+    printf 'generated-workflows: custody snapshot object database is unsafe for %s\n' "$label" >&2
+    return 1
+  fi
+  policy_private_git_root=$private
+  policy_private_git_index="$private/index"
+  policy_private_git_objects="$private/objects"
+  policy_private_git_source_objects=$object_dir
+  policy_private_git_common_dir=$common_dir
+  policy_private_git_source_index=$index_path
+  policy_private_git_shared_index=$shared_index
+}
+policy_run_private_lifecycle_snapshot() {
+  local root=$1
+  local label=$2
+  policy_prepare_private_git_state "$label" "$root" || return 1
+  (
+    cd "$root" || exit $?
+    local env_name
+    for env_name in "${!GIT_@}"; do
+      unset "$env_name"
+    done
+    export HOME="$policy_private_git_root/home"
+    export GIT_INDEX_FILE="$policy_private_git_index"
+    export GIT_OBJECT_DIRECTORY="$policy_private_git_objects"
+    export GIT_ALTERNATE_OBJECT_DIRECTORIES="$policy_private_git_source_objects"
+    export GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null
+    export GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0
+    export PATH="$policy_snapshot_python_path"
+    policy_lifecycle_source_snapshot "$root"
+  )
+}
+policy_private_index_tree() {
+  local label=$1
+  local root=$2
+  policy_prepare_private_git_state "$label" "$root" || return 1
+  (
+    cd "$root" || exit $?
+    local env_name
+    for env_name in "${!GIT_@}"; do
+      unset "$env_name"
+    done
+    export HOME="$policy_private_git_root/home"
+    export GIT_INDEX_FILE="$policy_private_git_index"
+    export GIT_OBJECT_DIRECTORY="$policy_private_git_objects"
+    export GIT_ALTERNATE_OBJECT_DIRECTORIES="$policy_private_git_source_objects"
+    export GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null
+    export GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0
+    export PATH="${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin"
+    "$git_command" -C "$root" write-tree
+  )
+}
+policy_capture_repo_context_state() {
+  local label=$1
+  local root=$2
+  local private
+  local common_dir
+  local index_path
+  local shared_index
+  local object_dir
+  local lifecycle_path
+  policy_prepare_private_git_state "$label" "$root" || return 1
+  private=$policy_private_git_root
+  common_dir=$policy_private_git_common_dir
+  index_path=$policy_private_git_source_index
+  shared_index=$policy_private_git_shared_index
+  object_dir=$policy_private_git_source_objects
+  lifecycle_path="$private/lifecycle.json"
+  if ! policy_run_private_lifecycle_snapshot "$root" "$label" > "$lifecycle_path"; then
+    printf 'generated-workflows: complete lifecycle custody capture failed for %s\n' "$label" >&2
+    return 1
+  fi
+  local checkout_sha
+  local object_sha
+  local metadata_sha
+  local refs_sha
+  local lifecycle_sha
+  local index_sha
+  local split_index_sha=none
+  local config_sha
+  local config_path="$common_dir/config"
+  checkout_sha=$(policy_context_filesystem_digest "$root" worktree) || return 1
+  object_sha=$(policy_context_filesystem_digest "$object_dir" all) || return 1
+  metadata_sha=$(policy_context_filesystem_digest "$common_dir" git-metadata) || return 1
+  refs_sha=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$root" show-ref --head | LC_ALL=C sort | sha256_stdin) || return 1
+  lifecycle_sha=$(sha256_file "$lifecycle_path") || return 1
+  index_sha=$(sha256_file "$index_path") || return 1
+  config_sha=$(sha256_file "$config_path") || return 1
+  if [[ -n "$shared_index" ]]; then
+    split_index_sha=$(sha256_file "$shared_index") || return 1
+  fi
+  printf '%s.lifecycle_sha256=%s\n' "$label" "$lifecycle_sha"
+  printf '%s.checkout_sha256=%s\n' "$label" "$checkout_sha"
+  printf '%s.object_database_sha256=%s\n' "$label" "$object_sha"
+  printf '%s.git_metadata_sha256=%s\n' "$label" "$metadata_sha"
+  printf '%s.index_sha256=%s\n' "$label" "$index_sha"
+  printf '%s.split_index_sha256=%s\n' "$label" "$split_index_sha"
+  printf '%s.config_sha256=%s\n' "$label" "$config_sha"
+  printf '%s.refs_sha256=%s\n' "$label" "$refs_sha"
+}
+
 policy_source_repository=
 policy_candidate_head=
 policy_candidate_parent=
@@ -1109,6 +1350,7 @@ policy_source_branch=
 policy_source_head=
 policy_historical_head=
 policy_seed_sha=
+policy_candidate_lock_sha=
 policy_source_snapshot_kind=
 write_policy_source_untracked_manifest() {
   local root=$1
@@ -1232,12 +1474,14 @@ assert_policy_source_unchanged() {
   local current_untracked_sha
   local current_source_snapshot_sha
   local current_source_branch
+  local current_source_index_tree
   current_source_branch=$(policy_lifecycle_branch "$repo_root") || return 1
-  if [[ "$("$git_command" -C "$repo_root" rev-parse HEAD)" != "$policy_source_head" || "$current_source_branch" != "$policy_source_branch" || "$("$git_command" -C "$repo_root" write-tree)" != "$policy_source_index_tree" ]]; then
+  current_source_index_tree=$(policy_private_index_tree source-boundary "$repo_root") || return 1
+  if [[ "$("$git_command" -C "$repo_root" rev-parse HEAD)" != "$policy_source_head" || "$current_source_branch" != "$policy_source_branch" || "$current_source_index_tree" != "$policy_source_index_tree" ]]; then
     printf 'generated-workflows: policy fixture changed the original source ref, HEAD, or index\n' >&2
     return 1
   fi
-  if ! "$git_command" -C "$repo_root" status --porcelain=v1 -z > "$test_root/policy-source-status.current"; then
+  if ! GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$repo_root" status --porcelain=v1 -z > "$test_root/policy-source-status.current"; then
     printf 'generated-workflows: cannot inspect original policy source state\n' >&2
     return 1
   fi
@@ -1263,7 +1507,7 @@ assert_policy_source_unchanged() {
     printf 'generated-workflows: policy fixture changed an original untracked source input\n' >&2
     return 1
   fi
-  if ! policy_lifecycle_source_snapshot "$repo_root" > "$test_root/policy-source-snapshot.current.json"; then
+  if ! policy_run_private_lifecycle_snapshot "$repo_root" source-boundary > "$test_root/policy-source-snapshot.current.json"; then
     printf 'generated-workflows: cannot capture the original source snapshot after a policy boundary\n' >&2
     return 1
   fi
@@ -1281,10 +1525,10 @@ prepare_policy_candidate_control() {
   local seed_is_tracked
   local seed_is_untracked
   local input_path
+  policy_source_index_tree=$(policy_private_index_tree source-initial "$repo_root") || return 1
   policy_source_head=$("$git_command" -C "$repo_root" rev-parse HEAD)
   policy_source_branch=$(policy_lifecycle_branch "$repo_root") || return 1
-  policy_source_index_tree=$("$git_command" -C "$repo_root" write-tree)
-  if ! "$git_command" -C "$repo_root" status --porcelain=v1 -z > "$test_root/policy-source-status.original"; then
+  if ! GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$repo_root" status --porcelain=v1 -z > "$test_root/policy-source-status.original"; then
     printf 'generated-workflows: cannot inspect original policy source state\n' >&2
     return 1
   fi
@@ -1294,7 +1538,7 @@ prepare_policy_candidate_control() {
     return 1
   fi
   policy_source_refs_sha=$(sha256_file "$test_root/policy-source-refs.original") || return 1
-  if ! policy_lifecycle_source_snapshot "$repo_root" > "$test_root/policy-source-snapshot.original.json"; then
+  if ! policy_run_private_lifecycle_snapshot "$repo_root" source-initial > "$test_root/policy-source-snapshot.original.json"; then
     printf 'generated-workflows: cannot capture the complete original policy source snapshot\n' >&2
     return 1
   fi
@@ -1478,20 +1722,27 @@ PY
       return 1
     fi
   done
-  if ! python3 -I -S - "$policy_source_repository" "$policy_seed_sha" <<'PY'
+  policy_candidate_lock_sha=$(sha256_file "$policy_candidate_files/Cargo.lock.candidate") || return 1
+  if [[ "$(sha256_file "$policy_source_repository/Cargo.lock")" != "$policy_candidate_lock_sha" || "$(sha256_file "$repo_root/Cargo.lock")" != "$policy_candidate_lock_sha" ]]; then
+    printf 'generated-workflows: captured candidate Cargo.lock does not match the actual source bytes\n' >&2
+    return 1
+  fi
+  if ! python3 -I -S - "$policy_source_repository" "$policy_seed_sha" "$policy_candidate_lock_sha" <<'PY'
 import hashlib
+import re
 import sys
 import tomllib
 from pathlib import Path
 
 root = Path(sys.argv[1])
 expected_seed_sha = sys.argv[2]
+expected_candidate_sha = sys.argv[3]
 seed_bytes = (root / "scripts/trusted-seed-cargo.lock").read_bytes()
 candidate_bytes = (root / "Cargo.lock").read_bytes()
 if hashlib.sha256(seed_bytes).hexdigest() != expected_seed_sha:
     raise SystemExit("generated-workflows: private candidate seed hash changed before policy qualification")
-if candidate_bytes != seed_bytes:
-    raise SystemExit("generated-workflows: actual candidate Cargo.lock is not byte-equal to the pinned trusted seed")
+if hashlib.sha256(candidate_bytes).hexdigest() != expected_candidate_sha:
+    raise SystemExit("generated-workflows: actual candidate Cargo.lock changed after immutable source capture")
 try:
     seed = tomllib.loads(seed_bytes.decode("utf-8"))
     candidate = tomllib.loads(candidate_bytes.decode("utf-8"))
@@ -1499,18 +1750,54 @@ try:
     app = tomllib.loads((root / "apps/jackin/Cargo.toml").read_text())
 except (tomllib.TOMLDecodeError, UnicodeError) as error:
     raise SystemExit("generated-workflows: policy candidate metadata is invalid TOML") from error
-if candidate != seed or candidate.get("version") != 4 or type(candidate.get("package")) is not list:
-    raise SystemExit("generated-workflows: actual candidate lock graph differs from the pinned trusted seed")
+def typed_equal(left, right):
+    if type(left) is not type(right):
+        return False
+    if isinstance(left, dict):
+        return left.keys() == right.keys() and all(typed_equal(left[key], right[key]) for key in left)
+    if isinstance(left, list):
+        return len(left) == len(right) and all(typed_equal(a, b) for a, b in zip(left, right))
+    return left == right
+if candidate.keys() != seed.keys() or not typed_equal({key: value for key, value in candidate.items() if key != "package"}, {key: value for key, value in seed.items() if key != "package"}) or type(candidate.get("version")) is not int or candidate.get("version") != seed.get("version") or candidate.get("version") != 4 or type(candidate.get("package")) is not list:
+    raise SystemExit("generated-workflows: actual candidate changes reviewed lock-level metadata")
 packages = candidate["package"]
 seed_packages = seed.get("package")
-if type(seed_packages) is not list or len(packages) != 299 or packages != seed_packages:
+if type(seed_packages) is not list or len(packages) != 299 or len(seed_packages) != 299:
     raise SystemExit("generated-workflows: complete candidate package inventory differs from the trusted seed")
 identities = [(item.get("name"), item.get("version"), item.get("source")) for item in packages]
-if len(identities) != len(set(identities)):
-    raise SystemExit("generated-workflows: trusted seed package identities are not unique")
+seed_identities = [(item.get("name"), item.get("version"), item.get("source")) for item in seed_packages]
+if any(type(name) is not str or type(version) is not str or source is not None and type(source) is not str for name, version, source in identities + seed_identities):
+    raise SystemExit("generated-workflows: candidate or trusted seed package identity has an invalid type")
+if len(identities) != len(set(identities)) or len(seed_identities) != len(set(seed_identities)):
+    raise SystemExit("generated-workflows: candidate or trusted seed package identities are not unique")
+candidate_by_identity = dict(zip(identities, packages))
+if set(candidate_by_identity) != set(seed_identities):
+    raise SystemExit("generated-workflows: complete candidate package identities differ from the trusted seed")
 local = {item.get("name"): item for item in packages if item.get("source") is None}
+seed_local = {item.get("name"): item for item in seed_packages if item.get("source") is None}
 if set(local) != {"jackin-console", "junie-tui"}:
     raise SystemExit("generated-workflows: trusted seed local-owner identities drifted")
+if set(seed_local) != set(local) or any((local[name].get("name"), local[name].get("version"), local[name].get("source")) != (seed_local[name].get("name"), seed_local[name].get("version"), seed_local[name].get("source")) for name in local):
+    raise SystemExit("generated-workflows: candidate local package identities differ from the trusted seed")
+for name in local:
+    candidate_fields = {key: value for key, value in local[name].items() if key != "dependencies"}
+    seed_fields = {key: value for key, value in seed_local[name].items() if key != "dependencies"}
+    if not typed_equal(candidate_fields, seed_fields):
+        raise SystemExit("generated-workflows: candidate changes a reviewed local package record")
+    if type(local[name].get("dependencies")) is not list or type(seed_local[name].get("dependencies")) is not list:
+        raise SystemExit("generated-workflows: candidate or trusted seed local package has an invalid dependency list")
+    if any(type(edge) is not str for edge in local[name]["dependencies"] + seed_local[name]["dependencies"]):
+        raise SystemExit("generated-workflows: candidate or trusted seed local package has an invalid dependency edge")
+local_edge_additions = {
+    name: set(local[name]["dependencies"]) - set(seed_local[name]["dependencies"])
+    for name in local
+}
+local_edge_removals = {
+    name: set(seed_local[name]["dependencies"]) - set(local[name]["dependencies"])
+    for name in local
+}
+if local_edge_additions != {"jackin-console": {"jackin-console"}, "junie-tui": {"sha2 0.10.9"}} or any(local_edge_removals.values()):
+    raise SystemExit("generated-workflows: candidate local dependency edge deltas differ from the reviewed source candidate")
 if local["junie-tui"].get("version") != "0.1.0" or local["junie-tui"].get("dependencies", []).count("syn 3.0.9") != 1:
     raise SystemExit("generated-workflows: trusted seed junie-tui syn edge identity drifted")
 if local["jackin-console"].get("version") != "0.1.0" or local["jackin-console"].get("dependencies", []).count("unicode-segmentation") != 1:
@@ -1523,16 +1810,37 @@ if len(syn_qualified) != 1:
     raise SystemExit("generated-workflows: trusted seed qualified syn edge does not resolve uniquely")
 external = [item for item in packages if item.get("source") is not None]
 seed_external = [item for item in seed_packages if item.get("source") is not None]
-if external != seed_external:
+if not typed_equal(external, seed_external):
     raise SystemExit("generated-workflows: complete external package inventory differs from the trusted seed")
+identity_set = set(candidate_by_identity)
+dependency_pattern = re.compile(r"([A-Za-z0-9_-]+)(?: ([0-9]+(?:\.[0-9]+){2}(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?))?(?: \(([^()]+)\))?")
+for identity, package in candidate_by_identity.items():
+    dependencies = package.get("dependencies", [])
+    if type(dependencies) is not list or any(type(edge) is not str for edge in dependencies):
+        raise SystemExit("generated-workflows: candidate contains an invalid dependency list")
+    seen = set()
+    for edge in dependencies:
+        match = dependency_pattern.fullmatch(edge)
+        if match is None:
+            raise SystemExit("generated-workflows: candidate contains a malformed dependency identity")
+        name, version, source = match.groups()
+        if source is not None and version is None:
+            raise SystemExit("generated-workflows: candidate contains a malformed source-qualified dependency")
+        targets = [target for target in identity_set if target[0] == name and (version is None or target[1] == version) and (source is None or target[2] == source)]
+        if len(targets) != 1:
+            raise SystemExit("generated-workflows: candidate contains an unresolved or ambiguous dependency identity")
+        target = targets[0]
+        if target in seen:
+            raise SystemExit("generated-workflows: candidate contains a duplicate dependency edge")
+        seen.add(target)
 if app.get("dependencies", {}).get("junie-tui") != {"path": "../..", "default-features": False, "features": ["terminal"]}:
     raise SystemExit("generated-workflows: candidate app local dependency identity drifted")
 PY
   then
     return 1
   fi
-  if [[ "$(sha256_file "$policy_source_repository/Cargo.lock")" != "$policy_seed_sha" ]]; then
-    printf 'generated-workflows: actual candidate Cargo.lock does not match the trusted seed hash\n' >&2
+  if [[ "$(sha256_file "$policy_source_repository/Cargo.lock")" != "$policy_candidate_lock_sha" ]]; then
+    printf 'generated-workflows: actual candidate Cargo.lock does not match its captured source hash\n' >&2
     return 1
   fi
   if ! "$git_command" -c core.hooksPath=/dev/null -C "$policy_source_repository" commit --allow-empty --quiet -m 'test: preserve trusted Cargo policy control'; then
@@ -1541,7 +1849,7 @@ PY
   fi
   policy_control_head=$("$git_command" -C "$policy_source_repository" rev-parse HEAD)
   policy_control_tree=$("$git_command" -C "$policy_source_repository" rev-parse "$policy_control_head^{tree}")
-  if [[ "$("$git_command" -C "$policy_source_repository" rev-parse "$policy_control_head^1")" != "$policy_candidate_head" || "$policy_control_tree" != "$policy_candidate_tree" ]]; then
+  if [[ "$("$git_command" -C "$policy_source_repository" rev-parse "$policy_control_head^1")" != "$policy_candidate_head" || "$policy_control_tree" != "$policy_candidate_tree" || "$(sha256_file "$policy_source_repository/Cargo.lock")" != "$policy_candidate_lock_sha" ]]; then
     printf 'generated-workflows: empty policy control does not preserve the candidate parent and exact tree\n' >&2
     return 1
   fi
@@ -1582,11 +1890,14 @@ PY
     printf 'trusted_seed_sha256=%s\n' "$policy_seed_sha"
     printf 'candidate_root_manifest_sha256=%s\n' "$(sha256_file "$policy_candidate_files/root-Cargo.toml.candidate")"
     printf 'candidate_app_manifest_sha256=%s\n' "$(sha256_file "$policy_candidate_files/app-Cargo.toml.candidate")"
-    printf 'candidate_lock_sha256=%s\n' "$(sha256_file "$policy_candidate_files/Cargo.lock.candidate")"
+    printf 'candidate_lock_sha256=%s\n' "$policy_candidate_lock_sha"
     printf 'control_root_manifest_sha256=%s\n' "$(sha256_file "$policy_source_repository/Cargo.toml")"
     printf 'control_app_manifest_sha256=%s\n' "$(sha256_file "$policy_source_repository/apps/jackin/Cargo.toml")"
     printf 'control_lock_sha256=%s\n' "$(sha256_file "$policy_source_repository/Cargo.lock")"
     printf 'candidate_checker_sha256=%s\n' "$(sha256_file "$policy_source_repository/scripts/check-generated-workflows.sh")"
+    printf 'custody_snapshot_python_version=%s\n' "$policy_snapshot_python_version"
+    printf 'custody_snapshot_python_sha256=%s\n' "$policy_snapshot_python_sha256"
+    printf 'custody_snapshot_python_path=%s\n' "$policy_snapshot_python_runtime/bin/python3"
   } > "$test_root/policy-fixture-context.txt"
   if [[ "$e2e_focus" == cargo-local-lock-policy ]]; then
     local saved_repository=
@@ -1689,6 +2000,7 @@ PY
   fi
 }
 if [[ "$e2e_focus" == cargo-local-lock-policy ]]; then
+  policy_prepare_snapshot_python || exit 1
   prepare_policy_candidate_control
 fi
 repository="$test_root/repository with 'quotes' and spaces"
@@ -1870,6 +2182,1029 @@ printf 'private installed checker setup: PASS\n' >> "$test_root/case-results.log
 checker_digest=$(sha256_file "$repository/scripts/check-generated-workflows.sh")
 installed_manifest="$installation/versions/$checker_digest/manifest"
 manifest_value() { /usr/bin/sed -n "s/^$1=//p" "$installed_manifest"; }
+policy_generator_environment=()
+policy_generator_executable=
+policy_generator_generation=
+policy_generator_source_generation=
+policy_generator_context_root=
+policy_generator_base_context_root=
+policy_generator_source_executable=
+policy_generator_source_mise_config=
+policy_generator_source_mise_lock=
+policy_generator_source_cargo=
+policy_generator_source_rustc=
+policy_generator_mise=
+policy_generator_cargo=
+policy_generator_rustc=
+policy_generator_jactionlint=
+policy_generator_shellcheck=
+policy_generator_jactionlint_relative=
+policy_generator_shellcheck_relative=
+policy_generator_mise_config=
+policy_generator_mise_lock=
+policy_generator_rust_pin=
+policy_generator_rust_host=
+policy_generator_mise_sha=
+policy_generator_config_sha=
+policy_generator_lock_sha=
+policy_generator_velnor_sha=
+policy_generator_cargo_sha=
+policy_generator_rustc_sha=
+policy_generator_jactionlint_sha=
+policy_generator_shellcheck_sha=
+policy_generator_payload_sha=
+policy_generator_path=
+policy_generator_source_mise=
+policy_generator_context_ready=0
+policy_network_port=
+policy_network_profile='(version 1)(allow default)(deny network*)'
+policy_tool_manifest_value() { /usr/bin/sed -n "s/^$1=//p" "$policy_generator_source_generation/manifest"; }
+policy_copy_authenticated_generation() {
+  local source=$1
+  local destination=$2
+  case "$(uname -s)" in
+    Darwin) /bin/cp -cRp "$source" "$destination" ;;
+    Linux) /bin/cp -a --reflink=auto "$source" "$destination" ;;
+    *) return 2 ;;
+  esac || return $?
+  python3 -I -S - "$source" "$destination" "$policy_generator_source_generation" <<'PY'
+import os
+import stat
+import sys
+from pathlib import Path
+
+def regular_file_inodes(root):
+    identities = set()
+    for directory, _, filenames in os.walk(root, followlinks=False):
+        current = Path(directory)
+        for name in filenames:
+            path = current / name
+            info = path.lstat()
+            if stat.S_ISREG(info.st_mode):
+                identities.add((info.st_dev, info.st_ino))
+    return identities
+
+source, destination, authenticated_source = map(Path, sys.argv[1:])
+source_inodes = regular_file_inodes(source)
+destination_inodes = regular_file_inodes(destination)
+if source_inodes & destination_inodes:
+    raise SystemExit("generated-workflows: copied generator context aliases its source file inodes")
+if authenticated_source != source:
+    authenticated_inodes = regular_file_inodes(authenticated_source)
+    if authenticated_inodes & destination_inodes:
+        raise SystemExit("generated-workflows: copied fault context aliases authenticated cache file inodes")
+PY
+}
+policy_generator_payload_inventory_sha() {
+  python3 -I -S - "$1" <<'PY'
+import hashlib
+import os
+import stat
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+digest = hashlib.sha256()
+def fail(error):
+    raise error
+entries = []
+for directory, names, filenames in os.walk(root, followlinks=False, onerror=fail):
+    current = Path(directory)
+    for name in names + filenames:
+        entries.append(current / name)
+for path in sorted(entries, key=lambda item: os.fsencode(item.relative_to(root))):
+    relative = os.fsencode(path.relative_to(root))
+    info = path.lstat()
+    if info.st_uid != os.getuid() or stat.S_ISREG(info.st_mode) and info.st_mode & 0o222 or stat.S_ISDIR(info.st_mode) and info.st_mode & 0o222:
+        raise SystemExit("generated-workflows: copied authenticated generator context has unsafe owner or write permissions")
+    mode = stat.S_IMODE(info.st_mode)
+    if stat.S_ISLNK(info.st_mode):
+        kind = b"link"
+        content = os.fsencode(os.readlink(path))
+        if not path.resolve(strict=True).is_relative_to(root.resolve(strict=True)):
+            raise SystemExit("generated-workflows: copied authenticated generator context has an escaping symlink")
+    elif stat.S_ISREG(info.st_mode):
+        kind = b"file"
+        content = path.read_bytes()
+    elif stat.S_ISDIR(info.st_mode):
+        kind = b"directory"
+        content = b""
+    else:
+        raise SystemExit("generated-workflows: copied authenticated generator context contains a special file")
+    for field in (relative, kind, str(mode).encode("ascii"), content):
+        digest.update(len(field).to_bytes(8, "big"))
+        digest.update(field)
+print(digest.hexdigest())
+PY
+}
+policy_generator_tool_relative_from_mise() {
+  local tool=$1
+  local version=$2
+  local tool_state="$policy_generator_generation/tool-state"
+  local install_root="$tool_state/mise-data/installs/$tool/$version"
+  local reported_path
+  local stderr_path="$test_root/policy-generator-mise-which-$tool.stderr"
+  if ! reported_path=$(policy_run_sandboxed_process "${policy_generator_environment[@]}" "$policy_generator_mise" which "$tool" 2> "$stderr_path"); then
+    if [[ -s "$stderr_path" ]]; then
+      cat "$stderr_path" >&2
+    fi
+    printf 'generated-workflows: authenticated pinned Mise could not resolve %s from its copied configuration\n' "$tool" >&2
+    return 1
+  fi
+  if ! python3 -I -S - "$tool_state" "$install_root" "$reported_path" "$tool" "$version" <<'PY'
+import os
+import stat
+import sys
+from pathlib import Path
+
+tool_state_arg, install_root_arg, reported_path, tool, version = sys.argv[1:]
+tool_state = Path(tool_state_arg).resolve(strict=True)
+install_root = Path(install_root_arg).resolve(strict=True)
+try:
+    install_relative = install_root.relative_to(tool_state)
+except ValueError as error:
+    raise SystemExit(f"generated-workflows: pinned {tool} install root escaped its authenticated version subtree") from error
+if install_relative.as_posix() != f"mise-data/installs/{tool}/{version}":
+    raise SystemExit(f"generated-workflows: pinned {tool} install root escaped its authenticated version subtree")
+if not install_root.is_dir():
+    raise SystemExit(f"generated-workflows: pinned {tool} install root is not a directory")
+if not reported_path or len(reported_path.splitlines()) != 1:
+    raise SystemExit(f"generated-workflows: pinned Mise returned an invalid {tool} executable path")
+reported = Path(reported_path)
+if not reported.is_absolute():
+    raise SystemExit(f"generated-workflows: pinned Mise returned a relative {tool} executable path")
+try:
+    resolved = reported.resolve(strict=True)
+    relative = resolved.relative_to(tool_state)
+    resolved.relative_to(install_root)
+except (OSError, ValueError) as error:
+    raise SystemExit(f"generated-workflows: pinned Mise selected {tool} outside its authenticated version subtree") from error
+info = resolved.lstat()
+if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o222 or info.st_mode & 0o111 == 0:
+    raise SystemExit(f"generated-workflows: pinned Mise selected a missing or unsafe {tool} executable")
+relative_text = relative.as_posix()
+if not relative_text or ":" in relative_text or "\n" in relative_text or "\r" in relative_text:
+    raise SystemExit(f"generated-workflows: pinned Mise selected an unusable {tool} executable path")
+print(relative_text)
+PY
+  then
+    return 1
+  fi
+}
+policy_generator_tool_path_is_safe() {
+  local tool=$1
+  local version=$2
+  local relative=$3
+  local executable=$4
+  local tool_state="$policy_generator_generation/tool-state"
+  local install_root="$tool_state/mise-data/installs/$tool/$version"
+  python3 -I -S - "$tool_state" "$install_root" "$relative" "$executable" "$tool" "$version" <<'PY'
+import os
+import stat
+import sys
+from pathlib import Path
+
+tool_state_arg, install_root_arg, relative_arg, executable_arg, tool, version = sys.argv[1:]
+tool_state = Path(tool_state_arg).resolve(strict=True)
+install_root = Path(install_root_arg).resolve(strict=True)
+try:
+    expected_root = install_root.relative_to(tool_state)
+    if expected_root.as_posix() != f"mise-data/installs/{tool}/{version}":
+        raise ValueError("install root differs from the pinned version subtree")
+    relative = Path(relative_arg)
+    if relative.is_absolute() or not relative.parts or ".." in relative.parts:
+        raise ValueError("invalid tool-state relative path")
+    executable = Path(executable_arg)
+    resolved = executable.resolve(strict=True)
+    actual_relative = resolved.relative_to(tool_state)
+    resolved.relative_to(install_root)
+    expected = tool_state / relative
+    if actual_relative != relative or resolved != expected.resolve(strict=True):
+        raise ValueError("resolved executable differs from its validated relative path")
+except (OSError, ValueError) as error:
+    raise SystemExit("generated-workflows: selected tool path escaped its authenticated version subtree") from error
+info = resolved.lstat()
+if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o222 or info.st_mode & 0o111 == 0:
+    raise SystemExit("generated-workflows: selected tool executable is missing or unsafe")
+PY
+}
+policy_select_generator_context() {
+  local context_root=$1
+  local include_ambient=$2
+  local generation="$context_root/generation"
+  local rust_bin="$generation/tool-state/rustup-home/toolchains/$policy_generator_rust_pin-$policy_generator_rust_host/bin"
+  local ambient_dir="$test_root/policy-generator-authority/ambient-tools"
+  local system_path="${git_command%/*}"
+  local relative_executable=${policy_generator_source_executable#"$policy_generator_source_generation"/}
+  policy_generator_context_root=$context_root
+  policy_generator_generation=$generation
+  policy_generator_executable="$generation/$relative_executable"
+  policy_generator_mise="$context_root/bin/mise"
+  policy_generator_mise_config="$generation/tool-state/mise-config/mise.toml"
+  policy_generator_mise_lock="$generation/tool-state/mise-config/mise.lock"
+  policy_generator_cargo="$rust_bin/cargo"
+  policy_generator_rustc="$rust_bin/rustc"
+  policy_generator_jactionlint=
+  policy_generator_shellcheck=
+  policy_generator_path="$context_root/bin:$rust_bin:${policy_generator_executable%/*}"
+  if [[ -n "$policy_generator_jactionlint_relative" ]]; then
+    policy_generator_jactionlint="$generation/tool-state/$policy_generator_jactionlint_relative"
+    policy_generator_path="$policy_generator_path:${policy_generator_jactionlint%/*}"
+  fi
+  if [[ -n "$policy_generator_shellcheck_relative" ]]; then
+    policy_generator_shellcheck="$generation/tool-state/$policy_generator_shellcheck_relative"
+    policy_generator_path="$policy_generator_path:${policy_generator_shellcheck%/*}"
+  fi
+  policy_generator_path="$policy_generator_path:$system_path"
+  if [[ "$include_ambient" == 1 ]]; then
+    policy_generator_path="$policy_generator_path:$ambient_dir:/usr/bin:/bin:/usr/sbin:/sbin"
+  else
+    policy_generator_path="$policy_generator_path:/usr/bin:/bin:/usr/sbin:/sbin"
+  fi
+  policy_generator_environment=(
+    "HOME=$test_root/policy-generator-authority"
+    "PATH=$policy_generator_path"
+    "TMPDIR=$test_root/policy-generator-authority/tmp"
+    "XDG_CONFIG_HOME=$test_root/policy-generator-authority/config"
+    "XDG_DATA_HOME=$test_root/policy-generator-authority/xdg-data"
+    "XDG_CACHE_HOME=$test_root/policy-generator-authority/xdg-cache"
+    "CARGO_HOME=$generation/tool-state/cargo-home"
+    "CARGO_TARGET_DIR=$test_root/policy-generator-authority/cargo-target"
+    "RUSTUP_HOME=$generation/tool-state/rustup-home"
+    "RUSTUP_DIST_SERVER=https://static.rust-lang.org"
+    "RUSTUP_UPDATE_ROOT=https://static.rust-lang.org/rustup"
+    "MISE_CARGO_HOME=$generation/tool-state/cargo-home"
+    "MISE_RUSTUP_HOME=$generation/tool-state/rustup-home"
+    "MISE_RUST_DEFAULT_HOST=$policy_generator_rust_host"
+    LANG=C LC_ALL=C
+    "GIT_CONFIG_GLOBAL=$test_root/policy-generator-authority/config/gitconfig"
+    "GIT_CONFIG_SYSTEM=$test_root/policy-generator-authority/config/system.toml"
+    GIT_CONFIG_NOSYSTEM=1 GIT_NO_REPLACE_OBJECTS=1 GIT_OPTIONAL_LOCKS=0 GIT_TERMINAL_PROMPT=0 GIT_NO_LAZY_FETCH=1
+    "MISE_CONFIG_DIR=${policy_generator_mise_config%/*}"
+    "MISE_CONFIG_FILE=$policy_generator_mise_config"
+    "MISE_GLOBAL_CONFIG_FILE=$test_root/policy-generator-authority/config/global.toml"
+    "MISE_SYSTEM_CONFIG_FILE=$test_root/policy-generator-authority/config/system.toml"
+    "MISE_STATE_DIR=$test_root/policy-generator-authority/mise-state"
+    "MISE_DATA_DIR=$generation/tool-state/mise-data"
+    "MISE_SHIMS_DIR=$test_root/policy-generator-authority/shims"
+    "MISE_CACHE_DIR=$test_root/policy-generator-authority/xdg-cache"
+    "MISE_DOWNLOADS_DIR=$test_root/policy-generator-authority/mise-downloads"
+    MISE_ENABLE_TOOLS=github:tailrocks/velnor-new,rust,jactionlint,shellcheck
+    MISE_ENV= MISE_IDIOMATIC_VERSION_FILE_ENABLE_TOOLS= MISE_LOCKFILE=1 MISE_LOCKED_VERIFY_PROVENANCE=1
+    MISE_GITHUB_ATTESTATIONS=1 MISE_GITHUB_GITHUB_ATTESTATIONS=1 MISE_PARANOID=1 MISE_PROVENANCE_API_FAILURES_FATAL=1
+    MISE_NO_ENV=1 MISE_NO_HOOKS=1 MISE_AUTO_INSTALL=0 MISE_OVERRIDE_CONFIG_FILENAMES=mise.toml
+    "MISE_CEILING_PATHS=$test_root"
+    "MISE_TRUSTED_CONFIG_PATHS=$policy_generator_mise_config"
+    CARGO_NET_OFFLINE=true CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
+    "RUSTUP_TOOLCHAIN=$policy_generator_rust_pin"
+  )
+}
+policy_run_sandboxed_process() {
+  /usr/bin/sandbox-exec -p "$policy_network_profile" /usr/bin/env -i "$@"
+}
+policy_run_context_tool() {
+  policy_validate_generator_context || return 1
+  policy_run_sandboxed_process "${policy_generator_environment[@]}" "$@"
+}
+policy_release_network_fixture() {
+  local release_status=0
+  local wait_status=0
+  if [[ -z "$network_fixture_pid" ]]; then
+    return 0
+  fi
+  if [[ -z "$network_fixture_release_marker" || "$network_fixture_release_marker" != "$test_root"/* ]]; then
+    printf 'generated-workflows: owned network fixture has no private release marker\n' >&2
+    release_status=1
+  elif ! : > "$network_fixture_release_marker"; then
+    printf 'generated-workflows: cannot release the owned network fixture; waiting for its bounded lifetime\n' >&2
+    release_status=1
+  fi
+  if wait "$network_fixture_pid" 2>/dev/null; then
+    wait_status=0
+  else
+    wait_status=$?
+  fi
+  network_fixture_pid=
+  network_fixture_release_marker=
+  if [[ "$wait_status" -ne 0 ]]; then
+    printf 'generated-workflows: owned network fixture exited before a successful release and reap\n' >&2
+    cat "$test_root/policy-network-listener.log" >&2
+    release_status=1
+  fi
+  return "$release_status"
+}
+policy_prepare_network_fixture() {
+  local ready_file="$test_root/policy-network-listener.ready"
+  local release_file="$test_root/policy-network-listener.release"
+  local listener_log="$test_root/policy-network-listener.log"
+  local accepted_file="$test_root/policy-network-accepted.log"
+  local probe_file="$test_root/policy-network-probe.py"
+  local outside_log="$test_root/policy-network-outside-control.log"
+  local red_log="$test_root/policy-network-no-deny-red-control.log"
+  local denied_log="$test_root/policy-network-denied-control.log"
+  local network_probe_path="${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin"
+  local network_probe_python="$python_runtime/bin/python3.15"
+  local try
+  local status
+  if [[ -n "$policy_network_port" ]]; then
+    return 0
+  fi
+  if [[ ! -f "$network_probe_python" || -L "$network_probe_python" || ! -x "$network_probe_python" ]]; then
+    printf 'generated-workflows: pinned Python 3.15.2 is unavailable for the local network control\n' >&2
+    return 1
+  fi
+  printf '%s\n' "$policy_network_profile" > "$test_root/network-deny.sb" || return 1
+  cat > "$probe_file" <<'PY'
+import errno
+import socket
+import sys
+
+port = int(sys.argv[1])
+mode = sys.argv[2]
+try:
+    connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    connection.connect(("127.0.0.1", port))
+    connection.sendall(b"x")
+    connection.close()
+except OSError as error:
+    print(f"errno={errno.errorcode.get(error.errno, error.errno)}")
+    raise SystemExit(0 if mode == "expect-denied" and error.errno == errno.EPERM else 1)
+print("connected")
+raise SystemExit(0 if mode == "expect-accepted" else 1)
+PY
+  : > "$accepted_file"
+  rm -f "$release_file"
+  network_fixture_release_marker=$release_file
+  env -i "PATH=$network_probe_path" "HOME=$test_root/policy-generator-authority" "$network_probe_python" -I -S -u - "$ready_file" "$accepted_file" "$release_file" > "$listener_log" 2>&1 <<'PY' &
+import socket
+import sys
+import time
+from pathlib import Path
+
+ready_path, accepted_path, release_path = map(Path, sys.argv[1:])
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server.bind(("127.0.0.1", 0))
+server.listen(8)
+deadline = time.monotonic() + 20.0
+accepted_count = 0
+ready_path.write_text(str(server.getsockname()[1]) + "\n")
+while not release_path.exists():
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        server.close()
+        raise TimeoutError("loopback denial listener exceeded its bounded lifetime")
+    server.settimeout(min(0.1, remaining))
+    try:
+        connection, _ = server.accept()
+    except socket.timeout:
+        continue
+    with connection:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("loopback denial listener accepted beyond its bounded lifetime")
+        connection.settimeout(remaining)
+        payload = connection.recv(1)
+        if payload != b"x":
+            raise RuntimeError("loopback denial listener received an empty or unexpected control")
+    accepted_count += 1
+    with accepted_path.open("a", encoding="ascii") as output:
+        output.write("accepted\n")
+    if accepted_count > 2:
+        raise RuntimeError("loopback denial listener accepted more than the two approved controls")
+if accepted_count != 2:
+    raise RuntimeError("loopback denial listener was released before both positive controls")
+server.close()
+PY
+  network_fixture_pid=$!
+  for try in {1..200}; do
+    if [[ -s "$ready_file" ]]; then
+      break
+    fi
+    sleep 0.05
+  done
+  if [[ ! -s "$ready_file" ]]; then
+    cat "$listener_log" >&2
+    printf 'generated-workflows: local network denial listener did not become ready\n' >&2
+    return 1
+  fi
+  policy_network_port=$(/usr/bin/sed -n '1p' "$ready_file")
+  if [[ ! "$policy_network_port" =~ ^[0-9]+$ ]] || (( policy_network_port < 1 || policy_network_port > 65535 )); then
+    printf 'generated-workflows: local network denial listener reported an invalid port\n' >&2
+    return 1
+  fi
+  if ! env -i "PATH=$network_probe_path" "HOME=$test_root/policy-generator-authority" "$network_probe_python" -I -S "$probe_file" "$policy_network_port" expect-accepted > "$outside_log" 2>&1; then
+    cat "$outside_log" >&2
+    printf 'generated-workflows: outside local TCP control could not reach the owned listener\n' >&2
+    return 1
+  fi
+  for try in {1..100}; do
+    if [[ "$(/usr/bin/awk 'END { print NR + 0 }' "$accepted_file")" -eq 1 ]]; then
+      break
+    fi
+    sleep 0.02
+  done
+  if [[ "$(/usr/bin/awk 'END { print NR + 0 }' "$accepted_file")" -ne 1 ]]; then
+    printf 'generated-workflows: outside local TCP control was not accepted exactly once\n' >&2
+    return 1
+  fi
+  status=0
+  if env -i "PATH=$network_probe_path" "HOME=$test_root/policy-generator-authority" "$network_probe_python" -I -S "$probe_file" "$policy_network_port" expect-denied > "$red_log" 2>&1; then
+    status=0
+  else
+    status=$?
+  fi
+  if [[ "$status" -eq 0 ]] || ! /usr/bin/grep -F -x -q 'connected' "$red_log"; then
+    cat "$red_log" >&2
+    printf 'generated-workflows: no-denial control did not show the EPERM assertion failing on reachable local TCP\n' >&2
+    return 1
+  fi
+  for try in {1..100}; do
+    if [[ "$(/usr/bin/awk 'END { print NR + 0 }' "$accepted_file")" -eq 2 ]]; then
+      break
+    fi
+    sleep 0.02
+  done
+  if [[ "$(/usr/bin/awk 'END { print NR + 0 }' "$accepted_file")" -ne 2 ]]; then
+    printf 'generated-workflows: no-denial control was not accepted exactly once\n' >&2
+    return 1
+  fi
+  if ! policy_run_sandboxed_process "PATH=$network_probe_path" "HOME=$test_root/policy-generator-authority" "$network_probe_python" -I -S "$probe_file" "$policy_network_port" expect-denied > "$denied_log" 2>&1; then
+    cat "$denied_log" >&2
+    printf 'generated-workflows: sandboxed local TCP control did not return EPERM\n' >&2
+    return 1
+  fi
+  if ! /usr/bin/grep -F -x -q 'errno=EPERM' "$denied_log"; then
+    cat "$denied_log" >&2
+    printf 'generated-workflows: sandboxed local TCP control did not return EPERM\n' >&2
+    return 1
+  fi
+  sleep 0.1
+  if [[ "$(/usr/bin/awk 'END { print NR + 0 }' "$accepted_file")" -ne 2 ]]; then
+    printf 'generated-workflows: sandboxed local TCP request reached the listener\n' >&2
+    return 1
+  fi
+  if ! policy_release_network_fixture; then
+    printf 'generated-workflows: owned local network listener could not be released and reaped after its controls\n' >&2
+    return 1
+  fi
+  {
+    printf 'network_profile_file_sha256=%s\n' "$(sha256_file "$test_root/network-deny.sb")"
+    printf 'network_inline_policy_sha256=%s\n' "$(printf '%s' "$policy_network_profile" | sha256_stdin)"
+    printf 'listener=127.0.0.1:%s\n' "$policy_network_port"
+    printf 'outside_control=connected,accepted=1\n'
+    printf 'no_deny_control=red,connected,accepted=2\n'
+    printf 'sandbox_control=EPERM,accepted_remains=2\n'
+    printf 'sandbox_process_boundary=/usr/bin/sandbox-exec -p "%s" /usr/bin/env -i\n' "$policy_network_profile"
+    printf 'listener_release=reaped_after_three_controls\n'
+  } > "$test_root/policy-network-control.result"
+  network_enforcement=macos-sandbox-exec-deny-network
+}
+policy_validate_generator_context() {
+  local resolved_mise
+  local selected_jactionlint_relative
+  local selected_shellcheck_relative
+  local jactionlint_version
+  local shellcheck_version
+  local expected_mise="$policy_generator_mise"
+  local ambient_mise="$test_root/policy-generator-authority/ambient-tools/mise"
+  resolved_mise=$(env -i "${policy_generator_environment[@]}" /bin/bash -c 'command -v mise' 2> "$test_root/policy-generator-child-mise-resolution.stderr" || true)
+  printf 'generator_child_mise_resolution=%s\n' "$resolved_mise" >> "$test_root/policy-generator-context.log"
+  printf 'generated-workflows: generator child resolves mise to %s\n' "${resolved_mise:-unavailable}" >&2
+  if [[ ! -f "$policy_generator_mise" || -L "$policy_generator_mise" || ! -x "$policy_generator_mise" || "$(sha256_file "$policy_generator_mise" 2>/dev/null || true)" != "$policy_generator_mise_sha" ]]; then
+    if [[ ! -e "$policy_generator_mise" && "$resolved_mise" != "$ambient_mise" ]]; then
+      printf 'generated-workflows: controlled ambient Mise fallback was unavailable for the missing-pin control\n' >&2
+      return 1
+    fi
+    printf 'generated-workflows: approved pinned Mise binary is missing or changed\n' >&2
+    return 1
+  fi
+  if [[ ! -f "$policy_generator_mise_lock" || -L "$policy_generator_mise_lock" || "$(sha256_file "$policy_generator_mise_lock" 2>/dev/null || true)" != "$policy_generator_lock_sha" ]]; then
+    printf 'generated-workflows: authenticated private Mise lock is missing or changed\n' >&2
+    return 1
+  fi
+  if [[ ! -f "$policy_generator_cargo" || -L "$policy_generator_cargo" || ! -x "$policy_generator_cargo" || "$(sha256_file "$policy_generator_cargo" 2>/dev/null || true)" != "$policy_generator_cargo_sha" || ! -f "$policy_generator_rustc" || -L "$policy_generator_rustc" || ! -x "$policy_generator_rustc" || "$(sha256_file "$policy_generator_rustc" 2>/dev/null || true)" != "$policy_generator_rustc_sha" ]]; then
+    printf 'generated-workflows: authenticated resolved Rust cargo or rustc runtime is missing or changed\n' >&2
+    return 1
+  fi
+  if [[ ! -f "$policy_generator_mise_config" || -L "$policy_generator_mise_config" || "$(sha256_file "$policy_generator_mise_config" 2>/dev/null || true)" != "$policy_generator_config_sha" || ! -f "$policy_generator_executable" || ! -x "$policy_generator_executable" || "$(sha256_file "$policy_generator_executable" 2>/dev/null || true)" != "$policy_generator_velnor_sha" ]]; then
+    printf 'generated-workflows: authenticated generator or configuration is missing or changed\n' >&2
+    return 1
+  fi
+  jactionlint_version=$(policy_tool_manifest_value jactionlint)
+  if ! selected_jactionlint_relative=$(policy_generator_tool_relative_from_mise jactionlint "$jactionlint_version") || [[ "$selected_jactionlint_relative" != "$policy_generator_jactionlint_relative" ]] || ! policy_generator_tool_path_is_safe jactionlint "$jactionlint_version" "$policy_generator_jactionlint_relative" "$policy_generator_jactionlint" || [[ "$(sha256_file "$policy_generator_jactionlint" 2>/dev/null || true)" != "$policy_generator_jactionlint_sha" ]]; then
+    printf 'generated-workflows: authenticated pinned jactionlint executable is missing, changed, or escaped its exact version subtree\n' >&2
+    return 1
+  fi
+  shellcheck_version=$(policy_tool_manifest_value shellcheck)
+  if ! selected_shellcheck_relative=$(policy_generator_tool_relative_from_mise shellcheck "$shellcheck_version") || [[ "$selected_shellcheck_relative" != "$policy_generator_shellcheck_relative" ]] || ! policy_generator_tool_path_is_safe shellcheck "$shellcheck_version" "$policy_generator_shellcheck_relative" "$policy_generator_shellcheck" || [[ "$(sha256_file "$policy_generator_shellcheck" 2>/dev/null || true)" != "$policy_generator_shellcheck_sha" ]]; then
+    printf 'generated-workflows: authenticated pinned shellcheck executable is missing, changed, or escaped its exact version subtree\n' >&2
+    return 1
+  fi
+  if [[ "$resolved_mise" != "$expected_mise" ]]; then
+    printf 'generated-workflows: sterile generator child resolves Mise outside its copied authenticated pin\n' >&2
+    return 1
+  fi
+  return 0
+}
+policy_run_generator() {
+  local fault=$1
+  local working_directory=$2
+  local context_root="$policy_generator_context_root"
+  local include_ambient=0
+  shift 2
+  if [[ -n "$fault" ]]; then
+    context_root="$test_root/policy-generator-faults/$fault"
+    policy_prepare_generator_fault_context "$fault" "$context_root" || return 1
+    include_ambient=1
+  fi
+  policy_select_generator_context "$context_root" "$include_ambient" || return 1
+  policy_validate_generator_context || return 1
+  (
+    cd "$working_directory" || exit $?
+    policy_run_sandboxed_process "${policy_generator_environment[@]}" "$policy_generator_executable" "$@"
+  )
+}
+policy_replace_context_file() {
+  local source=$1
+  local destination=$2
+  local suffix=$3
+  local mode
+  local parent=${destination%/*}
+  local parent_mode
+  mode=$(stat_mode "$source") || return 1
+  parent_mode=$(stat_mode "$parent") || return 1
+  chmod u+w "$parent" || return 1
+  cp -p "$source" "$destination.$suffix" || return 1
+  chmod u+w "$destination.$suffix" || return 1
+  printf '\n' >> "$destination.$suffix" || return 1
+  chmod "$mode" "$destination.$suffix" || return 1
+  mv "$destination.$suffix" "$destination" || return 1
+  chmod "$parent_mode" "$parent" || return 1
+}
+policy_remove_context_file() {
+  local destination=$1
+  local parent=${destination%/*}
+  local parent_mode
+  parent_mode=$(stat_mode "$parent") || return 1
+  chmod u+w "$parent" || return 1
+  rm "$destination" || return 1
+  chmod "$parent_mode" "$parent" || return 1
+}
+policy_context_filesystem_digest() {
+  python3 -I -S - "$1" "$2" <<'PY'
+import hashlib
+import os
+import stat
+import sys
+from pathlib import Path
+
+root = Path(os.path.abspath(sys.argv[1]))
+kind = sys.argv[2]
+if kind not in {"worktree", "git-metadata", "all"}:
+    raise SystemExit("generated-workflows: custody inventory kind is unsupported")
+if not hasattr(os, "O_NOFOLLOW"):
+    raise SystemExit("generated-workflows: custody inventory cannot open files without following symlinks")
+digest = hashlib.sha256()
+def frame(value):
+    digest.update(len(value).to_bytes(8, "big"))
+    digest.update(value)
+def fail(error):
+    raise error
+def identity(info):
+    return (
+        info.st_dev,
+        info.st_ino,
+        info.st_mode,
+        info.st_uid,
+        info.st_gid,
+        info.st_nlink,
+        info.st_size,
+        info.st_mtime_ns,
+        info.st_ctime_ns,
+    )
+def record(path, relative):
+    info = path.lstat()
+    if info.st_uid != os.getuid() or info.st_gid != os.getgid():
+        raise SystemExit("generated-workflows: custody inventory found a foreign owner or group")
+    if stat.S_ISREG(info.st_mode):
+        kind_name = b"file"
+    elif stat.S_ISDIR(info.st_mode):
+        kind_name = b"directory"
+    elif stat.S_ISLNK(info.st_mode):
+        kind_name = b"symlink"
+    else:
+        raise SystemExit("generated-workflows: custody inventory found a special file")
+    frame(b"entry")
+    frame(relative)
+    frame(kind_name)
+    for value in (
+        str(stat.S_IFMT(info.st_mode)).encode("ascii"),
+        str(stat.S_IMODE(info.st_mode)).encode("ascii"),
+        str(info.st_uid).encode("ascii"),
+        str(info.st_gid).encode("ascii"),
+    ):
+        frame(value)
+    if kind_name == b"file":
+        frame(b"content")
+        frame(info.st_size.to_bytes(8, "big"))
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, "O_CLOEXEC", 0))
+        try:
+            opened = os.fstat(descriptor)
+            if not stat.S_ISREG(opened.st_mode) or identity(opened) != identity(info):
+                raise SystemExit("generated-workflows: custody inventory file changed while opening")
+            remaining = info.st_size
+            while remaining:
+                chunk = os.read(descriptor, min(1024 * 1024, remaining))
+                if not chunk:
+                    raise SystemExit("generated-workflows: custody inventory file shortened while reading")
+                digest.update(chunk)
+                remaining -= len(chunk)
+            if os.read(descriptor, 1):
+                raise SystemExit("generated-workflows: custody inventory file grew while reading")
+            if identity(os.fstat(descriptor)) != identity(opened):
+                raise SystemExit("generated-workflows: custody inventory file changed while reading")
+        finally:
+            os.close(descriptor)
+    elif kind_name == b"symlink":
+        frame(b"target")
+        frame(os.fsencode(os.readlink(path)))
+        if identity(path.lstat()) != identity(info):
+            raise SystemExit("generated-workflows: custody inventory symlink changed while reading")
+    else:
+        frame(b"no-content")
+
+root_info = root.lstat()
+if not stat.S_ISDIR(root_info.st_mode) or stat.S_ISLNK(root_info.st_mode):
+    raise SystemExit("generated-workflows: custody inventory root is not a real directory")
+frame(b"jackin-custody-filesystem-v2")
+frame(kind.encode("ascii"))
+entries = [(root, b"")]
+for directory, names, filenames in os.walk(root, topdown=True, followlinks=False, onerror=fail):
+    current = Path(directory)
+    names.sort(key=os.fsencode)
+    filenames.sort(key=os.fsencode)
+    child_names = list(names)
+    entries.extend((current / name, os.fsencode((current / name).relative_to(root))) for name in child_names + filenames)
+    if kind == "worktree" and current == root:
+        names[:] = [name for name in names if name != ".git"]
+    elif kind == "git-metadata" and current == root:
+        names[:] = [name for name in names if name != "objects"]
+for path, relative in sorted(entries, key=lambda item: item[1]):
+    record(path, relative)
+print(digest.hexdigest())
+PY
+}
+policy_capture_remote_context_state() {
+  local private="$test_root/policy-context-capture/receiver"
+  local common_dir
+  local object_dir
+  local git_dir
+  local metadata_sha
+  local objects_sha
+  local config_sha
+  local refs_sha
+  mkdir -p "$private/home" || return 1
+  git_dir=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$remote" rev-parse --path-format=absolute --git-dir) || return 1
+  common_dir=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$remote" rev-parse --path-format=absolute --git-common-dir) || return 1
+  object_dir=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$remote" rev-parse --path-format=absolute --git-path objects) || return 1
+  metadata_sha=$(policy_context_filesystem_digest "$common_dir" git-metadata) || return 1
+  objects_sha=$(policy_context_filesystem_digest "$object_dir" all) || return 1
+  config_sha=$(sha256_file "$common_dir/config") || return 1
+  refs_sha=$(env -i "HOME=$private/home" "PATH=${git_command%/*}:/usr/bin:/bin:/usr/sbin:/sbin" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_SYSTEM=/dev/null GIT_NO_REPLACE_OBJECTS=1 GIT_NO_LAZY_FETCH=1 GIT_OPTIONAL_LOCKS=0 "$git_command" -C "$remote" show-ref | LC_ALL=C sort | sha256_stdin) || return 1
+  printf 'receiver.git_metadata_sha256=%s\n' "$metadata_sha"
+  printf 'receiver.object_database_sha256=%s\n' "$objects_sha"
+  printf 'receiver.config_sha256=%s\n' "$config_sha"
+  printf 'receiver.refs_sha256=%s\n' "$refs_sha"
+  printf 'receiver.git_dir=%s\n' "$git_dir"
+}
+policy_context_fixture_state() {
+  mkdir -p "$test_root/policy-context-capture" || return 1
+  policy_capture_repo_context_state source "$repo_root" || return 1
+  policy_capture_repo_context_state test "$repository" || return 1
+  policy_capture_repo_context_state generator "$policy_source_repository" || return 1
+  policy_capture_remote_context_state || return 1
+}
+policy_generator_source_cache_digest() {
+  local generation_digest
+  local payload_digest
+  generation_digest=$(policy_context_filesystem_digest "$policy_generator_source_generation" all) || return 1
+  payload_digest=$(policy_generator_payload_inventory_sha "$policy_generator_source_generation/tool-state") || return 1
+  printf '%s\n%s\n' "$generation_digest" "$payload_digest" | sha256_stdin
+}
+policy_prepare_generator_authority() {
+  local mise_version
+  local authority_home="$test_root/policy-generator-authority"
+  local authority_config="$authority_home/config"
+  local authority_global="$authority_config/global.toml"
+  local authority_system="$authority_config/system.toml"
+  local authority_git_config="$authority_config/gitconfig"
+  local source_tool_state
+  local source_jactionlint
+  local source_shellcheck
+  local jactionlint_version
+  local shellcheck_version
+  local actual_mise_version
+  local actual_cargo_version
+  local actual_rustc_version
+  local resolved_mise
+  if [[ "$policy_generator_context_ready" == 1 ]]; then
+    policy_select_generator_context "$policy_generator_base_context_root" 0 || return 1
+    policy_validate_generator_context || return 1
+    return 0
+  fi
+  policy_generator_source_executable=$(policy_verified_velnor_executable) || return 1
+  policy_generator_source_generation=${policy_generator_source_executable%%/tool-state/*}
+  mise_version=$(manifest_value mise_version)
+  policy_generator_rust_pin=$(policy_tool_manifest_value rust)
+  policy_generator_mise_sha=$(manifest_value mise_sha256)
+  policy_generator_payload_sha=$(policy_tool_manifest_value payload_sha256)
+  policy_generator_source_mise="$installation/artifacts/mise/$mise_version/$platform/mise"
+  policy_generator_source_mise_config="$policy_generator_source_generation/tool-state/mise-config/mise.toml"
+  policy_generator_source_mise_lock="$policy_generator_source_generation/tool-state/mise-config/mise.lock"
+  policy_generator_rust_host=aarch64-apple-darwin
+  if [[ "$platform" == linux-x64 ]]; then
+    policy_generator_rust_host=x86_64-unknown-linux-gnu
+  fi
+  if [[ ! "$policy_generator_rust_pin" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ || ! "$(policy_tool_manifest_value jactionlint)" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ || ! "$(policy_tool_manifest_value shellcheck)" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ || "$(policy_tool_manifest_value mise_version)" != "$mise_version" || "$(policy_tool_manifest_value mise_sha256)" != "$policy_generator_mise_sha" || ! "$policy_generator_payload_sha" =~ ^[0-9a-f]{64}$ ]]; then
+    printf 'generated-workflows: authenticated generator manifest does not match installed Mise pins\n' >&2
+    return 1
+  fi
+  source_tool_state="$policy_generator_source_generation/tool-state"
+  policy_generator_source_cargo="$source_tool_state/rustup-home/toolchains/$policy_generator_rust_pin-$policy_generator_rust_host/bin/cargo"
+  policy_generator_source_rustc="$source_tool_state/rustup-home/toolchains/$policy_generator_rust_pin-$policy_generator_rust_host/bin/rustc"
+  jactionlint_version=$(policy_tool_manifest_value jactionlint)
+  shellcheck_version=$(policy_tool_manifest_value shellcheck)
+  for context_file in "$policy_generator_source_mise_config" "$policy_generator_source_mise_lock"; do
+    if [[ ! -f "$context_file" || -L "$context_file" ]]; then
+      printf 'generated-workflows: authenticated private Mise configuration or lock is missing\n' >&2
+      return 1
+    fi
+  done
+  for context_file in "$policy_generator_source_executable" "$policy_generator_source_cargo" "$policy_generator_source_rustc"; do
+    if [[ ! -f "$context_file" || -L "$context_file" || ! -x "$context_file" ]]; then
+      printf 'generated-workflows: authenticated generator or resolved Rust runtime is missing or unsafe\n' >&2
+      return 1
+    fi
+  done
+  if [[ ! -f "$policy_generator_source_mise" || -L "$policy_generator_source_mise" || ! -x "$policy_generator_source_mise" || "$(sha256_file "$policy_generator_source_mise")" != "$policy_generator_mise_sha" ]]; then
+    printf 'generated-workflows: approved pinned Mise binary is missing or changed\n' >&2
+    return 1
+  fi
+  policy_generator_velnor_sha=$(sha256_file "$policy_generator_source_executable") || return 1
+  policy_generator_config_sha=$(sha256_file "$policy_generator_source_mise_config") || return 1
+  policy_generator_lock_sha=$(sha256_file "$policy_generator_source_mise_lock") || return 1
+  policy_generator_cargo_sha=$(sha256_file "$policy_generator_source_cargo") || return 1
+  policy_generator_rustc_sha=$(sha256_file "$policy_generator_source_rustc") || return 1
+  mkdir -p "$authority_home" "$authority_config" "$authority_home/xdg-data" "$authority_home/xdg-cache" "$authority_home/mise-state" "$authority_home/mise-downloads" "$authority_home/tmp" "$authority_home/shims" "$authority_home/cargo-target" || return 1
+  chmod 700 "$authority_home" "$authority_config" "$authority_home/xdg-data" "$authority_home/xdg-cache" "$authority_home/mise-state" "$authority_home/mise-downloads" "$authority_home/tmp" "$authority_home/shims" "$authority_home/cargo-target" || return 1
+  : > "$authority_global"
+  : > "$authority_system"
+  : > "$authority_git_config"
+  chmod 600 "$authority_global" "$authority_system" "$authority_git_config" || return 1
+  policy_generator_base_context_root="$authority_home/runtime"
+  policy_generator_context_root=$policy_generator_base_context_root
+  mkdir -p "$policy_generator_context_root" "$authority_home/ambient-tools" || return 1
+  policy_copy_authenticated_generation "$policy_generator_source_generation" "$policy_generator_context_root/generation" || return 1
+  mkdir -p "$policy_generator_context_root/bin" || return 1
+  cp -p "$policy_generator_source_mise" "$policy_generator_context_root/bin/mise" || return 1
+  cp -p "$policy_generator_source_mise" "$authority_home/ambient-tools/mise" || return 1
+  policy_select_generator_context "$policy_generator_context_root" 0 || return 1
+  if [[ "$(policy_generator_payload_inventory_sha "$policy_generator_generation/tool-state")" != "$policy_generator_payload_sha" ]]; then
+    printf 'generated-workflows: copied generator tool state does not match its authenticated payload inventory\n' >&2
+    return 1
+  fi
+  if [[ "$(sha256_file "$policy_generator_mise")" != "$policy_generator_mise_sha" || "$(sha256_file "$policy_generator_executable")" != "$policy_generator_velnor_sha" || "$(sha256_file "$policy_generator_mise_config")" != "$policy_generator_config_sha" || "$(sha256_file "$policy_generator_mise_lock")" != "$policy_generator_lock_sha" || "$(sha256_file "$policy_generator_cargo")" != "$policy_generator_cargo_sha" || "$(sha256_file "$policy_generator_rustc")" != "$policy_generator_rustc_sha" ]]; then
+    printf 'generated-workflows: copied authenticated generator context differs from its verified source payload\n' >&2
+    return 1
+  fi
+  if [[ "$(uname -s)" != Darwin || ! -x /usr/bin/sandbox-exec ]]; then
+    printf 'generated-workflows: generator process network denial is unavailable on this host\n' >&2
+    return 1
+  fi
+  policy_prepare_network_fixture || return 1
+  if ! resolved_mise=$(env -i "${policy_generator_environment[@]}" /bin/bash -c 'command -v mise' 2> "$test_root/policy-pinned-mise-resolution.stderr") || [[ "$resolved_mise" != "$policy_generator_mise" ]]; then
+    cat "$test_root/policy-pinned-mise-resolution.stderr" >&2
+    printf 'generated-workflows: sterile generator PATH does not resolve Mise to its copied authenticated pin\n' >&2
+    return 1
+  fi
+  if ! actual_mise_version=$(policy_run_sandboxed_process "${policy_generator_environment[@]}" "$policy_generator_mise" --version 2> "$test_root/policy-pinned-mise-version.stderr") || [[ "$actual_mise_version" != *"$mise_version"* ]]; then
+    cat "$test_root/policy-pinned-mise-version.stderr" >&2
+    printf 'generated-workflows: authenticated pinned Mise failed its manifest-bound version check\n' >&2
+    return 1
+  fi
+  policy_generator_jactionlint_relative=$(policy_generator_tool_relative_from_mise jactionlint "$jactionlint_version") || return 1
+  policy_generator_shellcheck_relative=$(policy_generator_tool_relative_from_mise shellcheck "$shellcheck_version") || return 1
+  policy_select_generator_context "$policy_generator_base_context_root" 0 || return 1
+  source_jactionlint="$source_tool_state/$policy_generator_jactionlint_relative"
+  source_shellcheck="$source_tool_state/$policy_generator_shellcheck_relative"
+  if ! policy_generator_tool_path_is_safe jactionlint "$jactionlint_version" "$policy_generator_jactionlint_relative" "$policy_generator_jactionlint" || ! policy_generator_tool_path_is_safe shellcheck "$shellcheck_version" "$policy_generator_shellcheck_relative" "$policy_generator_shellcheck"; then
+    printf 'generated-workflows: authenticated pinned linter executable escaped its exact version subtree\n' >&2
+    return 1
+  fi
+  policy_generator_jactionlint_sha=$(sha256_file "$source_jactionlint") || return 1
+  policy_generator_shellcheck_sha=$(sha256_file "$source_shellcheck") || return 1
+  if [[ "$(sha256_file "$policy_generator_jactionlint")" != "$policy_generator_jactionlint_sha" || "$(sha256_file "$policy_generator_shellcheck")" != "$policy_generator_shellcheck_sha" ]]; then
+    printf 'generated-workflows: copied pinned linter differs from its authenticated source payload\n' >&2
+    return 1
+  fi
+  policy_generator_context_ready=1
+  if ! actual_mise_version=$(policy_run_context_tool "$policy_generator_mise" --version 2> "$test_root/policy-pinned-mise-version.stderr") || [[ "$actual_mise_version" != *"$mise_version"* ]]; then
+    cat "$test_root/policy-pinned-mise-version.stderr" >&2
+    printf 'generated-workflows: authenticated pinned Mise failed its manifest-bound version check\n' >&2
+    return 1
+  fi
+  if ! actual_cargo_version=$(policy_run_context_tool "$policy_generator_cargo" --version 2> "$test_root/policy-pinned-cargo-version.stderr") || [[ "$actual_cargo_version" != "cargo $policy_generator_rust_pin"* ]]; then
+    cat "$test_root/policy-pinned-cargo-version.stderr" >&2
+    printf 'generated-workflows: authenticated resolved cargo failed its manifest-bound version check\n' >&2
+    return 1
+  fi
+  if ! actual_rustc_version=$(policy_run_context_tool "$policy_generator_rustc" --version 2> "$test_root/policy-pinned-rustc-version.stderr") || [[ "$actual_rustc_version" != "rustc $policy_generator_rust_pin"* ]]; then
+    cat "$test_root/policy-pinned-rustc-version.stderr" >&2
+    printf 'generated-workflows: authenticated resolved rustc failed its manifest-bound version check\n' >&2
+    return 1
+  fi
+  {
+    printf 'generator_cache_generation=%s\n' "${policy_generator_generation##*/}"
+    printf 'generator_payload_sha256=%s\n' "$policy_generator_payload_sha"
+    printf 'generator_velnor_path=%s\n' "$policy_generator_executable"
+    printf 'generator_velnor_sha256=%s\n' "$policy_generator_velnor_sha"
+    printf 'generator_mise_path=%s\n' "$policy_generator_mise"
+    printf 'generator_mise_version=%s\n' "$mise_version"
+    printf 'generator_mise_sha256=%s\n' "$policy_generator_mise_sha"
+    printf 'generator_mise_config_path=%s\n' "$policy_generator_mise_config"
+    printf 'generator_mise_config_sha256=%s\n' "$policy_generator_config_sha"
+    printf 'generator_mise_lock_path=%s\n' "$policy_generator_mise_lock"
+    printf 'generator_mise_lock_sha256=%s\n' "$policy_generator_lock_sha"
+    printf 'generator_rust_version=%s\n' "$policy_generator_rust_pin"
+    printf 'generator_rust_host=%s\n' "$policy_generator_rust_host"
+    printf 'generator_cargo_path=%s\n' "$policy_generator_cargo"
+    printf 'generator_cargo_sha256=%s\n' "$policy_generator_cargo_sha"
+    printf 'generator_rustc_path=%s\n' "$policy_generator_rustc"
+    printf 'generator_rustc_sha256=%s\n' "$policy_generator_rustc_sha"
+    printf 'generator_jactionlint_path=%s\n' "$policy_generator_jactionlint"
+    printf 'generator_jactionlint_relative=%s\n' "$policy_generator_jactionlint_relative"
+    printf 'generator_jactionlint_sha256=%s\n' "$policy_generator_jactionlint_sha"
+    printf 'generator_shellcheck_path=%s\n' "$policy_generator_shellcheck"
+    printf 'generator_shellcheck_relative=%s\n' "$policy_generator_shellcheck_relative"
+    printf 'generator_shellcheck_sha256=%s\n' "$policy_generator_shellcheck_sha"
+    printf 'generator_mise_reported_version=%s\n' "$actual_mise_version"
+    printf 'generator_cargo_reported_version=%s\n' "$actual_cargo_version"
+    printf 'generator_rustc_reported_version=%s\n' "$actual_rustc_version"
+    printf 'generator_path_sha256=%s\n' "$(printf '%s' "$policy_generator_path" | sha256_stdin)"
+    printf 'generator_child_mise_resolution=%s\n' "$resolved_mise"
+    printf 'generator_ambient_mise_fallback=controlled-copy-present-after-pinned-path\n'
+    printf 'generator_process_network_denial=macos-sandbox-exec-deny-network\n'
+  } >> "$test_root/policy-generator-context.log"
+}
+policy_prepare_generator_fault_context() {
+  local fault=$1
+  local context_root=$2
+  local generation="$context_root/generation"
+  local rust_bin="$generation/tool-state/rustup-home/toolchains/$policy_generator_rust_pin-$policy_generator_rust_host/bin"
+  if [[ -e "$context_root" || -L "$context_root" ]]; then
+    rm -rf "$context_root" || return 1
+  fi
+  mkdir -p "$context_root" || return 1
+  policy_copy_authenticated_generation "$policy_generator_base_context_root/generation" "$generation" || return 1
+  if [[ "$(policy_generator_payload_inventory_sha "$generation/tool-state")" != "$policy_generator_payload_sha" ]]; then
+    printf 'generated-workflows: copied fault context does not match the authenticated payload inventory\n' >&2
+    return 1
+  fi
+  mkdir -p "$context_root/bin" || return 1
+  cp -p "$policy_generator_base_context_root/bin/mise" "$context_root/bin/mise" || return 1
+  case "$fault" in
+    missing-mise) policy_remove_context_file "$context_root/bin/mise" || return 1 ;;
+    corrupt-mise) policy_replace_context_file "$policy_generator_source_mise" "$context_root/bin/mise" changed || return 1 ;;
+    missing-lock) policy_remove_context_file "$generation/tool-state/mise-config/mise.lock" || return 1 ;;
+    corrupt-lock) policy_replace_context_file "$policy_generator_source_mise_lock" "$generation/tool-state/mise-config/mise.lock" changed || return 1 ;;
+    missing-rust)
+      policy_remove_context_file "$rust_bin/cargo" || return 1
+      policy_remove_context_file "$rust_bin/rustc" || return 1
+      ;;
+    corrupt-rust)
+      policy_replace_context_file "$policy_generator_source_cargo" "$rust_bin/cargo" changed || return 1
+      policy_replace_context_file "$policy_generator_source_rustc" "$rust_bin/rustc" changed || return 1
+      ;;
+    missing-shellcheck)
+      policy_remove_context_file "$generation/tool-state/$policy_generator_shellcheck_relative" || return 1
+      ;;
+    escape-shellcheck)
+      local shellcheck_path="$generation/tool-state/$policy_generator_shellcheck_relative"
+      local shellcheck_parent="${shellcheck_path%/*}"
+      local shellcheck_parent_mode
+      policy_remove_context_file "$shellcheck_path" || return 1
+      shellcheck_parent_mode=$(stat_mode "$shellcheck_parent") || return 1
+      chmod u+w "$shellcheck_parent" || return 1
+      if ! ln -s "$policy_generator_source_generation/tool-state/$policy_generator_shellcheck_relative" "$shellcheck_path"; then
+        chmod "$shellcheck_parent_mode" "$shellcheck_parent"
+        return 1
+      fi
+      chmod "$shellcheck_parent_mode" "$shellcheck_parent" || return 1
+      ;;
+    *)
+      printf 'generated-workflows: unsupported generator context fault %s\n' "$fault" >&2
+      return 1
+      ;;
+  esac
+}
+policy_test_generator_context_faults() {
+  local family
+  local fault
+  local expected
+  local status
+  local before_state="$test_root/policy-generator-source-before.state"
+  local after_state="$test_root/policy-generator-source-after.state"
+  local fault_log
+  local baseline_log
+  local baseline_output
+  local before_state_sha
+  local after_state_sha
+  local before_cache_state
+  local after_cache_state
+  local baseline_cache_state
+  local baseline_cache_after
+  local fault_output_before
+  local fault_output_after
+  local -a faults
+  policy_prepare_generator_authority || return 1
+  if [[ "$policy_case" == generator-tool-resolution && "$policy_generator_shellcheck_relative" == "mise-data/installs/shellcheck/$(policy_tool_manifest_value shellcheck)/shellcheck" ]]; then
+    printf 'generated-workflows: focused ShellCheck regression payload did not exercise a nested executable layout\n' >&2
+    return 1
+  fi
+  for family in mise lock rust shellcheck; do
+    policy_prepare_generator_authority || return 1
+    policy_context_fixture_state > "$before_state" || return 1
+    baseline_cache_state=$(policy_generator_source_cache_digest) || return 1
+    baseline_log="$test_root/policy-generator-$family-baseline.log"
+    baseline_output=$(directory_digest "$repository/.github") || return 1
+    if ! policy_run_generator '' "$repository" generate --output-dir "$repository" > "$baseline_log" 2>&1; then
+      cat "$baseline_log" >&2
+      printf 'generated-workflows: copied authenticated generator context baseline failed before %s fault family\n' "$family" >&2
+      return 1
+    fi
+    if [[ "$(directory_digest "$repository/.github")" != "$baseline_output" ]]; then
+      printf 'generated-workflows: copied generator context baseline changed output before %s fault family\n' "$family" >&2
+      return 1
+    fi
+    policy_context_fixture_state > "$after_state" || return 1
+    baseline_cache_after=$(policy_generator_source_cache_digest) || return 1
+    if [[ "$baseline_cache_state" != "$baseline_cache_after" ]] || ! cmp -s "$before_state" "$after_state"; then
+      printf 'generated-workflows: copied generator baseline changed source/cache/Git custody before %s fault family\n' "$family" >&2
+      return 1
+    fi
+    before_state_sha=$(sha256_file "$before_state") || return 1
+    after_state_sha=$(sha256_file "$after_state") || return 1
+    printf 'generator_context_baseline_%s=generate_succeeded,output_sha256:%s,custody_sha256:%s,cache_sha256:%s\n' "$family" "$baseline_output" "$before_state_sha" "$baseline_cache_state" >> "$test_root/policy-generator-context.log"
+    case "$family" in
+      shellcheck) faults=(missing-shellcheck escape-shellcheck) ;;
+      *) faults=("missing-$family" "corrupt-$family") ;;
+    esac
+    for fault in "${faults[@]}"; do
+      case "$fault" in
+        *mise*) expected='approved pinned Mise binary is missing or changed' ;;
+        *lock*) expected='authenticated private Mise lock is missing or changed' ;;
+        *rust*) expected='authenticated resolved Rust cargo or rustc runtime is missing or changed' ;;
+        *shellcheck*) expected='authenticated pinned shellcheck executable is missing, changed, or escaped its exact version subtree' ;;
+      esac
+      policy_context_fixture_state > "$before_state" || return 1
+      before_cache_state=$(policy_generator_source_cache_digest) || return 1
+      fault_output_before=$(directory_digest "$repository/.github") || return 1
+      fault_log="$test_root/policy-generator-$fault.log"
+      status=0
+      if policy_run_generator "$fault" "$repository" generate --output-dir "$repository" > "$fault_log" 2>&1; then
+        status=0
+      else
+        status=$?
+      fi
+      policy_context_fixture_state > "$after_state" || return 1
+      after_cache_state=$(policy_generator_source_cache_digest) || return 1
+      fault_output_after=$(directory_digest "$repository/.github") || return 1
+      if [[ "$status" -eq 0 ]] || ! /usr/bin/grep -F -q "$expected" "$fault_log"; then
+        cat "$fault_log" >&2
+        printf 'generated-workflows: copied generator context fault %s was not rejected with its pinned cause before generation\n' "$fault" >&2
+        return 1
+      fi
+      if [[ "$before_cache_state" != "$after_cache_state" || "$fault_output_before" != "$fault_output_after" ]] || ! cmp -s "$before_state" "$after_state"; then
+        python3 -I -S - "$before_state" "$after_state" <<'PY' >&2
+import sys
+from pathlib import Path
+
+before = dict(line.rstrip("\n").split("=", 1) for line in Path(sys.argv[1]).read_text().splitlines())
+after = dict(line.rstrip("\n").split("=", 1) for line in Path(sys.argv[2]).read_text().splitlines())
+changed = sorted(key for key in set(before) | set(after) if before.get(key) != after.get(key))
+print("generated-workflows: generator context refusal changed custody fields: " + ",".join(changed))
+PY
+        cat "$fault_log" >&2
+        return 1
+      fi
+      before_state_sha=$(sha256_file "$before_state") || return 1
+      after_state_sha=$(sha256_file "$after_state") || return 1
+      printf 'generator_context_fault_%s=rejected_before_generation,custody_before_sha256:%s,custody_after_sha256:%s,cache_sha256:%s,output_sha256:%s\n' "$fault" "$before_state_sha" "$after_state_sha" "$before_cache_state" "$fault_output_before" >> "$test_root/policy-generator-context.log"
+    done
+  done
+  printf 'generator_context_faults=8\n' >> "$test_root/policy-generator-context.log"
+}
 prepare_external_edge_fixture() {
   local policy_velnor_executable
   local policy_velnor_version
@@ -1883,7 +3218,7 @@ prepare_external_edge_fixture() {
     printf 'generated-workflows: external-edge fixture did not start from the immutable empty control child\n' >&2
     return 1
   fi
-  if ! python3 -I -S - "$policy_source_repository" "$policy_seed_sha" <<'PY'
+  if ! python3 -I -S - "$policy_source_repository" "$policy_seed_sha" "$policy_candidate_lock_sha" <<'PY'
 import copy
 import hashlib
 import re
@@ -1892,14 +3227,14 @@ import tomllib
 from pathlib import Path
 
 root = Path(sys.argv[1])
-seed_sha = sys.argv[2]
+seed_sha, candidate_sha = sys.argv[2:]
 app_path = root / "apps/jackin/Cargo.toml"
 lock_path = root / "Cargo.lock"
 seed_bytes = (root / "scripts/trusted-seed-cargo.lock").read_bytes()
 app_text = app_path.read_text()
 lock_bytes = lock_path.read_bytes()
-if hashlib.sha256(seed_bytes).hexdigest() != seed_sha or lock_bytes != seed_bytes:
-    raise SystemExit("generated-workflows: external-edge fixture control is not byte-equal to the pinned seed lock")
+if hashlib.sha256(seed_bytes).hexdigest() != seed_sha or hashlib.sha256(lock_bytes).hexdigest() != candidate_sha:
+    raise SystemExit("generated-workflows: external-edge fixture control differs from its pinned seed or captured candidate lock")
 try:
     app_before = tomllib.loads(app_text)
     lock_before = tomllib.loads(lock_bytes.decode("utf-8"))
@@ -1969,7 +3304,7 @@ if external_after != external_before:
     raise SystemExit("generated-workflows: external-edge fixture changed the reviewed external package inventory")
 if lock_after["package"].count(expected_owner) != 1:
     raise SystemExit("generated-workflows: external-edge lock owner edge is not unique")
-if lock_after["package"] == lock_before["package"] or lock_after_text.encode("utf-8") == seed_bytes:
+if lock_after["package"] == lock_before["package"] or lock_after_text.encode("utf-8") == lock_bytes:
     raise SystemExit("generated-workflows: external-edge fixture did not change the lock graph and bytes")
 app_path.write_text(app_after_text)
 lock_path.write_text(lock_after_text)
@@ -1977,9 +3312,10 @@ PY
   then
     return 1
   fi
-  policy_velnor_executable=$(policy_verified_velnor_executable) || return 1
-  tool_cache_generation=${policy_velnor_executable%%/tool-state/*}
-  if ! policy_velnor_version=$(env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C "$policy_velnor_executable" --version 2> "$test_root/policy-velnor-version.stderr"); then
+  policy_prepare_generator_authority || return 1
+  policy_velnor_executable=$policy_generator_executable
+  tool_cache_generation=$policy_generator_generation
+  if ! policy_velnor_version=$(policy_run_generator '' "$policy_source_repository" --version 2> "$test_root/policy-velnor-version.stderr"); then
     cat "$test_root/policy-velnor-version.stderr" >&2
     printf 'generated-workflows: verified Velnor executable could not report its version\n' >&2
     return 1
@@ -1988,13 +3324,13 @@ PY
     printf 'generated-workflows: verified Velnor executable did not report reviewed version 0.1.78\n' >&2
     return 1
   fi
-  if ! (cd "$policy_source_repository" && env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_TERMINAL_PROMPT=0 "$policy_velnor_executable" generate --output-dir "$policy_source_repository") > "$test_root/policy-external-generator-first.log" 2>&1; then
+  if ! policy_run_generator '' "$policy_source_repository" generate --output-dir "$policy_source_repository" > "$test_root/policy-external-generator-first.log" 2>&1; then
     cat "$test_root/policy-external-generator-first.log" >&2
     printf 'generated-workflows: authenticated Velnor 0.1.78 failed to generate the external-edge fixture outputs\n' >&2
     return 1
   fi
   first_output_sha=$(directory_digest "$policy_source_repository/.github") || return 1
-  if ! (cd "$policy_source_repository" && env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_TERMINAL_PROMPT=0 "$policy_velnor_executable" generate --output-dir "$policy_source_repository") > "$test_root/policy-external-generator-second.log" 2>&1; then
+  if ! policy_run_generator '' "$policy_source_repository" generate --output-dir "$policy_source_repository" > "$test_root/policy-external-generator-second.log" 2>&1; then
     cat "$test_root/policy-external-generator-second.log" >&2
     printf 'generated-workflows: authenticated Velnor 0.1.78 failed its repeat generation\n' >&2
     return 1
@@ -2996,9 +4332,10 @@ PY
     local first_output_sha
     local second_output_sha
     local changed_paths="$test_root/policy-local-changed-paths.nul"
-    policy_velnor_executable=$(policy_verified_velnor_executable) || return 1
-    tool_cache_generation=${policy_velnor_executable%%/tool-state/*}
-    if ! policy_velnor_version=$(env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C "$policy_velnor_executable" --version 2> "$test_root/policy-local-generator-version.stderr"); then
+    policy_prepare_generator_authority || return 1
+    policy_velnor_executable=$policy_generator_executable
+    tool_cache_generation=$policy_generator_generation
+    if ! policy_velnor_version=$(policy_run_generator '' "$repository" --version 2> "$test_root/policy-local-generator-version.stderr"); then
       cat "$test_root/policy-local-generator-version.stderr" >&2
       printf 'generated-workflows: authenticated Velnor executable could not report its version for the local-edge fixture\n' >&2
       return 1
@@ -3007,13 +4344,13 @@ PY
       printf 'generated-workflows: local-edge fixture generator did not report reviewed Velnor version 0.1.78\n' >&2
       return 1
     fi
-    if ! (cd "$repository" && env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_TERMINAL_PROMPT=0 "$policy_velnor_executable" generate --output-dir "$repository") > "$test_root/policy-local-generator-first.log" 2>&1; then
+    if ! policy_run_generator '' "$repository" generate --output-dir "$repository" > "$test_root/policy-local-generator-first.log" 2>&1; then
       cat "$test_root/policy-local-generator-first.log" >&2
       printf 'generated-workflows: authenticated Velnor 0.1.78 failed to generate the local-edge fixture outputs\n' >&2
       return 1
     fi
     first_output_sha=$(directory_digest "$repository/.github") || return 1
-    if ! (cd "$repository" && env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_TERMINAL_PROMPT=0 "$policy_velnor_executable" generate --output-dir "$repository") > "$test_root/policy-local-generator-second.log" 2>&1; then
+    if ! policy_run_generator '' "$repository" generate --output-dir "$repository" > "$test_root/policy-local-generator-second.log" 2>&1; then
       cat "$test_root/policy-local-generator-second.log" >&2
       printf 'generated-workflows: authenticated Velnor 0.1.78 failed its local-edge repeat generation\n' >&2
       return 1
@@ -3205,9 +4542,10 @@ PY
     local first_output_sha
     local second_output_sha
     local changed_paths="$test_root/policy-formatting-changed-paths.nul"
-    policy_velnor_executable=$(policy_verified_velnor_executable) || return 1
-    tool_cache_generation=${policy_velnor_executable%%/tool-state/*}
-    if ! policy_velnor_version=$(env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C "$policy_velnor_executable" --version 2> "$test_root/policy-formatting-generator-version.stderr"); then
+    policy_prepare_generator_authority || return 1
+    policy_velnor_executable=$policy_generator_executable
+    tool_cache_generation=$policy_generator_generation
+    if ! policy_velnor_version=$(policy_run_generator '' "$repository" --version 2> "$test_root/policy-formatting-generator-version.stderr"); then
       cat "$test_root/policy-formatting-generator-version.stderr" >&2
       printf 'generated-workflows: authenticated Velnor could not report its version for the lock-formatting fixture\n' >&2
       return 1
@@ -3216,13 +4554,13 @@ PY
       printf 'generated-workflows: lock-formatting fixture generator did not report reviewed Velnor version 0.1.78\n' >&2
       return 1
     fi
-    if ! (cd "$repository" && env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_TERMINAL_PROMPT=0 "$policy_velnor_executable" generate --output-dir "$repository") > "$test_root/policy-formatting-generator-first.log" 2>&1; then
+    if ! policy_run_generator '' "$repository" generate --output-dir "$repository" > "$test_root/policy-formatting-generator-first.log" 2>&1; then
       cat "$test_root/policy-formatting-generator-first.log" >&2
       printf 'generated-workflows: authenticated Velnor 0.1.78 failed to generate lock-formatting outputs\n' >&2
       return 1
     fi
     first_output_sha=$(directory_digest "$repository/.github") || return 1
-    if ! (cd "$repository" && env -i HOME="$home_dir" PATH=/usr/bin:/bin LC_ALL=C LANG=C GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_TERMINAL_PROMPT=0 "$policy_velnor_executable" generate --output-dir "$repository") > "$test_root/policy-formatting-generator-second.log" 2>&1; then
+    if ! policy_run_generator '' "$repository" generate --output-dir "$repository" > "$test_root/policy-formatting-generator-second.log" 2>&1; then
       cat "$test_root/policy-formatting-generator-second.log" >&2
       printf 'generated-workflows: authenticated Velnor 0.1.78 failed its lock-formatting repeat generation\n' >&2
       return 1
@@ -3626,6 +4964,18 @@ PY
     } > "$test_root/policy-$positive_name-state.log"
     record_completion_witness "policy:$positive_name"
   }
+  if [[ "$policy_case" == generator-tool-resolution ]]; then
+    policy_test_generator_context_faults || exit 1
+    printf 'authenticated generator tool resolution and refusal matrix: PASS\n' >> "$test_root/case-results.log"
+    record_completion_witness "policy:$policy_case"
+    mark_completion_complete || exit 1
+    printf 'generator-tool-resolution: PASS\n'
+    exit 0
+  fi
+  if [[ "$policy_case" == all ]]; then
+    policy_test_generator_context_faults || exit 1
+    printf 'authenticated generator tool resolution and refusal matrix: PASS\n' >> "$test_root/case-results.log"
+  fi
   if [[ "$policy_case" == all ]]; then
     for selected_case in $negative_policy_cases; do
       run_policy_rejection "$selected_case" pre-commit
@@ -4419,6 +5769,7 @@ if [[ "$e2e_focus" == installer-repair-mise-http-failure || "$e2e_focus" == inst
   fixture_body="$test_root/network-fixture-response.bin"
   fixture_port_file="$test_root/network-fixture-port"
   fixture_request_log="$test_root/network-fixture-request.log"
+  fixture_release_file="$test_root/network-fixture-server.release"
   fixture_expected_path=/fixture/mise
   fixture_status=200
   if [[ "$e2e_focus" == installer-repair-mise-http-failure ]]; then
@@ -4446,24 +5797,135 @@ OPENSSL
   chmod 600 "$fixture_key"
   chmod 400 "$fixture_ca"
   network_body_sha=$(sha256_file "$fixture_body")
-  python3_command=$(command -v python3)
-  if [[ "$python3_command" != /* ]]; then
-    python3_command="$(pwd -P)/$python3_command"
+  python3_command="$python_runtime/bin/python3.15"
+  if [[ ! -f "$python3_command" || -L "$python3_command" || ! -x "$python3_command" ]]; then
+    printf 'generated-workflows: pinned Python 3.15.2 is unavailable for the loopback TLS fixture\n' >&2
+    exit 2
   fi
-  /usr/bin/env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin LC_ALL=C LANG=C "$python3_command" -I -S - "$fixture_port_file" "$fixture_request_log" "$fixture_ca" "$fixture_key" "$fixture_body" "$fixture_status" "$fixture_expected_path" <<'PY' > "$test_root/network-fixture-server.stdout" 2> "$test_root/network-fixture-server.stderr" &
+  rm -f "$fixture_release_file"
+  network_fixture_release_marker=$fixture_release_file
+  /usr/bin/env -i PATH=/usr/bin:/bin:/usr/sbin:/sbin LC_ALL=C LANG=C "$python3_command" -I -S - "$fixture_port_file" "$fixture_request_log" "$fixture_ca" "$fixture_key" "$fixture_body" "$fixture_status" "$fixture_expected_path" "$fixture_release_file" <<'PY' > "$test_root/network-fixture-server.stdout" 2> "$test_root/network-fixture-server.stderr" &
 import ssl
 import sys
+import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
-port_file, request_log, certificate, private_key, body_path, response_status, expected_path = sys.argv[1:]
+port_file, request_log, certificate, private_key, body_path, response_status, expected_path, release_path = sys.argv[1:]
 request_log = Path(request_log)
+release_path = Path(release_path)
 body = Path(body_path).read_bytes()
 expected_status = int(response_status)
 expected_peer = "127.0.0.1"
+request_timeout = 20.0
+deadline = time.monotonic() + request_timeout
+
+class DeadlineIO:
+    def __init__(self, connection, deadline):
+        self.connection = connection
+        self.deadline = deadline
+        self.closed = False
+
+    def require_time(self):
+        remaining = self.deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("loopback TLS fixture exceeded its absolute request deadline")
+        self.connection.settimeout(remaining)
+
+    def readline(self, limit=-1):
+        result = bytearray()
+        while limit < 0 or len(result) < limit:
+            self.require_time()
+            chunk = self.connection.recv(1)
+            if not chunk:
+                break
+            result.extend(chunk)
+            if chunk == b"\n":
+                break
+        return bytes(result)
+
+    def read(self, size=-1):
+        if size < 0:
+            result = bytearray()
+            while True:
+                self.require_time()
+                chunk = self.connection.recv(65536)
+                if not chunk:
+                    return bytes(result)
+                result.extend(chunk)
+        result = bytearray()
+        while len(result) < size:
+            self.require_time()
+            chunk = self.connection.recv(size - len(result))
+            if not chunk:
+                break
+            result.extend(chunk)
+        return bytes(result)
+
+    def write(self, payload):
+        self.require_time()
+        self.connection.sendall(payload)
+        self.require_time()
+        return len(payload)
+
+    def flush(self):
+        self.require_time()
+
+    def close(self):
+        self.closed = True
+
+class DeadlineHTTPServer(HTTPServer):
+    def __init__(self, address, handler, context, deadline):
+        self.context = context
+        self.deadline = deadline
+        self.failure = None
+        self.accepted_count = 0
+        super().__init__(address, handler)
+
+    def require_time(self, connection=None):
+        remaining = self.deadline - time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError("loopback TLS fixture exceeded its absolute request deadline")
+        if connection is not None:
+            connection.settimeout(remaining)
+
+    def get_request(self):
+        raw_connection, peer = self.socket.accept()
+        try:
+            self.require_time(raw_connection)
+            connection = self.context.wrap_socket(raw_connection, server_side=True, do_handshake_on_connect=True)
+            self.require_time(connection)
+            self.accepted_count += 1
+            return connection, peer
+        except Exception as error:
+            raw_connection.close()
+            self.failure = f"TLS accept or handshake failed: {type(error).__name__}: {error}"
+            raise
+
+    def handle_error(self, request, client_address):
+        self.failure = "TLS HTTP request failed before completion"
+        super().handle_error(request, client_address)
 
 class Handler(BaseHTTPRequestHandler):
+    def setup(self):
+        self.connection = self.request
+        self.rfile = DeadlineIO(self.connection, deadline)
+        self.wfile = DeadlineIO(self.connection, deadline)
+
+    def handle(self):
+        try:
+            super().handle()
+        except Exception as error:
+            self.server.failure = f"TLS HTTP request failed: {type(error).__name__}: {error}"
+            raise
+
+    def parse_request(self):
+        parsed = super().parse_request()
+        self.server.require_time(self.connection)
+        return parsed
+
     def do_GET(self):
+        self.server.require_time(self.connection)
         peer = self.client_address[0]
         valid_request = self.command == "GET" and self.path == expected_path and peer == expected_peer
         status = expected_status if valid_request else 404
@@ -4479,28 +5941,39 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         return
 
-server = HTTPServer((expected_peer, 0), Handler)
-server.request_timeout = 20
-server.timeout = server.request_timeout
 context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 context.load_cert_chain(certificate, private_key)
-server.socket = context.wrap_socket(server.socket, server_side=True)
+server = DeadlineHTTPServer((expected_peer, 0), Handler, context, deadline)
 Path(port_file).write_text(f"{server.server_address[1]}\n", encoding="ascii")
-server.handle_request()
+while True:
+    if release_path.exists():
+        break
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        break
+    server.timeout = min(0.1, remaining)
+    server.handle_request()
+    if server.failure is not None:
+        raise RuntimeError(server.failure)
+    if server.accepted_count and not request_log.exists():
+        raise RuntimeError("loopback TLS connection ended without the expected HTTP request")
+    if request_log.exists():
+        break
 server.server_close()
-if not request_log.exists():
+if request_log.exists():
+    if server.accepted_count != 1:
+        raise RuntimeError("loopback TLS fixture did not receive exactly one accepted connection")
+elif release_path.exists():
+    request_log.write_text("request_count=0 released=true\n", encoding="ascii")
+else:
     request_log.write_text("request_count=0 timed_out=true\n", encoding="ascii")
+    raise SystemExit(1)
 PY
   network_fixture_pid=$!
   network_fixture_child_pid=$network_fixture_pid
   network_fixture_started_seconds=$SECONDS
   for ((attempt = 0; attempt < 200; attempt++)); do
     [[ -s "$fixture_port_file" ]] && break
-    if ! kill -0 "$network_fixture_pid" 2>/dev/null; then
-      cat "$test_root/network-fixture-server.stderr" >&2
-      printf 'generated-workflows: loopback TLS server did not become ready\n' >&2
-      exit 1
-    fi
     sleep 0.05
   done
   if [[ ! -s "$fixture_port_file" ]]; then
@@ -4576,6 +6049,7 @@ PY
   fi
   network_fixture_elapsed_seconds=$((SECONDS - network_fixture_started_seconds))
   network_fixture_pid=
+  network_fixture_release_marker=
   /bin/rm -f "$installation/.network-fixture-ca.pem"
   request_record=$(/bin/cat "$fixture_request_log" 2>/dev/null || true)
   if [[ "$server_status" -ne 0 || "$request_record" != "request_count=1 peer=127.0.0.1 method=GET path=$fixture_expected_path status=$fixture_status" ]]; then
